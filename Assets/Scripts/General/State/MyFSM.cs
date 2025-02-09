@@ -2,44 +2,51 @@ using System.Collections.Generic;
 using System;
 
 public class MyFSM
-{
-    public MyFSM(Type startStateType)
+{   
+    public MyFSM(Type initialStateType)
     {
-        Launch(startStateType);
+        if (initialStateType == null)
+        {
+            //没有子状态的状态机
+            return;
+        }
+        Launch(initialStateType);
     }
-
-    Dictionary<Type,MyStateBase> stateDic;
+    
+    Dictionary<Type, MyStateBase> stateDic;
+    public MyStateBase GetStateByType(Type stateType)
+    {
+        if (stateDic.ContainsKey(stateType))
+        {
+            return stateDic[stateType];
+        }
+        MyStateBase state = Activator.CreateInstance(stateType) as MyStateBase;
+        state.belongFSM = this;
+        stateDic.Add(stateType, state);
+        return state;
+    }
     MyStateBase curState;
-    MyStateBase CreateStateByType(Type stateType)
-    {
-        MyStateBase newState = Activator.CreateInstance(stateType) as MyStateBase;
-        newState.fsm = this;
-        stateDic.Add(stateType,newState);
-        return newState;
-    }
-    void OnStateChange(MyStateBase oldState,MyStateBase newState)
-    {
-        oldState?.OnExit();
-        newState?.OnEnter();
-    }
-    void Launch(Type startStateStpe)
+
+    void Launch(Type startStateType, Type subStateType = null)
     {
         stateDic = new();
-        curState = CreateStateByType(startStateStpe);
-        curState.OnEnter();
+        curState = GetStateByType(startStateType);
+        curState.Enter(subStateType);
     }
     public void Update()
     {
-        curState?.OnUpdate();
+        curState?.Update();
     }
-    public void ChangeState(Type newStateType)
+    public void ChangeState(Type newStateType, Type subStateType = null)
     {
-        MyStateBase newState;
-        if (!stateDic.ContainsKey(newStateType))
-            newState = CreateStateByType(newStateType);
-        else
-            newState = stateDic[newStateType];
-        curState = newState;
-        OnStateChange(curState,newState);
+        if(curState.GetType() != newStateType)
+        {
+            curState.Exit();
+            curState = GetStateByType(newStateType);
+            curState.Enter(subStateType);
+            return;
+        }
+        curState.ChangeSubState(subStateType);
     }
+    
 }

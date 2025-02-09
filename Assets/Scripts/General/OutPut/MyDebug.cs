@@ -18,7 +18,7 @@ public static class MyDebug
     {
         LogType.Default,
         // LogType.Card,
-        // LogType.State,
+        LogType.State,
     };
     public static void Log(object message, LogType logType = LogType.Default, int threshold = 0)
     {
