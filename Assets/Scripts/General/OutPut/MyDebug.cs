@@ -4,6 +4,7 @@ public enum LogType
 {
     Default,
     Card,
+    State,
 }
 public static class MyDebug
 {
@@ -17,6 +18,7 @@ public static class MyDebug
     {
         LogType.Default,
         // LogType.Card,
+        // LogType.State,
     };
     public static void Log(object message, LogType logType = LogType.Default, int threshold = 0)
     {

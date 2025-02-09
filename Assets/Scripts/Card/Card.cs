@@ -38,12 +38,10 @@ public class Card: IDestroy
     {
         get
         {
-            MyDebug.Log("CardData get", LogType.Card);
             return cardData;
         }
         set
         {
-            MyDebug.Log("CardData set", LogType.Card);
             cardData = value;
             RefreshData();
         }
