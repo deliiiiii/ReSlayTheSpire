@@ -25,7 +25,7 @@ public class Card: IDestroy
 {
     public void MyDestroy()
     {
-        GameObject.Destroy(UICard);
+        GameObject.Destroy(UICard.gameObject);
     }
 
     public Card(CardData f_cardData)
