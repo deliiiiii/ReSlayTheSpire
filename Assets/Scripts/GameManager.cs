@@ -7,7 +7,7 @@ public class GameManager : Singleton<GameManager>
     MyFSM gameFSM;
     void Awake()
     {
-        gameFSM = new(typeof(MyStateExamble));
+        gameFSM = new(typeof(TitleState));
     }
     void Update()
     {
