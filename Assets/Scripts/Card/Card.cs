@@ -3,76 +3,80 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CardColor
+namespace Deli
 {
-    None,
-    Red,
-}
-public enum CardType
-{
-    Attack,
-    Skill,
-    Ability,
-    Curse,
-}
-[Serializable]
-public class CardData
-{
-    public string cardName;
-    public bool isUpper;
-}
-public class Card: IDestroy
-{
-    public void MyDestroy()
+    public enum CardColor
     {
-        GameObject.Destroy(UICard.gameObject);
+        None,
+        Red,
     }
-
-    public Card(CardData f_cardData)
+    public enum CardType
     {
-        CardData = f_cardData;
+        Attack,
+        Skill,
+        Ability,
+        Curse,
     }
-
-    CardData cardData;
-    CardData CardData
+    [Serializable]
+    public class CardData
     {
-        get
+        public string cardName;
+        public bool isUpper;
+    }
+    public class Card: IDestroy
+    {
+        Card c;
+        public void MyDestroy()
         {
-            return cardData;
+            GameObject.Destroy(UICard.gameObject);
         }
-        set
+
+        public Card(CardData f_cardData)
         {
-            cardData = value;
-            RefreshData();
+            CardData = f_cardData;
         }
-    }
 
-    #region 根据CardData读取
-    public int cardCost;
-    public CardColor cardColor;
-    public CardType cardType;
-    #endregion
-
-    #region 根据CardData和上面一个region内的变量读取
-    UICard uiCard;
-    UICard UICard
-    {
-        get
+        CardData cardData;
+        CardData CardData
         {
-            if (uiCard == null)
+            get
             {
-                uiCard = GameObject.Instantiate(MyResources.Load<UICard>(ResourcePath.UICard)); 
+                return cardData;
             }
-            return uiCard;
+            set
+            {
+                cardData = value;
+                RefreshData();
+            }
         }
-    }
-    #endregion
 
-    void RefreshData()
-    {
-        cardCost = CardData.isUpper ? 2 : 1;
-        cardColor = CardColor.Red;
-        cardType = CardType.Attack;
-        UICard.Refresh(this, CardData);
+        #region 根据CardData读取
+        public int cardCost;
+        public CardColor cardColor;
+        public CardType cardType;
+        #endregion
+
+        #region 根据CardData和上面一个region内的变量读取
+        UICard uiCard;
+        UICard UICard
+        {
+            get
+            {
+                if (uiCard == null)
+                {
+                    uiCard = GameObject.Instantiate(MyResources.Load<UICard>(ResourcePath.UICard)); 
+                }
+                return uiCard;
+            }
+        }
+        #endregion
+
+        void RefreshData()
+        {
+            cardCost = CardData.isUpper ? 2 : 1;
+            cardColor = CardColor.Red;
+            cardType = CardType.Attack;
+            UICard.Refresh(this, CardData);
+        }
     }
 }

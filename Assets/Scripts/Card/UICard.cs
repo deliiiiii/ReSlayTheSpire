@@ -9,7 +9,7 @@ public class UICard : MonoBehaviour
     public Text cardName;
     public Image cardImage;
     public Text cardDescription;
-    public void Refresh(Card card,CardData cardData)
+    public void Refresh(Deli.Card card,Deli.CardData cardData)
     {
         cardCost.text = card.cardCost.ToString();
         cardName.text = cardData.cardName;
