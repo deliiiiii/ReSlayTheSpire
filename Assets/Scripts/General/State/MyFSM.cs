@@ -16,12 +16,15 @@ public class MyFSM
     Dictionary<Type, MyStateBase> stateDic;
     public MyStateBase GetStateByType(Type stateType)
     {
+        if (stateType == null)
+        {
+            return null;
+        }
         if (stateDic.ContainsKey(stateType))
         {
             return stateDic[stateType];
         }
         MyStateBase state = Activator.CreateInstance(stateType) as MyStateBase;
-        state.belongFSM = this;
         stateDic.Add(stateType, state);
         return state;
     }
@@ -31,7 +34,7 @@ public class MyFSM
     {
         stateDic = new();
         curState = GetStateByType(startStateType);
-        curState.Enter(subStateType);
+        curState.Enter(GetStateByType(subStateType), isEnterSame: false);
     }
     public void Update()
     {
@@ -39,14 +42,16 @@ public class MyFSM
     }
     public void ChangeState(Type newStateType, Type subStateType = null)
     {
-        if(curState.GetType() != newStateType)
+        MyStateBase newState = GetStateByType(newStateType);
+        if(subStateType == null)
         {
-            curState.Exit();
-            curState = GetStateByType(newStateType);
-            curState.Enter(subStateType);
-            return;
+            subStateType = newState.GetDefaultSubStateType();
         }
-        curState.ChangeSubState(subStateType);
+        MyStateBase newSubState = GetStateByType(subStateType);
+        bool isEnterSame = curState == newState;
+        curState.Exit();
+        curState = newState;
+        curState.Enter(newSubState, isEnterSame);
     }
     
 }

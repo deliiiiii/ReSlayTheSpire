@@ -23,3 +23,20 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
        }
     }
 }
+
+
+//C#单例
+//需要被继承 xxx : SingletonCS<xxx>
+//获取单例 xxx.Instance
+public class SingletonCS<T> where T : SingletonCS<T>, new()
+{
+    private static T instance;
+    public static T Instance
+    {
+        get
+        {
+            instance ??= new();
+            return instance;
+        }
+    }
+}

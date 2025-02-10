@@ -1,16 +1,16 @@
 public class TitleState : MyStateBase
 {
-    public override void OnEnter()
+    protected override void OnEnter()
     {
         MyDebug.Log("TitleState OnEnter", LogType.State);
     }
 
-    public override void OnExit()
+    protected override void OnExit()
     {
         MyDebug.Log("TitleState OnExit", LogType.State);
     }
 
-    public override void OnUpdate()
+    protected override void OnUpdate()
     {
         
     }
@@ -18,17 +18,17 @@ public class TitleState : MyStateBase
 
 public class SelectState : MyStateBase
 {
-    public override void OnEnter()
+    protected override void OnEnter()
     {
         MyDebug.Log("GameState OnEnter", LogType.State);
     }
 
-    public override void OnExit()
+    protected override void OnExit()
     {
         MyDebug.Log("GameState OnExit", LogType.State);
     }
 
-    public override void OnUpdate()
+    protected override void OnUpdate()
     {
         
     }

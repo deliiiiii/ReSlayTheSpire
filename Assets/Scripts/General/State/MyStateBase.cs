@@ -4,34 +4,28 @@ public abstract class MyStateBase
 {
     protected MyStateBase subState;
     public virtual Type GetDefaultSubStateType() { return null; }
-    public MyFSM belongFSM;
-    public virtual void Enter(Type newSubStateType = null)
+    public virtual void Enter(MyStateBase newSubState, bool isEnterSame)
     {
-        OnEnter();
-        if (newSubStateType == null)
+        if (!isEnterSame)
         {
-            newSubStateType = GetDefaultSubStateType();
-            if (newSubStateType == null)
-            {
-                return;
-            }
+            OnEnter();
         }
-        ChangeSubState(newSubStateType);
+        if (newSubState == null)
+        {
+            return;
+        }
+        ChangeSubState(newSubState);
     }
-    public void ChangeSubState(Type newSubStateType)
+    void ChangeSubState(MyStateBase newSubState)
     {
         subState?.Exit();
-        subState = belongFSM.GetStateByType(newSubStateType);
-        subState.belongFSM = belongFSM;
-        subState.Enter();
+        subState = newSubState;
+        subState?.Enter(null, false);
     }
     public virtual void Exit()
     {
-        if (subState != null)
-        {
-            subState.Exit();
-            subState = null;
-        }
+        subState?.Exit();
+        subState = null;
         OnExit();
     }
     public virtual void Update()
@@ -39,11 +33,7 @@ public abstract class MyStateBase
         OnUpdate();
         subState?.Update();
     }
-    public abstract void OnUpdate();
-    public abstract void OnEnter();
-    public abstract void OnExit();
-    
-    
-    
-    
+    protected abstract void OnUpdate();
+    protected abstract void OnEnter();
+    protected abstract void OnExit();
 }
