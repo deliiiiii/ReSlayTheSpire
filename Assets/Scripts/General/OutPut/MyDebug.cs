@@ -36,6 +36,7 @@ public static class MyDebug
         {
             return;
         }
+        Debug.LogWarning(message);
 
     }
     public static void LogError(object message, LogType logType = LogType.Default, int threshold = 0)
@@ -44,6 +45,7 @@ public static class MyDebug
         {
             return;
         }
+        Debug.LogError(message);
 
     }
 
