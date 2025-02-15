@@ -93,20 +93,20 @@ namespace QFramework.Example
         }
 
 
-        protected override void ExecuteCommand(ICommand command)
-        {
-            Debug.Log("Before " + command.GetType().Name + "Execute");
-            base.ExecuteCommand(command);
-            Debug.Log("After " + command.GetType().Name + "Execute");
-        }
+        // protected override void ExecuteCommand(ICommand command)
+        // {
+        //     Debug.Log("Before " + command.GetType().Name + "Execute");
+        //     base.ExecuteCommand(command);
+        //     Debug.Log("After " + command.GetType().Name + "Execute");
+        // }
 
-        protected override TResult ExecuteCommand<TResult>(ICommand<TResult> command)
-        {
-            Debug.Log("Before " + command.GetType().Name + "Execute");
-            var result =  base.ExecuteCommand(command);
-            Debug.Log("After " + command.GetType().Name + "Execute");
-            return result;
-        }
+        // protected override TResult ExecuteCommand<TResult>(ICommand<TResult> command)
+        // {
+        //     Debug.Log("Before " + command.GetType().Name + "Execute");
+        //     var result =  base.ExecuteCommand(command);
+        //     Debug.Log("After " + command.GetType().Name + "Execute");
+        //     return result;
+        // }
     }
 
     // 引入 Command
@@ -114,9 +114,7 @@ namespace QFramework.Example
     {
         protected override void OnExecute()
         {
-            var model = this.GetModel<ICounterAppModel>();
-                
-            model.Count.Value++;
+            this.GetModel<ICounterAppModel>().Count.Value++;
         }
     }
     
@@ -124,7 +122,7 @@ namespace QFramework.Example
     {
         protected override void OnExecute()
         {
-            this.GetModel<ICounterAppModel>().Count.Value--; // -+
+            this.GetModel<ICounterAppModel>().Count.Value--;
         }
     }
 

@@ -20,16 +20,18 @@ namespace Deli
     [Serializable]
     public class CardData
     {
-        public string cardName;
-        public bool isUpper;
+        string cardName;
+        bool isUpper;
+
+        public string CardName => cardName;
+        public bool IsUpper => isUpper;
     }
-    public class Card: IDestroy
+    public class Card // : IDestroy
     {
-        Card c;
-        public void MyDestroy()
-        {
-            GameObject.Destroy(UICard.gameObject);
-        }
+        // public void MyDestroy()
+        // {
+        //     GameObject.Destroy(UICard.gameObject);
+        // }
 
         public Card(CardData f_cardData)
         {
@@ -73,7 +75,7 @@ namespace Deli
 
         void RefreshData()
         {
-            cardCost = CardData.isUpper ? 2 : 1;
+            cardCost = CardData.IsUpper ? 2 : 1;
             cardColor = CardColor.Red;
             cardType = CardType.Attack;
             UICard.Refresh(this, CardData);
