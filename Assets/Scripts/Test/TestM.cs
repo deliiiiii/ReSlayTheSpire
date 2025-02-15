@@ -76,43 +76,59 @@ public class AttackMediater : Mediater
                 enemy.TakeDamage(weapon.Damage);
             }, AttackPriority.DAMAGE);
         
-        EnemyTotalKilledEvent enemyTotalKilledEvent = new(this);
-        AddTrueCB(enemyTotalKilledEvent, AttackPriority.EVENT);
+        AddTrueCB(new EnemyKilledEvent(this), AttackPriority.EVENT);
     }
     public Weapon weapon;
     public Enemy enemy;
 }
 
-public class EnemyTotalKilledEvent : MyEvent
+public class EnemyKilledEvent : MyEvent
 {
-    int killed = 0;
-    public EnemyTotalKilledEvent(AttackMediater attackMediater) : base(attackMediater)
+    public EnemyKilledEvent(AttackMediater attackMediater) : base(attackMediater)
     {
-        this.attackMediater = attackMediater;
-        AddCheck(() => !attackMediater.enemy.IsAlive(), 0);
-        AddTrueCB(() =>{killed++; MyDebug.Log($"killed:{killed}");}, -1);
-        EnemyUpgradeEvent enemyUpgradeEvent = new(this);
-        AddTrueCB(enemyUpgradeEvent, 0);
-        AddTrueCB(() => attackMediater.enemy.Revive(), 1);
+        weapon = attackMediater.weapon;
+        enemy = attackMediater.enemy;
+        AddCheck(() => !enemy.IsAlive(), 0);
+        AddTrueCB(new EnemyDeadCountMediater(this), 0);
+        AddTrueCB(() => enemy.Revive(), 1);
     }
-    public AttackMediater attackMediater;
-    public int GetKilled()
+    public Weapon weapon;
+    public Enemy enemy;
+}
+
+public class EnemyDeadCountMediater : Mediater
+{
+    int deadCount = 0;
+    public EnemyDeadCountMediater(EnemyKilledEvent enemyKilledEvent) : base()
     {
-        return killed;
+        weapon = enemyKilledEvent.weapon;
+        enemy = enemyKilledEvent.enemy;
+        AddTrueCB(() =>{deadCount++; MyDebug.Log($"killed:{deadCount}");}, 0);
+        AddTrueCB(new Dead10Mediater(this), 1);
+    }
+    public Weapon weapon;
+    public Enemy enemy;
+    public int GetDeadCount()
+    {
+        return deadCount;
     }
     public void Reset()
     {
-        killed = 0;
+        deadCount = 0;
     }
 }
 
-public class EnemyUpgradeEvent : MyEvent
+public class Dead10Mediater : Mediater
 {
-    public EnemyUpgradeEvent(EnemyTotalKilledEvent enemyTotalKilledEvent) : base(enemyTotalKilledEvent)
+    public Dead10Mediater(EnemyDeadCountMediater enemyTotalKilledEvent) : base()
     {
-        AddCheck(() => enemyTotalKilledEvent.GetKilled() >= 10, 0);
-        AddTrueCB(() => {enemyTotalKilledEvent.Reset();enemyTotalKilledEvent.attackMediater.enemy.UpGrade();}, 0);
+        weapon = enemyTotalKilledEvent.weapon;
+        enemy = enemyTotalKilledEvent.enemy;
+        AddCheck(() => enemyTotalKilledEvent.GetDeadCount() >= 10, 0);
+        AddTrueCB(() => {enemyTotalKilledEvent.Reset();enemy.UpGrade();}, 0);
     }
+    public Weapon weapon;
+    public Enemy enemy;
 }
 
 #region Input

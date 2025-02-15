@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using UnityEngine.SocialPlatforms;
 
 public interface IMediateObject
 {
@@ -126,13 +124,13 @@ public class Mediater : IResult
         return falseCBs.TryRemove(simpleResult);
     }
 
-    public void AddTrueCB(MyEvent myEvent, float priority)
+    public void AddTrueCB(Mediater mediater, float priority)
     {
-        trueCBs.Enqueue(myEvent, priority);
+        trueCBs.Enqueue(mediater, priority);
     }
-    public bool RemoveTrueCB(MyEvent myEvent)
+    public bool RemoveTrueCB(Mediater mediater)
     {
-        return trueCBs.TryRemove(myEvent);
+        return trueCBs.TryRemove(mediater);
     }
     public void AddTrueCB(Action action, float priority)
     {
@@ -188,7 +186,7 @@ public class Mediater : IResult
                 continue;
             }
             // lastPriority != checks.GetPriority(e.Current)
-            bool orResult = false;
+            bool orResult = orChecks.Count == 0;
             foreach (ICondition orCheck in orChecks)
             {
                 // MyDebug.Log("Checking: " + lastPriority + " " + orCheck());
@@ -204,7 +202,7 @@ public class Mediater : IResult
             // MyDebug.Log("updatePriority " + lastPriority);
             orChecks.Add(e.Current);
         }
-        bool result = false;
+        bool result = orChecks.Count == 0;
         foreach (ICondition orCheck in orChecks)
         {
             // MyDebug.Log("Checking: " + lastPriority + " " + orCheck());
