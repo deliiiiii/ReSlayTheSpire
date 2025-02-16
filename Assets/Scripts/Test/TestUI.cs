@@ -20,6 +20,7 @@ public class TestUI : Singleton<TestUI>
 
     public GButton buttonHit;
     public GButton buttonRefine;
+    
 
     protected override void OnInit()
     {
@@ -44,13 +45,8 @@ public class TestUI : Singleton<TestUI>
         buttonHit = component1.GetChild("buttonHit").asButton;
         buttonRefine = component1.GetChild("buttonRefine").asButton;
 
-        AddButtonOnClick();
+
     }
     
-    void AddButtonOnClick()
-    {
-        buttonHit.onClick.Add(() => MyEventSystem.Fire<OnClickHit>());
-        buttonRefine.onClick.Add(() => MyEventSystem.Fire<OnClickRefine>());
-    }
 
 }

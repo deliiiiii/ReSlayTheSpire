@@ -17,7 +17,7 @@ public abstract class Weapon
         set
         {
             damage = value;
-            MyEventSystem.Fire<OnWeaponChange>();
+            onWeaponChange.Fire();
         }
     }
     public abstract bool IsDoingAttack(float dt);
@@ -75,7 +75,7 @@ public class Coin
         set
         {
             money = value;
-            MyEventSystem.Fire<OnMoneyChange>();
+            onMoneyChange.Fire();
         }
     }
 
@@ -112,7 +112,7 @@ public class Enemy
         {
             value = (float)Math.Round(value, 1);
             maxHP = value;
-            MyEventSystem.Fire<OnEnemyChange>();
+            onEnemyChange.Fire();
         }
     }
     public float Health
@@ -126,7 +126,7 @@ public class Enemy
             {
                 health = 0;
             }
-            MyEventSystem.Fire<OnEnemyChange>();
+            onEnemyChange.Fire();
         }
     }
     public float Defend
@@ -136,7 +136,7 @@ public class Enemy
         {
             value = (float)Math.Round(value, 1);
             defend = value;
-            MyEventSystem.Fire<OnEnemyChange>();
+            onEnemyChange.Fire();
         }
     }
 

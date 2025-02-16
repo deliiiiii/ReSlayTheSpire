@@ -22,12 +22,13 @@ public class TestMain : MonoBehaviour
         coin = new Coin();
         enemy = new Enemy();
 
-        attack = new(weapon, enemy);
-        onEnemyDie = new(attack, coin);
+        attack = new Attack(weapon, enemy);
+        onEnemyDie = new OnEnemyDie(attack, coin);
 
+        onClickRefine = new OnClickRefine(weapon, coin);
+        onClickHit = new OnClickHit(weapon);
 
-        onClickRefine = new(weapon, coin);
-        onClickHit = new(weapon);
+        attack.onEnemyDieEvent = () => onEnemyDie.Fire();
     }
 
 

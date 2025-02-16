@@ -1,14 +1,5 @@
 using System;
-using System.Collections.Generic;
-
-public static class MyEventSystem
-{
-    public static void Fire<T>() where T : MyEvent
-    {
-        eventDic[typeof(T).Name].Fire();
-    }
-    public static Dictionary<string,MyEvent> eventDic = new();
-}
+using FairyGUI;
 
 public class OnEnemyDie : MyEvent
 {
@@ -36,14 +27,22 @@ public class OnEnemyDie : MyEvent
     }
 }
 
+#region 点击事件
 public class OnClickRefine : MyEvent
 {
     Weapon weapon;
     Coin coin;
+    EventCallback0 onClick;
     public OnClickRefine(Weapon weapon, Coin coin)
     {
         this.weapon = weapon;
         this.coin = coin;
+        onClick = () => Fire();
+        TestUI.Instance.buttonRefine.onClick.Add(onClick);
+    }
+    ~OnClickRefine()
+    {
+        TestUI.Instance.buttonRefine.onClick.Remove(onClick);
     }
     public override void Fire()
     {
@@ -52,6 +51,28 @@ public class OnClickRefine : MyEvent
     }
 }
 
+public class OnClickHit : MyEvent
+{
+    WeaponClick weaponClick;
+    EventCallback0 onClick;
+    public OnClickHit(WeaponClick weaponClick)
+    {
+        this.weaponClick = weaponClick;
+        onClick = () => Fire();
+        TestUI.Instance.buttonHit.onClick.Add(onClick);
+    }
+    ~OnClickHit()
+    {
+        TestUI.Instance.buttonHit.onClick.Remove(onClick);
+    }
+    public override void Fire()
+    {
+        weaponClick.clicked = true;
+    }
+}
+#endregion
+
+#region 数据变化
 public class OnWeaponChange : MyEvent
 {
     TestUI testUI;
@@ -67,18 +88,7 @@ public class OnWeaponChange : MyEvent
     }
 }
 
-public class OnClickHit : MyEvent
-{
-    WeaponClick weaponClick;
-    public OnClickHit(WeaponClick weaponClick)
-    {
-        this.weaponClick = weaponClick;
-    }
-    public override void Fire()
-    {
-        weaponClick.clicked = true;
-    }
-}
+
 
 public class OnMoneyChange : MyEvent
 {
@@ -115,3 +125,4 @@ public class OnEnemyChange : MyEvent
         testUI.textDefendC.visible = enemy.Defend > 0;
     }
 }
+#endregion

@@ -4,13 +4,5 @@ public interface IUpdateMediate
 }
 public abstract class MyEvent
 {
-    public MyEvent()
-    {
-        MyEventSystem.eventDic.Add(GetType().Name, this);
-    }
-    ~MyEvent()
-    {
-        MyEventSystem.eventDic.Remove(GetType().Name);
-    }
     public abstract void Fire();
 }

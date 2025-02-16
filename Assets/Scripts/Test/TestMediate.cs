@@ -3,6 +3,8 @@ public class Attack : IUpdateMediate
 {
     public Weapon weapon;
     public Enemy enemy;
+    public Action onEnemyDieEvent;
+
     public Attack(Weapon weapon, Enemy enemy)
     {
         this.weapon = weapon;
@@ -18,7 +20,7 @@ public class Attack : IUpdateMediate
         enemy.TakeDamage(weapon.Damage);
         if(!enemy.IsAlive())
         {
-            MyEventSystem.Fire<OnEnemyDie>();
+            onEnemyDieEvent?.Invoke();
         }
     }
 }
