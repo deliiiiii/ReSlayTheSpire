@@ -1,7 +1,8 @@
 using UnityEngine;
 using FairyGUI;
+using System;
 
-public class Weapon : IMediateObject
+public class Weapon
 {
     public Weapon(TestUI testUI)
     {
@@ -11,6 +12,10 @@ public class Weapon : IMediateObject
     }
     float damage = 10;
     GTextField textAttack;
+    public bool IsDoingAttack()
+    {
+        return TestUI.Instance.ClickHit();
+    }
     public float GetDamage()
     {
         return damage;
@@ -27,7 +32,7 @@ public class Weapon : IMediateObject
     }
 }
 
-public class Coin : IMediateObject
+public class Coin
 {
     public Coin(TestUI testUI)
     {
@@ -66,7 +71,7 @@ public class Coin : IMediateObject
     }
 }
 
-public class Enemy : IMediateObject
+public class Enemy
 {
     public Enemy(TestUI testUI)
     {
@@ -76,111 +81,145 @@ public class Enemy : IMediateObject
         textDefend = testUI.component1.GetChild("textDefend").asCom.GetChild("text0").asTextField;
         textDefendC = testUI.component1.GetChild("textDefendC").asCom.GetChild("text0").asTextField;
         textDefendC.text = "Defend";
-
-        Revive();
+        MaxHP = 100;
+        Defend = 0;
+        Health = MaxHP;
     }
-    float maxHP = 100;
-    float defend = 0;
+    float maxHP;
     float health;
+    float defend;
+    public float MaxHP 
+    { 
+        get => maxHP;
+        set
+        {
+            value = (float)System.Math.Round(value, 1);
+            maxHP = value;
+            RefreshHPUI();
+        }
+    }
+    public float Health
+    {
+        get => health;
+        set
+        {
+            value = (float)System.Math.Round(value, 1);
+            health = value;
+            if(health <= 0)
+            {
+                health = 0;
+            }
+            RefreshHPUI();
+        }
+    }
+    public float Defend
+    {
+        get => defend;
+        set
+        {
+            value = (float)System.Math.Round(value, 1);
+            defend = value;
+            RefreshDefendUI();
+        }
+    }
 
     GTextField textCurHP;
     GTextField textMaxHP;
     GTextField textDefend;
     GTextField textDefendC;
-    
-    
+
 
     public bool IsAlive()
     {
-        return health > 0;
+        return Health > 0;
     }
     public void TakeDamage(float damage)
     {
-        float HP1 = health;
-        float trueDamage = (damage - defend) < 0 ? damage/10f : (damage - defend);
-        health = HP1 - trueDamage;
-        health = (float)System.Math.Round(health, 1);
-        MyDebug.Log($"{HP1} - {trueDamage} = {health}");
-        RefreshHPUI();
+        float HP1 = Health;
+        float trueDamage = (damage - Defend) < 0 ? damage/10f : (damage - Defend);
+        Health = HP1 - trueDamage;
+        MyDebug.Log($"{HP1} - {trueDamage} = {Health}");
     }
     public void Revive()
     {
-        MyDebug.Log($"Revive! {maxHP}");
-        health = maxHP;
-        RefreshHPUI();
-        RefreshDefendUI();
+        Health = MaxHP;
+        MyDebug.Log($"Revive! {MaxHP}");
     }
     public void UpGrade()
     {
-        maxHP += 10;
-        defend += 1;
-        MyDebug.Log($"UpGrade! maxHP:{maxHP} defense:{defend}");
+        MaxHP += 10;
+        Defend += 1;
+        MyDebug.Log($"UpGrade! maxHP:{MaxHP} defense:{Defend}");
     }
 
     public int GetReward()
     {
-        return (int)(maxHP/20) + (int)defend;
+        return (int)(MaxHP/20) + (int)Defend;
     }
     public void RefreshDefendUI()
     {
-        textDefend.text = defend.ToString();
-        textDefend.visible = defend >= 0;
-        textDefendC.visible = defend >= 0;
+        textDefend.text = Defend.ToString();
+        textDefend.visible = Defend >= 0;
+        textDefendC.visible = Defend >= 0;
     }
     public void RefreshHPUI()
     {
-        textCurHP.text = health.ToString();
-        textMaxHP.text = maxHP.ToString();
+        textCurHP.text = Health.ToString();
+        textMaxHP.text = MaxHP.ToString();
     }
 }
 
-public static class AttackPriority
+public class Attack : IUpdateTrigger
 {
-    public static float INPUT = float.MinValue;
-    public static float ENEMYCHECK = 0;
-    public static float DAMAGE = 1;
-    public static float UI = 5;
-    public static float EVENT = 10;
-}
-public class AttackM : Mediater
-{
-    Mediater enemyKilledM;
-    Mediater enemyDead10M;
-    Mediater decTimerM;
-    
-    public AttackM() : base()
+    public Weapon weapon;
+    public Enemy enemy;
+    public event Action onEnemyDie;
+    public Attack(Weapon weapon, Enemy enemy)
     {
-        Enemy enemy = Test.Instance.enemy;
-        Weapon weapon = Test.Instance.weapon;
-        Coin coin = Test.Instance.coin;
-        TimerM timer = Test.Instance.timer;
-        
-
-        enemyKilledM = new();
-        enemyDead10M = new();
-        decTimerM = new();
-
-
-        AddCheck(() => TestUI.Instance.ClickHit(), AttackPriority.INPUT);
-        AddCheck(() => timer.isTimeOut, AttackPriority.INPUT);
-        AddCheck(() => enemy.IsAlive(), AttackPriority.ENEMYCHECK);
-        
-        AddTrueCB(()=>enemy.TakeDamage(weapon.GetDamage()), AttackPriority.DAMAGE);
-        AddTrueCB(enemyKilledM, AttackPriority.EVENT);
-            enemyKilledM.AddCheck(() => !enemy.IsAlive(), 0);
-            enemyKilledM.AddTrueCB(() =>{deadCount++; MyDebug.Log($"killed:{deadCount}");}, 0);
-            enemyKilledM.AddTrueCB(()=>coin.Gain(enemy.GetReward()), 0);
-            enemyKilledM.AddTrueCB(enemyDead10M, 1);
-                enemyDead10M.AddCheck(() => deadCount % 3 == 0, 0);
-                enemyDead10M.AddTrueCB(() => {enemy.UpGrade();}, 0);
-            enemyKilledM.AddTrueCB(() => enemy.Revive(), 1);
-        AddTrueCB(decTimerM, AttackPriority.EVENT + 1);
-            decTimerM.AddCheck(() => timer.isTimeOut, 0);
-            decTimerM.AddTrueCB(()=>MyDebug.Log("↑ Triggered!"), 0);
-            decTimerM.AddTrueCB(()=>timer.Decrease(), 0);
+        this.weapon = weapon;
+        this.enemy = enemy;
     }
-    int deadCount = 0;
+    
+    public void Update()
+    {
+        if (!weapon.IsDoingAttack())
+            return;
+        if (!enemy.IsAlive())
+            return;
+        enemy.TakeDamage(weapon.GetDamage());
+        if(!enemy.IsAlive())
+            onEnemyDie?.Invoke();
+    }
 }
+
+public class OnEnemyDie : IEvent
+{
+    public Attack attack;
+    Weapon weapon => attack.weapon;
+    Enemy enemy => attack.enemy;
+    Coin coin;
+    
+    int deadCount = 0;
+    public OnEnemyDie(Attack attack, Coin coin)
+    {
+        this.attack = attack;
+        this.coin = coin;
+        attack.onEnemyDie += Fire;
+    }
+    public void Fire()
+    {
+        deadCount++;
+        MyDebug.Log($"killed:{deadCount}");
+        coin.Gain(enemy.GetReward());
+        if(deadCount % 3 == 0)
+        {
+            enemy.UpGrade();
+        }
+        enemy.Revive();
+    }
+}
+
+
 
 #region Input
 public class InputManager

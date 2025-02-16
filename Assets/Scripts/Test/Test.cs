@@ -1,24 +1,27 @@
 using UnityEngine;
 public class Test : Singleton<Test>
 {
-    public TimerM timer;
+    public TimerM timer = new(5);
     public Weapon weapon;
     public Coin coin;
+
+
     public Enemy enemy;
-    AttackM attackMediater;
+    Attack attack;
+    OnEnemyDie onEnemyDie;
+
     void Start()
     {
-        timer = new TimerM(5);
         weapon = new Weapon(TestUI.Instance);
         coin = new Coin(TestUI.Instance);
         enemy = new Enemy(TestUI.Instance);
-        attackMediater = new();
+        attack = new(weapon, enemy);
+        onEnemyDie = new(attack, coin);
     }
 
 
     void Update()
     {
-        timer.Update(Time.deltaTime);
-        attackMediater.CallResult();
+        attack.Update();
     }
 }
