@@ -11,7 +11,10 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
         get
         {
             if (instance == null)
+            {
                 instance = FindObjectOfType<T>();
+                instance.OnInit();
+            }
             return instance;
         }
     }
@@ -21,6 +24,9 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
        {
            DontDestroyOnLoad(gameObject);
        }
+    }
+    protected virtual void OnInit()
+    {
     }
 }
 

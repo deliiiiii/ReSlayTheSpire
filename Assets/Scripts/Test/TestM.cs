@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Weapon : IMediateObject
 {
-    public Weapon(float damage)
+    public Weapon()
     {
-        this.damage = damage;
+        
     }
-    float damage;
+    float damage = 10;
     public float GetDamage()
     {
         return damage;
@@ -17,13 +17,15 @@ public class Weapon : IMediateObject
 
 public class Enemy : IMediateObject
 {
-    public Enemy()
+    public Enemy(UIEnemy uiEnemy)
     {
-        health = maxHP;
+        this.uiEnemy = uiEnemy;
+        Revive();
     }
     float maxHP = 100;
     float defense = 0;
     float health;
+    UIEnemy uiEnemy;
     public bool IsAlive()
     {
         return health > 0;
@@ -34,11 +36,14 @@ public class Enemy : IMediateObject
         float trueDamage = (damage - defense) < 0 ? damage/10f : (damage - defense);
         health = HP1 - trueDamage;
         MyDebug.Log($"{HP1} - {trueDamage} = {health}");
+        uiEnemy.Refresh(health, maxHP);
     }
     public void Revive()
     {
         MyDebug.Log($"Revive! {maxHP}");
         health = maxHP;
+
+        uiEnemy.Refresh(health, maxHP);
     }
     public void UpGrade()
     {
@@ -53,6 +58,7 @@ public static class AttackPriority
     public static float INPUT = float.MinValue;
     public static float ENEMYCHECK = 0;
     public static float DAMAGE = 1;
+    public static float UI = 5;
     public static float EVENT = 10;
 }
 public class AttackMediater : Mediater
@@ -85,7 +91,7 @@ public class AttackMediater : Mediater
             enemyKilledM.AddTrueCB(() => enemy.Revive(), 1);
         AddTrueCB(decTimerM, AttackPriority.EVENT + 1);
             decTimerM.AddCheck(() => timer.isTriggered, 0);
-            decTimerM.AddTrueCB(()=>MyDebug.Log("Triggered!"), 0);
+            decTimerM.AddTrueCB(()=>MyDebug.Log("↑ Triggered!"), 0);
             decTimerM.AddTrueCB(()=>timer.Decrease(), 0);
     }
     public Weapon weapon;

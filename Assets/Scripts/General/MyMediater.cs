@@ -98,15 +98,6 @@ public class UpDateResult : IResult
     }
 }
 
-public class MyEvent : Mediater
-{
-    public MyEvent(Mediater preMediater)
-    {
-        this.preMediater = preMediater;
-    }
-    public Mediater preMediater;
-}
-
 public class Mediater : IResult
 {
     public Mediater()
@@ -133,13 +124,13 @@ public class Mediater : IResult
         return checks.TryRemove(simpleCondition);
     }
 
-    public void AddFalseCB(MyEvent myEvent, float priority)
+    public void AddFalseCB(Mediater mediater, float priority)
     {
-        falseCBs.Enqueue(myEvent, priority);
+        falseCBs.Enqueue(mediater, priority);
     }
-    public bool RemoveFalseCB(MyEvent myEvent)
+    public bool RemoveFalseCB(Mediater mediater)
     {
-        return falseCBs.TryRemove(myEvent);
+        return falseCBs.TryRemove(mediater);
     }
     public void AddFalseCB(Action action, float priority)
     {

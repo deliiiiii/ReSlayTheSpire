@@ -2,12 +2,17 @@ using System.Threading;
 using UnityEngine;
 public class Test : MonoBehaviour
 {
-    TimerM timer = new(5);
+    TimerM timer;
     AttackMediater attackMediater;
+    Weapon weapon;
+    Enemy enemy;
     void Start()
     {
-        // TestUI.Instance.Init();
-        attackMediater = new(new Weapon(20), new Enemy(), timer);
+        timer = new TimerM(5);
+
+        weapon = new Weapon();
+        enemy = new Enemy(UIEnemy.Instance);
+        attackMediater = new(weapon, enemy, timer);
     }
 
 
