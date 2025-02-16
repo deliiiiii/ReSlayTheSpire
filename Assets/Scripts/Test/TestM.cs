@@ -1,31 +1,102 @@
-using System;
-using System.Threading;
 using UnityEngine;
+using FairyGUI;
 
 public class Weapon : IMediateObject
 {
-    public Weapon()
+    public Weapon(TestUI testUI)
     {
-        
+        textAttack = testUI.component1.GetChild("textAttack").asCom.GetChild("text0").asTextField;
+        testUI.component1.GetChild("textAttackC").asCom.GetChild("text0").text = "Attack";
+        RefreshUI();
     }
     float damage = 10;
+    GTextField textAttack;
     public float GetDamage()
     {
         return damage;
+    }
+    public void Refine()
+    {
+        damage *= 1.1f;
+        damage = (float)System.Math.Round(damage, 1);
+        RefreshUI();
+    }
+    public void RefreshUI()
+    {
+        textAttack.text = damage.ToString();
+    }
+}
+
+public class Coin : IMediateObject
+{
+    public Coin(TestUI testUI)
+    {
+        textCoin = testUI.component1.GetChild("textCoin").asCom.GetChild("text0").asTextField;
+        textCoinC = testUI.component1.GetChild("textCoinC").asCom.GetChild("text0").asTextField;
+        textCoinC.text = "Coin";
+        buttonRefine = testUI.component1.GetChild("buttonRefine").asButton;
+        SetCost(10);
+    }
+    int coin = 0;
+    int cost = 0;
+    GTextField textCoin;
+    GTextField textCoinC;
+    GButton buttonRefine;
+    
+    public void Gain(int add)
+    {
+        coin += add;
+        RefreshUI();
+    }
+    public void Cost()
+    {
+        coin -= cost;
+        SetCost(cost + 10);
+    }
+    public void SetCost(int cost)
+    {
+        this.cost = cost;
+        RefreshUI();
+    }
+    public void RefreshUI()
+    {
+        textCoin.text = coin.ToString();
+        buttonRefine.enabled = coin >= cost;
+        buttonRefine.text = $"Refine {cost}";
     }
 }
 
 public class Enemy : IMediateObject
 {
-    public Enemy(UIEnemy uiEnemy)
+    public Enemy(TestUI testUI)
     {
-        this.uiEnemy = uiEnemy;
+        textCurHP = testUI.component1.GetChild("textCurHP").asCom.GetChild("text0").asTextField;
+        testUI.component1.GetChild("textHPSlash").asCom.GetChild("text0").text = "/";
+        textMaxHP = testUI.component1.GetChild("textMaxHP").asCom.GetChild("text0").asTextField;
+        textDefend = testUI.component1.GetChild("textDefend").asCom.GetChild("text0").asTextField;
+        textDefendC = testUI.component1.GetChild("textDefendC").asCom.GetChild("text0").asTextField;
+        textDefendC.text = "Defend";
+        
+        testUI.component1.GetChild("buttonHit").onClick.Add(() => isHit = true);
         Revive();
     }
     float maxHP = 100;
-    float defense = 0;
+    float defend = 0;
     float health;
-    UIEnemy uiEnemy;
+
+    GTextField textCurHP;
+    GTextField textMaxHP;
+    GTextField textDefend;
+    GTextField textDefendC;
+    bool isHit = false;
+    public bool IsHit()
+    {
+        bool ret = isHit;
+        isHit = false;
+        return ret;
+    }
+    
+
     public bool IsAlive()
     {
         return health > 0;
@@ -33,23 +104,40 @@ public class Enemy : IMediateObject
     public void TakeDamage(float damage)
     {
         float HP1 = health;
-        float trueDamage = (damage - defense) < 0 ? damage/10f : (damage - defense);
+        float trueDamage = (damage - defend) < 0 ? damage/10f : (damage - defend);
         health = HP1 - trueDamage;
+        health = (float)System.Math.Round(health, 1);
         MyDebug.Log($"{HP1} - {trueDamage} = {health}");
-        uiEnemy.Refresh(health, maxHP);
+        RefreshHPUI();
     }
     public void Revive()
     {
         MyDebug.Log($"Revive! {maxHP}");
         health = maxHP;
-
-        uiEnemy.Refresh(health, maxHP);
+        RefreshHPUI();
+        RefreshDefendUI();
     }
     public void UpGrade()
     {
         maxHP += 10;
-        defense += 1;
-        MyDebug.Log($"UpGrade! maxHP:{maxHP} defense:{defense}");
+        defend += 1;
+        MyDebug.Log($"UpGrade! maxHP:{maxHP} defense:{defend}");
+    }
+
+    public int GetReward()
+    {
+        return (int)(maxHP/20) + (int)defend;
+    }
+    public void RefreshDefendUI()
+    {
+        textDefend.text = defend.ToString();
+        textDefend.visible = defend >= 0;
+        textDefendC.visible = defend >= 0;
+    }
+    public void RefreshHPUI()
+    {
+        textCurHP.text = health.ToString();
+        textMaxHP.text = maxHP.ToString();
     }
 }
 
@@ -67,17 +155,20 @@ public class AttackMediater : Mediater
     Mediater enemyDead10M;
     Mediater decTimerM;
     
-    public AttackMediater(Weapon weapon, Enemy enemy, TimerM timer) : base()
+    public AttackMediater() : base()
     {
-        this.weapon = weapon;
-        this.enemy = enemy;
+        Enemy enemy = Test.Instance.enemy;
+        Weapon weapon = Test.Instance.weapon;
+        Coin coin = Test.Instance.coin;
+        TimerM timer = Test.Instance.timer;
+        
 
         enemyKilledM = new();
         enemyDead10M = new();
         decTimerM = new();
 
 
-        AddCheck(() => InputManager.isAttackKeyDown, AttackPriority.INPUT);
+        AddCheck(() => enemy.IsHit(), AttackPriority.INPUT);
         AddCheck(() => timer.isTriggered, AttackPriority.INPUT);
         AddCheck(() => enemy.IsAlive(), AttackPriority.ENEMYCHECK);
         
@@ -85,23 +176,17 @@ public class AttackMediater : Mediater
         AddTrueCB(enemyKilledM, AttackPriority.EVENT);
             enemyKilledM.AddCheck(() => !enemy.IsAlive(), 0);
             enemyKilledM.AddTrueCB(() =>{deadCount++; MyDebug.Log($"killed:{deadCount}");}, 0);
+            enemyKilledM.AddTrueCB(()=>coin.Gain(enemy.GetReward()), 0);
             enemyKilledM.AddTrueCB(enemyDead10M, 1);
-                enemyDead10M.AddCheck(() => deadCount >= 10, 0);
-                enemyDead10M.AddTrueCB(() => {Reset();enemy.UpGrade();}, 0);
+                enemyDead10M.AddCheck(() => deadCount % 3 == 0, 0);
+                enemyDead10M.AddTrueCB(() => {enemy.UpGrade();}, 0);
             enemyKilledM.AddTrueCB(() => enemy.Revive(), 1);
         AddTrueCB(decTimerM, AttackPriority.EVENT + 1);
             decTimerM.AddCheck(() => timer.isTriggered, 0);
             decTimerM.AddTrueCB(()=>MyDebug.Log("↑ Triggered!"), 0);
             decTimerM.AddTrueCB(()=>timer.Decrease(), 0);
     }
-    public Weapon weapon;
-    public Enemy enemy;
-
     int deadCount = 0;
-    public void Reset()
-    {
-        deadCount = 0;
-    }
 }
 
 #region Input
@@ -123,11 +208,25 @@ public class TimerM
     public void Update(float dt)
     {
         timer += dt;
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Time.timeScale *= 2f;
+            MyDebug.LogError($"Time.timeScale:{Time.timeScale}");
+        }
+        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Time.timeScale /= 2f;
+            MyDebug.LogError($"Time.timeScale:{Time.timeScale}");
+        }
     }
     public bool isTriggered => timer >= time;
     public void Decrease()
     {
         timer -= time;
+    }
+    public void RefineTime()
+    {
+        time = time * 0.9f;
     }
 }
 #endregion

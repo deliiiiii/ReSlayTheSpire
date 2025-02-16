@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1920,1080">
   <displayList>
-    <component id="n1_eqxn" name="textCurHP" src="eqxn1" fileName="Text/TextC.xml" xy="1300,835" size="200,100"/>
-    <component id="n3_eqxn" name="textHPSlash" src="eqxn1" fileName="Text/TextC.xml" xy="1498,835" size="200,100"/>
-    <component id="n5_eqxn" name="n5" src="eqxn2" fileName="Button1.xml" xy="58,900"/>
-    <component id="n6_eqxn" name="textMaxHP" src="eqxn1" fileName="Text/TextC.xml" xy="1683,835"/>
+    <component id="n1_eqxn" name="textCurHP" src="eqxn1" fileName="TextC.xml" xy="1300,835" size="200,100"/>
+    <component id="n3_eqxn" name="textHPSlash" src="eqxn1" fileName="TextC.xml" xy="1498,835" size="200,100"/>
+    <component id="n5_eqxn" name="buttonHit" src="eqxn2" fileName="Button1.xml" xy="1503,630">
+      <Button title="HIT !"/>
+    </component>
+    <component id="n6_eqxn" name="textMaxHP" src="eqxn1" fileName="TextC.xml" xy="1684,835"/>
+    <component id="n10_eqxn" name="textDefendC" src="eqxn1" fileName="TextC.xml" xy="1344,942" size="312,100"/>
+    <component id="n7_eqxn" name="textDefend" src="eqxn1" fileName="TextC.xml" xy="1684,942"/>
+    <component id="n11_eqxn" name="textAttackC" src="eqxn1" fileName="TextC.xml" xy="80,824"/>
+    <component id="n12_eqxn" name="textAttack" src="eqxn1" fileName="TextC.xml" xy="309,824"/>
+    <component id="n13_eqxn" name="textCoinC" src="eqxn1" fileName="TextC.xml" xy="79,944"/>
+    <component id="n14_eqxn" name="textCoin" src="eqxn1" fileName="TextC.xml" xy="308,944"/>
+    <component id="n15_eqxn" name="buttonRefine" src="eqxn2" fileName="Button1.xml" xy="109,644" size="340,100">
+      <Button title="Refine"/>
+    </component>
   </displayList>
 </component>

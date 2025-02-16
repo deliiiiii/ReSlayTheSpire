@@ -1,18 +1,18 @@
-using System.Threading;
 using UnityEngine;
-public class Test : MonoBehaviour
+public class Test : Singleton<Test>
 {
-    TimerM timer;
+    public TimerM timer;
+    public Weapon weapon;
+    public Coin coin;
+    public Enemy enemy;
     AttackMediater attackMediater;
-    Weapon weapon;
-    Enemy enemy;
     void Start()
     {
         timer = new TimerM(5);
-
-        weapon = new Weapon();
-        enemy = new Enemy(UIEnemy.Instance);
-        attackMediater = new(weapon, enemy, timer);
+        weapon = new Weapon(TestUI.Instance);
+        coin = new Coin(TestUI.Instance);
+        enemy = new Enemy(TestUI.Instance);
+        attackMediater = new();
     }
 
 
