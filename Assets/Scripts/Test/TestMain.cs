@@ -2,7 +2,6 @@ using FairyGUI;
 using UnityEngine;
 public class TestMain : MonoBehaviour
 {
-    public TestUI testUI;
     public WeaponClick weapon;
     public Coin coin;
     public Enemy enemy;
@@ -17,7 +16,9 @@ public class TestMain : MonoBehaviour
 
     void Start()
     {
-        testUI = GameObject.Find("UIPanel").GetComponent<TestUI>();
+        // 注入 UI 实例到 MyEvent 静态属性中
+        MyEvent.TestUI = TestUI.Instance;
+
         weapon = new WeaponClick();
         coin = new Coin();
         enemy = new Enemy();

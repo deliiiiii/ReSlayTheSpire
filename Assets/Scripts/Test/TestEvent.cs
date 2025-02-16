@@ -38,11 +38,11 @@ public class OnClickRefine : MyEvent
         this.weapon = weapon;
         this.coin = coin;
         onClick = () => Fire();
-        TestUI.Instance.buttonRefine.onClick.Add(onClick);
+        TestUI.buttonRefine.onClick.Add(onClick);
     }
     ~OnClickRefine()
     {
-        TestUI.Instance.buttonRefine.onClick.Remove(onClick);
+        TestUI.buttonRefine.onClick.Remove(onClick);
     }
     public override void Fire()
     {
@@ -59,11 +59,11 @@ public class OnClickHit : MyEvent
     {
         this.weaponClick = weaponClick;
         onClick = () => Fire();
-        TestUI.Instance.buttonHit.onClick.Add(onClick);
+        TestUI.buttonHit.onClick.Add(onClick);
     }
     ~OnClickHit()
     {
-        TestUI.Instance.buttonHit.onClick.Remove(onClick);
+        TestUI.buttonHit.onClick.Remove(onClick);
     }
     public override void Fire()
     {
@@ -75,54 +75,46 @@ public class OnClickHit : MyEvent
 #region 数据变化
 public class OnWeaponChange : MyEvent
 {
-    TestUI testUI;
     Weapon weapon;
     public OnWeaponChange(Weapon weapon)
     {
-        this.testUI = TestUI.Instance;
         this.weapon = weapon;
     }
     public override void Fire()
     {
-        testUI.textAttack.text = weapon.Damage.ToString();
+        TestUI.textAttack.text = weapon.Damage.ToString();
     }
 }
 
-
-
 public class OnMoneyChange : MyEvent
 {
-    TestUI testUI;
     Coin coin;
     public OnMoneyChange(Coin coin)
     {
-        this.testUI = TestUI.Instance;
         this.coin = coin;
     }
     public override void Fire()
     {
-        testUI.textCoin.text = coin.Money.ToString();
-        testUI.buttonRefine.enabled = coin.Money >= coin.Cost1;
-        testUI.buttonRefine.text = $"Refine {coin.Cost1}";
+        TestUI.textCoin.text = coin.Money.ToString();
+        TestUI.buttonRefine.enabled = coin.Money >= coin.Cost1;
+        TestUI.buttonRefine.text = $"Refine {coin.Cost1}";
     }
 }
 
 public class OnEnemyChange : MyEvent
 {
-    TestUI testUI;
     Enemy enemy;
     public OnEnemyChange(Enemy enemy)
     {
-        this.testUI = TestUI.Instance;
         this.enemy = enemy;
     }
     public override void Fire()
     {
-        testUI.textCurHP.text = enemy.Health.ToString();
-        testUI.textMaxHP.text = enemy.MaxHP.ToString();
-        testUI.textDefend.text = enemy.Defend.ToString();
-        testUI.textDefend.visible = enemy.Defend > 0;
-        testUI.textDefendC.visible = enemy.Defend > 0;
+        TestUI.textCurHP.text = enemy.Health.ToString();
+        TestUI.textMaxHP.text = enemy.MaxHP.ToString();
+        TestUI.textDefend.text = enemy.Defend.ToString();
+        TestUI.textDefend.visible = enemy.Defend > 0;
+        TestUI.textDefendC.visible = enemy.Defend > 0;
     }
 }
 #endregion
