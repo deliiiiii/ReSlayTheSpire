@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public interface IMediateObject
 {
@@ -70,6 +71,33 @@ public class SimpleResult : IResult
     }
 }
 
+public class UpDateResult : IResult
+{
+    public UpDateResult(Action<float> action)
+    {
+        this.action = action;
+    }
+    Action<float> action;
+    public bool CallResult()
+    {
+        action(Time.deltaTime);
+        return true;
+    }
+    public override bool Equals(object obj)
+    {
+        if(obj is UpDateResult other)
+        {
+            return action == other.action;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return action?.GetHashCode() ?? 0;
+    }
+}
+
 public class MyEvent : Mediater
 {
     public MyEvent(Mediater preMediater)
@@ -123,6 +151,16 @@ public class Mediater : IResult
         SimpleResult simpleResult = new(action);
         return falseCBs.TryRemove(simpleResult);
     }
+    // public void AddFalseCB(Action<float> action, float priority)
+    // {
+    //     UpDateResult upDateResult = new(action);
+    //     falseCBs.Enqueue(upDateResult, priority);
+    // }
+    // public bool RemoveFalseCB(Action<float> action)
+    // {
+    //     UpDateResult upDateResult = new(action);
+    //     return falseCBs.TryRemove(upDateResult);
+    // }
 
     public void AddTrueCB(Mediater mediater, float priority)
     {
@@ -142,7 +180,16 @@ public class Mediater : IResult
         SimpleResult simpleResult = new(action);
         return trueCBs.TryRemove(simpleResult);
     }
-
+    // public void AddTrueCB(Action<float> action, float priority)
+    // {
+    //     UpDateResult upDateResult = new(action);
+    //     trueCBs.Enqueue(upDateResult, priority);
+    // }
+    // public bool RemoveTrueCB(Action<float> action)
+    // {
+    //     UpDateResult upDateResult = new(action);
+    //     return trueCBs.TryRemove(upDateResult);
+    // }
     public bool CallResult()
     {
         if (!Check(checks))

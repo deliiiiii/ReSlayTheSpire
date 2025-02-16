@@ -7,7 +7,9 @@ namespace Package1
 {
     public partial class UI_Component1 : GComponent
     {
-        public GTextField m_text0;
+        public UI_TextC m_textCurHP;
+        public UI_TextC m_textHPSlash;
+        public UI_TextC m_textMaxHP;
         public const string URL = "ui://8sxnaau1fdxq0";
 
         public static UI_Component1 CreateInstance()
@@ -19,7 +21,9 @@ namespace Package1
         {
             base.ConstructFromXML(xml);
 
-            m_text0 = (GTextField)GetChildAt(0);
+            m_textCurHP = (UI_TextC)GetChildAt(0);
+            m_textHPSlash = (UI_TextC)GetChildAt(1);
+            m_textMaxHP = (UI_TextC)GetChildAt(3);
         }
     }
 }

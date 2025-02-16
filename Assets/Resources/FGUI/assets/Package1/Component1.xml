@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="800,600">
+<component size="1920,1080">
   <displayList>
-    <text id="n0_l6gh" name="text0" xy="140,172" size="136,99" fontSize="76" text="aaa"/>
+    <component id="n1_eqxn" name="textCurHP" src="eqxn1" fileName="Text/TextC.xml" xy="1300,835" size="200,100"/>
+    <component id="n3_eqxn" name="textHPSlash" src="eqxn1" fileName="Text/TextC.xml" xy="1498,835" size="200,100"/>
+    <component id="n5_eqxn" name="n5" src="eqxn2" fileName="Button1.xml" xy="58,900"/>
+    <component id="n6_eqxn" name="textMaxHP" src="eqxn1" fileName="Text/TextC.xml" xy="1683,835"/>
   </displayList>
 </component>

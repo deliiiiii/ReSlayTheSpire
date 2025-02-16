@@ -8,6 +8,7 @@ namespace Package1
     {
         public static void BindAll()
         {
+            UIObjectFactory.SetPackageItemExtension(UI_TextC.URL, typeof(UI_TextC));
             UIObjectFactory.SetPackageItemExtension(UI_Component1.URL, typeof(UI_Component1));
         }
     }

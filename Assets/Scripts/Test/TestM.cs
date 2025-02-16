@@ -1,23 +1,17 @@
 using System;
+using System.Threading;
 using UnityEngine;
 
 public class Weapon : IMediateObject
 {
     public Weapon(float damage)
     {
-        Damage = damage;
+        this.damage = damage;
     }
     float damage;
-    public float Damage
+    public float GetDamage()
     {
-        get
-        {
-            return damage;
-        }
-        set
-        {
-            damage = value;
-        }
+        return damage;
     }
 }
 
@@ -63,72 +57,45 @@ public static class AttackPriority
 }
 public class AttackMediater : Mediater
 {
-    public AttackMediater(Weapon weapon, Enemy enemy) : base()
+    Mediater enemyKilledM;
+    Mediater enemyDead10M;
+    Mediater decTimerM;
+    
+    public AttackMediater(Weapon weapon, Enemy enemy, TimerM timer) : base()
     {
         this.weapon = weapon;
         this.enemy = enemy;
+
+        enemyKilledM = new();
+        enemyDead10M = new();
+        decTimerM = new();
+
+
         AddCheck(() => InputManager.isAttackKeyDown, AttackPriority.INPUT);
-        AddCheck(() => Timer.isTriggered, AttackPriority.INPUT);
+        AddCheck(() => timer.isTriggered, AttackPriority.INPUT);
         AddCheck(() => enemy.IsAlive(), AttackPriority.ENEMYCHECK);
-        AddTrueCB(
-            ()=>
-            {
-                enemy.TakeDamage(weapon.Damage);
-            }, AttackPriority.DAMAGE);
         
-        AddTrueCB(new EnemyKilledEvent(this), AttackPriority.EVENT);
+        AddTrueCB(()=>enemy.TakeDamage(weapon.GetDamage()), AttackPriority.DAMAGE);
+        AddTrueCB(enemyKilledM, AttackPriority.EVENT);
+            enemyKilledM.AddCheck(() => !enemy.IsAlive(), 0);
+            enemyKilledM.AddTrueCB(() =>{deadCount++; MyDebug.Log($"killed:{deadCount}");}, 0);
+            enemyKilledM.AddTrueCB(enemyDead10M, 1);
+                enemyDead10M.AddCheck(() => deadCount >= 10, 0);
+                enemyDead10M.AddTrueCB(() => {Reset();enemy.UpGrade();}, 0);
+            enemyKilledM.AddTrueCB(() => enemy.Revive(), 1);
+        AddTrueCB(decTimerM, AttackPriority.EVENT + 1);
+            decTimerM.AddCheck(() => timer.isTriggered, 0);
+            decTimerM.AddTrueCB(()=>MyDebug.Log("Triggered!"), 0);
+            decTimerM.AddTrueCB(()=>timer.Decrease(), 0);
     }
     public Weapon weapon;
     public Enemy enemy;
-}
 
-public class EnemyKilledEvent : MyEvent
-{
-    public EnemyKilledEvent(AttackMediater attackMediater) : base(attackMediater)
-    {
-        weapon = attackMediater.weapon;
-        enemy = attackMediater.enemy;
-        AddCheck(() => !enemy.IsAlive(), 0);
-        AddTrueCB(new EnemyDeadCountMediater(this), 0);
-        AddTrueCB(() => enemy.Revive(), 1);
-    }
-    public Weapon weapon;
-    public Enemy enemy;
-}
-
-public class EnemyDeadCountMediater : Mediater
-{
     int deadCount = 0;
-    public EnemyDeadCountMediater(EnemyKilledEvent enemyKilledEvent) : base()
-    {
-        weapon = enemyKilledEvent.weapon;
-        enemy = enemyKilledEvent.enemy;
-        AddTrueCB(() =>{deadCount++; MyDebug.Log($"killed:{deadCount}");}, 0);
-        AddTrueCB(new Dead10Mediater(this), 1);
-    }
-    public Weapon weapon;
-    public Enemy enemy;
-    public int GetDeadCount()
-    {
-        return deadCount;
-    }
     public void Reset()
     {
         deadCount = 0;
     }
-}
-
-public class Dead10Mediater : Mediater
-{
-    public Dead10Mediater(EnemyDeadCountMediater enemyTotalKilledEvent) : base()
-    {
-        weapon = enemyTotalKilledEvent.weapon;
-        enemy = enemyTotalKilledEvent.enemy;
-        AddCheck(() => enemyTotalKilledEvent.GetDeadCount() >= 10, 0);
-        AddTrueCB(() => {enemyTotalKilledEvent.Reset();enemy.UpGrade();}, 0);
-    }
-    public Weapon weapon;
-    public Enemy enemy;
 }
 
 #region Input
@@ -137,22 +104,24 @@ public class InputManager
     public static bool isAttackKeyDown => Input.GetKeyDown(KeyCode.A);
 }
 
-public static class Timer
+public class TimerM
 {
-    public static float timer = 0;
-    public static float time = 2;
-    public static bool isTriggered = false;
-    public static void Update(float dt)
+    public TimerM(float f_time)
+    {
+        time = f_time;
+        timer = 0;
+    }
+    public float timer = 0;
+    public float time;
+
+    public void Update(float dt)
     {
         timer += dt;
-        if (timer >= time)
-        {
-            timer -= time;
-            MyDebug.Log("trigger!");
-            isTriggered = true;
-            return;
-        }
-        isTriggered = false;
+    }
+    public bool isTriggered => timer >= time;
+    public void Decrease()
+    {
+        timer -= time;
     }
 }
 #endregion

@@ -2,6 +2,8 @@
 <packageDescription id="8sxnaau1">
   <resources>
     <component id="fdxq0" name="Component1.xml" path="/" exported="true"/>
+    <component id="eqxn1" name="TextC.xml" path="/Text/" exported="true"/>
+    <component id="eqxn2" name="Button1.xml" path="/" exported="true"/>
   </resources>
-  <publish name="" genCode="true"/>
+  <publish name="Package1" genCode="true"/>
 </packageDescription>
