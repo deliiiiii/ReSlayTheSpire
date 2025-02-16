@@ -1,31 +1,4 @@
-using System;
 using FairyGUI;
-
-public class OnEnemyDie : MyEvent
-{
-    public Attack attack;
-    Weapon weapon => attack.weapon;
-    Enemy enemy => attack.enemy;
-    Coin coin;
-    
-    int deadCount = 0;
-    public OnEnemyDie(Attack attack, Coin coin)
-    {
-        this.attack = attack;
-        this.coin = coin;
-    }
-    public override void Fire()
-    {
-        deadCount++;
-        MyDebug.Log($"killed:{deadCount}");
-        coin.Gain(enemy.GetReward());
-        if(deadCount % 3 == 0)
-        {
-            enemy.UpGrade();
-        }
-        enemy.Revive();
-    }
-}
 
 #region 点击事件
 public class OnClickRefine : MyEvent

@@ -8,7 +8,6 @@ public class TestMain : MonoBehaviour
 
 
     Attack attack;
-    OnEnemyDie onEnemyDie;
 
     
     OnClickRefine onClickRefine;
@@ -23,13 +22,10 @@ public class TestMain : MonoBehaviour
         coin = new Coin();
         enemy = new Enemy();
 
-        attack = new Attack(weapon, enemy);
-        onEnemyDie = new OnEnemyDie(attack, coin);
+        attack = new Attack(weapon, enemy, coin);
 
         onClickRefine = new OnClickRefine(weapon, coin);
         onClickHit = new OnClickHit(weapon);
-
-        attack.onEnemyDieEvent = () => onEnemyDie.Fire();
     }
 
 

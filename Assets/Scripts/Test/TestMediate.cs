@@ -1,14 +1,16 @@
 using System;
 public class Attack : IUpdateMediate
 {
-    public Weapon weapon;
-    public Enemy enemy;
-    public Action onEnemyDieEvent;
+    int deadCount = 0;
+    Weapon weapon;
+    Enemy enemy;
+    Coin coin;
 
-    public Attack(Weapon weapon, Enemy enemy)
+    public Attack(Weapon weapon, Enemy enemy, Coin coin)
     {
         this.weapon = weapon;
         this.enemy = enemy;
+        this.coin = coin;
     }
     
     public void Update(float dt)
@@ -20,7 +22,14 @@ public class Attack : IUpdateMediate
         enemy.TakeDamage(weapon.Damage);
         if(!enemy.IsAlive())
         {
-            onEnemyDieEvent?.Invoke();
+            deadCount++;
+            MyDebug.Log($"killed:{deadCount}");
+            coin.Gain(enemy.GetReward());
+            if(deadCount % 3 == 0)
+            {
+                enemy.UpGrade();
+            }
+            enemy.Revive();
         }
     }
 }
