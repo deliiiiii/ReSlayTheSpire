@@ -4,8 +4,9 @@ public interface IUpdateMediate
 }
 public abstract class MyEvent
 {
-    // 新增静态属性用于注入 UI 实例，降低耦合
-    public static TestUI TestUI { get; set; }
-
     public abstract void Fire();
+}
+public static class UI
+{
+    public static TestUI TestUI { get; set; }
 }

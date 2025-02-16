@@ -15,22 +15,7 @@ public class Attack : IUpdateMediate
     
     public void Update(float dt)
     {
-        if (!weapon.IsDoingAttack(dt))
-            return;
-        if (!enemy.IsAlive())
-            return;
-        enemy.TakeDamage(weapon.Damage);
-        if(!enemy.IsAlive())
-        {
-            deadCount++;
-            MyDebug.Log($"killed:{deadCount}");
-            coin.Gain(enemy.GetReward());
-            if(deadCount % 3 == 0)
-            {
-                enemy.UpGrade();
-            }
-            enemy.Revive();
-        }
+        
     }
 }
 

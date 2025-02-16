@@ -48,5 +48,24 @@ public class TestUI : Singleton<TestUI>
 
     }
     
+    public void AddButtonOnClick(Weapon weapon, Coin coin)
+    {
+        buttonRefine.onClick.Add(() => OnClickRefine(weapon, coin));
+        if(weapon is WeaponClick weaponClick)
+        {
+            buttonHit.onClick.Add(() => OnClickHit(weaponClick));
+        }
+    }
+
+    void OnClickRefine(Weapon weapon, Coin coin)
+    {
+        coin.Cost();
+        weapon.Refine();
+    }
+
+    void OnClickHit(WeaponClick weapon)
+    {
+        weapon.clicked = true;
+    }
 
 }

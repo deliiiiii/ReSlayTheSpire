@@ -11,11 +11,11 @@ public class OnClickRefine : MyEvent
         this.weapon = weapon;
         this.coin = coin;
         onClick = () => Fire();
-        TestUI.buttonRefine.onClick.Add(onClick);
+        UI.TestUI.buttonRefine.onClick.Add(onClick);
     }
     ~OnClickRefine()
     {
-        TestUI.buttonRefine.onClick.Remove(onClick);
+        UI.TestUI.buttonRefine.onClick.Remove(onClick);
     }
     public override void Fire()
     {
@@ -32,11 +32,11 @@ public class OnClickHit : MyEvent
     {
         this.weaponClick = weaponClick;
         onClick = () => Fire();
-        TestUI.buttonHit.onClick.Add(onClick);
+        UI.TestUI.buttonHit.onClick.Add(onClick);
     }
     ~OnClickHit()
     {
-        TestUI.buttonHit.onClick.Remove(onClick);
+        UI.TestUI.buttonHit.onClick.Remove(onClick);
     }
     public override void Fire()
     {
@@ -55,7 +55,7 @@ public class OnWeaponChange : MyEvent
     }
     public override void Fire()
     {
-        TestUI.textAttack.text = weapon.Damage.ToString();
+        UI.TestUI.textAttack.text = weapon.Damage.ToString();
     }
 }
 
@@ -68,9 +68,9 @@ public class OnMoneyChange : MyEvent
     }
     public override void Fire()
     {
-        TestUI.textCoin.text = coin.Money.ToString();
-        TestUI.buttonRefine.enabled = coin.Money >= coin.Cost1;
-        TestUI.buttonRefine.text = $"Refine {coin.Cost1}";
+        UI.TestUI.textCoin.text = coin.Money.ToString();
+        UI.TestUI.buttonRefine.enabled = coin.Money >= coin.Cost1;
+        UI.TestUI.buttonRefine.text = $"Refine {coin.Cost1}";
     }
 }
 
@@ -83,11 +83,11 @@ public class OnEnemyChange : MyEvent
     }
     public override void Fire()
     {
-        TestUI.textCurHP.text = enemy.Health.ToString();
-        TestUI.textMaxHP.text = enemy.MaxHP.ToString();
-        TestUI.textDefend.text = enemy.Defend.ToString();
-        TestUI.textDefend.visible = enemy.Defend > 0;
-        TestUI.textDefendC.visible = enemy.Defend > 0;
+        UI.TestUI.textCurHP.text = enemy.Health.ToString();
+        UI.TestUI.textMaxHP.text = enemy.MaxHP.ToString();
+        UI.TestUI.textDefend.text = enemy.Defend.ToString();
+        UI.TestUI.textDefend.visible = enemy.Defend > 0;
+        UI.TestUI.textDefendC.visible = enemy.Defend > 0;
     }
 }
 #endregion

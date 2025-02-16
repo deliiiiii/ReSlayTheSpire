@@ -20,7 +20,25 @@ public abstract class Weapon
             onWeaponChange.Fire();
         }
     }
-    public abstract bool IsDoingAttack(float dt);
+    public abstract bool TryDoingAttack(float dt);
+    public void Attack(float dt, Enemy enemy, Coin coin)
+    {
+        if (!TryDoingAttack(dt))
+            return;
+        if (enemy == null || !enemy.IsAlive())
+            return;
+        enemy.TakeDamage(Damage);
+        if(!enemy.IsAlive())
+        {
+            enemy.DeadCount++;
+            coin.Gain(enemy.GetReward());
+            if(enemy.DeadCount % 3 == 0)
+            {
+                enemy.UpGrade();
+            }
+            enemy.Revive();
+        }
+    }
     public void Refine()
     {
         Damage = (float)Math.Round(Damage *= 1.1f, 1);
@@ -31,7 +49,7 @@ public abstract class Weapon
 public class WeaponClick : Weapon
 {
     public bool clicked = false;
-    public override bool IsDoingAttack(float dt)
+    public override bool TryDoingAttack(float dt)
     {
         bool ret = clicked;
         if(clicked)
@@ -45,7 +63,7 @@ public class WeaponAuto : Weapon
     float timer = 0;
     readonly float time = 1;
 
-    public override bool IsDoingAttack(float dt)
+    public override bool TryDoingAttack(float dt)
     {
         timer += dt;
         if(timer >= time)
@@ -94,6 +112,7 @@ public class Coin
 
 public class Enemy
 {
+    public int DeadCount = 0;
     OnEnemyChange onEnemyChange;
     public Enemy()
     {
@@ -139,9 +158,6 @@ public class Enemy
             onEnemyChange.Fire();
         }
     }
-
-   
-
 
     public bool IsAlive()
     {
