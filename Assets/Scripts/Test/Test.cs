@@ -5,7 +5,7 @@ public class Test : Singleton<Test>
     public Weapon weapon;
     public Coin coin;
     public Enemy enemy;
-    AttackMediater attackMediater;
+    AttackM attackMediater;
     void Start()
     {
         timer = new TimerM(5);

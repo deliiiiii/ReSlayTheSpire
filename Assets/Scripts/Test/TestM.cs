@@ -76,8 +76,7 @@ public class Enemy : IMediateObject
         textDefend = testUI.component1.GetChild("textDefend").asCom.GetChild("text0").asTextField;
         textDefendC = testUI.component1.GetChild("textDefendC").asCom.GetChild("text0").asTextField;
         textDefendC.text = "Defend";
-        
-        testUI.component1.GetChild("buttonHit").onClick.Add(() => isHit = true);
+
         Revive();
     }
     float maxHP = 100;
@@ -88,13 +87,7 @@ public class Enemy : IMediateObject
     GTextField textMaxHP;
     GTextField textDefend;
     GTextField textDefendC;
-    bool isHit = false;
-    public bool IsHit()
-    {
-        bool ret = isHit;
-        isHit = false;
-        return ret;
-    }
+    
     
 
     public bool IsAlive()
@@ -149,13 +142,13 @@ public static class AttackPriority
     public static float UI = 5;
     public static float EVENT = 10;
 }
-public class AttackMediater : Mediater
+public class AttackM : Mediater
 {
     Mediater enemyKilledM;
     Mediater enemyDead10M;
     Mediater decTimerM;
     
-    public AttackMediater() : base()
+    public AttackM() : base()
     {
         Enemy enemy = Test.Instance.enemy;
         Weapon weapon = Test.Instance.weapon;
@@ -168,8 +161,8 @@ public class AttackMediater : Mediater
         decTimerM = new();
 
 
-        AddCheck(() => enemy.IsHit(), AttackPriority.INPUT);
-        AddCheck(() => timer.isTriggered, AttackPriority.INPUT);
+        AddCheck(() => TestUI.Instance.ClickHit(), AttackPriority.INPUT);
+        AddCheck(() => timer.isTimeOut, AttackPriority.INPUT);
         AddCheck(() => enemy.IsAlive(), AttackPriority.ENEMYCHECK);
         
         AddTrueCB(()=>enemy.TakeDamage(weapon.GetDamage()), AttackPriority.DAMAGE);
@@ -182,7 +175,7 @@ public class AttackMediater : Mediater
                 enemyDead10M.AddTrueCB(() => {enemy.UpGrade();}, 0);
             enemyKilledM.AddTrueCB(() => enemy.Revive(), 1);
         AddTrueCB(decTimerM, AttackPriority.EVENT + 1);
-            decTimerM.AddCheck(() => timer.isTriggered, 0);
+            decTimerM.AddCheck(() => timer.isTimeOut, 0);
             decTimerM.AddTrueCB(()=>MyDebug.Log("↑ Triggered!"), 0);
             decTimerM.AddTrueCB(()=>timer.Decrease(), 0);
     }
@@ -219,7 +212,7 @@ public class TimerM
             MyDebug.LogError($"Time.timeScale:{Time.timeScale}");
         }
     }
-    public bool isTriggered => timer >= time;
+    public bool isTimeOut => timer >= time;
     public void Decrease()
     {
         timer -= time;
