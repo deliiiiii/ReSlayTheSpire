@@ -5,9 +5,9 @@ using UnityEngine;
 public abstract class Weapon
 {
     OnWeaponChange onWeaponChange;
-    public Weapon(TestUI testUI)
+    public Weapon()
     {
-        onWeaponChange = new(testUI, this);
+        onWeaponChange = new(this);
         Damage = 10;
     }
     float damage;
@@ -31,11 +31,6 @@ public abstract class Weapon
 public class WeaponClick : Weapon
 {
     public bool clicked = false;
-
-    public WeaponClick(TestUI testUI) : base(testUI)
-    {
-    }
-
     public override bool IsDoingAttack(float dt)
     {
         bool ret = clicked;
@@ -49,10 +44,6 @@ public class WeaponAuto : Weapon
 {
     float timer = 0;
     readonly float time = 1;
-
-    public WeaponAuto(TestUI testUI) : base(testUI)
-    {
-    }
 
     public override bool IsDoingAttack(float dt)
     {
@@ -69,11 +60,11 @@ public class WeaponAuto : Weapon
 public class Coin
 {
     OnMoneyChange onMoneyChange;
-    public Coin(TestUI testUI)
+    public Coin()
     {
-        onMoneyChange = new(testUI, this);
+        onMoneyChange = new(this);
+        cost = 10;
         Money = 0;
-        Cost1 = 10;
     }
     int money;
     int cost;
@@ -104,11 +95,11 @@ public class Coin
 public class Enemy
 {
     OnEnemyChange onEnemyChange;
-    public Enemy(TestUI testUI)
+    public Enemy()
     {
-        onEnemyChange = new(testUI, this);
-        MaxHP = 100;
-        Defend = 0;
+        onEnemyChange = new(this);
+        maxHP = 100;
+        defend = 0;
         Health = MaxHP;
     }
     float maxHP;

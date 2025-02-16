@@ -18,10 +18,9 @@ public class TestMain : MonoBehaviour
     void Start()
     {
         testUI = GameObject.Find("UIPanel").GetComponent<TestUI>();
-        testUI.Init();
-        weapon = new WeaponClick(testUI);
-        coin = new Coin(testUI);
-        enemy = new Enemy(testUI);
+        weapon = new WeaponClick();
+        coin = new Coin();
+        enemy = new Enemy();
 
         attack = new(weapon, enemy);
         onEnemyDie = new(attack, coin);

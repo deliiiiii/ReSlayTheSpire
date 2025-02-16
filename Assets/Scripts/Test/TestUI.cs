@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.iOS;
 using UnityEngine.UI;
 
-public class TestUI : MonoBehaviour
+public class TestUI : Singleton<TestUI>
 {
     public GComponent component1;
 
@@ -21,7 +21,7 @@ public class TestUI : MonoBehaviour
     public GButton buttonHit;
     public GButton buttonRefine;
 
-    public void Init()
+    protected override void OnInit()
     {
         GRoot.inst.SetContentScaleFactor(1920, 1080);
         component1 = GetComponent<UIPanel>().ui;

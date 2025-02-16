@@ -56,9 +56,9 @@ public class OnWeaponChange : MyEvent
 {
     TestUI testUI;
     Weapon weapon;
-    public OnWeaponChange(TestUI testUI, Weapon weapon)
+    public OnWeaponChange(Weapon weapon)
     {
-        this.testUI = testUI;
+        this.testUI = TestUI.Instance;
         this.weapon = weapon;
     }
     public override void Fire()
@@ -84,9 +84,9 @@ public class OnMoneyChange : MyEvent
 {
     TestUI testUI;
     Coin coin;
-    public OnMoneyChange(TestUI testUI, Coin coin)
+    public OnMoneyChange(Coin coin)
     {
-        this.testUI = testUI;
+        this.testUI = TestUI.Instance;
         this.coin = coin;
     }
     public override void Fire()
@@ -101,9 +101,9 @@ public class OnEnemyChange : MyEvent
 {
     TestUI testUI;
     Enemy enemy;
-    public OnEnemyChange(TestUI testUI, Enemy enemy)
+    public OnEnemyChange(Enemy enemy)
     {
-        this.testUI = testUI;
+        this.testUI = TestUI.Instance;
         this.enemy = enemy;
     }
     public override void Fire()
