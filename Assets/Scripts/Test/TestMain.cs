@@ -2,18 +2,21 @@ using UnityEngine;
 public class TestMain : MonoBehaviour
 {
     Player player;
-    public Enemy enemy;
+    EnemyManager enemyManager;
+    Store store;
     void Start()
     {
         // 注入 UI 实例到 MyEvent 静态属性中
         UI.TestUI = TestUI.Instance;
 
         player = new Player();
-        enemy = new Enemy(EnemyManager.Instance);        
+        enemyManager = new EnemyManager();
+        store = new Store(player.Weapon, player.CoinBag);
     }
 
     void Update()
     {
-        player.Update(Time.deltaTime, enemy);
+        player.Attack(Time.deltaTime, enemyManager.CurrentEnemy);
+        store.UpdateUI();
     }
 }

@@ -1,14 +1,30 @@
-public class EnemyManager : SingletonCS<EnemyManager>
+public class EnemyManager
 {
+    public EnemyManager()
+    {
+        deathCount = 0;
+    }
+    Enemy currentEnemy;
     // 全局累计的敌人死亡次数
-    private int totalDeathCount = 0;
+    int deathCount;
 
-    // 对外只读属性
-    public int TotalDeathCount => totalDeathCount;
+    public Enemy CurrentEnemy
+    {
+        get
+        {
+            return currentEnemy ??= CreateEnemy();
+        }
+    }
+    public int DeathCount => deathCount;
 
     // 增加死亡次数
-    public void IncrementDeathCount()
+    public void AddDeathCount()
     {
-        totalDeathCount++;
+        deathCount++;
+    }
+
+    Enemy CreateEnemy()
+    {
+        return currentEnemy = new Enemy(this);
     }
 } 

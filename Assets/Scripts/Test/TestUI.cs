@@ -43,25 +43,31 @@ public class TestUI : Singleton<TestUI>
 
 
     }
+
+    EventCallback0 onClickRefine;
+    EventCallback0 onClickHit;
+    public void AddOnClickRefine(Store store)
+    {
+        onClickRefine = () => store.OnClickRefine();
+        buttonRefine.onClick.Add(onClickRefine);
+    }
+    public void RemoveOnClickRefine()
+    {
+        buttonRefine.onClick.Remove(onClickRefine);
+    }
+
+    public void AddOnClickHit(WeaponClick weaponClick)
+    {
+        onClickHit = () => weaponClick.OnClickHit();
+        buttonHit.onClick.Add(onClickHit);
+    }
+    public void RemoveOnClickHit()
+    {
+        buttonHit.onClick.Remove(onClickHit);
+    }
+
     
-    public void AddButtonOnClick(Weapon weapon, Coin coin)
-    {
-        buttonRefine.onClick.Add(() => OnClickRefine(weapon, coin));
-        if(weapon is WeaponClick weaponClick)
-        {
-            buttonHit.onClick.Add(() => OnClickHit(weaponClick));
-        }
-    }
 
-    void OnClickRefine(Weapon weapon, Coin coin)
-    {
-        coin.Cost();
-        weapon.Refine();
-    }
-
-    void OnClickHit(WeaponClick weapon)
-    {
-        weapon.clicked = true;
-    }
+    
 
 }

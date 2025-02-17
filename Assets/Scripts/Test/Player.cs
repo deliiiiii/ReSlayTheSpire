@@ -1,51 +1,66 @@
-using System;
-
-public class Player : IWeaponUser
+public interface IHasWeapon
 {
-    public Coin Coin { get; }
-    WeaponClick weaponClick;
+    Weapon Weapon { get; }
+    void Attack(float dt, Enemy enemy);
+}
+public interface IHasCoinBag
+{
+    CoinBag CoinBag { get; }
+}
+public class Player : IHasWeapon, IHasCoinBag
+{
+    public Weapon Weapon { get; }
+    public CoinBag CoinBag { get; }
+    
     public Player()
     {
-        Coin = new Coin();
-        weaponClick = new WeaponClick(this);
-        UI.TestUI.AddButtonOnClick(weaponClick, Coin);
+        Weapon = new WeaponClick();
+        CoinBag = new CoinBag();
     }
-    public void Update(float dt, Enemy enemy)
+    public void Attack(float dt, Enemy enemy)
     {
-        weaponClick.Attack(dt, enemy);
+        if (!Weapon.TryDoingAttack(dt))
+            return;
+        if (enemy == null || !enemy.IsAlive())
+            return;
+        enemy.TakeDamage(Weapon.Damage);
+        if (!enemy.IsAlive())
+        {
+            enemy.enemyManager.AddDeathCount();
+            CoinBag.AddCoin(enemy.GetReward());
+            if (enemy.enemyManager.DeathCount % 3 == 0)
+            {
+                enemy.UpGrade();
+            }
+            enemy.Revive();
+        }
     }
+    
 }
-public class Coin
+public class CoinBag
 {
-    OnMoneyChange onMoneyChange;
-    public Coin()
+    public CoinBag()
     {
         onMoneyChange = new OnMoneyChange(this);
-        cost = 10;
-        Money = 0;
+        Coin = 0;
     }
-    int money;
-    int cost;
-
-    public int Money
+    int coin;
+    public OnMoneyChange onMoneyChange;
+    public int Coin
     {
-        get => money;
+        get => coin;
         set
         {
-            money = value;
+            coin = value;
             onMoneyChange.Fire();
         }
     }
-
-    public int Cost1 { get => cost; set => cost = value; }
-
-    public void Gain(int add)
+    public void AddCoin(int add)
     {
-        Money += add;
+        Coin += add;
     }
-    public void Cost()
+    public void UseCoin(int use)
     {
-        Money -= Cost1;
-        Cost1 += 10;
+        Coin -= use;
     }
-} 
+}

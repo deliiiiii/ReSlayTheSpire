@@ -1,19 +1,12 @@
 using System;
 
-public interface IWeaponUser
-{
-    Coin Coin { get; }
-}
-
 public abstract class Weapon
 {
-    IWeaponUser user;
     OnWeaponChange onWeaponChange;
-    public Weapon(IWeaponUser user)
+    public Weapon()
     {
         onWeaponChange = new OnWeaponChange(this);
         Damage = 10;
-        this.user = user;
     }
     float damage;
     public float Damage
@@ -26,24 +19,6 @@ public abstract class Weapon
         }
     }
     public abstract bool TryDoingAttack(float dt);
-    public void Attack(float dt, Enemy enemy)
-    {
-        if (!TryDoingAttack(dt))
-            return;
-        if (enemy == null || !enemy.IsAlive())
-            return;
-        enemy.TakeDamage(Damage);
-        if (!enemy.IsAlive())
-        {
-            enemy.enemyManager.IncrementDeathCount();
-            user.Coin.Gain(enemy.GetReward());
-            if (enemy.enemyManager.TotalDeathCount % 3 == 0)
-            {
-                enemy.UpGrade();
-            }
-            enemy.Revive();
-        }
-    }
     public void Refine()
     {
         Damage = (float)Math.Round(Damage *= 1.1f, 1);
@@ -52,8 +27,13 @@ public abstract class Weapon
 
 public class WeaponClick : Weapon
 {
-    public WeaponClick(IWeaponUser user) : base(user)
+    public WeaponClick() : base()
     {
+        UI.TestUI.AddOnClickHit(this);
+    }
+    ~WeaponClick()
+    {
+        UI.TestUI.RemoveOnClickHit();
     }
     public bool clicked = false;
     public override bool TryDoingAttack(float dt)
@@ -63,11 +43,15 @@ public class WeaponClick : Weapon
             clicked = false;
         return ret;
     }
+    public void OnClickHit()
+    {
+        clicked = true;
+    }
 }
 
 public class WeaponAuto : Weapon
 {
-    public WeaponAuto(IWeaponUser user) : base(user)
+    public WeaponAuto() : base()
     {
     }
     float timer = 0;

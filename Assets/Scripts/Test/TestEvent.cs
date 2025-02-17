@@ -14,16 +14,14 @@ public class OnWeaponChange : IEvent
 
 public class OnMoneyChange : IEvent
 {
-    Coin coin;
-    public OnMoneyChange(Coin coin)
+    CoinBag coinBag;
+    public OnMoneyChange(CoinBag coinBag)
     {
-        this.coin = coin;
+        this.coinBag = coinBag;
     }
     public void Fire()
     {
-        UI.TestUI.textCoin.text = coin.Money.ToString();
-        UI.TestUI.buttonRefine.enabled = coin.Money >= coin.Cost1;
-        UI.TestUI.buttonRefine.text = $"Refine {coin.Cost1}";
+        UI.TestUI.textCoin.text = coinBag.Coin.ToString();
     }
 }
 

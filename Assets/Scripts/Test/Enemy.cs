@@ -54,8 +54,6 @@ public class Enemy
     {
         return Health > 0;
     }
-    public event Action<int> OnDie;
-
     public void TakeDamage(float damage)
     {
         float HP1 = Health;

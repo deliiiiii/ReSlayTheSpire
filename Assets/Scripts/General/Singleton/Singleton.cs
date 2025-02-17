@@ -42,7 +42,11 @@ public class SingletonCS<T> where T : SingletonCS<T>, new()
         get
         {
             instance ??= new();
+            instance.OnInit();
             return instance;
         }
+    }
+    protected virtual void OnInit()
+    {
     }
 }
