@@ -3,11 +3,7 @@ public interface IHasWeapon
     Weapon Weapon { get; }
     void UpdateAttack(float dt, Enemy enemy);
 }
-// public interface IHasCoinBag
-// {
-//     CoinBag CoinBag { get; }
-// }
-public class Player : IHasWeapon//, IHasCoinBag
+public class Player : IHasWeapon
 {
     public Weapon Weapon { get; }
     public CoinBag CoinBag { get; }
