@@ -1,13 +1,13 @@
 public interface IHasWeapon
 {
     Weapon Weapon { get; }
-    void Attack(float dt, Enemy enemy);
+    void UpdateAttack(float dt, Enemy enemy);
 }
-public interface IHasCoinBag
-{
-    CoinBag CoinBag { get; }
-}
-public class Player : IHasWeapon, IHasCoinBag
+// public interface IHasCoinBag
+// {
+//     CoinBag CoinBag { get; }
+// }
+public class Player : IHasWeapon//, IHasCoinBag
 {
     public Weapon Weapon { get; }
     public CoinBag CoinBag { get; }
@@ -17,7 +17,7 @@ public class Player : IHasWeapon, IHasCoinBag
         Weapon = new WeaponClick();
         CoinBag = new CoinBag();
     }
-    public void Attack(float dt, Enemy enemy)
+    public void UpdateAttack(float dt, Enemy enemy)
     {
         if (!Weapon.TryDoingAttack(dt))
             return;

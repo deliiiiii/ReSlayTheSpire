@@ -16,7 +16,7 @@ public class TestMain : MonoBehaviour
 
     void Update()
     {
-        player.Attack(Time.deltaTime, enemyManager.CurrentEnemy);
+        player.UpdateAttack(Time.deltaTime, enemyManager.CurrentEnemy);
         store.UpdateUI();
     }
 }
