@@ -1,72 +1,25 @@
-using FairyGUI;
-
-#region 点击事件
-public class OnClickRefine : MyEvent
-{
-    Weapon weapon;
-    Coin coin;
-    EventCallback0 onClick;
-    public OnClickRefine(Weapon weapon, Coin coin)
-    {
-        this.weapon = weapon;
-        this.coin = coin;
-        onClick = () => Fire();
-        UI.TestUI.buttonRefine.onClick.Add(onClick);
-    }
-    ~OnClickRefine()
-    {
-        UI.TestUI.buttonRefine.onClick.Remove(onClick);
-    }
-    public override void Fire()
-    {
-        coin.Cost();
-        weapon.Refine();
-    }
-}
-
-public class OnClickHit : MyEvent
-{
-    WeaponClick weaponClick;
-    EventCallback0 onClick;
-    public OnClickHit(WeaponClick weaponClick)
-    {
-        this.weaponClick = weaponClick;
-        onClick = () => Fire();
-        UI.TestUI.buttonHit.onClick.Add(onClick);
-    }
-    ~OnClickHit()
-    {
-        UI.TestUI.buttonHit.onClick.Remove(onClick);
-    }
-    public override void Fire()
-    {
-        weaponClick.clicked = true;
-    }
-}
-#endregion
-
 #region 数据变化
-public class OnWeaponChange : MyEvent
+public class OnWeaponChange : IEvent
 {
     Weapon weapon;
     public OnWeaponChange(Weapon weapon)
     {
         this.weapon = weapon;
     }
-    public override void Fire()
+    public void Fire()
     {
         UI.TestUI.textAttack.text = weapon.Damage.ToString();
     }
 }
 
-public class OnMoneyChange : MyEvent
+public class OnMoneyChange : IEvent
 {
     Coin coin;
     public OnMoneyChange(Coin coin)
     {
         this.coin = coin;
     }
-    public override void Fire()
+    public void Fire()
     {
         UI.TestUI.textCoin.text = coin.Money.ToString();
         UI.TestUI.buttonRefine.enabled = coin.Money >= coin.Cost1;
@@ -74,14 +27,14 @@ public class OnMoneyChange : MyEvent
     }
 }
 
-public class OnEnemyChange : MyEvent
+public class OnEnemyChange : IEvent
 {
     Enemy enemy;
     public OnEnemyChange(Enemy enemy)
     {
         this.enemy = enemy;
     }
-    public override void Fire()
+    public void Fire()
     {
         UI.TestUI.textCurHP.text = enemy.Health.ToString();
         UI.TestUI.textMaxHP.text = enemy.MaxHP.ToString();

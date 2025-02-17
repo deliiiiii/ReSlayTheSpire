@@ -1,6 +1,4 @@
-using FairyGUI;
 using System;
-using UnityEngine;
 
 public abstract class Weapon
 {

@@ -1,8 +1,4 @@
-using System;
 using FairyGUI;
-using UnityEngine;
-using UnityEngine.iOS;
-using UnityEngine.UI;
 
 public class TestUI : Singleton<TestUI>
 {
