@@ -44,3 +44,15 @@ public class OnEnemyChange : IEvent
     }
 }
 #endregion
+
+public class OnEnemyDie : IEvent
+{
+    Enemy enemy;
+    public OnEnemyDie(Enemy enemy)
+    {
+        this.enemy = enemy;
+    }
+    public void Fire()
+    {
+    }
+}

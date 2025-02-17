@@ -2,11 +2,15 @@ using System;
 
 public class Enemy
 {
-    public int DeadCount = 0;
+    OnEnemyDie onEnemyDie;
     OnEnemyChange onEnemyChange;
-    public Enemy()
+
+    public EnemyManager enemyManager;
+    public Enemy(EnemyManager enemyManager)
     {
         onEnemyChange = new OnEnemyChange(this);
+        onEnemyDie = new OnEnemyDie(this);
+        this.enemyManager = enemyManager;
         maxHP = 100;
         defend = 0;
         Health = MaxHP;
@@ -53,10 +57,12 @@ public class Enemy
     {
         return Health > 0;
     }
+    public event Action<int> OnDie;
+
     public void TakeDamage(float damage)
     {
         float HP1 = Health;
-        float trueDamage = (damage - Defend) < 0 ? damage/10f : (damage - Defend);
+        float trueDamage = (damage - Defend) < 0 ? damage / 10f : (damage - Defend);
         Health = HP1 - trueDamage;
         MyDebug.Log($"{HP1} - {trueDamage} = {Health}");
     }

@@ -1,5 +1,20 @@
 using System;
 
+public class Player : IWeaponUser
+{
+    public Coin Coin { get; }
+    WeaponClick weaponClick;
+    public Player()
+    {
+        Coin = new Coin();
+        weaponClick = new WeaponClick(this);
+        UI.TestUI.AddButtonOnClick(weaponClick, Coin);
+    }
+    public void Update(float dt, Enemy enemy)
+    {
+        weaponClick.Attack(dt, enemy);
+    }
+}
 public class Coin
 {
     OnMoneyChange onMoneyChange;
