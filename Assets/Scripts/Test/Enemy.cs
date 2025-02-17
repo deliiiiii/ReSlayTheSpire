@@ -2,15 +2,12 @@ using System;
 
 public class Enemy
 {
-    OnEnemyDie onEnemyDie;
-    OnEnemyChange onEnemyChange;
-
     public EnemyManager enemyManager;
+    OnEnemyChange onEnemyChange;
     public Enemy(EnemyManager enemyManager)
     {
-        onEnemyChange = new OnEnemyChange(this);
-        onEnemyDie = new OnEnemyDie(this);
         this.enemyManager = enemyManager;
+        onEnemyChange = new OnEnemyChange(this);
         maxHP = 100;
         defend = 0;
         Health = MaxHP;
