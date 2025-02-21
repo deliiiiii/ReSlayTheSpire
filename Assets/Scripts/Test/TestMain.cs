@@ -1,18 +1,28 @@
 using UnityEngine;
+
 public class TestMain : MonoBehaviour
 {
     Player player;
     EnemyManager enemyManager;
     Store store;
-    void Start()
+    void Awake()
     {
-        // 注入 UI 实例到 MyEvent 静态属性中
-        UI.TestUI = TestUI.Instance;
+        InitManager();
+        InitData();
+    }
 
-        player = new Player();
+    void InitManager()
+    {
         enemyManager = new EnemyManager();
+        UI.TestUI = TestUI.Instance;
+    }
+
+    void InitData()
+    {
+        player = new Player();
         store = new Store(player.Weapon, player.CoinBag);
     }
+
 
     void Update()
     {

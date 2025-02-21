@@ -33,22 +33,26 @@ public class Player : IHasWeapon
     }
     
 }
+
+public class CoinChangedEvent
+{
+    public int Coin;
+}
+
 public class CoinBag
 {
     public CoinBag()
     {
-        onMoneyChange = new OnMoneyChange(this);
         Coin = 0;
     }
     int coin;
-    public OnMoneyChange onMoneyChange;
     public int Coin
     {
         get => coin;
         set
         {
             coin = value;
-            onMoneyChange.Fire();
+            MyEvent.Fire(new CoinChangedEvent{Coin = coin});
         }
     }
     public void AddCoin(int add)

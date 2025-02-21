@@ -1,5 +1,9 @@
 using FairyGUI;
 
+public static class UI
+{
+    public static TestUI TestUI { get; set; }
+}
 public class TestUI : Singleton<TestUI>
 {
     public GComponent component1;
@@ -41,9 +45,14 @@ public class TestUI : Singleton<TestUI>
         buttonHit = component1.GetChild("buttonHit").asButton;
         buttonRefine = component1.GetChild("buttonRefine").asButton;
 
-
+        MyEvent.AddListener<CoinChangedEvent>(OnCoinChanged);
     }
 
+    void OnCoinChanged(CoinChangedEvent e)
+    {
+        textCoin.text = e.Coin.ToString();
+    }
+    
     EventCallback0 onClickRefine;
     EventCallback0 onClickHit;
     public void AddOnClickRefine(Store store)

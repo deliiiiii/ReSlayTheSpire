@@ -1,21 +1,28 @@
 using System;
 
+public struct WeaponData
+{
+    public float Damage;
+}
 public abstract class Weapon
 {
-    OnWeaponChange onWeaponChange;
+    WeaponData weaponData;
     public Weapon()
     {
-        onWeaponChange = new OnWeaponChange(this);
-        Damage = 10;
+        weaponData = JsonIO.Read<WeaponData>("Weapon", "WeaponData");
+        if (weaponData.Damage == 0)
+        {
+            weaponData.Damage = 10;
+        }
     }
-    float damage;
     public float Damage
     {
-        get => damage;
+        get => weaponData.Damage;
         set
         {
-            damage = value;
-            onWeaponChange.Fire();
+            weaponData.Damage = value;
+            // EventCentre.Instance.Fire<WeaponChangeEvent>(this);
+            JsonIO.Write<WeaponData>("Weapon", "WeaponData", weaponData);
         }
     }
     public abstract bool TryDoingAttack(float dt);

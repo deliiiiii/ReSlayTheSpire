@@ -3,11 +3,9 @@ using System;
 public class Enemy
 {
     public EnemyManager enemyManager;
-    OnEnemyChange onEnemyChange;
     public Enemy(EnemyManager enemyManager)
     {
         this.enemyManager = enemyManager;
-        onEnemyChange = new OnEnemyChange(this);
         maxHP = 100;
         defend = 0;
         Health = MaxHP;
@@ -22,7 +20,7 @@ public class Enemy
         {
             value = (float)Math.Round(value, 1);
             maxHP = value;
-            onEnemyChange.Fire();
+            // EventCentre.Instance.Fire<EnemyChangeEvent>(this);
         }
     }
     public float Health
@@ -36,7 +34,7 @@ public class Enemy
             {
                 health = 0;
             }
-            onEnemyChange.Fire();
+            // EventCentre.Instance.Fire<EnemyChangeEvent>(this);
         }
     }
     public float Defend
@@ -46,7 +44,7 @@ public class Enemy
         {
             value = (float)Math.Round(value, 1);
             defend = value;
-            onEnemyChange.Fire();
+            // EventCentre.Instance.Fire<EnemyChangeEvent>(this);
         }
     }
 
