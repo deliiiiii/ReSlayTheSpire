@@ -17,7 +17,7 @@ public class MyStateExamble : MyStateBase
     {
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            GameManager.gameFSM.ChangeState(typeof(MyStateExamble2));
+            // GameManager.gameFSM.ChangeState(typeof(MyStateExamble2));
         }
     }
 }
@@ -38,11 +38,11 @@ public class MyStateExamble2 : MyStateBase
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            GameManager.gameFSM.ChangeState(typeof(MyStateExamble));
+            // GameManager.gameFSM.ChangeState(typeof(MyStateExamble));
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            GameManager.gameFSM.ChangeState(typeof(MyStateExamble3));
+            // GameManager.gameFSM.ChangeState(typeof(MyStateExamble3));
         }
     }
 }
@@ -67,7 +67,7 @@ public class MyStateExamble3 : MyStateBase
     {
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            GameManager.gameFSM.ChangeState(typeof(MyStateExamble2));
+            // GameManager.gameFSM.ChangeState(typeof(MyStateExamble2));
         }
     }
 }
@@ -87,7 +87,7 @@ public class MyStateExamble3_1 : MyStateBase
     {
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            GameManager.gameFSM.ChangeState(typeof(MyStateExamble3), typeof(MyStateExamble3_2));
+            // GameManager.gameFSM.ChangeState(typeof(MyStateExamble3), typeof(MyStateExamble3_2));
         }
     }
 }
@@ -108,7 +108,7 @@ public class MyStateExamble3_2 : MyStateBase
     {
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            GameManager.gameFSM.ChangeState(typeof(MyStateExamble3), typeof(MyStateExamble3_1));
+            // GameManager.gameFSM.ChangeState(typeof(MyStateExamble3), typeof(MyStateExamble3_1));
         }
     }
 }
