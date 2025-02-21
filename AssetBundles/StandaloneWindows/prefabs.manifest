@@ -1,0 +1,48 @@
+ManifestFileVersion: 0
+CRC: 227037826
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: cfb1d139b99a386fc040074b1058296e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: a9bac3c8b5a0c4e236ddeb39e03ec190
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: cfb1d139b99a386fc040074b1058296e
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 9483832380b08b548888e9d36d3a5d3d, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.FontData
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
+Assets:
+- Assets/Prefabs/UI/UICard.prefab
+Dependencies: []

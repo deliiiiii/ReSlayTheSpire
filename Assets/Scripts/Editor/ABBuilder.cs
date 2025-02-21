@@ -187,14 +187,14 @@ public class ABBuilder
         
         // 定义需要移除AB标签的资源的文件夹根目录
         strNeedRemoveLabelRoot = PathTools.GetABResourcesPath();   
-
         DirectoryInfo dirTempInfo = new DirectoryInfo(strNeedRemoveLabelRoot);
+        JudgeDirOrFileByRecursive(dirTempInfo);
         directoryDIRArray = dirTempInfo.GetDirectories();
-
+        
         // 遍历本场景目录下所有的目录或者文件
         foreach (DirectoryInfo currentDir in directoryDIRArray)
         {
-            // 递归调用方法，找到文件，则使用 AssetImporter 类，标记“包名”与 “后缀名”
+            // 递归调用方法，找到文件，则使用 AssetImporter 类，标记"包名"与 "后缀名"
             JudgeDirOrFileByRecursive(currentDir);
         }
 
@@ -213,9 +213,8 @@ public class ABBuilder
     /// 是目录，则继续递归
     /// </summary>
     /// <param name="fileSystemInfo">当前文件信息（文件信息与目录信息可以相互转换）</param>
-    private static void JudgeDirOrFileByRecursive(FileSystemInfo fileSystemInfo)
+    public static void JudgeDirOrFileByRecursive(FileSystemInfo fileSystemInfo)
     {
-        // 参数检查
         if (fileSystemInfo.Exists == false)
         {
             Debug.LogError("文件或者目录名称：" + fileSystemInfo + " 不存在，请检查");
@@ -230,7 +229,6 @@ public class ABBuilder
         foreach (FileSystemInfo fileInfo in fileSystemInfoArray)
         {
             FileInfo fileInfoObj = fileInfo as FileInfo;
-
             // 文件类型
             if (fileInfoObj != null)
             {
