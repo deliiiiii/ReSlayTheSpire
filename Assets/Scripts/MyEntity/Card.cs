@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Deli
 {
@@ -22,12 +23,17 @@ namespace Deli
     {
         public int CardId;
         public bool IsUpper;
+        public CardData(int f_cardId, bool f_isUpper)
+        {
+            CardId = f_cardId;
+            IsUpper = f_isUpper;
+        }
     }
     public class Card
     {
         public Card(CardData f_cardData)
         {
-            cardData = f_cardData;
+            CardData = f_cardData;
         }
 
         CardData cardData;
@@ -51,16 +57,33 @@ namespace Deli
         public CardType CardType;
         #endregion
 
-        #region 根据CardData和上面一个region内的变量读取
-        UICard uiCard;
 
+        public Card GetUpperCard()
+        {
+            return new Card(new CardData(cardData.CardId, true));
+        }
         void RefreshInfer()
         {
             CardName = "testCardName";
             CardCost = cardData.IsUpper ? 2 : 1;
             CardColor = CardColor.Red;
-            CardType = CardType.Attack;
-            uiCard.Refresh(this);
+            CardType = CardType.Attack;      
         }
     }
+
+    public class UICard : MonoBehaviour
+    {
+        public Text cardCost;
+        public Text cardName;
+        public Image cardImage;
+        public Text cardDescription;
+        public void Refresh(Card card)
+        {
+            cardCost.text = card.CardCost.ToString();
+            cardName.text = card.CardName;
+            // cardImage.color = card.CardColor;
+            cardDescription.text = "testDescription";
+        }
+    }
+
 }
