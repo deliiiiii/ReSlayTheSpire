@@ -20,26 +20,18 @@ namespace Deli
     [Serializable]
     public class CardData
     {
-        string cardName;
-        bool isUpper;
-
-        public string CardName => cardName;
-        public bool IsUpper => isUpper;
+        public int CardId;
+        public bool IsUpper;
     }
-    public class Card // : IDestroy
+    public class Card
     {
-        // public void MyDestroy()
-        // {
-        //     GameObject.Destroy(UICard.gameObject);
-        // }
-
         public Card(CardData f_cardData)
         {
-            CardData = f_cardData;
+            cardData = f_cardData;
         }
 
         CardData cardData;
-        CardData CardData
+        public CardData CardData
         {
             get
             {
@@ -48,37 +40,27 @@ namespace Deli
             set
             {
                 cardData = value;
-                RefreshData();
+                RefreshInfer();
             }
         }
 
-        #region 根据CardData读取
-        public int cardCost;
-        public CardColor cardColor;
-        public CardType cardType;
+        #region Infer 根据CardData读取
+        public string CardName;
+        public int CardCost;
+        public CardColor CardColor;
+        public CardType CardType;
         #endregion
 
         #region 根据CardData和上面一个region内的变量读取
         UICard uiCard;
-        UICard UICard
-        {
-            get
-            {
-                if (uiCard == null)
-                {
-                    uiCard = GameObject.Instantiate(MyResources.Load<UICard>(ResourcePath.UICard)); 
-                }
-                return uiCard;
-            }
-        }
-        #endregion
 
-        void RefreshData()
+        void RefreshInfer()
         {
-            cardCost = CardData.IsUpper ? 2 : 1;
-            cardColor = CardColor.Red;
-            cardType = CardType.Attack;
-            UICard.Refresh(this, CardData);
+            CardName = "testCardName";
+            CardCost = cardData.IsUpper ? 2 : 1;
+            CardColor = CardColor.Red;
+            CardType = CardType.Attack;
+            uiCard.Refresh(this);
         }
     }
 }

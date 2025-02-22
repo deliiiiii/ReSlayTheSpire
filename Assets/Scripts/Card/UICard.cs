@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Deli;
 
 public class UICard : MonoBehaviour
 {
@@ -9,10 +10,10 @@ public class UICard : MonoBehaviour
     public Text cardName;
     public Image cardImage;
     public Text cardDescription;
-    public void Refresh(Deli.Card card,Deli.CardData cardData)
+    public void Refresh(Card card)
     {
-        cardCost.text = card.cardCost.ToString();
-        cardName.text = cardData.CardName;
+        cardCost.text = card.CardCost.ToString();
+        cardName.text = card.CardName;
         // cardImage.sprite = null;
         cardDescription.text = "testDescription";
     }
