@@ -33,8 +33,8 @@ public class CounterAppController : MonoBehaviour, IController
     void Awake()
     {
         model = this.GetModel<CounterAppModel>();
-        btnAdd.onClick.AddListener(() => {model.Count++;RefreshView();});
-        btnMinus.onClick.AddListener(() => {model.Count--;RefreshView();});
+        btnAdd.onClick.AddListener(() => {this.SendCommand<AddCommand>();RefreshView();});
+        btnMinus.onClick.AddListener(() => {this.SendCommand<MinusCommand>();RefreshView();});
         RefreshView();
     }
 
@@ -46,5 +46,21 @@ public class CounterAppController : MonoBehaviour, IController
     public IArchitecture GetArchitecture()
     {
         return CounterAppArchitecture.Interface;
+    }
+}
+
+public class AddCommand : AbstractCommand
+{
+    protected override void OnExecute()
+    {
+        this.GetModel<CounterAppModel>().Count++;
+    }
+}
+
+public class MinusCommand : AbstractCommand
+{
+    protected override void OnExecute()
+    {
+        this.GetModel<CounterAppModel>().Count--;
     }
 }
