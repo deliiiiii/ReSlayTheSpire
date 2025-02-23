@@ -36,7 +36,17 @@ public class CounterAppController : MonoBehaviour, IController
         btnAdd.onClick.AddListener(() => {this.SendCommand<AddCommand>();RefreshView();});
         btnMinus.onClick.AddListener(() => {this.SendCommand<MinusCommand>();RefreshView();});
         RefreshView();
-    }
+
+
+        this.RegisterEvent<OnCountChangedEventPara>(_ =>
+        {
+            RefreshView();
+        }).UnRegisterWhenDisabled(gameObject);
+    }   
+
+
+
+    
 
     void RefreshView()
     {
@@ -54,6 +64,7 @@ public class AddCommand : AbstractCommand
     protected override void OnExecute()
     {
         this.GetModel<CounterAppModel>().Count++;
+        this.SendEvent<OnCountChangedEventPara>();
     }
 }
 
@@ -62,5 +73,15 @@ public class MinusCommand : AbstractCommand
     protected override void OnExecute()
     {
         this.GetModel<CounterAppModel>().Count--;
+        this.SendEvent<OnCountChangedEventPara>();
     }
 }
+
+public struct OnCountChangedEventPara
+{
+}
+
+
+
+
+
