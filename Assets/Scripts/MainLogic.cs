@@ -1,15 +1,11 @@
-using UnityEngine;
-using System;
-using UnityEngine.UI;
-public class MainLogic : MonoBehaviour
+public class MainLogic
 {
     MyFSM mainFSM;
-    IMain mainUI;
-
-    void Awake()
+    // MainUI mainUI;
+    public MainLogic(MainUI mainUI)
     {
         mainFSM = new MyFSM(typeof(Main_WaitForStartState));
-        mainUI = MainUI.Instance;
+        // this.mainUI = mainUI;
         mainUI.OnClickStart += () => 
         {
             mainFSM.ChangeState(typeof(Main_SelectJobState));
@@ -25,7 +21,7 @@ public class MainLogic : MonoBehaviour
         };
     }
 
-    void Update()
+    public void Update()
     {
         mainFSM.Update();
     }

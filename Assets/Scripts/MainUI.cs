@@ -1,16 +1,13 @@
 using System;
+using UnityEngine;
 using UnityEngine.UI;
-public interface IMain
-{
-    Action OnClickStart { get; set; }
-    Action OnClickQuit { get; set; }
-    Action OnLogicStart { get; set; }
-}
 
-public class MainUI : Singleton<MainUI>, IMain
+public class MainUI : MonoBehaviour
 {
-    public Button btnStart;
-    public Button btnQuit;
+    [SerializeField]
+    Button btnStart;
+    [SerializeField]
+    Button btnQuit;
     public Action OnClickStart { get; set; }
     public Action OnClickQuit { get; set; }
     public Action OnLogicStart { get; set; }
