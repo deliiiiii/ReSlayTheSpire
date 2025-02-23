@@ -5,17 +5,37 @@ public class CounterAppArchitecture : Architecture<CounterAppArchitecture>
 {
     protected override void Init()
     {
-        RegisterModel(new CounterAppModel());
+        this.RegisterModel(new CounterAppModel());
+        this.RegisterUtility(new QJsonIO());
     }
 }
 
 
 public class CounterAppModel : AbstractModel
 {
-    public int Count;
+    int count;
+    public int Count
+    {
+        get => count;
+        set
+        {
+            if(count != value)
+            {
+                count = value;
+                this.GetUtility<QJsonIO>().Save("Data","Count",count);
+            }
+        }
+    }
     protected override void OnInit()
     {
-        Count = 0;
+        if(this.GetUtility<QJsonIO>().Load<int>("Data","Count") == default)
+        {
+            Count = 0;
+        }
+        else
+        {
+            Count = this.GetUtility<QJsonIO>().Load<int>("Data","Count");
+        }
     }
 }
 
@@ -82,6 +102,21 @@ public struct OnCountChangedEventPara
 }
 
 
+public class QJsonIO : IUtility
+{
+    public void Save<T>(string f_pathPre,string f_name,T curEntity)
+    {
+        JsonIO.Write(f_pathPre,f_name,curEntity);
+    }
+    public T Load<T>(string f_pathPre,string f_name)
+    {
+        return JsonIO.Read<T>(f_pathPre,f_name);
+    }
+    public void Delete(string f_pathPre,string f_name)
+    {
+        JsonIO.Delete(f_pathPre,f_name);
+    }
+}
 
 
 
