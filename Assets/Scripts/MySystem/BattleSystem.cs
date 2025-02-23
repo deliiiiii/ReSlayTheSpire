@@ -22,12 +22,6 @@ public abstract class SystemBase
 
 public class SystemUpdate : SystemBase
 {
-    protected UpdateP updateP;
-    public SystemUpdate(UpdateP updateP)
-    {
-        this.updateP = updateP;
-        GameMain.Instance.AddUpdate( (dt) => {Update(dt);}, updateP);
-    }
     protected virtual void Update(float dt)
     {
     }
@@ -35,29 +29,25 @@ public class SystemUpdate : SystemBase
 
 public class BattleSystem : SystemUpdate
 {
-    public BattleSystem(UpdateP updateP) : base(updateP)
-    {
-        
-    }
-    MyFSM battleFSM;
-    PlayerData playerData;
+    // MyFSM battleFSM;
+    // PlayerData playerData;
 
-    protected override void InitRes()
-    {
-    }
-    protected override void InitData()
-    {
+    // protected override void InitRes()
+    // {
+    // }
+    // protected override void InitData()
+    // {
         
-    }
+    // }
 
-    protected override void InitFSM()
-    {
-        // AssetBundle ab;
-        // GameObject prefabUICard;
-        // ab = AssetBundle.LoadFromFile("AssetBundles/StandaloneWindows/prefabs");
-        // prefabUICard = ab.LoadAsset<GameObject>("UICard");
-        // GameObject card = Instantiate(prefabUICard);
-    }
+    // protected override void InitFSM()
+    // {
+    //     // AssetBundle ab;
+    //     // GameObject prefabUICard;
+    //     // ab = AssetBundle.LoadFromFile("AssetBundles/StandaloneWindows/prefabs");
+    //     // prefabUICard = ab.LoadAsset<GameObject>("UICard");
+    //     // GameObject card = Instantiate(prefabUICard);
+    // }
 
     protected override void Update(float dt)
     {

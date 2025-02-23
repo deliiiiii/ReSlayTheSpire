@@ -575,3 +575,48 @@ public class SimplePriorityQueue<TItem, TPriority> : IPriorityQueue<TItem, TPrio
         /// <param name="comparer">The comparison function to use to compare priority values</param>
         public SimplePriorityQueue(Comparison<float> comparer) : base(comparer) { }
     }
+
+    public static class SimplePriorityQueueExtension
+{
+    public static void Enqueue<T,P>(this SimplePriorityQueue<T,P> queue, T item, P priority, out T[] items)
+    {
+        queue.Enqueue(item, priority);
+        items = new T[queue.Count];
+        int index = 0;
+        SimplePriorityQueue<T,P> copyQueue = new SimplePriorityQueue<T,P>();
+        while (queue.TryFirst(out var first))
+        {
+            copyQueue.Enqueue(first, queue.GetPriority(first));
+            queue.Dequeue();
+        }
+        foreach (var copyUpdate in copyQueue)
+        {
+            items[index++] = copyUpdate;
+        }
+        foreach (var it in copyQueue)
+        {
+            queue.Enqueue(it, copyQueue.GetPriority(it));
+        }
+
+    }
+    public static void Remove<T,P>(this SimplePriorityQueue<T,P> queue, T item, out T[] items)
+    {
+        queue.Remove(item);
+        items = new T[queue.Count];
+        int index = 0;
+        SimplePriorityQueue<T,P> copyQueue = new SimplePriorityQueue<T,P>();
+        while (queue.TryFirst(out var first))
+        {
+            copyQueue.Enqueue(first, queue.GetPriority(first));
+            queue.Dequeue();
+        }
+        foreach (var copyUpdate in copyQueue)
+        {
+            items[index++] = copyUpdate;
+        }
+        foreach (var it in copyQueue)
+        {
+            queue.Enqueue(it, copyQueue.GetPriority(it));
+        }
+    }
+}
