@@ -8,48 +8,25 @@ public class ConstUICard
     public Font cardDescriptionFont;
     public string ResPath { get; set; }
 }
-public class MainLogic
-{
-    MyFSM mainFSM;
-    // MainUI mainUI;
-    public MainLogic(MainUI mainUI)
-    {
-        // mainFSM = new MyFSM(typeof(Main_WaitForStartState));
-        mainUI.OnClickStart += () => 
-        {
-            // mainFSM.ChangeState(typeof(Main_SelectJobState));
-            mainUI.OnLogicStart?.Invoke();
-        };
-        mainUI.OnClickQuit += () => 
-        {
-            #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-            #else
-            UnityEngine.Application.Quit();
-            #endif
-        };
-    }
-
-    public void Update()
-    {
-        mainFSM.Update();
-    }
-
-}
-
-
-
-
 [Serializable]
 public class StateData
 {
-    public Type StateType;
+    public string StateType;
+    public string subStateType;
 }
+
+public enum JobType
+{
+    IronClad,
+    Silent,
+    JiBao,
+    Watcher,
+}
+
 
 [Serializable]
 public class WaitForStartData : StateData
 {
-    public Type subStateType;
     public JobType selectedJob;
 }
 

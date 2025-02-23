@@ -3,14 +3,14 @@ using System;
 
 public class MyFSM
 {   
-    public MyFSM(Type initialStateType)
+    public MyFSM(Type initialStateType, Type subStateType = null)
     {
         if (initialStateType == null)
         {
             //没有子状态的状态机
             return;
         }
-        Launch(initialStateType);
+        Launch(initialStateType, subStateType);
     }
     
     Dictionary<Type, MyStateBase> stateDic;
@@ -42,6 +42,11 @@ public class MyFSM
     }
     public void ChangeState(Type newStateType, Type subStateType = null)
     {
+        if (curState == null)
+        {
+            Launch(newStateType, subStateType);
+            return;
+        }
         MyStateBase newState = GetStateByType(newStateType);
         if(subStateType == null)
         {

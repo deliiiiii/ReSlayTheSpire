@@ -25,7 +25,7 @@ public static class JsonIO
         if (!File.Exists(path))
         {
             Debug.Log("path :" + path + " not exist");
-            return default;
+            return default(T);
         }
         else
         {
