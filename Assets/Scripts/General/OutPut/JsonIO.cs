@@ -8,7 +8,7 @@ public static class JsonIO
 {
     public static void Write<T>(string f_pathPre,string f_name,T curEntity)
     {
-        //Debug.Log("write");
+        //Debug.Log("write"+curEntity);
         string path = f_pathPre +"/" + f_name + ".json";
         string pathShort = f_pathPre;
         if (!Directory.Exists(pathShort))
@@ -16,24 +16,23 @@ public static class JsonIO
             Directory.CreateDirectory(pathShort);
         }
         string str = JsonUtility.ToJson(curEntity, true);
-        str = StringToByteString(str);
+        // str = StringToByteString(str);
         File.WriteAllText(path, str);
     }
     public static T Read<T>(string f_pathPre, string f_name)
     {
-        T curEntity = default;
         string path = f_pathPre + "/" + f_name + ".json";
         if (!File.Exists(path))
         {
             Debug.Log("path :" + path + " not exist");
+            return default;
         }
         else
         {
             string str = File.ReadAllText(path);
-            str = ByteStringToString(str);
-            curEntity = JsonUtility.FromJson<T>(str);
+            // str = ByteStringToString(str);
+            return JsonUtility.FromJson<T>(str);
         }
-        return curEntity;
     }
     public static void Delete(string f_pathPre, string f_name)
     {
