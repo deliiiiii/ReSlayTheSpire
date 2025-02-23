@@ -4,7 +4,7 @@ public class OnClickStartCommand : AbstractCommand
 {
     protected override void OnExecute()
     {
-        this.GetSystem<GlobalSystem>().ChangeState(typeof(WaitForStartState),typeof(WaitForStartState_SelectJob));
+        this.GetModel<GlobalModel>().SetState(typeof(WaitForStartState),typeof(WaitForStartState_SelectJob));
     }
 }
 
@@ -13,7 +13,7 @@ public class OnClickConfirmJobCommand : AbstractCommand
     protected override void OnExecute()
     {
         //TODO: 确认职业
-        this.GetSystem<GlobalSystem>().ChangeState(typeof(WaitForStartState),typeof(WaitForStartState_Title));
+        this.GetModel<GlobalModel>().SetState(typeof(WaitForStartState),typeof(WaitForStartState_Title));
     }
 }
 
@@ -21,7 +21,7 @@ public class OnClickCancelJobCommand : AbstractCommand
 {
     protected override void OnExecute()
     {
-        this.GetSystem<GlobalSystem>().ChangeState(typeof(WaitForStartState),typeof(WaitForStartState_Title));
+        this.GetModel<GlobalModel>().SetState(typeof(WaitForStartState),typeof(WaitForStartState_Title));
     }
 }
 

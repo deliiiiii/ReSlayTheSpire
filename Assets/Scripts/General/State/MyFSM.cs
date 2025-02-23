@@ -3,15 +3,19 @@ using System;
 
 public class MyFSM
 {   
-    public MyFSM(Type initialStateType, Type subStateType = null)
-    {
-        if (initialStateType == null)
-        {
-            //没有子状态的状态机
-            return;
-        }
-        Launch(initialStateType, subStateType);
-    }
+    // public MyFSM()
+    // {
+
+    // }
+    // public MyFSM(Type initialStateType, Type subStateType = null)
+    // {
+    //     if (initialStateType == null)
+    //     {
+    //         //没有子状态的状态机
+    //         return;
+    //     }
+    //     Launch(initialStateType, subStateType);
+    // }
     
     Dictionary<Type, MyStateBase> stateDic;
     public MyStateBase GetStateByType(Type stateType)
@@ -30,11 +34,11 @@ public class MyFSM
     }
     MyStateBase curState;
 
-    void Launch(Type startStateType, Type subStateType = null)
+    public void Launch(Type startStateType, Type subStateType = null)
     {
         stateDic = new();
         curState = GetStateByType(startStateType);
-        curState.Enter(GetStateByType(subStateType), isEnterSame: false);
+        curState?.Enter(GetStateByType(subStateType), isEnterSame: false);
     }
     public void Update()
     {
@@ -54,7 +58,7 @@ public class MyFSM
         }
         MyStateBase newSubState = GetStateByType(subStateType);
         bool isEnterSame = curState == newState;
-        curState.Exit();
+        curState?.Exit();
         curState = newState;
         curState.Enter(newSubState, isEnterSame);
     }

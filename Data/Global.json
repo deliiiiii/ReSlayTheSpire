@@ -1,8 +1,6 @@
 {
     "PlayerName": "Deli_",
-    "PlayTime": 64.70978546142578,
-    "StateData": {
-        "StateType": "WaitForStartState",
-        "subStateType": "WaitForStartState_Title"
-    }
+    "PlayTime": 19.61643409729004,
+    "StateName": "WaitForStartState",
+    "SubStateName": "WaitForStartState_Title"
 }

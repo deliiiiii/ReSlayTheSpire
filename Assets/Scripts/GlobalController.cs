@@ -53,10 +53,12 @@ public class GlobalController : MonoBehaviour, IController
         });
 
         this.RegisterEvent<OnStateChangeEvent>(OnStateChange);
+        
+        this.GetModel<GlobalModel>().InitAfterController();
     }
     void Update()
     {
-        this.GetSystem<GlobalSystem>().Update();
+        this.GetModel<GlobalModel>().Update(Time.deltaTime);
         // 保留1位小数
         txtPlayTime.text = this.GetModel<GlobalModel>().PlayTime.ToString("F1");
     }

@@ -8,9 +8,10 @@ public class GlobalModel : AbstractModel
     {
         public string PlayerName;
         public float PlayTime;
-        public StateData StateData;
+        public string StateName;
+        public string SubStateName;
     }
-    GlobalData globalData;
+    GlobalData globalData = new();
     public float PlayTime
     {
         get
@@ -18,55 +19,33 @@ public class GlobalModel : AbstractModel
             return globalData.PlayTime;
         }
     }
-    public StateData StateData
-    {
-        get
-        {
-            return globalData.StateData;
-        }
-    }
+
+    MyFSM globalFSM = new();
     protected override void OnInit()
+    {   
+        
+    }
+
+    public void InitAfterController()
     {
         MyDebug.Log("GlobalModel OnInit", LogType.State);   
         GlobalData loadedData = this.GetUtility<QJsonIO>().Load<GlobalData>("Data","Global");
-        if(loadedData.Equals(default(GlobalData)))
+        MyDebug.Log("loadedData: " + (loadedData == null));
+        if(loadedData == null)
         {
             globalData.PlayTime = 0f;
             globalData.PlayerName = "Deli_";
-            globalData.StateData = new StateData()
-            {
-                StateType = typeof(WaitForStartState).ToString(),
-                subStateType = typeof(WaitForStartState_Title).ToString()
-            };
-            return;
+            globalData.StateName = typeof(WaitForStartState).ToString();
+            globalData.SubStateName = typeof(WaitForStartState_Title).ToString();
         }
-        globalData = loadedData;
-        MyDebug.Log("PlayTime: " + PlayTime, LogType.State);
+        else
+        {
+            globalData = loadedData;
+        }
+        SetStateWithoutSave(Type.GetType(globalData.StateName), Type.GetType(globalData.SubStateName));
+        // MyDebug.Log("PlayTime: " + PlayTime, LogType.State);
     }
-    public void Save()
-    {
-        this.GetUtility<QJsonIO>().Save("Data", "Global", globalData);
-    }
-    public void Tick(float dt)
-    {
-        globalData.PlayTime += dt;
-    }
-}
-
-public class GlobalSystem : AbstractSystem
-{
-    private float saveTimer = 0f;
-    MyFSM globalFSM;
-    protected override void OnInit()
-    {
-        // MyDebug.Log("GlobalSystem OnInit", LogType.State);
-        Type stateType = Type.GetType(this.GetModel<GlobalModel>().StateData.StateType);
-        Type subStateType = Type.GetType(this.GetModel<GlobalModel>().StateData.subStateType);
-        // MyDebug.Log("stateType: " +this.GetModel<GlobalModel>().StateData.StateType + " " + stateType.ToString(), LogType.State);
-        // MyDebug.Log("subStateType: " +this.GetModel<GlobalModel>().StateData.subStateType + " " + subStateType.ToString(), LogType.State);
-        globalFSM = new(stateType, subStateType);
-    }
-    public void ChangeState(Type stateType, Type subStateType = null)
+    void SetStateWithoutSave(Type stateType, Type subStateType)
     {
         globalFSM.ChangeState(stateType, subStateType);
         this.SendEvent(new OnStateChangeEvent()
@@ -74,20 +53,46 @@ public class GlobalSystem : AbstractSystem
             stateType = stateType,
             subStateType = subStateType
         });
-
     }
-    public void Update()
+    public void SetState(Type stateType, Type subStateType)
     {
-        this.GetModel<GlobalModel>().Tick(Time.deltaTime);
+        globalData.StateName = stateType.ToString();
+        globalData.SubStateName = subStateType.ToString();
+        Save();
+        SetStateWithoutSave(stateType, subStateType);
+    }
+    public void Save()
+    {
+        MyDebug.Log("Save", LogType.State);
+        this.GetUtility<QJsonIO>().Save("Data", "Global", globalData);
+    }
+    public void Update(float dt)
+    {
+        globalData.PlayTime += dt;
         globalFSM.Update();
+    }
+     
+}
+
+public class GlobalSystem : AbstractSystem
+{
+    private float saveTimer = 0f;
+    
+    public void Update(float dt)
+    {
+        this.GetModel<GlobalModel>().Update(dt);
         
-        saveTimer += Time.deltaTime;
+        saveTimer += dt;
         if(saveTimer >= 5f)
         {
-            MyDebug.Log("Save" + this.GetModel<GlobalModel>().PlayTime,LogType.State);
             saveTimer = 0f;
             this.GetModel<GlobalModel>().Save();
         }
+    }
+
+    protected override void OnInit()
+    {
+        
     }
 }
 
