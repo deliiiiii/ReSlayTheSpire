@@ -65,6 +65,10 @@ public partial class MainModel
         {
             return (JobType)(((int)selectJobData.SelectedJob - 1 + Enum.GetValues(typeof(JobType)).Length) % Enum.GetValues(typeof(JobType)).Length);
         }
+        public static bool IsIronClad()
+        {
+            return selectJobData.SelectedJob == JobType.IronClad;
+        }
     }
 }
 

@@ -1,5 +1,9 @@
 using System;
 using UnityEngine;
+public interface IData<T>
+{
+    public void ReadData(T savedData);
+}
 
 [Serializable]
 public partial class MainData : IData<MainData>

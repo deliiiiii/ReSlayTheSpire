@@ -6,6 +6,8 @@ public partial class MainView : Singleton<MainView>
     [HelpBox("Global",HelpBoxType.Info)]
     [SerializeField]
     Text txtPlayTime;
+    [SerializeField]
+    GameObject errorPanel;
     
     [HelpBox("WaitForStart",HelpBoxType.Info)]
     [Header("Title")]
@@ -38,6 +40,10 @@ public partial class MainView : Singleton<MainView>
         {
             MyCommand.Send(new OnClickQuitCommand());
         });
+        errorPanel.GetComponent<Button>().onClick.AddListener(()=>
+        {
+            errorPanel.SetActive(false);
+        });
 
         
 
@@ -64,4 +70,9 @@ public partial class MainView : Singleton<MainView>
         txtPlayTime.text = evt.PlayTime.ToString("F1");
     }
 
+    public void ShowErrorPanel(string error)
+    {
+        errorPanel.SetActive(true);
+        errorPanel.transform.Find("Txt Error").GetComponent<Text>().text = error;
+    }
 }

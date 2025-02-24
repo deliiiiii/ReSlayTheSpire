@@ -1,8 +1,9 @@
+using SelectJobModel = MainModel.SelectJobModel;
 public class OnClickNextJobCommand : AbstractCommand
 {
     public override void OnExecute()
     {
-        MainModel.SelectJobModel.SetSelectedJob(MainModel.SelectJobModel.GetNextJob());
+        SelectJobModel.SetSelectedJob(SelectJobModel.GetNextJob());
     }
 }
 
@@ -10,7 +11,7 @@ public class OnClickLastJobCommand : AbstractCommand
 {
     public override void OnExecute()
     {
-        MainModel.SelectJobModel.SetSelectedJob(MainModel.SelectJobModel.GetLastJob());
+        SelectJobModel.SetSelectedJob(SelectJobModel.GetLastJob());
     }
 }
 
@@ -19,6 +20,11 @@ public class OnClickConfirmJobCommand : AbstractCommand
 {
     public override void OnExecute()
     {
+        if(!SelectJobModel.IsIronClad())
+        {
+            MainView.Instance.ShowErrorPanel("只有 铁甲战士 才能启动！");
+            return;
+        }
         MainModel.SetState(typeof(WaitForStartState),typeof(WaitForStartState_Title));
     }
 }
