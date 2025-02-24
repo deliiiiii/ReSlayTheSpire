@@ -6,24 +6,6 @@ public class OnClickStartCommand : AbstractCommand
     }
 }
 
-public class OnClickConfirmJobCommand : AbstractCommand
-{
-    public override void OnExecute()
-    {
-        MainModel.SetState(typeof(WaitForStartState),typeof(WaitForStartState_Title));
-    }
-}
-
-public class OnClickCancelJobCommand : AbstractCommand
-{
-    public override void OnExecute()
-    {
-        MainModel.SetState(typeof(WaitForStartState),typeof(WaitForStartState_Title));
-    }
-}
-
-
-
 public class OnClickQuitCommand : AbstractCommand
 {
     public override void OnExecute()

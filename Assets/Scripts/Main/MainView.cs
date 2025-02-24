@@ -1,10 +1,12 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainView : Singleton<MainView>
+public partial class MainView : Singleton<MainView>
 {
-    #region WaitForStart
+    [HelpBox("Global",HelpBoxType.Info)]
+    [SerializeField]
+    Text txtPlayTime;
+    
     [HelpBox("WaitForStart",HelpBoxType.Info)]
     [Header("Title")]
     [SerializeField]
@@ -14,24 +16,19 @@ public class MainView : Singleton<MainView>
     [SerializeField]
     Button btnQuit;
 
-    [Header("SelectJob")]
-    [SerializeField]
-    GameObject panelSelectJob;
-    [SerializeField]
-    Button btnSelectJobUp;
-    [SerializeField]
-    Button btnSelectJobDown;
-    [SerializeField]
-    Button btnConfirmJob;
-    [SerializeField]
-    Button btnCancelJob;
-    #endregion
+    
 
     
-    [HelpBox("Global",HelpBoxType.Info)]
-    [SerializeField]
-    Text txtPlayTime;
+    
     public void Init()
+    {
+        MyDebug.Log("MainView OnInit", LogType.State);
+        InitMain();
+        InitSelectJob();
+        MyDebug.Log("MainView OnInit End", LogType.State);
+    }
+
+    void InitMain()
     {
         btnStart.onClick.AddListener(()=>
         {
@@ -42,35 +39,29 @@ public class MainView : Singleton<MainView>
             MyCommand.Send(new OnClickQuitCommand());
         });
 
-        btnConfirmJob.onClick.AddListener(()=>
-        {
-            MyCommand.Send(new OnClickConfirmJobCommand());
-        });
-        btnCancelJob.onClick.AddListener(()=>
-        {
-            MyCommand.Send(new OnClickCancelJobCommand());
-        });
+        
 
         MyEvent.AddListener<OnStateChangeEvent>(OnStateChange);
         MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
     }
 
+    
     void OnStateChange(OnStateChangeEvent evt)
     {
-        if(evt.subStateType == typeof(WaitForStartState_Title))
+        panelTitle.SetActive(false);
+        panelSelectJob.SetActive(false);
+        if(evt.SubStateType == typeof(WaitForStartState_Title))
         {
             panelTitle.SetActive(true);
-            panelSelectJob.SetActive(false);
         }
-        else if(evt.subStateType == typeof(WaitForStartState_SelectJob))
+        else if(evt.SubStateType == typeof(WaitForStartState_SelectJob))
         {
-            panelTitle.SetActive(false);
             panelSelectJob.SetActive(true);
         }
     }
     void OnPlayTimeChange(OnPlayTimeChangeEvent evt)
     {
-        txtPlayTime.text = evt.playTime.ToString("F1");
+        txtPlayTime.text = evt.PlayTime.ToString("F1");
     }
 
 }

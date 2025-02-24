@@ -40,3 +40,7 @@ public class UpdateTimer
     }
 }
 
+public interface IData<T>
+{
+    public void ReadData(T savedData);
+}

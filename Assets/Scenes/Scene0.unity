@@ -2088,6 +2088,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 749eb78d8f7f931458dd738148645161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  globalOnScene: 0
+  txtPlayTime: {fileID: 2116986636}
   panelTitle: {fileID: 291532135}
   btnStart: {fileID: 2065029922104282408}
   btnQuit: {fileID: 588808631936029726}
@@ -2096,7 +2098,7 @@ MonoBehaviour:
   btnSelectJobDown: {fileID: 1735949636}
   btnConfirmJob: {fileID: 698294253}
   btnCancelJob: {fileID: 1903538390}
-  txtPlayTime: {fileID: 2116986636}
+  txtJobName: {fileID: 723322198}
 --- !u!114 &6131057542865734512
 MonoBehaviour:
   m_ObjectHideFlags: 0

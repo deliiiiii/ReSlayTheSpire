@@ -1,26 +1,85 @@
 using System;
+using UnityEngine;
 
 [Serializable]
-public partial class MainData
+public partial class MainData : IData<MainData>
 {
-    public string PlayerName;
-    public float PlayTime;
-    public string StateName;
-    public string SubStateName;
+    [SerializeField]
+    string playerName;
+    public string PlayerName
+    {
+        get => playerName; 
+        set
+        {
+            playerName = value;
+        }
+    }
+    [SerializeField]
+    float playTime;
+    public float PlayTime
+    {
+        get
+        {
+            return playTime;
+        }
+        set
+        {
+            playTime = value;
+            MyEvent.Fire(new OnPlayTimeChangeEvent()
+            {
+                PlayTime = value
+            });
+        }
+    }
+    [SerializeField]
+    string stateName;
+    public string StateName
+    {
+        get
+        {
+            return stateName;
+        }
+        set
+        {
+            stateName = value;
+            MyEvent.Fire(new OnStateChangeEvent()
+            {
+                SubStateType = Type.GetType(subStateName),
+                StateType = Type.GetType(stateName),
+            });
+        }
+    }
+    [SerializeField]
+    string subStateName;
+    public string SubStateName
+    {
+        get
+        {
+            return subStateName;
+        }
+        set
+        {
+            subStateName = value;
+        }
+    }
+
+
     public MainData()
     {
         PlayTime = 0f;
         PlayerName = "Deli_";
-        StateName = typeof(WaitForStartState).ToString();
         SubStateName = typeof(WaitForStartState_Title).ToString();
+        StateName = typeof(WaitForStartState).ToString();
+    }
+    public void ReadData(MainData savedData)
+    {
+        PlayTime = savedData.PlayTime;
+        PlayerName = savedData.PlayerName;
+        SubStateName = savedData.SubStateName;
+        StateName = savedData.StateName;
+        SelectJobData.ReadData(savedData.SelectJobData);
     }
 }
-
-
-
-
-
-
 
 public partial class MainModel
 {
@@ -31,31 +90,12 @@ public partial class MainModel
         MyDebug.Log("MainModel OnInit", LogType.State);   
         MainData loadedData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
         MyDebug.Log("loadedData:（IS NULL :） " + (loadedData == null));
-        if(loadedData == null)
+        if(loadedData != null)
         {
-            mainData = new();
+            mainData.ReadData(loadedData);
         }
-        else
-        {
-            mainData = loadedData;
-        }
-        SetStateWithoutSave(Type.GetType(mainData.StateName), Type.GetType(mainData.SubStateName));
+        MyDebug.Log("MainModel OnInit End", LogType.State);
     }
-
-    
-
-
-    static void SetStateWithoutSave(Type stateType, Type subStateType)
-    {
-        MyEvent.Fire(new OnStateChangeEvent()
-        {
-            stateType = stateType,
-            subStateType = subStateType
-        });
-    }
-
-
-
     
     public static void Save()
     {
@@ -65,34 +105,24 @@ public partial class MainModel
     public static void Tick(float dt)
     {
         mainData.PlayTime += dt;
-        MyEvent.Fire(new OnPlayTimeChangeEvent()
-        {
-            playTime = mainData.PlayTime
-        });
     }
-
-
     public static void SetState(Type stateType, Type subStateType)
     {
-        mainData.StateName = stateType.ToString();
         mainData.SubStateName = subStateType.ToString();
+        mainData.StateName = stateType.ToString();
         Save();
-        SetStateWithoutSave(stateType, subStateType);
     }
-
-
-    
-    
 }
 
 
-public struct OnStateChangeEvent
+public class OnStateChangeEvent
 {
-    public Type stateType;
-    public Type subStateType;
+    public Type SubStateType;
+    public Type StateType;
 }
 
-public struct OnPlayTimeChangeEvent
+public class OnPlayTimeChangeEvent
 {
-    public float playTime;
+    public float PlayTime;
 }
+

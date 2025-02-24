@@ -1,9 +1,9 @@
 {
-    "PlayerName": "Deli_",
-    "PlayTime": 56.19973373413086,
-    "StateName": "WaitForStartState",
-    "SubStateName": "WaitForStartState_SelectJob",
-    "WaitForStartData": {
-        "selectedJob": 0
+    "playerName": "Deli_",
+    "playTime": 60.59110641479492,
+    "stateName": "WaitForStartState",
+    "subStateName": "WaitForStartState_SelectJob",
+    "SelectJobData": {
+        "selectedJob": 2
     }
 }
