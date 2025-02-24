@@ -15,7 +15,7 @@ public class MainModel
     {
         MyDebug.Log("MainModel OnInit", LogType.State);   
         MainData loadedData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
-        MyDebug.Log("loadedData: " + (loadedData == null));
+        MyDebug.Log("loadedData:（IS NULL :） " + (loadedData == null));
         if(loadedData == null)
         {
             mainData.PlayTime = 0f;
@@ -36,7 +36,6 @@ public class MainModel
             stateType = stateType,
             subStateType = subStateType
         });
-        MyDebug.Log("SetStateWithoutSave", LogType.State);
     }
     public static void SetState(Type stateType, Type subStateType)
     {
