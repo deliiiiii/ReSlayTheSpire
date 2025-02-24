@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class MainView : Singleton<MainView>
+public class BattleView : Singleton<BattleView>
 {
-    [HelpBox("Battle",HelpBoxType.Info)]
     [SerializeField]
     Text txtPlayerName;
     [SerializeField]
@@ -15,20 +14,34 @@ public partial class MainView : Singleton<MainView>
     [SerializeField]
     Text txtCurCoin;
     [SerializeField]
-    GameObject panelKurusi;
+    GameObject panelKusuri;
     [SerializeField]
     Text txtBattleTime;
     [SerializeField]
     Button btnMap;
     [SerializeField]
-    Button btnExit;
+    Button btnDeckCard;
     [SerializeField]
-    Button btnHandCard;
+    Text txtDeckCardCount;
+    [SerializeField]
+    Button btnExit;
+    
+    [SerializeField]
+    GameObject panelDeckCard;
 
 
-    void InitBattle()
+    public void InitBattle()
     {
         MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattle);
+
+        btnDeckCard.onClick.AddListener(()=>
+        {
+            panelDeckCard.SetActive(true);
+        });
+        panelDeckCard.GetComponent<Button>().onClick.AddListener(()=>
+        {
+            panelDeckCard.SetActive(false);
+        });
     }
 
     void OnEnterBattle(OnEnterBattleEvent evt)

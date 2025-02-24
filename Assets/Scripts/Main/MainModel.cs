@@ -47,7 +47,7 @@ public partial class MainModel
         mainFSM = new();
         MyDebug.Log("MainModel OnInit", LogType.State);   
         mainData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
-        MyDebug.Log("loadedData:（IS NULL :） " + (mainData == default(MainData)));
+        MyDebug.Log("loadedData IS NULL : " + (mainData == default(MainData)));
         if(mainData == default(MainData) || mainData.PlayerName == null)
         {
             mainData = new()
@@ -85,8 +85,8 @@ public partial class MainModel
     {
         mainData.SubStateName = subStateType?.ToString();
         mainData.StateName = stateType.ToString();
-        Save("SetState" + mainData.StateName + " " + mainData.SubStateName);
         mainFSM.ChangeState(stateType, subStateType);
+        Save("SetState" + mainData.StateName + " " + mainData.SubStateName);
     }
 }
 

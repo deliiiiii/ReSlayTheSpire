@@ -17,21 +17,17 @@ public partial class MainView : Singleton<MainView>
     Button btnStart;
     [SerializeField]
     Button btnQuit;
-
-    
-
-    
     
     public void Init()
     {
         MyDebug.Log("MainView OnInit", LogType.State);
-        InitMain();
+        InitTitle();
         InitSelectJob();
-        InitBattle();
+        BattleView.Instance.InitBattle();
         MyDebug.Log("MainView OnInit End", LogType.State);
     }
 
-    void InitMain()
+    void InitTitle()
     {
         btnStart.onClick.AddListener(()=>
         {
