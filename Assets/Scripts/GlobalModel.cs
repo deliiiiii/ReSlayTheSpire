@@ -1,99 +1,64 @@
 using System;
-using QFramework;
-using UnityEngine;
 
-public class GlobalModel : AbstractModel
+class MainData
 {
-    class GlobalData
-    {
-        public string PlayerName;
-        public float PlayTime;
-        public string StateName;
-        public string SubStateName;
-    }
-    GlobalData globalData = new();
-    public float PlayTime
-    {
-        get
-        {
-            return globalData.PlayTime;
-        }
-    }
+    public string PlayerName;
+    public float PlayTime;
+    public string StateName;
+    public string SubStateName;
+}
 
-    MyFSM globalFSM = new();
-    protected override void OnInit()
-    {   
-        
-    }
-
-    public void InitAfterController()
+public class MainModel
+{
+    static MainData mainData = new();
+    public static void Init()
     {
-        MyDebug.Log("GlobalModel OnInit", LogType.State);   
-        GlobalData loadedData = this.GetUtility<QJsonIO>().Load<GlobalData>("Data","Global");
+        MyDebug.Log("MainModel OnInit", LogType.State);   
+        MainData loadedData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
         MyDebug.Log("loadedData: " + (loadedData == null));
         if(loadedData == null)
         {
-            globalData.PlayTime = 0f;
-            globalData.PlayerName = "Deli_";
-            globalData.StateName = typeof(WaitForStartState).ToString();
-            globalData.SubStateName = typeof(WaitForStartState_Title).ToString();
+            mainData.PlayTime = 0f;
+            mainData.PlayerName = "Deli_";
+            mainData.StateName = typeof(WaitForStartState).ToString();
+            mainData.SubStateName = typeof(WaitForStartState_Title).ToString();
         }
         else
         {
-            globalData = loadedData;
+            mainData = loadedData;
         }
-        SetStateWithoutSave(Type.GetType(globalData.StateName), Type.GetType(globalData.SubStateName));
-        // MyDebug.Log("PlayTime: " + PlayTime, LogType.State);
+        SetStateWithoutSave(Type.GetType(mainData.StateName), Type.GetType(mainData.SubStateName));
     }
-    void SetStateWithoutSave(Type stateType, Type subStateType)
+    static void SetStateWithoutSave(Type stateType, Type subStateType)
     {
-        globalFSM.ChangeState(stateType, subStateType);
-        this.SendEvent(new OnStateChangeEvent()
+        MyEvent.Fire(new OnStateChangeEvent()
         {
             stateType = stateType,
             subStateType = subStateType
         });
+        MyDebug.Log("SetStateWithoutSave", LogType.State);
     }
-    public void SetState(Type stateType, Type subStateType)
+    public static void SetState(Type stateType, Type subStateType)
     {
-        globalData.StateName = stateType.ToString();
-        globalData.SubStateName = subStateType.ToString();
+        mainData.StateName = stateType.ToString();
+        mainData.SubStateName = subStateType.ToString();
         Save();
         SetStateWithoutSave(stateType, subStateType);
     }
-    public void Save()
+    public static void Save()
     {
         MyDebug.Log("Save", LogType.State);
-        this.GetUtility<QJsonIO>().Save("Data", "Global", globalData);
+        Saver.Save("Data",typeof(MainData).ToString(), mainData);
     }
-    public void Update(float dt)
+    public static void Tick(float dt)
     {
-        globalData.PlayTime += dt;
-        globalFSM.Update();
-    }
-     
-}
-
-public class GlobalSystem : AbstractSystem
-{
-    private float saveTimer = 0f;
-    
-    public void Update(float dt)
-    {
-        this.GetModel<GlobalModel>().Update(dt);
-        
-        saveTimer += dt;
-        if(saveTimer >= 5f)
+        mainData.PlayTime += dt;
+        MyEvent.Fire(new OnPlayTimeChangeEvent()
         {
-            saveTimer = 0f;
-            this.GetModel<GlobalModel>().Save();
-        }
+            playTime = mainData.PlayTime
+        });
     }
-
-    protected override void OnInit()
-    {
-        
-    }
+    
 }
 
 
@@ -101,5 +66,9 @@ public struct OnStateChangeEvent
 {
     public Type stateType;
     public Type subStateType;
+}
 
+public struct OnPlayTimeChangeEvent
+{
+    public float playTime;
 }
