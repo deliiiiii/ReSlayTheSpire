@@ -2,10 +2,7 @@ using System;
 using UnityEngine;
 public class ConstUICard
 {
-    public SerializableDictionary<Deli.CardColor, Color> cardColorToImageColor;
-    public Font cardNameFont;
-    public Font cardCostFont;
-    public Font cardDescriptionFont;
+    public SerializableDictionary<CardColor, Color> cardColorToImageColor;
     public string ResPath { get; set; }
 }
 
@@ -35,6 +32,7 @@ public class WaitForStartState_Title : MyStateBase
     protected override void OnEnter()
     {
         MyDebug.Log("WaitForStartState_Title OnEnter", LogType.State);
+        MyEvent.Fire(new OnEnterTitleStateEvent());
     }
 
     protected override void OnExit()
@@ -57,6 +55,10 @@ public class WaitForStartState_SelectJob : MyStateBase
     protected override void OnEnter()
     {
         MyDebug.Log("WaitForStartState_SelectJob OnEnter", LogType.State);
+        MyEvent.Fire(new OnEnterSelectJobStateEvent()
+        {
+            JobType = MainModel.SelectJobModel.GetSelectedJob(),
+        });
     }
 
     protected override void OnExit()
@@ -68,4 +70,14 @@ public class WaitForStartState_SelectJob : MyStateBase
     {
         
     }
+}
+
+public class OnEnterTitleStateEvent
+{
+
+}
+
+public class OnEnterSelectJobStateEvent
+{
+    public JobType JobType;
 }

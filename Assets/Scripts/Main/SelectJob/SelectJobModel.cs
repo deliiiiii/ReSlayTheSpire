@@ -10,11 +10,11 @@ public enum JobType
 }
 public partial class MainData
 {
-    public SelectJobData SelectJobData = new();
+    public SelectJobData SelectJobData;
 }
 
 [Serializable]
-public class SelectJobData : IData<SelectJobData>
+public class SelectJobData
 {
     [SerializeField]
     JobType selectedJob;
@@ -33,41 +33,45 @@ public class SelectJobData : IData<SelectJobData>
             });
         }
     }
-    public SelectJobData()
-    {
-        SelectedJob = JobType.IronClad;
-    }   
-    public void ReadData(SelectJobData savedData)
-    {
-        SelectedJob = savedData.SelectedJob;
-    }
-
 }
 
 public partial class MainModel 
 {
     public class SelectJobModel
     {
-        static SelectJobData selectJobData = mainData.SelectJobData;
-
-
+        public void EnterSelectJob()
+        {
+            if (mainData.SelectJobData == null)
+            {
+                mainData.SelectJobData = new()
+                {
+                    SelectedJob = JobType.IronClad,
+                };
+                Save("Init SelectJobData");
+            }
+        }
+        public static JobType GetSelectedJob()
+        {
+            return mainData.SelectJobData.SelectedJob;
+        }   
         public static void SetSelectedJob(JobType jobType)
         {
-            selectJobData.SelectedJob = jobType;
-            Save();
+            mainData.SelectJobData.SelectedJob = jobType;
+            Save("Set SelectedJob");
         }
 
         public static JobType GetNextJob()
         {
-            return (JobType)(((int)selectJobData.SelectedJob + 1) % Enum.GetValues(typeof(JobType)).Length);
+            return (JobType)(((int)mainData.SelectJobData.SelectedJob + 1) % Enum.GetValues(typeof(JobType)).Length);
         }
         public static JobType GetLastJob()
         {
-            return (JobType)(((int)selectJobData.SelectedJob - 1 + Enum.GetValues(typeof(JobType)).Length) % Enum.GetValues(typeof(JobType)).Length);
+            return (JobType)(((int)mainData.SelectJobData.SelectedJob - 1 + Enum.GetValues(typeof(JobType)).Length) 
+                % Enum.GetValues(typeof(JobType)).Length);
         }
         public static bool IsIronClad()
         {
-            return selectJobData.SelectedJob == JobType.IronClad;
+            return mainData.SelectJobData.SelectedJob == JobType.IronClad;
         }
     }
 }

@@ -4,7 +4,7 @@ using QFramework;
 public class Main : MonoBehaviour
 {
     readonly UpdateTimer saveTimer = new (5f,()=>{
-        MainModel.Save();
+        MainModel.Save("Update");
     });
 
     void Awake()

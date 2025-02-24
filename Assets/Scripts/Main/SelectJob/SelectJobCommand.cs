@@ -25,7 +25,7 @@ public class OnClickConfirmJobCommand : AbstractCommand
             MainView.Instance.ShowErrorPanel("只有 铁甲战士 才能启动！");
             return;
         }
-        MainModel.SetState(typeof(WaitForStartState),typeof(WaitForStartState_Title));
+        MainModel.SetState(typeof(EnterBattleState), null);
     }
 }
 

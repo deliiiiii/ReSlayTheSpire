@@ -1,23 +1,10 @@
 using System;
 using UnityEngine;
-public interface IData<T>
-{
-    public void ReadData(T savedData);
-}
 
 [Serializable]
-public partial class MainData : IData<MainData>
+public partial class MainData
 {
-    [SerializeField]
-    string playerName;
-    public string PlayerName
-    {
-        get => playerName; 
-        set
-        {
-            playerName = value;
-        }
-    }
+    public string PlayerName;
     [SerializeField]
     float playTime;
     public float PlayTime
@@ -35,24 +22,7 @@ public partial class MainData : IData<MainData>
             });
         }
     }
-    [SerializeField]
-    string stateName;
-    public string StateName
-    {
-        get
-        {
-            return stateName;
-        }
-        set
-        {
-            stateName = value;
-            MyEvent.Fire(new OnStateChangeEvent()
-            {
-                SubStateType = Type.GetType(subStateName),
-                StateType = Type.GetType(stateName),
-            });
-        }
-    }
+    public string StateName;
     [SerializeField]
     string subStateName;
     public string SubStateName
@@ -66,44 +36,45 @@ public partial class MainData : IData<MainData>
             subStateName = value;
         }
     }
-
-
-    public MainData()
-    {
-        PlayTime = 0f;
-        PlayerName = "Deli_";
-        SubStateName = typeof(WaitForStartState_Title).ToString();
-        StateName = typeof(WaitForStartState).ToString();
-    }
-    public void ReadData(MainData savedData)
-    {
-        PlayTime = savedData.PlayTime;
-        PlayerName = savedData.PlayerName;
-        SubStateName = savedData.SubStateName;
-        StateName = savedData.StateName;
-        SelectJobData.ReadData(savedData.SelectJobData);
-    }
 }
 
 public partial class MainModel
 {
-    static MainData mainData = new();
-    
+    public static MyFSM mainFSM;
+    static MainData mainData;
     public static void Init()
     {
+        mainFSM = new();
         MyDebug.Log("MainModel OnInit", LogType.State);   
-        MainData loadedData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
-        MyDebug.Log("loadedData:（IS NULL :） " + (loadedData == null));
-        if(loadedData != null)
+        mainData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
+        MyDebug.Log("loadedData:（IS NULL :） " + (mainData == default(MainData)));
+        if(mainData == default(MainData) || mainData.PlayerName == null)
         {
-            mainData.ReadData(loadedData);
+            mainData = new()
+            {
+                PlayTime = 0f,
+                PlayerName = "Deli_",
+                SubStateName = typeof(WaitForStartState_Title).ToString(),
+                StateName = typeof(WaitForStartState).ToString(),
+            };
+            Save("Init MainData");
         }
-        MyDebug.Log("MainModel OnInit End", LogType.State);
+        string stateName = mainData.StateName;
+        string subStateName = mainData.SubStateName;
+        if(! string.IsNullOrEmpty(subStateName))
+        {
+            mainFSM.ChangeState(Type.GetType(stateName), Type.GetType(subStateName));
+        }
+        else
+        {
+            mainFSM.ChangeState(Type.GetType(stateName));
+        }
+        // MyDebug.Log("MainModel OnInit End", LogType.State);
     }
     
-    public static void Save()
+    public static void Save(string info = "")
     {
-        MyDebug.Log("Save", LogType.State);
+        MyDebug.Log("Save " + info, LogType.State);
         Saver.Save("Data",typeof(MainData).ToString(), mainData);
     }
     public static void Tick(float dt)
@@ -112,18 +83,13 @@ public partial class MainModel
     }
     public static void SetState(Type stateType, Type subStateType)
     {
-        mainData.SubStateName = subStateType.ToString();
+        mainData.SubStateName = subStateType?.ToString();
         mainData.StateName = stateType.ToString();
-        Save();
+        Save("SetState" + mainData.StateName + " " + mainData.SubStateName);
+        mainFSM.ChangeState(stateType, subStateType);
     }
 }
 
-
-public class OnStateChangeEvent
-{
-    public Type SubStateType;
-    public Type StateType;
-}
 
 public class OnPlayTimeChangeEvent
 {

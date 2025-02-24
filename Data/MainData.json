@@ -1,9 +1,49 @@
 {
-    "playerName": "Deli_",
-    "playTime": 93.5671615600586,
-    "stateName": "WaitForStartState",
-    "subStateName": "WaitForStartState_SelectJob",
+    "BattleData": {
+        "battleSeed": "112233seed",
+        "PlayerData": {
+            "Job": "IronClad",
+            "MaxHP": 75,
+            "CurHP": 75,
+            "Coin": 99,
+            "deckCards": [
+                {
+                    "CardId": 1,
+                    "IsUpper": true
+                },
+                {
+                    "CardId": 2,
+                    "IsUpper": true
+                },
+                {
+                    "CardId": 3,
+                    "IsUpper": false
+                }
+            ]
+        },
+        "MapData": {
+            "mapNodes": [
+                {
+                    "NodeID": 0,
+                    "MapNodeType": 0,
+                    "Pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "nextNodes": [
+                        1,
+                        2,
+                        3
+                    ]
+                }
+            ]
+        }
+    },
+    "PlayerName": "Deli_",
+    "playTime": 1880.0928955078125,
+    "StateName": "EnterBattleState",
+    "subStateName": "",
     "SelectJobData": {
-        "selectedJob": 1
+        "selectedJob": 0
     }
 }

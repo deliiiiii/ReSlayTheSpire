@@ -27,6 +27,7 @@ public partial class MainView : Singleton<MainView>
         MyDebug.Log("MainView OnInit", LogType.State);
         InitMain();
         InitSelectJob();
+        InitBattle();
         MyDebug.Log("MainView OnInit End", LogType.State);
     }
 
@@ -47,23 +48,20 @@ public partial class MainView : Singleton<MainView>
 
         
 
-        MyEvent.AddListener<OnStateChangeEvent>(OnStateChange);
+        MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
+        MyEvent.AddListener<OnEnterSelectJobStateEvent>(OnEnterSelectJobState);
         MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
     }
 
-    
-    void OnStateChange(OnStateChangeEvent evt)
+    void OnEnterTitleState(OnEnterTitleStateEvent evt)
+    {
+        panelTitle.SetActive(true);
+        panelSelectJob.SetActive(false);
+    }
+    void OnEnterSelectJobState(OnEnterSelectJobStateEvent evt)
     {
         panelTitle.SetActive(false);
-        panelSelectJob.SetActive(false);
-        if(evt.SubStateType == typeof(WaitForStartState_Title))
-        {
-            panelTitle.SetActive(true);
-        }
-        else if(evt.SubStateType == typeof(WaitForStartState_SelectJob))
-        {
-            panelSelectJob.SetActive(true);
-        }
+        panelSelectJob.SetActive(true);
     }
     void OnPlayTimeChange(OnPlayTimeChangeEvent evt)
     {
