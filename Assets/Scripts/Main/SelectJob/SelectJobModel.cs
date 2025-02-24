@@ -50,10 +50,7 @@ public partial class MainModel
                 Save("Init SelectJobData");
             }
         }
-        public static JobType GetSelectedJob()
-        {
-            return mainData.SelectJobData.SelectedJob;
-        }   
+        public static JobType SelectedJob => mainData.SelectJobData.SelectedJob;
         public static void SetSelectedJob(JobType jobType)
         {
             mainData.SelectJobData.SelectedJob = jobType;

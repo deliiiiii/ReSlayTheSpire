@@ -1,6 +1,12 @@
 {
+    "BattleData": {
+        "battleSeed": "",
+        "MapData": {
+            "mapNodes": []
+        }
+    },
     "PlayerName": "Deli_",
-    "playTime": 2095.074951171875,
+    "playTime": 2370.23828125,
     "StateName": "EnterBattleState",
     "subStateName": "",
     "SelectJobData": {

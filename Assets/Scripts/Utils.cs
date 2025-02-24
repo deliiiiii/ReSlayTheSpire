@@ -39,3 +39,16 @@ public class UpdateTimer
         }
     }
 }
+
+public class Utils
+{
+    public static void ClearActiveChildren(Transform trans)
+    {
+        for(int i = 0; i < trans.childCount; i++)
+        {
+            if (!trans.GetChild(i).gameObject.activeSelf)
+                continue;
+            GameObject.Destroy(trans.GetChild(i).gameObject);
+        }
+    }
+}

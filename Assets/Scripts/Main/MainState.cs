@@ -57,7 +57,7 @@ public class WaitForStartState_SelectJob : MyStateBase
         MyDebug.Log("WaitForStartState_SelectJob OnEnter", LogType.State);
         MyEvent.Fire(new OnEnterSelectJobStateEvent()
         {
-            JobType = MainModel.SelectJobModel.GetSelectedJob(),
+            JobType = MainModel.SelectJobModel.SelectedJob,
         });
     }
 

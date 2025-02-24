@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 public partial class MainData
 {
     public BattleData BattleData;
@@ -40,7 +41,15 @@ public class CardData
     }
 }
 #endregion
+#region Kusuri
 [Serializable]
+public class KusuriData
+{
+    public int KusuriId;
+    public int KusuriCount;
+}
+#endregion
+#region Player
 public class PlayerData
 {
     public string Job;
@@ -48,12 +57,10 @@ public class PlayerData
     public int CurHP;
     public int Coin;
     public List<CardData> deckCards;
-    public override string ToString()
-    {
-        return $"Job: {Job}, MaxHP: {MaxHP}, CurHP: {CurHP}, Coin: {Coin}, deckCards: {deckCards.ToString()}";
-    }
+    public List<KusuriData> kusuris;
 }
-
+#endregion
+#region Map
 public enum MapNodeType
 {
     NormalEnemy,
@@ -77,17 +84,13 @@ public class MapData
 {
     public List<MapNodeData> mapNodes;
 }
-
+#endregion
 [Serializable]
 public class BattleData
 {
     public string battleSeed;
     public PlayerData PlayerData;
     public MapData MapData;
-    public override string ToString()
-    {
-        return $"battleSeed: {battleSeed}, PlayerData: {PlayerData.ToString()}, MapData: {MapData.ToString()}";
-    }
 }
 
 public class BattleModel
@@ -104,16 +107,27 @@ public class BattleModel
                 battleSeed = "112233seed",
                 PlayerData = new PlayerData()
                 {
-                    Job = MainModel.SelectJobModel.GetSelectedJob().ToString(),
+                    Job = MainModel.SelectJobModel.SelectedJob.ToString(),
                     MaxHP = 75,
                     CurHP = 75,
                     Coin = 99,
                     deckCards = new()
                     {
+                        new(1,false),
                         new(1,true),
+                        new(1,true),
+
+                        new(2,false),
+                        new(2,false),
                         new(2,true),
+                        new(2,true),
+
                         new(3,false),
-                    }
+                        new(4,false),
+                    },
+                    kusuris = new()
+                    {
+                    },
                 },
                 MapData = new MapData()
                 {
@@ -139,10 +153,8 @@ public class BattleModel
         MyEvent.Fire(new OnEnterBattleEvent()
         {
             PlayerName = MainModel.PlayerName,
-            Job = battleData.PlayerData.Job,
-            MaxHP = battleData.PlayerData.MaxHP,
-            CurHP = battleData.PlayerData.CurHP,
-            Coin = battleData.PlayerData.Coin,
+            PlayerData = battleData.PlayerData,
+            MapData = battleData.MapData,
         });
     }
 
@@ -158,10 +170,8 @@ public class BattleModel
 public class OnEnterBattleEvent
 {
     public string PlayerName;
-    public string Job;
-    public int MaxHP;
-    public int CurHP;
-    public int Coin;
+    public PlayerData PlayerData;
+    public MapData MapData;
 }
 
 

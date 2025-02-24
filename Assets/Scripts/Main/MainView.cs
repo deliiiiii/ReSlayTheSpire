@@ -47,6 +47,7 @@ public partial class MainView : Singleton<MainView>
         MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
         MyEvent.AddListener<OnEnterSelectJobStateEvent>(OnEnterSelectJobState);
         MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
+        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattle);
     }
 
     void OnEnterTitleState(OnEnterTitleStateEvent evt)
@@ -63,7 +64,11 @@ public partial class MainView : Singleton<MainView>
     {
         txtPlayTime.text = evt.PlayTime.ToString("F1");
     }
-
+    void OnEnterBattle(OnEnterBattleEvent evt)
+    {
+        panelTitle.SetActive(false);
+        panelSelectJob.SetActive(false);
+    }
     public void ShowErrorPanel(string error)
     {
         errorPanel.SetActive(true);
