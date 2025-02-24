@@ -10,7 +10,6 @@ public class OnClickConfirmJobCommand : AbstractCommand
 {
     public override void OnExecute()
     {
-        //TODO: 确认职业
         MainModel.SetState(typeof(WaitForStartState),typeof(WaitForStartState_Title));
     }
 }

@@ -49,20 +49,7 @@ public class WaitForStartState_Title : MyStateBase
 }
 
 
-public enum JobType
-{
-    IronClad,
-    Silent,
-    JiBao,
-    Watcher,
-}
 
-
-[Serializable]
-public class WaitForStartData
-{
-    public JobType selectedJob;
-}
 
 
 public class WaitForStartState_SelectJob : MyStateBase
