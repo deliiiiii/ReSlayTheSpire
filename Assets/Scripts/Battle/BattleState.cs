@@ -1,4 +1,3 @@
-using BattleModel = MainModel.BattleModel;
 public class EnterBattleState : MyStateBase
 {
     protected override void OnEnter()

@@ -15,10 +15,10 @@ public class BattleView : Singleton<BattleView>
     Text txtCurCoin;
     [SerializeField]
     GameObject panelKusuri;
-    [SerializeField]
-    Text txtBattleTime;
-    [SerializeField]
-    Button btnMap;
+    // [SerializeField]
+    // Text txtBattleTime;
+    // [SerializeField]
+    // Button btnMap;
     [SerializeField]
     Button btnDeckCard;
     [SerializeField]
@@ -28,6 +28,10 @@ public class BattleView : Singleton<BattleView>
     
     [SerializeField]
     GameObject panelDeckCard;
+
+    [SerializeField]
+    GameObject panelHandCard;
+
 
 
     public void InitBattle()
@@ -41,6 +45,10 @@ public class BattleView : Singleton<BattleView>
         panelDeckCard.GetComponent<Button>().onClick.AddListener(()=>
         {
             panelDeckCard.SetActive(false);
+        });
+        panelHandCard.GetComponent<Button>().onClick.AddListener(()=>
+        {
+            panelHandCard.SetActive(false);
         });
     }
 

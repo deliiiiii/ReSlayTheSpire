@@ -1,0 +1,40 @@
+{
+    "battleSeed": "112233seed",
+    "PlayerData": {
+        "Job": "IronClad",
+        "MaxHP": 75,
+        "CurHP": 75,
+        "Coin": 99,
+        "deckCards": [
+            {
+                "CardId": 1,
+                "IsUpper": true
+            },
+            {
+                "CardId": 2,
+                "IsUpper": true
+            },
+            {
+                "CardId": 3,
+                "IsUpper": false
+            }
+        ]
+    },
+    "MapData": {
+        "mapNodes": [
+            {
+                "NodeID": 0,
+                "MapNodeType": 0,
+                "Pos": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "nextNodes": [
+                    1,
+                    2,
+                    3
+                ]
+            }
+        ]
+    }
+}

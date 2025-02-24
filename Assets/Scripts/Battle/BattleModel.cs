@@ -90,62 +90,66 @@ public class BattleData
     }
 }
 
-public partial class MainModel
+public class BattleModel
 {
-    public class BattleModel
+    static BattleData battleData;
+    public static void EnterBattle()
     {
-
-        public static void EnterBattle()
+        battleData = Saver.Load<BattleData>("Data", typeof(BattleData).ToString());
+        if (battleData == null || battleData.PlayerData == null)
         {
-            if (mainData.BattleData == null || mainData.BattleData.PlayerData == null)
+            MyDebug.Log("EnterBattle NULL", LogType.State);
+            battleData = new BattleData()
             {
-                MyDebug.Log("EnterBattle NULL", LogType.State);
-                mainData.BattleData = new BattleData()
+                battleSeed = "112233seed",
+                PlayerData = new PlayerData()
                 {
-                    battleSeed = "112233seed",
-                    PlayerData = new PlayerData()
+                    Job = MainModel.SelectJobModel.GetSelectedJob().ToString(),
+                    MaxHP = 75,
+                    CurHP = 75,
+                    Coin = 99,
+                    deckCards = new()
                     {
-                        Job = mainData.SelectJobData.SelectedJob.ToString(),
-                        MaxHP = 75,
-                        CurHP = 75,
-                        Coin = 99,
-                        deckCards = new()
-                        {
-                            new(1,true),
-                            new(2,true),
-                            new(3,false),
-                        }
-                    },
-                    MapData = new MapData()
+                        new(1,true),
+                        new(2,true),
+                        new(3,false),
+                    }
+                },
+                MapData = new MapData()
+                {
+                    mapNodes = new()
                     {
-                        mapNodes = new()
+                        new MapNodeData()
                         {
-                            new MapNodeData()
-                            {
-                                NodeID = 0,
-                                MapNodeType = MapNodeType.NormalEnemy,
-                                Pos = new Vector2(0, 0),
-                                nextNodes = new(){1,2,3},
-                            },
+                            NodeID = 0,
+                            MapNodeType = MapNodeType.NormalEnemy,
+                            Pos = new Vector2(0, 0),
+                            nextNodes = new(){1,2,3},
                         },
                     },
-                };
-                Save();
-            }
-            // MyDebug.Log(mainData.PlayerName, LogType.State);
-            // MyDebug.Log(battleData.PlayerData.Job, LogType.State);
-            // MyDebug.Log(battleData.PlayerData.MaxHP, LogType.State);
-            // MyDebug.Log(battleData.PlayerData.CurHP, LogType.State);
-            // MyDebug.Log(battleData.PlayerData.Coin, LogType.State);
-            MyEvent.Fire(new OnEnterBattleEvent()
-            {
-                PlayerName = mainData.PlayerName,
-                Job = mainData.BattleData.PlayerData.Job,
-                MaxHP = mainData.BattleData.PlayerData.MaxHP,
-                CurHP = mainData.BattleData.PlayerData.CurHP,
-                Coin = mainData.BattleData.PlayerData.Coin,
-            });
+                },
+            };
+            Save("Init BattleData");
         }
+        // MyDebug.Log(mainData.PlayerName, LogType.State);
+        // MyDebug.Log(battleData.PlayerData.Job, LogType.State);
+        // MyDebug.Log(battleData.PlayerData.MaxHP, LogType.State);
+        // MyDebug.Log(battleData.PlayerData.CurHP, LogType.State);
+        // MyDebug.Log(battleData.PlayerData.Coin, LogType.State);
+        MyEvent.Fire(new OnEnterBattleEvent()
+        {
+            PlayerName = MainModel.PlayerName,
+            Job = battleData.PlayerData.Job,
+            MaxHP = battleData.PlayerData.MaxHP,
+            CurHP = battleData.PlayerData.CurHP,
+            Coin = battleData.PlayerData.Coin,
+        });
+    }
+
+    public static void Save(string info = "")
+    {
+        MyDebug.Log("Save " +info, LogType.State);
+        Saver.Save("Data", typeof(BattleData).ToString(), battleData);
     }
 }
 

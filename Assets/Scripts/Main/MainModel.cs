@@ -88,6 +88,10 @@ public partial class MainModel
         mainFSM.ChangeState(stateType, subStateType);
         Save("SetState" + mainData.StateName + " " + mainData.SubStateName);
     }
+
+    #region Getter
+    public static string PlayerName => mainData.PlayerName;
+    #endregion
 }
 
 
