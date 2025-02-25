@@ -71,13 +71,8 @@ public class BattleView : Singleton<BattleView>
     void OnEnterBattle(OnEnterBattleEvent evt)
     {
         gameObject.SetActive(true);
-        // txtPlayerName.text = evt.PlayerName;
-        // txtJob.text = evt.Job;
-        // txtCurHP.text = evt.CurHP.ToString();
-        // txtMaxHP.text = evt.MaxHP.ToString();
-        // txtCurCoin.text = evt.Coin.ToString();
-        txtPlayerName.text = MainModel.PlayerName;
-        txtJob.text = MainModel.SelectJobModel.SelectedJob.ToString();
+        txtPlayerName.text = evt.PlayerName;
+        txtJob.text = evt.PlayerData.Job.ToString();
         txtCurHP.text = evt.PlayerData.CurHP.ToString();
         txtMaxHP.text = evt.PlayerData.MaxHP.ToString();
         txtCurCoin.text = evt.PlayerData.Coin.ToString();
