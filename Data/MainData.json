@@ -1,19 +1,4 @@
 {
-    "BattleData": {
-        "hasPreBattleBonus": false,
-        "battleSeed": "",
-        "PlayerData": {
-            "Job": "",
-            "MaxHP": 0,
-            "CurHP": 0,
-            "Coin": 0,
-            "DeckCards": [],
-            "Kusuris": []
-        },
-        "MapData": {
-            "mapNodes": []
-        }
-    },
     "PlayerName": "Deli_",
     "playTime": 3774.09912109375,
     "StateName": "WaitForStartState_Title",
