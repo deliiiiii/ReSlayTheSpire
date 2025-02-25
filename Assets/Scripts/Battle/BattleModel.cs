@@ -88,13 +88,19 @@ public class BattleData
     public string battleSeed;
     public PlayerData PlayerData;
     public MapData MapData;
+
+    public string BattleState;
+
+    public string CurSelectedEnemyType;
 }
 
 public class BattleModel
 {
     static BattleData battleData;
-    public static void EnterBattle()
+    static MyFSM battleFSM;
+    public static void EnterGlobalBattle()
     {
+        battleFSM = new();
         battleData = Saver.Load<BattleData>("Data", typeof(BattleData).ToString());
         if (battleData == null || battleData.PlayerData == null)
         {
@@ -113,14 +119,12 @@ public class BattleModel
                         new(1,false),
                         new(1,true),
                         new(1,true),
-
                         new(2,false),
                         new(2,false),
-                        // new(2,true),
-                        // new(2,true),
-
-                        // new(3,false),
-                        // new(4,false),
+                        new(2,true),
+                        new(2,true),
+                        new(3,false),
+                        new(4,false),
                     },
                     Kusuris = new()
                     {
@@ -139,6 +143,8 @@ public class BattleModel
                         },
                     },
                 },
+                BattleState = typeof(SelectNextRoomState).ToString(),
+                CurSelectedEnemyType = "Enemy1",
             };
             Save("Init BattleData");
         }
@@ -148,6 +154,7 @@ public class BattleModel
             PlayerData = battleData.PlayerData,
             MapData = battleData.MapData,
         });
+        battleFSM.ChangeState(Type.GetType(battleData.BattleState));
     }
 
     public static void Save(string info = "")
@@ -155,7 +162,13 @@ public class BattleModel
         MyDebug.Log("Save " +info, LogType.State);
         Saver.Save("Data", typeof(BattleData).ToString(), battleData);
     }
-
+    
+    public static string CurSelectedEnemyType => battleData.CurSelectedEnemyType;
+    public static void SetCurSelectedEnemyType(string enemyType)
+    {
+        battleData.CurSelectedEnemyType = enemyType;
+        Save("SetCurSelectedEnemyType");
+    }
 }
 
 

@@ -7,6 +7,10 @@ public class BattleView : MonoBehaviour
     [SerializeField]UICard prefabUICard;
 
 
+    [Header("Enter Next Room")]
+    [SerializeField]GameObject panelEnterNextRoom;
+    [SerializeField]UIMapNodeEnemy uiMapNodeEnemy;
+
     [Header("Hand Card")]
     [SerializeField]GameObject panelHandCard;
     float handcardWidthFillPercent = 0.8f;
@@ -40,9 +44,8 @@ public class BattleView : MonoBehaviour
 
     public void Init()
     {
-        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattle);
-        MyEvent.AddListener<OnClickDeckCardEvent>(OnClickDeckCard);
-        MyEvent.AddListener<OnClickExitBattleEvent>(OnClickExitBattle);
+        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterGlobalBattle);
+        MyEvent.AddListener<OnEnterSelectNextRoomStateEvent>(OnEnterSelectNextRoom);
 
         MyEvent.AddListener<OnDragCardEvent>(OnDragCard);
         MyEvent.AddListener<OnBeginDragCardEvent>(OnBeginDragCard);
@@ -62,12 +65,17 @@ public class BattleView : MonoBehaviour
         });
         btnExit.onClick.AddListener(()=>
         {
-            MyEvent.Fire(new OnClickExitBattleEvent());
+            gameObject.SetActive(false);
+            MyCommand.Send(new OnConfirmExitBattleCommand());
         });
+
+
+        uiMapNodeEnemy.AddOnDropdownValueChanged();
         gameObject.SetActive(false);
     }
 
-    void OnEnterBattle(OnEnterBattleEvent evt)
+
+    void OnEnterGlobalBattle(OnEnterBattleEvent evt)
     {
         gameObject.SetActive(true);
         txtPlayerName.text = evt.PlayerName;
@@ -90,30 +98,26 @@ public class BattleView : MonoBehaviour
         ShowHandCard(evt.PlayerData.DeckCards);
     }
 
-    void OnClickDeckCard(OnClickDeckCardEvent evt)
+    void OnEnterSelectNextRoom(OnEnterSelectNextRoomStateEvent evt)
     {
-        detailUICard.ReadData(evt.CardData);
-        panelDetailCard.SetActive(true);
+        panelHandCard.SetActive(false);
+        panelDeckCard.SetActive(false);
+        panelDetailCard.SetActive(false);
+        panelEnterNextRoom.SetActive(true);
+        uiMapNodeEnemy.SetEnemyType(new string[]{"Enemy1", "Enemy2", "Enemy3"});
+        uiMapNodeEnemy.SetCurSelectedEnemyType(evt.EnemyType);
     }
 
-    void OnClickExitBattle(OnClickExitBattleEvent evt)
-    {
-        gameObject.SetActive(false);
-        MyCommand.Send(new OnConfirmExitBattleCommand());
-    }
 
     GameObject CreateDeckCard(CardData cardData)
     {
         UICard uiCard = Instantiate<UICard>(prefabUICard);
-        // uiCard.GetComponent<Canvas>().sortingOrder = (int)BattleSort.DeckCard;
         uiCard.ReadData(cardData);
         uiCard.GetComponent<Button>().enabled = true;
         uiCard.GetComponent<Button>().onClick.AddListener(()=>
         {
-            MyEvent.Fire(new OnClickDeckCardEvent()
-            {
-                CardData = cardData,
-            });
+            detailUICard.ReadData(cardData);
+            panelDetailCard.SetActive(true);
         });
         uiCard.transform.SetParent(transDeckCardContent);
         uiCard.gameObject.SetActive(true);
@@ -124,9 +128,7 @@ public class BattleView : MonoBehaviour
     {
         UICard uiCard = Instantiate<UICard>(prefabUICard);
         uiCard.IsHandCard = true;
-        // uiCard.GetComponent<Canvas>().sortingOrder = (int)BattleSort.HandCard;
         uiCard.ReadData(cardData);
-        //TODO 
         uiCard.transform.SetParent(panelHandCard.transform);
         uiCard.gameObject.SetActive(true);
         return uiCard.gameObject;
@@ -225,18 +227,3 @@ public class BattleView : MonoBehaviour
         evt.UICard.transform.position = curDragCardPosition;
     }
 }
-
-
-public class OnClickDeckCardEvent
-{
-    public CardData CardData;
-}
-
-public class OnClickExitBattleEvent
-{
-}
-
-public class OnExitBattleEvent
-{
-}
-

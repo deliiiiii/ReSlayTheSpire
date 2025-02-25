@@ -1,4 +1,5 @@
 {
+    "hasPreBattleBonus": false,
     "battleSeed": "112233seed",
     "PlayerData": {
         "Job": "IronClad",
@@ -77,5 +78,7 @@
                 ]
             }
         ]
-    }
+    },
+    "BattleState": "SelectNextRoomState",
+    "CurSelectedEnemyType": "Enemy3"
 }

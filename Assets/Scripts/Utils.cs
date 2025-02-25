@@ -24,6 +24,7 @@ public class UpdateTimer
     float time;
     float timer;
     Action action;
+    bool stopped = false;
     public UpdateTimer(float time,Action action)
     {
         this.time = time;
@@ -31,12 +32,27 @@ public class UpdateTimer
     }
     public void Tick(float dt)
     {
+        if(stopped)
+            return;
         timer += dt;
         if(timer >= time)
         {
             action();
             timer -= time;
         }
+    }
+    public void Stop()
+    {
+        stopped = true;
+    }
+    public void Resume()
+    {
+        stopped = false;
+    }
+    public void ResetAndResume()
+    {
+        timer = 0;
+        stopped = false;
     }
 }
 

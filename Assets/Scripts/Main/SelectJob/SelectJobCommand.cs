@@ -25,7 +25,7 @@ public class OnClickConfirmJobCommand : AbstractCommand
             MyEvent.Fire(new ErrorPanelEvent() { ErrorInfo = "只有 铁甲战士 才能启动！" });
             return;
         }
-        MainModel.SetState(typeof(EnterBattleState));
+        MainModel.SetState(typeof(BattleState));
     }
 }
 
