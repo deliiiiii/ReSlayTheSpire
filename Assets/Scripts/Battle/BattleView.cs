@@ -28,6 +28,8 @@ public class BattleView : Singleton<BattleView>
     Button btnExit;
     
     [SerializeField]
+    GameObject panelDeckCard;
+    [SerializeField]
     GameObject panelDeckCardBack;
     [SerializeField]
     Transform transDeckCardContent;
@@ -49,11 +51,11 @@ public class BattleView : Singleton<BattleView>
 
         btnDeckCard.onClick.AddListener(()=>
         {
-            panelDeckCardBack.SetActive(true);
+            panelDeckCard.SetActive(true);
         });
         panelDeckCardBack.GetComponent<Button>().onClick.AddListener(()=>
         {
-            panelDeckCardBack.SetActive(false);
+            panelDeckCard.SetActive(false);
         });
         panelDetailCard.GetComponent<Button>().onClick.AddListener(()=>
         {

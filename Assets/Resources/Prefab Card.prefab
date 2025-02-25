@@ -377,7 +377,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardCost: {fileID: 6852247969211598333}
   cardName: {fileID: 864975706804351378}
-  cardImage: {fileID: 6368231847830025311}
+  cardImage: {fileID: 4056012061037463399}
+  description: {fileID: 1471452154763369242}
   cardDescription: {fileID: 1471452154763369242}
 --- !u!1 &7006929798957986605
 GameObject:
