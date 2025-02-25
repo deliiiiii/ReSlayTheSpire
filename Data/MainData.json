@@ -6,10 +6,9 @@
         }
     },
     "PlayerName": "Deli_",
-    "playTime": 2370.23828125,
-    "StateName": "EnterBattleState",
-    "subStateName": "",
+    "playTime": 2418.55419921875,
+    "StateName": "WaitForStartState_Title",
     "SelectJobData": {
-        "selectedJob": 0
+        "selectedJob": 3
     }
 }

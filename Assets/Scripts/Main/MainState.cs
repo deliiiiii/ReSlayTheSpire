@@ -6,27 +6,6 @@ public class ConstUICard
     public string ResPath { get; set; }
 }
 
-
-
-
-public class WaitForStartState : MyStateBase
-{
-    protected override void OnEnter()
-    {
-        MyDebug.Log("WaitForStartState OnEnter", LogType.State);
-    }
-
-    protected override void OnExit()
-    {
-        MyDebug.Log("WaitForStartState OnExit", LogType.State);
-    }
-
-    protected override void OnUpdate()
-    {
-         
-    }
-}
-
 public class WaitForStartState_Title : MyStateBase
 {
     protected override void OnEnter()

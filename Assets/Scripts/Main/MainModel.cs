@@ -23,19 +23,6 @@ public partial class MainData
         }
     }
     public string StateName;
-    [SerializeField]
-    string subStateName;
-    public string SubStateName
-    {
-        get
-        {
-            return subStateName;
-        }
-        set
-        {
-            subStateName = value;
-        }
-    }
 }
 
 public partial class MainModel
@@ -54,22 +41,12 @@ public partial class MainModel
             {
                 PlayTime = 0f,
                 PlayerName = "Deli_",
-                SubStateName = typeof(WaitForStartState_Title).ToString(),
-                StateName = typeof(WaitForStartState).ToString(),
+                StateName = typeof(WaitForStartState_Title).ToString(),
             };
             Save("Init MainData");
         }
         string stateName = mainData.StateName;
-        string subStateName = mainData.SubStateName;
-        if(! string.IsNullOrEmpty(subStateName))
-        {
-            mainFSM.ChangeState(Type.GetType(stateName), Type.GetType(subStateName));
-        }
-        else
-        {
-            mainFSM.ChangeState(Type.GetType(stateName));
-        }
-        // MyDebug.Log("MainModel OnInit End", LogType.State);
+        mainFSM.ChangeState(Type.GetType(stateName));
     }
     
     public static void Save(string info = "")
@@ -81,12 +58,11 @@ public partial class MainModel
     {
         mainData.PlayTime += dt;
     }
-    public static void SetState(Type stateType, Type subStateType)
+    public static void SetState(Type stateType)
     {
-        mainData.SubStateName = subStateType?.ToString();
         mainData.StateName = stateType.ToString();
-        mainFSM.ChangeState(stateType, subStateType);
-        Save("SetState" + mainData.StateName + " " + mainData.SubStateName);
+        mainFSM.ChangeState(stateType);
+        Save("SetState" + mainData.StateName);
     }
 
     #region Getter

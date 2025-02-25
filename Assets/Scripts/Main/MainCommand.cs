@@ -2,7 +2,7 @@ public class OnClickStartCommand : AbstractCommand
 {
     public override void OnExecute()
     {
-        MainModel.SetState(typeof(WaitForStartState),typeof(WaitForStartState_SelectJob));
+        MainModel.SetState(typeof(WaitForStartState_SelectJob));
     }
 }
 

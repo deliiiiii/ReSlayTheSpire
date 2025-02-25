@@ -2,21 +2,7 @@ using System.Collections.Generic;
 using System;
 
 public class MyFSM
-{   
-    // public MyFSM()
-    // {
-
-    // }
-    // public MyFSM(Type initialStateType, Type subStateType = null)
-    // {
-    //     if (initialStateType == null)
-    //     {
-    //         //没有子状态的状态机
-    //         return;
-    //     }
-    //     Launch(initialStateType, subStateType);
-    // }
-    
+{       
     Dictionary<Type, MyStateBase> stateDic;
     public MyStateBase GetStateByType(Type stateType)
     {
@@ -34,33 +20,27 @@ public class MyFSM
     }
     MyStateBase curState;
 
-    public void Launch(Type startStateType, Type subStateType = null)
+    public void Launch(Type startStateType)
     {
         stateDic = new();
         curState = GetStateByType(startStateType);
-        curState?.Enter(GetStateByType(subStateType), isEnterSame: false);
+        curState?.Enter();
     }
     public void Update()
     {
         curState?.Update();
     }
-    public void ChangeState(Type newStateType, Type subStateType = null)
+    public void ChangeState(Type newStateType)
     {
         if (curState == null)
         {
-            Launch(newStateType, subStateType);
+            Launch(newStateType);
             return;
         }
         MyStateBase newState = GetStateByType(newStateType);
-        if(subStateType == null)
-        {
-            subStateType = newState.GetDefaultSubStateType();
-        }
-        MyStateBase newSubState = GetStateByType(subStateType);
-        bool isEnterSame = curState == newState;
         curState?.Exit();
         curState = newState;
-        curState.Enter(newSubState, isEnterSame);
+        curState.Enter();
     }
     
 }
