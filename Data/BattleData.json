@@ -1,5 +1,18 @@
 {
     "battleSeed": "112233seed",
+    "PlayerData": {
+        "Job": "IronClad",
+        "MaxHP": 75,
+        "CurHP": 75,
+        "Coin": 99,
+        "DeckCards": [
+            {
+                "CardId": 1,
+                "IsUpper": false
+            }
+        ],
+        "Kusuris": []
+    },
     "MapData": {
         "mapNodes": [
             {

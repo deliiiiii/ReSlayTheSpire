@@ -6,24 +6,20 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
     static T instance;
     public bool globalOnScene = false;
-    public static T Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<T>();
-                instance.OnInit();
-            }
-            return instance;
-        }
-    }
+    public static T Instance => instance;
     private void Awake()
     {
-       if (globalOnScene)
-       {
-           DontDestroyOnLoad(gameObject);
-       }
+        instance = this as T;
+        instance.OnInit();
+        if (globalOnScene)
+        {
+            DontDestroyOnLoad(gameObject);
+            return;
+        }
+        if(instance)
+        {
+            Destroy(instance.gameObject);
+        }
     }
     protected virtual void OnInit()
     {

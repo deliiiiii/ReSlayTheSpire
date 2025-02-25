@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class MainView : Singleton<MainView>
+public partial class MainView : MonoBehaviour
 {
     [HelpBox("Global",HelpBoxType.Info)]
     [SerializeField]
@@ -17,14 +17,28 @@ public partial class MainView : Singleton<MainView>
     Button btnStart;
     [SerializeField]
     Button btnQuit;
+
+
+    [Header("SelectJob")]
+    [SerializeField]
+    GameObject panelSelectJob;
+    [SerializeField]
+    Button btnSelectJobUp;
+    [SerializeField]
+    Button btnSelectJobDown;
+    [SerializeField]
+    Button btnConfirmJob;
+    [SerializeField]
+    Button btnCancelJob;
+    [SerializeField]
+    Text txtJobName;
     
     public void Init()
     {
-        MyDebug.Log("MainView OnInit", LogType.State);
+        // MyDebug.Log("MainView OnInit", LogType.State);
         InitTitle();
         InitSelectJob();
-        BattleView.Instance.InitBattle();
-        MyDebug.Log("MainView OnInit End", LogType.State);
+        // MyDebug.Log("MainView OnInit End", LogType.State);
     }
 
     void InitTitle()
@@ -41,37 +55,76 @@ public partial class MainView : Singleton<MainView>
         {
             errorPanel.SetActive(false);
         });
-
-        
-
         MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
         MyEvent.AddListener<OnEnterSelectJobStateEvent>(OnEnterSelectJobState);
         MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
         MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattle);
+
+        MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
+    }
+
+    public void InitSelectJob()
+    {
+        btnSelectJobUp.onClick.AddListener(()=>
+        {
+            MyCommand.Send(new OnClickNextJobCommand());
+        });
+        btnSelectJobDown.onClick.AddListener(()=>
+        {
+            MyCommand.Send(new OnClickLastJobCommand());
+        });
+        btnConfirmJob.onClick.AddListener(()=>
+        {
+            MyCommand.Send(new OnClickConfirmJobCommand());
+        });
+        btnCancelJob.onClick.AddListener(()=>
+        {
+            MyCommand.Send(new OnClickCancelJobCommand());
+        });
+
+        MyEvent.AddListener<OnSelectedJobChangeEvent>(OnSelectedJobChange);
+    }
+
+    void OnSelectedJobChange(OnSelectedJobChangeEvent evt)
+    {
+        txtJobName.text = evt.JobType.ToString();
     }
 
     void OnEnterTitleState(OnEnterTitleStateEvent evt)
     {
+        gameObject.SetActive(true);
         panelTitle.SetActive(true);
         panelSelectJob.SetActive(false);
     }
-    void OnEnterSelectJobState(OnEnterSelectJobStateEvent evt)
-    {
-        panelTitle.SetActive(false);
-        panelSelectJob.SetActive(true);
-    }
+
     void OnPlayTimeChange(OnPlayTimeChangeEvent evt)
     {
         txtPlayTime.text = evt.PlayTime.ToString("F1");
     }
+
+    void OnEnterSelectJobState(OnEnterSelectJobStateEvent evt)
+    {
+        gameObject.SetActive(true);
+        panelTitle.SetActive(false);
+        panelSelectJob.SetActive(true);
+    }
+    
     void OnEnterBattle(OnEnterBattleEvent evt)
     {
+        panelSelectJob.SetActive(false);
         panelTitle.SetActive(false);
         panelSelectJob.SetActive(false);
     }
-    public void ShowErrorPanel(string error)
+    public void OnShowErrorPanel(ErrorPanelEvent evt)
     {
         errorPanel.SetActive(true);
-        errorPanel.transform.Find("Txt Error").GetComponent<Text>().text = error;
+        errorPanel.transform.Find("Txt Error").GetComponent<Text>().text = evt.ErrorInfo;
     }
 }
+
+
+public class ErrorPanelEvent
+{
+    public string ErrorInfo;
+}
+

@@ -32,9 +32,8 @@ public partial class MainModel
     public static void Init()
     {
         mainFSM = new();
-        MyDebug.Log("MainModel OnInit", LogType.State);   
         mainData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
-        MyDebug.Log("loadedData IS NULL : " + (mainData == default(MainData)));
+        MyDebug.Log("mainData IS NULL : " + (mainData == default(MainData)));
         if(mainData == default(MainData) || mainData.PlayerName == null)
         {
             mainData = new()

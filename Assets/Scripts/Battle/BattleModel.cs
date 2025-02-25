@@ -50,14 +50,15 @@ public class KusuriData
 }
 #endregion
 #region Player
+[Serializable]
 public class PlayerData
 {
     public string Job;
     public int MaxHP;
     public int CurHP;
     public int Coin;
-    public List<CardData> deckCards;
-    public List<KusuriData> kusuris;
+    public List<CardData> DeckCards;
+    public List<KusuriData> Kusuris;
 }
 #endregion
 #region Map
@@ -111,7 +112,7 @@ public class BattleModel
                     MaxHP = 75,
                     CurHP = 75,
                     Coin = 99,
-                    deckCards = new()
+                    DeckCards = new()
                     {
                         new(1,false),
                         new(1,true),
@@ -119,13 +120,13 @@ public class BattleModel
 
                         new(2,false),
                         new(2,false),
-                        new(2,true),
-                        new(2,true),
+                        // new(2,true),
+                        // new(2,true),
 
-                        new(3,false),
-                        new(4,false),
+                        // new(3,false),
+                        // new(4,false),
                     },
-                    kusuris = new()
+                    Kusuris = new()
                     {
                     },
                 },
@@ -145,11 +146,6 @@ public class BattleModel
             };
             Save("Init BattleData");
         }
-        // MyDebug.Log(mainData.PlayerName, LogType.State);
-        // MyDebug.Log(battleData.PlayerData.Job, LogType.State);
-        // MyDebug.Log(battleData.PlayerData.MaxHP, LogType.State);
-        // MyDebug.Log(battleData.PlayerData.CurHP, LogType.State);
-        // MyDebug.Log(battleData.PlayerData.Coin, LogType.State);
         MyEvent.Fire(new OnEnterBattleEvent()
         {
             PlayerName = MainModel.PlayerName,

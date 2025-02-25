@@ -22,7 +22,7 @@ public class OnClickConfirmJobCommand : AbstractCommand
     {
         if(!SelectJobModel.IsIronClad())
         {
-            MainView.Instance.ShowErrorPanel("只有 铁甲战士 才能启动！");
+            MyEvent.Fire(new ErrorPanelEvent() { ErrorInfo = "只有 铁甲战士 才能启动！" });
             return;
         }
         MainModel.SetState(typeof(EnterBattleState));

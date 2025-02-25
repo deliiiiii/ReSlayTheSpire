@@ -5,6 +5,10 @@ public static class MyEvent
 {
     private static Dictionary<Type, Delegate> eventHandlers = new Dictionary<Type, Delegate>();
 
+    public static void ClearAll()
+    {
+        eventHandlers = new();
+    }
     // 添加事件监听
     public static void AddListener<T>(Action<T> handler)
     {

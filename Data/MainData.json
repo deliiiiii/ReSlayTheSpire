@@ -1,12 +1,20 @@
 {
     "BattleData": {
         "battleSeed": "",
+        "PlayerData": {
+            "Job": "",
+            "MaxHP": 0,
+            "CurHP": 0,
+            "Coin": 0,
+            "DeckCards": [],
+            "Kusuris": []
+        },
         "MapData": {
             "mapNodes": []
         }
     },
     "PlayerName": "Deli_",
-    "playTime": 2586.16015625,
+    "playTime": 3284.719482421875,
     "StateName": "EnterBattleState",
     "SelectJobData": {
         "selectedJob": 0
