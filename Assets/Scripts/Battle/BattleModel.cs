@@ -1,11 +1,6 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UIElements;
-public partial class MainData
-{
-    public BattleData BattleData;
-}
 
 #region Card
 public enum CardColor
