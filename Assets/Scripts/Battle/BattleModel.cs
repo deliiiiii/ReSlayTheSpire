@@ -89,6 +89,7 @@ public class MapData
 [Serializable]
 public class BattleData
 {
+    public bool hasPreBattleBonus;
     public string battleSeed;
     public PlayerData PlayerData;
     public MapData MapData;
@@ -159,6 +160,7 @@ public class BattleModel
         MyDebug.Log("Save " +info, LogType.State);
         Saver.Save("Data", typeof(BattleData).ToString(), battleData);
     }
+
 }
 
 

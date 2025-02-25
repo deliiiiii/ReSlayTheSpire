@@ -4,54 +4,39 @@ using UnityEngine.UI;
 
 public class BattleView : MonoBehaviour
 {
-    [SerializeField]
-    Text txtPlayerName;
-    [SerializeField]
-    Text txtJob;
-    [SerializeField]
-    Text txtCurHP;
-    [SerializeField]
-    Text txtMaxHP;
-    [SerializeField]
-    Text txtCurCoin;
-    [SerializeField]
-    GameObject panelKusuri;
-    // [SerializeField]
-    // Text txtBattleTime;
-    // [SerializeField]
-    // Button btnMap;
-    [SerializeField]
-    Button btnDeckCard;
-    [SerializeField]
-    Text txtDeckCardCount;
-    [SerializeField]
-    Button btnExit;
-    
-    [SerializeField]
-    GameObject panelDeckCard;
-    [SerializeField]
-    GameObject panelDeckCardBack;
-    [SerializeField]
-    Transform transDeckCardContent;
+    [SerializeField]UICard prefabUICard;
 
-    [SerializeField]
-    GameObject panelDetailCard;
-    
-    [SerializeField]
-    GameObject panelHandCard;
-    float screenWidth;
+
+    [Header("Hand Card")]
+    [SerializeField]GameObject panelHandCard;
     float handcardWidthFillPercent = 0.8f;
     float handcardHeightFillPercent = 0.9f;
 
 
-
-    [SerializeField]
-    UICard detailUICard;
-    [SerializeField]
-    UICard prefabUICard;
-
+    [Header("Deck Card")]
+    [SerializeField]GameObject panelDeckCard;
+    [SerializeField]GameObject panelDeckCardBack;
+    [SerializeField]Transform transDeckCardContent;
 
 
+    [Header("Detail Card")]
+    [SerializeField]GameObject panelDetailCard;
+    [SerializeField]UICard detailUICard;
+
+
+    [Header("Upper Info")]
+    [SerializeField]Text txtPlayerName;
+    [SerializeField]Text txtJob;
+    [SerializeField]Text txtCurHP;
+    [SerializeField]Text txtMaxHP;
+    [SerializeField]Text txtCurCoin;
+    [SerializeField]GameObject panelKusuri;
+    // [SerializeField]Text txtBattleTime;
+    // [SerializeField]Button btnMap;
+    [SerializeField]Button btnDeckCard;
+    [SerializeField]Text txtDeckCardCount;
+    [SerializeField]Button btnExit;
+    
 
     public void Init()
     {
@@ -202,14 +187,12 @@ public class BattleView : MonoBehaviour
 
         int cardCount = panelHandCard.transform.childCount;
         float spreadInterval = cardWidth * 0.1f;
-        //计算所有手牌加间隙的最大宽度
         float spreadWidth = cardWidth * cardCount + spreadInterval * (cardCount - 1);
         if (spreadWidth > panelWidth)
         {
             float newInterval = (panelWidth - cardWidth * cardCount) / (cardCount - 1);
             spreadInterval = newInterval;
         }
-        // 中心点是0，对应第centerID = （cardCount - 1）/ 2张牌，偏移量为 (curID - centerID)  * (cardWidth + spreadInterval)
         for (int i = 0; i < cardCount; i++)
         {
             float offset = (i - (cardCount - 1) / 2) * (cardWidth + spreadInterval);

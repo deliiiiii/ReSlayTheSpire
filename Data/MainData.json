@@ -1,5 +1,6 @@
 {
     "BattleData": {
+        "hasPreBattleBonus": false,
         "battleSeed": "",
         "PlayerData": {
             "Job": "",
@@ -14,8 +15,8 @@
         }
     },
     "PlayerName": "Deli_",
-    "playTime": 3649.766845703125,
-    "StateName": "EnterBattleState",
+    "playTime": 3774.09912109375,
+    "StateName": "WaitForStartState_Title",
     "SelectJobData": {
         "selectedJob": 0
     }

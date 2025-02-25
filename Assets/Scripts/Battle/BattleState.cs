@@ -13,6 +13,24 @@ public class EnterBattleState : MyStateBase
 
     protected override void OnUpdate()
     {
-        throw new System.NotImplementedException();
+    }
+}
+
+
+public class SelectNextRoomState : MyStateBase
+{
+    protected override void OnEnter()
+    {
+        MyDebug.Log("SelectNextRoomState OnEnter", LogType.State);
+    }
+
+    protected override void OnExit()
+    {   
+        MyDebug.Log("SelectNextRoomState OnExit", LogType.State);
+    }
+
+    protected override void OnUpdate()
+    {
+        
     }
 }
