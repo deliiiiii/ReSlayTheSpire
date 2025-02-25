@@ -36,10 +36,40 @@ public class SelectNextRoomState : MyStateBase
     }
 }
 
+public class InRoomBattleState : MyStateBase
+{
+    protected override void OnEnter()
+    {
+        MyDebug.Log("InRoomBattleState OnEnter", LogType.State);
+        MyEvent.Fire(new OnEnterInRoomBattleStateEvent(BattleModel.CurSelectedEnemyType));
+    }
+
+    protected override void OnExit()
+    {
+        MyDebug.Log("InRoomBattleState OnExit", LogType.State);
+    }
+
+    protected override void OnUpdate()
+    {
+        
+    }
+    
+}
+
 public class OnEnterSelectNextRoomStateEvent
 {
     private OnEnterSelectNextRoomStateEvent(){}
     public OnEnterSelectNextRoomStateEvent(string f_enemyType)
+    {
+        EnemyType = f_enemyType;
+    }
+    public string EnemyType;
+}
+
+public class OnEnterInRoomBattleStateEvent
+{
+    private OnEnterInRoomBattleStateEvent(){}
+    public OnEnterInRoomBattleStateEvent(string f_enemyType)
     {
         EnemyType = f_enemyType;
     }

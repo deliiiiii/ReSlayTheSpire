@@ -1,7 +1,7 @@
 {
     "PlayerName": "Deli_",
-    "playTime": 3845.146728515625,
-    "StateName": "WaitForStartState_Title",
+    "playTime": 3899.10302734375,
+    "StateName": "BattleState",
     "SelectJobData": {
         "selectedJob": 0
     }

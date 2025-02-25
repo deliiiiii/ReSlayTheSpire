@@ -169,6 +169,12 @@ public class BattleModel
         battleData.CurSelectedEnemyType = enemyType;
         Save("SetCurSelectedEnemyType");
     }
+    public static void EnterNextRoomBattle()
+    {
+        battleData.BattleState = typeof(InRoomBattleState).ToString();
+        battleFSM.ChangeState(Type.GetType(battleData.BattleState));
+        Save("EnterNextRoomBattle");
+    }
 }
 
 

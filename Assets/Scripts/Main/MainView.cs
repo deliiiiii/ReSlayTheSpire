@@ -58,7 +58,7 @@ public partial class MainView : MonoBehaviour
         MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
         MyEvent.AddListener<OnEnterSelectJobStateEvent>(OnEnterSelectJobState);
         MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
-        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattle);
+        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattleState);
 
         MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
     }
@@ -107,9 +107,10 @@ public partial class MainView : MonoBehaviour
         gameObject.SetActive(true);
         panelTitle.SetActive(false);
         panelSelectJob.SetActive(true);
+        txtJobName.text = evt.JobType.ToString();
     }
     
-    void OnEnterBattle(OnEnterBattleEvent evt)
+    void OnEnterBattleState(OnEnterBattleEvent evt)
     {
         panelSelectJob.SetActive(false);
         panelTitle.SetActive(false);

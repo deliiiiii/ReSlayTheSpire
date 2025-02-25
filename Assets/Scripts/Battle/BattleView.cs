@@ -46,6 +46,7 @@ public class BattleView : MonoBehaviour
     {
         MyEvent.AddListener<OnEnterBattleEvent>(OnEnterGlobalBattle);
         MyEvent.AddListener<OnEnterSelectNextRoomStateEvent>(OnEnterSelectNextRoom);
+        MyEvent.AddListener<OnEnterInRoomBattleStateEvent>(OnEnterInRoomBattle);
 
         MyEvent.AddListener<OnDragCardEvent>(OnDragCard);
         MyEvent.AddListener<OnBeginDragCardEvent>(OnBeginDragCard);
@@ -70,7 +71,7 @@ public class BattleView : MonoBehaviour
         });
 
 
-        uiMapNodeEnemy.AddOnDropdownValueChanged();
+        uiMapNodeEnemy.Init();
         gameObject.SetActive(false);
     }
 
@@ -106,6 +107,15 @@ public class BattleView : MonoBehaviour
         panelEnterNextRoom.SetActive(true);
         uiMapNodeEnemy.SetEnemyType(new string[]{"Enemy1", "Enemy2", "Enemy3"});
         uiMapNodeEnemy.SetCurSelectedEnemyType(evt.EnemyType);
+    }
+
+    void OnEnterInRoomBattle(OnEnterInRoomBattleStateEvent evt)
+    {
+        MyDebug.Log("UI OnEnterInRoomBattle", LogType.BattleUI);
+        panelEnterNextRoom.SetActive(false);
+        panelHandCard.SetActive(true);
+        panelDeckCard.SetActive(false);
+        panelDetailCard.SetActive(false);
     }
 
 

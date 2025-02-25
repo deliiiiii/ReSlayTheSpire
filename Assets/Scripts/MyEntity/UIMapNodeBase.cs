@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIMapNodeBase : MonoBehaviour
 {
-    [SerializeField]Button BtnEnter;
+    public Button BtnEnter;
 
     void Awake()
     {

@@ -6,6 +6,7 @@ public enum LogType
     Card,
     State,
     Drag,
+    BattleUI,
 }
 public static class MyDebug
 {

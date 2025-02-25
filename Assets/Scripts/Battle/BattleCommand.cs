@@ -7,7 +7,7 @@ public class OnConfirmExitBattleCommand : AbstractCommand
 }
 
 
-public class OnSetNextRoomEnemy : AbstractCommand
+public class OnSetNextRoomEnemyCommand : AbstractCommand
 {
     public string EnemyType;
     public override void OnExecute()
@@ -17,3 +17,10 @@ public class OnSetNextRoomEnemy : AbstractCommand
 }
 
 
+public class OnEnterNextRoomBattleCommand : AbstractCommand
+{
+    public override void OnExecute()
+    {
+        BattleModel.EnterNextRoomBattle();
+    }
+}
