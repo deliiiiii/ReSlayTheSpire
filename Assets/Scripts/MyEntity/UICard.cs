@@ -1,17 +1,20 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class UICard : MonoBehaviour
+public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     public Text cardCost;
     public Text cardName;
     public Image cardImage;
     public Text description;
     public Text cardDescription;
+
+    Vector3 originalScale;
+    int originalIndex;
+
+    public bool IsHandCard;
     public void ReadData(CardData card)
     {
         cardCost.text = card.IsUpper ? "2" : "1";
@@ -19,4 +22,69 @@ public class UICard : MonoBehaviour
         cardImage.color = card.CardColor == CardColor.Red ? Color.red : Color.blue;
         cardDescription.text = "testDescription";
     }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if(!IsHandCard)
+        {
+            return;
+        }
+        originalScale = transform.localScale;
+        originalIndex = transform.GetSiblingIndex();
+        transform.localScale = originalScale * 1.2f;
+        transform.SetSiblingIndex(transform.parent.childCount);
+
+    }
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if(!IsHandCard)
+        {
+            return;
+        }
+        transform.localScale = originalScale;
+        transform.SetSiblingIndex(originalIndex);
+    }
+    public void OnDrag(PointerEventData eventData)
+    {
+        if(!IsHandCard)
+        {
+            return;
+        }
+        MyEvent.Fire(new OnDragCardEvent(){UICard = this});
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if(!IsHandCard)
+        {
+            return;
+        }
+        MyEvent.Fire(new OnBeginDragCardEvent(){UICard = this});
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if(!IsHandCard)
+        {
+            return;
+        }
+        MyEvent.Fire(new OnEndDragCardEvent(){UICard = this});
+    }
 }
+
+public class OnDragCardEvent
+{
+    public UICard UICard;
+}
+
+
+public class OnBeginDragCardEvent
+{
+    public UICard UICard;
+}
+
+public class OnEndDragCardEvent
+{
+    public UICard UICard;
+}
+
+

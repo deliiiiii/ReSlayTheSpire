@@ -5,6 +5,7 @@ public enum LogType
     Default,
     Card,
     State,
+    Drag,
 }
 public static class MyDebug
 {

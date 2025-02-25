@@ -59,6 +59,10 @@ public class BattleView : MonoBehaviour
         MyEvent.AddListener<OnClickDeckCardEvent>(OnClickDeckCard);
         MyEvent.AddListener<OnClickExitBattleEvent>(OnClickExitBattle);
 
+        MyEvent.AddListener<OnDragCardEvent>(OnDragCard);
+        MyEvent.AddListener<OnBeginDragCardEvent>(OnBeginDragCard);
+        MyEvent.AddListener<OnEndDragCardEvent>(OnEndDragCard);
+
         btnDeckCard.onClick.AddListener(()=>
         {
             panelDeckCard.SetActive(true);
@@ -134,6 +138,7 @@ public class BattleView : MonoBehaviour
     GameObject CreateHandCard(CardData cardData)
     {
         UICard uiCard = Instantiate<UICard>(prefabUICard);
+        uiCard.IsHandCard = true;
         // uiCard.GetComponent<Canvas>().sortingOrder = (int)BattleSort.HandCard;
         uiCard.ReadData(cardData);
         //TODO 
@@ -180,6 +185,61 @@ public class BattleView : MonoBehaviour
             card.transform.localScale = new Vector3(cardScale, cardScale, 1);
             card.transform.localPosition = new Vector3(offset, 0, 0);
         }
+    }
+    
+    float lastScreenWidth;
+    void RefreshHandCardPos()
+    {
+        if (lastScreenWidth == Screen.width)
+        {
+            return;
+        }
+        lastScreenWidth = Screen.width;
+        float panelWidth = Screen.width * handcardWidthFillPercent;
+        float cardHeight = panelHandCard.GetComponent<RectTransform>().sizeDelta.y * handcardHeightFillPercent;
+        float cardScale = cardHeight / prefabUICard.GetComponent<RectTransform>().sizeDelta.y;
+        float cardWidth = prefabUICard.GetComponent<RectTransform>().sizeDelta.x * cardScale;
+
+        int cardCount = panelHandCard.transform.childCount;
+        float spreadInterval = cardWidth * 0.1f;
+        //计算所有手牌加间隙的最大宽度
+        float spreadWidth = cardWidth * cardCount + spreadInterval * (cardCount - 1);
+        if (spreadWidth > panelWidth)
+        {
+            float newInterval = (panelWidth - cardWidth * cardCount) / (cardCount - 1);
+            spreadInterval = newInterval;
+        }
+        // 中心点是0，对应第centerID = （cardCount - 1）/ 2张牌，偏移量为 (curID - centerID)  * (cardWidth + spreadInterval)
+        for (int i = 0; i < cardCount; i++)
+        {
+            float offset = (i - (cardCount - 1) / 2) * (cardWidth + spreadInterval);
+            panelHandCard.transform.GetChild(i).localPosition = new Vector3(offset, 0, 0);
+        }
+    }
+    void Update()
+    {
+        //TODO
+        RefreshHandCardPos();
+    }
+
+    Vector3 curDragCardPosition;
+    Vector3 dragDelta;
+    void OnBeginDragCard(OnBeginDragCardEvent evt)
+    {
+        curDragCardPosition = evt.UICard.transform.position;
+        dragDelta = curDragCardPosition - Input.mousePosition;
+    }
+
+    void OnDragCard(OnDragCardEvent evt)
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition.z = 0;
+        MyDebug.Log("mousePosition:" + mousePosition, LogType.Drag);
+        evt.UICard.transform.position = mousePosition + dragDelta;
+    }
+    void OnEndDragCard(OnEndDragCardEvent evt)
+    {
+        evt.UICard.transform.position = curDragCardPosition;
     }
 }
 

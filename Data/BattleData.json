@@ -9,6 +9,54 @@
             {
                 "CardId": 1,
                 "IsUpper": false
+            },
+            {
+                "CardId": 2,
+                "IsUpper": true
+            },
+            {
+                "CardId": 3,
+                "IsUpper": false
+            },
+            {
+                "CardId": 4,
+                "IsUpper": true
+            },
+            {
+                "CardId": 5,
+                "IsUpper": false
+            },
+            {
+                "CardId": 6,
+                "IsUpper": true
+            },
+            {
+                "CardId": 7,
+                "IsUpper": false
+            },
+            {
+                "CardId": 5,
+                "IsUpper": false
+            },
+            {
+                "CardId": 6,
+                "IsUpper": true
+            },
+            {
+                "CardId": 7,
+                "IsUpper": false
+            },
+            {
+                "CardId": 5,
+                "IsUpper": false
+            },
+            {
+                "CardId": 6,
+                "IsUpper": true
+            },
+            {
+                "CardId": 7,
+                "IsUpper": false
             }
         ],
         "Kusuris": []
