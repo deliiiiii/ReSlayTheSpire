@@ -35,14 +35,7 @@ public partial class MainView : MonoBehaviour
     
     public void Init()
     {
-        // MyDebug.Log("MainView OnInit", LogType.State);
-        InitTitle();
-        InitSelectJob();
-        // MyDebug.Log("MainView OnInit End", LogType.State);
-    }
-
-    void InitTitle()
-    {
+        MyEvent.RegisterAnnotatedHandlers(this);
         btnStart.onClick.AddListener(()=>
         {
             MyCommand.Send(new OnClickStartCommand());
@@ -55,16 +48,8 @@ public partial class MainView : MonoBehaviour
         {
             errorPanel.SetActive(false);
         });
-        MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
-        MyEvent.AddListener<OnEnterSelectJobStateEvent>(OnEnterSelectJobState);
-        MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
-        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattleState);
 
-        MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
-    }
 
-    public void InitSelectJob()
-    {
         btnSelectJobUp.onClick.AddListener(()=>
         {
             MyCommand.Send(new OnClickNextJobCommand());
@@ -82,14 +67,22 @@ public partial class MainView : MonoBehaviour
             MyCommand.Send(new OnClickCancelJobCommand());
         });
 
-        MyEvent.AddListener<OnSelectedJobChangeEvent>(OnSelectedJobChange);
+
+        // MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
+        // MyEvent.AddListener<OnEnterSelectJobStateEvent>(OnEnterSelectJobState);
+        // MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
+        // MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattleState);
+        // MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
+        // MyEvent.AddListener<OnSelectedJobChangeEvent>(OnSelectedJobChange);
     }
 
+    [MyEvent]
     void OnSelectedJobChange(OnSelectedJobChangeEvent evt)
     {
         txtJobName.text = evt.JobType.ToString();
     }
 
+    [MyEvent]
     void OnEnterTitleState(OnEnterTitleStateEvent evt)
     {
         gameObject.SetActive(true);
@@ -97,11 +90,13 @@ public partial class MainView : MonoBehaviour
         panelSelectJob.SetActive(false);
     }
 
+    [MyEvent]
     void OnPlayTimeChange(OnPlayTimeChangeEvent evt)
     {
         txtPlayTime.text = evt.PlayTime.ToString("F1");
     }
 
+    [MyEvent]
     void OnEnterSelectJobState(OnEnterSelectJobStateEvent evt)
     {
         gameObject.SetActive(true);
@@ -110,13 +105,16 @@ public partial class MainView : MonoBehaviour
         txtJobName.text = evt.JobType.ToString();
     }
     
+    [MyEvent]
     void OnEnterBattleState(OnEnterBattleEvent evt)
     {
         panelSelectJob.SetActive(false);
         panelTitle.SetActive(false);
         panelSelectJob.SetActive(false);
     }
-    public void OnShowErrorPanel(ErrorPanelEvent evt)
+
+   [MyEvent]
+    void OnShowErrorPanel(ErrorPanelEvent evt)
     {
         errorPanel.SetActive(true);
         errorPanel.transform.Find("Txt Error").GetComponent<Text>().text = evt.ErrorInfo;

@@ -39,17 +39,6 @@ public partial class MainModel
 {
     public class SelectJobModel
     {
-        public void EnterSelectJob()
-        {
-            if (mainData.SelectJobData == null)
-            {
-                mainData.SelectJobData = new()
-                {
-                    SelectedJob = JobType.IronClad,
-                };
-                Save("Init SelectJobData");
-            }
-        }
         public static JobType SelectedJob => mainData.SelectJobData.SelectedJob;
         public static void SetSelectedJob(JobType jobType)
         {
@@ -59,16 +48,16 @@ public partial class MainModel
 
         public static JobType GetNextJob()
         {
-            return (JobType)(((int)mainData.SelectJobData.SelectedJob + 1) % Enum.GetValues(typeof(JobType)).Length);
+            return (JobType)(((int)SelectedJob + 1) % Enum.GetValues(typeof(JobType)).Length);
         }
         public static JobType GetLastJob()
         {
-            return (JobType)(((int)mainData.SelectJobData.SelectedJob - 1 + Enum.GetValues(typeof(JobType)).Length) 
+            return (JobType)(((int)SelectedJob - 1 + Enum.GetValues(typeof(JobType)).Length) 
                 % Enum.GetValues(typeof(JobType)).Length);
         }
         public static bool IsIronClad()
         {
-            return mainData.SelectJobData.SelectedJob == JobType.IronClad;
+            return SelectedJob == JobType.IronClad;
         }
     }
 }
