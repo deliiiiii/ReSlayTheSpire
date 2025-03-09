@@ -6,17 +6,6 @@ public class OnConfirmExitBattleCommand : AbstractCommand
     }
 }
 
-
-public class OnSetNextRoomEnemyCommand : AbstractCommand
-{
-    public string EnemyType;
-    public override void OnExecute()
-    {
-        BattleModel.SetCurSelectedEnemyType(EnemyType);
-    }
-}
-
-
 public class OnEnterNextRoomBattleCommand : AbstractCommand
 {
     public override void OnExecute()

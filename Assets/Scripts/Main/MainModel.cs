@@ -1,6 +1,15 @@
 using System;
 using UnityEngine;
 
+public enum EJobType
+{
+    IronClad,
+    Silent,
+    JiBao,
+    Watcher,
+}
+
+
 [Serializable]
 public partial class MainData
 {
@@ -63,6 +72,19 @@ public partial class MainModel
         mainFSM.ChangeState(stateType);
         Save("SetState" + mainData.StateName);
     }
+
+
+    public static EJobType GetNextJob(EJobType jobType)
+    {
+        return (EJobType)(((int)jobType + 1) % Enum.GetValues(typeof(EJobType)).Length);
+    }
+    public static EJobType GetLastJob(EJobType jobType)
+    {
+        return (EJobType)(((int)jobType - 1 + Enum.GetValues(typeof(EJobType)).Length) 
+            % Enum.GetValues(typeof(EJobType)).Length);
+    }
+
+
 
     #region Getter
     public static string PlayerName => mainData.PlayerName;

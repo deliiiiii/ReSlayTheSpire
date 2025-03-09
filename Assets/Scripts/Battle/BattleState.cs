@@ -3,7 +3,7 @@ public class BattleState : MyStateBase
     protected override void OnEnter()
     {
         MyDebug.Log("BattleState OnEnter", LogType.State);
-        BattleModel.EnterGlobalBattle();
+        BattleModel.EnterBattle();
     }
 
     protected override void OnExit()
@@ -22,7 +22,6 @@ public class SelectNextRoomState : MyStateBase
     protected override void OnEnter()
     {
         MyDebug.Log("SelectNextRoomState OnEnter", LogType.State);
-        MyEvent.Fire(new OnEnterSelectNextRoomStateEvent(BattleModel.CurSelectedEnemyType));
     }
 
     protected override void OnExit()
@@ -41,7 +40,6 @@ public class InRoomBattleState : MyStateBase
     protected override void OnEnter()
     {
         MyDebug.Log("InRoomBattleState OnEnter", LogType.State);
-        MyEvent.Fire(new OnEnterInRoomBattleStateEvent(BattleModel.CurSelectedEnemyType));
     }
 
     protected override void OnExit()

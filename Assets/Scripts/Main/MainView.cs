@@ -30,19 +30,32 @@ public partial class MainView : MonoBehaviour
     Button btnConfirmJob;
     [SerializeField]
     Button btnCancelJob;
+
+    EJobType m_EJobType;
+    EJobType JobType
+    {
+        get { return m_EJobType; }
+        set { m_EJobType = value; txtJobName.text = value.ToString(); }
+    }
+
     [SerializeField]
     Text txtJobName;
     
     public void Init()
     {
-        MyEvent.RegisterAnnotatedHandlers(this);
         btnStart.onClick.AddListener(()=>
         {
-            MyCommand.Send(new OnClickStartCommand());
+            panelTitle.SetActive(false);
+            panelSelectJob.SetActive(true);
+            JobType =EJobType.IronClad;
         });
         btnQuit.onClick.AddListener(()=>
         {
-            MyCommand.Send(new OnClickQuitCommand());
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+            #else
+            UnityEngine.Application.Quit();
+            #endif
         });
         errorPanel.GetComponent<Button>().onClick.AddListener(()=>
         {
@@ -52,37 +65,38 @@ public partial class MainView : MonoBehaviour
 
         btnSelectJobUp.onClick.AddListener(()=>
         {
-            MyCommand.Send(new OnClickNextJobCommand());
+            //TODO Model in UI calss
+            JobType = MainModel.GetNextJob(JobType);
         });
         btnSelectJobDown.onClick.AddListener(()=>
         {
-            MyCommand.Send(new OnClickLastJobCommand());
+            //TODO Model in UI calss
+            JobType = MainModel.GetLastJob(JobType);
         });
         btnConfirmJob.onClick.AddListener(()=>
         {
-            MyCommand.Send(new OnClickConfirmJobCommand());
+            //TODO Unexpected logic in UI class
+            if(JobType != EJobType.IronClad)
+            {
+                MyEvent.Fire(new ErrorPanelEvent() { ErrorInfo = "只有 铁甲战士 才能启动！" });
+                return;
+            }
+            //TODO Model in UI calss
+            MainModel.SetState(typeof(BattleState));
         });
         btnCancelJob.onClick.AddListener(()=>
         {
-            MyCommand.Send(new OnClickCancelJobCommand());
+            panelTitle.SetActive(true);
+            panelSelectJob.SetActive(false);
         });
 
 
-        // MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
-        // MyEvent.AddListener<OnEnterSelectJobStateEvent>(OnEnterSelectJobState);
-        // MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
-        // MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattleState);
-        // MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
-        // MyEvent.AddListener<OnSelectedJobChangeEvent>(OnSelectedJobChange);
+        MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
+        MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
+        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattleState);
+        MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
     }
 
-    [MyEvent]
-    void OnSelectedJobChange(OnSelectedJobChangeEvent evt)
-    {
-        txtJobName.text = evt.JobType.ToString();
-    }
-
-    [MyEvent]
     void OnEnterTitleState(OnEnterTitleStateEvent evt)
     {
         gameObject.SetActive(true);
@@ -90,22 +104,11 @@ public partial class MainView : MonoBehaviour
         panelSelectJob.SetActive(false);
     }
 
-    [MyEvent]
     void OnPlayTimeChange(OnPlayTimeChangeEvent evt)
     {
         txtPlayTime.text = evt.PlayTime.ToString("F1");
     }
-
-    [MyEvent]
-    void OnEnterSelectJobState(OnEnterSelectJobStateEvent evt)
-    {
-        gameObject.SetActive(true);
-        panelTitle.SetActive(false);
-        panelSelectJob.SetActive(true);
-        txtJobName.text = evt.JobType.ToString();
-    }
     
-    [MyEvent]
     void OnEnterBattleState(OnEnterBattleEvent evt)
     {
         panelSelectJob.SetActive(false);
@@ -113,7 +116,6 @@ public partial class MainView : MonoBehaviour
         panelSelectJob.SetActive(false);
     }
 
-   [MyEvent]
     void OnShowErrorPanel(ErrorPanelEvent evt)
     {
         errorPanel.SetActive(true);

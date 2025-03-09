@@ -90,15 +90,13 @@ public class BattleData
     public MapData MapData;
 
     public string BattleState;
-
-    public string CurSelectedEnemyType;
 }
 
 public class BattleModel
 {
     static BattleData battleData;
     static MyFSM battleFSM;
-    public static void EnterGlobalBattle()
+    public static void EnterBattle()
     {
         battleFSM = new();
         battleData = Saver.Load<BattleData>("Data", typeof(BattleData).ToString());
@@ -110,7 +108,6 @@ public class BattleModel
                 battleSeed = "112233seed",
                 PlayerData = new PlayerData()
                 {
-                    Job = MainModel.SelectJobModel.SelectedJob.ToString(),
                     MaxHP = 75,
                     CurHP = 75,
                     Coin = 99,
@@ -143,8 +140,6 @@ public class BattleModel
                         },
                     },
                 },
-                BattleState = typeof(SelectNextRoomState).ToString(),
-                CurSelectedEnemyType = "Enemy1",
             };
             Save("Init BattleData");
         }
@@ -162,18 +157,17 @@ public class BattleModel
         MyDebug.Log("Save " +info, LogType.State);
         Saver.Save("Data", typeof(BattleData).ToString(), battleData);
     }
-    
-    public static string CurSelectedEnemyType => battleData.CurSelectedEnemyType;
-    public static void SetCurSelectedEnemyType(string enemyType)
-    {
-        battleData.CurSelectedEnemyType = enemyType;
-        Save("SetCurSelectedEnemyType");
-    }
     public static void EnterNextRoomBattle()
     {
         battleData.BattleState = typeof(InRoomBattleState).ToString();
         battleFSM.ChangeState(Type.GetType(battleData.BattleState));
         Save("EnterNextRoomBattle");
+    }
+
+    public void SetJob(EJobType eJobType)
+    {
+        battleData.PlayerData.Job = eJobType.ToString();
+        Save("SetJob " + eJobType.ToString());
     }
 }
 

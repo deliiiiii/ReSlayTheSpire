@@ -44,14 +44,13 @@ public class BattleView : MonoBehaviour
 
     public void Init()
     {
-        MyEvent.RegisterAnnotatedHandlers(this);
-        // MyEvent.AddListener<OnEnterBattleEvent>(OnEnterGlobalBattle);
-        // MyEvent.AddListener<OnEnterSelectNextRoomStateEvent>(OnEnterSelectNextRoom);
-        // MyEvent.AddListener<OnEnterInRoomBattleStateEvent>(OnEnterInRoomBattle);
+        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterGlobalBattle);
+        MyEvent.AddListener<OnEnterSelectNextRoomStateEvent>(OnEnterSelectNextRoom);
+        MyEvent.AddListener<OnEnterInRoomBattleStateEvent>(OnEnterInRoomBattle);
 
-        // MyEvent.AddListener<OnDragCardEvent>(OnDragCard);
-        // MyEvent.AddListener<OnBeginDragCardEvent>(OnBeginDragCard);
-        // MyEvent.AddListener<OnEndDragCardEvent>(OnEndDragCard);
+        MyEvent.AddListener<OnDragCardEvent>(OnDragCard);
+        MyEvent.AddListener<OnBeginDragCardEvent>(OnBeginDragCard);
+        MyEvent.AddListener<OnEndDragCardEvent>(OnEndDragCard);
 
         btnDeckCard.onClick.AddListener(()=>
         {
@@ -77,7 +76,6 @@ public class BattleView : MonoBehaviour
     }
 
 
-    [MyEvent]
     void OnEnterGlobalBattle(OnEnterBattleEvent evt)
     {
         MyDebug.Log("UI OnEnterGlobalBattle", LogType.BattleUI);
@@ -102,7 +100,6 @@ public class BattleView : MonoBehaviour
         ShowHandCard(evt.PlayerData.DeckCards);
     }
 
-    [MyEvent]
     void OnEnterSelectNextRoom(OnEnterSelectNextRoomStateEvent evt)
     {
         MyDebug.Log("UI OnEnterSelectNextRoom", LogType.BattleUI);
@@ -114,7 +111,6 @@ public class BattleView : MonoBehaviour
         uiMapNodeEnemy.SetCurSelectedEnemyType(evt.EnemyType);
     }
 
-    [MyEvent]
     void OnEnterInRoomBattle(OnEnterInRoomBattleStateEvent evt)
     {
         MyDebug.Log("UI OnEnterInRoomBattle", LogType.BattleUI);
@@ -123,7 +119,6 @@ public class BattleView : MonoBehaviour
         panelDeckCard.SetActive(false);
         panelDetailCard.SetActive(false);
     }
-
 
     GameObject CreateDeckCard(CardData cardData)
     {
@@ -226,14 +221,12 @@ public class BattleView : MonoBehaviour
     Vector3 curDragCardPosition;
     Vector3 dragDelta;
 
-    [MyEvent]
     void OnBeginDragCard(OnBeginDragCardEvent evt)
     {
         curDragCardPosition = evt.UICard.transform.position;
         dragDelta = curDragCardPosition - Input.mousePosition;
     }
 
-    [MyEvent]
     void OnDragCard(OnDragCardEvent evt)
     {
         Vector3 mousePosition = Input.mousePosition;
@@ -242,8 +235,6 @@ public class BattleView : MonoBehaviour
         evt.UICard.transform.position = mousePosition + dragDelta;
     }
 
-    
-    [MyEvent]
     void OnEndDragCard(OnEndDragCardEvent evt)
     {
         evt.UICard.transform.position = curDragCardPosition;

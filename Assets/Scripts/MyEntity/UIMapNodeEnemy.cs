@@ -12,10 +12,6 @@ public class UIMapNodeEnemy : UIMapNodeBase
     //dropdown选中时发送事件
     public void Init()
     {
-        ddEnemy.onValueChanged.AddListener((value)=>
-        {
-            MyCommand.Send(new OnSetNextRoomEnemyCommand(){EnemyType = enemyTypes[value]});
-        });
         BtnEnter.onClick.AddListener(()=>
         {
             MyCommand.Send(new OnEnterNextRoomBattleCommand());
