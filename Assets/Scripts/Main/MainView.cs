@@ -47,7 +47,7 @@ public partial class MainView : MonoBehaviour
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(true);
-            JobType =EJobType.IronClad;
+            JobType = EJobType.IronClad;
         });
         btnQuit.onClick.AddListener(()=>
         {
@@ -82,7 +82,8 @@ public partial class MainView : MonoBehaviour
                 return;
             }
             //TODO Model in UI calss
-            MainModel.SetState(typeof(BattleState));
+            MainModel.SetJob(JobType);
+            MainModel.ChangeState(typeof(BattleState));
         });
         btnCancelJob.onClick.AddListener(()=>
         {
@@ -97,6 +98,9 @@ public partial class MainView : MonoBehaviour
         MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
     }
 
+
+
+    #region Event
     void OnEnterTitleState(OnEnterTitleStateEvent evt)
     {
         gameObject.SetActive(true);
@@ -121,6 +125,7 @@ public partial class MainView : MonoBehaviour
         errorPanel.SetActive(true);
         errorPanel.transform.Find("Txt Error").GetComponent<Text>().text = evt.ErrorInfo;
     }
+    #endregion
 }
 
 

@@ -48,7 +48,6 @@ public class KusuriData
 [Serializable]
 public class PlayerData
 {
-    public string Job;
     public int MaxHP;
     public int CurHP;
     public int Coin;
@@ -146,6 +145,7 @@ public class BattleModel
         MyEvent.Fire(new OnEnterBattleEvent()
         {
             PlayerName = MainModel.PlayerName,
+            PlayerJob = MainModel.PlayerJob,
             PlayerData = battleData.PlayerData,
             MapData = battleData.MapData,
         });
@@ -163,12 +163,6 @@ public class BattleModel
         battleFSM.ChangeState(Type.GetType(battleData.BattleState));
         Save("EnterNextRoomBattle");
     }
-
-    public void SetJob(EJobType eJobType)
-    {
-        battleData.PlayerData.Job = eJobType.ToString();
-        Save("SetJob " + eJobType.ToString());
-    }
 }
 
 
@@ -176,6 +170,7 @@ public class BattleModel
 public class OnEnterBattleEvent
 {
     public string PlayerName;
+    public EJobType PlayerJob;
     public PlayerData PlayerData;
     public MapData MapData;
 }

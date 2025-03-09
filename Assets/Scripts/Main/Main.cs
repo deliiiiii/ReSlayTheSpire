@@ -14,10 +14,8 @@ public class Main : MonoBehaviour
     void Awake()
     {
         MyEvent.ClearAll();
-        MainView mainView = Instantiate(prefabMainView);
-        mainView.Init();
-        BattleView battleView = Instantiate(prefabBattleView);
-        battleView.Init();
+        Instantiate(prefabMainView).Init();
+        Instantiate(prefabBattleView).Init();
         MainModel.Init();
     }
     public void Update()

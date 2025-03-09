@@ -32,6 +32,7 @@ public partial class MainData
         }
     }
     public string StateName;
+    public EJobType PlayerJob;
 }
 
 public partial class MainModel
@@ -53,8 +54,9 @@ public partial class MainModel
             };
             Save("Init MainData");
         }
-        string stateName = mainData.StateName;
-        mainFSM.ChangeState(Type.GetType(stateName));
+        // string stateName = mainData.StateName;
+        // mainFSM.ChangeState(Type.GetType(stateName));
+        ChangeState(typeof(WaitForStartState_Title));
     }
     
     public static void Save(string info = "")
@@ -66,11 +68,11 @@ public partial class MainModel
     {
         mainData.PlayTime += dt;
     }
-    public static void SetState(Type stateType)
+    public static void ChangeState(Type stateType)
     {
-        mainData.StateName = stateType.ToString();
+        // mainData.StateName = stateType.ToString();
         mainFSM.ChangeState(stateType);
-        Save("SetState" + mainData.StateName);
+        // Save("SetState" + mainData.StateName);
     }
 
 
@@ -83,11 +85,17 @@ public partial class MainModel
         return (EJobType)(((int)jobType - 1 + Enum.GetValues(typeof(EJobType)).Length) 
             % Enum.GetValues(typeof(EJobType)).Length);
     }
+    public static void SetJob(EJobType eJobType)
+    {
+        mainData.PlayerJob = eJobType;
+        Save("SetJob " + eJobType.ToString());
+    }
 
 
 
     #region Getter
     public static string PlayerName => mainData.PlayerName;
+    public static EJobType PlayerJob => mainData.PlayerJob;
     #endregion
 }
 

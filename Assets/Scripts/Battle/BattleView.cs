@@ -81,16 +81,16 @@ public class BattleView : MonoBehaviour
         MyDebug.Log("UI OnEnterGlobalBattle", LogType.BattleUI);
         gameObject.SetActive(true);
         txtPlayerName.text = evt.PlayerName;
-        txtJob.text = evt.PlayerData.Job.ToString();
+        txtJob.text = evt.PlayerJob.ToString();
         txtCurHP.text = evt.PlayerData.CurHP.ToString();
         txtMaxHP.text = evt.PlayerData.MaxHP.ToString();
         txtCurCoin.text = evt.PlayerData.Coin.ToString();
         Utils.ClearActiveChildren(panelKusuri.transform);
-        foreach (var kusuri in evt.PlayerData.Kusuris)
-        {
-            // GameObject kusuriObj = Instantiate(panelKusuri, panelKusuri.transform);
-            // kusuriObj.GetComponent<Image>().sprite = Resources.Load<Sprite>("Kusuri/" + kusuri.KusuriId);
-        }
+        // foreach (var kusuri in evt.PlayerData.Kusuris)
+        // {
+        //     GameObject kusuriObj = Instantiate(panelKusuri, panelKusuri.transform);
+        //     kusuriObj.GetComponent<Image>().sprite = Resources.Load<Sprite>("Kusuri/" + kusuri.KusuriId);
+        // }
         txtDeckCardCount.text = evt.PlayerData.DeckCards.Count.ToString();
         Utils.ClearActiveChildren(transDeckCardContent);
         foreach (var cardData in evt.PlayerData.DeckCards)
