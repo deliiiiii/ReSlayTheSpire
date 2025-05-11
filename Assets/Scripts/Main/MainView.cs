@@ -31,13 +31,6 @@ public partial class MainView : MonoBehaviour
     [SerializeField]
     Button btnCancelJob;
 
-    EJobType m_EJobType;
-    EJobType JobType
-    {
-        get { return m_EJobType; }
-        set { m_EJobType = value; txtJobName.text = value.ToString(); }
-    }
-
     [SerializeField]
     Text txtJobName;
     
@@ -47,7 +40,6 @@ public partial class MainView : MonoBehaviour
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(true);
-            JobType = EJobType.IronClad;
         });
         btnQuit.onClick.AddListener(()=>
         {
@@ -65,24 +57,19 @@ public partial class MainView : MonoBehaviour
 
         btnSelectJobUp.onClick.AddListener(()=>
         {
-            //TODO Model in UI calss
-            JobType = MainModel.GetNextJob(JobType);
+            MainModel.SetNextJob();
         });
         btnSelectJobDown.onClick.AddListener(()=>
         {
-            //TODO Model in UI calss
-            JobType = MainModel.GetLastJob(JobType);
+            MainModel.SetLastJob();
         });
         btnConfirmJob.onClick.AddListener(()=>
         {
-            //TODO Unexpected logic in UI class
-            if(JobType != EJobType.IronClad)
+            if(MainModel.PlayerJob != EJobType.IronClad)
             {
                 MyEvent.Fire(new ErrorPanelEvent() { ErrorInfo = "只有 铁甲战士 才能启动！" });
                 return;
             }
-            //TODO Model in UI calss
-            MainModel.SetJob(JobType);
             MainModel.ChangeState(typeof(BattleState));
         });
         btnCancelJob.onClick.AddListener(()=>
@@ -94,6 +81,7 @@ public partial class MainView : MonoBehaviour
 
         MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
         MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
+        MyEvent.AddListener<OnPlayJobChangeEvent>(OnPlayJobChange);
         MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattleState);
         MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
     }
@@ -111,6 +99,10 @@ public partial class MainView : MonoBehaviour
     void OnPlayTimeChange(OnPlayTimeChangeEvent evt)
     {
         txtPlayTime.text = evt.PlayTime.ToString("F1");
+    }
+    void OnPlayJobChange(OnPlayJobChangeEvent evt)
+    {
+        txtJobName.text = evt.PlayerJob.ToString();
     }
     
     void OnEnterBattleState(OnEnterBattleEvent evt)

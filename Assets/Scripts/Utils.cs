@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Saver
 {
-    public static void Save<T>(string f_pathPre,string f_name,T curEntity)
+    public static void Save<T>(string f_pathPre, string f_name, T curEntity)
     {
         JsonIO.Write(f_pathPre,f_name,curEntity);
     }
@@ -24,7 +24,7 @@ public class UpdateTimer
     float time;
     float timer;
     Action action;
-    bool stopped = false;
+    bool stopped;
     public UpdateTimer(float time,Action action)
     {
         this.time = time;
@@ -56,7 +56,7 @@ public class UpdateTimer
     }
 }
 
-public class Utils
+public static class Utils
 {
     public static void ClearActiveChildren(Transform trans)
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-
+     
 public static class MyEvent
 {
     private static Dictionary<Type, Delegate> eventHandlers = new Dictionary<Type, Delegate>();
@@ -52,42 +52,6 @@ public static class MyEvent
         }
     }
 
-    public static void RegisterAnnotatedHandlers(object instance)
-    {
-        Type instanceType = instance.GetType();
-        // 查找所有带有MyEvent特性的方法
-        foreach (var method in instanceType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-        {
-            var attributes = method.GetCustomAttributes(typeof(MyEventAttribute), true);
-            foreach (MyEventAttribute attr in attributes)
-            {
-                Type eventType;
-                // 首先检查是否在特性中指定了事件类型（向后兼容）
-                if (attr.EventType != null)
-                {
-                    eventType = attr.EventType;
-                }
-                else
-                {
-                    // 从方法的第一个参数获取事件类型
-                    ParameterInfo[] parameters = method.GetParameters();
-                    if (parameters.Length == 0)
-                    {
-                        MyDebug.LogError($"Method {method.Name} in {instanceType.Name} has MyEvent attribute but no parameters.");
-                        continue;
-                    }
-                    eventType = parameters[0].ParameterType;
-                }
-
-                Type delegateType = typeof(Action<>).MakeGenericType(eventType);
-                Delegate handler = Delegate.CreateDelegate(delegateType, instance, method);
-                // 调用泛型AddListener方法
-                typeof(MyEvent)
-                    .GetMethod(nameof(AddListener))
-                    .MakeGenericMethod(eventType)
-                    .Invoke(null, new object[] { handler });
-            }
-        }
-    }
+    
     
 }

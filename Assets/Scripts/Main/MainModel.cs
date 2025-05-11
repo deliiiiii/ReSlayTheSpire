@@ -1,6 +1,7 @@
 using System;
+using System.ComponentModel;
+using PropertyChanged;
 using UnityEngine;
-
 public enum EJobType
 {
     IronClad,
@@ -10,32 +11,32 @@ public enum EJobType
 }
 
 
-[Serializable]
+[Serializable] 
+[AddINotifyPropertyChangedInterface]
 public partial class MainData
 {
     public string PlayerName;
-    [SerializeField]
-    float playTime;
-    public float PlayTime
+    public float PlayTime {get; set;}
+    void OnPlayerNameChanged()
     {
-        get
+        MyEvent.Fire(new OnPlayTimeChangeEvent()
         {
-            return playTime;
-        }
-        set
-        {
-            playTime = value;
-            MyEvent.Fire(new OnPlayTimeChangeEvent()
-            {
-                PlayTime = value
-            });
-        }
+            PlayTime = PlayTime
+        });
     }
+    
     public string StateName;
-    public EJobType PlayerJob;
+    public EJobType PlayerJob {get; set;}
+    void OnPlayerJobChanged()
+    {
+        MyEvent.Fire(new OnPlayJobChangeEvent()
+        {
+            PlayerJob = PlayerJob
+        });
+    }
 }
 
-public partial class MainModel
+public class MainModel
 {
     public static MyFSM mainFSM;
     static MainData mainData;
@@ -76,16 +77,16 @@ public partial class MainModel
     }
 
 
-    public static EJobType GetNextJob(EJobType jobType)
+    public static void SetNextJob()
     {
-        return (EJobType)(((int)jobType + 1) % Enum.GetValues(typeof(EJobType)).Length);
+        SetJob((EJobType)(((int)PlayerJob + 1) % Enum.GetValues(typeof(EJobType)).Length));
     }
-    public static EJobType GetLastJob(EJobType jobType)
+    public static void SetLastJob()
     {
-        return (EJobType)(((int)jobType - 1 + Enum.GetValues(typeof(EJobType)).Length) 
-            % Enum.GetValues(typeof(EJobType)).Length);
+        SetJob((EJobType)(((int)PlayerJob - 1 + Enum.GetValues(typeof(EJobType)).Length) 
+            % Enum.GetValues(typeof(EJobType)).Length));
     }
-    public static void SetJob(EJobType eJobType)
+    static void SetJob(EJobType eJobType)
     {
         mainData.PlayerJob = eJobType;
         Save("SetJob " + eJobType.ToString());
@@ -105,3 +106,7 @@ public class OnPlayTimeChangeEvent
     public float PlayTime;
 }
 
+public class OnPlayJobChangeEvent
+{
+    public EJobType PlayerJob;
+}
