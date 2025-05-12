@@ -114,18 +114,14 @@ public static class Binder
     
     public static void BindAction<T1>(Observable<T1> from, Action action)
     {
-        from.onValueChangedAfter += (T1 t1) => action();
+        // from.onValueChangedAfter += (T1 t1) => action();
+        from.onValueChangedAfter += _ => action();
     }
 
     public static void BindText<T1>(Observable<T1> from, Text text)
     {
-        from.onValueChangedAfter += (T1 t1) =>
-        {
-            text.text = from.Value.ToString();
-        };
+        from.onValueChangedAfter += _ => text.text = from.Value.ToString();
     }
-
-    
     
     // public static void Unbind<T1, T2>(Observable<T1> from, Observable<T2> to)
     // {
@@ -158,7 +154,6 @@ public class Model1
 public class Test2 : MonoBehaviour
 {
     public Model1 Model1Instance = new Model1();
-    float f = 111f;
     public Text TestText;
 
     void Awake()

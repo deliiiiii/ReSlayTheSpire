@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -137,10 +138,9 @@ public class BattleView : MonoBehaviour
 
     GameObject CreateHandCard(CardData cardData)
     {
-        UICard uiCard = Instantiate<UICard>(prefabUICard);
+        UICard uiCard = Instantiate(prefabUICard, panelHandCard.transform);
         uiCard.IsHandCard = true;
         uiCard.ReadData(cardData);
-        uiCard.transform.SetParent(panelHandCard.transform);
         uiCard.gameObject.SetActive(true);
         return uiCard.gameObject;
     }
@@ -188,7 +188,7 @@ public class BattleView : MonoBehaviour
     float lastScreenWidth;
     void RefreshHandCardPos()
     {
-        if (lastScreenWidth == Screen.width)
+        if (Math.Abs(lastScreenWidth - Screen.width) < 1f)
         {
             return;
         }

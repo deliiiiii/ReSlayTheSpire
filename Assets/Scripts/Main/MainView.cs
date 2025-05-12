@@ -48,7 +48,7 @@ public partial class MainView : MonoBehaviour
             #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
             #else
-            UnityEngine.Application.Quit();
+            Application.Quit();
             #endif
         });
         errorPanel.GetComponent<Button>().onClick.AddListener(()=>
