@@ -19,42 +19,6 @@ public class Saver
         JsonIO.Delete(f_pathPre,f_name);
     }
 }
-public class UpdateTimer
-{
-    float time;
-    float timer;
-    Action action;
-    bool stopped;
-    public UpdateTimer(float time,Action action)
-    {
-        this.time = time;
-        this.action = action;
-    }
-    public void Tick(float dt)
-    {
-        if(stopped)
-            return;
-        timer += dt;
-        if(timer >= time)
-        {
-            action();
-            timer -= time;
-        }
-    }
-    public void Stop()
-    {
-        stopped = true;
-    }
-    public void Resume()
-    {
-        stopped = false;
-    }
-    public void ResetAndResume()
-    {
-        timer = 0;
-        stopped = false;
-    }
-}
 
 public static class Utils
 {

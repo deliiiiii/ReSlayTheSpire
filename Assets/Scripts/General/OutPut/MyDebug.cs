@@ -20,7 +20,7 @@ public static class MyDebug
     {
         LogType.Default,
         // LogType.Card,
-        // LogType.State,
+        LogType.State,
         // LogType.Drag,
         LogType.BattleUI,
     };

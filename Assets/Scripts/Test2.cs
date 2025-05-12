@@ -47,6 +47,7 @@ public class Observable<T>
     T _value;
     public T Value
     {
+        // get => _value;
         get => _value;
         set
         {
@@ -54,7 +55,6 @@ public class Observable<T>
             {
                 return;
             }
-
             onValueChangedBefore?.Invoke(_value);
             _value = value;
             onValueChangedAfter?.Invoke(_value);
@@ -67,11 +67,13 @@ public class Observable<T>
     {
         _value = initValue;
         onValueChangedAfter += initEvent;
-        Dic = new Dictionary<object, Action<T>>();
+        // Dic = new Dictionary<object, Action<T>>();
     }
-
-    public Dictionary<object, Action<T>> Dic;
-
+    // public Dictionary<object, Action<T>> Dic;
+    public static implicit operator T(Observable<T> v)
+    {
+        return v.Value;
+    }
 }
 
 

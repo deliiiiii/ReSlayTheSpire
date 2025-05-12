@@ -5,7 +5,7 @@ public partial class MainView : MonoBehaviour
 {
     [HelpBox("Global",HelpBoxType.Info)]
     [SerializeField]
-    Text txtPlayTime;
+    public Text TxtPlayTime;
     [SerializeField]
     GameObject errorPanel;
     
@@ -36,6 +36,8 @@ public partial class MainView : MonoBehaviour
     
     public void Init()
     {
+        Binder.BindText(MainModel.MainData.PlayTime, TxtPlayTime);
+        
         btnStart.onClick.AddListener(()=>
         {
             panelTitle.SetActive(false);
@@ -80,7 +82,6 @@ public partial class MainView : MonoBehaviour
 
 
         MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
-        MyEvent.AddListener<OnPlayTimeChangeEvent>(OnPlayTimeChange);
         MyEvent.AddListener<OnPlayJobChangeEvent>(OnPlayJobChange);
         MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattleState);
         MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
@@ -94,11 +95,6 @@ public partial class MainView : MonoBehaviour
         gameObject.SetActive(true);
         panelTitle.SetActive(true);
         panelSelectJob.SetActive(false);
-    }
-
-    void OnPlayTimeChange(OnPlayTimeChangeEvent evt)
-    {
-        txtPlayTime.text = evt.PlayTime.ToString("F1");
     }
     void OnPlayJobChange(OnPlayJobChangeEvent evt)
     {

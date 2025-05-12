@@ -821,8 +821,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 749eb78d8f7f931458dd738148645161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  globalOnScene: 0
-  txtPlayTime: {fileID: 1830015147155207550}
+  TxtPlayTime: {fileID: 1830015147155207550}
   errorPanel: {fileID: 2646965323231293777}
   panelTitle: {fileID: 1766159760744694819}
   btnStart: {fileID: 6304778395477427247}

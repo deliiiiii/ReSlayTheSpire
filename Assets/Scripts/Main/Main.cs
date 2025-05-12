@@ -4,23 +4,33 @@ using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour
 {
-    readonly UpdateTimer saveTimer = new (5f,()=>{
-        MainModel.Save("Update");
-    });
+    
+    
     [SerializeField]
     MainView prefabMainView;
+    
+    MainView mainViewIns;
     [SerializeField]
     BattleView prefabBattleView;
+    BattleView battleViewIns;
+    
     void Awake()
     {
         MyEvent.ClearAll();
-        Instantiate(prefabMainView).Init();
-        Instantiate(prefabBattleView).Init();
         MainModel.Init();
+        
+        mainViewIns = Instantiate(prefabMainView);
+        mainViewIns.Init();
+        battleViewIns = Instantiate(prefabBattleView);
+        battleViewIns.Init();
+        
+        MainModel.ChangeState(typeof(WaitForStartState_Title));
     }
+    
+    
+    
     public void Update()
     {
-        saveTimer.Tick(Time.deltaTime);
         MainModel.Tick(Time.deltaTime);
 
 

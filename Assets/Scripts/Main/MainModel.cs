@@ -16,15 +16,8 @@ public enum EJobType
 public partial class MainData
 {
     public string PlayerName;
-    public float PlayTime {get; set;}
-    void OnPlayerNameChanged()
-    {
-        MyEvent.Fire(new OnPlayTimeChangeEvent()
-        {
-            PlayTime = PlayTime
-        });
-    }
-    
+    public Observable<float> PlayTime;
+    public float SaveTimer;
     public string StateName;
     public EJobType PlayerJob {get; set;}
     void OnPlayerJobChanged()
@@ -38,42 +31,50 @@ public partial class MainData
 
 public class MainModel
 {
-    public static MyFSM mainFSM;
-    static MainData mainData;
+    public static MyFSM MainFSM;
+    public static MainData MainData;
     public static void Init()
     {
-        mainFSM = new();
-        mainData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
-        MyDebug.Log("mainData IS NULL : " + (mainData == default(MainData)));
-        if(mainData == default(MainData) || mainData.PlayerName == null)
+        MainFSM = new();
+        MainData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
+        MyDebug.Log("mainData IS NULL : " + (MainData == default(MainData)));
+        if(MainData == default(MainData) || MainData.PlayerName == null)
         {
-            mainData = new()
+            MainData = new MainData
             {
-                PlayTime = 0f,
+                PlayTime = new Observable<float>(0f),
                 PlayerName = "Deli_",
                 StateName = typeof(WaitForStartState_Title).ToString(),
             };
             Save("Init MainData");
         }
-        // string stateName = mainData.StateName;
-        // mainFSM.ChangeState(Type.GetType(stateName));
-        ChangeState(typeof(WaitForStartState_Title));
+        
+        Binder.BindAction(MainData.PlayTime,
+            () =>
+            {
+                MainData.SaveTimer += Time.deltaTime;
+                if (MainData.SaveTimer >= 5f)
+                {
+                    MainData.SaveTimer -= 5f;
+                    Save("SaveTimer");
+                }
+            }
+                
+                );
     }
     
     public static void Save(string info = "")
     {
         MyDebug.Log("Save " + info, LogType.State);
-        Saver.Save("Data",typeof(MainData).ToString(), mainData);
+        Saver.Save("Data",typeof(MainData).ToString(), MainData);
     }
     public static void Tick(float dt)
     {
-        mainData.PlayTime += dt;
+        MainData.PlayTime.Value += dt;
     }
     public static void ChangeState(Type stateType)
     {
-        // mainData.StateName = stateType.ToString();
-        mainFSM.ChangeState(stateType);
-        // Save("SetState" + mainData.StateName);
+        MainFSM.ChangeState(stateType);
     }
 
 
@@ -88,23 +89,25 @@ public class MainModel
     }
     static void SetJob(EJobType eJobType)
     {
-        mainData.PlayerJob = eJobType;
+        MainData.PlayerJob = eJobType;
         Save("SetJob " + eJobType.ToString());
     }
 
 
 
     #region Getter
-    public static string PlayerName => mainData.PlayerName;
-    public static EJobType PlayerJob => mainData.PlayerJob;
+    public static string PlayerName => MainData.PlayerName;
+    public static EJobType PlayerJob => MainData.PlayerJob;
+
+    // public static Observable<float> PlayTime
+    // {
+    //     get => mainData.PlayTime;
+    //     set => mainData.PlayTime = value;
+    // }
+
     #endregion
 }
 
-
-public class OnPlayTimeChangeEvent
-{
-    public float PlayTime;
-}
 
 public class OnPlayJobChangeEvent
 {
