@@ -55,18 +55,22 @@ public class Observable<T>
             {
                 return;
             }
-            onValueChangedBefore?.Invoke(_value);
+            OnValueChangedBefore?.Invoke(_value);
             _value = value;
-            onValueChangedAfter?.Invoke(_value);
+            OnValueChangedAfter?.Invoke(_value);
         }
     }
-    public event Action<T> onValueChangedBefore;
-    public event Action<T> onValueChangedAfter;
+    public event Action<T> OnValueChangedBefore;
+    public event Action<T> OnValueChangedAfter;
 
+    public void Immediate()
+    {
+        OnValueChangedAfter?.Invoke(_value);
+    }
     public Observable(T initValue, Action<T> initEvent = null)
     {
         _value = initValue;
-        onValueChangedAfter += initEvent;
+        OnValueChangedAfter += initEvent;
         // Dic = new Dictionary<object, Action<T>>();
     }
     // public Dictionary<object, Action<T>> Dic;
@@ -75,6 +79,7 @@ public class Observable<T>
         return v.Value;
     }
 }
+
 
 
 public static class Binder
@@ -110,17 +115,33 @@ public static class Binder
     //     from.onValueChanged += ac;
     //     from.Dic[to] = ac;
     // }
-    
-    
-    public static void BindAction<T1>(Observable<T1> from, Action action)
+
+
+    public static void BindChange<T1>(Observable<T1> from, Action action, bool immediate = false)
     {
         // from.onValueChangedAfter += (T1 t1) => action();
-        from.onValueChangedAfter += _ => action();
+        from.OnValueChangedAfter += _ => action();
+        if (immediate)
+        {
+            from.Immediate();
+        }
     }
 
-    public static void BindText<T1>(Observable<T1> from, Text text)
+    public static void BindChange<T1>(Observable<T1> from, Text text, bool immediate = false)
     {
-        from.onValueChangedAfter += _ => text.text = from.Value.ToString();
+        BindChange(from, () => text.text = from.Value.ToString(), immediate);
+    }
+
+    public static void BindCulminate(Observable<float> from, float threshold, Action action, bool immediate = false) 
+    {
+        BindChange(from, () =>
+        {
+            if (from.Value.CompareTo(threshold) < 0)
+                return;
+            from.Value -= threshold;
+            action();
+        },
+        immediate);
     }
     
     // public static void Unbind<T1, T2>(Observable<T1> from, Observable<T2> to)
@@ -141,27 +162,4 @@ public static class Binder
     //     }
     // }
 
-}
-
-
-[Serializable]
-public class Model1
-{
-    public Observable<int> I = new Observable<int>(66);
-}
-
-
-public class Test2 : MonoBehaviour
-{
-    public Model1 Model1Instance = new Model1();
-    public Text TestText;
-
-    void Awake()
-    {
-        Binder.BindText(Model1Instance.I, TestText);
-    }
-
-    void Update()
-    {
-    }
 }

@@ -25,10 +25,10 @@ public class CardData
     public int CardCost => IsUpper ? 2 : 1;
     public CardColor CardColor => CardColor.Red;
     public CardType CardType => CardType.Attack;
-    public CardData(int f_cardId, bool f_isUpper)
+    public CardData(int cardId, bool isUpper)
     {
-        CardId = f_cardId;
-        IsUpper = f_isUpper;
+        CardId = cardId;
+        IsUpper = isUpper;
     }
     public CardData GetUpperCard()
     {
@@ -36,12 +36,12 @@ public class CardData
     }
 }
 #endregion
-#region Kusuri
+#region Bottle
 [Serializable]
-public class KusuriData
+public class BottleData
 {
-    public int KusuriId;
-    public int KusuriCount;
+    public int BottleId;
+    public int BottleCount;
 }
 #endregion
 #region Player
@@ -52,7 +52,7 @@ public class PlayerData
     public int CurHP;
     public int Coin;
     public List<CardData> DeckCards;
-    public List<KusuriData> Kusuris;
+    public List<BottleData> Bottles;
 }
 #endregion
 #region Map
@@ -72,45 +72,44 @@ public class MapNodeData
     public int NodeID;
     public MapNodeType MapNodeType;
     public Vector2 Pos;
-    public List<int> nextNodes;
+    public List<int> NextNodes;
 }
 [Serializable]
 public class MapData
 {
-    public List<MapNodeData> mapNodes;
+    public List<MapNodeData> MapNodes;
 }
 #endregion
 [Serializable]
 public class BattleData
 {
-    public bool hasPreBattleBonus;
-    public string battleSeed;
+    public bool HasPreBattleBonus;
+    public string BattleSeed;
     public PlayerData PlayerData;
     public MapData MapData;
-
     public string BattleState;
 }
 
-public class BattleModel
+public static class BattleModel
 {
     static BattleData battleData;
     static MyFSM battleFSM;
     public static void EnterBattle()
     {
-        battleFSM = new();
+        battleFSM = new MyFSM();
         battleData = Saver.Load<BattleData>("Data", typeof(BattleData).ToString());
-        if (battleData == null || battleData.PlayerData == null)
+        if (battleData?.PlayerData == null)
         {
             MyDebug.Log("EnterBattle NULL", LogType.State);
-            battleData = new BattleData()
+            battleData = new BattleData
             {
-                battleSeed = "112233seed",
-                PlayerData = new PlayerData()
+                BattleSeed = "112233seed",
+                PlayerData = new PlayerData
                 {
                     MaxHP = 75,
                     CurHP = 75,
                     Coin = 99,
-                    DeckCards = new()
+                    DeckCards = new List<CardData>
                     {
                         new(1,false),
                         new(1,true),
@@ -122,27 +121,25 @@ public class BattleModel
                         new(3,false),
                         new(4,false),
                     },
-                    Kusuris = new()
-                    {
-                    },
+                    Bottles = new List<BottleData>()
                 },
-                MapData = new MapData()
+                MapData = new MapData
                 {
-                    mapNodes = new()
+                    MapNodes = new List<MapNodeData>
                     {
-                        new MapNodeData()
+                        new()
                         {
                             NodeID = 0,
                             MapNodeType = MapNodeType.NormalEnemy,
                             Pos = new Vector2(0, 0),
-                            nextNodes = new(){1,2,3},
+                            NextNodes = new List<int> {1,2,3},
                         },
                     },
                 },
             };
             Save("Init BattleData");
         }
-        MyEvent.Fire(new OnEnterBattleEvent()
+        MyEvent.Fire(new OnEnterBattleEvent
         {
             PlayerName = MainModel.PlayerName,
             PlayerJob = MainModel.PlayerJob,
@@ -152,7 +149,7 @@ public class BattleModel
         battleFSM.ChangeState(Type.GetType(battleData.BattleState));
     }
 
-    public static void Save(string info = "")
+    static void Save(string info = "")
     {
         MyDebug.Log("Save " +info, LogType.State);
         Saver.Save("Data", typeof(BattleData).ToString(), battleData);

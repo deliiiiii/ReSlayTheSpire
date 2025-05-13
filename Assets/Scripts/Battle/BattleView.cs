@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+// ReSharper disable InconsistentNaming
 
 public class BattleView : MonoBehaviour
 {
@@ -14,8 +15,9 @@ public class BattleView : MonoBehaviour
 
     [Header("Hand Card")]
     [SerializeField]GameObject panelHandCard;
-    float handcardWidthFillPercent = 0.8f;
-    float handcardHeightFillPercent = 0.9f;
+
+    const float handcardWidthFillPercent = 0.8f;
+    const float handcardHeightFillPercent = 0.9f;
 
 
     [Header("Deck Card")]
@@ -96,7 +98,7 @@ public class BattleView : MonoBehaviour
         Utils.ClearActiveChildren(transDeckCardContent);
         foreach (var cardData in evt.PlayerData.DeckCards)
         {
-            GameObject go = CreateDeckCard(cardData);
+            CreateDeckCard(cardData);
         }        
         ShowHandCard(evt.PlayerData.DeckCards);
     }
@@ -108,7 +110,7 @@ public class BattleView : MonoBehaviour
         panelDeckCard.SetActive(false);
         panelDetailCard.SetActive(false);
         panelEnterNextRoom.SetActive(true);
-        uiMapNodeEnemy.SetEnemyType(new string[]{"Enemy1", "Enemy2", "Enemy3"});
+        uiMapNodeEnemy.SetEnemyType(new []{"Enemy1", "Enemy2", "Enemy3"});
         uiMapNodeEnemy.SetCurSelectedEnemyType(evt.EnemyType);
     }
 
@@ -123,7 +125,7 @@ public class BattleView : MonoBehaviour
 
     GameObject CreateDeckCard(CardData cardData)
     {
-        UICard uiCard = Instantiate<UICard>(prefabUICard);
+        UICard uiCard = Instantiate(prefabUICard, transDeckCardContent);
         uiCard.ReadData(cardData);
         uiCard.GetComponent<Button>().enabled = true;
         uiCard.GetComponent<Button>().onClick.AddListener(()=>
@@ -131,7 +133,6 @@ public class BattleView : MonoBehaviour
             detailUICard.ReadData(cardData);
             panelDetailCard.SetActive(true);
         });
-        uiCard.transform.SetParent(transDeckCardContent);
         uiCard.gameObject.SetActive(true);
         return uiCard.gameObject;
     }
@@ -155,16 +156,17 @@ public class BattleView : MonoBehaviour
 
         Utils.ClearActiveChildren(panelHandCard.transform);
         int cardCount = cardDatas.Count;
-        if (cardCount == 0)
+        switch (cardCount)
         {
-            return;
-        }
-        if (cardCount == 1)
-        {
-            GameObject card = CreateHandCard(cardDatas[0]);
-            card.transform.localScale = new Vector3(cardScale, cardScale, 1);
-            card.transform.localPosition = Vector3.zero;
-            return;
+            case 0:
+                return;
+            case 1:
+            {
+                GameObject card = CreateHandCard(cardDatas[0]);
+                card.transform.localScale = new Vector3(cardScale, cardScale, 1);
+                card.transform.localPosition = Vector3.zero;
+                return;
+            }
         }
 
         float spreadInterval = cardWidth * 0.1f;
@@ -178,7 +180,7 @@ public class BattleView : MonoBehaviour
         // 中心点是0，对应第centerID = （cardCount - 1）/ 2张牌，偏移量为 (curID - centerID)  * (cardWidth + spreadInterval)
         for (int i = 0; i < cardCount; i++)
         {
-            float offset = (i - (cardCount - 1) / 2) * (cardWidth + spreadInterval);
+            float offset = (i - (cardCount - 1f) / 2) * (cardWidth + spreadInterval);
             GameObject card = CreateHandCard(cardDatas[i]);
             card.transform.localScale = new Vector3(cardScale, cardScale, 1);
             card.transform.localPosition = new Vector3(offset, 0, 0);
@@ -208,7 +210,7 @@ public class BattleView : MonoBehaviour
         }
         for (int i = 0; i < cardCount; i++)
         {
-            float offset = (i - (cardCount - 1) / 2) * (cardWidth + spreadInterval);
+            float offset = (i - (cardCount - 1f) / 2) * (cardWidth + spreadInterval);
             panelHandCard.transform.GetChild(i).localPosition = new Vector3(offset, 0, 0);
         }
     }
@@ -223,7 +225,7 @@ public class BattleView : MonoBehaviour
 
     void OnBeginDragCard(OnBeginDragCardEvent evt)
     {
-        curDragCardPosition = evt.UICard.transform.position;
+        curDragCardPosition = Camera.main.WorldToScreenPoint(evt.UICard.transform.position);
         dragDelta = curDragCardPosition - Input.mousePosition;
     }
 
@@ -232,12 +234,12 @@ public class BattleView : MonoBehaviour
         Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = 0;
         MyDebug.Log("mousePosition:" + mousePosition, LogType.Drag);
-        evt.UICard.transform.position = mousePosition + dragDelta;
+        evt.UICard.transform.position = Camera.main.ScreenToWorldPoint(mousePosition + dragDelta);
     }
 
     void OnEndDragCard(OnEndDragCardEvent evt)
     {
-        evt.UICard.transform.position = curDragCardPosition;
+        evt.UICard.transform.position = Camera.main.ScreenToWorldPoint(curDragCardPosition);
     }
 
 

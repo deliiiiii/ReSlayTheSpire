@@ -4,21 +4,20 @@ using UnityEngine;
 //获取单例 xxx.Instance
 public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
-    static T instance;
-    public bool globalOnScene = false;
-    public static T Instance => instance;
-    private void Awake()
+    public bool GlobalOnScene = false;
+    public static T Instance { get; private set; }
+
+    void Awake()
     {
-        instance = this as T;
-        instance.OnInit();
-        if (globalOnScene)
+        if(Instance && Instance != this)
+        {
+            Destroy(Instance.gameObject);
+        }
+        Instance = this as T;
+        Instance!.OnInit();
+        if (GlobalOnScene)
         {
             DontDestroyOnLoad(gameObject);
-            return;
-        }
-        if(instance)
-        {
-            Destroy(instance.gameObject);
         }
     }
     protected virtual void OnInit()
@@ -30,6 +29,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 //C#单例
 //需要被继承 xxx : SingletonCS<xxx>
 //获取单例 xxx.Instance
+// ReSharper disable once InconsistentNaming
 public class SingletonCS<T> where T : SingletonCS<T>, new()
 {
     private static T instance;
@@ -37,7 +37,7 @@ public class SingletonCS<T> where T : SingletonCS<T>, new()
     {
         get
         {
-            instance ??= new();
+            instance ??= new T();
             instance.OnInit();
             return instance;
         }

@@ -6,8 +6,6 @@ public partial class MainView : MonoBehaviour
     [HelpBox("Global",HelpBoxType.Info)]
     [SerializeField]
     public Text TxtPlayTime;
-    [SerializeField]
-    GameObject errorPanel;
     
     [HelpBox("WaitForStart",HelpBoxType.Info)]
     [Header("Title")]
@@ -31,19 +29,18 @@ public partial class MainView : MonoBehaviour
     [SerializeField]
     Button btnCancelJob;
 
-    [SerializeField]
-    Text txtJobName;
+    public Text TxtJobName;
     
     public void Init()
     {
-        Binder.BindText(MainModel.MainData.PlayTime, TxtPlayTime);
-        
-        btnStart.onClick.AddListener(()=>
+        Binder.BindChange(MainModel.PlayTime, TxtPlayTime, true);
+        Binder.BindChange(MainModel.PlayerJob, TxtJobName, true);
+        btnStart.onClick.AddListener(() =>
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(true);
         });
-        btnQuit.onClick.AddListener(()=>
+        btnQuit.onClick.AddListener(() =>
         {
             #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -51,25 +48,14 @@ public partial class MainView : MonoBehaviour
             Application.Quit();
             #endif
         });
-        errorPanel.GetComponent<Button>().onClick.AddListener(()=>
-        {
-            errorPanel.SetActive(false);
-        });
-
-
-        btnSelectJobUp.onClick.AddListener(()=>
-        {
-            MainModel.SetNextJob();
-        });
-        btnSelectJobDown.onClick.AddListener(()=>
-        {
-            MainModel.SetLastJob();
-        });
+        
+        btnSelectJobUp.onClick.AddListener(MainModel.SetNextJob);
+        btnSelectJobDown.onClick.AddListener(MainModel.SetLastJob);
         btnConfirmJob.onClick.AddListener(()=>
         {
             if(MainModel.PlayerJob != EJobType.IronClad)
             {
-                MyEvent.Fire(new ErrorPanelEvent() { ErrorInfo = "只有 铁甲战士 才能启动！" });
+                GlobalView.Instance.ShowError("只有 铁甲战士 才能启动！");
                 return;
             }
             MainModel.ChangeState(typeof(BattleState));
@@ -82,9 +68,7 @@ public partial class MainView : MonoBehaviour
 
 
         MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
-        MyEvent.AddListener<OnPlayJobChangeEvent>(OnPlayJobChange);
         MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattleState);
-        MyEvent.AddListener<ErrorPanelEvent>(OnShowErrorPanel);
     }
 
 
@@ -96,10 +80,6 @@ public partial class MainView : MonoBehaviour
         panelTitle.SetActive(true);
         panelSelectJob.SetActive(false);
     }
-    void OnPlayJobChange(OnPlayJobChangeEvent evt)
-    {
-        txtJobName.text = evt.PlayerJob.ToString();
-    }
     
     void OnEnterBattleState(OnEnterBattleEvent evt)
     {
@@ -108,17 +88,6 @@ public partial class MainView : MonoBehaviour
         panelSelectJob.SetActive(false);
     }
 
-    void OnShowErrorPanel(ErrorPanelEvent evt)
-    {
-        errorPanel.SetActive(true);
-        errorPanel.transform.Find("Txt Error").GetComponent<Text>().text = evt.ErrorInfo;
-    }
+    
     #endregion
 }
-
-
-public class ErrorPanelEvent
-{
-    public string ErrorInfo;
-}
-

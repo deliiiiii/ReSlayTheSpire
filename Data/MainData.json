@@ -1,8 +1,12 @@
 {
     "PlayerName": "Deli_",
     "PlayTime": {
-        "_value": 55.000709533691409
+        "_value": 5527.06591796875
     },
-    "SaveTimer": 0.0006198883056640625,
-    "StateName": ""
+    "SaveTimer": {
+        "_value": 0.0019288063049316407
+    },
+    "PlayerJob": {
+        "_value": 0
+    }
 }
