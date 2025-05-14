@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,11 +31,14 @@ public partial class MainView : MonoBehaviour
     Button btnCancelJob;
 
     public Text TxtJobName;
+
+
     
+
     public void Bind()
     {
-        Binder.BindChange(MainModel.PlayTime, TxtPlayTime, true);
-        Binder.BindChange(MainModel.PlayerJob, TxtJobName, true);
+        Binder.BindChange(MainModel.PlayTime, TxtPlayTime);
+        Binder.BindChange(MainModel.PlayerJob, TxtJobName);
         Binder.BindButton(btnStart, () =>
         {
             panelTitle.SetActive(false);

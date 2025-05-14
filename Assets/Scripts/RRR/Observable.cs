@@ -3,6 +3,7 @@ using System.ComponentModel;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using JetBrains.Annotations;
 using QFramework;
 using UnityEngine.Events;
@@ -129,11 +130,15 @@ public static class Binder
         }
     }
 
-    public static void BindChange<T1>(Observable<T1> from, Text text, bool immediate = false)
+    public static void BindChange<T1>(Observable<T1> from, Text text)
     {
-        BindChange(from, () => text.text = from.Value.ToString(), immediate);
+        BindChange(from, () => text.text = from.Value.ToString(), true);
     }
-    
+
+    public static void BindChangeFluent(Observable<float> from, Text t, float deltaPerSecond, string format)
+    {
+        BindChange(from, () => t.DoFluent(from.Value, deltaPerSecond, format), true);
+    }
 
     public static void BindCulminate(Observable<float> from, float threshold, UnityAction action, bool immediate = false) 
     {
@@ -149,12 +154,18 @@ public static class Binder
     
     public static void BindButton(Button button, UnityAction action)
     {
-        button.onClick.AddListener(action);
+        BindUnityEvent(button.onClick, action);
     }
 
     public static void BindButton(GameObject panel, UnityAction action)
     {
         BindButton(panel.GetComponent<Button>(), action);
+    }
+
+    public static void BindUnityEvent(UnityEvent unityEvent, UnityAction action)
+    {
+        unityEvent.RemoveListener(action);
+        unityEvent.AddListener(action);
     }
     
     
