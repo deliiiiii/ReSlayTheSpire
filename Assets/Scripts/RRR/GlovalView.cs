@@ -21,8 +21,6 @@ public class GlobalView : Singleton<GlobalView>
         {
             errorPanel.SetActive(false);
         });
-        
-        
         MainView.Init();
         BattleView.Init();
         MainView.gameObject.SetActive(true);
