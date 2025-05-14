@@ -47,14 +47,6 @@ public class BattleView : MonoBehaviour
 
     public void Init()
     {
-        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterGlobalBattle);
-        MyEvent.AddListener<OnEnterSelectNextRoomStateEvent>(OnEnterSelectNextRoom);
-        MyEvent.AddListener<OnEnterInRoomBattleStateEvent>(OnEnterInRoomBattle);
-
-        MyEvent.AddListener<OnDragCardEvent>(OnDragCard);
-        MyEvent.AddListener<OnBeginDragCardEvent>(OnBeginDragCard);
-        MyEvent.AddListener<OnEndDragCardEvent>(OnEndDragCard);
-
         btnDeckCard.onClick.AddListener(()=>
         {
             panelDeckCard.SetActive(true);
@@ -79,42 +71,42 @@ public class BattleView : MonoBehaviour
     }
 
 
-    void OnEnterGlobalBattle(OnEnterBattleEvent evt)
+    public void OnEnterGlobalBattle(OnEnterBattleArg arg)
     {
         MyDebug.Log("UI OnEnterGlobalBattle", LogType.BattleUI);
         gameObject.SetActive(true);
-        txtPlayerName.text = evt.PlayerName;
-        txtJob.text = evt.PlayerJob.ToString();
-        txtCurHP.text = evt.PlayerData.CurHP.ToString();
-        txtMaxHP.text = evt.PlayerData.MaxHP.ToString();
-        txtCurCoin.text = evt.PlayerData.Coin.ToString();
+        txtPlayerName.text = arg.PlayerName;
+        txtJob.text = arg.PlayerJob.ToString();
+        txtCurHP.text = arg.PlayerData.CurHP.ToString();
+        txtMaxHP.text = arg.PlayerData.MaxHP.ToString();
+        txtCurCoin.text = arg.PlayerData.Coin.ToString();
         Utils.ClearActiveChildren(panelKusuri.transform);
         // foreach (var kusuri in evt.PlayerData.Kusuris)
         // {
         //     GameObject kusuriObj = Instantiate(panelKusuri, panelKusuri.transform);
         //     kusuriObj.GetComponent<Image>().sprite = Resources.Load<Sprite>("Kusuri/" + kusuri.KusuriId);
         // }
-        txtDeckCardCount.text = evt.PlayerData.DeckCards.Count.ToString();
+        txtDeckCardCount.text = arg.PlayerData.DeckCards.Count.ToString();
         Utils.ClearActiveChildren(transDeckCardContent);
-        foreach (var cardData in evt.PlayerData.DeckCards)
+        foreach (var cardData in arg.PlayerData.DeckCards)
         {
             CreateDeckCard(cardData);
         }        
-        ShowHandCard(evt.PlayerData.DeckCards);
+        ShowHandCard(arg.PlayerData.DeckCards);
     }
 
-    void OnEnterSelectNextRoom(OnEnterSelectNextRoomStateEvent evt)
-    {
-        MyDebug.Log("UI OnEnterSelectNextRoom", LogType.BattleUI);
-        panelHandCard.SetActive(false);
-        panelDeckCard.SetActive(false);
-        panelDetailCard.SetActive(false);
-        panelEnterNextRoom.SetActive(true);
-        uiMapNodeEnemy.SetEnemyType(new []{"Enemy1", "Enemy2", "Enemy3"});
-        uiMapNodeEnemy.SetCurSelectedEnemyType(evt.EnemyType);
-    }
+    // void OnEnterSelectNextRoom(OnEnterSelectNextRoomStateEvent evt)
+    // {
+    //     MyDebug.Log("UI OnEnterSelectNextRoom", LogType.BattleUI);
+    //     panelHandCard.SetActive(false);
+    //     panelDeckCard.SetActive(false);
+    //     panelDetailCard.SetActive(false);
+    //     panelEnterNextRoom.SetActive(true);
+    //     uiMapNodeEnemy.SetEnemyType(new []{"Enemy1", "Enemy2", "Enemy3"});
+    //     uiMapNodeEnemy.SetCurSelectedEnemyType(evt.EnemyType);
+    // }
 
-    void OnEnterInRoomBattle(OnEnterInRoomBattleStateEvent evt)
+    public void EnterInRoomBattle()
     {
         MyDebug.Log("UI OnEnterInRoomBattle", LogType.BattleUI);
         panelEnterNextRoom.SetActive(false);
@@ -223,23 +215,23 @@ public class BattleView : MonoBehaviour
     Vector3 curDragCardPosition;
     Vector3 dragDelta;
 
-    void OnBeginDragCard(OnBeginDragCardEvent evt)
+    public void OnBeginDragCard(UICard uiCard)
     {
-        curDragCardPosition = Camera.main.WorldToScreenPoint(evt.UICard.transform.position);
+        curDragCardPosition = Camera.main.WorldToScreenPoint(uiCard.transform.position);
         dragDelta = curDragCardPosition - Input.mousePosition;
     }
 
-    void OnDragCard(OnDragCardEvent evt)
+    public void OnDragCard(UICard uiCard)
     {
         Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = 0;
         MyDebug.Log("mousePosition:" + mousePosition, LogType.Drag);
-        evt.UICard.transform.position = Camera.main.ScreenToWorldPoint(mousePosition + dragDelta);
+        uiCard.transform.position = Camera.main.ScreenToWorldPoint(mousePosition + dragDelta);
     }
 
-    void OnEndDragCard(OnEndDragCardEvent evt)
+    public void OnEndDragCard(UICard uiCard)
     {
-        evt.UICard.transform.position = Camera.main.ScreenToWorldPoint(curDragCardPosition);
+        uiCard.transform.position = Camera.main.ScreenToWorldPoint(curDragCardPosition);
     }
 
 

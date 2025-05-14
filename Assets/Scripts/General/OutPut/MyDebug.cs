@@ -16,12 +16,12 @@ public static class MyDebug
     static bool canLogWarning = true;
     static bool canLogError = true;
     static int logThreshold = 10;
-    static List<LogType> logTypes = new()
+    static HashSet<LogType> logTypes = new()
     {
         LogType.Default,
         // LogType.Card,
         // LogType.State,
-        LogType.Drag,
+        // LogType.Drag,
         LogType.BattleUI,
     };
     public static void Log(object message, LogType logType = LogType.Default, int threshold = 0)

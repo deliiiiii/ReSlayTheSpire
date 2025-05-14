@@ -4,6 +4,14 @@ public class BattleState : MyStateBase
     {
         MyDebug.Log("BattleState OnEnter", LogType.State);
         BattleModel.EnterBattle();
+        GlobalView.MainView.OnEnterBattleState();
+        GlobalView.BattleView.OnEnterGlobalBattle(new OnEnterBattleArg
+            {
+                PlayerName = MainModel.PlayerName,
+                PlayerJob = MainModel.PlayerJob,
+                PlayerData = BattleModel.PlayerData,
+                MapData = BattleModel.MapData,
+            });
     }
 
     protected override void OnExit()
@@ -52,26 +60,6 @@ public class InRoomBattleState : MyStateBase
         
     }
     
-}
-
-public class OnEnterSelectNextRoomStateEvent
-{
-    private OnEnterSelectNextRoomStateEvent(){}
-    public OnEnterSelectNextRoomStateEvent(string f_enemyType)
-    {
-        EnemyType = f_enemyType;
-    }
-    public string EnemyType;
-}
-
-public class OnEnterInRoomBattleStateEvent
-{
-    private OnEnterInRoomBattleStateEvent(){}
-    public OnEnterInRoomBattleStateEvent(string f_enemyType)
-    {
-        EnemyType = f_enemyType;
-    }
-    public string EnemyType;
 }
 
 

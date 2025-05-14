@@ -3,6 +3,7 @@ using System.ComponentModel;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine.UI;
 
 // #region AddINotifyPropertyChangedInterface
@@ -144,6 +145,8 @@ public static class Binder
         immediate);
     }
     
+    
+    
     // public static void Unbind<T1, T2>(Observable<T1> from, Observable<T2> to)
     // {
     //     if (from.Dic.TryGetValue(to, out var v))
@@ -162,4 +165,33 @@ public static class Binder
     //     }
     // }
 
+}
+
+
+public class Trigger
+{
+    public Func<bool> TriggerEvt;
+    public Func<bool> Condition;
+    public Action TrueResult;
+    public Action FalseResult;
+
+    public Trigger(Func<bool> triggerEvt, Func<bool> condition, Action trueResult, Action falseResult)
+    {
+        TriggerEvt = triggerEvt;
+        Condition = condition;
+        TrueResult = trueResult;
+        FalseResult = falseResult;
+    }
+
+    public Trigger(Func<bool> condition, Action trueResult)
+    {
+        Condition = condition;
+        TrueResult = trueResult;
+    }
+    public Trigger(Func<bool> condition, Action trueResult, Action falseResult)
+    {
+        Condition = condition;
+        TrueResult = trueResult;
+        FalseResult = falseResult;
+    }
 }

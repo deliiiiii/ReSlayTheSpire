@@ -5,7 +5,7 @@ public class WaitForStartState_Title : MyStateBase
     protected override void OnEnter()
     {
         MyDebug.Log("WaitForStartState_Title OnEnter", LogType.State);
-        MyEvent.Fire(new OnEnterTitleStateEvent());
+        GlobalView.MainView.OnEnterTitleState();
     }
 
     protected override void OnExit()
@@ -39,9 +39,4 @@ public class WaitForStartState_SelectJob : MyStateBase
     {
         
     }
-}
-
-public class OnEnterTitleStateEvent
-{
-
 }

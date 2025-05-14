@@ -1,3 +1,4 @@
+using QFramework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -49,16 +50,16 @@ public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             return;
         }
-        MyEvent.Fire(new OnDragCardEvent(){UICard = this});
+        GlobalView.BattleView.OnDragCard(this);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if(!IsHandCard)
+        if (!IsHandCard)
         {
             return;
         }
-        MyEvent.Fire(new OnBeginDragCardEvent(){UICard = this});
+        GlobalView.BattleView.OnBeginDragCard(this);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -67,24 +68,8 @@ public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             return;
         }
-        MyEvent.Fire(new OnEndDragCardEvent(){UICard = this});
+        GlobalView.BattleView.OnEndDragCard(this);
     }
-}
-
-public class OnDragCardEvent
-{
-    public UICard UICard;
-}
-
-
-public class OnBeginDragCardEvent
-{
-    public UICard UICard;
-}
-
-public class OnEndDragCardEvent
-{
-    public UICard UICard;
 }
 
 

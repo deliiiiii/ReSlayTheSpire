@@ -65,23 +65,19 @@ public partial class MainView : MonoBehaviour
             panelTitle.SetActive(true);
             panelSelectJob.SetActive(false);
         });
-
-
-        MyEvent.AddListener<OnEnterTitleStateEvent>(OnEnterTitleState);
-        MyEvent.AddListener<OnEnterBattleEvent>(OnEnterBattleState);
     }
 
 
 
     #region Event
-    void OnEnterTitleState(OnEnterTitleStateEvent evt)
+    public void OnEnterTitleState()
     {
         gameObject.SetActive(true);
         panelTitle.SetActive(true);
         panelSelectJob.SetActive(false);
     }
     
-    void OnEnterBattleState(OnEnterBattleEvent evt)
+    public void OnEnterBattleState()
     {
         panelSelectJob.SetActive(false);
         panelTitle.SetActive(false);

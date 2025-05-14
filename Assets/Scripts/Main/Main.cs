@@ -4,19 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour
 {
-    [SerializeField]
-    MainView mainViewIns;
-    [SerializeField]
-    BattleView battleViewIns;
-    
     void Awake()
     {
-        MyEvent.ClearAll();
         MainModel.Init();
-        mainViewIns.Init();
-        battleViewIns.Init();
-        
-        mainViewIns.gameObject.SetActive(true);
+        GlobalView.Instance.OnInit();
         MainModel.ChangeState(typeof(WaitForStartState_Title));
     }
     

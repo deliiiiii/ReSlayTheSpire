@@ -8,13 +8,24 @@ public class GlobalView : Singleton<GlobalView>
     [SerializeField] GameObject errorPanel;
     [SerializeField] Text txtError;
 
-    protected override void OnInit()
+    [SerializeField] MainView mainView;
+    public static MainView MainView => Instance.mainView;
+    
+    [SerializeField] BattleView battleView;
+    public static BattleView BattleView => Instance.battleView;
+
+    public override void OnInit()
     {
         base.OnInit();
         errorPanel.GetComponent<Button>().onClick.AddListener(()=>
         {
             errorPanel.SetActive(false);
         });
+        
+        
+        MainView.Init();
+        BattleView.Init();
+        MainView.gameObject.SetActive(true);
     }
     public void ShowError(string errorInfo)
     {

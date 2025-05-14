@@ -14,15 +14,13 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
             Destroy(Instance.gameObject);
         }
         Instance = this as T;
-        Instance!.OnInit();
+        // Instance!.OnInit();
         if (GlobalOnScene)
         {
             DontDestroyOnLoad(gameObject);
         }
     }
-    protected virtual void OnInit()
-    {
-    }
+    public virtual void OnInit(){}
 }
 
 

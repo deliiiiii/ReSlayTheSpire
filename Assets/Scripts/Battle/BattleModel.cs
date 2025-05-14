@@ -93,7 +93,7 @@ public class BattleData
 public static class BattleModel
 {
     static BattleData battleData;
-    static MyFSM battleFSM;
+    static MyFSM battleFSM = new();
     public static void EnterBattle()
     {
         battleFSM = new MyFSM();
@@ -139,13 +139,6 @@ public static class BattleModel
             };
             Save("Init BattleData");
         }
-        MyEvent.Fire(new OnEnterBattleEvent
-        {
-            PlayerName = MainModel.PlayerName,
-            PlayerJob = MainModel.PlayerJob,
-            PlayerData = battleData.PlayerData,
-            MapData = battleData.MapData,
-        });
         battleFSM.ChangeState(Type.GetType(battleData.BattleState));
     }
 
@@ -160,11 +153,18 @@ public static class BattleModel
         battleFSM.ChangeState(Type.GetType(battleData.BattleState));
         Save("EnterNextRoomBattle");
     }
+
+    #region Getter
+
+    public static PlayerData PlayerData => battleData.PlayerData;
+    public static MapData MapData => battleData.MapData;
+
+    #endregion
 }
 
 
 
-public class OnEnterBattleEvent
+public struct OnEnterBattleArg
 {
     public string PlayerName;
     public EJobType PlayerJob;
