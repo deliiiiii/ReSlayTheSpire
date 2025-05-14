@@ -17,12 +17,9 @@ public class GlobalView : Singleton<GlobalView>
     public override void OnInit()
     {
         base.OnInit();
-        errorPanel.GetComponent<Button>().onClick.AddListener(()=>
-        {
-            errorPanel.SetActive(false);
-        });
-        MainView.Init();
-        BattleView.Init();
+        Binder.BindButton(errorPanel, () => errorPanel.SetActive(false));
+        MainView.Bind();
+        BattleView.Bind();
         MainView.gameObject.SetActive(true);
     }
     public void ShowError(string errorInfo)

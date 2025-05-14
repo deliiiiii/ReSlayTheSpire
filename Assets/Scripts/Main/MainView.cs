@@ -31,27 +31,26 @@ public partial class MainView : MonoBehaviour
 
     public Text TxtJobName;
     
-    public void Init()
+    public void Bind()
     {
         Binder.BindChange(MainModel.PlayTime, TxtPlayTime, true);
         Binder.BindChange(MainModel.PlayerJob, TxtJobName, true);
-        btnStart.onClick.AddListener(() =>
+        Binder.BindButton(btnStart, () =>
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(true);
         });
-        btnQuit.onClick.AddListener(() =>
+        Binder.BindButton(btnQuit, () =>
         {
             #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+                UnityEditor.EditorApplication.isPlaying = false;
             #else
-            Application.Quit();
+                Application.Quit();
             #endif
         });
-        
-        btnSelectJobUp.onClick.AddListener(MainModel.SetNextJob);
-        btnSelectJobDown.onClick.AddListener(MainModel.SetLastJob);
-        btnConfirmJob.onClick.AddListener(()=>
+        Binder.BindButton(btnSelectJobUp, MainModel.SetNextJob);
+        Binder.BindButton(btnSelectJobDown, MainModel.SetLastJob);
+        Binder.BindButton(btnConfirmJob, () =>
         {
             if(MainModel.PlayerJob != EJobType.IronClad)
             {
@@ -60,7 +59,7 @@ public partial class MainView : MonoBehaviour
             }
             MainModel.ChangeState(typeof(BattleState));
         });
-        btnCancelJob.onClick.AddListener(()=>
+        Binder.BindButton(btnCancelJob, () =>
         {
             panelTitle.SetActive(true);
             panelSelectJob.SetActive(false);

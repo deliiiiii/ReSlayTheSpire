@@ -4,6 +4,8 @@ using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using QFramework;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 // #region AddINotifyPropertyChangedInterface
@@ -61,14 +63,14 @@ public class Observable<T>
             OnValueChangedAfter?.Invoke(_value);
         }
     }
-    public event Action<T> OnValueChangedBefore;
-    public event Action<T> OnValueChangedAfter;
+    public event UnityAction<T> OnValueChangedBefore;
+    public event UnityAction<T> OnValueChangedAfter;
 
     public void Immediate()
     {
         OnValueChangedAfter?.Invoke(_value);
     }
-    public Observable(T initValue, Action<T> initEvent = null)
+    public Observable(T initValue, UnityAction<T> initEvent = null)
     {
         _value = initValue;
         OnValueChangedAfter += initEvent;
@@ -118,10 +120,9 @@ public static class Binder
     // }
 
 
-    public static void BindChange<T1>(Observable<T1> from, Action action, bool immediate = false)
+    public static void BindChange<T1>(Observable<T1> from, UnityAction action, bool immediate = false)
     {
-        // from.onValueChangedAfter += (T1 t1) => action();
-        from.OnValueChangedAfter += _ => action();
+        from.OnValueChangedAfter += (T1 t1) => action();
         if (immediate)
         {
             from.Immediate();
@@ -133,7 +134,7 @@ public static class Binder
         BindChange(from, () => text.text = from.Value.ToString(), immediate);
     }
 
-    public static void BindCulminate(Observable<float> from, float threshold, Action action, bool immediate = false) 
+    public static void BindCulminate(Observable<float> from, float threshold, UnityAction action, bool immediate = false) 
     {
         BindChange(from, () =>
         {
@@ -143,6 +144,16 @@ public static class Binder
             action();
         },
         immediate);
+    }
+    
+    public static void BindButton(Button button, UnityAction action)
+    {
+        button.onClick.AddListener(action);
+    }
+
+    public static void BindButton(GameObject panel, UnityAction action)
+    {
+        BindButton(panel.GetComponent<Button>(), action);
     }
     
     

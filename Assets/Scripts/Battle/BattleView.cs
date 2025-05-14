@@ -45,28 +45,17 @@ public class BattleView : MonoBehaviour
     [SerializeField]Button btnExit;
     
 
-    public void Init()
+    public void Bind()
     {
-        btnDeckCard.onClick.AddListener(()=>
-        {
-            panelDeckCard.SetActive(true);
-        });
-        panelDeckCardBack.GetComponent<Button>().onClick.AddListener(()=>
-        {
-            panelDeckCard.SetActive(false);
-        });
-        panelDetailCard.GetComponent<Button>().onClick.AddListener(()=>
-        {
-            panelDetailCard.SetActive(false);
-        });
-        btnExit.onClick.AddListener(()=>
+        Binder.BindButton(btnDeckCard, () => panelDeckCard.SetActive(true));
+        Binder.BindButton(panelDeckCardBack, () => panelDeckCard.SetActive(false));
+        Binder.BindButton(panelDetailCard, () => panelDetailCard.SetActive(false));
+        Binder.BindButton(btnExit, () =>
         {
             gameObject.SetActive(false);
-            MyCommand.Send(new OnConfirmExitBattleCommand());
+            MainModel.ChangeState(typeof(WaitForStartState_Title));
         });
-
-
-        uiMapNodeEnemy.Init();
+        uiMapNodeEnemy.Bind();
         gameObject.SetActive(false);
     }
 

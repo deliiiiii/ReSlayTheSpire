@@ -10,12 +10,9 @@ public class UIMapNodeEnemy : UIMapNodeBase
 
 
     //dropdown选中时发送事件
-    public void Init()
+    public override void Bind()
     {
-        BtnEnter.onClick.AddListener(()=>
-        {
-            MyCommand.Send(new OnEnterNextRoomBattleCommand());
-        });
+        Binder.BindButton(BtnEnter, BattleModel.EnterNextRoomBattle);
     }
     public void SetEnemyType(string[] enemyTypes)
     {
