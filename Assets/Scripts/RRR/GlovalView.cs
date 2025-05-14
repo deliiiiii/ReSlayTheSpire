@@ -2,7 +2,12 @@
 using UnityEngine.UI;
 
 
-public class GlobalView : Singleton<GlobalView>
+public interface IView
+{
+    public void Bind();
+}
+
+public class GlobalView : Singleton<GlobalView>, IView
 {
     public Observable<float> ObFluent;
     public Text TxtFluent;
@@ -18,12 +23,10 @@ public class GlobalView : Singleton<GlobalView>
 
     public override void OnInit()
     {
-        ObFluent = new Observable<float>(1);
-        TxtFluent.text = 0f.ToString("F3");
-        Binder.BindChangeFluent(ObFluent, TxtFluent, 0.5f, "F3");
-        
-        
-        Binder.BindButton(errorPanel, () => errorPanel.SetActive(false));
+        // ObFluent = new Observable<float>(1);
+        // TxtFluent.text = 0f.ToString("F3");
+        // Binder.BindChangeFluent(ObFluent, TxtFluent, 0.5f, "F3");
+        this.Bind();
         MainView.Bind();
         BattleView.Bind();
         MainView.gameObject.SetActive(true);
@@ -33,16 +36,21 @@ public class GlobalView : Singleton<GlobalView>
         errorPanel.SetActive(true);
         txtError.text = errorInfo;
     }
-    
-    void Update()
+
+    public void Bind()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            ObFluent.Value += 1;
-        }
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            ObFluent.Value -= 1;
-        }
+        Binder.BindButton(errorPanel, () => errorPanel.SetActive(false));
     }
+    
+    // void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.Z))
+    //     {
+    //         ObFluent.Value += 1;
+    //     }
+    //     if (Input.GetKeyDown(KeyCode.X))
+    //     {
+    //         ObFluent.Value -= 1;
+    //     }
+    // }
 }
