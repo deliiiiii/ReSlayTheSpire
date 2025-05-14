@@ -4,15 +4,16 @@ using System;
 public class MyFSM
 {       
     Dictionary<Type, MyStateBase> stateDic;
-    public MyStateBase GetStateByType(Type stateType)
+
+    MyStateBase GetStateByType(Type stateType)
     {
         if (stateType == null)
         {
             return null;
         }
-        if (stateDic.ContainsKey(stateType))
+        if (stateDic.TryGetValue(stateType, out var value))
         {
-            return stateDic[stateType];
+            return value;
         }
         MyStateBase state = Activator.CreateInstance(stateType) as MyStateBase;
         stateDic.Add(stateType, state);
@@ -20,9 +21,9 @@ public class MyFSM
     }
     MyStateBase curState;
 
-    public void Launch(Type startStateType)
+    void Launch(Type startStateType)
     {
-        stateDic = new();
+        stateDic = new Dictionary<Type, MyStateBase>();
         curState = GetStateByType(startStateType);
         curState?.Enter();
     }

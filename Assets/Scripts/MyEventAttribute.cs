@@ -10,6 +10,6 @@ public class MyEventAttribute : Attribute
     }
     public MyEventAttribute(Type eventType)
     {
-        this.EventType = eventType;
+        EventType = eventType;
     }
 }
