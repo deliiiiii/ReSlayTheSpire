@@ -71,10 +71,15 @@ public class Observable<T>
     {
         OnValueChangedAfter?.Invoke(_value);
     }
-    public Observable(T initValue, UnityAction<T> initEvent = null)
+    public Observable(T initValue)
     {
         _value = initValue;
-        OnValueChangedAfter += initEvent;
+    }
+    public Observable(T initValue, UnityAction<T> before, UnityAction<T> after)
+    {
+        _value = initValue;
+        OnValueChangedBefore += before;
+        OnValueChangedAfter += after;
         // Dic = new Dictionary<object, Action<T>>();
     }
     // public Dictionary<object, Action<T>> Dic;
