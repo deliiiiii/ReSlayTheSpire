@@ -133,6 +133,7 @@ public static class Binder
     {
         BindChange(from, () => text.text = from.Value.ToString(), immediate);
     }
+    
 
     public static void BindCulminate(Observable<float> from, float threshold, UnityAction action, bool immediate = false) 
     {
