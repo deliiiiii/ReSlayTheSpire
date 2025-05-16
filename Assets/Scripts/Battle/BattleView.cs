@@ -47,10 +47,10 @@ public class BattleView : MonoBehaviour
 
     public void Bind()
     {
-        Binder.BindButton(btnDeckCard, () => panelDeckCard.SetActive(true));
-        Binder.BindButton(panelDeckCardBack, () => panelDeckCard.SetActive(false));
-        Binder.BindButton(panelDetailCard, () => panelDetailCard.SetActive(false));
-        Binder.BindButton(btnExit, () =>
+        Binder.From(btnDeckCard).SingleTo(() => panelDeckCard.SetActive(true));
+        Binder.From(panelDeckCardBack).SingleTo(() => panelDeckCard.SetActive(false));
+        Binder.From(panelDetailCard).SingleTo(() => panelDetailCard.SetActive(false));
+        Binder.From(btnExit).SingleTo(() =>
         {
             gameObject.SetActive(false);
             MainModel.ChangeState(typeof(WaitForStartState_Title));

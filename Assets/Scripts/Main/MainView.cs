@@ -7,6 +7,9 @@ public class MainView : MonoBehaviour
     [HelpBox("Global",HelpBoxType.Info)]
     [SerializeField]
     public Text TxtPlayTime;
+    [SerializeField] GameObject errorPanel;
+    [SerializeField] Text txtError;
+    
     
     [HelpBox("WaitForStart",HelpBoxType.Info)]
     [Header("Title")]
@@ -37,14 +40,20 @@ public class MainView : MonoBehaviour
 
     public void Bind()
     {
-        Binder.BindChange(MainModel.PlayTime, TxtPlayTime);
-        Binder.BindChange(MainModel.PlayerJob, TxtJobName);
-        Binder.BindButton(btnStart, () =>
+        Binder.From(errorPanel).SingleTo(() => errorPanel.SetActive(false));
+        Binder.From(MainModel.PlayTime).ToTxt(TxtPlayTime);
+        Binder.From(MainModel.PlayerJob).ToTxt(TxtJobName);
+        Binder.From(btnStart).SingleTo(() =>
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(true);
         });
-        Binder.BindButton(btnQuit, () =>
+        Binder.From(btnStart).SingleTo(() =>
+        {
+            panelTitle.SetActive(false);
+            panelSelectJob.SetActive(true);
+        });
+        Binder.From(btnQuit).SingleTo(() =>
         {
             #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
@@ -52,26 +61,24 @@ public class MainView : MonoBehaviour
                 Application.Quit();
             #endif
         });
-        Binder.BindButton(btnSelectJobUp, MainModel.SetNextJob);
-        Binder.BindButton(btnSelectJobDown, MainModel.SetLastJob);
-        Binder.BindButton(btnConfirmJob, () =>
+        Binder.From(btnSelectJobUp).SingleTo(MainModel.SetNextJob);
+        Binder.From(btnSelectJobDown).SingleTo(MainModel.SetLastJob);
+        Binder.From(btnConfirmJob).SingleTo(() =>
         {
             if(MainModel.PlayerJob != EJobType.IronClad)
             {
-                GlobalView.Instance.ShowError("只有 铁甲战士 才能启动！");
+                txtError.text = "只有 铁甲战士 才能启动！";
                 return;
             }
             MainModel.ChangeState(typeof(BattleState));
         });
-        Binder.BindButton(btnCancelJob, () =>
+        Binder.From(btnCancelJob).SingleTo(() =>
         {
             panelTitle.SetActive(true);
             panelSelectJob.SetActive(false);
         });
     }
-
-
-
+    
     #region Event
     public void OnEnterTitleState()
     {

@@ -543,7 +543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
   ObFluent:
-    _value: 0
+    _value: 2
   TxtFluent: {fileID: 1163662063}
   errorPanel: {fileID: 1126155207}
   txtError: {fileID: 1869388140}
@@ -812,10 +812,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 930887250}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -462.75, y: 293}
-  m_SizeDelta: {x: 288.11, y: 76.36}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 145.03003, y: -41.089966}
+  m_SizeDelta: {x: 290.05, y: 82.18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1163662063
 MonoBehaviour:
@@ -5637,7 +5637,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -106.599976, y: 52.089996}
+  m_AnchoredPosition: {x: -106.599976, y: 52.089966}
   m_SizeDelta: {x: 213, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &5199783727582728150

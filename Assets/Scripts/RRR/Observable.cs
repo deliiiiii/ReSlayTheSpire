@@ -1,57 +1,15 @@
 using UnityEngine;
-using System.ComponentModel;
-// using PropertyChanged;
 using System;
-using System.Collections.Generic;
-using DG.Tweening;
-using JetBrains.Annotations;
-using QFramework;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-// #region AddINotifyPropertyChangedInterface
-// public class Test : MonoBehaviour
-// {
-//     TestProperty testProperty = new TestProperty();
-//     void Update()
-     // {
-     //     if (Input.GetKeyDown(KeyCode.A))
-     //     {
-     //         testProperty.IntProperty1++;
-     //     }
-//     }
-// }
-//
-// [AddINotifyPropertyChangedInterface]
-// public class TestProperty
-// {
-//     // [AlsoNotifyFor(nameof(IntProperty2))]
-//     public int IntProperty1 { get; set; }
-//
-//     [DoNotNotify]
-//     public int IntProperty2 => IntProperty1 + 1;
-//     void OnIntProperty1Changed()
-//     {
-//         Debug.Log($"[Fody-Callback] IntProperty1 -> {IntProperty1}");
-//     }
-//     void OnIntProperty2Changed()
-//     {
-//         Debug.Log($"[Fody-Callback] IntProperty2 -> {IntProperty2}");
-//     }
-// }
-//
-// #endregion
-
-
-
 [Serializable]
-public class Observable<T>
+public class Observable<T> where T: IComparable
 {
     [SerializeField]
     T _value;
     public T Value
     {
-        // get => _value;
         get => _value;
         set
         {
@@ -59,12 +17,12 @@ public class Observable<T>
             {
                 return;
             }
-            OnValueChangedBefore?.Invoke(_value);
+            // OnValueChangedBefore?.Invoke(_value);
             _value = value;
             OnValueChangedAfter?.Invoke(_value);
         }
     }
-    public event UnityAction<T> OnValueChangedBefore;
+    // public event UnityAction<T> OnValueChangedBefore;
     public event UnityAction<T> OnValueChangedAfter;
 
     public void Immediate()
@@ -75,17 +33,28 @@ public class Observable<T>
     {
         _value = initValue;
     }
-    public Observable(T initValue, UnityAction<T> before, UnityAction<T> after)
+    // public Observable(T initValue, UnityAction<T> before, UnityAction<T> after)
+    public Observable(T initValue, UnityAction<T> after)
     {
         _value = initValue;
-        OnValueChangedBefore += before;
+        // OnValueChangedBefore += before;
         OnValueChangedAfter += after;
-        // Dic = new Dictionary<object, Action<T>>();
     }
-    // public Dictionary<object, Action<T>> Dic;
     public static implicit operator T(Observable<T> v)
     {
         return v.Value;
+    }
+    
+    public static implicit operator float(Observable<T> v)
+    {
+        return v.Value switch
+        {
+            int i => i,
+            float f => f,
+            double d => (float)d,
+            char c => c,
+            _ => 0f
+        };
     }
 }
 
@@ -93,133 +62,16 @@ public class Observable<T>
 
 public static class Binder
 {
-    //
-    // public static void Bind<T1, T2>(Observable<T1> from, Observable<T2> to, Func<T1, T2> converter)
-    // {
-    //     if (from.Dic.ContainsKey(to))
-    //     {
-    //         Debug.LogWarning($"Binding already exists for this source:{from} and target:{to}.");
-    //         Unbind(from, to);
-    //     }
-    //     Action<T1> ac = (newValue) =>
-    //     {
-    //         to.Value = converter(newValue);
-    //     };
-    //     from.onValueChanged += ac;
-    //     from.Dic[to] = ac;
-    // }
-
-    
-    // public static void Bind<T1, T2>(Observable<T1> from,ref T2 to, Func<T1, T2> converter)
-    // {
-    //     if (from.Dic.ContainsKey(to))
-    //     {
-    //         Debug.LogWarning($"Binding already exists for this source:{from} and target:{to}.");
-    //         Unbind(from,ref to);
-    //     }
-    //     Action<T1> ac = (newValue) =>
-    //     {
-    //         to = converter(newValue);
-    //     };
-    //     from.onValueChanged += ac;
-    //     from.Dic[to] = ac;
-    // }
-
-
-    public static void BindChange<T1>(Observable<T1> from, UnityAction action, bool immediate = false)
+    public static BindDataAct<T> From<T>(Observable<T> osv) where T : IComparable
     {
-        from.OnValueChangedAfter += (T1 t1) => action();
-        if (immediate)
-        {
-            from.Immediate();
-        }
+        return new BindDataAct<T>(osv);
     }
-
-    public static void BindChange<T1>(Observable<T1> from, Text text)
+    public static BindDataBtn From(Button btn)
     {
-        BindChange(from, () => text.text = from.Value.ToString(), true);
+        return new BindDataBtn(btn);
     }
-
-    public static void BindChangeFluent(Observable<float> from, Text t, float deltaPerSecond, string format)
+    public static BindDataBtn From(GameObject pnl)
     {
-        BindChange(from, () => t.DoFluent(from.Value, deltaPerSecond, format), true);
-    }
-
-    public static void BindCulminate(Observable<float> from, float threshold, UnityAction action, bool immediate = false) 
-    {
-        BindChange(from, () =>
-        {
-            if (from.Value.CompareTo(threshold) < 0)
-                return;
-            from.Value -= threshold;
-            action();
-        },
-        immediate);
-    }
-    
-    public static void BindButton(Button button, UnityAction action)
-    {
-        BindUnityEvent(button.onClick, action);
-    }
-
-    public static void BindButton(GameObject panel, UnityAction action)
-    {
-        BindButton(panel.GetComponent<Button>(), action);
-    }
-
-    public static void BindUnityEvent(UnityEvent unityEvent, UnityAction action)
-    {
-        unityEvent.RemoveListener(action);
-        unityEvent.AddListener(action);
-    }
-    
-    
-    
-    // public static void Unbind<T1, T2>(Observable<T1> from, Observable<T2> to)
-    // {
-    //     if (from.Dic.TryGetValue(to, out var v))
-    //     {
-    //         from.onValueChanged -= v;
-    //         from.Dic.Remove(v);
-    //     }
-    // }
-    //
-    // public static void Unbind<T1, T2>(Observable<T1> from, ref T2 to)
-    // {
-    //     if (from.Dic.TryGetValue(to, out var v))
-    //     {
-    //         from.onValueChanged -= v;
-    //         from.Dic.Remove(v);
-    //     }
-    // }
-
-}
-
-
-public class Trigger
-{
-    public Func<bool> TriggerEvt;
-    public Func<bool> Condition;
-    public Action TrueResult;
-    public Action FalseResult;
-
-    public Trigger(Func<bool> triggerEvt, Func<bool> condition, Action trueResult, Action falseResult)
-    {
-        TriggerEvt = triggerEvt;
-        Condition = condition;
-        TrueResult = trueResult;
-        FalseResult = falseResult;
-    }
-
-    public Trigger(Func<bool> condition, Action trueResult)
-    {
-        Condition = condition;
-        TrueResult = trueResult;
-    }
-    public Trigger(Func<bool> condition, Action trueResult, Action falseResult)
-    {
-        Condition = condition;
-        TrueResult = trueResult;
-        FalseResult = falseResult;
+        return From(pnl.GetComponent<Button>());
     }
 }

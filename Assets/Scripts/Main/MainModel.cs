@@ -23,7 +23,10 @@ public static class MainModel
             Save("Init MainData");
         }
 
-        Binder.BindCulminate(mainData.SaveTimer, 5f, () => Save("SaveTimer"));
+        // Binder.BindCulminate(mainData.SaveTimer, 5f, () => Save("SaveTimer"));
+        Binder.From(mainData.SaveTimer).To(_ => Save("SaveTimer")).Culminate(5f).UnBind();
+        
+        
     }
         
     
