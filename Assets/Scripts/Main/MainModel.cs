@@ -1,24 +1,8 @@
 using System;
 using System.ComponentModel;
-using PropertyChanged;
+// using PropertyChanged;
 using UnityEngine;
-public enum EJobType
-{
-    IronClad,
-    Silent,
-    JiBao,
-    Watcher,
-}
 
-
-[Serializable] 
-public class MainData
-{
-    public string PlayerName;
-    public Observable<float> PlayTime;
-    public Observable<float> SaveTimer;
-    public Observable<EJobType> PlayerJob;
-}
 
 public static class MainModel
 {

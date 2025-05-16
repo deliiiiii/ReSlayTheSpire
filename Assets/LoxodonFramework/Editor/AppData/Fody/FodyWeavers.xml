@@ -4,5 +4,4 @@
 		<Item>Assembly-CSharp</Item>
 	</AssemblyNames>
 	<PropertyChanged defaultWeaving ="true" />
-	<!-- <PropertyChanged/> -->
 </Weavers>

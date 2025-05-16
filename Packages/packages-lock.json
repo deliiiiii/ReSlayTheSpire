@@ -220,13 +220,6 @@
       "dependencies": {},
       "url": "https://packages.unity.cn"
     },
-    "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.1",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.cn"
-    },
     "com.unity.profiling.core": {
       "version": "1.0.2",
       "depth": 1,
@@ -298,58 +291,6 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
-    },
-    "com.unity.visualscripting": {
-      "version": "1.9.5",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0"
-      },
-      "url": "https://packages.unity.cn"
-    },
-    "com.vovgou.loxodon-framework": {
-      "version": "2.6.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://package.openupm.com"
-    },
-    "com.vovgou.loxodon-framework-fody": {
-      "version": "2.6.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://package.openupm.com"
-    },
-    "com.vovgou.loxodon-framework-fody-bindingproxy": {
-      "version": "2.6.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.vovgou.loxodon-framework-fody": "2.6.0",
-        "com.vovgou.loxodon-framework": "2.6.0"
-      },
-      "url": "https://package.openupm.com"
-    },
-    "com.vovgou.loxodon-framework-fody-propertychanged": {
-      "version": "2.6.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.vovgou.loxodon-framework-fody": "2.6.0"
-      },
-      "url": "https://package.openupm.com"
-    },
-    "com.vovgou.loxodon-framework-fody-tostring": {
-      "version": "2.6.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.vovgou.loxodon-framework-fody": "2.6.0"
-      },
-      "url": "https://package.openupm.com"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

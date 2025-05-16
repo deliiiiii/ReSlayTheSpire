@@ -9,15 +9,9 @@
     "com.unity.ide.visualstudio": "2.0.22",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.inputsystem": "1.7.0",
-    "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.timeline": "1.7.6",
     "com.unity.toolchain.win-x86_64-linux-x86_64": "2.0.10",
     "com.unity.ugui": "1.0.0",
-    "com.unity.visualscripting": "1.9.5",
-    "com.vovgou.loxodon-framework-fody": "2.4.9",
-    "com.vovgou.loxodon-framework-fody-bindingproxy": "2.6.0",
-    "com.vovgou.loxodon-framework-fody-propertychanged": "2.6.0",
-    "com.vovgou.loxodon-framework-fody-tostring": "2.6.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -49,15 +43,5 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  },
-  "scopedRegistries": [
-    {
-      "name": "package.openupm.com",
-      "url": "https://package.openupm.com",
-      "scopes": [
-        "com.vovgou",
-        "com.openupm"
-      ]
-    }
-  ]
+  }
 }

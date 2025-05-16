@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainView : MonoBehaviour, IView
+public class MainView : MonoBehaviour
 {
     [HelpBox("Global",HelpBoxType.Info)]
     [SerializeField]

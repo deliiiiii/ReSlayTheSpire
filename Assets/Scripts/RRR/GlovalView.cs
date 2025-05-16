@@ -1,13 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-
-public interface IView
-{
-    public void Bind();
-}
-
-public class GlobalView : Singleton<GlobalView>, IView
+public class GlobalView : Singleton<GlobalView>
 {
     public Observable<float> ObFluent;
     public Text TxtFluent;

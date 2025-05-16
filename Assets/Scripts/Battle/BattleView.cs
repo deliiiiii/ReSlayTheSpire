@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 // ReSharper disable InconsistentNaming
 
-public class BattleView : MonoBehaviour, IView
+public class BattleView : MonoBehaviour
 {
     [SerializeField]UICard prefabUICard;
 
