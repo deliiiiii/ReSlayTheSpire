@@ -545,8 +545,6 @@ MonoBehaviour:
   ObFluent:
     _value: 2
   TxtFluent: {fileID: 1163662063}
-  errorPanel: {fileID: 1126155207}
-  txtError: {fileID: 1869388140}
   mainView: {fileID: 4512057174557312181}
   battleView: {fileID: 2404329948218407982}
 --- !u!1 &1126155207
@@ -4779,6 +4777,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TxtPlayTime: {fileID: 3194224400770252724}
+  errorPanel: {fileID: 1126155207}
+  txtError: {fileID: 1869388140}
   panelTitle: {fileID: 3292984335170817769}
   btnStart: {fileID: 7083807845882515173}
   btnQuit: {fileID: 8412831404897733689}
