@@ -35,7 +35,6 @@ public static class TextExtension
             {
                 if (s != PlayModeStateChange.ExitingPlayMode)
                     return;
-                MyDebug.LogError("Cancel");
                 foreach (var it in dic.Keys)
                 {
                     dic[it].CancelTokenSource.Cancel();

@@ -53,14 +53,16 @@ public class BindDataAct<T> where T : IComparable
         var tempAct = act;
         act = (T newV) =>
         {
+            //TODO 真的是每累计吗
+            
             // Debug.LogWarning("1");
-            if (osv.Value is not IComparable comparableValue)
-            {
-                Debug.LogWarning($"Observable Value {newV} is not IComparable. Immediately Triggered.");
-                tempAct(newV);
-                return;
-            }
-            if (comparableValue.CompareTo(threshold) < 0)
+            // if (osv.Value is not IComparable comparableValue)
+            // {
+            //     Debug.LogWarning($"Observable Value {newV} is not IComparable. Immediately Triggered.");
+            //     tempAct(newV);
+            //     return;
+            // }
+            if (osv.Value.CompareTo(threshold) < 0)
                 return;
             dynamic d = osv.Value;
             osv.Value = d - threshold;
