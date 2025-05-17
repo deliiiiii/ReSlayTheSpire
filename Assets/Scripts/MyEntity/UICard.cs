@@ -50,7 +50,7 @@ public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             return;
         }
-        GlobalView.BattleView.OnDragCard(this);
+        UIManager.BattleView.OnDragCard(this);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -59,7 +59,7 @@ public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             return;
         }
-        GlobalView.BattleView.OnBeginDragCard(this);
+        UIManager.BattleView.OnBeginDragCard(this);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -68,7 +68,7 @@ public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             return;
         }
-        GlobalView.BattleView.OnEndDragCard(this);
+        UIManager.BattleView.OnEndDragCard(this);
     }
 }
 

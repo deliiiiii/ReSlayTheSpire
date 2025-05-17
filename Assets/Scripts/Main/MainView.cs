@@ -32,11 +32,7 @@ public class MainView : MonoBehaviour
     Button btnConfirmJob;
     [SerializeField]
     Button btnCancelJob;
-
     public Text TxtJobName;
-
-
-    
 
     public void Bind()
     {
@@ -65,35 +61,33 @@ public class MainView : MonoBehaviour
         Binder.From(btnSelectJobDown).SingleTo(MainModel.SetLastJob);
         Binder.From(btnConfirmJob).SingleTo(() =>
         {
-            if(MainModel.PlayerJob != EJobType.IronClad)
+            if (!MainModel.IsIronClad)
             {
+                errorPanel.SetActive(true);
                 txtError.text = "只有 铁甲战士 才能启动！";
                 return;
             }
-            MainModel.ChangeState(typeof(BattleState));
+            MainModel.ChangeState(EMainState.Battle);
         });
         Binder.From(btnCancelJob).SingleTo(() =>
         {
             panelTitle.SetActive(true);
             panelSelectJob.SetActive(false);
         });
-    }
-    
-    #region Event
-    public void OnEnterTitleState()
-    {
-        gameObject.SetActive(true);
-        panelTitle.SetActive(true);
-        panelSelectJob.SetActive(false);
-    }
-    
-    public void OnEnterBattleState()
-    {
-        panelSelectJob.SetActive(false);
-        panelTitle.SetActive(false);
-        panelSelectJob.SetActive(false);
-    }
 
-    
-    #endregion
+        Binder.From(MainModel.GetState(EMainState.Title)).OnEnter(() =>
+        {
+            gameObject.SetActive(true);
+            panelTitle.SetActive(true);
+            panelSelectJob.SetActive(false);
+        });
+        Binder.From(MainModel.GetState(EMainState.Title)).OnExit(() =>
+        {
+            panelTitle.SetActive(false);
+            panelSelectJob.SetActive(false);
+            BattleModel.Init();
+            UIManager.BattleView.Bind();
+            BattleModel.Launch();
+        });
+    }
 }

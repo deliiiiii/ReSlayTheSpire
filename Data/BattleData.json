@@ -1,6 +1,6 @@
 {
-    "hasPreBattleBonus": false,
-    "battleSeed": "112233seed",
+    "HasPreBattleBonus": false,
+    "BattleSeed": "112233seed",
     "PlayerData": {
         "MaxHP": 75,
         "CurHP": 75,
@@ -9,6 +9,26 @@
             {
                 "CardId": 1,
                 "IsUpper": false
+            },
+            {
+                "CardId": 1,
+                "IsUpper": true
+            },
+            {
+                "CardId": 1,
+                "IsUpper": true
+            },
+            {
+                "CardId": 2,
+                "IsUpper": false
+            },
+            {
+                "CardId": 2,
+                "IsUpper": false
+            },
+            {
+                "CardId": 2,
+                "IsUpper": true
             },
             {
                 "CardId": 2,
@@ -20,49 +40,13 @@
             },
             {
                 "CardId": 4,
-                "IsUpper": true
-            },
-            {
-                "CardId": 5,
-                "IsUpper": false
-            },
-            {
-                "CardId": 6,
-                "IsUpper": true
-            },
-            {
-                "CardId": 7,
-                "IsUpper": false
-            },
-            {
-                "CardId": 5,
-                "IsUpper": false
-            },
-            {
-                "CardId": 6,
-                "IsUpper": true
-            },
-            {
-                "CardId": 7,
-                "IsUpper": false
-            },
-            {
-                "CardId": 5,
-                "IsUpper": false
-            },
-            {
-                "CardId": 6,
-                "IsUpper": true
-            },
-            {
-                "CardId": 7,
                 "IsUpper": false
             }
         ],
-        "Kusuris": []
+        "Bottles": []
     },
     "MapData": {
-        "mapNodes": [
+        "MapNodes": [
             {
                 "NodeID": 0,
                 "MapNodeType": 0,
@@ -70,7 +54,7 @@
                     "x": 0.0,
                     "y": 0.0
                 },
-                "nextNodes": [
+                "NextNodes": [
                     1,
                     2,
                     3
@@ -78,6 +62,5 @@
             }
         ]
     },
-    "BattleState": "InRoomBattleState",
-    "CurSelectedEnemyType": "Enemy3"
+    "BattleState": "InRoom"
 }

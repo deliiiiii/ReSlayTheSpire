@@ -44,7 +44,6 @@ public class BattleView : MonoBehaviour
     [SerializeField]Text txtDeckCardCount;
     [SerializeField]Button btnExit;
     
-
     public void Bind()
     {
         Binder.From(btnDeckCard).SingleTo(() => panelDeckCard.SetActive(true));
@@ -53,35 +52,36 @@ public class BattleView : MonoBehaviour
         Binder.From(btnExit).SingleTo(() =>
         {
             gameObject.SetActive(false);
-            MainModel.ChangeState(typeof(WaitForStartState_Title));
+            MainModel.ChangeState(EMainState.Title);
         });
+        Binder.From(BattleModel.GetState(EBattleState.InRoom)).OnEnter(OnEnterBattle);
+        
         uiMapNodeEnemy.Bind();
-        gameObject.SetActive(false);
     }
 
 
-    public void OnEnterGlobalBattle(OnEnterBattleArg arg)
+    public void OnEnterBattle()
     {
         MyDebug.Log("UI OnEnterGlobalBattle", LogType.BattleUI);
         gameObject.SetActive(true);
-        txtPlayerName.text = arg.PlayerName;
-        txtJob.text = arg.PlayerJob.ToString();
-        txtCurHP.text = arg.PlayerData.CurHP.ToString();
-        txtMaxHP.text = arg.PlayerData.MaxHP.ToString();
-        txtCurCoin.text = arg.PlayerData.Coin.ToString();
+        txtPlayerName.text = MainModel.PlayerName;
+        txtJob.text = MainModel.PlayerJob.ToString();
+        txtCurHP.text = BattleModel.PlayerData.CurHP.ToString();
+        txtMaxHP.text = BattleModel.PlayerData.MaxHP.ToString();
+        txtCurCoin.text = BattleModel.PlayerData.Coin.ToString();
         Utils.ClearActiveChildren(panelKusuri.transform);
         // foreach (var kusuri in evt.PlayerData.Kusuris)
         // {
         //     GameObject kusuriObj = Instantiate(panelKusuri, panelKusuri.transform);
         //     kusuriObj.GetComponent<Image>().sprite = Resources.Load<Sprite>("Kusuri/" + kusuri.KusuriId);
         // }
-        txtDeckCardCount.text = arg.PlayerData.DeckCards.Count.ToString();
+        txtDeckCardCount.text = BattleModel.PlayerData.DeckCards.Count.ToString();
         Utils.ClearActiveChildren(transDeckCardContent);
-        foreach (var cardData in arg.PlayerData.DeckCards)
+        foreach (var cardData in BattleModel.PlayerData.DeckCards)
         {
             CreateDeckCard(cardData);
         }        
-        ShowHandCard(arg.PlayerData.DeckCards);
+        ShowHandCard(BattleModel.PlayerData.DeckCards);
     }
 
     // void OnEnterSelectNextRoom(OnEnterSelectNextRoomStateEvent evt)

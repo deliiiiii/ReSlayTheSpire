@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class GlobalView : Singleton<GlobalView>
+public class UIManager : Singleton<UIManager>
 {
     public Observable<float> ObFluent;
     public Text TxtFluent;
@@ -12,18 +12,6 @@ public class GlobalView : Singleton<GlobalView>
     [SerializeField] BattleView battleView;
     public static BattleView BattleView => Instance.battleView;
     BindDataAct<float> b;
-    public override void OnInit()
-    {
-        MainView.Bind();
-        BattleView.Bind();
-        MainView.gameObject.SetActive(true);
-        
-        
-        ObFluent = new Observable<float>(1);
-        TxtFluent.text = 0f.ToString("F3");
-        b = Binder.From(ObFluent).ToTxt(TxtFluent).Fluent(.5f).Format("F3").Immediate();
-    }
-    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z))

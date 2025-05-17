@@ -1,11 +1,19 @@
 using System.Collections.Generic;
 using System;
 
-public class MyFSM
+public class MyFSM<T> where T : Enum
 {       
-    Dictionary<Type, MyStateBase> stateDic;
+    Dictionary<string, MyState> stateDic;
 
-    MyStateBase GetStateByType(Type stateType)
+    public MyFSM()
+    {
+        stateDic = new Dictionary<string, MyState>();
+        foreach (var e in Enum.GetValues(typeof(T)))
+        {
+            stateDic.Add(e.ToString(), new MyState());
+        }
+    }
+    public MyState GetState(string stateType)
     {
         if (stateType == null)
         {
@@ -15,30 +23,29 @@ public class MyFSM
         {
             return value;
         }
-        MyStateBase state = Activator.CreateInstance(stateType) as MyStateBase;
+        MyState state = new();
         stateDic.Add(stateType, state);
         return state;
     }
-    MyStateBase curState;
+    MyState curState;
 
-    void Launch(Type startStateType)
+    void Launch(string startStateType)
     {
-        stateDic = new Dictionary<Type, MyStateBase>();
-        curState = GetStateByType(startStateType);
+        curState = GetState(startStateType);
         curState?.Enter();
     }
     public void Update()
     {
         curState?.Update();
     }
-    public void ChangeState(Type newStateType)
+    public void ChangeState(string newStateType)
     {
         if (curState == null)
         {
             Launch(newStateType);
             return;
         }
-        MyStateBase newState = GetStateByType(newStateType);
+        MyState newState = GetState(newStateType);
         curState?.Exit();
         curState = newState;
         curState.Enter();

@@ -2,13 +2,41 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 
+public enum EBattleState
+{
+    InRoom,
+}
+[Serializable]
+class BattleData
+{
+    public bool HasPreBattleBonus;
+    public string BattleSeed;
+    public PlayerData PlayerData;
+    public MapData MapData;
+    public string BattleState;
+    
+    public static BattleData GetDefault()
+    {
+        return new BattleData
+        {
+            BattleSeed = "112233seed",
+            PlayerData = PlayerData.GetDefault(),
+            MapData = MapData.GetDefault(),
+            BattleState = nameof(EBattleState.InRoom),
+        };
+    }
+}
+
+
 public static class BattleModel 
 {
+    
+    
     static BattleData battleData;
-    static MyFSM battleFSM = new();
-    public static void EnterBattle()
+    static MyFSM<EBattleState> battleFSM;
+    public static void Init()
     {
-        battleFSM = new MyFSM();
+        battleFSM = new MyFSM<EBattleState>();
         battleData = Saver.Load<BattleData>("Data", typeof(BattleData).ToString());
         if (battleData?.PlayerData == null)
         {
@@ -16,7 +44,6 @@ public static class BattleModel
             battleData = BattleData.GetDefault();
             Save("Init BattleData");
         }
-        battleFSM.ChangeState(Type.GetType(battleData.BattleState));
     }
 
     static void Save(string info = "")
@@ -26,27 +53,29 @@ public static class BattleModel
     }
     public static void EnterNextRoomBattle()
     {
-        battleData.BattleState = typeof(InRoomBattleState).ToString();
-        battleFSM.ChangeState(Type.GetType(battleData.BattleState));
-        Save("EnterNextRoomBattle");
+        //TODO 不做了
+        // ChangeState(EBattleState.InRoom);
+    }
+
+
+    public static void Launch()
+    {
+        battleFSM.ChangeState(battleData.BattleState);
+    }
+    public static void ChangeState(EBattleState eState)
+    {
+        battleData.BattleState = eState.ToString();
+        battleFSM.ChangeState(eState.ToString());
+        Save($"Battle Change State :{eState.ToString()}");
     }
 
     #region Getter
 
     public static PlayerData PlayerData => battleData.PlayerData;
     public static MapData MapData => battleData.MapData;
+    public static MyState GetState(EBattleState e) => battleFSM.GetState(e.ToString());
 
     #endregion
-}
-
-
-
-public struct OnEnterBattleArg
-{
-    public string PlayerName;
-    public EJobType PlayerJob;
-    public PlayerData PlayerData;
-    public MapData MapData;
 }
 
 

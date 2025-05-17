@@ -64,6 +64,7 @@ public class BindDataAct<T> where T : IComparable
             // }
             if (osv.Value.CompareTo(threshold) < 0)
                 return;
+            Debug.LogWarning("2");
             dynamic d = osv.Value;
             osv.Value = d - threshold;
             tempAct(newV);
@@ -85,61 +86,8 @@ public class BindDataAct<T> where T : IComparable
     }
 }
 
-public class BindDataActTxt<T> : BindDataAct<T> where T : IComparable
-{
-    public BindDataActTxt(Observable<T> osv, Text txt) : base(osv)
-    {
-        this.txt = txt;
-        act = (T t) => txt.text = t.ToString();
-    }
-    Text txt;
-    float deltaPerSecond;
-    public BindDataActTxt<T> Fluent(float deltaPerSecond)
-    {
-        BeforeTo();
-        this.deltaPerSecond = deltaPerSecond;
-        act = (_) => txt.DoFluent(osv, deltaPerSecond);
-        AfterTo();
-        return this;
-    }
-
-    public BindDataActTxt<T> Format(string format)
-    {
-        BeforeTo();
-        act = (_) => txt.DoFluent(osv, deltaPerSecond, format);
-        AfterTo();
-        return this;
-    }
-}
 
 
 
-public class BindDataBtn
-{
-    public BindDataBtn(Button btn)
-    {
-        this.btn = btn;
-    }
-    Button btn;
 
-    UnityAction act;
-    public BindDataBtn SingleTo(UnityAction act)
-    {
-        UnBindAll();
-        this.act = act;
-        btn.onClick.AddListener(act);
-        return this;
-    }
 
-    public BindDataBtn AnotherTo(UnityAction act)
-    {
-        this.act = act;
-        btn.onClick.AddListener(act);
-        return this;
-    }
-
-    void UnBindAll()
-    {
-        btn.onClick.RemoveAllListeners();
-    }
-}

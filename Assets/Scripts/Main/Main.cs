@@ -7,8 +7,8 @@ public class Main : MonoBehaviour
     void Awake()
     {
         MainModel.Init();
-        GlobalView.Instance.OnInit();
-        MainModel.ChangeState(typeof(WaitForStartState_Title));
+        UIManager.MainView.Bind();
+        MainModel.ChangeState(EMainState.Title);
     }
     
     

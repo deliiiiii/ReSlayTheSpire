@@ -4,17 +4,45 @@ using System.ComponentModel;
 using UnityEngine;
 
 
+
+public enum EMainState
+{
+    Title,
+    Battle,
+}
+public enum EJobType
+{
+    IronClad,
+    Silent,
+    JiBao,
+    Watcher,
+}
+[Serializable] 
+class MainData
+{
+    public string PlayerName;
+    public Observable<float> PlayTime;
+    public Observable<float> SaveTimer;
+    public Observable<EJobType> PlayerJob;
+}
+
+
 public static class MainModel
 {
-    static MyFSM mainFSM;
+    
+    
+    
+    
+    static MyFSM<EMainState> mainFSM;
     static MainData mainData;
     public static void Init()
     {
-        mainFSM = new MyFSM();
+        mainFSM = new MyFSM<EMainState>();
         mainData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
-        MyDebug.Log("mainData IS NULL : " + (mainData == default(MainData)));
+        
         if(mainData == default(MainData) || mainData.PlayerName == null)
         {
+            MyDebug.Log("mainData IS NULL");
             mainData = new MainData
             {
                 PlayTime = new Observable<float>(0f),
@@ -22,11 +50,7 @@ public static class MainModel
             };
             Save("Init MainData");
         }
-
-        // Binder.BindCulminate(mainData.SaveTimer, 5f, () => Save("SaveTimer"));
-        Binder.From(mainData.SaveTimer).To(_ => Save("SaveTimer")).Culminate(5f).UnBind();
-        
-        
+        Binder.From(mainData.SaveTimer).To(_ => Save("SaveTimer")).Culminate(5f);
     }
         
     
@@ -41,12 +65,12 @@ public static class MainModel
         mainData.PlayTime.Value += dt;
         mainData.SaveTimer.Value += dt;
     }
-    public static void ChangeState(Type stateType)
+    public static void ChangeState(EMainState eState)
     {
-        mainFSM.ChangeState(stateType);
+        mainFSM.ChangeState(eState.ToString());
     }
 
-
+    public static bool IsIronClad => mainData.PlayerJob == EJobType.IronClad;
     public static void SetNextJob()
     {
         SetJob((EJobType)(((int)PlayerJob.Value + 1) % Enum.GetValues(typeof(EJobType)).Length));
@@ -61,13 +85,16 @@ public static class MainModel
         mainData.PlayerJob.Value = eJobType;
         // Save("SetJob " + eJobType);
     }
-
+    
+    
 
 
     #region Getter
     public static string PlayerName => mainData.PlayerName;
     public static Observable<EJobType> PlayerJob => mainData.PlayerJob;
     public static Observable<float> PlayTime => mainData.PlayTime;
+
+    public static MyState GetState(EMainState eState) => mainFSM.GetState(eState.ToString());
 
     #endregion
 }
