@@ -11,18 +11,6 @@ public abstract partial class ViewBase : MonoBehaviour
     public virtual void IBL(){}
     // static Dictionary<Type, ViewBase> viewDic = new();
     static Dictionary<Type, ModelBase> modelDic => ModelBase.modelDic;
-
-
-    // static ViewBase RegisterView(ViewBase view)
-    // {
-    //     if (modelDic.ContainsKey(view.GetType()))
-    //     {
-    //         // MyDebug.LogError($"model {model.GetType()} already exists");
-    //         return viewDic[view.GetType()];
-    //     }
-    //     viewDic.Add(view.GetType(), view);
-    //     return view;
-    // }
     protected static ModelBase RegisterModel(ModelBase model)
     {
         if (modelDic.ContainsKey(model.GetType()))
