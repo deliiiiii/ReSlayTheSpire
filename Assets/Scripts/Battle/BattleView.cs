@@ -43,8 +43,15 @@ public class BattleView : MonoBehaviour
     [SerializeField]Button btnDeckCard;
     [SerializeField]Text txtDeckCardCount;
     [SerializeField]Button btnExit;
+
+    public void IBL()
+    {
+        BattleModel.Init();
+        Bind();
+        BattleModel.Launch();
+    }
     
-    public void Bind()
+    void Bind()
     {
         Binder.From(btnDeckCard).SingleTo(() => panelDeckCard.SetActive(true));
         Binder.From(panelDeckCardBack).SingleTo(() => panelDeckCard.SetActive(false));
@@ -60,7 +67,7 @@ public class BattleView : MonoBehaviour
     }
 
 
-    public void OnEnterBattle()
+    void OnEnterBattle()
     {
         MyDebug.Log("UI OnEnterGlobalBattle", LogType.BattleUI);
         gameObject.SetActive(true);
@@ -95,7 +102,7 @@ public class BattleView : MonoBehaviour
     //     uiMapNodeEnemy.SetCurSelectedEnemyType(evt.EnemyType);
     // }
 
-    public void EnterInRoomBattle()
+    void EnterInRoomBattle()
     {
         MyDebug.Log("UI OnEnterInRoomBattle", LogType.BattleUI);
         panelEnterNextRoom.SetActive(false);

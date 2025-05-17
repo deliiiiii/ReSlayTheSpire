@@ -6,9 +6,7 @@ public class Main : MonoBehaviour
 {
     void Awake()
     {
-        MainModel.Init();
-        UIManager.MainView.Bind();
-        MainModel.ChangeState(EMainState.Title);
+        UIManager.MainView.IBL();
     }
     
     

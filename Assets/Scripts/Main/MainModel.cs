@@ -29,10 +29,6 @@ class MainData
 
 public static class MainModel
 {
-    
-    
-    
-    
     static MyFSM<EMainState> mainFSM;
     static MainData mainData;
     public static void Init()
@@ -52,14 +48,18 @@ public static class MainModel
         }
         Binder.From(mainData.SaveTimer).To(_ => Save("SaveTimer")).Culminate(5f);
     }
-        
+
+    public static void Launch()
+    {
+        ChangeState(EMainState.Title);
+    }
     
-    
-    public static void Save(string info = "")
+    static void Save(string info = "")
     {
         MyDebug.Log("Save " + info, LogType.State);
         Saver.Save("Data",typeof(MainData).ToString(), mainData);
     }
+    
     public static void Tick(float dt)
     {
         mainData.PlayTime.Value += dt;
@@ -93,8 +93,6 @@ public static class MainModel
     public static string PlayerName => mainData.PlayerName;
     public static Observable<EJobType> PlayerJob => mainData.PlayerJob;
     public static Observable<float> PlayTime => mainData.PlayTime;
-
     public static MyState GetState(EMainState eState) => mainFSM.GetState(eState.ToString());
-
     #endregion
 }

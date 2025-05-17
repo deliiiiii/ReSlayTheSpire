@@ -34,7 +34,15 @@ public class MainView : MonoBehaviour
     Button btnCancelJob;
     public Text TxtJobName;
 
-    public void Bind()
+    public void IBL()
+    {
+        MainModel.Init();
+        Bind();
+        MainModel.Launch();
+    }
+    
+    
+    void Bind()
     {
         Binder.From(errorPanel).SingleTo(() => errorPanel.SetActive(false));
         Binder.From(MainModel.PlayTime).ToTxt(TxtPlayTime);
@@ -85,9 +93,7 @@ public class MainView : MonoBehaviour
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(false);
-            BattleModel.Init();
-            UIManager.BattleView.Bind();
-            BattleModel.Launch();
+            UIManager.BattleView.IBL();
         });
     }
 }
