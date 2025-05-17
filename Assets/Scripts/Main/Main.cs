@@ -6,6 +6,6 @@ public class Main : MonoBehaviour
 {
     void Awake()
     {
-        UIManager.MainView.IBL();
+        MainView.Instance.IBL();
     }
 }

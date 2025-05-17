@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainView : MonoBehaviour
+public class MainView : Singleton<MainView>
 {
     [HelpBox("Global",HelpBoxType.Info)]
     [SerializeField]
@@ -93,7 +93,7 @@ public class MainView : MonoBehaviour
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(false);
-            UIManager.BattleView.IBL();
+            BattleView.Instance.IBL();
         });
     }
 
