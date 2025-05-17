@@ -1,11 +1,15 @@
+﻿using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using QFramework;
-using UnityEngine.SceneManagement;
 
-public class Main : MonoBehaviour
+public class Main : ViewBase
 {
+    public MainView MainViewIns;
+    public BattleView BattleViewIns;
     void Awake()
     {
-        MainView.Instance.IBL();
+        MainView = MainViewIns;
+        BattleView = BattleViewIns;
+        MainView.gameObject.SetActive(true);
     }
 }

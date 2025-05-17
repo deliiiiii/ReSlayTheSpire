@@ -27,11 +27,13 @@ class MainData
 }
 
 
-public static class MainModel
+public class MainModel : ModelBase
 {
-    static MyFSM<EMainState> mainFSM;
-    static MainData mainData;
-    public static void Init()
+    [SerializeField]
+    MyFSM<EMainState> mainFSM;
+    [SerializeField]
+    MainData mainData;
+    public override void Init()
     {
         mainFSM = new MyFSM<EMainState>();
         mainData = Saver.Load<MainData>("Data",typeof(MainData).ToString());
@@ -49,38 +51,38 @@ public static class MainModel
         Binder.From(mainData.SaveTimer).To(_ => Save("SaveTimer")).Culminate(5f);
     }
 
-    public static void Launch()
+    public override void Launch()
     {
         ChangeState(EMainState.Title);
     }
     
-    static void Save(string info = "")
+    void Save(string info = "")
     {
         MyDebug.Log("Save " + info, LogType.State);
         Saver.Save("Data",typeof(MainData).ToString(), mainData);
     }
     
-    public static void Tick(float dt)
+    public void Tick(float dt)
     {
         mainData.PlayTime.Value += dt;
         mainData.SaveTimer.Value += dt;
     }
-    public static void ChangeState(EMainState eState)
+    public void ChangeState(EMainState eState)
     {
         mainFSM.ChangeState(eState.ToString());
     }
 
-    public static bool IsIronClad => mainData.PlayerJob == EJobType.IronClad;
-    public static void SetNextJob()
+    public bool IsIronClad => mainData.PlayerJob == EJobType.IronClad;
+    public void SetNextJob()
     {
         SetJob((EJobType)(((int)PlayerJob.Value + 1) % Enum.GetValues(typeof(EJobType)).Length));
     }
-    public static void SetLastJob()
+    public void SetLastJob()
     {
         SetJob((EJobType)(((int)PlayerJob.Value - 1 + Enum.GetValues(typeof(EJobType)).Length) 
             % Enum.GetValues(typeof(EJobType)).Length));
     }
-    static void SetJob(EJobType eJobType)
+    void SetJob(EJobType eJobType)
     {
         mainData.PlayerJob.Value = eJobType;
         // Save("SetJob " + eJobType);
@@ -90,9 +92,9 @@ public static class MainModel
 
 
     #region Getter
-    public static string PlayerName => mainData.PlayerName;
-    public static Observable<EJobType> PlayerJob => mainData.PlayerJob;
-    public static Observable<float> PlayTime => mainData.PlayTime;
-    public static MyState GetState(EMainState eState) => mainFSM.GetState(eState.ToString());
+    public string PlayerName => mainData.PlayerName;
+    public Observable<EJobType> PlayerJob => mainData.PlayerJob;
+    public Observable<float> PlayTime => mainData.PlayTime;
+    public MyState GetState(EMainState eState) => mainFSM.GetState(eState.ToString());
     #endregion
 }

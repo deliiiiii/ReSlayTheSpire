@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
+[Serializable]
 public class MyFSM<T> where T : Enum
 {       
     Dictionary<string, MyState> stateDic;
@@ -28,7 +31,7 @@ public class MyFSM<T> where T : Enum
         return state;
     }
     MyState curState;
-
+    [ShowInInspector]string curStateName => curState.GetType().ToString();
     void Launch(string startStateType)
     {
         curState = GetState(startStateType);

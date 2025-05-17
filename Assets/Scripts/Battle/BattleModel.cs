@@ -28,13 +28,11 @@ class BattleData
 }
 
 
-public static class BattleModel 
+public class BattleModel : ModelBase
 {
-    
-    
-    static BattleData battleData;
-    static MyFSM<EBattleState> battleFSM;
-    public static void Init()
+    BattleData battleData;
+    MyFSM<EBattleState> battleFSM;
+    public override void Init()
     {
         battleFSM = new MyFSM<EBattleState>();
         battleData = Saver.Load<BattleData>("Data", typeof(BattleData).ToString());
@@ -45,24 +43,25 @@ public static class BattleModel
             Save("Init BattleData");
         }
     }
+    public override void Launch()
+    {
+        battleFSM.ChangeState(battleData.BattleState);
+    }
 
-    static void Save(string info = "")
+    void Save(string info = "")
     {
         MyDebug.Log("Save " +info, LogType.State);
         Saver.Save("Data", typeof(BattleData).ToString(), battleData);
     }
-    public static void EnterNextRoomBattle()
+    public void EnterNextRoomBattle()
     {
         //TODO 不做了
         // ChangeState(EBattleState.InRoom);
     }
 
 
-    public static void Launch()
-    {
-        battleFSM.ChangeState(battleData.BattleState);
-    }
-    public static void ChangeState(EBattleState eState)
+    
+    public void ChangeState(EBattleState eState)
     {
         battleData.BattleState = eState.ToString();
         battleFSM.ChangeState(eState.ToString());
@@ -71,9 +70,9 @@ public static class BattleModel
 
     #region Getter
 
-    public static PlayerData PlayerData => battleData.PlayerData;
-    public static MapData MapData => battleData.MapData;
-    public static MyState GetState(EBattleState e) => battleFSM.GetState(e.ToString());
+    public PlayerData PlayerData => battleData.PlayerData;
+    public MapData MapData => battleData.MapData;
+    public MyState GetState(EBattleState e) => battleFSM.GetState(e.ToString());
 
     #endregion
 }

@@ -56,6 +56,12 @@ public class Observable<T> where T: IComparable
             _ => 0f
         };
     }
+
+
+    public override string ToString()
+    {
+        return _value.ToString();
+    }
 }
 
 

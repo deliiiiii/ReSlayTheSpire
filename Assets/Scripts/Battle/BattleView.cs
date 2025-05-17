@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using QFramework;
 using UnityEngine;
 using UnityEngine.UI;
 // ReSharper disable InconsistentNaming
 
-public class BattleView : Singleton<BattleView>
+public class BattleView : ViewBase
 {
     [SerializeField]UICard prefabUICard;
 
@@ -44,9 +45,9 @@ public class BattleView : Singleton<BattleView>
     [SerializeField]Text txtDeckCardCount;
     [SerializeField]Button btnExit;
 
-    public void IBL()
+    public override void IBL()
     {
-        BattleModel.Init();
+        RegisterModel(gameObject.GetOrAddComponent<BattleModel>()).Init();
         Bind();
         BattleModel.Launch();
     }

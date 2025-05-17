@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class UICard : ViewBase, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     public Text cardCost;
     public Text cardName;
@@ -50,7 +50,7 @@ public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             return;
         }
-        BattleView.Instance.OnDragCard(this);
+        BattleView.OnDragCard(this);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -59,7 +59,7 @@ public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             return;
         }
-        BattleView.Instance.OnBeginDragCard(this);
+        BattleView.OnBeginDragCard(this);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -68,7 +68,7 @@ public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         {
             return;
         }
-        BattleView.Instance.OnEndDragCard(this);
+        BattleView.OnEndDragCard(this);
     }
 }
 

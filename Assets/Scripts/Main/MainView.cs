@@ -1,8 +1,9 @@
 using System;
+using QFramework;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainView : Singleton<MainView>
+public class MainView : ViewBase
 {
     [HelpBox("Global",HelpBoxType.Info)]
     [SerializeField]
@@ -34,9 +35,15 @@ public class MainView : Singleton<MainView>
     Button btnCancelJob;
     public Text TxtJobName;
 
-    public void IBL()
+
+    void Awake()
     {
-        MainModel.Init();
+        IBL();
+    }
+
+    public override void IBL()
+    {
+        RegisterModel(gameObject.GetOrAddComponent<MainModel>()).Init();
         Bind();
         MainModel.Launch();
     }
@@ -45,8 +52,8 @@ public class MainView : Singleton<MainView>
     void Bind()
     {
         Binder.From(errorPanel).SingleTo(() => errorPanel.SetActive(false));
-        Binder.From(MainModel.PlayTime).ToTxt(TxtPlayTime);
-        Binder.From(MainModel.PlayerJob).ToTxt(TxtJobName);
+        Binder.From(MainModel.PlayTime).ToTxt(TxtPlayTime).Immediate();
+        Binder.From(MainModel.PlayerJob).ToTxt(TxtJobName).Immediate();
         Binder.From(btnStart).SingleTo(() =>
         {
             panelTitle.SetActive(false);
@@ -93,7 +100,7 @@ public class MainView : Singleton<MainView>
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(false);
-            BattleView.Instance.IBL();
+            BattleView.IBL();
         });
     }
 
