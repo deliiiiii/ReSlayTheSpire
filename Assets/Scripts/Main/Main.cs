@@ -8,16 +8,4 @@ public class Main : MonoBehaviour
     {
         UIManager.MainView.IBL();
     }
-    
-    
-    
-    public void Update()
-    {
-        MainModel.Tick(Time.deltaTime);
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-    }
-
 }

@@ -96,4 +96,9 @@ public class MainView : MonoBehaviour
             UIManager.BattleView.IBL();
         });
     }
+
+    void Update()
+    {
+        MainModel.Tick(Time.deltaTime);
+    }
 }
