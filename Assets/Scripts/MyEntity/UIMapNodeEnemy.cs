@@ -9,11 +9,11 @@ public class UIMapNodeEnemy : UIMapNodeBase
     string[] enemyTypes;
 
 
-    //dropdown选中时发送事件
-    public override void Bind()
-    {
-        Binder.From(BtnEnter).SingleTo(BattleModel.EnterNextRoomBattle);
-    }
+    // TODO dropdown选中时发送事件
+    // public override void Bind()
+    // {
+    //     Binder.From(BtnEnter).SingleTo(BattleModel.EnterNextRoomBattle);
+    // }
     public void SetEnemyType(string[] enemyTypes)
     {
         this.enemyTypes = enemyTypes;

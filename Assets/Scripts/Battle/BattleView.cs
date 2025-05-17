@@ -122,6 +122,8 @@ public class BattleView : ViewBase
             detailUICard.ReadData(cardData);
             panelDetailCard.SetActive(true);
         });
+        BindUICard(uiCard);
+        
         uiCard.gameObject.SetActive(true);
         return uiCard.gameObject;
     }
@@ -131,8 +133,18 @@ public class BattleView : ViewBase
         UICard uiCard = Instantiate(prefabUICard, panelHandCard.transform);
         uiCard.IsHandCard = true;
         uiCard.ReadData(cardData);
+        BindUICard(uiCard);
+        
         uiCard.gameObject.SetActive(true);
         return uiCard.gameObject;
+    }
+
+    void BindUICard(UICard uiCard)
+    {
+        uiCard.OnDragEvent += () => OnDragCard(uiCard);
+        uiCard.OnBeginDragEvent += () => OnBeginDragCard(uiCard);
+        uiCard.OnEndDragEvent += () => OnEndDragCard(uiCard);
+        
     }
 
 

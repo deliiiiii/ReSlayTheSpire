@@ -1,10 +1,11 @@
+using System;
 using QFramework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class UICard : ViewBase, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class UICard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     public Text cardCost;
     public Text cardName;
@@ -44,13 +45,19 @@ public class UICard : ViewBase, IPointerEnterHandler, IPointerExitHandler, IDrag
         transform.localScale = originalScale;
         transform.SetSiblingIndex(originalIndex);
     }
+
+
+
+    public event Action OnDragEvent;
+    public event Action OnBeginDragEvent;
+    public event Action OnEndDragEvent;
     public void OnDrag(PointerEventData eventData)
     {
         if(!IsHandCard)
         {
             return;
         }
-        BattleView.OnDragCard(this);
+        OnDragEvent?.Invoke();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -59,7 +66,7 @@ public class UICard : ViewBase, IPointerEnterHandler, IPointerExitHandler, IDrag
         {
             return;
         }
-        BattleView.OnBeginDragCard(this);
+        OnBeginDragEvent?.Invoke();
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -68,7 +75,7 @@ public class UICard : ViewBase, IPointerEnterHandler, IPointerExitHandler, IDrag
         {
             return;
         }
-        BattleView.OnEndDragCard(this);
+        OnEndDragEvent?.Invoke();
     }
 }
 

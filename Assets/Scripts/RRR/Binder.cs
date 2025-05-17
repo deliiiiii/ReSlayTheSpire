@@ -21,5 +21,10 @@ public static class Binder
     {
         return new BindDataState(state);
     }
+
+    public static BindDataEvent From(Action evtAction)
+    {
+        return new BindDataEvent(evtAction);
+    }
     
 }

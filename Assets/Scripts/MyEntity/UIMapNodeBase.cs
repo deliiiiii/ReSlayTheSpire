@@ -3,14 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIMapNodeBase : ViewBase
+public class UIMapNodeBase : MonoBehaviour
 {
     public Button BtnEnter;
-    
     public virtual void Bind(){}
-
-    public override void IBL()
-    {
-        Bind();
-    }
 }
