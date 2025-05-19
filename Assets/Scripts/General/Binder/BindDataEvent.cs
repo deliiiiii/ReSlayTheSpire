@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class BindDataEvent
 {
-    UnityEvent evt;
+    readonly UnityEvent evt;
     public BindDataEvent(UnityEvent evt)
     {
         this.evt = evt;

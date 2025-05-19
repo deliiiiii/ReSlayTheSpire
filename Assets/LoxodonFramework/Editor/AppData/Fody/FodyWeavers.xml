@@ -3,5 +3,5 @@
 	<AssemblyNames>
 		<Item>Assembly-CSharp</Item>
 	</AssemblyNames>
-	<PropertyChanged defaultWeaving ="true" />
+	<PropertyChanged defaultWeaving ="false" />
 </Weavers>

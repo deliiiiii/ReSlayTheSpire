@@ -6,7 +6,7 @@ using UnityEditor;
 #endif
 
 
-public abstract class ViewBase : MonoBehaviour
+public abstract partial class ViewBase : MonoBehaviour
 {
     public virtual void IBL(){}
     static Dictionary<Type, ModelBase> modelDic => ModelBase.ModelDic;
@@ -26,3 +26,24 @@ public abstract class ViewBase : MonoBehaviour
     protected static MainModel MainModel => modelDic[typeof(MainModel)] as MainModel;
     protected static BattleModel BattleModel => modelDic[typeof(BattleModel)] as BattleModel;
 }
+
+
+#if UNITY_EDITOR
+public partial class ViewBase
+{
+    void Awake()
+    {
+        EditorApplication.playModeStateChanged -= OnExitPlayMode;
+        EditorApplication.playModeStateChanged += OnExitPlayMode;
+    }
+
+    void OnExitPlayMode(PlayModeStateChange state)
+    {
+        if(state == PlayModeStateChange.ExitingPlayMode)
+        {
+            MainView = null;
+            BattleView = null;
+        }
+    }
+}
+#endif
