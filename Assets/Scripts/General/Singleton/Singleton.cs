@@ -4,16 +4,20 @@ using UnityEngine;
 //获取单例 xxx.Instance
 public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
+    static T instance;
     public bool GlobalOnScene = false;
-    public static T Instance { get; private set; }
 
-    void Awake()
+    public static T Instance => instance ? instance : FindObjectOfType<T>() ? FindObjectOfType<T>() : new GameObject().AddComponent<T>();
+
+    protected virtual void Awake()
     {
+        if(name == "New Game Object")
+            name = GetType().ToString();
         if(Instance && Instance != this)
         {
+            // duplicate!!!
             Destroy(Instance.gameObject);
         }
-        Instance = this as T;
         // Instance!.OnInit();
         if (GlobalOnScene)
         {
@@ -30,7 +34,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 // ReSharper disable once InconsistentNaming
 public class SingletonCS<T> where T : SingletonCS<T>, new()
 {
-    private static T instance;
+    static T instance;
     public static T Instance
     {
         get

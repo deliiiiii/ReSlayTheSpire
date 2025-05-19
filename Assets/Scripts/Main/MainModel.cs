@@ -44,6 +44,8 @@ public class MainModel : ModelBase
             };
             Save("Init MainData");
         }
+
+        Binder.Update(Tick, EUpdatePri.MainModel);
         Binder.From(mainData.PlayTime).To(_ => Save("SaveTimer")).CulminateEvery(5f);
     }
 
@@ -58,7 +60,7 @@ public class MainModel : ModelBase
         Saver.Save("Data",typeof(MainData).ToString(), mainData);
     }
     
-    public void Tick(float dt)
+    void Tick(float dt)
     {
         mainData.PlayTime.Value += dt;
     }

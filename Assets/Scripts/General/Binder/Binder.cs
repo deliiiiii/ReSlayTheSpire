@@ -27,23 +27,23 @@ public static class Binder
         return new BindDataState(state);
     }
 
-    public static SortedDictionary<EUpdatePri, HashSet<BindDataUpdate>> UpdateDic = new();
-    public static BindDataUpdate Update(Action act, EUpdatePri priority)
+    
+    public static BindDataUpdate Update(Action<float> act, EUpdatePri priority)
     {
         var ret = new BindDataUpdate(act, priority);
-        if(!UpdateDic.ContainsKey(priority))
-            UpdateDic.Add(priority, new HashSet<BindDataUpdate>());
-        UpdateDic[priority].Add(ret);
+        if(!Updater.UpdateDic.ContainsKey(priority))
+            Updater.UpdateDic.Add(priority, new HashSet<BindDataUpdate>());
+        Updater.UpdateDic[priority].Add(ret);
         return ret;
     }
 }
 
 public class BindDataUpdate
 {
-    public Action Act;
+    public Action<float> Act;
     readonly EUpdatePri priority;
 
-    public BindDataUpdate(Action act, EUpdatePri priority)
+    public BindDataUpdate(Action<float> act, EUpdatePri priority)
     {
         this.Act = act;
         this.priority = priority;
@@ -51,13 +51,13 @@ public class BindDataUpdate
 
     public void UnBind()
     {
-        Binder.UpdateDic[priority].Remove(this);
+        Updater.UpdateDic[priority].Remove(this);
     }
 }
 
 public enum EUpdatePri
 {
-    Default = 0,
-    P1 = 1,
-    P2 = 2,
+    MainModel = 0,
+    // P1 = 1,
+    // P2 = 2,
 }

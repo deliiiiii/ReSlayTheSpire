@@ -101,9 +101,4 @@ public class MainView : ViewBase
             BattleView.IBL();
         });
     }
-
-    void Update()
-    {
-        MainModel.Tick(Time.deltaTime);
-    }
 }
