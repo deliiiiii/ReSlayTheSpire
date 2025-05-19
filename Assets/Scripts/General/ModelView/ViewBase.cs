@@ -19,18 +19,18 @@ public abstract partial class ViewBase : MonoBehaviour
         modelDic.Add(model.GetType(), model);
         return model;
     }
-
-    protected static MainView MainView;
-    protected static BattleView BattleView;
-    
-    protected static MainModel MainModel => modelDic[typeof(MainModel)] as MainModel;
-    protected static BattleModel BattleModel => modelDic[typeof(BattleModel)] as BattleModel;
+    static T GetModel<T>() where T : ModelBase => modelDic[typeof(T)] ? modelDic[typeof(T)] as T: null;
 }
 
 
 #if UNITY_EDITOR
 public partial class ViewBase
 {
+    protected static MainView MainView;
+    protected static BattleView BattleView;
+    protected static MainModel MainModel => GetModel<MainModel>();
+    protected static BattleModel BattleModel => GetModel<BattleModel>();
+    
     void Awake()
     {
         EditorApplication.playModeStateChanged -= OnExitPlayMode;

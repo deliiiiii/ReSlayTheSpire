@@ -35,14 +35,9 @@ public class MainView : ViewBase
     Button btnCancelJob;
     public Text TxtJobName;
 
-
-    void Awake()
-    {
-        IBL();
-    }
-
     public override void IBL()
     {
+        gameObject.SetActive(true);
         RegisterModel(gameObject.GetOrAddComponent<MainModel>()).Init();
         Bind();
         MainModel.Launch();
@@ -100,6 +95,9 @@ public class MainView : ViewBase
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(false);
+        });
+        Binder.From(MainModel.GetState(EMainState.Battle)).OnEnter(() =>
+        {
             BattleView.IBL();
         });
     }

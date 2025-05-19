@@ -19,7 +19,6 @@ class MainData
 {
     public string PlayerName;
     public Observable<float> PlayTime;
-    public Observable<float> SaveTimer;
     public Observable<EJobType> PlayerJob;
 }
 
@@ -45,7 +44,7 @@ public class MainModel : ModelBase
             };
             Save("Init MainData");
         }
-        Binder.From(mainData.SaveTimer).To(_ => Save("SaveTimer")).CulminateEvery(5f);
+        Binder.From(mainData.PlayTime).To(_ => Save("SaveTimer")).CulminateEvery(5f);
     }
 
     public override void Launch()
@@ -62,7 +61,6 @@ public class MainModel : ModelBase
     public void Tick(float dt)
     {
         mainData.PlayTime.Value += dt;
-        mainData.SaveTimer.Value += dt;
     }
     public void ChangeState(EMainState eState)
     {
