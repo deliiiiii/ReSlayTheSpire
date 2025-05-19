@@ -54,10 +54,10 @@ public class BattleView : ViewBase
     
     void Bind()
     {
-        Binder.From(btnDeckCard).SingleTo(() => panelDeckCard.SetActive(true));
-        Binder.From(panelDeckCardBack).SingleTo(() => panelDeckCard.SetActive(false));
-        Binder.From(panelDetailCard).SingleTo(() => panelDetailCard.SetActive(false));
-        Binder.From(btnExit).SingleTo(() =>
+        Binder.From(btnDeckCard).To(() => panelDeckCard.SetActive(true));
+        Binder.From(panelDeckCardBack).To(() => panelDeckCard.SetActive(false));
+        Binder.From(panelDetailCard).To(() => panelDetailCard.SetActive(false));
+        Binder.From(btnExit).To(() =>
         {
             gameObject.SetActive(false);
             MainModel.ChangeState(EMainState.Title);
@@ -77,14 +77,14 @@ public class BattleView : ViewBase
         txtCurHP.text = BattleModel.PlayerData.CurHP.ToString();
         txtMaxHP.text = BattleModel.PlayerData.MaxHP.ToString();
         txtCurCoin.text = BattleModel.PlayerData.Coin.ToString();
-        Utils.ClearActiveChildren(panelKusuri.transform);
+        panelKusuri.transform.ClearActionChildren();
         // foreach (var kusuri in evt.PlayerData.Kusuris)
         // {
         //     GameObject kusuriObj = Instantiate(panelKusuri, panelKusuri.transform);
         //     kusuriObj.GetComponent<Image>().sprite = Resources.Load<Sprite>("Kusuri/" + kusuri.KusuriId);
         // }
         txtDeckCardCount.text = BattleModel.PlayerData.DeckCards.Count.ToString();
-        Utils.ClearActiveChildren(transDeckCardContent);
+        transDeckCardContent.ClearActionChildren();
         foreach (var cardData in BattleModel.PlayerData.DeckCards)
         {
             CreateDeckCard(cardData);
@@ -155,7 +155,7 @@ public class BattleView : ViewBase
         float cardScale = cardHeight / prefabUICard.GetComponent<RectTransform>().sizeDelta.y;
         float cardWidth = prefabUICard.GetComponent<RectTransform>().sizeDelta.x * cardScale;
 
-        Utils.ClearActiveChildren(panelHandCard.transform);
+        panelHandCard.transform.ClearActionChildren();
         int cardCount = cardDatas.Count;
         switch (cardCount)
         {

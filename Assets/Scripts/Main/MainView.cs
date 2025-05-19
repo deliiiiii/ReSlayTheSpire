@@ -51,20 +51,20 @@ public class MainView : ViewBase
     
     void Bind()
     {
-        Binder.From(errorPanel).SingleTo(() => errorPanel.SetActive(false));
+        Binder.From(errorPanel).To(() => errorPanel.SetActive(false));
         Binder.From(MainModel.PlayTime).ToTxt(TxtPlayTime).Immediate();
         Binder.From(MainModel.PlayerJob).ToTxt(TxtJobName).Immediate();
-        Binder.From(btnStart).SingleTo(() =>
+        Binder.From(btnStart).To(() =>
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(true);
         });
-        Binder.From(btnStart).SingleTo(() =>
+        Binder.From(btnStart).To(() =>
         {
             panelTitle.SetActive(false);
             panelSelectJob.SetActive(true);
         });
-        Binder.From(btnQuit).SingleTo(() =>
+        Binder.From(btnQuit).To(() =>
         {
             #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
@@ -72,9 +72,9 @@ public class MainView : ViewBase
                 Application.Quit();
             #endif
         });
-        Binder.From(btnSelectJobUp).SingleTo(MainModel.SetNextJob);
-        Binder.From(btnSelectJobDown).SingleTo(MainModel.SetLastJob);
-        Binder.From(btnConfirmJob).SingleTo(() =>
+        Binder.From(btnSelectJobUp).To(MainModel.SetNextJob);
+        Binder.From(btnSelectJobDown).To(MainModel.SetLastJob);
+        Binder.From(btnConfirmJob).To(() =>
         {
             if (!MainModel.IsIronClad)
             {
@@ -84,7 +84,7 @@ public class MainView : ViewBase
             }
             MainModel.ChangeState(EMainState.Battle);
         });
-        Binder.From(btnCancelJob).SingleTo(() =>
+        Binder.From(btnCancelJob).To(() =>
         {
             panelTitle.SetActive(true);
             panelSelectJob.SetActive(false);

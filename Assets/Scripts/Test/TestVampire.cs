@@ -18,11 +18,11 @@ public class TestVampire : MonoBehaviour
     public Button BtnHit;
     void Awake()
     {
-        Binder.From(BtnAdd).SingleTo(() =>
+        Binder.From(BtnAdd).To(() =>
         {
             EnemyView.Instance.CreateEntity();
         });
-        Binder.From(BtnHit).SingleTo(() =>
+        Binder.From(BtnHit).To(() =>
         {
             EnemyView.Instance.GetNeareat();
         });

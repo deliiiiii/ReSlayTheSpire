@@ -11,9 +11,6 @@ public class BindDataAct<T> where T : IComparable
     }
     
     protected Observable<T> osv;
-
-    
-
     protected UnityAction<T> act;
 
     public BindDataAct<T> To(UnityAction<T> act)
@@ -41,33 +38,31 @@ public class BindDataAct<T> where T : IComparable
         osv.OnValueChangedAfter += act;
     }
 
-    public BindDataAct<T> Immediate()
+    public void Immediate()
     {
         osv.Immediate();
-        return this;
     }
-    
-    public BindDataAct<T> Culminate(float threshold)
+
+
+    T startEvery;
+    public BindDataAct<T> CulminateEvery(T every, int everyMaxCount = 1000)
     {
         BeforeTo();
         var tempAct = act;
-        act = (T newV) =>
+        startEvery = osv;
+        act = (newV) =>
         {
-            //TODO 真的是每累计吗
-            
-            // Debug.LogWarning("1");
-            // if (osv.Value is not IComparable comparableValue)
-            // {
-            //     Debug.LogWarning($"Observable Value {newV} is not IComparable. Immediately Triggered.");
-            //     tempAct(newV);
-            //     return;
-            // }
-            if (osv.Value.CompareTo(threshold) < 0)
-                return;
-            Debug.LogWarning("2");
-            dynamic d = osv.Value;
-            osv.Value = d - threshold;
-            tempAct(newV);
+            int tempCount = 0;
+            while (true)
+            {
+                if (tempCount >= everyMaxCount)
+                    break;
+                if (osv.Value.CompareTo((dynamic)startEvery + (dynamic)every) < 0)
+                    break;
+                tempAct(newV);
+                startEvery += (dynamic)every;
+                tempCount++;
+            }
         };
         AfterTo();
         return this;

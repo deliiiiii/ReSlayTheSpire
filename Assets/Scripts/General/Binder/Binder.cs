@@ -8,11 +8,11 @@ public static class Binder
     {
         return new BindDataAct<T>(osv);
     }
-    public static BindDataBtn From(Button btn)
+    public static BindDataEvent From(Button btn)
     {
-        return new BindDataBtn(btn);
+        return new BindDataEvent(btn.onClick);
     }
-    public static BindDataBtn From(GameObject pnl)
+    public static BindDataEvent From(GameObject pnl)
     {
         return From(pnl.GetComponent<Button>());
     }
@@ -20,11 +20,6 @@ public static class Binder
     public static BindDataState From(MyState state)
     {
         return new BindDataState(state);
-    }
-
-    public static BindDataEvent From(Action evtAction)
-    {
-        return new BindDataEvent(evtAction);
     }
     
 }

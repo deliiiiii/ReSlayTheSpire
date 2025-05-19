@@ -1,8 +1,5 @@
 using System;
-using System.ComponentModel;
-// using PropertyChanged;
 using UnityEngine;
-
 
 
 public enum EMainState
@@ -48,7 +45,7 @@ public class MainModel : ModelBase
             };
             Save("Init MainData");
         }
-        Binder.From(mainData.SaveTimer).To(_ => Save("SaveTimer")).Culminate(5f);
+        Binder.From(mainData.SaveTimer).To(_ => Save("SaveTimer")).CulminateEvery(5f);
     }
 
     public override void Launch()

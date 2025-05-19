@@ -53,13 +53,6 @@ public class BattleModel : ModelBase
         MyDebug.Log("Save " +info, LogType.State);
         Saver.Save("Data", typeof(BattleData).ToString(), battleData);
     }
-    public void EnterNextRoomBattle()
-    {
-        //TODO 不做了
-        // ChangeState(EBattleState.InRoom);
-    }
-
-
     
     public void ChangeState(EBattleState eState)
     {
