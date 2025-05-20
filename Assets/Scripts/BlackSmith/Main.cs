@@ -6,11 +6,11 @@ namespace BlackSmith
     
 public class Main : ViewBase
 {
-    // public MainView MainViewIns;
+    public MainView MainViewIns;
 
     void Awake()
     {
-        // Main
+        MainView = MainViewIns;
     }
 }
 

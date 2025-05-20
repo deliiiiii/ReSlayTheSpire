@@ -4,8 +4,8 @@
 //
 // public partial class ViewBase
 // {
-//     // protected static ReSlayTheSpire.Main.MainView MainView;
-//     // protected static ReSlayTheSpire.Battle.BattleView BattleView;
+//     // protected static MainView MainView;
+//     // protected static BattleView BattleView;
 //     // protected static MainModel MainModel => GetModel<MainModel>();
 //     // protected static BattleModel BattleModel => GetModel<BattleModel>();
 //
@@ -15,7 +15,7 @@
 //         EditorApplication.playModeStateChanged += OnExitPlayMode;
 //     }
 //
-//     void OnExitPlayMode(PlayModeStateChange state)
+//     static void OnExitPlayMode(PlayModeStateChange state)
 //     {
 //         if(state == PlayModeStateChange.ExitingPlayMode)
 //         {
