@@ -11,6 +11,7 @@ public class Main : ViewBase
     void Awake()
     {
         MainView = MainViewIns;
+        MainView.IBL();
     }
 }
 

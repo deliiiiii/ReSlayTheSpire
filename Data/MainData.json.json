@@ -1,0 +1,20 @@
+{
+    "PlayTime": {
+        "_value": 14.001099586486817
+    },
+    "PlayerLvl": {
+        "_value": 1
+    },
+    "CurMine": {
+        "_value": 0
+    },
+    "CurWeapon": {
+        "_value": 0
+    },
+    "CurEnchant": {
+        "_value": 0
+    },
+    "IsEnchantStopped": {
+        "_value": false
+    }
+}

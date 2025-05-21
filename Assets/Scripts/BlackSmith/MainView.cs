@@ -8,6 +8,7 @@ public class MainView : ViewBase
 {
     public override void IBL()
     {
+        MainModel.Instance.InitData();
     }
 }
 
