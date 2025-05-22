@@ -8,19 +8,21 @@ namespace BlackSmith
 {
     public class MainModel : MonoBehaviour
     {
-        static MainConfig MainConfig => Configer.Instance.MainConfig;
+        static MainConfig MainConfig => Configer.MainConfig;
         
         // [SerializeField]
         [ReadOnly][ShowInInspector]
-        public static MainData MainData;
-
+        static MainData mainData;
+        
+        public static Observable<EMine> CurMine => mainData.CurMine;
+        public static MineData CurMineData => mainData.CurMineData;
         
         public static void InitData()
         {
-            MainData = Saver.Load<MainData>("Data", "MainData");
-            if (MainData == null)
+            mainData = Saver.Load<MainData>("Data", "MainData");
+            if (mainData == null)
             {
-                MainData = new MainData()
+                mainData = new MainData()
                 {
                     PlayTime = new Observable<float>(0f),
                     PlayerLvl = new Observable<int>(1),
@@ -32,21 +34,21 @@ namespace BlackSmith
                     CurEnchant = new Observable<EEnchant>(EEnchant.Agility),
                 };
                 Save("null data");
-                MainData.MineList = CreateMineDatas();
+                mainData.MineList = CreateMineDatas();
             }
-            Binder.From(MainData.CurMine)
-                .To((v) => MainData.CurMineData = MainData.MineList.Find(x => x.Name.Value == v))
+            Binder.From(mainData.CurMine)
+                .To((v) => mainData.CurMineData = mainData.MineList.Find(x => x.Name.Value == v))
                 .Immediate();
-            Binder.From(MainData.CurWeapon)
-                .To((v) => MainData.CurWeaponData = MainData.CurMineData.NextWeaponList.Find(x => x.Name.Value == v))
+            Binder.From(mainData.CurWeapon)
+                .To((v) => mainData.CurWeaponData = mainData.CurMineData.NextWeaponList.Find(x => x.Name.Value == v))
                 .Immediate();
-            Binder.From(MainData.CurEnchant)
-                .To((v) => MainData.CurEnchantData = MainData.CurWeaponData.NextEnchantList.Find(x => x.Name.Value == v))
+            Binder.From(mainData.CurEnchant)
+                .To((v) => mainData.CurEnchantData = mainData.CurWeaponData.NextEnchantList.Find(x => x.Name.Value == v))
                 .Immediate();
             
             
-            Binder.Update((dt) => MainData.PlayTime.Value += dt, EUpdatePri.MainModel);
-            Binder.From(MainData.PlayTime).To((_) => Save("auto")).CulminateEvery(2f);
+            Binder.Update((dt) => mainData.PlayTime.Value += dt, EUpdatePri.MainModel);
+            Binder.From(mainData.PlayTime).To((_) => Save("auto")).CulminateEvery(2f);
         }
 
 
@@ -54,12 +56,12 @@ namespace BlackSmith
 
         public static void OnClickBtnMine()
         {
-            var progress = MainData.CurMineData.Progress;
-            var cost = MainConfig.MineCostDic[MainData.CurMine];
+            var progress = mainData.CurMineData.Progress;
+            var cost = MainConfig.MineCostDic[mainData.CurMine];
             progress.Value += MainConfig.ClickValue;
             if (progress.Value >= cost)
             {
-                MainData.CurMineData.Count.Value += (int)(progress.Value / cost);
+                mainData.CurMineData.Count.Value += (int)(progress.Value / cost);
                 progress.Value = 0;
             }
         }
@@ -71,12 +73,12 @@ namespace BlackSmith
         static void Save(string info = "")
         {
             MyDebug.Log($"MainData Saved cuz {info}");
-            Saver.Save("Data", "MainData", MainData);
+            Saver.Save("Data", "MainData", mainData);
         }
         static List<MineData> CreateMineDatas()
         {
             var ret = new List<MineData>();
-            foreach (var e in MainData.UnlockedMineList)
+            foreach (var e in mainData.UnlockedMineList)
             {
                 ret.Add(CreateMineData(e));
             }
@@ -96,7 +98,7 @@ namespace BlackSmith
         static List<WeaponData> CreateWeaponDatas(EMine eMine)
         {
             var ret = new List<WeaponData>();
-            foreach (var e in MainData.UnlockedWeaponList)
+            foreach (var e in mainData.UnlockedWeaponList)
             {
                 ret.Add(CreateWeaponData(eMine, e));
             }
@@ -119,7 +121,7 @@ namespace BlackSmith
         static List<EnchantData> CreateEnchantDatas(EWeapon eWeapon)
         {
             var ret = new List<EnchantData>();
-            foreach (var e in MainData.UnlockedEnchantList)
+            foreach (var e in mainData.UnlockedEnchantList)
             {
                 ret.Add(CreateEnchantData(eWeapon, e));
             }

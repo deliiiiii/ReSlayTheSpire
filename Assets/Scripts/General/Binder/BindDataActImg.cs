@@ -21,4 +21,10 @@ public class BindDataActImg<T> : BindDataAct<T> where T : IComparable
         AfterTo();
         return this;
     }
+
+    public new BindDataActImg<T> Immediate()
+    {
+        base.Immediate();
+        return this;
+    }
 }

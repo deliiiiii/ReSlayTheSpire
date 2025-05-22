@@ -38,16 +38,12 @@ public class MainView : ViewBase
     void Bind()
     {
         Binder.From(BtnMine).To(MainModel.OnClickBtnMine);
-        Binder.From(MainModel.MainData.CurMine).ToTxt(TxtMine).Immediate();
+        Binder.From(MainModel.CurMine).ToTxt(TxtMine).Immediate();
         
-        var b = Binder.From(MainModel.MainData.CurMineData.Count).ToTxt(TxtMineCount).Format("F0");
-        b.Immediate();
-        b.Fluent(10);
+        Binder.From(MainModel.CurMineData.Count).ToTxt(TxtMineCount).Format("F0").Immediate().Fluent(10);
         
-        var b2 = Binder.From(MainModel.MainData.CurMineData.Progress)
-            .ToImg(ImgMineFill, (v) => v * 1f / Configer.Instance.MainConfig.MineCostDic[MainModel.MainData.CurMine]);
-        b2.Immediate();
-        b2.Fluent(1.5f);
+        Binder.From(MainModel.CurMineData.Progress)
+            .ToImg(ImgMineFill, (v) => v * 1f / Configer.MainConfig.MineCostDic[MainModel.CurMine]).Immediate().Fluent(8f);
     }
     
 }

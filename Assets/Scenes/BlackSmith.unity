@@ -2882,7 +2882,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 1
-  MainConfig: {fileID: 11400000, guid: 482eada8ec354da43872defdbcd8fde3, type: 2}
+  MainConfigIns: {fileID: 11400000, guid: 482eada8ec354da43872defdbcd8fde3, type: 2}
 --- !u!1 &2039179900
 GameObject:
   m_ObjectHideFlags: 0

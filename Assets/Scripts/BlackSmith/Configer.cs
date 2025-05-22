@@ -1,7 +1,12 @@
-﻿namespace BlackSmith
+﻿using Sirenix.OdinInspector;
+
+namespace BlackSmith
 {
     public class Configer : Singleton<Configer>
     {
-        public MainConfig MainConfig;
+        [ShowInInspector]
+        public MainConfig MainConfigIns;
+        
+        public static MainConfig MainConfig => Instance.MainConfigIns;
     }
 }

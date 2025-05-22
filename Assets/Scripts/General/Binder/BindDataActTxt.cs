@@ -28,4 +28,9 @@ public class BindDataActTxt<T> : BindDataAct<T> where T : IComparable
         AfterTo();
         return this;
     }
+    public new BindDataActTxt<T> Immediate()
+    {
+        base.Immediate();
+        return this;
+    }
 }
