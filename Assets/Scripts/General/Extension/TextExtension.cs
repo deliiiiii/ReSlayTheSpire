@@ -23,8 +23,9 @@ public static class TextExtension
 {
     static Dictionary<Text, TextExtensionData> dic = new();
     static int staticCount = 0;
-    const float UPDATE_INTERVAL = 0.02f; 
-    public static void DoFluent(this Text txt, float tarValue, float deltaPerSecond, string format = "")
+    const float UPDATE_INTERVAL = 0.02f;
+
+    public static void DoFluent(this Text txt, float tarValue, float deltaPerSecond, string format)
     {
         
 #if UNITY_EDITOR
