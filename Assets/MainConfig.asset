@@ -18,93 +18,93 @@ MonoBehaviour:
   EnchantAutoValue: 0.2
   MineCostDic:
     list:
-    - Key: 0
-      Value: 2
+    - Key: 1
+      Value: 3
   WeaponCostDic:
     list:
+    - Key: 2
+      Value:
+        list:
+        - Key: 2
+          Value: 20
+        - Key: 1
+          Value: 10
     - Key: 1
       Value:
         list:
-        - Key: 0
+        - Key: 2
           Value: 10
         - Key: 1
-          Value: 20
-    - Key: 0
-      Value:
-        list:
-        - Key: 0
           Value: 4
-        - Key: 1
-          Value: 10
   EnchantCostDic:
     list:
+    - Key: 2
+      Value:
+        list:
+        - Key: 1
+          Value:
+            list:
+            - Key: 2
+              Value: 30
+            - Key: 1
+              Value: 20
+        - Key: 2
+          Value:
+            list:
+            - Key: 2
+              Value: 50
+            - Key: 1
+              Value: 40
     - Key: 1
       Value:
         list:
-        - Key: 0
+        - Key: 2
           Value:
             list:
-            - Key: 0
-              Value: 20
-            - Key: 1
-              Value: 30
-        - Key: 1
-          Value:
-            list:
-            - Key: 0
-              Value: 50
-            - Key: 1
-              Value: 80
-    - Key: 0
-      Value:
-        list:
-        - Key: 0
-          Value:
-            list:
-            - Key: 0
-              Value: 5
-            - Key: 1
-              Value: 10
-        - Key: 1
-          Value:
-            list:
-            - Key: 0
-              Value: 10
-            - Key: 1
+            - Key: 2
               Value: 15
+            - Key: 1
+              Value: 10
+        - Key: 1
+          Value:
+            list:
+            - Key: 2
+              Value: 10
+            - Key: 1
+              Value: 5
   EnchantPriceDic:
     list:
+    - Key: 2
+      Value:
+        list:
+        - Key: 2
+          Value:
+            list:
+            - Key: 2
+              Value: 80
+            - Key: 1
+              Value: 50
+        - Key: 1
+          Value:
+            list:
+            - Key: 2
+              Value: 30
+            - Key: 1
+              Value: 20
     - Key: 1
       Value:
         list:
-        - Key: 0
+        - Key: 2
           Value:
             list:
-            - Key: 0
-              Value: 20
-            - Key: 1
-              Value: 30
-        - Key: 1
-          Value:
-            list:
-            - Key: 0
-              Value: 50
-            - Key: 1
-              Value: 80
-    - Key: 0
-      Value:
-        list:
-        - Key: 0
-          Value:
-            list:
-            - Key: 0
-              Value: 5
-            - Key: 1
-              Value: 10
-        - Key: 1
-          Value:
-            list:
-            - Key: 0
-              Value: 10
-            - Key: 1
+            - Key: 2
               Value: 15
+            - Key: 1
+              Value: 10
+        - Key: 1
+          Value:
+            list:
+            - Key: 2
+              Value: 10
+            - Key: 1
+              Value: 5

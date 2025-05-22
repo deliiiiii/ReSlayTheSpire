@@ -7,7 +7,7 @@ public class BindDataActImg<T> : BindDataAct<T> where T : IComparable
     {
         this.img = img;
         this.func = func;
-        act = (_) => img.fillAmount = (dynamic)func(osv);
+        act = (_) => img.fillAmount = func(osv);
     }
     Image img;
     string format;

@@ -1,44 +1,47 @@
 {
     "PlayTime": {
-        "_value": 390.0361022949219
+        "_value": 1014.0591430664063
     },
     "PlayerLvl": {
         "_value": 1
     },
+    "Coin": {
+        "_value": 280
+    },
     "UnlockedMineList": [
-        0
+        1
     ],
     "UnlockedWeaponList": [
-        0
+        1
     ],
     "UnlockedEnchantList": [
-        0
+        1
     ],
     "CurMine": {
-        "_value": 0
+        "_value": 1
     },
     "CurWeapon": {
-        "_value": 0
+        "_value": 1
     },
     "CurEnchant": {
-        "_value": 0
+        "_value": 1
     },
     "MineList": [
         {
             "Name": {
-                "_value": 0
+                "_value": 1
             },
             "Count": {
-                "_value": 131
+                "_value": 0
             },
             "Progress": {
                 "_value": 0.0
             },
             "NextWeaponList": [
                 {
-                    "LastMineType": 0,
+                    "LastMineType": 1,
                     "Name": {
-                        "_value": 0
+                        "_value": 1
                     },
                     "Count": {
                         "_value": 0
@@ -48,12 +51,9 @@
                     },
                     "NextEnchantList": [
                         {
-                            "LastWeaponType": 0,
+                            "LastWeaponType": 1,
                             "Name": {
-                                "_value": 0
-                            },
-                            "Count": {
-                                "_value": 0
+                                "_value": 1
                             },
                             "Progress": {
                                 "_value": 0.0

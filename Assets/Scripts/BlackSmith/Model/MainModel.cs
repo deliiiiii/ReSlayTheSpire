@@ -13,9 +13,14 @@ namespace BlackSmith
         // [SerializeField]
         [ReadOnly][ShowInInspector]
         static MainData mainData;
-        
+
+        public static Observable<int> Coin => mainData.Coin;
         public static Observable<EMine> CurMine => mainData.CurMine;
+        public static Observable<EWeapon> CurWeapon => mainData.CurWeapon;
+        public static Observable<EEnchant> CurEnchant => mainData.CurEnchant;
         public static MineData CurMineData => mainData.CurMineData;
+        public static WeaponData CurWeaponData => mainData.CurWeaponData;
+        public static EnchantData CurEnchantData => mainData.CurEnchantData;
         
         public static void InitData()
         {
@@ -26,6 +31,7 @@ namespace BlackSmith
                 {
                     PlayTime = new Observable<float>(0f),
                     PlayerLvl = new Observable<int>(1),
+                    Coin = new Observable<int>(0),
                     UnlockedMineList = new List<EMine> { EMine.Coal },
                     UnlockedWeaponList = new List<EWeapon> { EWeapon.Shield },
                     UnlockedEnchantList = new List<EEnchant> { EEnchant.Agility },
@@ -62,6 +68,36 @@ namespace BlackSmith
             if (progress.Value >= cost)
             {
                 mainData.CurMineData.Count.Value += (int)(progress.Value / cost);
+                progress.Value = 0;
+            }
+        }
+
+        public static void OnClickBtnWeapon()
+        {
+            var progress = mainData.CurWeaponData.Progress;
+            var cost = MainConfig.WeaponCostDic[mainData.CurMine][mainData.CurWeapon];
+            progress.Value += MainConfig.ClickValue;
+            var progressAdded = (int)(progress.Value / cost);
+            var maxAdded = Math.Min(mainData.CurMineData.Count / (int)CurWeapon.Value, progressAdded);
+            if (progress.Value >= cost)
+            {
+                mainData.CurWeaponData.Count.Value += maxAdded;
+                mainData.CurMineData.Count.Value -= maxAdded;
+                progress.Value = 0;
+            }
+        }
+        
+        public static void OnClickBtnEnchant()
+        {
+            var progress = mainData.CurEnchantData.Progress;
+            var cost = MainConfig.EnchantCostDic[mainData.CurMine][mainData.CurWeapon][mainData.CurEnchant];
+            progress.Value += MainConfig.ClickValue;
+            var progressAdded = (int)(progress.Value / cost);
+            var maxAdded = Math.Min(mainData.CurWeaponData.Count / (int)CurEnchant.Value, progressAdded);
+            if (progress.Value >= cost)
+            {
+                mainData.Coin.Value += maxAdded * MainConfig.EnchantPriceDic[mainData.CurMine][mainData.CurWeapon][mainData.CurEnchant];
+                mainData.CurWeaponData.Count.Value -= maxAdded;
                 progress.Value = 0;
             }
         }
@@ -135,7 +171,6 @@ namespace BlackSmith
             {
                 LastWeaponType = eWeapon,
                 Name = new Observable<EEnchant>(eEnchant),
-                Count = new Observable<int>(0),
                 Progress = new Observable<float>(0),
             };
         }
@@ -153,7 +188,7 @@ namespace BlackSmith
         public SerializableDictionary<EMine, float> MineCostDic;
         public SerializableDictionary<EMine, SerializableDictionary<EWeapon, float>> WeaponCostDic;
         public SerializableDictionary<EMine, SerializableDictionary<EWeapon, SerializableDictionary<EEnchant, float>>> EnchantCostDic;
-        public SerializableDictionary<EMine, SerializableDictionary<EWeapon, SerializableDictionary<EEnchant, float>>> EnchantPriceDic;
+        public SerializableDictionary<EMine, SerializableDictionary<EWeapon, SerializableDictionary<EEnchant, int>>> EnchantPriceDic;
     }
     
     [Serializable]
@@ -162,6 +197,7 @@ namespace BlackSmith
         public Observable<float> PlayTime;
         // public Observable<bool> HasStarted;
         public Observable<int> PlayerLvl;
+        public Observable<int> Coin;
         
         public List<EMine> UnlockedMineList;
         public List<EWeapon> UnlockedWeaponList;
@@ -187,8 +223,8 @@ namespace BlackSmith
     [Serializable]
     public enum EMine
     {
-        Coal,
-        Stone,
+        Coal = 1,
+        Stone = 2,
     }
     [Serializable]
     public class MineData
@@ -206,8 +242,8 @@ namespace BlackSmith
     [Serializable]
     public enum EWeapon
     {
-        Shield,
-        Sword,
+        Shield = 1,
+        Sword = 2,
     }
     [Serializable]
     public class WeaponData
@@ -223,15 +259,14 @@ namespace BlackSmith
     [Serializable]
     public enum EEnchant
     {
-        Agility,
-        Magic,
+        Agility = 1,
+        Magic = 2,
     }
     [Serializable]
     public class EnchantData
     {
         public EWeapon LastWeaponType;
         public Observable<EEnchant> Name;
-        public Observable<int> Count;
         public Observable<float> Progress;
     }
 }

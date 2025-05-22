@@ -33,7 +33,7 @@ public class BindDataAct<T> where T : IComparable
     public BindDataActImg<T> ToImg(Image img, Func<T, float> func = null)
     {
         BeforeTo();
-        func ??= (v) => (dynamic)v;
+        func ??= (v) => new Observable<T>(v);
         var ret = new BindDataActImg<T>(osv, img, func);
         ret.AfterTo();
         return ret;
@@ -69,7 +69,7 @@ public class BindDataAct<T> where T : IComparable
             {
                 if (tempCount >= everyMaxCount)
                     break;
-                if (osv.Value.CompareTo((dynamic)startEvery + (dynamic)every) < 0)
+                if (osv.Value.CompareTo(startEvery + (dynamic)every) < 0)
                     break;
                 tempAct(newV);
                 startEvery += (dynamic)every;

@@ -48,7 +48,7 @@ public class Observable<T> where T: IComparable
             float f => f,
             double d => (float)d,
             char c => c,
-            _ => 0f
+            _ => (dynamic)v._value
         };
     }
 
