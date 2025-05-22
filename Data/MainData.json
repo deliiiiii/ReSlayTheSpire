@@ -1,9 +1,70 @@
 {
-    "PlayerName": "Deli_",
     "PlayTime": {
-        "_value": 9893.3623046875
+        "_value": 26.00625991821289
     },
-    "PlayerJob": {
-        "_value": 2
+    "PlayerLvl": {
+        "_value": 1
+    },
+    "UnlockedMineList": [
+        0
+    ],
+    "UnlockedWeaponList": [
+        0
+    ],
+    "UnlockedEnchantList": [
+        0
+    ],
+    "CurMine": {
+        "_value": 0
+    },
+    "CurWeapon": {
+        "_value": 0
+    },
+    "CurEnchant": {
+        "_value": 0
+    },
+    "MineList": [
+        {
+            "Name": {
+                "_value": 0
+            },
+            "Count": {
+                "_value": 0
+            },
+            "Progress": {
+                "_value": 0.0
+            },
+            "NextWeaponList": [
+                {
+                    "LastMineType": 0,
+                    "Name": {
+                        "_value": 0
+                    },
+                    "Count": {
+                        "_value": 0
+                    },
+                    "Progress": {
+                        "_value": 0.0
+                    },
+                    "NextEnchantList": [
+                        {
+                            "LastWeaponType": 0,
+                            "Name": {
+                                "_value": 0
+                            },
+                            "Count": {
+                                "_value": 0
+                            },
+                            "Progress": {
+                                "_value": 0.0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "IsEnchantStopped": {
+        "_value": false
     }
 }

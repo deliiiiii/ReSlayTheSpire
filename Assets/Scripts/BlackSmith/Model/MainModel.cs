@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BlackSmith
@@ -8,21 +9,22 @@ namespace BlackSmith
     public class MainModel : Singleton<MainModel>
     {
         [SerializeField]
+        [ReadOnly]
         MainData mainData;
 
 
         public void InitData()
         {
-            mainData = Saver.Load<MainData>("Data", "MainData.json");
+            mainData = Saver.Load<MainData>("Data", "MainData");
             if (mainData == null)
             {
                 mainData = new MainData()
                 {
                     PlayTime = new Observable<float>(0f),
                     PlayerLvl = new Observable<int>(1),
-                    UnLockedMineList = new ObservableCollection<EMine> { EMine.Coal },
-                    UnLockedWeaponList = new ObservableCollection<EWeapon> { EWeapon.Shield },
-                    UnLockedEnchantList = new ObservableCollection<EEnchant> { EEnchant.Agility },
+                    UnlockedMineList = new List<EMine> { EMine.Coal },
+                    UnlockedWeaponList = new List<EWeapon> { EWeapon.Shield },
+                    UnlockedEnchantList = new List<EEnchant> { EEnchant.Agility },
                 };
                 Save("null data");
                 mainData.MineList = CreateMineDatas();
@@ -35,12 +37,12 @@ namespace BlackSmith
         void Save(string info = "")
         {
             MyDebug.Log($"MainData Saved cuz {info}");
-            Saver.Save("Data", "MainData.json", mainData);
+            Saver.Save("Data", "MainData", mainData);
         }
-        ObservableCollection<MineData> CreateMineDatas()
+        List<MineData> CreateMineDatas()
         {
-            var ret = new ObservableCollection<MineData>();
-            foreach (var e in mainData.UnLockedMineList)
+            var ret = new List<MineData>();
+            foreach (var e in mainData.UnlockedMineList)
             {
                 ret.Add(CreateMineData(e));
             }
@@ -57,10 +59,10 @@ namespace BlackSmith
             };
         }
 
-        ObservableCollection<WeaponData> CreateWeaponDatas(EMine eMine)
+        List<WeaponData> CreateWeaponDatas(EMine eMine)
         {
-            var ret = new ObservableCollection<WeaponData>();
-            foreach (var e in mainData.UnLockedWeaponList)
+            var ret = new List<WeaponData>();
+            foreach (var e in mainData.UnlockedWeaponList)
             {
                 ret.Add(CreateWeaponData(eMine, e));
             }
@@ -80,10 +82,10 @@ namespace BlackSmith
             };
         }
 
-        ObservableCollection<EnchantData> CreateEnchantDatas(EWeapon eWeapon)
+        List<EnchantData> CreateEnchantDatas(EWeapon eWeapon)
         {
-            var ret = new ObservableCollection<EnchantData>();
-            foreach (var e in mainData.UnLockedEnchantList)
+            var ret = new List<EnchantData>();
+            foreach (var e in mainData.UnlockedEnchantList)
             {
                 ret.Add(CreateEnchantData(eWeapon, e));
             }
@@ -111,20 +113,20 @@ namespace BlackSmith
         // public Observable<bool> HasStarted;
         public Observable<int> PlayerLvl;
         
-        public ObservableCollection<EMine> UnLockedMineList;
-        public ObservableCollection<EWeapon> UnLockedWeaponList;
-        public ObservableCollection<EEnchant> UnLockedEnchantList;
-        
+        public List<EMine> UnlockedMineList;
+        public List<EWeapon> UnlockedWeaponList;
+        public List<EEnchant> UnlockedEnchantList;
         
         public Observable<EMine> CurMine;
         public Observable<EWeapon> CurWeapon;
         public Observable<EEnchant> CurEnchant;
         
-        public ObservableCollection<MineData> MineList;
+        public List<MineData> MineList;
         
         public Observable<bool> IsEnchantStopped;
     }
 
+    [Serializable]
     public enum EMine
     {
         Coal,
@@ -133,12 +135,17 @@ namespace BlackSmith
     [Serializable]
     public class MineData
     {
+        [SerializeField]
         public Observable<EMine> Name;
+        [SerializeField]
         public Observable<int> Count;
+        [SerializeField]
         public Observable<float> Progress;
-        public ObservableCollection<WeaponData> NextWeaponList;
+        [ShowInInspector]
+        public List<WeaponData> NextWeaponList;
     }
 
+    [Serializable]
     public enum EWeapon
     {
         Shield,
@@ -151,9 +158,11 @@ namespace BlackSmith
         public Observable<EWeapon> Name;
         public Observable<int> Count;
         public Observable<float> Progress;
-        public ObservableCollection<EnchantData> NextEnchantList;   
+        [ShowInInspector]
+        public List<EnchantData> NextEnchantList;   
     }
 
+    [Serializable]
     public enum EEnchant
     {
         Agility,
