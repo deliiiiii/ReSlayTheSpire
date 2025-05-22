@@ -55,51 +55,58 @@ namespace BlackSmith
             
             Binder.Update((dt) => mainData.PlayTime.Value += dt, EUpdatePri.MainModel);
             Binder.From(mainData.PlayTime).To((_) => Save("auto")).CulminateEvery(2f);
+
+            Binder.From(mainData.CurMineData.Progress).To(v =>
+            {
+                var cost = MainConfig.MineCostDic[mainData.CurMine];
+                if(v < cost)
+                    return;
+                mainData.CurMineData.Count.Value += (int)(v / cost);
+                mainData.CurMineData.Progress.Value = 0f;
+            }).Immediate();
+            
+            Binder.From(mainData.CurWeaponData.Progress).To(v =>
+            {
+                var cost = MainConfig.WeaponCostDic[mainData.CurMine][mainData.CurWeapon];
+                var progressAdded = (int)(v / cost);
+                var maxAdded = Math.Min(mainData.CurMineData.Count / (int)CurWeapon.Value, progressAdded);
+                if(v < cost)
+                    return;
+                mainData.CurWeaponData.Count.Value += maxAdded;
+                mainData.CurMineData.Count.Value -= maxAdded;
+                mainData.CurWeaponData.Progress.Value = 0f;
+            }).Immediate();
+            
+            Binder.From(mainData.CurEnchantData.Progress).To(v =>
+            {
+                var cost = MainConfig.EnchantCostDic[mainData.CurMine][mainData.CurWeapon][mainData.CurEnchant];
+                var progressAdded = (int)(v / cost);
+                var maxAdded = Math.Min(mainData.CurWeaponData.Count / (int)CurEnchant.Value, progressAdded);
+                if(v < cost)
+                    return;
+                mainData.Coin.Value += maxAdded * MainConfig.EnchantPriceDic[mainData.CurMine][mainData.CurWeapon][mainData.CurEnchant];
+                mainData.CurWeaponData.Count.Value -= maxAdded;
+                mainData.CurEnchantData.Progress.Value = 0f;
+            }).Immediate();
+
         }
 
 
         #region UI
-
         public static void OnClickBtnMine()
         {
             var progress = mainData.CurMineData.Progress;
-            var cost = MainConfig.MineCostDic[mainData.CurMine];
             progress.Value += MainConfig.ClickValue;
-            if (progress.Value >= cost)
-            {
-                mainData.CurMineData.Count.Value += (int)(progress.Value / cost);
-                progress.Value = 0;
-            }
         }
-
         public static void OnClickBtnWeapon()
         {
             var progress = mainData.CurWeaponData.Progress;
-            var cost = MainConfig.WeaponCostDic[mainData.CurMine][mainData.CurWeapon];
             progress.Value += MainConfig.ClickValue;
-            var progressAdded = (int)(progress.Value / cost);
-            var maxAdded = Math.Min(mainData.CurMineData.Count / (int)CurWeapon.Value, progressAdded);
-            if (progress.Value >= cost)
-            {
-                mainData.CurWeaponData.Count.Value += maxAdded;
-                mainData.CurMineData.Count.Value -= maxAdded;
-                progress.Value = 0;
-            }
         }
-        
         public static void OnClickBtnEnchant()
         {
             var progress = mainData.CurEnchantData.Progress;
-            var cost = MainConfig.EnchantCostDic[mainData.CurMine][mainData.CurWeapon][mainData.CurEnchant];
             progress.Value += MainConfig.ClickValue;
-            var progressAdded = (int)(progress.Value / cost);
-            var maxAdded = Math.Min(mainData.CurWeaponData.Count / (int)CurEnchant.Value, progressAdded);
-            if (progress.Value >= cost)
-            {
-                mainData.Coin.Value += maxAdded * MainConfig.EnchantPriceDic[mainData.CurMine][mainData.CurWeapon][mainData.CurEnchant];
-                mainData.CurWeaponData.Count.Value -= maxAdded;
-                progress.Value = 0;
-            }
         }
         
 
