@@ -12,6 +12,7 @@ public class BindDataAct<T> where T : IComparable
     
     protected Observable<T> osv;
     protected UnityAction<T> act;
+    UnityAction<T> latestAct;
 
     public BindDataAct<T> To(UnityAction<T> act)
     {
@@ -29,6 +30,15 @@ public class BindDataAct<T> where T : IComparable
         return ret;
     }
 
+    public BindDataActImg<T> ToImg(Image img, Func<T, float> func = null)
+    {
+        BeforeTo();
+        func ??= (v) => (dynamic)v;
+        var ret = new BindDataActImg<T>(osv, img, func);
+        ret.AfterTo();
+        return ret;
+    }
+
     protected void BeforeTo()
     {
         osv.OnValueChangedAfter -= act;
@@ -36,11 +46,12 @@ public class BindDataAct<T> where T : IComparable
     protected void AfterTo()
     {
         osv.OnValueChangedAfter += act;
+        latestAct = act;
     }
 
     public void Immediate()
     {
-        osv.Immediate();
+        latestAct(osv.Value);
     }
 
 

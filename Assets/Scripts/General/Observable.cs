@@ -24,11 +24,6 @@ public class Observable<T> where T: IComparable
     }
     // public event UnityAction<T> OnValueChangedBefore;
     public event UnityAction<T> OnValueChangedAfter;
-
-    public void Immediate()
-    {
-        OnValueChangedAfter?.Invoke(_value);
-    }
     public Observable(T initValue)
     {
         _value = initValue;
