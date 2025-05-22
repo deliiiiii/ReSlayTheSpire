@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -120,12 +121,7 @@ namespace BlackSmith
         }
         static List<MineData> CreateMineDatas()
         {
-            var ret = new List<MineData>();
-            foreach (var e in mainData.UnlockedMineList)
-            {
-                ret.Add(CreateMineData(e));
-            }
-            return ret;
+            return mainData.UnlockedMineList.Select(CreateMineData).ToList();
         }
         static MineData CreateMineData(EMine eMine)
         {
@@ -134,49 +130,35 @@ namespace BlackSmith
                 Name = new Observable<EMine>(eMine),
                 Count = new Observable<int>(0),
                 Progress = new Observable<float>(0),
-                NextWeaponList = CreateWeaponDatas(eMine),
+                NextWeaponList = CreateWeaponDatas(),
             };
         }
 
-        static List<WeaponData> CreateWeaponDatas(EMine eMine)
+        static List<WeaponData> CreateWeaponDatas()
         {
-            var ret = new List<WeaponData>();
-            foreach (var e in mainData.UnlockedWeaponList)
-            {
-                ret.Add(CreateWeaponData(eMine, e));
-            }
-
-            return ret;
+            return mainData.UnlockedWeaponList.Select(CreateWeaponData).ToList();
         }
 
-        static WeaponData CreateWeaponData(EMine eMine, EWeapon eWeapon)
+        static WeaponData CreateWeaponData(EWeapon eWeapon)
         {
             return new WeaponData()
             {
-                LastMineType = eMine,
                 Name = new Observable<EWeapon>(eWeapon),
                 Count = new Observable<int>(0),
                 Progress = new Observable<float>(0),
-                NextEnchantList = CreateEnchantDatas(eWeapon),
+                NextEnchantList = CreateEnchantDatas(),
             };
         }
 
-        static List<EnchantData> CreateEnchantDatas(EWeapon eWeapon)
+        static List<EnchantData> CreateEnchantDatas()
         {
-            var ret = new List<EnchantData>();
-            foreach (var e in mainData.UnlockedEnchantList)
-            {
-                ret.Add(CreateEnchantData(eWeapon, e));
-            }
-
-            return ret;
+            return mainData.UnlockedEnchantList.Select(CreateEnchantData).ToList();
         }
 
-        static EnchantData CreateEnchantData(EWeapon eWeapon, EEnchant eEnchant)
+        static EnchantData CreateEnchantData(EEnchant eEnchant)
         {
             return new EnchantData()
             {
-                LastWeaponType = eWeapon,
                 Name = new Observable<EEnchant>(eEnchant),
                 Progress = new Observable<float>(0),
             };
@@ -255,7 +237,6 @@ namespace BlackSmith
     [Serializable]
     public class WeaponData
     {
-        public EMine LastMineType;
         public Observable<EWeapon> Name;
         public Observable<int> Count;
         public Observable<float> Progress;
@@ -272,7 +253,6 @@ namespace BlackSmith
     [Serializable]
     public class EnchantData
     {
-        public EWeapon LastWeaponType;
         public Observable<EEnchant> Name;
         public Observable<float> Progress;
     }
