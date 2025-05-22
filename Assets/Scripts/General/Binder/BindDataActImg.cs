@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class BindDataActImg<T> : BindDataAct<T> where T : IComparable
 {
-    public BindDataActImg(Observable<T> osv, Image img, Func<T, float> func) : base(osv)
+    public BindDataActImg(Observable<T> osv, Image img, Func<float, float> func) : base(osv)
     {
         this.img = img;
         this.func = func;
@@ -11,7 +11,7 @@ public class BindDataActImg<T> : BindDataAct<T> where T : IComparable
     }
     Image img;
     string format;
-    Func<T, float> func;
+    Func<float, float> func;
     float deltaPerSecond = float.MaxValue;
     public BindDataActImg<T> Fluent(float deltaPerSecond)
     {
