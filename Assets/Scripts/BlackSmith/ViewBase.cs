@@ -5,10 +5,7 @@ using UnityEditor;
 public partial class ViewBase
 {
     protected static BlackSmith.MainView MainView;
-    // protected static BattleView BattleView;
-    // protected static MainModel MainModel => GetModel<MainModel>();
-    // protected static BattleModel BattleModel => GetModel<BattleModel>();
-
+    protected static BlackSmith.UpgradeView UpgradeView;
     void Awake()
     {
         EditorApplication.playModeStateChanged -= OnExitPlayMode;

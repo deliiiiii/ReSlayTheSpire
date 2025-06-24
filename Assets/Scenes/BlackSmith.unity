@@ -720,7 +720,7 @@ GameObject:
   - component: {fileID: 495922535}
   - component: {fileID: 495922534}
   m_Layer: 5
-  m_Name: Button UpClick (1)
+  m_Name: Button UpClick2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -863,6 +863,7 @@ GameObject:
   - component: {fileID: 703098131}
   - component: {fileID: 703098130}
   - component: {fileID: 703098134}
+  - component: {fileID: 703098135}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -985,6 +986,19 @@ MonoBehaviour:
   TxtEnchant: {fileID: 539530252}
   TxtEnchantPrice: {fileID: 857176545}
   ImgEnchantFill: {fileID: 1144066429}
+--- !u!114 &703098135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703098129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae3436e2a56f4363b06b0660afe0e044, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Btn1: {fileID: 817235328}
 --- !u!1 &742642201
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,6 +1045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainViewIns: {fileID: 703098134}
+  UpgradeViewIns: {fileID: 703098135}
 --- !u!114 &742642204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1067,7 +1082,7 @@ GameObject:
   - component: {fileID: 817235329}
   - component: {fileID: 817235328}
   m_Layer: 5
-  m_Name: Button UpClick (2)
+  m_Name: Button UpClick1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1399,7 +1414,7 @@ GameObject:
   - component: {fileID: 938877051}
   - component: {fileID: 938877050}
   m_Layer: 5
-  m_Name: Button UpClick (3)
+  m_Name: Button UpClick4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1999,7 +2014,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -216.29, y: -41.439}
+  m_AnchoredPosition: {x: -216.28998, y: -41.438995}
   m_SizeDelta: {x: 370.67, y: 82.88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1481074644
@@ -2228,7 +2243,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4110901942324646003, guid: eed52b01d4189374c9ca90fae21884fe, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -53.490074
+      value: -53.49008
       objectReference: {fileID: 0}
     - target: {fileID: 4458776997236967464, guid: eed52b01d4189374c9ca90fae21884fe, type: 3}
       propertyPath: m_Color.b
@@ -2384,7 +2399,7 @@ GameObject:
   - component: {fileID: 1781338840}
   - component: {fileID: 1781338839}
   m_Layer: 5
-  m_Name: Button UpClick (4)
+  m_Name: Button UpClick5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2516,7 +2531,7 @@ GameObject:
   - component: {fileID: 1810704630}
   - component: {fileID: 1810704629}
   m_Layer: 5
-  m_Name: Button UpClick
+  m_Name: Button UpClick3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2661,7 +2676,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.223, y: 1}
-  m_AnchoredPosition: {x: 1.4804688, y: 51.68994}
+  m_AnchoredPosition: {x: 1.4801025, y: 51.68994}
   m_SizeDelta: {x: 2.9499512, y: -543.73}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1824916197

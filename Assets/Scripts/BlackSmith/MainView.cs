@@ -34,7 +34,7 @@ public class MainView : ViewBase
     public override void IBL()
     {
         MainModel.InitData();
-        Bind(); 
+        Bind();
     }
 
     void Bind()

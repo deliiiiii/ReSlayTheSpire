@@ -11,6 +11,7 @@ namespace BlackSmith
     {
         static MainConfig MainConfig => Configer.MainConfig;
         
+        
         // [SerializeField]
         [ReadOnly][ShowInInspector]
         static MainData mainData;
@@ -96,18 +97,15 @@ namespace BlackSmith
         #region UI
         public static void OnClickBtnMine()
         {
-            var progress = mainData.CurMineData.Progress;
-            progress.Value += MainConfig.ClickValue;
+            mainData.CurMineData.Progress.Value += MainConfig.ClickValue;
         }
         public static void OnClickBtnWeapon()
         {
-            var progress = mainData.CurWeaponData.Progress;
-            progress.Value += MainConfig.ClickValue;
+            mainData.CurWeaponData.Progress.Value += MainConfig.ClickValue;
         }
         public static void OnClickBtnEnchant()
         {
-            var progress = mainData.CurEnchantData.Progress;
-            progress.Value += MainConfig.ClickValue;
+            mainData.CurEnchantData.Progress.Value += MainConfig.ClickValue;
         }
         
 
@@ -166,19 +164,7 @@ namespace BlackSmith
         
     }
 
-    [CreateAssetMenu(fileName = "MainConfig", menuName = "ScriptableObjects/MainConfig", order = 1)]
-    public class MainConfig : ScriptableObject
-    {
-        public float ClickValue;
-        public float MineAutoValue;
-        public float WeaponAutoValue;
-        public float EnchantAutoValue;
-        
-        public SerializableDictionary<EMine, float> MineCostDic;
-        public SerializableDictionary<EMine, SerializableDictionary<EWeapon, float>> WeaponCostDic;
-        public SerializableDictionary<EMine, SerializableDictionary<EWeapon, SerializableDictionary<EEnchant, float>>> EnchantCostDic;
-        public SerializableDictionary<EMine, SerializableDictionary<EWeapon, SerializableDictionary<EEnchant, int>>> EnchantPriceDic;
-    }
+    
     
     [Serializable]
     public class MainData

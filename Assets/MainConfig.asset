@@ -12,10 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: MainConfig
   m_EditorClassIdentifier: Assembly-CSharp:BlackSmith:MainConfig
-  ClickValue: 1
-  MineAutoValue: 0.3
-  WeaponAutoValue: 0.2
-  EnchantAutoValue: 0.2
   MineCostDic:
     list:
     - Key: 1

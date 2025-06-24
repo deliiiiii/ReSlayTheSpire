@@ -1,12 +1,12 @@
 {
     "PlayTime": {
-        "_value": 1032.0616455078125
+        "_value": 6572.08837890625
     },
     "PlayerLvl": {
         "_value": 1
     },
     "Coin": {
-        "_value": 305
+        "_value": 405
     },
     "UnlockedMineList": [
         1
@@ -32,14 +32,13 @@
                 "_value": 1
             },
             "Count": {
-                "_value": 0
+                "_value": 82
             },
             "Progress": {
                 "_value": 0.0
             },
             "NextWeaponList": [
                 {
-                    "LastMineType": 1,
                     "Name": {
                         "_value": 1
                     },
@@ -51,7 +50,6 @@
                     },
                     "NextEnchantList": [
                         {
-                            "LastWeaponType": 1,
                             "Name": {
                                 "_value": 1
                             },
