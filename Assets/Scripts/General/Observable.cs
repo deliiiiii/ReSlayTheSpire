@@ -1,37 +1,36 @@
-using UnityEngine;
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 [Serializable]
 public class Observable<T> where T: IComparable
 {
-    [SerializeField]
-    T _value;
+    [ShowInInspector]
+    T value;
     public T Value
     {
-        get => _value;
+        get => value;
         set
         {
-            if (Equals(value, _value))
+            if (Equals(value, this.value))
             {
                 return;
             }
             // OnValueChangedBefore?.Invoke(_value);
-            _value = value;
-            OnValueChangedAfter?.Invoke(_value);
+            this.value = value;
+            OnValueChangedAfter?.Invoke(this.value);
         }
     }
     // public event UnityAction<T> OnValueChangedBefore;
     public event UnityAction<T> OnValueChangedAfter;
     public Observable(T initValue)
     {
-        _value = initValue;
+        value = initValue;
     }
     // public Observable(T initValue, UnityAction<T> before, UnityAction<T> after)
     public Observable(T initValue, UnityAction<T> after)
     {
-        _value = initValue;
+        value = initValue;
         // OnValueChangedBefore += before;
         OnValueChangedAfter += after;
     }
@@ -48,14 +47,14 @@ public class Observable<T> where T: IComparable
             float f => f,
             double d => (float)d,
             char c => c,
-            _ => (dynamic)v._value
+            _ => (dynamic)v.value
         };
     }
 
 
     public override string ToString()
     {
-        return _value.ToString();
+        return value.ToString();
     }
 }
 

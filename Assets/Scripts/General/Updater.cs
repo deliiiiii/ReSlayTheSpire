@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Updater : Singleton<Updater>
@@ -12,12 +13,9 @@ public class Updater : Singleton<Updater>
     }
     void Update()
     {
-        foreach (var pair in UpdateDic)
+        foreach (var bindDataUpdate in UpdateDic.SelectMany(pair => pair.Value))
         {
-            foreach (var bindDataUpdate in pair.Value)
-            {
-                bindDataUpdate.Act(Time.deltaTime);
-            }
+            bindDataUpdate.Act(Time.deltaTime);
         }
     }
 }
