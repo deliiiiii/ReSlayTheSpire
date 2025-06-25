@@ -24,7 +24,7 @@ public static class ImageExtension
     static Dictionary<Image, ImageExtensionData> dic = new();
     static int staticCount = 0;
     const float UPDATE_INTERVAL = 0.02f; 
-    public static void DoFluent(this Image img, float tarValue, float deltaPerSecond)
+    public static void DoFluentFill(this Image img, float tarValue, float deltaPerSecond)
     {
         
 #if UNITY_EDITOR
@@ -55,11 +55,11 @@ public static class ImageExtension
         dic[img].TarValue = tarValue;
         if (!dic[img].Started)
         {
-            Fluent(img);
+            FluentFill(img);
         }
     }
 
-    static async void Fluent(Image img)
+    static async void FluentFill(Image img)
     {
         dic[img].Started = true;
         while (!Mathf.Approximately(dic[img].CurValue, dic[img].TarValue))

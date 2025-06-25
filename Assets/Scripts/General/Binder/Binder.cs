@@ -26,7 +26,6 @@ public static class Binder
     {
         return new BindDataState(state);
     }
-
     
     public static BindDataUpdate Update(Action<float> act, EUpdatePri priority)
     {
@@ -38,26 +37,3 @@ public static class Binder
     }
 }
 
-public class BindDataUpdate
-{
-    public Action<float> Act;
-    readonly EUpdatePri priority;
-
-    public BindDataUpdate(Action<float> act, EUpdatePri priority)
-    {
-        this.Act = act;
-        this.priority = priority;
-    }
-
-    public void UnBind()
-    {
-        Updater.UpdateDic[priority].Remove(this);
-    }
-}
-
-public enum EUpdatePri
-{
-    MainModel = 0,
-    // P1 = 1,
-    // P2 = 2,
-}

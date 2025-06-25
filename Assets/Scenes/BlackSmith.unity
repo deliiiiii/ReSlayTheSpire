@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1600,6 +1599,7 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1 &1077455006
 GameObject:
   m_ObjectHideFlags: 0
@@ -2676,7 +2676,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.223, y: 1}
-  m_AnchoredPosition: {x: 1.4801025, y: 51.68994}
+  m_AnchoredPosition: {x: 1.4802246, y: 51.68994}
   m_SizeDelta: {x: 2.9499512, y: -543.73}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1824916197
@@ -2818,7 +2818,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4110901942324646003, guid: eed52b01d4189374c9ca90fae21884fe, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -53.48999
+      value: -53.490005
       objectReference: {fileID: 0}
     - target: {fileID: 4602260135825386986, guid: eed52b01d4189374c9ca90fae21884fe, type: 3}
       propertyPath: m_Name
@@ -3094,7 +3094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4110901942324646003, guid: eed52b01d4189374c9ca90fae21884fe, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -53.48999
+      value: -53.489975
       objectReference: {fileID: 0}
     - target: {fileID: 5436173218544339890, guid: eed52b01d4189374c9ca90fae21884fe, type: 3}
       propertyPath: m_Pivot.x

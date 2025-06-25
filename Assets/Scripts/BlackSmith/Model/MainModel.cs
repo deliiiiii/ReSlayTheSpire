@@ -44,6 +44,10 @@ namespace BlackSmith
                 Save("null data");
                 mainData.MineList = CreateMineDatas();
             }
+            Binder.Update((dt) => mainData.PlayTime.Value += dt, EUpdatePri.MainModel);
+            
+            
+            
             Binder.From(mainData.CurMine)
                 .To((v) => mainData.CurMineData = mainData.MineList.Find(x => x.Name.Value == v))
                 .Immediate();
@@ -53,9 +57,6 @@ namespace BlackSmith
             Binder.From(mainData.CurEnchant)
                 .To((v) => mainData.CurEnchantData = mainData.CurWeaponData.NextEnchantList.Find(x => x.Name.Value == v))
                 .Immediate();
-            
-            
-            Binder.Update((dt) => mainData.PlayTime.Value += dt, EUpdatePri.MainModel);
             Binder.From(mainData.PlayTime).To((_) => Save("auto")).CulminateEvery(2f);
 
             Binder.From(mainData.CurMineData.Progress).To(v =>

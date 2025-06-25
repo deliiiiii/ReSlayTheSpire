@@ -34,7 +34,7 @@ public class Flow
     /// </summary>
     /// <param name="action">回调</param>
     /// <returns>同一个 <see cref="Flow"/> 对象，以链式调用</returns>
-    public Flow Then(Action<Handle> action)
+    Flow Then(Action<Handle> action)
     {
         actions.Add(action);
         return this;

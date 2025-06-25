@@ -17,7 +17,7 @@ public class BindDataActImg<T> : BindDataAct<T> where T : IComparable
     {
         BeforeTo();
         this.deltaPerSecond = deltaPerSecond;
-        act = (_) => img.DoFluent(func(osv), deltaPerSecond);
+        act = (_) => img.DoFluentFill(func(osv), deltaPerSecond);
         AfterTo();
         return this;
     }

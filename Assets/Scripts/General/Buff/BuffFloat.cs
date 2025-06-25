@@ -13,7 +13,7 @@ public class BuffFloat
     {
         get
         {
-            float ret = value;
+            var ret = value;
             ret += baseAddSet.Sum(baseAdd => baseAdd.Value);
             ret = baseMultiSet.Aggregate(ret, (cur, baseMulti) => cur * (1f + baseMulti.Value));
             ret = finalMultiSet.Aggregate(ret, (cur, finalMulti) => cur * (1f + finalMulti.Value));

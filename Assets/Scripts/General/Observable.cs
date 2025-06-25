@@ -1,11 +1,12 @@
 using System;
 using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
 public class Observable<T> where T: IComparable
 {
-    [ShowInInspector]
+    [SerializeField]
     T value;
     public T Value
     {
