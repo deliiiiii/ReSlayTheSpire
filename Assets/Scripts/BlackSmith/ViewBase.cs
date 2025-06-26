@@ -16,8 +16,8 @@ public partial class ViewBase
     {
         if(state == PlayModeStateChange.ExitingPlayMode)
         {
-            // MainView = null;
-            // BattleView = null;
+            MainView = null;
+            UpgradeView = null;
         }
     }
 }

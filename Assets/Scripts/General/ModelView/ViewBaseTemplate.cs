@@ -6,8 +6,6 @@
 // {
 //     // protected static MainView MainView;
 //     // protected static BattleView BattleView;
-//     // protected static MainModel MainModel => GetModel<MainModel>();
-//     // protected static BattleModel BattleModel => GetModel<BattleModel>();
 //
 //     void Awake()
 //     {
