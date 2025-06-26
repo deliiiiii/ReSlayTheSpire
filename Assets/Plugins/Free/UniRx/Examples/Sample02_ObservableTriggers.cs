@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UniRx.Triggers; // Triggers Namepsace
 using System;
+using System.Collections.Generic;
 
 namespace UniRx.Examples
 {
@@ -14,11 +15,12 @@ namespace UniRx.Examples
             // Add ObservableXxxTrigger for handle MonoBehaviour's event as Observable
             cube.AddComponent<ObservableUpdateTrigger>()
                 .UpdateAsObservable()
-                .SampleFrame(30)
+                .Where(_ => Input.GetKeyDown(KeyCode.A))
+                .SampleFrame(1000)
                 .Subscribe(x => Debug.Log("cube"), () => Debug.Log("destroy"));
  
             // destroy after 3 second:)
-            GameObject.Destroy(cube, 3f);
+            // GameObject.Destroy(cube, 3f);
         }
     }
 }
