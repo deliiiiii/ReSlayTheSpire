@@ -2243,7 +2243,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4110901942324646003, guid: eed52b01d4189374c9ca90fae21884fe, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -53.49008
+      value: -53.490074
       objectReference: {fileID: 0}
     - target: {fileID: 4458776997236967464, guid: eed52b01d4189374c9ca90fae21884fe, type: 3}
       propertyPath: m_Color.b
@@ -2978,7 +2978,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 1
-  MainConfigIns: {fileID: 11400000, guid: 482eada8ec354da43872defdbcd8fde3, type: 2}
+  MainConfigIns: {fileID: 11400000, guid: e60da80cde8d4b440805b6a4c9bf6295, type: 2}
 --- !u!1 &2039179900
 GameObject:
   m_ObjectHideFlags: 0
