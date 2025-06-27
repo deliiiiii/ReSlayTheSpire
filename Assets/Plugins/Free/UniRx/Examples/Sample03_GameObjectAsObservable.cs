@@ -1,5 +1,7 @@
 ﻿#if !(UNITY_IPHONE || UNITY_ANDROID || UNITY_METRO)
 
+using System;
+using UniRx;
 using UnityEngine;
 using UniRx.Triggers; // for enable gameObject.EventAsObservbale()
 
@@ -11,8 +13,9 @@ namespace UniRx.Examples
         {
             // All events can subscribe by ***AsObservable if enables UniRx.Triggers
             this.OnMouseDownAsObservable()
-                .SelectMany(_ => this.gameObject.UpdateAsObservable())
-                .TakeUntil(this.gameObject.OnMouseUpAsObservable())
+                .Select(_ => gameObject.UpdateAsObservable())
+                .TakeUntil(gameObject.OnMouseUpAsObservable())
+                // .TakeWhile(_ => Input.GetKeyDown(KeyCode.A))
                 .Select(_ => Input.mousePosition)
                 .RepeatUntilDestroy(this)
                 .Subscribe(x => Debug.Log(x), ()=> Debug.Log("!!!" + "complete"));

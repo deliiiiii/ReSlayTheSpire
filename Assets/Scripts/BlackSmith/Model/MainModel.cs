@@ -27,7 +27,7 @@ namespace BlackSmith
         public static void InitData()
         {
             mainData = Saver.Load<MainData>("Data", "MainData");
-            if (mainData == null)
+            if (mainData.Equals(default))
             {
                 mainData = new MainData()
                 {
@@ -168,7 +168,7 @@ namespace BlackSmith
     
     
     [Serializable]
-    public class MainData
+    public struct MainData
     {
         public Observable<float> PlayTime;
         // public Observable<bool> HasStarted;
@@ -222,7 +222,7 @@ namespace BlackSmith
         Sword = 2,
     }
     [Serializable]
-    public class WeaponData
+    public struct WeaponData
     {
         public Observable<EWeapon> Name;
         public Observable<int> Count;
@@ -238,7 +238,7 @@ namespace BlackSmith
         Magic = 2,
     }
     [Serializable]
-    public class EnchantData
+    public struct EnchantData
     {
         public Observable<EEnchant> Name;
         public Observable<float> Progress;

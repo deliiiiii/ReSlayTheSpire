@@ -21,6 +21,8 @@ namespace UniRx.Examples
 
         Enemy enemy = new Enemy(1000);
 
+        IDisposable iDisposable1;
+        IDisposable iDisposable2;
         void Start()
         {
             // UnityEvent as Observable
@@ -54,7 +56,20 @@ namespace UniRx.Examples
                 });
 
             // initial text:)
-            IntRxProp.SubscribeToText(MyText);
+            iDisposable1 = IntRxProp.SubscribeToText(MyText);
+            
+            IntRxProp.Subscribe(x =>
+            {
+                Debug.Log("IntReactiveProperty Changed: " + x);
+            });
+
+            Observable.EveryUpdate()
+                .Where(_ => Input.GetKeyDown(KeyCode.A))
+                .Subscribe(_ =>
+                {
+                    Debug.Log("A Key Pressed");
+                    iDisposable1.Dispose();
+                }).AddTo(this);
         }
     }
 
