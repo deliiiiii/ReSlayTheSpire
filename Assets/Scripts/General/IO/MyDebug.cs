@@ -3,10 +3,7 @@ using UnityEngine;
 public enum LogType
 {
     Default,
-    Card,
-    State,
-    Drag,
-    BattleUI,
+    Tick,
 }
 public static class MyDebug
 {
@@ -19,10 +16,9 @@ public static class MyDebug
     static HashSet<LogType> logTypes = new()
     {
         LogType.Default,
-        // LogType.Card,
-        LogType.State,
-        // LogType.Drag,
-        // LogType.BattleUI,
+        
+        LogType.Tick,
+        
     };
     public static void Log(object message, LogType logType = LogType.Default, int threshold = 0)
     {
