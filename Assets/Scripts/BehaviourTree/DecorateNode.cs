@@ -12,9 +12,10 @@ namespace BehaviourTree
             return Child;
         }
 
-        public override bool OnTick(float dt)
+        public override EState OnTick(float dt)
         {
-            return Child?.OnTick(dt) ?? true;
+            // 1变成0 0变成1
+            return ~Child?.OnTick(dt) ?? EState.Failed;
         }
         public override void OnFail()
         {

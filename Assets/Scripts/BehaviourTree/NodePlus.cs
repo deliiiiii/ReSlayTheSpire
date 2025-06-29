@@ -35,7 +35,7 @@
         
        
         
-        public override bool OnTick(float dt)
+        public override EState OnTick(float dt)
         {
             return Node.OnTick(dt);
         }

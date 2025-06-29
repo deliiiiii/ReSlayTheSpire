@@ -19,17 +19,20 @@ namespace BehaviourTree
             return null;
         }
 
-        public override bool OnTick(float dt)
+        public override EState OnTick(float dt)
         {
             if (!Tree.IsNodeRunning(this))
             {
                 OnEnter?.Invoke();
                 Tree.AddRunningNode(this);
             }
-            if(isFinished)
-                return true;
             OnContinue(dt);
-            return isFinished;
+            if (isFinished)
+            {
+                Tree.RemoveRunningNode(this);
+                return EState.Succeeded;
+            }
+            return EState.Running;
         }
         public override void OnFail()
         {

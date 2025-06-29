@@ -10,8 +10,6 @@ namespace BehaviourTree
         [ShowInInspector]
         public LinkedList<NodeBase> childList;
         protected LinkedListNode<NodeBase> curNode;
-        [ShowInInspector]
-        NodeBase curNodeTrue => curNode?.Value;
         
         public override NodeBase GetChild()
         {
@@ -70,18 +68,36 @@ namespace BehaviourTree
     [Serializable]
     public class SequenceNode : CompositeNode
     {
-        public override bool OnTick(float dt)
+        public override EState OnTick(float dt)
         {
-            // curNode ??= childList.First;
-            curNode = childList.First;
+            if (curNode != null)
+            {
+                var res = curNode.Value.Tick(dt);
+                if (res == EState.Succeeded)
+                {
+                    curNode = curNode.Next;
+                }
+            }
+            else
+            {
+                curNode = childList.First;
+            }
+            
             while (curNode != null)
             {
                 var res = curNode.Value.Tick(dt);
-                if (!res)
-                    return false;
+                if (res is EState.Running)
+                {
+                    return res;
+                }
+                if (res is EState.Failed)
+                {
+                    curNode = null;
+                    return res;
+                }
                 curNode = curNode.Next;
             }
-            return true;
+            return EState.Succeeded;
             
         }
         public override void OnFail()
@@ -98,18 +114,18 @@ namespace BehaviourTree
     [Serializable]
     public class SelectorNode : CompositeNode
     {
-        public override bool OnTick(float dt)
+        public override EState OnTick(float dt)
         {
             // curNode ??= childList.First;
             curNode = childList.First;
             while (curNode != null)
             {
                 var res = curNode.Value.Tick(dt);
-                if (res)
-                    return true;
+                if (res is EState.Running or EState.Succeeded)
+                    return res;
                 curNode = curNode.Next;
             }
-            return false;
+            return EState.Failed;
         }
         public override void OnFail()
         {

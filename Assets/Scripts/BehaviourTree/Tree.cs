@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 
 namespace BehaviourTree
@@ -10,7 +11,8 @@ namespace BehaviourTree
         public string Name = "New Tree";
         [ShowInInspector]
         public NodeBase Root;
-        // public NodeBase CurrentNode;
+        // [ShowInInspector]
+        // public NodeBase CurRunningNode;
         [ShowInInspector]
         HashSet<ActionNode> RunningNodeSet;
         public void AddRunningNode(ActionNode node)
@@ -38,6 +40,11 @@ namespace BehaviourTree
 
         public void Tick(float dt)
         {
+            // if (RunningNodeSet != null && RunningNodeSet.Count > 0)
+            // {
+            //     RunningNodeSet.ToArray()[^1].Tick(dt);
+            //     return;
+            // }
             Root.Tick(dt);
         }
     }

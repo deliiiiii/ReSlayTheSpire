@@ -5,7 +5,14 @@ using UnityEngine;
 
 namespace BehaviourTree
 {
-    
+
+
+public enum EState
+{
+    Succeeded,
+    Failed,
+    Running,
+}
 public static class NodeBaseExtensions
 {
     // public static T SetName<T>(this T node, string name) where T : NodeBase
@@ -14,20 +21,29 @@ public static class NodeBaseExtensions
     //     return node;
     // }
     
-    public static NodePlus<T1, T2, T3> SetName<T1, T2, T3>(this NodePlus<T1, T2, T3> node, string name) where T1 : NodeBase where T2 : NodeBase where T3 : NodeBase
+    public static NodePlus<T1, T2, T3> SetName<T1, T2, T3>(this NodePlus<T1, T2, T3> node, string name)
+        where T1 : NodeBase
+        where T2 : NodeBase
+        where T3 : NodeBase
     {
         node.Node.Name = name;
         return node;
     }
 
-    public static T SetGuard<T>(this T node, Func<bool> condition) where T : NodeBase
+    public static NodePlus<T1, T2, T3> SetGuard<T1, T2, T3>(this NodePlus<T1, T2, T3> node, Func<bool> condition)
+        where T1 : NodeBase
+        where T2 : NodeBase
+        where T3 : NodeBase
     {
-        node.Guard = new Guard { Condition = condition };
+        node.Node.Guard = new Guard { Condition = condition };
         return node;
     }
-    public static T RemoveGuard<T>(this T node) where T : NodeBase
+    public static NodePlus<T1, T2, T3> RemoveGuard<T1, T2, T3>(this NodePlus<T1, T2, T3> node, Func<bool> condition)
+        where T1 : NodeBase
+        where T2 : NodeBase
+        where T3 : NodeBase
     {
-        node.Guard = Guard.AlwaysTrue;
+        node.Node.Guard = Guard.AlwaysTrue;
         return node;
     }
 }
@@ -48,7 +64,7 @@ public abstract class NodeBase
 
 
 
-    public abstract bool OnTick(float dt);
+    public abstract EState OnTick(float dt);
     public abstract void OnFail();
     public abstract NodeBase GetChild();
     
@@ -63,12 +79,12 @@ public abstract class NodeBase
     //     return Parent;
     // }
     
-    public bool Tick(float dt)
+    public EState Tick(float dt)
     {
         if (!CheckGuardLocal())
         {
             OnFail();
-            return false;
+            return EState.Failed;
         }
         // var failedNode = CheckGuardGlobal();
         // if(failedNode != null)
