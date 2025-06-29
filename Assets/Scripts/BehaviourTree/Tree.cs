@@ -31,11 +31,12 @@ namespace BehaviourTree
 
         public NodePlus<NodeBase, T, NodeBase> Create<T>() where T : CompositeNode, new()
         {
-            Root = new T
+            var t = new T
             {
                 Tree = this
             };
-            return new NodePlus<NodeBase, T, NodeBase>(Root as T);
+            Root = t;
+            return new NodePlus<NodeBase, T, NodeBase>(t);
         }
 
         public void Tick(float dt)

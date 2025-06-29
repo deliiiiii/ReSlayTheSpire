@@ -24,9 +24,6 @@ namespace BehaviourTree
                     .AddChildStay(new ActionNodeDelay(1.5f)).SetChildName("DelayNodeFalse")
                     .AddChildStay(new ActionNodeSet<bool>(true, tar => TestBool = tar)).SetChildName("SetterFalse")
                 .Back();
-                
-            //
-            // .AddC
         }
 
         void Update()
