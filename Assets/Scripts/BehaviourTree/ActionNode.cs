@@ -14,6 +14,11 @@ namespace BehaviourTree
         public Action<float> OnContinue;
         protected bool isFinished;
 
+        public override NodeBase GetChild()
+        {
+            return null;
+        }
+
         public override bool OnTick(float dt)
         {
             if (!Tree.IsNodeRunning(this))

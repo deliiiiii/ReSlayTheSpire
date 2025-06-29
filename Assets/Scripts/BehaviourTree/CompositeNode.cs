@@ -4,14 +4,6 @@ using Sirenix.OdinInspector;
 
 namespace BehaviourTree
 {
-
-    public static class CompositeNodeExtensions
-    {
-        public static T ToChild<T>(this CompositeNode node) where T : NodeBase
-        {
-            return node.childList?.Last?.Value as T;
-        }
-    }
     [Serializable]
     public abstract class CompositeNode : NodeBase
     {
@@ -20,6 +12,11 @@ namespace BehaviourTree
         protected LinkedListNode<NodeBase> curNode;
         [ShowInInspector]
         NodeBase curNodeTrue => curNode?.Value;
+        
+        public override NodeBase GetChild()
+        {
+            return childList?.Last?.Value;
+        }
 
         public CompositeNode SetChildName(string name)
         {

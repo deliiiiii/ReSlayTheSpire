@@ -11,17 +11,20 @@ namespace BehaviourTree
         {
             Application.targetFrameRate = 30;
             Tree.Create<SelectorNode>().SetName("RootNode")
-                
-                .AddChildStay(new SequenceNode()).SetName("Se1")
+                .AddChildStayPlus(new SequenceNode()).SetName("Se1")
                 .SetGuard(() => TestBool)
-                .ToChild<SequenceNode>()
-                    .AddChildStay(new ActionNodeDebug("Start")).SetChildName("StartNode")
-                    .AddChildStay(new ActionNodeDelay(2f)).SetChildName("DelayNode")
-                    .AddChildStay(new ActionNodeSet<bool>(false, tar => TestBool = tar)).SetChildName("Setter")
-                    .AddChildStay(new ActionNodeDebug("End")).SetChildName("EndNode")
-                .Back();
-                //
-                // .AddC
+                .ToChild();
+                
+                //!!!!    
+                // .AddChildStayPlus(new ActionNodeDebug("Start")); //.SetChildNamePlus("StartNode")
+            
+            
+            //     .AddChildStayPlus(new ActionNodeDelay(2f)).SetChildNamePlus("DelayNode")
+            //     .AddChildStayPlus(new ActionNodeSet<bool>(false, tar => TestBool = tar)).SetChildNamePlus("Setter")
+            //     .AddChildStayPlus(new ActionNodeDebug("End")).SetChildNamePlus("EndNode")
+            // .BackPlus();
+            //
+            // .AddC
         }
 
         void Update()

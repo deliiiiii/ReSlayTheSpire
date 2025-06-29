@@ -26,6 +26,7 @@ public static class NodeBaseExtensions
     }
 }
 
+
 [Serializable]
 public abstract class NodeBase
 {
@@ -38,8 +39,10 @@ public abstract class NodeBase
     public NodeBase Parent;
 
 
+
     public abstract bool OnTick(float dt);
     public abstract void OnFail();
+    public abstract NodeBase GetChild();
     
     // public T SetName<T>(string name) where T : NodeBase
     // {
