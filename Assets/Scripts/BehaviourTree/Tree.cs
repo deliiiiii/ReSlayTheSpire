@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
 
 namespace BehaviourTree
 {
@@ -6,12 +8,32 @@ namespace BehaviourTree
     public class Tree
     {
         public string Name = "New Tree";
-        public SequenceNode Root;
+        [ShowInInspector]
+        public NodeBase Root;
         // public NodeBase CurrentNode;
-
-        public SequenceNode Create()
+        [ShowInInspector]
+        HashSet<ActionNode> RunningNodeSet;
+        public void AddRunningNode(ActionNode node)
         {
-            return Root = new SequenceNode();
+            RunningNodeSet ??= new HashSet<ActionNode>();
+            RunningNodeSet.Add(node);
+        }
+        public void RemoveRunningNode(ActionNode node)
+        {
+            RunningNodeSet?.Remove(node);
+        }
+        public bool IsNodeRunning(ActionNode node)
+        {
+            return RunningNodeSet != null && RunningNodeSet.Contains(node);
+        }
+
+        public T Create<T>() where T : NodeBase, new()
+        {
+            Root = new T
+            {
+                Tree = this
+            };
+            return Root as T;
         }
 
         public void Tick(float dt)

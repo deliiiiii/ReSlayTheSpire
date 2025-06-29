@@ -4,19 +4,22 @@ using Sirenix.OdinInspector;
 
 namespace BehaviourTree
 {
+
+    public static class CompositeNodeExtensions
+    {
+        public static T ToChild<T>(this CompositeNode node) where T : NodeBase
+        {
+            return node.childList?.Last?.Value as T;
+        }
+    }
     [Serializable]
     public abstract class CompositeNode : NodeBase
     {
         [ShowInInspector]
-        protected LinkedList<NodeBase> childList;
-        [ShowInInspector]
+        public LinkedList<NodeBase> childList;
         protected LinkedListNode<NodeBase> curNode;
-        
-        public CompositeNode SetName(string name)
-        {
-            Name = name;
-            return this;
-        }
+        [ShowInInspector]
+        NodeBase curNodeTrue => curNode?.Value;
 
         public CompositeNode SetChildName(string name)
         {
@@ -24,7 +27,12 @@ namespace BehaviourTree
             return this;
         }
         
-        public CompositeNode AddChild(NodeBase child)
+        // public NodeBase ToChild()
+        // {
+        //     return childList?.Last.Value;
+        // }
+        
+        public CompositeNode AddChildStay(NodeBase child)
         {
             childList ??= new LinkedList<NodeBase>();
             child.Parent = this;
@@ -32,6 +40,16 @@ namespace BehaviourTree
             childList.AddLast(child);
             return this;
         }
+        
+        public T AddChildTo<T>(T child) where T : NodeBase
+        {
+            childList ??= new LinkedList<NodeBase>();
+            child.Parent = this;
+            child.Tree = Tree;
+            childList.AddLast(child);
+            return child;
+        }
+        
         public CompositeNode RemoveChild(NodeBase child)
         {
             if (childList == null || !childList.Contains(child))
@@ -69,6 +87,15 @@ namespace BehaviourTree
             return true;
             
         }
+        public override void OnFail()
+        {
+            var fNode = childList.First;
+            while (fNode != null)
+            {
+                fNode.Value.OnFail();
+                fNode = fNode.Next;
+            }
+        }
     }
     
     [Serializable]
@@ -86,6 +113,15 @@ namespace BehaviourTree
                 curNode = curNode.Next;
             }
             return false;
+        }
+        public override void OnFail()
+        {
+            var fNode = childList.First;
+            while (fNode != null)
+            {
+                fNode.Value.OnFail();
+                fNode = fNode.Next;
+            }
         }
     }
 }

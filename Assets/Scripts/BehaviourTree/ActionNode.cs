@@ -5,16 +5,31 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    public class ActionNode : NodeBase
+    public abstract class ActionNode : NodeBase
     {
         public string Name => ToString();
         [HideInEditorMode][HideInPlayMode]
-        public Action Act;
+        public Action OnEnter;
+        [HideInEditorMode][HideInPlayMode]
+        public Action<float> OnContinue;
+        protected bool isFinished;
 
         public override bool OnTick(float dt)
         {
-            Act();
-            return true;
+            if (!Tree.IsNodeRunning(this))
+            {
+                OnEnter?.Invoke();
+                Tree.AddRunningNode(this);
+            }
+            if(isFinished)
+                return true;
+            OnContinue(dt);
+            return isFinished;
+        }
+        public override void OnFail()
+        {
+            isFinished = false;
+            Tree.RemoveRunningNode(this);
         }
     }
 
@@ -26,9 +41,10 @@ namespace BehaviourTree
         public ActionNodeDebug(string content)
         {
             Content = content;
-            Act = () =>
+            OnContinue = _ =>
             {
                 MyDebug.Log(Content, LogType.Tick);
+                isFinished = true;
             };
         }
 
@@ -42,16 +58,45 @@ namespace BehaviourTree
     public class ActionNodeDelay : ActionNode
     {
         public float DelaySeconds;
+        [ShowInInspector][ReadOnly]
         float timer;
         
         public ActionNodeDelay(float delaySeconds)
         {
             DelaySeconds = delaySeconds;
+            OnEnter = () => timer = 0;
+            OnContinue = dt =>
+            {
+                timer += dt;
+                isFinished = timer >= DelaySeconds;
+            };
         }
-        public override bool OnTick(float dt)
+
+        public override string ToString()
         {
-            timer += dt;
-            return timer >= DelaySeconds;
+            return $"Delay {DelaySeconds}s";
+        }
+    }
+    
+    public class ActionNodeSet<T> : ActionNode
+    {
+        public T TarValue;
+        public Action<T> Setter;
+
+        public ActionNodeSet(T tarValue, Action<T> setter)
+        {
+            TarValue = tarValue;
+            Setter = setter;
+            OnContinue = _ =>
+            {
+                Setter(TarValue);
+                isFinished = true;
+            };
+        }
+
+        public override string ToString()
+        {
+            return $"Set to {TarValue}";
         }
     }
 }
