@@ -16,7 +16,7 @@
     {
         public TParent Parent { get; set; }
         public TThis Node { get; }
-        public TChild Child => Node.GetChild() as TChild;
+        public TChild Child => Node.ToChild() as TChild;
 
         public NodePlus(TThis node)
         {

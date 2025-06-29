@@ -11,23 +11,12 @@ namespace BehaviourTree
         public LinkedList<NodeBase> childList;
         protected LinkedListNode<NodeBase> curNode;
         
-        public override NodeBase GetChild()
+        public override NodeBase ToChild()
         {
             return childList?.Last?.Value;
         }
-
-        public CompositeNode SetChildName(string name)
-        {
-            childList.Last.Value.NodeName = name;
-            return this;
-        }
         
-        // public NodeBase ToChild()
-        // {
-        //     return childList?.Last.Value;
-        // }
-        
-        public CompositeNode AddChildStay(NodeBase child)
+        public override NodeBase AddChild(NodeBase child)
         {
             childList ??= new LinkedList<NodeBase>();
             child.Parent = this;

@@ -14,10 +14,7 @@ namespace BehaviourTree
         public Action<float> OnContinue;
         protected bool isFinished;
 
-        public override NodeBase GetChild()
-        {
-            return null;
-        }
+        
 
         public override EState OnTick(float dt)
         {
@@ -38,6 +35,16 @@ namespace BehaviourTree
         {
             isFinished = false;
             Tree.RemoveRunningNode(this);
+        }
+        public override NodeBase ToChild()
+        {
+            return null;
+        }
+        
+        public override NodeBase AddChild(NodeBase child)
+        {
+            MyDebug.LogError("ActionNode cannot have children.");
+            return this;
         }
     }
 

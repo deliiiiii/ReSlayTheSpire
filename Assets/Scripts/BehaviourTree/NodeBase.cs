@@ -27,7 +27,10 @@ public abstract class NodeBase
 
     public abstract EState OnTick(float dt);
     public abstract void OnFail();
-    public abstract NodeBase GetChild();
+    public abstract NodeBase ToChild();
+    public abstract NodeBase AddChild(NodeBase child);
+
+    public NodeBase Back() => Parent;
     
     public EState Tick(float dt)
     {

@@ -2,16 +2,30 @@
 
 namespace BehaviourTree
 {
-    [Serializable]
-    public class InverseNode : NodeBase
+    public abstract class DecorateNode : NodeBase
     {
         public NodeBase Child;
-
-        public override NodeBase GetChild()
+        public override NodeBase ToChild()
         {
             return Child;
         }
-
+        
+        public override NodeBase AddChild(NodeBase child)
+        {
+            if (Child != null)
+            {
+                MyDebug.LogError("InverseNode can only have one child.");
+                return this;
+            }
+            Child = child;
+            return this;
+        }
+    }
+    
+    [Serializable]
+    public class InverseNode : DecorateNode
+    {
+        public NodeBase Child;
         public override EState OnTick(float dt)
         {
             // 1变成0 0变成1
@@ -21,5 +35,11 @@ namespace BehaviourTree
         {
             Child?.OnFail();
         }
+        public override NodeBase ToChild()
+        {
+            return Child;
+        }
+
+        
     }
 }

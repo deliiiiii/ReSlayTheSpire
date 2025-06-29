@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -10,20 +11,30 @@ namespace BehaviourTree
         void Awake()
         {
             Application.targetFrameRate = 30;
-            Tree.Create<SelectorNode>().SetName("RootNode")
-                .AddChildStay(new SequenceNode())
+            Tree.CreateVir<SelectorNode>().SetName("RootNode")
+                .AddChild(new SequenceNode())
                 .ToChild().SetName("SeqTrue")
                     .SetGuard(() => TestBool)
-                    .AddChildStay(new ActionNodeDebug("Start")).SetChildName("StartNode")
-                    .AddChildStay(new ActionNodeDelay(1.2f)).SetChildName("DelayNodeTrue")
-                    .AddChildStay(new ActionNodeSet<bool>(false, tar => TestBool = tar)).SetChildName("SetterTrue")
-                    .AddChildStay(new ActionNodeDebug("End")).SetChildName("EndNode")
+                    .AddChild(new ActionNodeDebug("Start")).SetChildName("StartNode")
+                    .AddChild(new ActionNodeDelay(1.2f)).SetChildName("DelayNodeTrue")
+                    .AddChild(new ActionNodeSet<bool>(false, tar => TestBool = tar)).SetChildName("SetterTrue")
+                    .AddChild(new ActionNodeDebug("End")).SetChildName("EndNode")
                 .Back()
-                .AddChildStay(new SequenceNode())
+                .AddChild(new SequenceNode())
                 .ToChild().SetName("SeqFalse")
-                    .AddChildStay(new ActionNodeDelay(1.5f)).SetChildName("DelayNodeFalse")
-                    .AddChildStay(new ActionNodeSet<bool>(true, tar => TestBool = tar)).SetChildName("SetterFalse")
+                    .AddChild(new ActionNodeDelay(1.5f)).SetChildName("DelayNodeFalse")
+                    .AddChild(new ActionNodeSet<bool>(true, tar => TestBool = tar)).SetChildName("SetterFalse")
                 .Back();
+            
+            // Tree.CreateVir<SelectorNode>()
+            //     .AddChildStay(new SelectorNode())
+            //     .ToChild()
+            //         .AddChildStay(new SequenceNode())
+            //         .ToChild()
+            //             .AddChildStay(new SelectorNode())
+            //             .ToChild()
+            //                 .AddChildStay(new SequenceNode())
+            //                 .ToChild();
         }
 
         void Update()

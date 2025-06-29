@@ -153,26 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Tree:
     Name: New Tree
-    Root:
-      Name: New Node
-      Tree:
-        Name: New Tree
-        Root:
-          Name: New Node
-          Tree:
-            Name: New Tree
-            Root:
-              Name: New Node
-              Tree:
-                Name: New Tree
-                Root:
-                  Name: New Node
-                  Tree:
-                    Name: New Tree
-                    Root:
-                      Name: New Node
-                      Tree:
-                        Name: New Tree
+  TestBool: 1
 --- !u!4 &151640479
 Transform:
   m_ObjectHideFlags: 0
