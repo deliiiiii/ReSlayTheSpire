@@ -13,46 +13,11 @@ public enum EState
     Failed,
     Running,
 }
-public static class NodeBaseExtensions
-{
-    // public static T SetName<T>(this T node, string name) where T : NodeBase
-    // {
-    //     node.Name = name;
-    //     return node;
-    // }
-    
-    public static NodePlus<T1, T2, T3> SetName<T1, T2, T3>(this NodePlus<T1, T2, T3> node, string name)
-        where T1 : NodeBase
-        where T2 : NodeBase
-        where T3 : NodeBase
-    {
-        node.Node.Name = name;
-        return node;
-    }
-
-    public static NodePlus<T1, T2, T3> SetGuard<T1, T2, T3>(this NodePlus<T1, T2, T3> node, Func<bool> condition)
-        where T1 : NodeBase
-        where T2 : NodeBase
-        where T3 : NodeBase
-    {
-        node.Node.Guard = new Guard { Condition = condition };
-        return node;
-    }
-    public static NodePlus<T1, T2, T3> RemoveGuard<T1, T2, T3>(this NodePlus<T1, T2, T3> node, Func<bool> condition)
-        where T1 : NodeBase
-        where T2 : NodeBase
-        where T3 : NodeBase
-    {
-        node.Node.Guard = Guard.AlwaysTrue;
-        return node;
-    }
-}
-
 
 [Serializable]
 public abstract class NodeBase
 {
-    public string Name = "New Node";
+    public string NodeName = "New Node";
     [HideInInspector]
     public Tree Tree;
     
@@ -60,24 +25,9 @@ public abstract class NodeBase
     [HideInInspector]
     public NodeBase Parent;
 
-    public static NodeBase NullNode = null;
-
-
-
     public abstract EState OnTick(float dt);
     public abstract void OnFail();
     public abstract NodeBase GetChild();
-    
-    // public T SetName<T>(string name) where T : NodeBase
-    // {
-    //     Name = name;
-    //     return this as T;
-    // }
-
-    // public NodeBase Back()
-    // {
-    //     return Parent;
-    // }
     
     public EState Tick(float dt)
     {
@@ -98,7 +48,7 @@ public abstract class NodeBase
         //     } while (curNode != failedNode);
         // }
         var tickResult = OnTick(dt);
-        MyDebug.Log($"\"{Name}\" Tick: {tickResult}", LogType.Tick);
+        MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
         return tickResult;
     }
 

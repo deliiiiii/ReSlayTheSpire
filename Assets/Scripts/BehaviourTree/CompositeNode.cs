@@ -18,7 +18,7 @@ namespace BehaviourTree
 
         public CompositeNode SetChildName(string name)
         {
-            childList.Last.Value.Name = name;
+            childList.Last.Value.NodeName = name;
             return this;
         }
         
@@ -49,7 +49,7 @@ namespace BehaviourTree
         {
             if (childList == null || !childList.Contains(child))
             {
-                MyDebug.LogError($"Child \"{child.Name}\" not found in {Name} children list.");
+                MyDebug.LogError($"Child \"{child.NodeName}\" not found in {NodeName} children list.");
                 return this;
             }
             childList.Remove(child);
