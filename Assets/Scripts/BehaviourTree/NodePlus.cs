@@ -16,11 +16,15 @@
     {
         public TParent Parent { get; set; }
         public TThis Node { get; }
+        public override NodeBase GetChild()
+        {
+            return Node.GetChild();
+        }
 
         public NodePlus(TThis node)
         {
             this.Node = node;
-            Parent = new NullNode() as TParent;
+            // Parent = NullNode as TParent;
         }
         
         public NodePlus(TParent parent, TThis node)
@@ -29,10 +33,7 @@
             Parent = parent;
         }
         
-        public override NodeBase GetChild()
-        {
-            return Node.GetChild();
-        }
+       
         
         public override bool OnTick(float dt)
         {

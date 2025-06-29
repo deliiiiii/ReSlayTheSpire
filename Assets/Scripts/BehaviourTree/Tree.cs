@@ -27,13 +27,13 @@ namespace BehaviourTree
             return RunningNodeSet != null && RunningNodeSet.Contains(node);
         }
 
-        public NodePlus<NullNode, T, NullNode> Create<T>() where T : CompositeNode, new()
+        public NodePlus<NodeBase, T, NodeBase> Create<T>() where T : CompositeNode, new()
         {
             Root = new T
             {
                 Tree = this
             };
-            return new NodePlus<NullNode, T, NullNode>(Root as T);
+            return new NodePlus<NodeBase, T, NodeBase>(Root as T);
         }
 
         public void Tick(float dt)

@@ -8,9 +8,15 @@ namespace BehaviourTree
     
 public static class NodeBaseExtensions
 {
-    public static T SetName<T>(this T node, string name) where T : NodeBase
+    // public static T SetName<T>(this T node, string name) where T : NodeBase
+    // {
+    //     node.Name = name;
+    //     return node;
+    // }
+    
+    public static NodePlus<T1, T2, T3> SetName<T1, T2, T3>(this NodePlus<T1, T2, T3> node, string name) where T1 : NodeBase where T2 : NodeBase where T3 : NodeBase
     {
-        node.Name = name;
+        node.Node.Name = name;
         return node;
     }
 
@@ -38,6 +44,8 @@ public abstract class NodeBase
     [HideInInspector]
     public NodeBase Parent;
 
+    public static NodeBase NullNode = null;
+
 
 
     public abstract bool OnTick(float dt);
@@ -50,10 +58,10 @@ public abstract class NodeBase
     //     return this as T;
     // }
 
-    public NodeBase Back()
-    {
-        return Parent;
-    }
+    // public NodeBase Back()
+    // {
+    //     return Parent;
+    // }
     
     public bool Tick(float dt)
     {
