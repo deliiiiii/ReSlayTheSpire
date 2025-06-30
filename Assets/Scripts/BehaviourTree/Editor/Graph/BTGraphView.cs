@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Sirenix.Utilities;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -64,28 +65,109 @@ namespace BehaviourTree
             CreateNode(typeof(T));
         }
 
-        GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+        public GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
-            if (graphViewChange.edgesToCreate == null)
-                return graphViewChange;
-            foreach (var edge in graphViewChange.edgesToCreate)
+            if (graphViewChange.edgesToCreate != null)
             {
-                if (edge.output.node is NodeBaseEditor<NodeBase> parentEditor && 
-                    edge.input.node is NodeBaseEditor<NodeBase> childEditor)
+                foreach (var edge in graphViewChange.edgesToCreate)
                 {
-                    parentEditor.NodeBase.AddChild(childEditor.NodeBase);
+                    if (edge.output.node is INodeBaseEditor<NodeBase> parentEditor && 
+                        edge.input.node is INodeBaseEditor<NodeBase> childEditor)
+                    {
+                        MyDebug.Log($"Adding child {childEditor.NodeBase.NodeName} to parent {parentEditor.NodeBase.NodeName}");
+                        parentEditor.NodeBase.AddChild(childEditor.NodeBase);
+                    }
                 }
             }
 
-            foreach (var edge in graphViewChange.elementsToRemove.OfType<Edge>())
+            if (graphViewChange.elementsToRemove != null)
             {
-                if (edge.output.node is NodeBaseEditor<NodeBase> parentEditor && 
-                    edge.input.node is NodeBaseEditor<NodeBase> childEditor)
+                foreach (var edge in graphViewChange.elementsToRemove.OfType<Edge>())
                 {
-                    parentEditor.NodeBase.RemoveChild(childEditor.NodeBase);
+                    if (edge.output.node is INodeBaseEditor<NodeBase> parentEditor && 
+                        edge.input.node is INodeBaseEditor<NodeBase> childEditor)
+                    {
+                        MyDebug.Log($"Removing child {childEditor.NodeBase.NodeName} from parent {parentEditor.NodeBase.NodeName}");
+                        parentEditor.NodeBase.RemoveChild(childEditor.NodeBase);
+                    }
                 }
             }
+            ConstructTree();
             return graphViewChange;
         }
+
+        void ConstructTree()
+        {
+            var tree = new Tree();
+            //找到图中第一个没有输入 但有输出的节点作为根节点
+            // var curNodes = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)));
+            var rootNodeSonClass = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)))
+                                .FirstOrDefault(n => 
+                                    //错误用法
+                                    // n.inputContainer.Children().Sum(x => x.childCount) == 0
+                                    !n.inputContainer.Q<Port>().connections.Any()
+                                    && n.outputContainer.Q<Port>().connections.Any());
+            
+            // var v2 = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)))
+            //                     .Count(n => 
+            //                         //错误用法
+            //                         // n.inputContainer.Children().Sum(x => x.childCount) == 0
+            //                         !n.inputContainer.Q<Port>().connections.Any()
+            //                         && n.outputContainer.Q<Port>().connections.Any());
+            //
+            // MyDebug.Log(curNodes.Count() + " " + v2);
+            
+            // var rootNodeGeneral = rootNodeSonClass as INodeBaseEditor<NodeBase> as NodeBaseEditor<NodeBase>;
+            // MyDebug.Log(
+            //     (
+            //         rootNodeSonClass is NodeBaseEditor<NodeBase>) 
+            //     + " " 
+            //     + (rootNodeSonClass is INodeBaseEditor<NodeBase>)
+            //     + " "
+            //     + ((rootNodeSonClass as INodeBaseEditor<NodeBase>) is NodeBaseEditor<NodeBase>)
+            //     );
+
+            if (rootNodeSonClass is not INodeBaseEditor<NodeBase> rootNodeInterface)
+            {
+                MyDebug.LogError("No root node found in the graph.");
+                return;
+            }
+            tree.Root = rootNodeInterface.NodeBase;
+            tree.Root.Tree = tree;
+            rootNodeInterface.AddChildren();
+            TreeTest.StaticTree = tree;
+        }
+        
+        // void ConstructTree()
+        // {
+        //     var tree = new Tree();
+        //     //找到图中第一个没有输入 但有输出的节点作为根节点
+        //     var rootNodeSonClass = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)))
+        //         .FirstOrDefault(n => 
+        //             //错误用法
+        //             // n.inputContainer.Children().Sum(x => x.childCount) == 0
+        //             !n.inputContainer.Q<Port>().connections.Any()
+        //             && n.outputContainer.Q<Port>().connections.Any());
+        //     if (rootNodeSonClass is not NodeBaseEditor<NodeBase> rootNodeGeneral)
+        //     {
+        //         //找到图中第一个没有输入 也没有输出的节点作为根节点
+        //         rootNodeSonClass = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)))
+        //             .FirstOrDefault(n => 
+        //                 !n.inputContainer.Q<Port>().connections.Any()
+        //                 && !n.outputContainer.Q<Port>().connections.Any());
+        //         rootNodeGeneral = rootNodeSonClass as NodeBaseEditor<NodeBase>;
+        //         if (rootNodeGeneral == null)
+        //         {
+        //             MyDebug.LogError("No root node found in the graph.");
+        //             return;
+        //         }
+        //     }
+        //     tree.Root = rootNodeGeneral.NodeBase;
+        //     tree.Root.Tree = tree;
+        //     AddChildren(rootNodeGeneral);
+        //
+        //     TreeTest.StaticTree = tree;
+        // }
+        
     }
 }

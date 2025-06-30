@@ -39,6 +39,7 @@ namespace BehaviourTree.Editor
         void ConstructGraph()
         {
             view = new BTGraphView();
+            view.graphViewChanged = view.OnGraphViewChanged;
             view.StretchToParentSize();
             rootVisualElement.Add(view);
         }

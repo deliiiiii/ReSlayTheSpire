@@ -3,11 +3,16 @@ using UnityEngine;
 
 namespace BehaviourTree
 {
-    public class TreeTest : MonoBehaviour
+    public class TreeTest : Singleton<TreeTest>
     {
-        public Tree Tree = new Tree();
+        public Tree Tree = new();
         public bool TestBool = true;
 
+        public static Tree StaticTree
+        {
+            get => Instance.Tree;
+            set => Instance.Tree = value;
+        }
 
         void Awake()
         {

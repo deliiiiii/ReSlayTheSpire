@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -23,9 +24,11 @@ public abstract class NodeBase
     public Guard Guard = Guard.AlwaysTrue;
     [HideInInspector]
     public NodeBase Parent;
+    [ShowInInspector]
     protected LinkedList<NodeBase> childList;
     public NodeBase Back() => Parent;
     public NodeBase ToChild() => childList?.Last?.Value;
+    public LinkedList<NodeBase> ChildList => childList;
 
     public abstract EState OnTick(float dt);
     public abstract void OnFail();
