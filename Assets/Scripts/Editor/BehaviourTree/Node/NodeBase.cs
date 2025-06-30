@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using QFramework;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -15,7 +14,7 @@ public enum EState
 }
 
 [Serializable]
-public abstract class NodeBase
+public abstract class NodeBase : Node
 {
     public string NodeName = "New Node";
     [HideInInspector]

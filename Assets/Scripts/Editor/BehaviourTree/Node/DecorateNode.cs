@@ -4,7 +4,7 @@ namespace BehaviourTree
 {
     public abstract class DecorateNode : NodeBase
     {
-        public NodeBase Child;
+        protected NodeBase Child;
         public override NodeBase ToChild()
         {
             return Child;
@@ -25,7 +25,6 @@ namespace BehaviourTree
     [Serializable]
     public class InverseNode : DecorateNode
     {
-        public NodeBase Child;
         public override EState OnTick(float dt)
         {
             // 1变成0 0变成1
