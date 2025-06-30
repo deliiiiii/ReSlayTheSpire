@@ -44,6 +44,7 @@ namespace BehaviourTree.Editor
             view.StretchToParentSize();
             rootVisualElement.Add(view);
         }
+        
         void ConstructToolbar()
         {
             var toolbar = new Toolbar();
@@ -51,16 +52,14 @@ namespace BehaviourTree.Editor
             {
                 toolbar.Add(btn);
             }
-            // var btn = new Button(() => view.CreateNode<TestNode>()) {text = nameof(BTGraphView.CreateNode) + "<" + nameof(TestNode) + ">"};
-            // toolbar.Add(btn);
             rootVisualElement.Add(toolbar);
         }
 
         IEnumerable<Button> CollectButtons()
         {
             var ret = new List<Button>();
-            //利用反射获取所有的Button，继承于Node的非抽象类
-            var nodeType = typeof(Node);
+            //利用反射获取所有的Button，继承于NodeBaseEditor的非抽象类
+            var nodeType = typeof(NodeBaseEditor<>);
             var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
             foreach (var type in nodeTypes)
             {

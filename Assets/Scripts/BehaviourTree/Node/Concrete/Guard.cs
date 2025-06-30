@@ -9,34 +9,37 @@ namespace BehaviourTree
     {
         [ShowInInspector]
         public string Name => ToString();
-        [HideInInspector]
+        // [HideInInspector]
         public Func<bool> Condition;
-        
-        public static Guard AlwaysTrue => new()
+        public static Guard AlwaysTrue = new GuardAlwaysTrue();
+    }
+    public class GuardAlwaysTrue : Guard
+    {
+        public GuardAlwaysTrue()
         {
-            Condition = () => true
-        };
-
+            Condition = () => true;
+        }
         public override string ToString()
         {
-            return "AlwaysTrue";
+            return "Always True";
         }
     }
+    
     public class GuardMoreThan : Guard
     {
-        public int Value;
-        public int Threshold;
+        readonly int value;
+        readonly int threshold;
         
         public GuardMoreThan(int value, int threshold)
         {
-            Value = value;
-            Threshold = threshold;
-            Condition = () => Value > Threshold;
+            this.value = value;
+            this.threshold = threshold;
+            Condition = () => this.value > this.threshold;
         }
 
         public override string ToString()
         {
-            return $"{Value} > {Threshold}";
+            return $"{value} > {threshold}";
         }
     }
 }

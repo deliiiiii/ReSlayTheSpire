@@ -148,12 +148,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 151640477}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b830563208184118a01fc8d87c6d1a1a, type: 3}
+  m_Script: {fileID: 11500000, guid: 1fa5b9051f3097c45a04531635cc6d9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tree:
-    Name: New Tree
-  TestBool: 1
 --- !u!4 &151640479
 Transform:
   m_ObjectHideFlags: 0

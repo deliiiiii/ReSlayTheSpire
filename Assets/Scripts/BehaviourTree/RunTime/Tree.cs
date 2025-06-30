@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Sirenix.OdinInspector;
 
 namespace BehaviourTree
@@ -11,8 +10,6 @@ namespace BehaviourTree
         public string Name = "New Tree";
         [ShowInInspector]
         public NodeBase Root;
-        // [ShowInInspector]
-        // public NodeBase CurRunningNode;
         [ShowInInspector]
         HashSet<ActionNode> RunningNodeSet;
         public void AddRunningNode(ActionNode node)
@@ -29,15 +26,15 @@ namespace BehaviourTree
             return RunningNodeSet != null && RunningNodeSet.Contains(node);
         }
 
-        public NodePlus<NodeBase, T, NodeBase> Create<T>() where T : CompositeNode, new()
-        {
-            var t = new T
-            {
-                Tree = this
-            };
-            Root = t;
-            return new NodePlus<NodeBase, T, NodeBase>(t);
-        }
+        // public NodePlus<NodeBase, T, NodeBase> Create<T>() where T : CompositeNode, new()
+        // {
+        //     var t = new T
+        //     {
+        //         Tree = this
+        //     };
+        //     Root = t;
+        //     return new NodePlus<NodeBase, T, NodeBase>(t);
+        // }
 
         public NodeBase CreateVir<T>() where T : CompositeNode, new()
         {

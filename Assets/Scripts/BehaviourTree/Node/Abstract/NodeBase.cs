@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -14,22 +15,21 @@ public enum EState
 }
 
 [Serializable]
-public abstract class NodeBase : Node
+public abstract partial class NodeBase
 {
-    public string NodeName = "New Node";
     [HideInInspector]
     public Tree Tree;
-    
+    public string NodeName = "New Node";
     public Guard Guard = Guard.AlwaysTrue;
     [HideInInspector]
     public NodeBase Parent;
+    public List<NodeBase> ChildList;
+    public NodeBase Back() => Parent;
+    public NodeBase ToChild() => ChildList?.Count > 0 ? ChildList[^1] : null;
 
     public abstract EState OnTick(float dt);
     public abstract void OnFail();
-    public abstract NodeBase ToChild();
     public abstract NodeBase AddChild(NodeBase child);
-
-    public NodeBase Back() => Parent;
     
     public EState Tick(float dt)
     {

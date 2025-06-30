@@ -1,62 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using Sirenix.OdinInspector;
 
 namespace BehaviourTree
 {
     [Serializable]
-    public abstract class CompositeNode : NodeBase
-    {
-        [ShowInInspector]
-        public LinkedList<NodeBase> childList;
-        protected LinkedListNode<NodeBase> curNode;
-        
-        public override NodeBase ToChild()
-        {
-            return childList?.Last?.Value;
-        }
-        
-        public override NodeBase AddChild(NodeBase child)
-        {
-            childList ??= new LinkedList<NodeBase>();
-            child.Parent = this;
-            child.Tree = Tree;
-            childList.AddLast(child);
-            return this;
-        }
-        
-        public T AddChildTo<T>(T child) where T : NodeBase
-        {
-            childList ??= new LinkedList<NodeBase>();
-            child.Parent = this;
-            child.Tree = Tree;
-            childList.AddLast(child);
-            return child;
-        }
-        
-        public CompositeNode RemoveChild(NodeBase child)
-        {
-            if (childList == null || !childList.Contains(child))
-            {
-                MyDebug.LogError($"Child \"{child.NodeName}\" not found in {NodeName} children list.");
-                return this;
-            }
-            childList.Remove(child);
-            child.Parent = null;
-            child.Tree = null;
-            return this;
-        }
-
-        public CompositeNode ClearChildren()
-        {
-            childList?.Clear();
-            return this;
-        }
-    }
-
-    [Serializable]
     public class SequenceNode : CompositeNode
     {
+        public SequenceNode() { }
         public override EState OnTick(float dt)
         {
             if (curNode != null)
@@ -69,7 +18,7 @@ namespace BehaviourTree
             }
             else
             {
-                curNode = childList.First;
+                curNode = childLinkedList.First;
             }
             
             while (curNode != null)
@@ -91,7 +40,7 @@ namespace BehaviourTree
         }
         public override void OnFail()
         {
-            var fNode = childList.First;
+            var fNode = childLinkedList.First;
             while (fNode != null)
             {
                 fNode.Value.OnFail();
@@ -103,10 +52,11 @@ namespace BehaviourTree
     [Serializable]
     public class SelectorNode : CompositeNode
     {
+        public SelectorNode() { }
         public override EState OnTick(float dt)
         {
             // curNode ??= childList.First;
-            curNode = childList.First;
+            curNode = childLinkedList.First;
             while (curNode != null)
             {
                 var res = curNode.Value.Tick(dt);
@@ -118,7 +68,7 @@ namespace BehaviourTree
         }
         public override void OnFail()
         {
-            var fNode = childList.First;
+            var fNode = childLinkedList.First;
             while (fNode != null)
             {
                 fNode.Value.OnFail();

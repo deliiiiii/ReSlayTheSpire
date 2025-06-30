@@ -45,20 +45,18 @@ namespace BehaviourTree
         
         public void CreateNode(Type nodeType)
         {
-            Node node;
-            if(nodeType == typeof(TestNode))
-            {
-                node = CreateTestNode();
-            }
-            else if(nodeType == typeof(SequenceNode))
-            {
-                node = CreateSequenceNode();
-            }
-            else
-            {
-                Debug.LogError($"Unsupported node type: {nodeType}");
-                return;
-            }
+            // var methodInfos = nodeType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            //利用反射调用函数CreateNodeInGraph,
+            var ins = Activator.CreateInstance(nodeType);
+            var methodInfo = nodeType.GetMethod("CreateNodeInGraph",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var invoke = methodInfo?.Invoke(ins, null);
+            var node = invoke as Node;
+            // if (invoke is not Node node)
+            // {
+            //     Debug.LogError($"Node type {nodeType} does not have a CreateNodeInGraph method.");
+            //     return;
+            // }
             node.SetPosition(new Rect(100, 100, 200, 150));
             node.RefreshPorts();
             node.expanded = true;
@@ -68,37 +66,6 @@ namespace BehaviourTree
         public void CreateNode<T>() where T : Node
         {
             CreateNode(typeof(T));
-        }
-
-        static TestNode CreateTestNode()
-        {
-            var node = new TestNode
-            {
-                title = "Test Node",
-                viewDataKey = "TestNode_001",
-                TestInt = 42,
-            };
-            var inputPort = node.InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(bool));
-            inputPort.portName = "Input";
-            inputPort.tooltip = typeof(bool).ToString();
-            node.inputContainer.Add(inputPort);
-            
-            var outputPort = node.InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
-            outputPort.portName = "Output";
-            outputPort.tooltip = typeof(bool).ToString();
-            node.outputContainer.Add(outputPort);
-            return node;
-        }
-
-        static SequenceNode CreateSequenceNode()
-        {
-            var node = new SequenceNode
-            {
-                title = "Sequence Node",
-                viewDataKey = "SequenceNode_001",
-            };
-
-            return node;
         }
     }
 }

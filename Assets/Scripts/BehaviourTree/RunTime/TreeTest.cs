@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -8,17 +7,29 @@ namespace BehaviourTree
     {
         public Tree Tree = new Tree();
         public bool TestBool = true;
+
+
         void Awake()
         {
+            CreateTree();
+        }
+
+        void Update()
+        {
+            Tick(Time.deltaTime);
+        }
+
+         void CreateTree()
+         {
             Application.targetFrameRate = 30;
             Tree.CreateVir<SelectorNode>().SetName("RootNode")
                 .AddChild(new SequenceNode())
                 .ToChild().SetName("SeqTrue")
                     .SetGuard(() => TestBool)
-                    .AddChild(new ActionNodeDebug("Start")).SetChildName("StartNode")
+                    .AddChild(new ActionNodeConcrete("Start")).SetChildName("StartNode")
                     .AddChild(new ActionNodeDelay(1.2f)).SetChildName("DelayNodeTrue")
                     .AddChild(new ActionNodeSet<bool>(false, tar => TestBool = tar)).SetChildName("SetterTrue")
-                    .AddChild(new ActionNodeDebug("End")).SetChildName("EndNode")
+                    .AddChild(new ActionNodeConcrete("End")).SetChildName("EndNode")
                 .Back()
                 .AddChild(new SequenceNode())
                 .ToChild().SetName("SeqFalse")
@@ -36,11 +47,10 @@ namespace BehaviourTree
             //                 .AddChildStay(new SequenceNode())
             //                 .ToChild();
         }
-
-        void Update()
+        void Tick(float dt)
         {
             MyDebug.Log("----------Start Tick----------", LogType.Tick);
-            Tree.Tick(Time.deltaTime);
+            Tree.Tick(dt);
         }
     }
 }
