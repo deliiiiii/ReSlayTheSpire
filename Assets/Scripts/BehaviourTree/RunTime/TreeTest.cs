@@ -35,13 +35,13 @@ namespace BehaviourTree
                     .SetGuard(() => TestBool)
                     .AddChild(new ActionNodeDebug("Start")).SetChildName("StartNode")
                     .AddChild(new ActionNodeDelay(1.2f)).SetChildName("DelayNodeTrue")
-                    .AddChild(new ActionNodeSet<bool>(false, tar => TestBool = tar)).SetChildName("SetterTrue")
+                    // .AddChild(new ActionNodeSet<bool>(false, tar => TestBool = tar)).SetChildName("SetterTrue")
                     .AddChild(new ActionNodeDebug("End")).SetChildName("EndNode")
                 .Back()
                 .AddChild(new SequenceNode())
                 .ToChild().SetName("SeqFalse")
                     .AddChild(new ActionNodeDelay(1.5f)).SetChildName("DelayNodeFalse")
-                    .AddChild(new ActionNodeSet<bool>(true, tar => TestBool = tar)).SetChildName("SetterFalse")
+                    // .AddChild(new ActionNodeSet<bool>(true, tar => TestBool = tar)).SetChildName("SetterFalse")
                 .Back();
             
             // Tree.CreateVir<SelectorNode>()

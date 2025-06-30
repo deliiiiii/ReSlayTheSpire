@@ -9,11 +9,11 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace BehaviourTree.Editor
+namespace BehaviourTree
 {
     public class BTEditorWindow : EditorWindow
     {
-        BTGraphView view;
+        static BTGraphView view;
         [MenuItem("BTGraph/Open Graph Editor")]
         public static void OnOpen()
         {
@@ -21,6 +21,7 @@ namespace BehaviourTree.Editor
         }
         void OnEnable()
         {
+            InitDropDownDicCache();
             ConstructGraph();
             ConstructToolbar();
         }
@@ -44,33 +45,49 @@ namespace BehaviourTree.Editor
             view.StretchToParentSize();
             rootVisualElement.Add(view);
         }
+
+        static void InitDropDownDicCache()
+        {
+            var baseType = typeof(NodeBaseEditor<>);
+            var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
+            nodeTypes
+                .Where(type =>  
+                    type.InheritsFrom(baseType)
+                    && type != baseType
+                    && type.IsAbstract
+                    && type.IsGenericType
+                ) 
+                .ForEach(generic =>
+                {
+                    DropDownFieldDataCache.DDDic[generic] = new List<Type>();
+                    var tSubTypes = generic.GetGenericArguments()[0].BaseType.SubType();
+                    tSubTypes.ForEach(tSubType =>
+                    {
+                        // var genericWithSubT = generic.MakeGenericType(tSubType);
+                        // var subTSpecific = generic.MakeGenericType(tSubType).FirstSubType();
+                        // if (subTSpecific == null)
+                        // {
+                        //     MyDebug.LogError($"2 {generic} {tSubType} than subTSpecific is null!!");
+                        //     return;
+                        // }
+                        
+                        //TODO 确保每个RT都有一个对应的Editor
+                        DropDownFieldDataCache.DDDic[generic].Add(tSubType);
+                    });
+                });
+        }
         
         void ConstructToolbar()
         {
             var toolbar = new Toolbar();
             foreach (var btn in CollectButtons())
             {
-                // var toolbarMenu = new ToolbarMenu
-                // {
-                //     text = type.Name,
-                //     style =
-                //     {
-                //         flexDirection = FlexDirection.Column,
-                //         //滚动列表
-                //         overflow = Overflow.Hidden,
-                //     }
-                //     
-                // };
-                // btns.ForEach(btn => toolbarMenu.Add(btn));
-                // toolbar.Add(toolbarMenu);
-                
-                
                 toolbar.Add(btn);
             }
             rootVisualElement.Add(toolbar);
         }
 
-        IEnumerable<Button> CollectButtons()
+        static IEnumerable<Button> CollectButtons()
         {
             List<Button> ret = new();
             var baseType = typeof(NodeBaseEditor<>);
