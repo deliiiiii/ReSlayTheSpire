@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -37,10 +38,7 @@ namespace BehaviourTree.Editor
         
         void ConstructGraph()
         {
-            view = new BTGraphView()
-            {
-                name = "GGG??",
-            };
+            view = new BTGraphView();
             view.StretchToParentSize();
             rootVisualElement.Add(view);
         }
@@ -59,11 +57,12 @@ namespace BehaviourTree.Editor
         {
             var ret = new List<Button>();
             //利用反射获取所有的Button，继承于NodeBaseEditor的非抽象类
-            var nodeType = typeof(NodeBaseEditor<>);
+            var baseType = typeof(NodeBaseEditor<>);
             var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
             foreach (var type in nodeTypes)
             {
-                if (!nodeType.IsAssignableFrom(type) || type.IsAbstract)
+                var b1 = type.InheritsFrom(baseType);
+                if (!b1 || type.IsAbstract)
                     continue;
                 var btn = new Button(() => view.CreateNode(type)) {text = nameof(BTGraphView.CreateNode) + "<" + type.Name + ">"};
                 ret.Add(btn);

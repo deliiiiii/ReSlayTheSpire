@@ -1,23 +1,28 @@
 ﻿using UnityEditor.Experimental.GraphView;
+using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
-    public class ActionNodeDebugEditor : NodeBaseEditor<ActionNodeConcrete>
+    public enum EDebugType
     {
-        public override Node CreateNodeInGraph()
+        Log,
+        Warning,
+        Error
+    }
+    public class ActionNodeDebugEditor : NodeBaseEditor<ActionNodeDebug>
+    {
+        public EDebugType DebugType = EDebugType.Log;
+        public ActionNodeDebugEditor()
         {
-            var node = new ActionNodeDebugEditor
-            {
-                title = "Action Node Debug",
-                viewDataKey = "ActionNodeDebug_001",
-                nodeBase = new ActionNodeConcrete("Debug Message"),
-            };
-            var inputPort = node.InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
-            inputPort.portName = "Input";
-            inputPort.tooltip = typeof(bool).ToString();
-            node.inputContainer.Add(inputPort);
-            
-            return node;
+            title = "Action Node Debug";
+            viewDataKey = "ActionNodeDebug_001";
+            nodeBase = new ActionNodeDebug("Debug Message");
+            var enumField = new EnumField(nameof(DebugType), EDebugType.Log);
+            enumField.RegisterValueChangedCallback(v =>
+                {
+                    DebugType = (EDebugType)v.newValue;
+                });
+            extensionContainer.Add(enumField);
         }
     }
 }

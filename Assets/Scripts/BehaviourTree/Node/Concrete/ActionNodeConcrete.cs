@@ -4,12 +4,12 @@ using Sirenix.OdinInspector;
 namespace BehaviourTree
 {
     [Serializable]
-    public class ActionNodeConcrete : ActionNode
+    public class ActionNodeDebug : ActionNode
     {
         
         public string Content;
-        public ActionNodeConcrete() { }
-        public ActionNodeConcrete(string content)
+        public ActionNodeDebug() { }
+        public ActionNodeDebug(string content)
         {
             Content = content;
             OnContinue = _ =>
