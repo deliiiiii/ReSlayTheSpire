@@ -87,15 +87,16 @@ namespace BehaviourTree.Editor
                 {
                     var typeTSubType = tGeneric.GetGenericArguments()[0].BaseType.FirstSubType();
                     var subTSpecific = tGeneric.MakeGenericType(typeTSubType).FirstSubType();
-                    MyDebug.Log($"1 {tGeneric} {typeTSubType} {subTSpecific}");
+                    // MyDebug.Log($"1 {tGeneric} {typeTSubType} {subTSpecific}");
                     ret.Add(new Button(() => view.CreateNode(subTSpecific))
                     {
-                        text = nameof(BTGraphView.CreateNode) + "<" + subTSpecific.Name + ">",
+                        // text = nameof(BTGraphView.CreateNode) + "<" + subTSpecific.Name + ">",
+                        text = tGeneric.Name[..^2],
                         style =
                         {
                             width = 200,
                             height = 30,
-                            // marginLeft = 5 + (countType++) * 2,
+                            marginLeft = ret.Count == 0 ? 10: 0,
                             // marginRight = 5 + (count++) * 20,
                             // marginTop = 2 + (count++) * 20,
                             // marginBottom = 2 + (count++) * 20

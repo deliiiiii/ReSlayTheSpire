@@ -26,33 +26,17 @@ namespace BehaviourTree
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
-            var compatiblePorts = new List<Port>();
-            // var compatibleTypes = new ;
-
-            foreach (var port in ports.ToList())
-            {
-                if (port.direction == startPort.direction ||
-                    !port.portType.IsAssignableFrom(startPort.portType))
-                    continue;
-                compatiblePorts.Add(port);
-                // if (compatibleTypes.Contains(port.portType))
-                // {
-                //     
-                // }
-            }
-
-            return compatiblePorts;
+            return ports.ToList()
+                .Where(port => 
+                    port.direction != startPort.direction 
+                    && port.portType.IsAssignableFrom(startPort.portType))
+                .ToList();
         }
         
         public void CreateNode(Type nodeType)
         {
             //利用反射调用构造函数
             var node = Activator.CreateInstance(nodeType) as Node;
-            // if (invoke is not Node node)
-            // {
-            //     Debug.LogError($"Node type {nodeType} does not have a CreateNodeInGraph method.");
-            //     return;
-            // }
             node.SetPosition(new Rect(100, 100, 200, 150));
             node.RefreshPorts();
             node.expanded = true;
@@ -66,31 +50,30 @@ namespace BehaviourTree
 
         public GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
-            if (graphViewChange.edgesToCreate != null)
-            {
-                foreach (var edge in graphViewChange.edgesToCreate)
+            graphViewChange.edgesToCreate?
+                .ForEach(edge =>
                 {
-                    if (edge.output.node is INodeBaseEditor<NodeBase> parentEditor && 
-                        edge.input.node is INodeBaseEditor<NodeBase> childEditor)
+                    if (edge.output.node is not INodeBaseEditor<NodeBase> childEditor
+                        || edge.input.node is not INodeBaseEditor<NodeBase> parentEditor)
                     {
-                        MyDebug.Log($"Adding child {childEditor.NodeBase.NodeName} to parent {parentEditor.NodeBase.NodeName}");
-                        parentEditor.NodeBase.AddChild(childEditor.NodeBase);
+                        return;
                     }
-                }
-            }
-
-            if (graphViewChange.elementsToRemove != null)
-            {
-                foreach (var edge in graphViewChange.elementsToRemove.OfType<Edge>())
+                    // MyDebug.Log($"Adding child {childEditor.NodeBase.NodeName} to parent {parentEditor.NodeBase.NodeName}");
+                    parentEditor.NodeBase.AddChild(childEditor.NodeBase);
+                });
+            
+            graphViewChange.elementsToRemove?
+                .OfType<Edge>()
+                .ForEach(edge =>
                 {
-                    if (edge.output.node is INodeBaseEditor<NodeBase> parentEditor && 
-                        edge.input.node is INodeBaseEditor<NodeBase> childEditor)
+                    if (edge.output.node is not INodeBaseEditor<NodeBase> childEditor
+                        || edge.input.node is not INodeBaseEditor<NodeBase> parentEditor)
                     {
-                        MyDebug.Log($"Removing child {childEditor.NodeBase.NodeName} from parent {parentEditor.NodeBase.NodeName}");
-                        parentEditor.NodeBase.RemoveChild(childEditor.NodeBase);
+                        return;
                     }
-                }
-            }
+                    // MyDebug.Log($"Removing child {childEditor.NodeBase.NodeName} from parent {parentEditor.NodeBase.NodeName}");
+                    parentEditor.NodeBase.RemoveChild(childEditor.NodeBase);
+                });
             ConstructTree();
             return graphViewChange;
         }
@@ -98,13 +81,15 @@ namespace BehaviourTree
         void ConstructTree()
         {
             //找到图中第一个没有输入 但有输出的节点作为根节点
-            var rootNodeSonClass = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)))
-                                .FirstOrDefault(n => 
-                                    //错误用法
-                                    // n.inputContainer.Children().Sum(x => x.childCount) == 0
-                                    !n.inputContainer.Q<Port>()?.connections.Any() ??
-                                    n.outputContainer.Q<Port>()?.connections.Any() ??
-                                    false);
+            var rootNodeSonClass = nodes
+                    .Where(node => 
+                        node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)))
+                    .FirstOrDefault(n => 
+                        //错误用法
+                        // n.inputContainer.Children().Sum(x => x.childCount) == 0
+                        !n.inputContainer.Q<Port>()?.connections.Any() ??
+                        n.outputContainer.Q<Port>()?.connections.Any() ??
+                        false);
             if (rootNodeSonClass is not INodeBaseEditor<NodeBase> rootNodeInterface)
             {
                 MyDebug.LogError("No root node found in the graph.");

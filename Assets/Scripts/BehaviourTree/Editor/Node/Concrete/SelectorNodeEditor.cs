@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+﻿using UnityEditor.Experimental.GraphView;
 
 namespace BehaviourTree
 {
-    public class SequenceNodeEditor : NodeBaseEditor<SequenceNode>
+    public class SelectorNodeEditor : CompositeNodeEditor<SelectorNode>
     {
-        public SequenceNodeEditor()
+        public SelectorNodeEditor()
         {
-            title = "Sequence →";
-            viewDataKey = "SequenceNode_001";
-            
-            NodeBase = new SequenceNode();
+            title = "Selector ?";
+            viewDataKey = "SelectorNode_001";
+            NodeBase = new SelectorNode();
             
             var inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
             inputPort.portName = "Parent ↑";
@@ -21,10 +19,6 @@ namespace BehaviourTree
             outputPort.portName = "Seq ↓";
             outputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
             outputContainer.Add(outputPort);
-
         }
     }
 }
-
-
-

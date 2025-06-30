@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
-    public abstract class DecorateNodeEditor : NodeBaseEditor<DecorateNode>
+    public abstract class DecorateNodeEditor<T> : NodeBaseEditor<T> where T : DecorateNode
     {
         static List<Type> decorateNodeTypeList;
         static Dictionary<string, Type> dic;
@@ -38,12 +38,12 @@ namespace BehaviourTree
             }
             var decorateTypeField = new DropdownField(dic.Keys.ToList(), decorateNodeTypeList[0].Name);
             title = decorateNodeTypeList[0].Name;
-            NodeBase = Activator.CreateInstance(decorateNodeTypeList[0]) as DecorateNode;
+            NodeBase = Activator.CreateInstance(decorateNodeTypeList[0]) as T;
                 
             decorateTypeField.RegisterValueChangedCallback(choice =>
             {
                 title = choice.newValue;
-                NodeBase = Activator.CreateInstance(dic[choice.newValue]) as DecorateNode;
+                NodeBase = Activator.CreateInstance(dic[choice.newValue]) as T;
             });
             extensionContainer.Add(decorateTypeField);
             
