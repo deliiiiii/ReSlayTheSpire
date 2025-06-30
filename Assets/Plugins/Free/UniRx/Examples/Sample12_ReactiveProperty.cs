@@ -65,9 +65,9 @@ namespace UniRx.Examples
 
             Observable.EveryUpdate()
                 .Where(_ => Input.GetKeyDown(KeyCode.A))
-                .Subscribe(_ =>
+                .Subscribe(x =>
                 {
-                    Debug.Log("A Key Pressed");
+                    Debug.Log($" x = {x} A Key Pressed");
                     iDisposable1.Dispose();
                 }).AddTo(this);
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Sirenix.OdinInspector;
+using UniRx;
 using UnityEngine;
 
 namespace BlackSmith
@@ -44,7 +45,11 @@ namespace BlackSmith
                 Save("null data");
                 mainData.MineList = CreateMineDatas();
             }
-            Binder.Update((dt) => mainData.PlayTime.Value += dt, EUpdatePri.MainModel);
+            // Binder.Update((dt) => mainData.PlayTime.Value += dt, EUpdatePri.MainModel);
+            Observable.EveryUpdate()
+                .Select(_ => Time.deltaTime)
+                .Subscribe(dt => mainData.PlayTime.Value += dt);
+            
             
             
             
