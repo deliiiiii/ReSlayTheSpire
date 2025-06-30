@@ -23,13 +23,29 @@ public abstract class NodeBase
     public Guard Guard = Guard.AlwaysTrue;
     [HideInInspector]
     public NodeBase Parent;
-    public List<NodeBase> ChildList;
+    protected LinkedList<NodeBase> childList;
     public NodeBase Back() => Parent;
-    public NodeBase ToChild() => ChildList?.Count > 0 ? ChildList[^1] : null;
+    public NodeBase ToChild() => childList?.Last?.Value;
 
     public abstract EState OnTick(float dt);
     public abstract void OnFail();
     public abstract NodeBase AddChild(NodeBase child);
+    public bool RemoveChild(NodeBase child)
+    {
+        if (childList != null && childList.Contains(child))
+        {
+            childList.Remove(child);
+            return true;
+        }
+        MyDebug.LogError($"Node \"{NodeName}\" does not have child \"{child.NodeName}\".");
+        return false;
+    }
+    
+    public NodeBase ClearChildren()
+    {
+        childList?.Clear();
+        return this;
+    }
     
     public EState Tick(float dt)
     {

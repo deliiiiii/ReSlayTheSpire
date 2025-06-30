@@ -63,5 +63,29 @@ namespace BehaviourTree
         {
             CreateNode(typeof(T));
         }
+
+        GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+        {
+            if (graphViewChange.edgesToCreate == null)
+                return graphViewChange;
+            foreach (var edge in graphViewChange.edgesToCreate)
+            {
+                if (edge.output.node is NodeBaseEditor<NodeBase> parentEditor && 
+                    edge.input.node is NodeBaseEditor<NodeBase> childEditor)
+                {
+                    parentEditor.NodeBase.AddChild(childEditor.NodeBase);
+                }
+            }
+
+            foreach (var edge in graphViewChange.elementsToRemove.OfType<Edge>())
+            {
+                if (edge.output.node is NodeBaseEditor<NodeBase> parentEditor && 
+                    edge.input.node is NodeBaseEditor<NodeBase> childEditor)
+                {
+                    parentEditor.NodeBase.RemoveChild(childEditor.NodeBase);
+                }
+            }
+            return graphViewChange;
+        }
     }
 }

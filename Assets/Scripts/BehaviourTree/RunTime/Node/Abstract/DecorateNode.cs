@@ -6,15 +6,17 @@ namespace BehaviourTree
 {
     public abstract class DecorateNode : NodeBase
     {
-        protected NodeBase curChild => ChildList?.Count > 0 ? ChildList[0] : null;
         public override NodeBase AddChild(NodeBase child)
         {
-            if (curChild != null)
+            if (ToChild() != null)
             {
                 MyDebug.LogError("InverseNode can only have one child.");
                 return this;
             }
-            ChildList ??= new List<NodeBase>{child};
+            childList ??= new LinkedList<NodeBase>();
+            child.Parent = this;
+            child.Tree = Tree;
+            childList.AddLast(child);
             return this;
         }
     }

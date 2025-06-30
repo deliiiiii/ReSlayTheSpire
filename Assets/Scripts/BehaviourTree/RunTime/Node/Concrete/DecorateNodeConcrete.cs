@@ -9,11 +9,11 @@ namespace BehaviourTree
         public override EState OnTick(float dt)
         {
             // 1变成0 0变成1
-            return ~curChild?.OnTick(dt) ?? EState.Failed;
+            return ~ToChild()?.OnTick(dt) ?? EState.Failed;
         }
         public override void OnFail()
         {
-            curChild?.OnFail();
+            ToChild()?.OnFail();
         }
     }
 
@@ -27,8 +27,7 @@ namespace BehaviourTree
         }
         public override void OnFail()
         {
-            // 什么都不做
-            curChild?.OnFail();
+            ToChild()?.OnFail();
         }
     }
 }

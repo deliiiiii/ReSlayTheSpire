@@ -18,7 +18,7 @@ namespace BehaviourTree
             }
             else
             {
-                curNode = childLinkedList.First;
+                curNode = childList.First;
             }
             
             while (curNode != null)
@@ -40,7 +40,7 @@ namespace BehaviourTree
         }
         public override void OnFail()
         {
-            var fNode = childLinkedList.First;
+            var fNode = childList.First;
             while (fNode != null)
             {
                 fNode.Value.OnFail();
@@ -56,7 +56,7 @@ namespace BehaviourTree
         public override EState OnTick(float dt)
         {
             // curNode ??= childList.First;
-            curNode = childLinkedList.First;
+            curNode = childList.First;
             while (curNode != null)
             {
                 var res = curNode.Value.Tick(dt);
@@ -68,7 +68,7 @@ namespace BehaviourTree
         }
         public override void OnFail()
         {
-            var fNode = childLinkedList.First;
+            var fNode = childList.First;
             while (fNode != null)
             {
                 fNode.Value.OnFail();
