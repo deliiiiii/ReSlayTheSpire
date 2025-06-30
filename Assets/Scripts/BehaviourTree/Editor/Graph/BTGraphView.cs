@@ -47,8 +47,7 @@ namespace BehaviourTree
         public void CreateNode(Type nodeType)
         {
             //利用反射调用构造函数
-            var ins = Activator.CreateInstance(nodeType);
-            var node = ins as Node;
+            var node = Activator.CreateInstance(nodeType) as Node;
             // if (invoke is not Node node)
             // {
             //     Debug.LogError($"Node type {nodeType} does not have a CreateNodeInGraph method.");

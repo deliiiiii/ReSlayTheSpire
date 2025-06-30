@@ -50,6 +50,21 @@ namespace BehaviourTree.Editor
             var toolbar = new Toolbar();
             foreach (var btn in CollectButtons())
             {
+                // var toolbarMenu = new ToolbarMenu
+                // {
+                //     text = type.Name,
+                //     style =
+                //     {
+                //         flexDirection = FlexDirection.Column,
+                //         //滚动列表
+                //         overflow = Overflow.Hidden,
+                //     }
+                //     
+                // };
+                // btns.ForEach(btn => toolbarMenu.Add(btn));
+                // toolbar.Add(toolbarMenu);
+                
+                
                 toolbar.Add(btn);
             }
             rootVisualElement.Add(toolbar);
@@ -57,35 +72,38 @@ namespace BehaviourTree.Editor
 
         IEnumerable<Button> CollectButtons()
         {
-            var ret = new List<Button>();
-            // 利用反射获取所有的Button，继承于NodeBaseEditor的非抽象类
+            List<Button> ret = new();
             var baseType = typeof(NodeBaseEditor<>);
             var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
-            
-            foreach (var type in nodeTypes)
-            {
-                var createdType = baseType;
-                var b1 = type.InheritsFrom(baseType);
-                if (!b1 || !type.IsAbstract)
-                    continue;
-                if(type == typeof(NodeBaseEditor<>))
-                    continue;
-                
-                // 已知
-                // ActionNodeDebugEditor : ActionNodeEditor<ActionNodeDebug>
-                // ActionNodeEditor<T> where T : ActionNode
-                // 怎么获取其泛型参数T的一个具体类型,如 T = ActionNodeDebug
-                if (type.IsGenericType)
+            nodeTypes
+                // 继承于NodeBaseEditor<>的非抽象类
+                .Where(type =>  
+                    type.InheritsFrom(baseType)
+                    && type != baseType
+                    && type.IsAbstract
+                    && type.IsGenericType
+                    ) 
+                .ForEach(tGeneric =>
                 {
-                    // var genericType = type.GetGenericArguments()[0];
-                    //拿到泛型T的一个具体类型
-                    // createdType = type.MakeGenericType(genericType.BaseType.FirstSubType());
-                    //!!!!! TODO
-                    createdType = type.FirstSubType();
-                }
-                var btn = new Button(() => view.CreateNode(createdType)) {text = nameof(BTGraphView.CreateNode) + "<" + type.Name + ">"};
-                ret.Add(btn);
-            }
+                    var typeTSubType = tGeneric.GetGenericArguments()[0].BaseType.FirstSubType();
+                    var subTSpecific = tGeneric.MakeGenericType(typeTSubType).FirstSubType();
+                    MyDebug.Log($"1 {tGeneric} {typeTSubType} {subTSpecific}");
+                    ret.Add(new Button(() => view.CreateNode(subTSpecific))
+                    {
+                        text = nameof(BTGraphView.CreateNode) + "<" + subTSpecific.Name + ">",
+                        style =
+                        {
+                            width = 200,
+                            height = 30,
+                            // marginLeft = 5 + (countType++) * 2,
+                            // marginRight = 5 + (count++) * 20,
+                            // marginTop = 2 + (count++) * 20,
+                            // marginBottom = 2 + (count++) * 20
+                        }
+                    });
+                    // MyDebug.Log($"Adding button for {tSpecific.Name}<{tSpecific.GetGenericArguments()[0].Name}> sub{subTSpecific.Name}");
+                    
+                });
             return ret;
         }
         
@@ -95,13 +113,17 @@ namespace BehaviourTree.Editor
         }
         
     }
-
+ 
     public static class ReflectionExtensions
     {
         public static Type FirstSubType(this Type parentType)
         {
-            return parentType.Assembly.GetTypes().FirstOrDefault(x => parentType.IsAssignableFrom(x) && x != parentType);
-
+            return parentType.SubType().FirstOrDefault();
+        }
+        
+        public static IEnumerable<Type> SubType(this Type parentType)
+        {
+            return parentType.Assembly.GetTypes().Where(x => x.IsSubclassOf(parentType));
         }
         
     }
