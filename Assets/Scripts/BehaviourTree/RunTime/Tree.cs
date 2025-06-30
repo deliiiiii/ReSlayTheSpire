@@ -25,17 +25,6 @@ namespace BehaviourTree
         {
             return RunningNodeSet != null && RunningNodeSet.Contains(node);
         }
-
-        // public NodePlus<NodeBase, T, NodeBase> Create<T>() where T : CompositeNode, new()
-        // {
-        //     var t = new T
-        //     {
-        //         Tree = this
-        //     };
-        //     Root = t;
-        //     return new NodePlus<NodeBase, T, NodeBase>(t);
-        // }
-
         public NodeBase CreateRoot<T>() where T : NodeBase, new()
         {
             return Root = new T
