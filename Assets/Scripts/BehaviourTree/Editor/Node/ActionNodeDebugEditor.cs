@@ -4,13 +4,12 @@ using UnityEngine.UIElements;
 namespace BehaviourTree
 {
     
-    public class ActionNodeDebugEditor : NodeBaseEditor<ActionNodeDebug>
+    public class ActionNodeDebugEditor : ActionNodeEditor<ActionNodeDebug>
     {
         public ActionNodeDebugEditor()
         {
             title = "Action Node Debug";
             viewDataKey = "ActionNodeDebug_001";
-            NodeBase = new ActionNodeDebug("Debug Message");
             
             var debugTypeField = new EnumField(nameof(NodeBase.DebugType), EDebugType.Log);
             debugTypeField.RegisterValueChangedCallback(v =>

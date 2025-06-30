@@ -8,15 +8,11 @@ namespace BehaviourTree
         public Tree Tree = new();
         public bool TestBool = true;
 
-        public static Tree StaticTree
-        {
-            get => Instance.Tree;
-            set => Instance.Tree = value;
-        }
+        public static NodeBase CreateByRoot(NodeBase root) => Instance.PrivateCreateByRoot(root);
 
         void Awake()
         {
-            CreateTree();
+            SampleCreate();
         }
 
         void Update()
@@ -24,10 +20,16 @@ namespace BehaviourTree
             Tick(Time.deltaTime);
         }
 
-         void CreateTree()
-         {
+        NodeBase PrivateCreateByRoot(NodeBase root)
+        {
+            return Tree.CreateRoot(root);
+        }
+        
+        NodeBase SampleCreate()
+        {
             Application.targetFrameRate = 30;
-            Tree.CreateVir<SelectorNode>().SetName("RootNode")
+            return 
+                Tree.CreateRoot<SelectorNode>().SetName("RootNode")
                 .AddChild(new SequenceNode())
                 .ToChild().SetName("SeqTrue")
                     .SetGuard(() => TestBool)

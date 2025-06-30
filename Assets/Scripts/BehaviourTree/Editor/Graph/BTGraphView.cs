@@ -98,24 +98,21 @@ namespace BehaviourTree
 
         void ConstructTree()
         {
-            var tree = new Tree();
             //找到图中第一个没有输入 但有输出的节点作为根节点
             var rootNodeSonClass = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)))
                                 .FirstOrDefault(n => 
                                     //错误用法
                                     // n.inputContainer.Children().Sum(x => x.childCount) == 0
-                                    !n.inputContainer.Q<Port>().connections?.Any() ??
-                                    n.outputContainer.Q<Port>().connections?.Any() ??
+                                    !n.inputContainer.Q<Port>()?.connections.Any() ??
+                                    n.outputContainer.Q<Port>()?.connections.Any() ??
                                     false);
             if (rootNodeSonClass is not INodeBaseEditor<NodeBase> rootNodeInterface)
             {
                 MyDebug.LogError("No root node found in the graph.");
                 return;
             }
-            tree.Root = rootNodeInterface.NodeBase;
-            tree.Root.Tree = tree;
-            rootNodeInterface.AddChildren();
-            TreeTest.StaticTree = tree;
+            TreeTest.CreateByRoot(rootNodeInterface.NodeBase);
+            rootNodeInterface.AddInEditorChildren();
         }
         
         // void ConstructTree()

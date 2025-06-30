@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Sirenix.Utilities;
 using UnityEditor;
@@ -57,15 +58,32 @@ namespace BehaviourTree.Editor
         IEnumerable<Button> CollectButtons()
         {
             var ret = new List<Button>();
-            //利用反射获取所有的Button，继承于NodeBaseEditor的非抽象类
+            // 利用反射获取所有的Button，继承于NodeBaseEditor的非抽象类
             var baseType = typeof(NodeBaseEditor<>);
             var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
+            
             foreach (var type in nodeTypes)
             {
+                var createdType = baseType;
                 var b1 = type.InheritsFrom(baseType);
-                if (!b1 || type.IsAbstract)
+                if (!b1 || !type.IsAbstract)
                     continue;
-                var btn = new Button(() => view.CreateNode(type)) {text = nameof(BTGraphView.CreateNode) + "<" + type.Name + ">"};
+                if(type == typeof(NodeBaseEditor<>))
+                    continue;
+                
+                // 已知
+                // ActionNodeDebugEditor : ActionNodeEditor<ActionNodeDebug>
+                // ActionNodeEditor<T> where T : ActionNode
+                // 怎么获取其泛型参数T的一个具体类型,如 T = ActionNodeDebug
+                if (type.IsGenericType)
+                {
+                    // var genericType = type.GetGenericArguments()[0];
+                    //拿到泛型T的一个具体类型
+                    // createdType = type.MakeGenericType(genericType.BaseType.FirstSubType());
+                    //!!!!! TODO
+                    createdType = type.FirstSubType();
+                }
+                var btn = new Button(() => view.CreateNode(createdType)) {text = nameof(BTGraphView.CreateNode) + "<" + type.Name + ">"};
                 ret.Add(btn);
             }
             return ret;
@@ -74,6 +92,16 @@ namespace BehaviourTree.Editor
         void DestructGraph()
         {
             rootVisualElement.Remove(view);
+        }
+        
+    }
+
+    public static class ReflectionExtensions
+    {
+        public static Type FirstSubType(this Type parentType)
+        {
+            return parentType.Assembly.GetTypes().FirstOrDefault(x => parentType.IsAssignableFrom(x) && x != parentType);
+
         }
         
     }

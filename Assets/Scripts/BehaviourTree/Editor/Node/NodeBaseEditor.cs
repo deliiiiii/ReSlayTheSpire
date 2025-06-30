@@ -6,13 +6,13 @@ namespace BehaviourTree
     public interface INodeBaseEditor<out T> where T : NodeBase
     {
         public T NodeBase { get; }
-        void AddChildren();
+        void AddInEditorChildren();
     }
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
         public T NodeBase { get; protected set; }
         
-        public void AddChildren()
+        public void AddInEditorChildren()
         {
             //遍历节点的每个输出端口
             foreach (var outputPort in outputContainer.Q<Port>().connections)
@@ -22,7 +22,7 @@ namespace BehaviourTree
                     continue;
                 NodeBase.AddChild(childNode.NodeBase);
                 //递归添加子节点
-                childNode.AddChildren();
+                childNode.AddInEditorChildren();
             }
         }
     }

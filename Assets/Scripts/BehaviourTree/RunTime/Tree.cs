@@ -36,12 +36,18 @@ namespace BehaviourTree
         //     return new NodePlus<NodeBase, T, NodeBase>(t);
         // }
 
-        public NodeBase CreateVir<T>() where T : CompositeNode, new()
+        public NodeBase CreateRoot<T>() where T : NodeBase, new()
         {
             return Root = new T
             {
                 Tree = this
             };
+        }
+        public NodeBase CreateRoot<T>(T node) where T : NodeBase
+        {
+            Root = node;
+            Root.Tree = this;
+            return Root;
         }
 
         public void Tick(float dt)

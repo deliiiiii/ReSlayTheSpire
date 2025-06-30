@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
-    public class DecorateNodeEditor : NodeBaseEditor<DecorateNode>
+    public abstract class DecorateNodeEditor : NodeBaseEditor<DecorateNode>
     {
         static List<Type> decorateNodeTypeList;
         static Dictionary<string, Type> dic;
@@ -36,15 +36,16 @@ namespace BehaviourTree
                 MyDebug.LogError("No DecorateNode types found in the assembly.");
                 return;
             }
-            var decorateTypeDDField = new DropdownField(dic.Keys.ToList(), decorateNodeTypeList[0].Name);
+            var decorateTypeField = new DropdownField(dic.Keys.ToList(), decorateNodeTypeList[0].Name);
             title = decorateNodeTypeList[0].Name;
+            NodeBase = Activator.CreateInstance(decorateNodeTypeList[0]) as DecorateNode;
                 
-            decorateTypeDDField.RegisterValueChangedCallback(choice =>
+            decorateTypeField.RegisterValueChangedCallback(choice =>
             {
-                NodeBase = Activator.CreateInstance(dic[choice.newValue]) as DecorateNode;
                 title = choice.newValue;
+                NodeBase = Activator.CreateInstance(dic[choice.newValue]) as DecorateNode;
             });
-            extensionContainer.Add(decorateTypeDDField);
+            extensionContainer.Add(decorateTypeField);
             
             var inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
             inputPort.portName = "Dec ↓";
