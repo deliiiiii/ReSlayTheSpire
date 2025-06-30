@@ -15,7 +15,7 @@ public enum EState
 }
 
 [Serializable]
-public abstract partial class NodeBase
+public abstract class NodeBase
 {
     [HideInInspector]
     public Tree Tree;
