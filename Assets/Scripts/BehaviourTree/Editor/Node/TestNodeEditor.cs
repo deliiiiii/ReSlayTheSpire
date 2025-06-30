@@ -8,7 +8,7 @@ namespace BehaviourTree
         {
             title = "Test Node";
             viewDataKey = "TestNode_001";
-            nodeBase = new TestNode
+            NodeBase = new TestNode
             {
                 TestInt = 42,
             };

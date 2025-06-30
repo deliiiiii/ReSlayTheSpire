@@ -1,22 +1,27 @@
-﻿using UnityEditor.Experimental.GraphView;
+﻿using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 
 namespace BehaviourTree
 {
     public class SequenceNodeEditor : NodeBaseEditor<SequenceNode>
     {
+        List<NodeBaseEditor<NodeBase>> childList;
         public SequenceNodeEditor()
         {
-            title = "Sequence Node";
+            title = "Sequence →";
             viewDataKey = "SequenceNode_001";
-            nodeBase = new SequenceNode();
-            var inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
-            inputPort.portName = "Input";
-            inputPort.tooltip = typeof(bool).ToString();
+            childList = new List<NodeBaseEditor<NodeBase>>();
+            NodeBase = new SequenceNode();
+            
+            
+            var inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(NodeBaseEditor<NodeBase>));
+            inputPort.portName = "Seq ↓";
+            inputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
             inputContainer.Add(inputPort);
 
-            var outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
-            outputPort.portName = "Output";
-            outputPort.tooltip = typeof(bool).ToString();
+            var outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
+            outputPort.portName = "Parent ↑";
+            outputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
             outputContainer.Add(outputPort);
         }
     }

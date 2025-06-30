@@ -16,7 +16,7 @@ namespace BehaviourTree
         {
             title = "Action Node Debug";
             viewDataKey = "ActionNodeDebug_001";
-            nodeBase = new ActionNodeDebug("Debug Message");
+            NodeBase = new ActionNodeDebug("Debug Message");
             var enumField = new EnumField(nameof(DebugType), EDebugType.Log);
             enumField.RegisterValueChangedCallback(v =>
                 {

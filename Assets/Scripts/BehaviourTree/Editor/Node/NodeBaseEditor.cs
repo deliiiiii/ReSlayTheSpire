@@ -2,8 +2,12 @@
 
 namespace BehaviourTree
 {
-    public abstract class NodeBaseEditor<T> : Node where T : NodeBase
+    public interface INodeBaseEditor<out T> where T : NodeBase
     {
-        protected T nodeBase;
+        public T NodeBase { get; }
+    }
+    public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
+    {
+        public T NodeBase { get; protected set; }
     }
 }
