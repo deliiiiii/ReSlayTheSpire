@@ -3,26 +3,33 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
-    public enum EDebugType
-    {
-        Log,
-        Warning,
-        Error
-    }
+    
     public class ActionNodeDebugEditor : NodeBaseEditor<ActionNodeDebug>
     {
-        public EDebugType DebugType = EDebugType.Log;
         public ActionNodeDebugEditor()
         {
             title = "Action Node Debug";
             viewDataKey = "ActionNodeDebug_001";
             NodeBase = new ActionNodeDebug("Debug Message");
-            var enumField = new EnumField(nameof(DebugType), EDebugType.Log);
-            enumField.RegisterValueChangedCallback(v =>
+            
+            var debugTypeField = new EnumField(nameof(NodeBase.DebugType), EDebugType.Log);
+            debugTypeField.RegisterValueChangedCallback(v =>
                 {
-                    DebugType = (EDebugType)v.newValue;
+                    NodeBase.DebugType = (EDebugType)v.newValue;
                 });
-            extensionContainer.Add(enumField);
+            extensionContainer.Add(debugTypeField);
+            
+            var contentField = new TextField("Content")
+            {
+                value = NodeBase.Content = "Debug SomeThing",
+                multiline = true
+            };
+            contentField.RegisterValueChangedCallback(v =>
+            {
+                NodeBase.Content = v.newValue;
+            });
+            extensionContainer.Add(contentField);
+            
         }
     }
 }
