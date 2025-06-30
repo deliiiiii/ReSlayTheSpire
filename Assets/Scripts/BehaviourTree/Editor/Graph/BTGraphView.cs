@@ -100,33 +100,13 @@ namespace BehaviourTree
         {
             var tree = new Tree();
             //找到图中第一个没有输入 但有输出的节点作为根节点
-            // var curNodes = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)));
             var rootNodeSonClass = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)))
                                 .FirstOrDefault(n => 
                                     //错误用法
                                     // n.inputContainer.Children().Sum(x => x.childCount) == 0
-                                    !n.inputContainer.Q<Port>().connections.Any()
-                                    && n.outputContainer.Q<Port>().connections.Any());
-            
-            // var v2 = nodes.Where(node => node.GetType().InheritsFrom(typeof(NodeBaseEditor<>)))
-            //                     .Count(n => 
-            //                         //错误用法
-            //                         // n.inputContainer.Children().Sum(x => x.childCount) == 0
-            //                         !n.inputContainer.Q<Port>().connections.Any()
-            //                         && n.outputContainer.Q<Port>().connections.Any());
-            //
-            // MyDebug.Log(curNodes.Count() + " " + v2);
-            
-            // var rootNodeGeneral = rootNodeSonClass as INodeBaseEditor<NodeBase> as NodeBaseEditor<NodeBase>;
-            // MyDebug.Log(
-            //     (
-            //         rootNodeSonClass is NodeBaseEditor<NodeBase>) 
-            //     + " " 
-            //     + (rootNodeSonClass is INodeBaseEditor<NodeBase>)
-            //     + " "
-            //     + ((rootNodeSonClass as INodeBaseEditor<NodeBase>) is NodeBaseEditor<NodeBase>)
-            //     );
-
+                                    !n.inputContainer.Q<Port>().connections?.Any() ??
+                                    n.outputContainer.Q<Port>().connections?.Any() ??
+                                    false);
             if (rootNodeSonClass is not INodeBaseEditor<NodeBase> rootNodeInterface)
             {
                 MyDebug.LogError("No root node found in the graph.");
