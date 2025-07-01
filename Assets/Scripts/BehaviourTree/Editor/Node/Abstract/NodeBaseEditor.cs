@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using QFramework;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
@@ -27,50 +28,57 @@ namespace BehaviourTree
                 MyDebug.LogError($"No {GetType().Name} types found in the assembly.");
                 return;
             }
-            CreateDropDownField();
-            CreateOutputPort();
+            CreateNodeEditor();
+            CreateInputPort();
         }
         
-        void CreateDropDownField()
+        void CreateNodeEditor()
         {
-            typeField = new DropdownField(rtTypeList.Select(x => x.Name).ToList(), rtTypeList[0].Name);
-            title = rtTypeList[0].Name;
-            NodeBase = Activator.CreateInstance(rtTypeList[0]) as T;
+            typeField = new DropdownField(rtTypeList.Select(x => x.GetGenericArguments()[0].Name).ToList(), rtTypeList[0].GetGenericArguments()[0].Name);
+            title = rtTypeList[0].GetGenericArguments()[0].Name;
+            NodeBase = Activator.CreateInstance(rtTypeList[0].GetGenericArguments()[0]) as T;
+            NodeBase.NodeName = rtTypeList[0].GetGenericArguments()[0].Name;
                 
             typeField.RegisterValueChangedCallback(choice =>
             {
-                title = choice.newValue;
-                NodeBase = Activator.CreateInstance(rtTypeList.First(x => x.Name == choice.newValue)) as T;
+                OnChangeType(rtTypeList.First(x => x.GetGenericArguments()[0].Name == choice.newValue));
             });
             extensionContainer.Add(typeField);
         }
 
-        void CreateOutputPort()
+        void OnChangeType(Type nodeEditorType)
         {
-            outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
-            outputPort.portName = "Parent ↑";
-            outputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
-            outputContainer.Add(outputPort);
+            // title = nodeEditorType.Name;
+            // NodeBase = Activator.CreateInstance(nodeEditorType);
+            // MyDebug.Log($"select: changed to {choice.newValue}");
+            // MyDebug.Log($"{NodeBase == null} {NodeBase?.GetType() == null} {NodeBase?.GetType().Name}");
+            //     
+            // NodeBase.NodeName = choice.newValue;
+        }
+        void CreateInputPort()
+        {
+            inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
+            inputPort.portName = "Parent ↑";
+            inputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
+            inputContainer.Add(inputPort);
         }
         public void AddInEditorChildren()
         {
-            //遍历节点的每个输出端口
-            foreach (var outputPort in outputContainer.Q<Port>().connections)
+            outputContainer.Q<Port>()?.connections.ForEach(port =>
             {
-                //获取连接的输出端口对应的节点
-                if (outputPort.input.node is not NodeBaseEditor<NodeBase> childNode)
-                    continue;
+                if (port.input.node is not NodeBaseEditor<NodeBase> childNode)
+                    return;
+                MyDebug.Log($"{NodeBase.NodeName} AddChild {childNode.NodeBase.NodeName}");
                 NodeBase.AddChild(childNode.NodeBase);
-                //递归添加子节点
                 childNode.AddInEditorChildren();
-            }
+            });
         }
     }
 
     public static class DropDownFieldDataCache
     {
         //缓存每个NodeBaseEditor的DropDownFieldData
-        //<ActionNodeEditor<>, [ActionNodeDebug...]>
+        //<ActionNodeEditor<>, [ActionNodeEditor<ActionNodeDebug>...]>
         public static readonly Dictionary<Type, List<Type>> DDDic = new();
     }
 }

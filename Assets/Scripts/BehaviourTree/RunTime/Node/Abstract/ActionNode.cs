@@ -35,7 +35,7 @@ namespace BehaviourTree
         
         public override NodeBase AddChild(NodeBase child)
         {
-            MyDebug.LogError("ActionNode cannot have children.");
+            // MyDebug.LogError("ActionNode cannot have children.");
             return this;
         }
     }

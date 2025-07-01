@@ -8,17 +8,16 @@ namespace BehaviourTree
         public CompositeNodeEditor()
         {
             viewDataKey = "SequenceNode_001";
-            
-            // var outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
-            // outputPort.portName = "Parent ↑";
-            // outputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
-            // outputContainer.Add(outputPort);
-            
-            inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(NodeBaseEditor<NodeBase>));
-            inputPort.portName = "Com ↓";
-            inputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
-            inputContainer.Add(inputPort);
+            CreateOutputPort();
+        }
 
+        void CreateOutputPort()
+        {
+            outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi,
+                typeof(NodeBaseEditor<NodeBase>));
+            outputPort.portName = "Com ↓";
+            outputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
+            outputContainer.Add(outputPort);
         }
     }
 }

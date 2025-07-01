@@ -63,7 +63,7 @@ namespace BehaviourTree
                     var tSubTypes = generic.GetGenericArguments()[0].BaseType.SubType();
                     tSubTypes.ForEach(tSubType =>
                     {
-                        // var genericWithSubT = generic.MakeGenericType(tSubType);
+                        var genericWithSubT = generic.MakeGenericType(tSubType);
                         // var subTSpecific = generic.MakeGenericType(tSubType).FirstSubType();
                         // if (subTSpecific == null)
                         // {
@@ -72,7 +72,7 @@ namespace BehaviourTree
                         // }
                         
                         //TODO 确保每个RT都有一个对应的Editor
-                        DropDownFieldDataCache.DDDic[generic].Add(tSubType);
+                        DropDownFieldDataCache.DDDic[generic].Add(genericWithSubT);
                     });
                 });
         }

@@ -53,8 +53,8 @@ namespace BehaviourTree
             graphViewChange.edgesToCreate?
                 .ForEach(edge =>
                 {
-                    if (edge.output.node is not INodeBaseEditor<NodeBase> childEditor
-                        || edge.input.node is not INodeBaseEditor<NodeBase> parentEditor)
+                    if (edge.output.node is not INodeBaseEditor<NodeBase> parentEditor
+                        || edge.input.node is not INodeBaseEditor<NodeBase> childEditor)
                     {
                         return;
                     }
@@ -66,8 +66,8 @@ namespace BehaviourTree
                 .OfType<Edge>()
                 .ForEach(edge =>
                 {
-                    if (edge.output.node is not INodeBaseEditor<NodeBase> childEditor
-                        || edge.input.node is not INodeBaseEditor<NodeBase> parentEditor)
+                    if (edge.output.node is not INodeBaseEditor<NodeBase> parentEditor
+                        || edge.input.node is not INodeBaseEditor<NodeBase> childEditor)
                     {
                         return;
                     }
@@ -87,14 +87,19 @@ namespace BehaviourTree
                     .FirstOrDefault(n => 
                         //错误用法
                         // n.inputContainer.Children().Sum(x => x.childCount) == 0
-                        !n.inputContainer.Q<Port>()?.connections.Any() ??
-                        n.outputContainer.Q<Port>()?.connections.Any() ??
-                        false);
+                        n.inputContainer.Q<Port>()?.connections.Any() != null &&
+                        n.outputContainer.Q<Port>() != null &&
+                        n.outputContainer.Q<Port>().connections.Any()
+                        );
             if (rootNodeSonClass is not INodeBaseEditor<NodeBase> rootNodeInterface)
             {
-                MyDebug.LogError("No root node found in the graph.");
+                // MyDebug.LogError("No root node found in the graph.");
                 return;
             }
+
+            var inCount = rootNodeSonClass.inputContainer.Q<Port>()?.connections.Count();
+            var outCount = rootNodeSonClass.outputContainer.Q<Port>()?.connections.Count();
+            MyDebug.Log($"Root node found: {rootNodeInterface.NodeBase.NodeName} in : {inCount} out : {outCount}");
             TreeTest.CreateByRoot(rootNodeInterface.NodeBase);
             rootNodeInterface.AddInEditorChildren();
         }

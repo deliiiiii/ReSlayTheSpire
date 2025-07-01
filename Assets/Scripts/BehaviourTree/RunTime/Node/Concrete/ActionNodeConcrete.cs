@@ -67,22 +67,22 @@ namespace BehaviourTree
         }
     }
     
-    // public class ActionNodeSet<T> : ActionNode
-    // {
-    //     readonly T tarValue;
-    //     public ActionNodeSet(){}
-    //     public ActionNodeSet(T tarValue, Action<T> setter)
-    //     {
-    //         this.tarValue = tarValue;
-    //         OnContinue = _ =>
-    //         {
-    //             setter(this.tarValue);
-    //             isFinished = true;
-    //         };
-    //     }
-    //     public override string ToString()
-    //     {
-    //         return $"Set to {tarValue}";
-    //     }
-    // }
+    public class ActionNodeSet<T> : ActionNode
+    {
+        readonly T tarValue;
+        public ActionNodeSet(){}
+        public ActionNodeSet(T tarValue, Action<T> setter)
+        {
+            this.tarValue = tarValue;
+            OnContinue = _ =>
+            {
+                setter(this.tarValue);
+                isFinished = true;
+            };
+        }
+        public override string ToString()
+        {
+            return $"Set to {tarValue}";
+        }
+    }
 }

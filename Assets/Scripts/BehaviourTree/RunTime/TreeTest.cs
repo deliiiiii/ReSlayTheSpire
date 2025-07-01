@@ -10,7 +10,7 @@ namespace BehaviourTree
 
         public static NodeBase CreateByRoot(NodeBase root) => Instance.PrivateCreateByRoot(root);
 
-        void Awake()
+        void Start()
         {
             SampleCreate();
         }
