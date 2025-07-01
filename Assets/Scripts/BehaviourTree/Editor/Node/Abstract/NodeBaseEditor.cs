@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using QFramework;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
@@ -11,6 +12,8 @@ namespace BehaviourTree
     {
         public T NodeBase { get; }
         void AddInEditorChildren();
+        public event Action<Type> OnChangeTypeEvent;
+        public void SetNodeBase(Type nodeType);
     }
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
@@ -21,6 +24,11 @@ namespace BehaviourTree
         //最终是实例类xxxNodeEditor在调用
         List<Type> rtTypeList => DropDownFieldDataCache.DDDic[GetType().BaseType!.GetGenericTypeDefinition()];
         
+        /// <summary>
+        /// 如ActionNodeDebug
+        /// </summary>
+        Type firstTType => rtTypeList[0].GetGenericArguments()[0];
+        public event Action<Type> OnChangeTypeEvent;
         public NodeBaseEditor()
         {
             if (rtTypeList.Count == 0)
@@ -28,40 +36,42 @@ namespace BehaviourTree
                 MyDebug.LogError($"No {GetType().Name} types found in the assembly.");
                 return;
             }
-            CreateNodeEditor();
-            CreateInputPort();
+            DrawNodeEditor();
+            DrawInputPort();
+        }
+
+        protected virtual T CreateConcreteNode(Type concreteT)
+        {
+            return Activator.CreateInstance(concreteT) as T;
         }
         
-        void CreateNodeEditor()
+        void DrawNodeEditor()
         {
-            typeField = new DropdownField(rtTypeList.Select(x => x.GetGenericArguments()[0].Name).ToList(), rtTypeList[0].GetGenericArguments()[0].Name);
-            title = rtTypeList[0].GetGenericArguments()[0].Name;
-            NodeBase = Activator.CreateInstance(rtTypeList[0].GetGenericArguments()[0]) as T;
-            NodeBase.NodeName = rtTypeList[0].GetGenericArguments()[0].Name;
-                
-            typeField.RegisterValueChangedCallback(choice =>
+            SetNodeBase(firstTType);
+            title = NodeBase.NodeName = firstTType.Name;
+            
+            typeField = new DropdownField(rtTypeList.Select(x => x.GetGenericArguments()[0].Name).ToList(), firstTType.Name);
+            typeField.RegisterValueChangedCallback(newNodeType =>
             {
-                OnChangeType(rtTypeList.First(x => x.GetGenericArguments()[0].Name == choice.newValue));
+                MyDebug.Log($" 11 {GetType().Name}");
+                OnChangeTypeEvent?.Invoke(rtTypeList.First(x => x.GetGenericArguments()[0].Name == newNodeType.newValue));
             });
             extensionContainer.Add(typeField);
         }
-
-        void OnChangeType(Type nodeEditorType)
-        {
-            // title = nodeEditorType.Name;
-            // NodeBase = Activator.CreateInstance(nodeEditorType);
-            // MyDebug.Log($"select: changed to {choice.newValue}");
-            // MyDebug.Log($"{NodeBase == null} {NodeBase?.GetType() == null} {NodeBase?.GetType().Name}");
-            //     
-            // NodeBase.NodeName = choice.newValue;
-        }
-        void CreateInputPort()
+        
+        void DrawInputPort()
         {
             inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
             inputPort.portName = "Parent ↑";
             inputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
             inputContainer.Add(inputPort);
         }
+        
+        public void SetNodeBase(Type nodeType)
+        {
+            NodeBase = CreateConcreteNode(nodeType);
+        }
+        
         public void AddInEditorChildren()
         {
             outputContainer.Q<Port>()?.connections.ForEach(port =>
@@ -77,8 +87,10 @@ namespace BehaviourTree
 
     public static class DropDownFieldDataCache
     {
-        //缓存每个NodeBaseEditor的DropDownFieldData
-        //<ActionNodeEditor<>, [ActionNodeEditor<ActionNodeDebug>...]>
+        /// <summary>
+        /// 缓存每个NodeBaseEditor的DropDownFieldData
+        /// ActionNodeEditor《》, [ActionNodeEditor《ActionNodeDebug》...]
+        /// </summary>
         public static readonly Dictionary<Type, List<Type>> DDDic = new();
     }
 }

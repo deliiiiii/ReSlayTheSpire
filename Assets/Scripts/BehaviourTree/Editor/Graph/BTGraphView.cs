@@ -33,19 +33,29 @@ namespace BehaviourTree
                 .ToList();
         }
         
-        public void CreateNode(Type nodeType)
+        public void DrawNodeEditor(Type nodeEditorType)
         {
             //利用反射调用构造函数
-            var node = Activator.CreateInstance(nodeType) as Node;
+            var ins = Activator.CreateInstance(nodeEditorType);
+            
+            var nodeI = ins as INodeBaseEditor<NodeBase>;
+            nodeI.OnChangeTypeEvent += newNodeEditorType =>
+            {
+                MyDebug.Log($" 22 {newNodeEditorType.Name}");
+                MyDebug.Log($"select: changed to {newNodeEditorType.Name[..^2]}<{newNodeEditorType.GetGenericArguments()[0]}>");
+                nodeI.SetNodeBase(newNodeEditorType.GetGenericArguments()[0]);
+            };
+
+            var node = ins as Node;
             node.SetPosition(new Rect(100, 100, 200, 150));
             node.RefreshPorts();
             node.expanded = true;
             node.RefreshExpandedState();
             AddElement(node);
         }
-        public void CreateNode<T>() where T : Node
+        public void DrawNodeEditor<T>() where T : Node
         {
-            CreateNode(typeof(T));
+            DrawNodeEditor(typeof(T));
         }
 
         public GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
@@ -87,7 +97,7 @@ namespace BehaviourTree
                     .FirstOrDefault(n => 
                         //错误用法
                         // n.inputContainer.Children().Sum(x => x.childCount) == 0
-                        n.inputContainer.Q<Port>()?.connections.Any() != null &&
+                        n.inputContainer.Q<Port>() == null || !n.inputContainer.Q<Port>().connections.Any() &&
                         n.outputContainer.Q<Port>() != null &&
                         n.outputContainer.Q<Port>().connections.Any()
                         );

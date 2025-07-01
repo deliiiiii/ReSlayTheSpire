@@ -71,7 +71,7 @@ namespace BehaviourTree
                         //     return;
                         // }
                         
-                        //TODO 确保每个RT都有一个对应的Editor
+                        //TODO 确保每个RT都有一个对应的Editor吗
                         DropDownFieldDataCache.DDDic[generic].Add(genericWithSubT);
                     });
                 });
@@ -105,7 +105,7 @@ namespace BehaviourTree
                     var typeTSubType = tGeneric.GetGenericArguments()[0].BaseType.FirstSubType();
                     var subTSpecific = tGeneric.MakeGenericType(typeTSubType).FirstSubType();
                     // MyDebug.Log($"1 {tGeneric} {typeTSubType} {subTSpecific}");
-                    ret.Add(new Button(() => view.CreateNode(subTSpecific))
+                    ret.Add(new Button(() => view.DrawNodeEditor(subTSpecific))
                     {
                         // text = nameof(BTGraphView.CreateNode) + "<" + subTSpecific.Name + ">",
                         text = tGeneric.Name[..^2],

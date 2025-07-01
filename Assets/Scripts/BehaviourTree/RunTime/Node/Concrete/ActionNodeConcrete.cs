@@ -67,22 +67,28 @@ namespace BehaviourTree
         }
     }
     
-    public class ActionNodeSet<T> : ActionNode
+    public class ActionNodeSet<T> : ActionNode //where T : struct
     {
-        readonly T tarValue;
+        public T TarValue;
         public ActionNodeSet(){}
         public ActionNodeSet(T tarValue, Action<T> setter)
         {
-            this.tarValue = tarValue;
+            this.TarValue = tarValue;
             OnContinue = _ =>
             {
-                setter(this.tarValue);
+                setter(this.TarValue);
                 isFinished = true;
             };
         }
+
+        public new static NodeBase CreateDefaultConcreteNode()
+        {
+            return Activator.CreateInstance(typeof(ActionNodeSet<>).MakeGenericType(typeof(int))) as ActionNodeSet<int>;
+        }
+
         public override string ToString()
         {
-            return $"Set to {tarValue}";
+            return $"Set to {TarValue}";
         }
     }
 }

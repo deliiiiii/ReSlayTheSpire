@@ -31,6 +31,7 @@ public abstract class NodeBase
     public abstract EState OnTick(float dt);
     public abstract void OnFail();
     public abstract NodeBase AddChild(NodeBase child);
+    
     public bool RemoveChild(NodeBase child)
     {
         if (childList != null && childList.Contains(child))
