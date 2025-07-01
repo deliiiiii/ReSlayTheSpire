@@ -53,26 +53,18 @@ namespace BehaviourTree
             nodeTypes
                 .Where(type =>  
                     type.InheritsFrom(baseType)
+                    && type
                     && type != baseType
-                    && type.IsAbstract
-                    && type.IsGenericType
-                ) 
-                .ForEach(generic =>
+                )
+                // abstractNodeEditorType: ActionNodeEditor or CompositeNodeEditor or DecoratorNodeEditor ...
+                .ForEach(abstractNodeEditorType =>
                 {
-                    DropDownFieldDataCache.DDDic[generic] = new List<Type>();
-                    var tSubTypes = generic.GetGenericArguments()[0].BaseType.SubType();
+                    DropDownFieldDataCache.DDDic[abstractNodeEditorType] = new List<Type>();
+                    var tSubTypes = abstractNodeEditorType.BaseType!.GetGenericArguments()[0].SubType();
                     tSubTypes.ForEach(tSubType =>
                     {
-                        // var genericWithSubT = generic.MakeGenericType(tSubType);
-                        // var subTSpecific = generic.MakeGenericType(tSubType).FirstSubType();
-                        // if (subTSpecific == null)
-                        // {
-                        //     MyDebug.LogError($"2 {generic} {tSubType} than subTSpecific is null!!");
-                        //     return;
-                        // }
-                        
                         //TODO 确保每个RT都有一个对应的Editor吗。好像不用
-                        DropDownFieldDataCache.DDDic[generic].Add(tSubType);
+                        DropDownFieldDataCache.DDDic[abstractNodeEditorType].Add(tSubType);
                     });
                 });
         }
@@ -93,35 +85,25 @@ namespace BehaviourTree
             var baseType = typeof(NodeBaseEditor<>);
             var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
             nodeTypes
-                // 继承于NodeBaseEditor<>的非抽象类
                 .Where(type =>  
                     type.InheritsFrom(baseType)
                     && type != baseType
-                    && type.IsAbstract
-                    && type.IsGenericType
                     ) 
-                .ForEach(tGeneric =>
+                .ForEach(abstractNodeEditorType =>
                 {
-                    var typeTSubType = tGeneric.GetGenericArguments()[0].BaseType.FirstSubType();
-                    var subTSpecific = tGeneric.MakeGenericType(typeTSubType).FirstSubType();
-                    // MyDebug.Log($"1 {tGeneric} {typeTSubType} {subTSpecific}");
-                    ret.Add(new Button(() => view.DrawNodeEditor(subTSpecific))
+                    MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
+                    ret.Add(new Button(() => view.DrawNodeEditor(abstractNodeEditorType))
                     {
-                        // text = nameof(BTGraphView.CreateNode) + "<" + subTSpecific.Name + ">",
-                        text = tGeneric.Name[..^2],
+                        text = abstractNodeEditorType.Name,
                         style =
                         {
                             width = 200,
                             height = 30,
-                            marginLeft = ret.Count == 0 ? 10: 0,
-                            // marginRight = 5 + (count++) * 20,
-                            // marginTop = 2 + (count++) * 20,
-                            // marginBottom = 2 + (count++) * 20
+                            marginLeft = ret.Count == 0 ? 10: 0
                         }
                     });
-                    // MyDebug.Log($"Adding button for {tSpecific.Name}<{tSpecific.GetGenericArguments()[0].Name}> sub{subTSpecific.Name}");
-                    
                 });
+            
             return ret;
         }
         

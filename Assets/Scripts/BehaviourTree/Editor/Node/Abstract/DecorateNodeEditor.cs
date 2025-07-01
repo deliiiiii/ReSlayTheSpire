@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
-    public abstract class DecorateNodeEditor : NodeBaseEditor<DecorateNode>
+    public class DecorateNodeEditor : NodeBaseEditor<DecorateNode>
     {
     }
 }

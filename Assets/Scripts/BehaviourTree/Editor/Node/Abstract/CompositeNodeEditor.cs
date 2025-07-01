@@ -3,11 +3,10 @@ using UnityEditor.Experimental.GraphView;
 
 namespace BehaviourTree
 {
-    public abstract class CompositeNodeEditor : NodeBaseEditor<CompositeNode>
+    public class CompositeNodeEditor : NodeBaseEditor<CompositeNode>
     {
         public CompositeNodeEditor()
         {
-            viewDataKey = "SequenceNode_001";
             CreateOutputPort();
         }
 

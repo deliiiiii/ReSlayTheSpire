@@ -13,8 +13,9 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeDebug : ActionNode
     {
-        
+        [DrawnField]
         public string Content;
+        [DrawnField]
         public EDebugType DebugType = EDebugType.Log;
         public ActionNodeDebug() { }
         public ActionNodeDebug(string content, EDebugType debugType = EDebugType.Log)
@@ -46,6 +47,7 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeDelay : ActionNode
     {
+        [DrawnField]
         public float DelaySeconds;
         [ShowInInspector][ReadOnly]
         float timer;
@@ -69,6 +71,7 @@ namespace BehaviourTree
     
     public class ActionNodeSet<T> : ActionNode //where T : struct
     {
+        [DrawnField]
         public T TarValue;
         public ActionNodeSet(){}
         public ActionNodeSet(T tarValue, Action<T> setter)
