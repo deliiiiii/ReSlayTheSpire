@@ -20,10 +20,10 @@ namespace BehaviourTree
         protected Port outputPort;
         protected DropdownField typeField;
         /// <summary>
-        /// 最终是实例类xxxNodeEditor在调用
+        /// 最终是实例类ActionNodeEditor在调用
         /// [ActionNodeDebug, ActionNodeDelay, ...]
         /// </summary>
-        List<Type> rtTypeList => DropDownFieldDataCache.DDDic[GetType().BaseType!.GetGenericTypeDefinition()];
+        List<Type> rtTypeList => DropDownFieldDataCache.DDDic[GetType()];
         public NodeBaseEditor()
         {
             if (rtTypeList.Count == 0)
@@ -33,7 +33,6 @@ namespace BehaviourTree
             }
             DrawNodeEditor();
         }
-
 
         protected HashSet<VisualElement> fieldElementSet = new();
         protected virtual void DrawNodeField()
@@ -47,7 +46,6 @@ namespace BehaviourTree
 
             var fieldInfos = NodeBase.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)
                 .Where(f => f.GetCustomAttribute<DrawnFieldAttribute>() != null);
-
             foreach (var fieldInfo in fieldInfos)
             {
                 VisualElement fieldElement = null;
@@ -133,7 +131,7 @@ namespace BehaviourTree
 
             NodeBase = Activator.CreateInstance(nodeType) as NodeBase;
             title = NodeBase.NodeName = nodeType.Name;
-            // DrawNodeField();
+            DrawNodeField();
         }
         
         
@@ -154,7 +152,7 @@ namespace BehaviourTree
     {
         /// <summary>
         /// 缓存每个NodeBaseEditor的DropDownFieldData
-        /// ActionNodeEditor《》, [ActionNodeDebug, ActionNodeDelay, ...]
+        /// ActionNodeEditor, [ActionNodeDebug, ActionNodeDelay, ...]
         /// </summary>
         public static readonly Dictionary<Type, List<Type>> DDDic = new();
     }

@@ -53,7 +53,6 @@ namespace BehaviourTree
             nodeTypes
                 .Where(type =>  
                     type.InheritsFrom(baseType)
-                    && type
                     && type != baseType
                 )
                 // abstractNodeEditorType: ActionNodeEditor or CompositeNodeEditor or DecoratorNodeEditor ...

@@ -69,7 +69,7 @@ namespace BehaviourTree
         }
     }
     
-    public class ActionNodeSet<T> : ActionNode //where T : struct
+    public class ActionNodeSet<T> : ActionNode
     {
         [DrawnField]
         public T TarValue;
@@ -82,11 +82,6 @@ namespace BehaviourTree
                 setter(this.TarValue);
                 isFinished = true;
             };
-        }
-
-        public new static NodeBase CreateDefaultConcreteNode()
-        {
-            return Activator.CreateInstance(typeof(ActionNodeSet<>).MakeGenericType(typeof(int))) as ActionNodeSet<int>;
         }
 
         public override string ToString()

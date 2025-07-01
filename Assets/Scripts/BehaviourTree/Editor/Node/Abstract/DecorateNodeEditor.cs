@@ -9,5 +9,18 @@ namespace BehaviourTree
 {
     public class DecorateNodeEditor : NodeBaseEditor<DecorateNode>
     {
+        public DecorateNodeEditor()
+        {
+            CreateOutputPort();
+        }
+
+        void CreateOutputPort()
+        {
+            outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
+                typeof(NodeBaseEditor<NodeBase>));
+            outputPort.portName = "Com ↓";
+            outputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
+            outputContainer.Add(outputPort);
+        }
     }
 }
