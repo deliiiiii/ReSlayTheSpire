@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 namespace BehaviourTree
 {
     
-    public class ActionNodeDelayEditor : ActionNodeEditor<ActionNodeDelay>
+    public class ActionNodeDelayEditor : ActionNodeEditor
     {
         public ActionNodeDelayEditor()
         {

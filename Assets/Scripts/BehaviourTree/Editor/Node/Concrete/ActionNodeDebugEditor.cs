@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 namespace BehaviourTree
 {
     
-    public class ActionNodeDebugEditor : ActionNodeEditor<ActionNodeDebug>
+    public class ActionNodeDebugEditor : ActionNodeEditor
     {
         public ActionNodeDebugEditor()
         {

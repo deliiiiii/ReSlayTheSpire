@@ -36,17 +36,7 @@ namespace BehaviourTree
         public void DrawNodeEditor(Type nodeEditorType)
         {
             //利用反射调用构造函数
-            var ins = Activator.CreateInstance(nodeEditorType);
-            
-            var nodeI = ins as INodeBaseEditor<NodeBase>;
-            nodeI.OnChangeTypeEvent += newNodeEditorType =>
-            {
-                MyDebug.Log($" 22 {newNodeEditorType.Name}");
-                MyDebug.Log($"select: changed to {newNodeEditorType.Name[..^2]}<{newNodeEditorType.GetGenericArguments()[0]}>");
-                nodeI.SetNodeBase(newNodeEditorType.GetGenericArguments()[0]);
-            };
-
-            var node = ins as Node;
+            var node = Activator.CreateInstance(nodeEditorType) as Node;
             node.SetPosition(new Rect(100, 100, 200, 150));
             node.RefreshPorts();
             node.expanded = true;

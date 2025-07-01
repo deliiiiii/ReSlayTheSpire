@@ -10,25 +10,20 @@ namespace BehaviourTree
 {
     public interface INodeBaseEditor<out T> where T : NodeBase
     {
-        public T NodeBase { get; }
+        public NodeBase NodeBase { get; }
         void AddInEditorChildren();
-        public event Action<Type> OnChangeTypeEvent;
-        public void SetNodeBase(Type nodeType);
     }
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
-        public T NodeBase { get; protected set; }
+        public NodeBase NodeBase { get; protected set; }
         protected Port inputPort;
         protected Port outputPort;
         protected DropdownField typeField;
-        //最终是实例类xxxNodeEditor在调用
-        List<Type> rtTypeList => DropDownFieldDataCache.DDDic[GetType().BaseType!.GetGenericTypeDefinition()];
-        
         /// <summary>
-        /// 如ActionNodeDebug
+        /// 最终是实例类xxxNodeEditor在调用
+        /// [ActionNodeDebug, ActionNodeDelay, ...]
         /// </summary>
-        Type firstTType => rtTypeList[0].GetGenericArguments()[0];
-        public event Action<Type> OnChangeTypeEvent;
+        List<Type> rtTypeList => DropDownFieldDataCache.DDDic[GetType().BaseType!.GetGenericTypeDefinition()];
         public NodeBaseEditor()
         {
             if (rtTypeList.Count == 0)
@@ -37,28 +32,24 @@ namespace BehaviourTree
                 return;
             }
             DrawNodeEditor();
-            DrawInputPort();
         }
 
-        protected virtual T CreateConcreteNode(Type concreteT)
-        {
-            return Activator.CreateInstance(concreteT) as T;
-        }
-        
         void DrawNodeEditor()
         {
-            SetNodeBase(firstTType);
-            title = NodeBase.NodeName = firstTType.Name;
-            
-            typeField = new DropdownField(rtTypeList.Select(x => x.GetGenericArguments()[0].Name).ToList(), firstTType.Name);
-            typeField.RegisterValueChangedCallback(newNodeType =>
+            DrawInputPort();
+            DrawTypeField();
+            SetNodeBase(rtTypeList[0]);
+        }
+        
+        void DrawTypeField()
+        {
+            typeField = new DropdownField(rtTypeList.Select(x => x.Name).ToList(), rtTypeList[0].Name);
+            typeField.RegisterValueChangedCallback(evt =>
             {
-                MyDebug.Log($" 11 {GetType().Name}");
-                OnChangeTypeEvent?.Invoke(rtTypeList.First(x => x.GetGenericArguments()[0].Name == newNodeType.newValue));
+                SetNodeBase(rtTypeList.First(x => x.Name == evt.newValue));
             });
             extensionContainer.Add(typeField);
         }
-        
         void DrawInputPort()
         {
             inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
@@ -69,7 +60,13 @@ namespace BehaviourTree
         
         public void SetNodeBase(Type nodeType)
         {
-            NodeBase = CreateConcreteNode(nodeType);
+            if (nodeType.IsGenericType)
+            {
+                nodeType = nodeType.MakeGenericType(typeof(int));
+            }
+
+            NodeBase = Activator.CreateInstance(nodeType) as NodeBase;
+            title = NodeBase.NodeName = nodeType.Name;
         }
         
         public void AddInEditorChildren()
@@ -89,7 +86,7 @@ namespace BehaviourTree
     {
         /// <summary>
         /// 缓存每个NodeBaseEditor的DropDownFieldData
-        /// ActionNodeEditor《》, [ActionNodeEditor《ActionNodeDebug》...]
+        /// ActionNodeEditor《》, [ActionNodeDebug, ActionNodeDelay, ...]
         /// </summary>
         public static readonly Dictionary<Type, List<Type>> DDDic = new();
     }

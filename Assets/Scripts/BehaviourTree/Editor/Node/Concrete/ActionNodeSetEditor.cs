@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
-    public class ActionNodeSetEditor<TValue> : ActionNodeEditor<ActionNodeSet<TValue>> //where TValue : struct
+    public class ActionNodeSetEditor : ActionNodeEditor
     {
         public ActionNodeSetEditor()
         {

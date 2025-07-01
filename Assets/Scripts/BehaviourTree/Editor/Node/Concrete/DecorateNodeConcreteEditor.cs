@@ -1,11 +1,11 @@
 ﻿namespace BehaviourTree
 {
-    public class InvertNodeEditor : DecorateNodeEditor<InverseNode>
+    public class InvertNodeEditor : DecorateNodeEditor
     {
         
     }
     
-    public class NothingNodeEditor : DecorateNodeEditor<NothingNode>
+    public class NothingNodeEditor : DecorateNodeEditor
     {
         
     }

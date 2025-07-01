@@ -2,7 +2,7 @@
 
 namespace BehaviourTree
 {
-    public class SelectorNodeEditor : CompositeNodeEditor<SelectorNode>
+    public class SelectorNodeEditor : CompositeNodeEditor
     {
     }
 }

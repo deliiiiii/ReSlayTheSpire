@@ -3,7 +3,7 @@ using UnityEditor.Experimental.GraphView;
 
 namespace BehaviourTree
 {
-    public abstract class CompositeNodeEditor<T> : NodeBaseEditor<T> where T : CompositeNode
+    public abstract class CompositeNodeEditor : NodeBaseEditor<CompositeNode>
     {
         public CompositeNodeEditor()
         {
