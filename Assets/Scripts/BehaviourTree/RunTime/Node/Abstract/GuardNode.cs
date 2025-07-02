@@ -7,7 +7,7 @@ namespace BehaviourTree
     [Serializable]
     public abstract class GuardNode : NodeBase
     {
-        [HideInInspector]
+        [NonSerialized]
         public Func<bool> Condition;
     }
 }

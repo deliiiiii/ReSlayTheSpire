@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Sirenix.OdinInspector;
 
 namespace BehaviourTree
@@ -59,9 +62,10 @@ public abstract class ACDNode : NodeBase
     #endregion
 
     #region Parent & Child
+    [JsonIgnore]
     public ACDNode Parent { get; set; }
     protected ACDNode FirstChild => ChildList?.Last?.Value;
-    [ShowInInspector]
+    [ShowInInspector][JsonProperty]
     protected LinkedList<ACDNode> ChildList { get; set; }
     public abstract ACDNode AddChild(ACDNode child);
     

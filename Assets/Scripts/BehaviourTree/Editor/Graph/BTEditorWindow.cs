@@ -85,6 +85,38 @@ namespace BehaviourTree
                 toolbar.Add(btn);
             }
             rootVisualElement.Add(toolbar);
+            
+            toolbar.Add(new VisualElement
+            {
+                style =
+                {
+                    flexDirection = FlexDirection.Row,
+                    height = 30
+                }
+            });
+            var spacer = new VisualElement
+            {
+                style =
+                {
+                    flexDirection = FlexDirection.Row,
+                    height = 30
+                }
+            };
+            toolbar.Add(spacer);
+            var addButton = new Button(() => TreeTest.Save("DataTree", nameof(RootNode)))
+            {
+                text = "Save Tree",
+                style =
+                {
+                    width = 200,
+                    height = 30,
+                    marginLeft = 10
+                }
+            };
+            toolbar.Add(addButton);
+            
+            
+
         }
 
         static IEnumerable<Button> CollectButtons()

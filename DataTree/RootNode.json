@@ -1,0 +1,30 @@
+{
+  "ChildNode": {
+    "GuardNode": {
+      "Value": 98,
+      "Threshold": 14,
+      "NodeName": "GuardNodeMoreThan"
+    },
+    "NodeName": "SequenceNode",
+    "ChildList": [
+      {
+        "Content": "的点点滴滴大",
+        "DebugType": 0,
+        "GuardNode": {
+          "NodeName": null
+        },
+        "NodeName": "ActionNodeDebug",
+        "ChildList": null
+      },
+      {
+        "DelaySeconds": 0.73,
+        "GuardNode": {
+          "NodeName": null
+        },
+        "NodeName": "ActionNodeDelay",
+        "ChildList": null
+      }
+    ]
+  },
+  "NodeName": "RootNode"
+}

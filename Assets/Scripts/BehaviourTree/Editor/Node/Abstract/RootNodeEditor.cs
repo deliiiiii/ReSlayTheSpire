@@ -10,7 +10,7 @@ namespace BehaviourTree
         Port outputPort; 
         protected override void DrawPort()
         {
-            outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi,
+            outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
                 typeof(IACDNodeEditor<ACDNode>));
             outputPort.portName = "Root ↓";
             outputPort.tooltip = typeof(IACDNodeEditor<ACDNode>).ToString();

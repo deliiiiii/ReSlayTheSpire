@@ -6,9 +6,9 @@ namespace BehaviourTree
     [Serializable]
     public abstract class ActionNode : ACDNode
     {
-        [HideInInspector]
+        [NonSerialized]
         public Action OnEnter;
-        [HideInInspector]
+        [NonSerialized]
         public Action<float> OnContinue;
         bool isRunning;
         protected bool isFinished;

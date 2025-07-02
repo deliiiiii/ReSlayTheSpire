@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public static class JsonIO
 {
@@ -15,8 +16,8 @@ public static class JsonIO
         {
             Directory.CreateDirectory(pathShort);
         }
-        string str = JsonUtility.ToJson(curEntity, true);
-        // str = StringToByteString(str);
+        // string str = JsonUtility.ToJson(curEntity, true);
+        string str = JsonConvert.SerializeObject(curEntity, Formatting.Indented);
         File.WriteAllText(path, str);
     }
     public static T Read<T>(string f_pathPre, string f_name)
@@ -27,12 +28,9 @@ public static class JsonIO
             Debug.Log("path :" + path + " not exist");
             return default;
         }
-        else
-        {
-            string str = File.ReadAllText(path);
-            // str = ByteStringToString(str);
-            return JsonUtility.FromJson<T>(str);
-        }
+        string str = File.ReadAllText(path);
+        // return JsonUtility.FromJson<T>(str);
+        return JsonConvert.DeserializeObject<T>(str);
     }
     public static void Delete(string f_pathPre, string f_name)
     {
