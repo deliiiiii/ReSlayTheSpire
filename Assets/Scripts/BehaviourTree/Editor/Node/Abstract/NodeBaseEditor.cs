@@ -11,11 +11,13 @@ namespace BehaviourTree
     public interface INodeBaseEditor<out T> where T : NodeBase
     {
         public NodeBase NodeBase { get; }
+        public event Action<Type> OnNodeBaseChanged;
         void AddInEditorChildren();
     }
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
         public NodeBase NodeBase { get; protected set; }
+        public event Action<Type> OnNodeBaseChanged;
         protected Port inputPort;
         protected Port outputPort;
         protected DropdownField typeField;
@@ -31,18 +33,31 @@ namespace BehaviourTree
                 MyDebug.LogError($"No {GetType().Name} types found in the assembly.");
                 return;
             }
-            DrawNodeEditor();
+            DrawPort();
+            DrawTypeField();
+            OnNodeBaseChanged += SetNodeBase;
+            
+            OnNodeBaseChanged!.Invoke(rtTypeList[0]);
         }
 
         protected HashSet<VisualElement> fieldElementSet = new();
+        
+        
+        protected virtual void DrawPort()
+        {
+            inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
+            inputPort.portName = "Parent ↑";
+            inputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
+            inputContainer.Add(inputPort);
+        }
+        
         protected virtual void DrawNodeField()
         {
-            // Clear existing fields except the type dropdown
-            // var fieldsToRemove = extensionContainer.Children().Where(c => c != typeField).ToList();
             foreach (var field in fieldElementSet)
             {
                 extensionContainer.Remove(field);
             }
+            fieldElementSet.Clear();
 
             var fieldInfos = NodeBase.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)
                 .Where(f => f.GetCustomAttribute<DrawnFieldAttribute>() != null);
@@ -98,31 +113,18 @@ namespace BehaviourTree
             }
         }
         
-        void DrawNodeEditor()
-        {
-            DrawInputPort();
-            DrawTypeField();
-            SetNodeBase(rtTypeList[0]);
-        }
         
         void DrawTypeField()
         {
             typeField = new DropdownField(rtTypeList.Select(x => x.Name).ToList(), rtTypeList[0].Name);
             typeField.RegisterValueChangedCallback(evt =>
             {
-                SetNodeBase(rtTypeList.First(x => x.Name == evt.newValue));
+                OnNodeBaseChanged?.Invoke(rtTypeList.First(x => x.Name == evt.newValue));
             });
             extensionContainer.Add(typeField);
         }
-        void DrawInputPort()
-        {
-            inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
-            inputPort.portName = "Parent ↑";
-            inputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
-            inputContainer.Add(inputPort);
-        }
         
-        public void SetNodeBase(Type nodeType)
+        void SetNodeBase(Type nodeType)
         {
             if (nodeType.IsGenericType)
             {

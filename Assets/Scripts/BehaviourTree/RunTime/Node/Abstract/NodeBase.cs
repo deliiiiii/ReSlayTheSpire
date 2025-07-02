@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BehaviourTree
 {
@@ -21,7 +22,7 @@ public abstract class NodeBase
     [HideInInspector]
     public Tree Tree;
     public string NodeName = "New Node";
-    public Guard Guard = Guard.AlwaysTrue;
+    public GuardNode GuardNode = GuardNode.AlwaysTrue;
     [HideInInspector]
     public NodeBase Parent;
     [ShowInInspector]
@@ -93,7 +94,7 @@ public abstract class NodeBase
     bool CheckGuardLocal()
     {
         
-        return Guard.Condition();
+        return GuardNode.Condition();
     }
     
     

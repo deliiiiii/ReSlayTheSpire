@@ -21,12 +21,12 @@ namespace BehaviourTree
         }
         public static NodeBase SetGuard(this NodeBase node, Func<bool> condition)
         {
-            node.Guard = new Guard { Condition = condition };
+            node.GuardNode = new GuardNode { Condition = condition };
             return node;
         }
         public static NodeBase RemoveGuard(this NodeBase node)
         {
-            node.Guard = Guard.AlwaysTrue;
+            node.GuardNode = GuardNode.AlwaysTrue;
             return node;
         }
         

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Sirenix.Utilities;
+using UniRx;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -36,7 +37,11 @@ namespace BehaviourTree
         public void DrawNodeEditor(Type nodeEditorType)
         {
             //利用反射调用构造函数
-            var node = Activator.CreateInstance(nodeEditorType) as Node;
+            var ins = Activator.CreateInstance(nodeEditorType);
+            var iNode = ins as INodeBaseEditor<NodeBase>;
+            iNode.OnNodeBaseChanged += _ => OnGraphViewChanged(default);
+            
+            var node = ins as Node;
             node.SetPosition(new Rect(100, 100, 200, 150));
             node.RefreshPorts();
             node.expanded = true;
@@ -50,34 +55,40 @@ namespace BehaviourTree
 
         public GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
-            graphViewChange.edgesToCreate?
-                .ForEach(edge =>
-                {
-                    if (edge.output.node is not INodeBaseEditor<NodeBase> parentEditor
-                        || edge.input.node is not INodeBaseEditor<NodeBase> childEditor)
-                    {
-                        return;
-                    }
-                    // MyDebug.Log($"Adding child {childEditor.NodeBase.NodeName} to parent {parentEditor.NodeBase.NodeName}");
-                    parentEditor.NodeBase.AddChild(childEditor.NodeBase);
-                });
-            
-            graphViewChange.elementsToRemove?
-                .OfType<Edge>()
-                .ForEach(edge =>
-                {
-                    if (edge.output.node is not INodeBaseEditor<NodeBase> parentEditor
-                        || edge.input.node is not INodeBaseEditor<NodeBase> childEditor)
-                    {
-                        return;
-                    }
-                    // MyDebug.Log($"Removing child {childEditor.NodeBase.NodeName} from parent {parentEditor.NodeBase.NodeName}");
-                    parentEditor.NodeBase.RemoveChild(childEditor.NodeBase);
-                });
-            ConstructTree();
+            MyDebug.LogWarning($"OnGraphViewChanged");
+            nodes.ForEach(node =>
+            {
+                if (node is not INodeBaseEditor<NodeBase> nodeEditor)
+                    return;
+                nodeEditor.NodeBase.ClearChildren();
+            });
+            // graphViewChange.edgesToCreate?
+            //     .ForEach(edge =>
+            //     {
+            //         if (edge.output.node is not INodeBaseEditor<NodeBase> parentEditor
+            //             || edge.input.node is not INodeBaseEditor<NodeBase> childEditor)
+            //         {
+            //             return;
+            //         }
+            //         // MyDebug.Log($"Adding child {childEditor.NodeBase.NodeName} to parent {parentEditor.NodeBase.NodeName}");
+            //         parentEditor.NodeBase.AddChild(childEditor.NodeBase);
+            //     });
+            //
+            // graphViewChange.elementsToRemove?
+            //     .OfType<Edge>()
+            //     .ForEach(edge =>
+            //     {
+            //         if (edge.output.node is not INodeBaseEditor<NodeBase> parentEditor
+            //             || edge.input.node is not INodeBaseEditor<NodeBase> childEditor)
+            //         {
+            //             return;
+            //         }
+            //         // MyDebug.Log($"Removing child {childEditor.NodeBase.NodeName} from parent {parentEditor.NodeBase.NodeName}");
+            //         parentEditor.NodeBase.RemoveChild(childEditor.NodeBase);
+            //     });
+            Observable.NextFrame().Subscribe(_ => ConstructTree());
             return graphViewChange;
         }
-
         void ConstructTree()
         {
             //找到图中第一个没有输入 但有输出的节点作为根节点
@@ -93,7 +104,7 @@ namespace BehaviourTree
                         );
             if (rootNodeSonClass is not INodeBaseEditor<NodeBase> rootNodeInterface)
             {
-                // MyDebug.LogError("No root node found in the graph.");
+                MyDebug.Log("No root node found in the graph.");
                 return;
             }
 

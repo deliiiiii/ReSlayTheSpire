@@ -5,13 +5,9 @@ namespace BehaviourTree
 {
     public class CompositeNodeEditor : NodeBaseEditor<CompositeNode>
     {
-        public CompositeNodeEditor()
+        protected override void DrawPort()
         {
-            CreateOutputPort();
-        }
-
-        void CreateOutputPort()
-        {
+            base.DrawPort();
             outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi,
                 typeof(NodeBaseEditor<NodeBase>));
             outputPort.portName = "Com ↓";

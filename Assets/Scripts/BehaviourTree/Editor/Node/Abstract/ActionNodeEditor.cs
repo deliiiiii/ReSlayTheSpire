@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine.UIElements;
-
-namespace BehaviourTree
+﻿namespace BehaviourTree
 {
     public class ActionNodeEditor : NodeBaseEditor<ActionNode>
     {

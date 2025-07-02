@@ -82,6 +82,7 @@ namespace BehaviourTree
         }
     }
     
+    // [Serializable]
     // public class ActionNodeSet<T> : ActionNode
     // {
     //     [DrawnField]
