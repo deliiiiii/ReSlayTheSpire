@@ -7,15 +7,15 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
-    public class DecorateNodeEditor : NodeBaseEditor<DecorateNode>
+    public class DecorateNodeEditor : ACDNodeEditor<DecorateNode>
     {
         protected override void DrawPort()
         {
             base.DrawPort();
             outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
-                typeof(NodeBaseEditor<NodeBase>));
+                typeof(IACDNodeEditor<ACDNode>));
             outputPort.portName = "Dec ↓";
-            outputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
+            outputPort.tooltip = typeof(IACDNodeEditor<ACDNode>).ToString();
             outputContainer.Add(outputPort);
         }
     }

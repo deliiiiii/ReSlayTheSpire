@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using QFramework;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
@@ -10,17 +9,33 @@ namespace BehaviourTree
 {
     public interface INodeBaseEditor<out T> where T : NodeBase
     {
-        public NodeBase NodeBase { get; }
+        public T NodeBase { get; }
+        public int? InEdgesCount { get; }
+        public int? OutEdgesCount { get; }
+        
+        public IEnumerable<Edge> InEdges { get; }
+        public IEnumerable<Edge> OutEdges { get; }
         public event Action<Type> OnNodeBaseChanged;
-        void AddInEditorChildren();
+        void OnConstructTree();
     }
+    
+    
+
+    
+    
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
-        public NodeBase NodeBase { get; protected set; }
+        public T NodeBase { get; protected set; }
+        public int? InEdgesCount => InEdges.Count();
+        public int? OutEdgesCount => OutEdges.Count();
+        public IEnumerable<Edge> InEdges => inputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
+        public IEnumerable<Edge> OutEdges => outputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
         public event Action<Type> OnNodeBaseChanged;
-        protected Port inputPort;
-        protected Port outputPort;
+        
         protected DropdownField typeField;
+        protected HashSet<VisualElement> fieldElementSet = new();
+        
+        
         /// <summary>
         /// 最终是实例类ActionNodeEditor在调用
         /// [ActionNodeDebug, ActionNodeDelay, ...]
@@ -40,16 +55,10 @@ namespace BehaviourTree
             OnNodeBaseChanged!.Invoke(rtTypeList[0]);
         }
 
-        protected HashSet<VisualElement> fieldElementSet = new();
-        
-        
-        protected virtual void DrawPort()
-        {
-            inputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(NodeBaseEditor<NodeBase>));
-            inputPort.portName = "Parent ↑";
-            inputPort.tooltip = typeof(NodeBaseEditor<NodeBase>).ToString();
-            inputContainer.Add(inputPort);
-        }
+
+
+        protected abstract void DrawPort();
+        public abstract void OnConstructTree();
         
         protected virtual void DrawNodeField()
         {
@@ -131,22 +140,9 @@ namespace BehaviourTree
                 nodeType = nodeType.MakeGenericType(typeof(int));
             }
 
-            NodeBase = Activator.CreateInstance(nodeType) as NodeBase;
+            NodeBase = Activator.CreateInstance(nodeType) as T;
             title = NodeBase.NodeName = nodeType.Name;
             DrawNodeField();
-        }
-        
-        
-        public void AddInEditorChildren()
-        {
-            outputContainer.Q<Port>()?.connections.ForEach(port =>
-            {
-                if (port.input.node is not INodeBaseEditor<NodeBase> childNode)
-                    return;
-                MyDebug.Log($"{NodeBase.NodeName} AddChild {childNode.NodeBase.NodeName}");
-                NodeBase.AddChild(childNode.NodeBase);
-                childNode.AddInEditorChildren();
-            });
         }
     }
 

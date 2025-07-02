@@ -8,7 +8,7 @@ namespace BehaviourTree
         public Tree Tree = new();
         public bool TestBool = true;
 
-        public static NodeBase CreateByRoot(NodeBase root) => Instance.PrivateCreateByRoot(root);
+        public static ACDNode CreateByRoot(ACDNode root) => Instance.PrivateCreateByRoot(root);
 
         // void Start()
         // {
@@ -20,7 +20,7 @@ namespace BehaviourTree
             Tick(Time.deltaTime);
         }
 
-        NodeBase PrivateCreateByRoot(NodeBase root)
+        ACDNode PrivateCreateByRoot(ACDNode root)
         {
             return Tree.CreateRoot(root);
         }

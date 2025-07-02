@@ -6,15 +6,15 @@ using UnityEditor.Experimental.GraphView;
 namespace BehaviourTree
 {
     [Serializable]
-    public abstract class CompositeNode : NodeBase
+    public abstract class CompositeNode : ACDNode
     {
-        protected LinkedListNode<NodeBase> curNode;
-        public override NodeBase AddChild(NodeBase child)
+        protected LinkedListNode<ACDNode> curNode;
+        public override ACDNode AddChild(ACDNode child)
         {
-            childList ??= new LinkedList<NodeBase>();
+            ChildList ??= new LinkedList<ACDNode>();
             child.Parent = this;
             child.Tree = Tree;
-            childList.AddLast(child);
+            ChildList.AddLast(child);
             return this;
         }
     }

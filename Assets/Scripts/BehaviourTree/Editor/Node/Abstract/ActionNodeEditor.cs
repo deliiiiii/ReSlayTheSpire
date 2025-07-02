@@ -1,6 +1,6 @@
 ﻿namespace BehaviourTree
 {
-    public class ActionNodeEditor : NodeBaseEditor<ActionNode>
+    public class ActionNodeEditor : ACDNodeEditor<ActionNode>
     {
     }
 }

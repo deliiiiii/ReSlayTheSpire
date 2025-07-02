@@ -9,7 +9,7 @@ namespace BehaviourTree
     {
         public string Name = "New Tree";
         [ShowInInspector]
-        public NodeBase Root;
+        public ACDNode Root;
         [ShowInInspector]
         HashSet<ActionNode> RunningNodeSet;
         public void AddRunningNode(ActionNode node)
@@ -25,14 +25,14 @@ namespace BehaviourTree
         {
             return RunningNodeSet != null && RunningNodeSet.Contains(node);
         }
-        public NodeBase CreateRoot<T>() where T : NodeBase, new()
-        {
-            return Root = new T
-            {
-                Tree = this
-            };
-        }
-        public NodeBase CreateRoot<T>(T node) where T : NodeBase
+        // public ACDNode CreateRoot<T>() where T : ACDNode, new()
+        // {
+        //     return Root = new T
+        //     {
+        //         Tree = this
+        //     };
+        // }
+        public ACDNode CreateRoot<T>(T node) where T : ACDNode
         {
             Root = node;
             Root.Tree = this;

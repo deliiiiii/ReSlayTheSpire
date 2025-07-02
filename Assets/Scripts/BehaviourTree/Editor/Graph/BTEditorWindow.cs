@@ -54,6 +54,7 @@ namespace BehaviourTree
                 .Where(type =>  
                     type.InheritsFrom(baseType)
                     && type != baseType
+                    && !type.IsAbstract
                 )
                 // abstractNodeEditorType: ActionNodeEditor or CompositeNodeEditor or DecoratorNodeEditor ...
                 .ForEach(abstractNodeEditorType =>
@@ -87,6 +88,9 @@ namespace BehaviourTree
                 .Where(type =>  
                     type.InheritsFrom(baseType)
                     && type != baseType
+                    && !type.IsAbstract
+                    // ||
+                    // (type is GuardNodeEditor)
                     ) 
                 .ForEach(abstractNodeEditorType =>
                 {

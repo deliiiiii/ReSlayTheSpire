@@ -4,19 +4,20 @@ using UnityEditor.Experimental.GraphView;
 
 namespace BehaviourTree
 {
-    public abstract class DecorateNode : NodeBase
+    [Serializable]
+    public abstract class DecorateNode : ACDNode
     {
-        public override NodeBase AddChild(NodeBase child)
+        public override ACDNode AddChild(ACDNode child)
         {
-            if (ToChild() != null)
+            if (FirstChild != null)
             {
                 MyDebug.LogError("InverseNode can only have one child.");
                 return this;
             }
-            childList ??= new LinkedList<NodeBase>();
+            ChildList ??= new LinkedList<ACDNode>();
             child.Parent = this;
             child.Tree = Tree;
-            childList.AddLast(child);
+            ChildList.AddLast(child);
             return this;
         }
     }

@@ -5,7 +5,7 @@ using UnityEditor.Experimental.GraphView;
 namespace BehaviourTree
 {
     [Serializable]
-    public abstract class ActionNode : NodeBase
+    public abstract class ActionNode : ACDNode
     {
         [HideInEditorMode][HideInPlayMode]
         public Action OnEnter;
@@ -33,8 +33,8 @@ namespace BehaviourTree
             isFinished = false;
             Tree.RemoveRunningNode(this);
         }
-        
-        public override NodeBase AddChild(NodeBase child)
+
+        public override ACDNode AddChild(ACDNode child)
         {
             // MyDebug.LogError("ActionNode cannot have children.");
             return this;
