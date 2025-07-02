@@ -139,7 +139,7 @@ namespace BehaviourTree
         {
             outputContainer.Q<Port>()?.connections.ForEach(port =>
             {
-                if (port.input.node is not NodeBaseEditor<NodeBase> childNode)
+                if (port.input.node is not INodeBaseEditor<NodeBase> childNode)
                     return;
                 MyDebug.Log($"{NodeBase.NodeName} AddChild {childNode.NodeBase.NodeName}");
                 NodeBase.AddChild(childNode.NodeBase);

@@ -90,7 +90,7 @@ namespace BehaviourTree
                     ) 
                 .ForEach(abstractNodeEditorType =>
                 {
-                    MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
+                    // MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
                     ret.Add(new Button(() => view.DrawNodeEditor(abstractNodeEditorType))
                     {
                         text = abstractNodeEditorType.Name,

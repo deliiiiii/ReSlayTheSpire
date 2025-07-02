@@ -17,11 +17,9 @@ namespace BehaviourTree
         public string Content;
         [DrawnField]
         public EDebugType DebugType = EDebugType.Log;
-        public ActionNodeDebug() { }
-        public ActionNodeDebug(string content, EDebugType debugType = EDebugType.Log)
+
+        public ActionNodeDebug()
         {
-            Content = content;
-            DebugType = debugType;
             OnEnter = () =>
             {
                 switch (DebugType)
@@ -39,6 +37,12 @@ namespace BehaviourTree
             };
             OnContinue = _ => isFinished = true;
         }
+        // public ActionNodeDebug(string content, EDebugType debugType = EDebugType.Log)
+        // {
+        //     Content = content;
+        //     DebugType = debugType;
+        //     InitAction();
+        // }
         public override string ToString()
         {
             return $"{Content}";
@@ -51,10 +55,9 @@ namespace BehaviourTree
         public float DelaySeconds;
         [ShowInInspector][ReadOnly]
         float timer;
-        public ActionNodeDelay(){}
-        public ActionNodeDelay(float delaySeconds)
+
+        public ActionNodeDelay()
         {
-            DelaySeconds = delaySeconds;
             OnEnter = () => timer = 0;
             OnContinue = dt =>
             {
@@ -62,6 +65,16 @@ namespace BehaviourTree
                 isFinished = timer >= DelaySeconds;
             };
         }
+        // public ActionNodeDelay(float delaySeconds)
+        // {
+        //     DelaySeconds = delaySeconds;
+        //     OnEnter = () => timer = 0;
+        //     OnContinue = dt =>
+        //     {
+        //         timer += dt;
+        //         isFinished = timer >= DelaySeconds;
+        //     };
+        // }
 
         public override string ToString()
         {
@@ -69,24 +82,24 @@ namespace BehaviourTree
         }
     }
     
-    public class ActionNodeSet<T> : ActionNode
-    {
-        [DrawnField]
-        public T TarValue;
-        public ActionNodeSet(){}
-        public ActionNodeSet(T tarValue, Action<T> setter)
-        {
-            this.TarValue = tarValue;
-            OnContinue = _ =>
-            {
-                setter(this.TarValue);
-                isFinished = true;
-            };
-        }
-
-        public override string ToString()
-        {
-            return $"Set to {TarValue}";
-        }
-    }
+    // public class ActionNodeSet<T> : ActionNode
+    // {
+    //     [DrawnField]
+    //     public T TarValue;
+    //     public ActionNodeSet(){}
+    //     public ActionNodeSet(T tarValue, Action<T> setter)
+    //     {
+    //         this.TarValue = tarValue;
+    //         OnContinue = _ =>
+    //         {
+    //             setter(this.TarValue);
+    //             isFinished = true;
+    //         };
+    //     }
+    //
+    //     public override string ToString()
+    //     {
+    //         return $"Set to {TarValue}";
+    //     }
+    // }
 }

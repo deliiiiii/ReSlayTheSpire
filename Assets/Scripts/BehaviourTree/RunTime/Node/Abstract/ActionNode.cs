@@ -12,6 +12,7 @@ namespace BehaviourTree
         [HideInEditorMode][HideInPlayMode]
         public Action<float> OnContinue;
         protected bool isFinished;
+        
         public override EState OnTick(float dt)
         {
             if (!Tree.IsNodeRunning(this))
@@ -19,7 +20,7 @@ namespace BehaviourTree
                 OnEnter?.Invoke();
                 Tree.AddRunningNode(this);
             }
-            OnContinue(dt);
+            OnContinue?.Invoke(dt);
             if (isFinished)
             {
                 Tree.RemoveRunningNode(this);
