@@ -1,15 +1,14 @@
 ﻿using System;
-using Sirenix.OdinInspector;
-using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 namespace BehaviourTree
 {
     [Serializable]
     public abstract class ActionNode : ACDNode
     {
-        [HideInEditorMode][HideInPlayMode]
+        [HideInInspector]
         public Action OnEnter;
-        [HideInEditorMode][HideInPlayMode]
+        [HideInInspector]
         public Action<float> OnContinue;
         protected bool isFinished;
         

@@ -1,5 +1,6 @@
 ﻿using System;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace BehaviourTree
 {
@@ -8,7 +9,7 @@ namespace BehaviourTree
     {
         [ShowInInspector]
         public string Name => ToString();
-        // [HideInInspector]
+        [HideInInspector]
         public Func<bool> Condition;
     }
 }
