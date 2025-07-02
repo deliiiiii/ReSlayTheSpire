@@ -5,7 +5,6 @@ namespace BehaviourTree
     [Serializable]
     public class SequenceNode : CompositeNode
     {
-        public SequenceNode() { }
         public override EState OnTick(float dt)
         {
             if (curNode != null)
@@ -52,7 +51,6 @@ namespace BehaviourTree
     [Serializable]
     public class SelectorNode : CompositeNode
     {
-        public SelectorNode() { }
         public override EState OnTick(float dt)
         {
             // curNode ??= childList.First;

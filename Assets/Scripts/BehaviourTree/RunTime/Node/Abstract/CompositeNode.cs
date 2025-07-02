@@ -13,7 +13,7 @@ namespace BehaviourTree
         {
             ChildList ??= new LinkedList<ACDNode>();
             child.Parent = this;
-            child.Tree = Tree;
+            // child.Tree = Tree;
             ChildList.AddLast(child);
             return this;
         }

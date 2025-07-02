@@ -15,10 +15,7 @@ public enum EState
 [Serializable]
 public abstract class NodeBase
 {
-    [HideInInspector]
-    public Tree Tree;
-    public string NodeName = "New Node";
+    public string NodeName;
 }
-
 
 }

@@ -60,12 +60,20 @@ namespace BehaviourTree
                 .ForEach(abstractNodeEditorType =>
                 {
                     DropDownFieldDataCache.DDDic[abstractNodeEditorType] = new List<Type>();
-                    var tSubTypes = abstractNodeEditorType.BaseType!.GetGenericArguments()[0].SubType();
-                    tSubTypes.ForEach(tSubType =>
+                    var tBaseType = abstractNodeEditorType.BaseType!.GetGenericArguments()[0];
+                    var tSubTypes = tBaseType.SubType();
+                    if (!tSubTypes.Any())
                     {
-                        //TODO 确保每个RT都有一个对应的Editor吗。好像不用
-                        DropDownFieldDataCache.DDDic[abstractNodeEditorType].Add(tSubType);
-                    });
+                        DropDownFieldDataCache.DDDic[abstractNodeEditorType].Add(tBaseType);
+                    }
+                    else
+                    {
+                        tSubTypes.ForEach(tSubType =>
+                        {
+                            //TODO 确保每个RT都有一个对应的Editor吗。好像不用
+                            DropDownFieldDataCache.DDDic[abstractNodeEditorType].Add(tSubType);
+                        });
+                    }
                 });
         }
         

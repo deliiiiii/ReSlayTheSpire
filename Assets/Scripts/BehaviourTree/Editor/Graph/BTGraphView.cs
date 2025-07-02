@@ -64,21 +64,14 @@ namespace BehaviourTree
         void ConstructTree()
         {
             //找到图中第一个没有输入 但有输出的节点作为根节点
-            var firstNode = nodes
-                .Where(node =>
-                {
-                    if (node is not IACDNodeEditor<ACDNode> acdNodeEditor)
-                        return false;
-                    return acdNodeEditor.InEdgesCount == 0 && acdNodeEditor.OutEdgesCount > 0;
-                }).First();
+            var rootNode = nodes.FirstOrDefault(node => node is RootNodeEditor);
                     
-            if (firstNode is not IACDNodeEditor<ACDNode> rootNodeEditor)
+            if (rootNode is not RootNodeEditor rootNodeEditor)
             {
-                MyDebug.Log("No root node found in the graph.");
+                MyDebug.Log("No ROOT node found in the graph.");
                 return;
             }
-            MyDebug.Log($"Root node found: {rootNodeEditor.NodeBase.NodeName} in : {rootNodeEditor.InEdgesCount} out : {rootNodeEditor.OutEdgesCount}");
-            TreeTest.CreateByRoot(rootNodeEditor.NodeBase);
+            TreeTest.CreateTree(rootNodeEditor.NodeBase);
             rootNodeEditor.OnConstructTree();
         }
     }

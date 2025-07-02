@@ -5,7 +5,6 @@ namespace BehaviourTree
     [Serializable]
     public class InverseNode : DecorateNode
     {
-        public InverseNode(){}
         public override EState OnTick(float dt)
         {
             // 1变成0 0变成1
@@ -19,7 +18,6 @@ namespace BehaviourTree
 
     public class NothingNode : DecorateNode
     {
-        public NothingNode() { }
         public override EState OnTick(float dt)
         {
             // 什么都不做

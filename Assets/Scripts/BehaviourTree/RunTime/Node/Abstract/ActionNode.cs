@@ -10,27 +10,27 @@ namespace BehaviourTree
         public Action OnEnter;
         [HideInInspector]
         public Action<float> OnContinue;
+        bool isRunning;
         protected bool isFinished;
         
         public override EState OnTick(float dt)
         {
-            if (!Tree.IsNodeRunning(this))
+            if (!isRunning)
             {
                 OnEnter?.Invoke();
-                Tree.AddRunningNode(this);
+                isRunning = true;
             }
             OnContinue?.Invoke(dt);
             if (isFinished)
             {
-                Tree.RemoveRunningNode(this);
+                isRunning = isFinished = false;
                 return EState.Succeeded;
             }
             return EState.Running;
         }
         public override void OnFail()
         {
-            isFinished = false;
-            Tree.RemoveRunningNode(this);
+            isRunning = isFinished = false;
         }
 
         public override ACDNode AddChild(ACDNode child)
