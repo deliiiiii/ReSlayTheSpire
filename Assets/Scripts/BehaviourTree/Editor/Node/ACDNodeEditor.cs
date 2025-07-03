@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine.UIElements;
 using Sirenix.Utilities;
-using UnityEditor;
+using UnityEngine;
 using Direction = UnityEditor.Experimental.GraphView.Direction;
 
 namespace BehaviourTree
@@ -12,7 +11,8 @@ namespace BehaviourTree
     {
     }
     
-    public abstract class ACDNodeEditor<T> : NodeBaseEditor<T>, IACDNodeEditor<T> where T : ACDNode
+    public abstract class ACDNodeEditor<T>
+        : NodeBaseEditor<T>, IACDNodeEditor<T> where T : ACDNode
     {
         Port inputACDPort;
         Port inputGuardPort;
@@ -27,6 +27,8 @@ namespace BehaviourTree
                 .Where(port => port.output.node is GuardNodeEditor)
                 .Select(port => port.output.node as GuardNodeEditor)
                 .FirstOrDefault();
+
+        GuardNode guard => guardEditor?.NodeBase ?? ScriptableObject.CreateInstance<GuardNodeAlwaysTrue>();
         
         protected override void DrawPort()
         {
@@ -51,15 +53,18 @@ namespace BehaviourTree
                 childEditor.OnConstructTree();
             });
             
-            NodeBase.SetGuard(ACDNode.DefaultGuard);
-            MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guardEditor.NodeBase.NodeName}");
-            NodeBase.SetGuard(guardEditor.NodeBase);
+            NodeBase.SetGuard(ScriptableObject.CreateInstance<GuardNodeAlwaysTrue>());
+            if(guardEditor != null)
+            {
+                MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guard.NodeName}");
+                NodeBase.SetGuard(guard);
+            }
             
         }
         
         public override void OnSave()
         {
-            AssetDataBaseExtension.SafeAddSubAsset(guardEditor.NodeBase, this.NodeBase);
+            AssetDataBaseExtension.SafeAddSubAsset(guard, this.NodeBase);
             childsEditor.ForEach(childEditor =>
             {
                 AssetDataBaseExtension.SafeAddSubAsset(childEditor.NodeBase, this.NodeBase);

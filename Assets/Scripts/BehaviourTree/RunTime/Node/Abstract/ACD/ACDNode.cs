@@ -12,8 +12,6 @@ namespace BehaviourTree
 public abstract class ACDNode : NodeBase
 {
     #region Tick
-
-    public static GuardNode DefaultGuard => CreateInstance<GuardNodeAlwaysTrue>();
     public GuardNode GuardNode;
     public abstract EState OnTick(float dt);
     public abstract void OnFail();

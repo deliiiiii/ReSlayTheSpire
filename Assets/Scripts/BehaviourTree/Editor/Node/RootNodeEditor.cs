@@ -30,11 +30,12 @@ namespace BehaviourTree
         public override void OnConstructTree()
         {
             NodeBase.ChildNode = null;
-            if (childEditor == null)
-                return;
-            MyDebug.Log($"Root {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
-            NodeBase.ChildNode = childEditor.NodeBase;
-            childEditor.OnConstructTree();
+            if (childEditor != null)
+            {
+                MyDebug.Log($"Root {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
+                NodeBase.ChildNode = childEditor.NodeBase;
+                childEditor.OnConstructTree();
+            }
         }
         public override void OnSave()
         {

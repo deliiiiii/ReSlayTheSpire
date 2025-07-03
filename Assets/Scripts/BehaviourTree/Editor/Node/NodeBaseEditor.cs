@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Sirenix.OdinInspector;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -27,6 +28,7 @@ namespace BehaviourTree
     
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
+        [ShowInInspector]
         public T NodeBase { get; protected set; }
         public int? InEdgesCount => InEdges.Count();
         public int? OutEdgesCount => OutEdges.Count();

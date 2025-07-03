@@ -13,30 +13,4 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   NodeName: RootNode
-  ChildNode: {fileID: 6611827070520434016}
---- !u!114 &4701717956894242873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c29e081c393481abee61f8715aa5ae9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: 
---- !u!114 &6611827070520434016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: SelectorNode
+  ChildNode: {fileID: 0}

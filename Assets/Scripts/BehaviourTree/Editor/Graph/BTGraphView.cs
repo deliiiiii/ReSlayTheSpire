@@ -16,6 +16,7 @@ namespace BehaviourTree
     {
         string s1 = "DataTree";
         string s2 = nameof(RootNode);
+        string path => $"Assets/{s1}/{s2}.asset";
         RootNodeEditor rootEditor;
         public BTGraphView()
         {
@@ -74,33 +75,48 @@ namespace BehaviourTree
                 return;
             }
             rootEditor.OnConstructTree();
-            TreeTest.Root(rootEditor.NodeBase);
+            TreeTest.Root = rootEditor.NodeBase;
         }
 
         public RootNode Load()
         {
-            var assetPath = $"Assets/{s1}/{s2}";
             //TODO 运行时资源加载方式
-            var loadedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(assetPath);
+            var loadedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(path);
             if (loadedRoot != null)
             {
                 TreeTest.Root = loadedRoot;
                 return loadedRoot;
             }
-            Debug.LogError($"Failed to load RootNode from {assetPath}");
+            Debug.LogError($"Failed to load RootNode from {path}");
             return null;
         }
 
         public void Save()
         {
-            if (!EditorUtility.IsPersistent(TreeTest.Root))
+            if (rootEditor == null)
             {
-                AssetDatabase.DeleteAsset($"Assets/{s1}/{s2}.asset");
-                AssetDatabase.CreateAsset(TreeTest.Root, $"Assets/{s1}/{s2}.asset");
+                MyDebug.LogError("No RootNodeEditor ... cannot save the tree.");
+                return;
+            }
+            if (!EditorUtility.IsPersistent(TreeTest.Root))
+            // if(AssetDatabase.LoadAssetAtPath<RootNode>(path) != null)
+            {
+                AssetDatabase.DeleteAsset(path);
+                AssetDatabase.CreateAsset(TreeTest.Root, path);
                 EditorUtility.SetDirty(TreeTest.Root);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
+            else
+            {
+                AssetDatabase.LoadAllAssetRepresentationsAtPath(path).ForEach(ass =>
+                {
+                    if (ass == TreeTest.Root)
+                        return;
+                    UnityEngine.Object.DestroyImmediate(ass, true);
+                });
+            }
+          
             
             rootEditor.OnSave();
             EditorUtility.SetDirty(TreeTest.Root);
