@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -12,7 +13,7 @@ namespace BehaviourTree
 public abstract class ACDNode : NodeBase
 {
     #region Tick
-    public GuardNode GuardNode;
+    [CanBeNull] public GuardNode GuardNode;
     public abstract EState OnTick(float dt);
     public abstract void OnFail();
 
@@ -45,7 +46,7 @@ public abstract class ACDNode : NodeBase
     /// <returns>Guard失败返回当前节点，否则返回null</returns>
     bool CheckGuardLocal()
     {
-        return GuardNode.Condition();
+        return !GuardNode || GuardNode.Condition();
     }
     
     // /// <summary>
@@ -86,12 +87,6 @@ public abstract class ACDNode : NodeBase
         ChildList?.Clear();
         return this;
     }
-    public void SetGuard(GuardNode guardNode)
-    {
-        this.GuardNode = guardNode;
-    }
-    
-    
     
 #endif
     #endregion

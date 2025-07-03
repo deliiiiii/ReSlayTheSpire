@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7878169285862269592
+--- !u!114 &-6516719455468210900
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,10 +9,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c29e081c393481abee61f8715aa5ae9, type: 3}
+  m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeName: 
+  NodeName: GuardNodeMoreThan
+  Value: 65
+  Threshold: 0
+--- !u!114 &-3121797086567919039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: SequenceNode
+  GuardNode: {fileID: -6516719455468210900}
+--- !u!114 &-2072981655650076955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: ActionNodeDelay
+  GuardNode: {fileID: 0}
+  DelaySeconds: 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26,8 +57,8 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   NodeName: RootNode
-  ChildNode: {fileID: 7798118191797655691}
---- !u!114 &585354495394065893
+  ChildNode: {fileID: -3121797086567919039}
+--- !u!114 &166987917011976852
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,22 +72,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeName: ActionNodeDebug
   GuardNode: {fileID: 0}
-  Content: "\u4E0A\u4E0A\u4E0A"
+  Content: aaa
   DebugType: 0
---- !u!114 &1222965239321207163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c29e081c393481abee61f8715aa5ae9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: 
---- !u!114 &2788360017076356167
+--- !u!114 &683711103374179156
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -70,9 +88,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeName: ActionNodeDebug
   GuardNode: {fileID: 0}
-  Content: "\u554A\u554A\u554A"
+  Content: ddd
   DebugType: 0
---- !u!114 &7798118191797655691
+--- !u!114 &2420109003154082816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -81,12 +99,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
+  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeName: SelectorNode
+  NodeName: ActionNodeDelay
   GuardNode: {fileID: 0}
---- !u!114 &8842003546379239604
+  DelaySeconds: 2
+--- !u!114 &4977945772958548687
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,7 +114,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c29e081c393481abee61f8715aa5ae9, type: 3}
+  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeName: 
+  NodeName: ActionNodeDebug
+  GuardNode: {fileID: 0}
+  Content: sss
+  DebugType: 0

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEditor.Experimental.GraphView;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -28,7 +29,7 @@ namespace BehaviourTree
                 .Select(port => port.output.node as GuardNodeEditor)
                 .FirstOrDefault();
 
-        GuardNode guard => guardEditor?.NodeBase ?? ScriptableObject.CreateInstance<GuardNodeAlwaysTrue>();
+        [CanBeNull] GuardNode guard => guardEditor?.NodeBase;
         
         protected override void DrawPort()
         {
@@ -53,13 +54,9 @@ namespace BehaviourTree
                 childEditor.OnConstructTree();
             });
             
-            NodeBase.SetGuard(ScriptableObject.CreateInstance<GuardNodeAlwaysTrue>());
-            if(guardEditor != null)
-            {
-                MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guard.NodeName}");
-                NodeBase.SetGuard(guard);
-            }
-            
+            NodeBase.GuardNode = null;
+            MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guard?.NodeName}");
+            NodeBase.GuardNode = guard;
         }
         
         public override void OnSave()
