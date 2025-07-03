@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2171567290176282707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: ActionNodeDebug
+  GuardNode: {fileID: 0}
+  Content: 1111111
+  DebugType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,3 +28,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode
   m_EditorClassIdentifier: 
+  NodeName: RootNode
+  ChildNode: {fileID: 7280504522313597913}
+--- !u!114 &7108726126549511105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: ActionNodeDelay
+  GuardNode: {fileID: 0}
+  DelaySeconds: 2.01
+--- !u!114 &7280504522313597913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: SelectorNode
+  GuardNode: {fileID: 8072038799100671513}
+--- !u!114 &8072038799100671513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: GuardNodeMoreThan
+  Value: 101
+  Threshold: 33

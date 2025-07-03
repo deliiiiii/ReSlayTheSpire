@@ -21,6 +21,8 @@ namespace BehaviourTree
         {
             // Saver.Save(s1, s2, root);
             AssetDatabase.CreateAsset(root, $"Assets/{s1}/{s2}.asset");
+            root.OnSave(); 
+            
             EditorUtility.SetDirty(root); // 标记资源已修改
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

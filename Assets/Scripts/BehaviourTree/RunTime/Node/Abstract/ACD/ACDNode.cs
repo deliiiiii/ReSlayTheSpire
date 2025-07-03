@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace BehaviourTree
 {
@@ -10,10 +14,16 @@ namespace BehaviourTree
 public abstract class ACDNode : NodeBase
 {
     #region Tick
-    public GuardNode GuardNode = new GuardNodeAlwaysTrue();
+
+    public GuardNode GuardNode;
     public abstract EState OnTick(float dt);
     public abstract void OnFail();
-    
+
+    void OnEnable()
+    {
+        GuardNode = CreateInstance<GuardNodeAlwaysTrue>();
+    }
+
     public EState Tick(float dt)
     {
         if (!CheckGuardLocal())
@@ -62,14 +72,14 @@ public abstract class ACDNode : NodeBase
     
     #endregion
 
-    #region Parent & Child
+    #region Parent & Child & Guard
     [JsonIgnore]
     public ACDNode Parent { get; set; }
     protected ACDNode FirstChild => ChildList?.Last?.Value;
     [ShowInInspector][JsonProperty]
     protected LinkedList<ACDNode> ChildList { get; set; }
+#if UNITY_EDITOR
     public abstract ACDNode AddChild(ACDNode child);
-    
     public bool RemoveChild(ACDNode child)
     {
         if (ChildList != null && ChildList.Contains(child))
@@ -84,7 +94,22 @@ public abstract class ACDNode : NodeBase
         ChildList?.Clear();
         return this;
     }
-    #endregion
+    public void SetGuard(GuardNode guardNode)
+    {
+        GuardNode = guardNode;
+    }
     
+    
+    public override void OnSave()
+    {
+        AssetDatabase.AddObjectToAsset(GuardNode, this);
+        ChildList?.ForEach(child =>
+        {
+            AssetDatabase.AddObjectToAsset(child, this);
+            child.OnSave();
+        });
+    }
+#endif
+    #endregion
 }
 }

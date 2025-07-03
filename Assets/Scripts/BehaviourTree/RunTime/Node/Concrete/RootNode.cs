@@ -1,4 +1,7 @@
 ﻿using System;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace BehaviourTree
 {
@@ -10,6 +13,15 @@ namespace BehaviourTree
         {
             return nameof(RootNode);
         }
+        
+#if UNITY_EDITOR
+        public override void OnSave()
+        {
+            AssetDatabase.AddObjectToAsset(ChildNode, this);
+            ChildNode?.OnSave();
+        }
+#endif
+
         public void Tick(float dt)
         {
             // if (RunningNodeSet != null && RunningNodeSet.Count > 0)

@@ -1,22 +1,7 @@
 ﻿using System;
-using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace BehaviourTree
 {
-    [Serializable]
-    public class GuardNodeAlwaysTrue : GuardNode
-    {
-        public GuardNodeAlwaysTrue()
-        {
-            Condition = () => true;
-        }
-        public override string ToString()
-        {
-            return "Always True";
-        }
-    }
-    
     [Serializable]
     public class GuardNodeMoreThan : GuardNode
     {
@@ -25,7 +10,7 @@ namespace BehaviourTree
         [DrawnField]
         public int Threshold;
 
-        public GuardNodeMoreThan()
+        void OnEnable()
         {
             Condition = () => Value > Threshold;
         }

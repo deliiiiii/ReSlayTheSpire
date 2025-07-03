@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
-
+#endif
 
 public partial class ViewBase
 {
@@ -22,4 +22,3 @@ public partial class ViewBase
     }
 }
 
-#endif

@@ -35,7 +35,7 @@ namespace BehaviourTree
             {
                 if (port.input.node is not IACDNodeEditor<ACDNode> childNode)
                     return;
-                MyDebug.Log($"{NodeBase.NodeName} AddChild {childNode.NodeBase.NodeName}");
+                MyDebug.Log($"Editor : {NodeBase.NodeName} AddChild {childNode.NodeBase.NodeName}");
                 NodeBase.AddChild(childNode.NodeBase);
                 childNode.OnConstructTree();
             });
@@ -44,8 +44,8 @@ namespace BehaviourTree
             {
                 if (port.output.node is not GuardNodeEditor guardNodeEditor)
                     return;
-                NodeBase.GuardNode = guardNodeEditor.NodeBase;
-                MyDebug.Log($"{NodeBase.NodeName} AddGuard {guardNodeEditor.NodeBase.NodeName}");
+                MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guardNodeEditor.NodeBase.NodeName}");
+                NodeBase.SetGuard(guardNodeEditor.NodeBase);
             });
             
         }
