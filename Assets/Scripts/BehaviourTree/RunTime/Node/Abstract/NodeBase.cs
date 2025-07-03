@@ -12,8 +12,9 @@ public enum EState
     Running,
 }
 
+
 [Serializable]
-public abstract class NodeBase
+public abstract class NodeBase : ScriptableObject
 {
     public string NodeName;
 }

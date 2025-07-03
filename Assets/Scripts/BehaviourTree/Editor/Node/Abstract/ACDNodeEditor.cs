@@ -8,10 +8,6 @@ namespace BehaviourTree
 {
     public interface IACDNodeEditor<out T> : INodeBaseEditor<T> where T : ACDNode
     {
-        /// <summary>
-        /// 添加子节点到编辑器中
-        /// </summary>
-        // public void AddInEditorChildren();
     }
     
     public abstract class ACDNodeEditor<T> : NodeBaseEditor<T>, IACDNodeEditor<T> where T : ACDNode

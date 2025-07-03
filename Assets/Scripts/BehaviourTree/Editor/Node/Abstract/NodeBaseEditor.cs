@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourTree
@@ -140,7 +141,8 @@ namespace BehaviourTree
                 nodeType = nodeType.MakeGenericType(typeof(int));
             }
 
-            NodeBase = Activator.CreateInstance(nodeType) as T;
+            // NodeBase = Activator.CreateInstance(nodeType) as T;
+            NodeBase = ScriptableObject.CreateInstance(nodeType) as T;
             title = NodeBase.NodeName = nodeType.Name;
             DrawNodeField();
         }

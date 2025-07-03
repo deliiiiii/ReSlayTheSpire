@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Sirenix.OdinInspector;
+﻿using System;
 
 namespace BehaviourTree
 {
+    [Serializable]
     public class RootNode : NodeBase
     {
         public ACDNode ChildNode;

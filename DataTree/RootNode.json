@@ -1,30 +1,44 @@
 {
   "ChildNode": {
     "GuardNode": {
-      "Value": 98,
-      "Threshold": 14,
-      "NodeName": "GuardNodeMoreThan"
+      "Value": 34,
+      "Threshold": 15,
+      "NodeName": "GuardNodeMoreThan",
+      "name": "",
+      "hideFlags": 0
     },
     "NodeName": "SequenceNode",
     "ChildList": [
       {
-        "Content": "的点点滴滴大",
+        "Content": "顶顶顶顶",
         "DebugType": 0,
         "GuardNode": {
-          "NodeName": null
+          "NodeName": null,
+          "name": "",
+          "hideFlags": 0
         },
         "NodeName": "ActionNodeDebug",
-        "ChildList": null
+        "ChildList": null,
+        "name": "",
+        "hideFlags": 0
       },
       {
-        "DelaySeconds": 0.73,
+        "DelaySeconds": 42.0,
         "GuardNode": {
-          "NodeName": null
+          "NodeName": null,
+          "name": "",
+          "hideFlags": 0
         },
         "NodeName": "ActionNodeDelay",
-        "ChildList": null
+        "ChildList": null,
+        "name": "",
+        "hideFlags": 0
       }
-    ]
+    ],
+    "name": "",
+    "hideFlags": 0
   },
-  "NodeName": "RootNode"
+  "NodeName": "RootNode",
+  "name": "",
+  "hideFlags": 0
 }
