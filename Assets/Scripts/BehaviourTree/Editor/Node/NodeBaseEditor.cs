@@ -18,6 +18,7 @@ namespace BehaviourTree
         public IEnumerable<Edge> OutEdges { get; }
         public event Action<Type> OnNodeBaseChanged;
         void OnConstructTree();
+        void OnSave();
     }
     
     
@@ -60,6 +61,7 @@ namespace BehaviourTree
 
         protected abstract void DrawPort();
         public abstract void OnConstructTree();
+        public abstract void OnSave();
         
         protected virtual void DrawNodeField()
         {

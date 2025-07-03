@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Sirenix.Utilities;
 using UniRx;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,6 +14,9 @@ namespace BehaviourTree
 {
     public class BTGraphView : GraphView
     {
+        string s1 = "DataTree";
+        string s2 = nameof(RootNode);
+        RootNodeEditor rootEditor;
         public BTGraphView()
         {
             this.AddManipulator(new ContentZoomer());
@@ -63,16 +67,45 @@ namespace BehaviourTree
         }
         void ConstructTree()
         {
-            //找到图中第一个没有输入 但有输出的节点作为根节点
-            var rootNode = nodes.FirstOrDefault(node => node is RootNodeEditor);
-                    
-            if (rootNode is not RootNodeEditor rootNodeEditor)
+            rootEditor = nodes.FirstOrDefault(node => node is RootNodeEditor) as RootNodeEditor;
+            if (rootEditor == null)
             {
                 MyDebug.Log("No ROOT node found in the graph.");
                 return;
             }
-            TreeTest.CreateTree(rootNodeEditor.NodeBase);
-            rootNodeEditor.OnConstructTree();
+            rootEditor.OnConstructTree();
+            TreeTest.Root(rootEditor.NodeBase);
+        }
+
+        public RootNode Load()
+        {
+            var assetPath = $"Assets/{s1}/{s2}";
+            //TODO 运行时资源加载方式
+            var loadedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(assetPath);
+            if (loadedRoot != null)
+            {
+                TreeTest.Root = loadedRoot;
+                return loadedRoot;
+            }
+            Debug.LogError($"Failed to load RootNode from {assetPath}");
+            return null;
+        }
+
+        public void Save()
+        {
+            if (!EditorUtility.IsPersistent(TreeTest.Root))
+            {
+                AssetDatabase.DeleteAsset($"Assets/{s1}/{s2}.asset");
+                AssetDatabase.CreateAsset(TreeTest.Root, $"Assets/{s1}/{s2}.asset");
+                EditorUtility.SetDirty(TreeTest.Root);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+            
+            rootEditor.OnSave();
+            EditorUtility.SetDirty(TreeTest.Root);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
     }
 }

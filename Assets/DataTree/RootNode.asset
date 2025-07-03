@@ -1,21 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2171567290176282707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDebug
-  GuardNode: {fileID: 0}
-  Content: 1111111
-  DebugType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29,8 +13,8 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   NodeName: RootNode
-  ChildNode: {fileID: 7280504522313597913}
---- !u!114 &7108726126549511105
+  ChildNode: {fileID: 6611827070520434016}
+--- !u!114 &4701717956894242873
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -39,13 +23,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c29e081c393481abee61f8715aa5ae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeName: ActionNodeDelay
-  GuardNode: {fileID: 0}
-  DelaySeconds: 2.01
---- !u!114 &7280504522313597913
+  NodeName: 
+--- !u!114 &6611827070520434016
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,19 +40,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeName: SelectorNode
-  GuardNode: {fileID: 8072038799100671513}
---- !u!114 &8072038799100671513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: GuardNodeMoreThan
-  Value: 101
-  Threshold: 33

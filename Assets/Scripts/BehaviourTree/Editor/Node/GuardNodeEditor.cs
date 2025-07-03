@@ -17,5 +17,9 @@ namespace BehaviourTree
         public override void OnConstructTree()
         {
         }
+        
+        public override void OnSave()
+        {
+        }
     }
 }

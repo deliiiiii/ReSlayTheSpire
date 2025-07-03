@@ -8,7 +8,7 @@ namespace BehaviourTree
         public override EState OnTick(float dt)
         {
             // curNode ??= childList.First;
-            curNode = ChildList.First;
+            curNode = ChildList?.First;
             while (curNode != null)
             {
                 var res = curNode.Value.Tick(dt);
@@ -20,7 +20,7 @@ namespace BehaviourTree
         }
         public override void OnFail()
         {
-            var fNode = ChildList.First;
+            var fNode = ChildList?.First;
             while (fNode != null)
             {
                 fNode.Value.OnFail();

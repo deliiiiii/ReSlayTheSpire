@@ -102,7 +102,7 @@ namespace BehaviourTree
                 }
             };
             toolbar.Add(spacer);
-            var addButton = new Button(() => TreeTest.Save("DataTree", nameof(RootNode)))
+            var addButton = new Button(view.Save)
             {
                 text = "Save Tree",
                 style =

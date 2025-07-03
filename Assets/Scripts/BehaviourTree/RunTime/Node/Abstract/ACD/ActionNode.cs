@@ -38,13 +38,6 @@ namespace BehaviourTree
             // MyDebug.LogError("ActionNode cannot have children.");
             return this;
         }
-        
-#if UNITY_EDITOR
-        public override void OnSave()
-        {
-            
-        }
-#endif
     }
 
     

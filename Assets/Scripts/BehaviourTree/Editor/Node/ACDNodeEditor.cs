@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using Sirenix.Utilities;
+using UnityEditor;
 using Direction = UnityEditor.Experimental.GraphView.Direction;
 
 namespace BehaviourTree
@@ -16,6 +18,16 @@ namespace BehaviourTree
         Port inputGuardPort;
         protected Port outputPort;
 
+        IEnumerable<IACDNodeEditor<ACDNode>> childsEditor => 
+            OutEdges
+                .Where(port => port.input.node is IACDNodeEditor<ACDNode>)
+                .Select(port => port.input.node as IACDNodeEditor<ACDNode>);
+        GuardNodeEditor guardEditor =>
+            InEdges
+                .Where(port => port.output.node is GuardNodeEditor)
+                .Select(port => port.output.node as GuardNodeEditor)
+                .FirstOrDefault();
+        
         protected override void DrawPort()
         {
             inputACDPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(IACDNodeEditor<ACDNode>));
@@ -31,23 +43,29 @@ namespace BehaviourTree
         
         public override void OnConstructTree()
         {
-            OutEdges.ForEach(port =>
+            NodeBase.ClearChildren();
+            childsEditor.ForEach(childEditor =>
             {
-                if (port.input.node is not IACDNodeEditor<ACDNode> childNode)
-                    return;
-                MyDebug.Log($"Editor : {NodeBase.NodeName} AddChild {childNode.NodeBase.NodeName}");
-                NodeBase.AddChild(childNode.NodeBase);
-                childNode.OnConstructTree();
+                MyDebug.Log($"Editor : {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
+                NodeBase.AddChild(childEditor.NodeBase);
+                childEditor.OnConstructTree();
             });
             
-            InEdges.ForEach(port =>
-            {
-                if (port.output.node is not GuardNodeEditor guardNodeEditor)
-                    return;
-                MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guardNodeEditor.NodeBase.NodeName}");
-                NodeBase.SetGuard(guardNodeEditor.NodeBase);
-            });
+            NodeBase.SetGuard(ACDNode.DefaultGuard);
+            MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guardEditor.NodeBase.NodeName}");
+            NodeBase.SetGuard(guardEditor.NodeBase);
             
         }
+        
+        public override void OnSave()
+        {
+            AssetDataBaseExtension.SafeAddSubAsset(guardEditor.NodeBase, this.NodeBase);
+            childsEditor.ForEach(childEditor =>
+            {
+                AssetDataBaseExtension.SafeAddSubAsset(childEditor.NodeBase, this.NodeBase);
+                childEditor.OnSave();
+            });
+        }
+        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Sirenix.Utilities;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using Direction = UnityEditor.Experimental.GraphView.Direction;
 
@@ -7,7 +8,15 @@ namespace BehaviourTree
 {
     public class RootNodeEditor : NodeBaseEditor<RootNode>
     {
-        Port outputPort; 
+        Port outputPort;
+        
+        IACDNodeEditor<ACDNode> childEditor =>
+            OutEdges
+                .Where(port => port.input.node is IACDNodeEditor<ACDNode>)
+                .Select(port => port.input.node as IACDNodeEditor<ACDNode>)
+                .FirstOrDefault();
+        
+        
         protected override void DrawPort()
         {
             outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
@@ -20,14 +29,19 @@ namespace BehaviourTree
 
         public override void OnConstructTree()
         {
-            OutEdges.ForEach(port =>
-            {
-                if (port.input.node is not IACDNodeEditor<ACDNode> childNode)
-                    return;
-                MyDebug.Log($"Root {NodeBase.NodeName} AddChild {childNode.NodeBase.NodeName}");
-                NodeBase.ChildNode = childNode.NodeBase;
-                childNode.OnConstructTree();
-            });
+            NodeBase.ChildNode = null;
+            if (childEditor == null)
+                return;
+            MyDebug.Log($"Root {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
+            NodeBase.ChildNode = childEditor.NodeBase;
+            childEditor.OnConstructTree();
+        }
+        public override void OnSave()
+        {
+            if (NodeBase.ChildNode == null)
+                return;
+            AssetDataBaseExtension.SafeAddSubAsset(NodeBase.ChildNode, this.NodeBase);
+            childEditor.OnSave();
         }
     }
 }
