@@ -18,6 +18,12 @@ namespace BehaviourTree
         string s2 = nameof(RootNode);
         string path => $"Assets/{s1}/{s2}.asset";
         RootNodeEditor rootEditor;
+
+        RootNode rootNode
+        {
+            get => TreeTest.Root;
+            set => TreeTest.Root = value;
+        }
         public BTGraphView()
         {
             this.AddManipulator(new ContentZoomer());
@@ -75,7 +81,7 @@ namespace BehaviourTree
                 return;
             }
             rootEditor.OnConstructTree();
-            TreeTest.Root = rootEditor.NodeBase;
+            rootNode = rootEditor.NodeBase;
         }
 
         public RootNode Load()
@@ -84,7 +90,7 @@ namespace BehaviourTree
             var loadedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(path);
             if (loadedRoot != null)
             {
-                TreeTest.Root = loadedRoot;
+                rootNode = loadedRoot;
                 return loadedRoot;
             }
             Debug.LogError($"Failed to load RootNode from {path}");
@@ -98,12 +104,14 @@ namespace BehaviourTree
                 MyDebug.LogError("No RootNodeEditor ... cannot save the tree.");
                 return;
             }
-            if (!EditorUtility.IsPersistent(TreeTest.Root))
-            // if(AssetDatabase.LoadAssetAtPath<RootNode>(path) != null)
+
+            var savedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(path);
+            if (savedRoot == null || !EditorUtility.IsPersistent(rootNode))
             {
-                AssetDatabase.DeleteAsset(path);
-                AssetDatabase.CreateAsset(TreeTest.Root, path);
-                EditorUtility.SetDirty(TreeTest.Root);
+                if(AssetDatabase.LoadAssetAtPath<RootNode>(path))
+                    AssetDatabase.DeleteAsset(path);
+                AssetDatabase.CreateAsset(rootNode, path);
+                EditorUtility.SetDirty(rootNode);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
@@ -111,15 +119,15 @@ namespace BehaviourTree
             {
                 AssetDatabase.LoadAllAssetRepresentationsAtPath(path).ForEach(ass =>
                 {
-                    if (ass == TreeTest.Root)
+                    if (ass == rootNode)
                         return;
-                    UnityEngine.Object.DestroyImmediate(ass, true);
+                    AssetDatabase.RemoveObjectFromAsset(ass);
                 });
             }
           
             
             rootEditor.OnSave();
-            EditorUtility.SetDirty(TreeTest.Root);
+            EditorUtility.SetDirty(rootNode);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
