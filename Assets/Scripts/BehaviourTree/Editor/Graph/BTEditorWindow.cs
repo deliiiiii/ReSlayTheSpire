@@ -40,7 +40,6 @@ namespace BehaviourTree
         void ConstructGraph()
         {
             view = new BTGraphView();
-            view.graphViewChanged = view.OnGraphViewChanged;
             view.StretchToParentSize();
             rootVisualElement.Add(view);
         }
@@ -58,19 +57,19 @@ namespace BehaviourTree
                 // abstractNodeEditorType: ActionNodeEditor or CompositeNodeEditor or DecoratorNodeEditor ...
                 .ForEach(abstractNodeEditorType =>
                 {
-                    DropDownFieldDataCache.DDDic[abstractNodeEditorType] = new List<Type>();
+                    TypeCache.EditorToSubNodeDic[abstractNodeEditorType] = new List<Type>();
                     var tBaseType = abstractNodeEditorType.BaseType!.GetGenericArguments()[0];
                     var tSubTypes = tBaseType.SubType();
                     if (!tSubTypes.Any())
                     {
-                        DropDownFieldDataCache.DDDic[abstractNodeEditorType].Add(tBaseType);
+                        TypeCache.EditorToSubNodeDic[abstractNodeEditorType].Add(tBaseType);
                     }
                     else
                     {
                         tSubTypes.ForEach(tSubType =>
                         {
                             //TODO 确保每个RT都有一个对应的Editor吗。好像不用
-                            DropDownFieldDataCache.DDDic[abstractNodeEditorType].Add(tSubType);
+                            TypeCache.EditorToSubNodeDic[abstractNodeEditorType].Add(tSubType);
                         });
                     }
                 });
@@ -85,23 +84,6 @@ namespace BehaviourTree
             }
             rootVisualElement.Add(toolbar);
             
-            toolbar.Add(new VisualElement
-            {
-                style =
-                {
-                    flexDirection = FlexDirection.Row,
-                    height = 30
-                }
-            });
-            var spacer = new VisualElement
-            {
-                style =
-                {
-                    flexDirection = FlexDirection.Row,
-                    height = 30
-                }
-            };
-            toolbar.Add(spacer);
             var addButton = new Button(view.Save)
             {
                 text = "Save Tree",
@@ -114,8 +96,17 @@ namespace BehaviourTree
             };
             toolbar.Add(addButton);
             
-            
-
+            var loadButton = new Button(() => view.Load())
+            {
+                text = "Load Tree",
+                style =
+                {
+                    width = 200,
+                    height = 30,
+                    marginLeft = 10
+                }
+            };
+            toolbar.Add(loadButton);
         }
 
         static IEnumerable<Button> CollectButtons()
@@ -124,6 +115,7 @@ namespace BehaviourTree
             var baseType = typeof(NodeBaseEditor<>);
             var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
             nodeTypes
+                // 如 ActionNodeEditor, CompositeNodeEditor, DecoratorNodeEditor
                 .Where(type =>  
                     type.InheritsFrom(baseType)
                     && type != baseType
@@ -131,12 +123,12 @@ namespace BehaviourTree
                     // ||
                     // (type is GuardNodeEditor)
                     ) 
-                .ForEach(abstractNodeEditorType =>
+                .ForEach(nodeEditorConcrteType =>
                 {
                     // MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
-                    ret.Add(new Button(() => view.DrawNodeEditor(abstractNodeEditorType))
+                    ret.Add(new Button(() => view.DrawNodeEditor(nodeEditorConcrteType))
                     {
-                        text = abstractNodeEditorType.Name,
+                        text = nodeEditorConcrteType.Name,
                         style =
                         {
                             width = 200,
@@ -156,17 +148,5 @@ namespace BehaviourTree
         
     }
  
-    public static class ReflectionExtensions
-    {
-        // public static Type FirstSubType(this Type parentType)
-        // {
-        //     return parentType.SubType().FirstOrDefault();
-        // }
-        
-        public static IEnumerable<Type> SubType(this Type parentType)
-        {
-            return parentType.Assembly.GetTypes().Where(x => x.IsSubclassOf(parentType));
-        }
-        
-    }
+    
 }

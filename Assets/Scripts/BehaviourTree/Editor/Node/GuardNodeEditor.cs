@@ -14,12 +14,13 @@ namespace BehaviourTree
             outputContainer.Add(outputPort);
         }
 
-        public override void OnConstructTree()
+        public override void OnRefreshTree()
         {
         }
         
         public override void OnSave()
         {
+            base.OnSave();
         }
     }
 }

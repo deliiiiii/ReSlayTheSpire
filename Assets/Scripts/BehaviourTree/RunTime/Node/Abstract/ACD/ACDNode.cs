@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -10,7 +11,7 @@ namespace BehaviourTree
 {
     
 [Serializable]
-public abstract class ACDNode : NodeBase
+public abstract class ACDNode : NodeBase, IHasChild
 {
     #region Tick
     [CanBeNull] public GuardNode GuardNode;
@@ -66,8 +67,8 @@ public abstract class ACDNode : NodeBase
     #endregion
 
     #region Parent & Child & Guard
-    [JsonIgnore]
-    public ACDNode Parent { get; set; }
+
+    public IEnumerable<NodeBase> ChildNodes => ChildList.Select(x => x as NodeBase);
     protected ACDNode FirstChild => ChildList?.Last?.Value;
     [ShowInInspector][JsonProperty] public LinkedList<ACDNode> ChildList { get; set; }
     

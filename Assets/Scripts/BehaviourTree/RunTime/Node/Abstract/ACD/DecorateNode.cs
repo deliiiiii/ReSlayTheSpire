@@ -15,8 +15,6 @@ namespace BehaviourTree
                 return this;
             }
             ChildList ??= new LinkedList<ACDNode>();
-            child.Parent = this;
-            // child.Tree = Tree;
             ChildList.AddLast(child);
             return this;
         }

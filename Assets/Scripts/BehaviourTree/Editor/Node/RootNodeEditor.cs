@@ -16,7 +16,6 @@ namespace BehaviourTree
                 .Select(port => port.input.node as IACDNodeEditor<ACDNode>)
                 .FirstOrDefault();
         
-        
         protected override void DrawPort()
         {
             outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
@@ -27,22 +26,29 @@ namespace BehaviourTree
             
         }
 
-        public override void OnConstructTree()
+        public override void OnRefreshTree()
         {
             NodeBase.ChildNode = null;
             if (childEditor != null)
             {
                 MyDebug.Log($"Root {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
                 NodeBase.ChildNode = childEditor.NodeBase;
-                childEditor.OnConstructTree();
+                childEditor.OnRefreshTree();
             }
         }
         public override void OnSave()
         {
-            if (NodeBase.ChildNode == null)
-                return;
-            AssetDataBaseExtension.SafeAddSubAsset(NodeBase.ChildNode, this.NodeBase);
-            childEditor.OnSave();
+            base.OnSave();
+            if (NodeBase.ChildNode != null)
+            {
+                AssetDataBaseExtension.SafeAddSubAsset(NodeBase.ChildNode, this.NodeBase);
+                childEditor.OnSave();
+            }
+        }
+
+        public override void OnLoad(RootNode loadedRootNode)
+        {
+            base.OnLoad(loadedRootNode);
         }
     }
 }

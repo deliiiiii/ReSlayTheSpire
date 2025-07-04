@@ -18,7 +18,8 @@ namespace BehaviourTree
         public IEnumerable<Edge> InEdges { get; }
         public IEnumerable<Edge> OutEdges { get; }
         public event Action<Type> OnNodeBaseChanged;
-        void OnConstructTree();
+        /// 当树变化时调用，主要是从头开始构建NodeBase
+        void OnRefreshTree();
         void OnSave();
     }
     
@@ -44,7 +45,7 @@ namespace BehaviourTree
         /// 最终是实例类ActionNodeEditor在调用
         /// [ActionNodeDebug, ActionNodeDelay, ...]
         /// </summary>
-        List<Type> rtTypeList => DropDownFieldDataCache.DDDic[GetType()];
+        List<Type> rtTypeList => TypeCache.EditorToSubNodeDic[GetType()];
         public NodeBaseEditor()
         {
             if (rtTypeList.Count == 0)
@@ -62,8 +63,20 @@ namespace BehaviourTree
 
 
         protected abstract void DrawPort();
-        public abstract void OnConstructTree();
-        public abstract void OnSave();
+        public abstract void OnRefreshTree();
+
+        public virtual void OnSave()
+        {
+            NodeBase.RectInGraph = GetPosition();
+        }
+
+        // public virtual void OnLoad(T loadedNodeBase)
+        public virtual void OnLoad(T loadedNodeBase)
+        {
+            NodeBase = loadedNodeBase;
+            SetPosition(NodeBase.RectInGraph);
+        }
+        
         
         protected virtual void DrawNodeField()
         {
@@ -152,12 +165,5 @@ namespace BehaviourTree
         }
     }
 
-    public static class DropDownFieldDataCache
-    {
-        /// <summary>
-        /// 缓存每个NodeBaseEditor的DropDownFieldData
-        /// ActionNodeEditor, [ActionNodeDebug, ActionNodeDelay, ...]
-        /// </summary>
-        public static readonly Dictionary<Type, List<Type>> DDDic = new();
-    }
+    
 }

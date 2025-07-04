@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BehaviourTree
 {
@@ -12,10 +14,16 @@ public enum EState
     Running,
 }
 
+public interface IHasChild
+{
+    public IEnumerable<NodeBase> ChildNodes { get; }
+}
+
 [Serializable]
 public abstract class NodeBase : ScriptableObject
 {
     public string NodeName;
+    public Rect RectInGraph;
 }
 
 }

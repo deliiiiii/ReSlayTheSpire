@@ -1,49 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6516719455468210900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: GuardNodeMoreThan
-  Value: 65
-  Threshold: 0
---- !u!114 &-3121797086567919039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: SequenceNode
-  GuardNode: {fileID: -6516719455468210900}
---- !u!114 &-2072981655650076955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDelay
-  GuardNode: {fileID: 0}
-  DelaySeconds: 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,8 +13,54 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   NodeName: RootNode
-  ChildNode: {fileID: -3121797086567919039}
---- !u!114 &166987917011976852
+  RectInGraph:
+    serializedVersion: 2
+    x: 434
+    y: 71
+    width: 103
+    height: 77
+  ChildNode: {fileID: 1596831548047468003}
+--- !u!114 &1596831548047468003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: SequenceNode
+  RectInGraph:
+    serializedVersion: 2
+    x: 272
+    y: 180
+    width: 186
+    height: 122
+  GuardNode: {fileID: 0}
+--- !u!114 &7189846824395095602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: SelectorNode
+  RectInGraph:
+    serializedVersion: 2
+    x: 179
+    y: 331
+    width: 186
+    height: 122
+  GuardNode: {fileID: 0}
+--- !u!114 &8122683098722629212
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,53 +73,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeName: ActionNodeDebug
+  RectInGraph:
+    serializedVersion: 2
+    x: 179
+    y: 499
+    width: 151
+    height: 141
   GuardNode: {fileID: 0}
-  Content: aaa
-  DebugType: 0
---- !u!114 &683711103374179156
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDebug
-  GuardNode: {fileID: 0}
-  Content: ddd
-  DebugType: 0
---- !u!114 &2420109003154082816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDelay
-  GuardNode: {fileID: 0}
-  DelaySeconds: 2
---- !u!114 &4977945772958548687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDebug
-  GuardNode: {fileID: 0}
-  Content: sss
+  Content: 
   DebugType: 0

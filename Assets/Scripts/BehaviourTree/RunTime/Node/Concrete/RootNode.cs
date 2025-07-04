@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace BehaviourTree
 {
     [Serializable]
-    public class RootNode : NodeBase
+    public class RootNode : NodeBase, IHasChild
     {
+        public IEnumerable<NodeBase> ChildNodes => new[] { ChildNode };
         public ACDNode ChildNode;
         public override string ToString()
         {

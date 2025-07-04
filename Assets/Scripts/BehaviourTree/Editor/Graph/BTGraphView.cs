@@ -19,7 +19,7 @@ namespace BehaviourTree
         string path => $"Assets/{s1}/{s2}.asset";
         RootNodeEditor rootEditor;
 
-        RootNode rootNode
+        static RootNode rootNode
         {
             get => TreeTest.Root;
             set => TreeTest.Root = value;
@@ -30,6 +30,7 @@ namespace BehaviourTree
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+            graphViewChanged = OnGraphViewChanged;
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -55,12 +56,8 @@ namespace BehaviourTree
             node.RefreshExpandedState();
             AddElement(node);
         }
-        public void DrawNodeEditor<T>() where T : Node
-        {
-            DrawNodeEditor(typeof(T));
-        }
 
-        public GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+        GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             MyDebug.LogWarning($"OnGraphViewChanged");
             nodes.ForEach(node =>
@@ -69,10 +66,10 @@ namespace BehaviourTree
                     return;
                 nodeEditor.NodeBase.ClearChildren();
             });
-            Observable.NextFrame().Subscribe(_ => ConstructTree());
+            Observable.NextFrame().Subscribe(_ => RefreshTree());
             return graphViewChange;
         }
-        void ConstructTree()
+        void RefreshTree()
         {
             rootEditor = nodes.FirstOrDefault(node => node is RootNodeEditor) as RootNodeEditor;
             if (rootEditor == null)
@@ -80,23 +77,69 @@ namespace BehaviourTree
                 MyDebug.Log("No ROOT node found in the graph.");
                 return;
             }
-            rootEditor.OnConstructTree();
+            rootEditor.OnRefreshTree();
             rootNode = rootEditor.NodeBase;
         }
 
-        public RootNode Load()
+        void ClearGraph()
+        {
+            nodes.ForEach(RemoveElement);
+        }
+
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeConcrete"> 如ActionNodeDebug，具体Node类</param>
+        NodeBaseEditor<T> CreateNodeEditorOnLoad<T>(T nodeConcrete) where T : NodeBase
+        {
+            var nodeConcreteType = nodeConcrete.GetType();
+            // // SequenceNode -> CompositeNode, ActionNodeDebug -> ActionNode
+            // while (!nodeConcreteType!.IsAbstract)
+            // {
+            //     nodeConcreteType = nodeConcreteType.BaseType;
+            // }
+            if(Activator.CreateInstance(TypeCache.GetEditorBySubType(nodeConcreteType)) is not NodeBaseEditor<T> ins)
+            {
+                MyDebug.LogError($"Failed to create NodeBaseEditor for {nodeConcreteType.Name}");
+                return null;
+            }
+            MyDebug.Log($"CreateNodeEditorOnLoad: {ins.GetType().Name} for {nodeConcreteType.Name}");
+            
+            AddElement(ins);
+            ins.OnLoad(nodeConcrete);
+            return ins;
+        }
+        
+        void RecursivelyReadChildNodes(NodeBase nodeBase)
+        {
+            if (nodeBase is not IHasChild hasChild)
+                return;
+            foreach (var child in hasChild.ChildNodes)
+            {
+                CreateNodeEditorOnLoad(child);
+                RecursivelyReadChildNodes(child);
+            }
+        }
+        
+        public void Load()
         {
             //TODO 运行时资源加载方式
             var loadedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(path);
-            if (loadedRoot != null)
+            if (loadedRoot == null)
             {
-                rootNode = loadedRoot;
-                return loadedRoot;
+                Debug.LogError($"Failed to load RootNode from {path}");
+                return;
             }
-            Debug.LogError($"Failed to load RootNode from {path}");
-            return null;
+            
+            ClearGraph();
+            rootNode = loadedRoot;
+            rootEditor = CreateNodeEditorOnLoad(rootNode) as RootNodeEditor;
+            if (rootNode.ChildNode == null)
+                return;
+            RecursivelyReadChildNodes(rootNode);
         }
-
+        
         public void Save()
         {
             if (rootEditor == null)

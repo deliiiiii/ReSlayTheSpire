@@ -44,14 +44,14 @@ namespace BehaviourTree
             inputContainer.Add(inputGuardPort);
         }
         
-        public override void OnConstructTree()
+        public override void OnRefreshTree()
         {
             NodeBase.ClearChildren();
             childsEditor.ForEach(childEditor =>
             {
                 MyDebug.Log($"Editor : {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
                 NodeBase.AddChild(childEditor.NodeBase);
-                childEditor.OnConstructTree();
+                childEditor.OnRefreshTree();
             });
             
             NodeBase.GuardNode = null;
@@ -61,6 +61,7 @@ namespace BehaviourTree
         
         public override void OnSave()
         {
+            base.OnSave();
             AssetDataBaseExtension.SafeAddSubAsset(guard, this.NodeBase);
             childsEditor.ForEach(childEditor =>
             {

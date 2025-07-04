@@ -10,8 +10,6 @@ namespace BehaviourTree
         public override ACDNode AddChild(ACDNode child)
         {
             ChildList ??= new LinkedList<ACDNode>();
-            child.Parent = this;
-            // child.Tree = Tree;
             ChildList.AddLast(child);
             return this;
         }
