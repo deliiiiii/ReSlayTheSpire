@@ -4,6 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using Sirenix.Utilities;
 using UnityEngine.Serialization;
 
@@ -67,8 +68,11 @@ public abstract class ACDNode : NodeBase
     #endregion
 
     #region Parent & Child & Guard
-    protected ACDNode FirstChild => ChildList?.Last?.Value;
-    [ShowInInspector][JsonProperty][CanBeNull] public LinkedList<ACDNode> ChildList { get; set; }
+    protected ACDNode FirstChild => ChildLinkedList?.Last?.Value;
+    // [OdinSerialize]
+    [ShowInInspector]
+    protected LinkedList<ACDNode> ChildLinkedList => ChildList == null ? new() : new LinkedList<ACDNode>(ChildList);
+    public List<ACDNode> ChildList;
     
 #if UNITY_EDITOR
     public abstract ACDNode AddChild(ACDNode child);
@@ -81,10 +85,9 @@ public abstract class ACDNode : NodeBase
         }
         return false;
     }
-    public ACDNode ClearChildren()
+    public void ClearChildren()
     {
         ChildList?.Clear();
-        return this;
     }
     
 #endif

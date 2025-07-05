@@ -24,8 +24,8 @@ namespace BehaviourTree
                 MyDebug.LogError("InverseNode can only have one child.");
                 return this;
             }
-            ChildList ??= new LinkedList<ACDNode>();
-            ChildList.AddLast(child);
+            ChildList ??= new List<ACDNode>();
+            ChildList.Add(child);
             return this;
         }
     }

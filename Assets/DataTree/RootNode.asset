@@ -1,26 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7483967468202286215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDelay
-  RectInGraph:
-    serializedVersion: 2
-    x: 392.8
-    y: 383.2
-    width: 152.79999
-    height: 104
-  GuardNode: {fileID: 0}
-  DelaySeconds: 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,12 +15,12 @@ MonoBehaviour:
   NodeName: RootNode
   RectInGraph:
     serializedVersion: 2
-    x: 290.4
-    y: 121.59999
-    width: 88.80002
-    height: 61.600006
-  ChildNode: {fileID: 5986161184078361458}
---- !u!114 &1859421357895190657
+    x: 351.2
+    y: 112
+    width: 88.79999
+    height: 61.59999
+  ChildNode: {fileID: 2364592944092572565}
+--- !u!114 &448196635918326878
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,14 +35,15 @@ MonoBehaviour:
   NodeName: ActionNodeDebug
   RectInGraph:
     serializedVersion: 2
-    x: 976.8
-    y: 383.2
-    width: 167.20001
+    x: 371.2
+    y: 382.40002
+    width: 146.39996
     height: 104
   GuardNode: {fileID: 0}
-  Content: EEE
+  ChildList: []
+  Content: 
   DebugType: 0
---- !u!114 &2031336984042232887
+--- !u!114 &2100502110130465464
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -72,42 +52,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
+  m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeName: ActionNodeDebug
+  NodeName: GuardNodeMoreThan
   RectInGraph:
     serializedVersion: 2
-    x: 594.4
-    y: 383.2
-    width: 171.19995
-    height: 104
-  GuardNode: {fileID: 0}
-  Content: DDD
-  DebugType: 0
---- !u!114 &5931751832952021353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDebug
-  RectInGraph:
-    serializedVersion: 2
-    x: 1220.8
-    y: 383.2
-    width: 168.79993
-    height: 104
-  GuardNode: {fileID: 0}
-  Content: AAA
-  DebugType: 0
---- !u!114 &5986161184078361458
+    x: 155.2
+    y: 124.8
+    width: 152.8
+    height: 98.399994
+  Value: 0
+  Threshold: 0
+--- !u!114 &2364592944092572565
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,12 +79,15 @@ MonoBehaviour:
   NodeName: SequenceNode
   RectInGraph:
     serializedVersion: 2
-    x: 311.2
-    y: 212.8
+    x: 324.8
+    y: 239.2
     width: 192.79999
     height: 85.600006
-  GuardNode: {fileID: 0}
---- !u!114 &7358224653850609657
+  GuardNode: {fileID: 2100502110130465464}
+  ChildList:
+  - {fileID: 5402893639192700443}
+  - {fileID: 448196635918326878}
+--- !u!114 &5402893639192700443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,9 +102,10 @@ MonoBehaviour:
   NodeName: ActionNodeDelay
   RectInGraph:
     serializedVersion: 2
-    x: 788
-    y: 383.2
-    width: 152.79999
+    x: 167.2
+    y: 402.40002
+    width: 171.2
     height: 104
   GuardNode: {fileID: 0}
-  DelaySeconds: 3
+  ChildList: []
+  DelaySeconds: 1.78

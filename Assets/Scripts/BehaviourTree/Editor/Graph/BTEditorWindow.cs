@@ -76,6 +76,7 @@ namespace BehaviourTree
                     ret.Add(new Button(() => view.DrawNodeEditor(nodeEditorConcreteType))
                     {
                         text = nodeEditorConcreteType.Name,
+                        
                         style =
                         {
                             width = 200,
@@ -84,7 +85,6 @@ namespace BehaviourTree
                         }
                     });
                 });
-            
             return ret;
         }
     }

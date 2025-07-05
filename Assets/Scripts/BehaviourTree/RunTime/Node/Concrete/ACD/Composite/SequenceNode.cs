@@ -17,7 +17,7 @@ namespace BehaviourTree
             }
             else
             {
-                curNode = ChildList?.First;
+                curNode = ChildLinkedList?.First;
             }
             
             while (curNode != null)
@@ -39,7 +39,7 @@ namespace BehaviourTree
         }
         public override void OnFail()
         {
-            var fNode = ChildList?.First;
+            var fNode = ChildLinkedList?.First;
             while (fNode != null)
             {
                 fNode.Value.OnFail();

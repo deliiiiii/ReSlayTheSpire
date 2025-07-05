@@ -174,7 +174,7 @@ namespace BehaviourTree
             CreateChildNodeEditors(rootEditor, rootNode);
         }
         
-        public void Save()
+        void Save()
         {
             // if (rootEditor == null)
             // {
@@ -201,7 +201,6 @@ namespace BehaviourTree
                 // }
             }
             
-            EditorUtility.SetDirty(rootNode);
             rootEditor.OnSave();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

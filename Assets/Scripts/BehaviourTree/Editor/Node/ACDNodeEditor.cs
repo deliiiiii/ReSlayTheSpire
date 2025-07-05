@@ -80,6 +80,7 @@ namespace BehaviourTree
         {
             base.OnSave();
             AssetDataBaseExtension.SafeAddSubAsset(guard, this.NodeBase);
+            guardEditor?.OnSave();
             childsEditor.ForEach(childEditor =>
             {
                 AssetDataBaseExtension.SafeAddSubAsset(childEditor.NodeBase, this.NodeBase);

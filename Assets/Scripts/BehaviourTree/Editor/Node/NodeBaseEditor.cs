@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -82,6 +83,7 @@ namespace BehaviourTree
         
         public virtual void OnSave()
         {
+            EditorUtility.SetDirty(NodeBase);
             NodeBase.RectInGraph = GetPosition();
         }
         
