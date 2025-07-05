@@ -9,6 +9,10 @@ namespace BehaviourTree
 {
     public class DecorateNodeEditor : ACDNodeEditor<DecorateNode>
     {
+        public DecorateNodeEditor(DecorateNode nodeBase) : base(nodeBase)
+        {
+        }
+
         protected override void DrawPort()
         {
             base.DrawPort();

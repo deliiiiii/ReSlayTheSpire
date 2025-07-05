@@ -4,6 +4,10 @@ namespace BehaviourTree
 {
     public class GuardNodeEditor : NodeBaseEditor<GuardNode>
     {
+        public GuardNodeEditor(GuardNode nodeBase) : base(nodeBase)
+        {
+        }
+     
         Port outputPort;
         protected override void DrawPort()
         {
@@ -18,9 +22,5 @@ namespace BehaviourTree
         {
         }
         
-        public override void OnSave()
-        {
-            base.OnSave();
-        }
     }
 }

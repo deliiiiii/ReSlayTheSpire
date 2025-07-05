@@ -15,6 +15,12 @@ namespace BehaviourTree
     public abstract class ACDNodeEditor<T>
         : NodeBaseEditor<T>, IACDNodeEditor<T> where T : ACDNode
     {
+        protected ACDNodeEditor(T nodeBase) : base(nodeBase)
+        {
+        }
+        
+        
+        
         Port inputACDPort;
         Port inputGuardPort;
         protected Port outputPort;

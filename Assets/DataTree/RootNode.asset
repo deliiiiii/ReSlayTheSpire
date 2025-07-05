@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-1839081902493358344
+--- !u!114 &-7082683156588395543
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,19 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
+  m_Script: {fileID: 11500000, guid: cc923665e79a455d8362390bfbd8d0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeName: ActionNodeDebug
+  NodeName: InverseNode
   RectInGraph:
     serializedVersion: 2
-    x: 326.4
-    y: 401.6
-    width: 154.4
-    height: 140.00003
+    x: 160
+    y: 270.40002
+    width: 188.79999
+    height: 85.599976
   GuardNode: {fileID: 0}
-  Content: 
-  DebugType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37,49 +35,8 @@ MonoBehaviour:
   NodeName: RootNode
   RectInGraph:
     serializedVersion: 2
-    x: 268.8
-    y: 91.2
-    width: 106.400024
-    height: 97.600006
-  ChildNode: {fileID: 8709233437127622956}
---- !u!114 &4620695605704505052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDelay
-  RectInGraph:
-    serializedVersion: 2
-    x: 64.8
-    y: 443.2
-    width: 171.2
-    height: 140
-  GuardNode: {fileID: 0}
-  DelaySeconds: 4.76
---- !u!114 &8709233437127622956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: SelectorNode
-  RectInGraph:
-    serializedVersion: 2
-    x: 152
-    y: 247.99998
-    width: 192.79999
-    height: 121.600006
-  GuardNode: {fileID: 0}
+    x: 126.4
+    y: 127.2
+    width: 88.799995
+    height: 61.600006
+  ChildNode: {fileID: -7082683156588395543}

@@ -16,63 +16,20 @@ namespace BehaviourTree
         [MenuItem("BTGraph/Open Graph Editor")]
         public static void OnOpen()
         {
-            InitWindow();
-        }
-        void OnEnable()
-        {
-            InitDropDownDicCache();
-            ConstructGraph();
-            ConstructToolbar();
-        }
-        void OnDisable()
-        {
-            DestructGraph();
-        }
-
-        static void InitWindow()
-        {
             var window = GetWindow<BTEditorWindow>();
             window.titleContent = new GUIContent("BT Graph");
             window.minSize = new Vector2(600, 400);
             window.Show();
         }
-        
-        void ConstructGraph()
+        void OnEnable()
         {
             view = new BTGraphView();
             rootVisualElement.Add(view);
+            ConstructToolbar();
         }
-
-        static void InitDropDownDicCache()
+        void OnDisable()
         {
-            var baseType = typeof(NodeBaseEditor<>);
-            var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
-            nodeTypes
-                .Where(type =>  
-                    type.InheritsFrom(baseType)
-                    && type != baseType
-                    && !type.IsAbstract
-                    && (type.BaseType?.IsAbstract ?? false)
-                )
-                // nodeEditorType: ActionNodeEditor or CompositeNodeEditor or DecoratorNodeEditor ...
-                .ForEach(nodeEditorType =>
-                {
-                    
-                    TypeCache.EditorToSubNodeDic[nodeEditorType] = new List<Type>();
-                    var tBaseType = nodeEditorType.BaseType!.GetGenericArguments()[0];
-                    var tSubTypes = tBaseType.SubType();
-                    if (!tSubTypes.Any())
-                    {
-                        TypeCache.EditorToSubNodeDic[nodeEditorType].Add(tBaseType);
-                    }
-                    else
-                    {
-                        tSubTypes.ForEach(tSubType =>
-                        {
-                            TypeCache.EditorToSubNodeDic[nodeEditorType].Add(tSubType);
-                        });
-                    }
-                });
+            rootVisualElement.Remove(view);
         }
         
         void ConstructToolbar()
@@ -139,12 +96,6 @@ namespace BehaviourTree
             
             return ret;
         }
-        
-        void DestructGraph()
-        {
-            rootVisualElement.Remove(view);
-        }
-        
     }
  
     

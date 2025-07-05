@@ -8,8 +8,11 @@ namespace BehaviourTree
 {
     public class RootNodeEditor : NodeBaseEditor<RootNode>
     {
-        Port outputPort;
+        public RootNodeEditor(RootNode nodeBase) : base(nodeBase)
+        {
+        }
         
+        Port outputPort;
         IACDNodeEditor<ACDNode> childEditor =>
             OutEdges
                 .Where(port => port.input.node is IACDNodeEditor<ACDNode>)
@@ -39,16 +42,11 @@ namespace BehaviourTree
         public override void OnSave()
         {
             base.OnSave();
-            if (NodeBase.ChildNode != null)
+            if (childEditor != null)
             {
-                AssetDataBaseExtension.SafeAddSubAsset(NodeBase.ChildNode, this.NodeBase);
+                AssetDataBaseExtension.SafeAddSubAsset(childEditor.NodeBase, this.NodeBase);
                 childEditor.OnSave();
             }
-        }
-
-        public override void OnLoad()
-        {
-            base.OnLoad();
         }
     }
 }

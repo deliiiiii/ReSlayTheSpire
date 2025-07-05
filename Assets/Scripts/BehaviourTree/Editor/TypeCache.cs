@@ -11,7 +11,7 @@ namespace BehaviourTree
         /// </summary>
         public static readonly Dictionary<Type, List<Type>> EditorToSubNodeDic = new();
 
-        public static Type GetEditorBySubType(Type subType)
+        public static Type GetEditorByConcreteSubType(Type subType)
         {
             foreach (var kvp in EditorToSubNodeDic)
             {

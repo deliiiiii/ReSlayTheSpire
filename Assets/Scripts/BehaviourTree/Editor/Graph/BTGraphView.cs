@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using Sirenix.Utilities;
 using UniRx;
 using UnityEditor;
@@ -34,6 +33,7 @@ namespace BehaviourTree
             this.AddManipulator(new RectangleSelector());
             graphViewChanged = OnGraphViewChanged;
             this.StretchToParentSize();
+            InitDropDownDicCache();
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -44,20 +44,30 @@ namespace BehaviourTree
                     && port.portType.IsAssignableFrom(startPort.portType))
                 .ToList();
         }
-        
-        public void DrawNodeEditor(Type nodeEditorType)
+
+        public INodeBaseEditor<NodeBase> DrawNodeEditor(Type nodeEditorType, NodeBase nodeconcrete = null)
         {
-            //利用反射调用构造函数
-            var ins = Activator.CreateInstance(nodeEditorType);
-            var iNode = ins as INodeBaseEditor<NodeBase>;
-            iNode.OnNodeBaseChanged += _ => OnGraphViewChanged(default);
-            
-            var node = ins as Node;
-            node.SetPosition(new Rect(100, 100, 200, 150));
-            node.RefreshPorts();
-            node.expanded = true;
-            node.RefreshExpandedState();
-            AddElement(node);
+            // 利用反射调用构造函数, 参数列表恰好是T
+            var ins = nodeEditorType
+                .GetConstructor(nodeEditorType.BaseType!.GetGenericArguments())
+                ?.Invoke(new object[]{nodeconcrete})
+                as INodeBaseEditor<NodeBase>;
+            ins.OnNodeEditorChanged += _ => OnGraphViewChanged(default);
+            AddElement(ins as Node);
+            return ins;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeConcrete"> 如ActionNodeDebug，具体Node类</param>
+        INodeBaseEditor<NodeBase> CreateNodeEditorOnLoad<T>(T nodeConcrete) where T : NodeBase
+        {
+            var nodeConcreteType = nodeConcrete.GetType();
+            var nodeEditorType = TypeCache.GetEditorByConcreteSubType(nodeConcreteType);
+            var ret = DrawNodeEditor(nodeEditorType, nodeConcrete);
+            AddElement(ret as Node);
+            return ret;
         }
 
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
@@ -90,30 +100,7 @@ namespace BehaviourTree
         }
 
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="nodeConcrete"> 如ActionNodeDebug，具体Node类</param>
-        INodeBaseEditor<NodeBase> CreateNodeEditorOnLoad<T>(T nodeConcrete) where T : NodeBase
-        {
-            var nodeConcreteType = nodeConcrete.GetType();
-            // // SequenceNode -> CompositeNode, ActionNodeDebug -> ActionNode
-            // while (!nodeConcreteType!.IsAbstract)
-            // {
-            //     nodeConcreteType = nodeConcreteType.BaseType;
-            // }
-            if(Activator.CreateInstance(TypeCache.GetEditorBySubType(nodeConcreteType)) is not INodeBaseEditor<NodeBase> ins)
-            {
-                MyDebug.LogError($"Failed to create NodeBaseEditor for {nodeConcreteType.Name}");
-                return null;
-            }
-            MyDebug.Log($"CreateNodeEditorOnLoad: {ins.GetType().Name} for {nodeConcreteType.Name}");
-            
-            AddElement(ins as Node);
-            ins.NodeBase = nodeConcrete;
-            ins.OnLoad();
-            return ins;
-        }
+        
         
         void RecursivelyReadChildNodes(NodeBase nodeBase)
         {
@@ -165,7 +152,7 @@ namespace BehaviourTree
             {
                 AssetDatabase.LoadAllAssetRepresentationsAtPath(path).ForEach(ass =>
                 {
-                    if (ass == rtNootNode)
+                    if (ass == null || ass == rtNootNode)
                         return;
                     AssetDatabase.RemoveObjectFromAsset(ass);
                 });
@@ -176,6 +163,40 @@ namespace BehaviourTree
             EditorUtility.SetDirty(rtNootNode);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+        
+        
+        
+        static void InitDropDownDicCache()
+        {
+            var baseType = typeof(NodeBaseEditor<>);
+            var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
+            nodeTypes
+                .Where(type =>  
+                    type.InheritsFrom(baseType)
+                    && type != baseType
+                    && !type.IsAbstract
+                    && (type.BaseType?.IsAbstract ?? false)
+                )
+                // nodeEditorType: ActionNodeEditor or CompositeNodeEditor or DecoratorNodeEditor ...
+                .ForEach(nodeEditorType =>
+                {
+                    
+                    TypeCache.EditorToSubNodeDic[nodeEditorType] = new List<Type>();
+                    var tBaseType = nodeEditorType.BaseType!.GetGenericArguments()[0];
+                    var tSubTypes = tBaseType.SubType();
+                    if (!tSubTypes.Any())
+                    {
+                        TypeCache.EditorToSubNodeDic[nodeEditorType].Add(tBaseType);
+                    }
+                    else
+                    {
+                        tSubTypes.ForEach(tSubType =>
+                        {
+                            TypeCache.EditorToSubNodeDic[nodeEditorType].Add(tSubType);
+                        });
+                    }
+                });
         }
     }
 }

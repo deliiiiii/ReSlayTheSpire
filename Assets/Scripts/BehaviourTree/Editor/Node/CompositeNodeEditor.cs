@@ -5,6 +5,10 @@ namespace BehaviourTree
 {
     public class CompositeNodeEditor : ACDNodeEditor<CompositeNode>
     {
+        public CompositeNodeEditor(CompositeNode nodeBase) : base(nodeBase)
+        {
+        }
+
         protected override void DrawPort()
         {
             base.DrawPort();
