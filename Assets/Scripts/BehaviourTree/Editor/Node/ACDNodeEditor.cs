@@ -10,6 +10,17 @@ namespace BehaviourTree
 {
     public interface IACDNodeEditor<out T> : INodeBaseEditor<T> where T : ACDNode
     {
+        public Port InputACDPort { get; }
+        public Port InputGuardPort { get; }
+        Port OutputPort { get;}
+        public Edge ConnectChildNodeEditor(IACDNodeEditor<ACDNode> childNodeEditor)
+        {
+            return OutputPort.ConnectTo(childNodeEditor.InputACDPort);
+        }
+        public Edge ConnectGuardNodeEditor(GuardNodeEditor guardNodeEditor)
+        {
+            return InputGuardPort.ConnectTo(guardNodeEditor.outputPort);
+        }
     }
     
     public abstract class ACDNodeEditor<T>
@@ -21,9 +32,9 @@ namespace BehaviourTree
         
         
         
-        Port inputACDPort;
-        Port inputGuardPort;
-        protected Port outputPort;
+        public Port InputACDPort { get; protected set; }
+        public Port InputGuardPort{ get; protected set; }
+        public Port OutputPort { get; protected set; }
 
         IEnumerable<IACDNodeEditor<ACDNode>> childsEditor => 
             OutEdges
@@ -39,15 +50,15 @@ namespace BehaviourTree
         
         protected override void DrawPort()
         {
-            inputACDPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(IACDNodeEditor<ACDNode>));
-            inputACDPort.portName = "Parent ↑";
-            inputACDPort.tooltip = typeof(IACDNodeEditor<ACDNode>).ToString();
-            inputContainer.Add(inputACDPort);
+            InputACDPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(IACDNodeEditor<ACDNode>));
+            InputACDPort.portName = "Parent ↑";
+            InputACDPort.tooltip = typeof(IACDNodeEditor<ACDNode>).ToString();
+            inputContainer.Add(InputACDPort);
             
-            inputGuardPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(GuardNodeEditor));
-            inputGuardPort.portName = "Guarded By ↑";
-            inputGuardPort.tooltip = typeof(GuardNodeEditor).ToString();
-            inputContainer.Add(inputGuardPort);
+            InputGuardPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(GuardNodeEditor));
+            InputGuardPort.portName = "Guarded By ↑";
+            InputGuardPort.tooltip = typeof(GuardNodeEditor).ToString();
+            inputContainer.Add(InputGuardPort);
         }
         
         public override void OnRefreshTree()
@@ -55,13 +66,13 @@ namespace BehaviourTree
             NodeBase.ClearChildren();
             childsEditor.ForEach(childEditor =>
             {
-                MyDebug.Log($"Editor : {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
+                // MyDebug.Log($"Editor : {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
                 NodeBase.AddChild(childEditor.NodeBase);
                 childEditor.OnRefreshTree();
             });
             
             NodeBase.GuardNode = null;
-            MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guard?.NodeName}");
+            // MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guard?.NodeName ?? "null"}");
             NodeBase.GuardNode = guard;
         }
         
@@ -75,6 +86,5 @@ namespace BehaviourTree
                 childEditor.OnSave();
             });
         }
-        
     }
 }

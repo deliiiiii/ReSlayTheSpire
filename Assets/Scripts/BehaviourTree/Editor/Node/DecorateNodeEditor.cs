@@ -16,11 +16,11 @@ namespace BehaviourTree
         protected override void DrawPort()
         {
             base.DrawPort();
-            outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
+            OutputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
                 typeof(IACDNodeEditor<ACDNode>));
-            outputPort.portName = "Dec ↓";
-            outputPort.tooltip = typeof(IACDNodeEditor<ACDNode>).ToString();
-            outputContainer.Add(outputPort);
+            OutputPort.portName = "Dec ↓";
+            OutputPort.tooltip = typeof(IACDNodeEditor<ACDNode>).ToString();
+            outputContainer.Add(OutputPort);
         }
     }
 }

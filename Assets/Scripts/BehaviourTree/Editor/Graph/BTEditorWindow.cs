@@ -13,17 +13,32 @@ namespace BehaviourTree
     public class BTEditorWindow : EditorWindow
     {
         static BTGraphView view;
+        static BTEditorWindow window;
+        static RootNode openedRootNode;
         [MenuItem("BTGraph/Open Graph Editor")]
         public static void OnOpen()
         {
-            var window = GetWindow<BTEditorWindow>();
+            window = GetWindow<BTEditorWindow>();
             window.titleContent = new GUIContent("BT Graph");
             window.minSize = new Vector2(600, 400);
             window.Show();
         }
+        
+        [UnityEditor.Callbacks.OnOpenAsset(1)]
+        public static bool OnOpenAsset(int instanceID, int line)
+        {
+            var obj = EditorUtility.InstanceIDToObject(instanceID);
+            if (obj is not RootNode node)
+                return false; // 继续默认行为
+            openedRootNode = node;
+            OnOpen();
+            return true; // 表示已处理，阻止默认行为
+        }
         void OnEnable()
         {
             view = new BTGraphView();
+            BTGraphView.rootNode = openedRootNode;
+            view.Load();
             rootVisualElement.Add(view);
             ConstructToolbar();
         }
@@ -40,30 +55,6 @@ namespace BehaviourTree
                 toolbar.Add(btn);
             }
             rootVisualElement.Add(toolbar);
-            
-            var addButton = new Button(view.Save)
-            {
-                text = "Save Tree",
-                style =
-                {
-                    width = 200,
-                    height = 30,
-                    marginLeft = 10
-                }
-            };
-            toolbar.Add(addButton);
-            
-            var loadButton = new Button(() => view.Load())
-            {
-                text = "Load Tree",
-                style =
-                {
-                    width = 200,
-                    height = 30,
-                    marginLeft = 10
-                }
-            };
-            toolbar.Add(loadButton);
         }
 
         static IEnumerable<Button> CollectButtons()

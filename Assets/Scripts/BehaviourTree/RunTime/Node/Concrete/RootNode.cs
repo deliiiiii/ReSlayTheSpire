@@ -5,9 +5,8 @@ using System.Linq;
 namespace BehaviourTree
 {
     [Serializable]
-    public class RootNode : NodeBase, IHasChild
+    public class RootNode : NodeBase
     {
-        public IEnumerable<ACDNode> ChildNodes => ChildNode != null ? new[] { ChildNode } : Enumerable.Empty<ACDNode>();
         public ACDNode ChildNode;
         public override string ToString()
         {

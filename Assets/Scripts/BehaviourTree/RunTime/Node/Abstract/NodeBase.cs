@@ -14,11 +14,6 @@ public enum EState
     Running,
 }
 
-public interface IHasChild
-{
-    public IEnumerable<ACDNode> ChildNodes { get; }
-}
-
 [Serializable]
 public abstract class NodeBase : ScriptableObject
 {

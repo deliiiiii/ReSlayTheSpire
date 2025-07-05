@@ -8,7 +8,7 @@ namespace BehaviourTree
         {
         }
      
-        Port outputPort;
+        public Port outputPort;
         protected override void DrawPort()
         {
             outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,

@@ -34,7 +34,7 @@ namespace BehaviourTree
             NodeBase.ChildNode = null;
             if (childEditor != null)
             {
-                MyDebug.Log($"Root {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
+                // MyDebug.Log($"Root {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
                 NodeBase.ChildNode = childEditor.NodeBase;
                 childEditor.OnRefreshTree();
             }
@@ -47,6 +47,11 @@ namespace BehaviourTree
                 AssetDataBaseExtension.SafeAddSubAsset(childEditor.NodeBase, this.NodeBase);
                 childEditor.OnSave();
             }
+        }
+        
+        public Edge ConnectChildNodeEditor(IACDNodeEditor<ACDNode> childNodeEditor)
+        {
+            return outputPort.ConnectTo(childNodeEditor.InputACDPort);
         }
     }
 }

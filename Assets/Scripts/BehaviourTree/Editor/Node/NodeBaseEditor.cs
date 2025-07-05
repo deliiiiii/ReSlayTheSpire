@@ -21,17 +21,13 @@ namespace BehaviourTree
         /// 当树变化时调用，主要是从头开始构建NodeBase
         void OnRefreshTree();
         void OnSave();
-        void OnLoad();
     }
-    
-    
-
     
     
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
-        [ShowInInspector]
-        public T NodeBase { get; }
+        public T NodeBase { get; set; }
+
         public IEnumerable<Edge> InEdges => inputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
         public IEnumerable<Edge> OutEdges => outputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
         public event Action<Type> OnNodeEditorChanged;
@@ -39,7 +35,8 @@ namespace BehaviourTree
         DropdownField typeField;
         HashSet<VisualElement> fieldElementSet = new();
         
-        
+
+
         /// <summary>
         /// 最终是实例类ActionNodeEditor在调用
         /// [ActionNodeDebug, ActionNodeDelay, ...]
@@ -53,17 +50,11 @@ namespace BehaviourTree
                 MyDebug.LogError($"No {GetType().Name} types found in the assembly.");
                 return;
             }
-            MyDebug.Log($"{GetType().Name} types found in the assembly.");
+            // MyDebug.Log($"{GetType().Name} types found in the assembly.");
             
             if (nodeBase == null)
             {
-                var nodeType = rtTypeList[0];
-                if (nodeType.IsGenericType)
-                {
-                    nodeType = nodeType.MakeGenericType(typeof(int));
-                }
-                NodeBase = ScriptableObject.CreateInstance(nodeType) as T;
-                NodeBase.NodeName = nodeType.Name;
+                CreateNodeBase(rtTypeList[0]);
                 SetPosition(new Rect(100, 100, 200, 150));
             }
             else
@@ -72,33 +63,39 @@ namespace BehaviourTree
                 SetPosition(NodeBase.RectInGraph);
             }
             
+            OnNodeEditorChanged += CreateNodeBase;
+            OnNodeEditorChanged += _ => DrawNodeField();
             
-            DrawNodeField();
-            DrawTypeField();
             DrawPort();
+            DrawTypeField();
+            DrawNodeField();
             //隐藏名字栏
             titleContainer.style.display = DisplayStyle.None;
             
             RefreshPorts();
             expanded = true;
             RefreshExpandedState();
-            
         }
-
-
-
+        
         protected abstract void DrawPort();
         public abstract void OnRefreshTree();
         
-
         public virtual void OnSave()
         {
             NodeBase.RectInGraph = GetPosition();
         }
-        public virtual void OnLoad(){}
         
+        void CreateNodeBase(Type nodeType)
+        {
+            if (nodeType.IsGenericType)
+            {
+                nodeType = nodeType.MakeGenericType(typeof(int));
+            }
+            NodeBase = ScriptableObject.CreateInstance(nodeType) as T;
+            NodeBase.NodeName = nodeType.Name;
+        }
         
-        protected virtual void DrawNodeField()
+        void DrawNodeField()
         {
             foreach (var field in fieldElementSet)
             {
@@ -159,8 +156,6 @@ namespace BehaviourTree
                 fieldElementSet.Add(fieldElement);
             }
         }
-        
-        
         void DrawTypeField()
         {
             typeField = new DropdownField(rtTypeList.Select(x => x.Name).ToList(), NodeBase.GetType().Name);

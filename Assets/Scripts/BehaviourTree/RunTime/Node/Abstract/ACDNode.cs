@@ -11,7 +11,7 @@ namespace BehaviourTree
 {
     
 [Serializable]
-public abstract class ACDNode : NodeBase, IHasChild
+public abstract class ACDNode : NodeBase
 {
     #region Tick
     [CanBeNull] public GuardNode GuardNode;
@@ -67,10 +67,8 @@ public abstract class ACDNode : NodeBase, IHasChild
     #endregion
 
     #region Parent & Child & Guard
-
-    public IEnumerable<ACDNode> ChildNodes => ChildList ?? Enumerable.Empty<ACDNode>();
     protected ACDNode FirstChild => ChildList?.Last?.Value;
-    [ShowInInspector][JsonProperty] public LinkedList<ACDNode> ChildList { get; set; }
+    [ShowInInspector][JsonProperty][CanBeNull] public LinkedList<ACDNode> ChildList { get; set; }
     
 #if UNITY_EDITOR
     public abstract ACDNode AddChild(ACDNode child);
