@@ -24,7 +24,7 @@ public abstract class ACDNode : NodeBase
         if (!CheckGuardLocal())
         {
             OnFail();
-            return EState.Failed;
+            return State.Value = EState.Failed;
         }
         // var failedNode = CheckGuardGlobal();
         // if(failedNode != null)
@@ -37,9 +37,9 @@ public abstract class ACDNode : NodeBase
         //         curNode = curNode.Parent;
         //     } while (curNode != failedNode);
         // }
-        var tickResult = OnTick(dt);
-        MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
-        return tickResult;
+        State.Value = OnTick(dt);
+        // MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
+        return State.Value;
     }
     
     /// <summary>
@@ -48,7 +48,7 @@ public abstract class ACDNode : NodeBase
     /// <returns>Guard失败返回当前节点，否则返回null</returns>
     bool CheckGuardLocal()
     {
-        return !GuardNode || GuardNode.Condition();
+        return !GuardNode || GuardNode.Judge();
     }
     
     // /// <summary>

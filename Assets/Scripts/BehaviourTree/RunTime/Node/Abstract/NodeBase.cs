@@ -9,8 +9,8 @@ namespace BehaviourTree
 
 public enum EState
 {
-    Succeeded,
     Failed,
+    Succeeded,
     Running,
 }
 
@@ -19,6 +19,7 @@ public abstract class NodeBase : ScriptableObject
 {
     public string NodeName;
     public Rect RectInGraph;
+    public Observable<EState> State = new(EState.Failed);
 }
 
 }

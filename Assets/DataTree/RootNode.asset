@@ -1,5 +1,53 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4818438533959465347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: GuardNodeMoreThan
+  RectInGraph:
+    serializedVersion: 2
+    x: 70.4
+    y: 152.8
+    width: 160
+    height: 98.399994
+  State:
+    value: 1
+  Value: 44
+  Threshold: 23
+--- !u!114 &-3789731212438200998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: ActionNodeDebug
+  RectInGraph:
+    serializedVersion: 2
+    x: 964
+    y: 384
+    width: 172
+    height: 104
+  State:
+    value: 0
+  GuardNode: {fileID: 0}
+  ChildList: []
+  Content: fffrrr
+  DebugType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19,31 +67,10 @@ MonoBehaviour:
     y: 112
     width: 88.79999
     height: 61.59999
-  ChildNode: {fileID: 2364592944092572565}
---- !u!114 &448196635918326878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDebug
-  RectInGraph:
-    serializedVersion: 2
-    x: 371.2
-    y: 382.40002
-    width: 146.39996
-    height: 104
-  GuardNode: {fileID: 0}
-  ChildList: []
-  Content: 
-  DebugType: 0
---- !u!114 &2100502110130465464
+  State:
+    value: 2
+  ChildNode: {fileID: 2920156769245845029}
+--- !u!114 &556690289068730946
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,13 +85,15 @@ MonoBehaviour:
   NodeName: GuardNodeMoreThan
   RectInGraph:
     serializedVersion: 2
-    x: 155.2
-    y: 124.8
-    width: 152.8
+    x: 647.2
+    y: 140.8
+    width: 164.79999
     height: 98.399994
-  Value: 0
+  State:
+    value: 0
+  Value: -37
   Threshold: 0
---- !u!114 &2364592944092572565
+--- !u!114 &1170247588029832321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,21 +102,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
+  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeName: SequenceNode
+  NodeName: ActionNodeDebug
   RectInGraph:
     serializedVersion: 2
-    x: 324.8
-    y: 239.2
-    width: 192.79999
-    height: 85.600006
-  GuardNode: {fileID: 2100502110130465464}
-  ChildList:
-  - {fileID: 5402893639192700443}
-  - {fileID: 448196635918326878}
---- !u!114 &5402893639192700443
+    x: 460.8
+    y: 384
+    width: 186.40002
+    height: 104
+  State:
+    value: 0
+  GuardNode: {fileID: 0}
+  ChildList: []
+  Content: dddeee
+  DebugType: 0
+--- !u!114 &1776578450291620324
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,6 +137,59 @@ MonoBehaviour:
     y: 402.40002
     width: 171.2
     height: 104
-  GuardNode: {fileID: 0}
+  State:
+    value: 2
+  GuardNode: {fileID: -4818438533959465347}
   ChildList: []
-  DelaySeconds: 1.78
+  DelaySeconds: 0.54
+--- !u!114 &2920156769245845029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: SelectorNode
+  RectInGraph:
+    serializedVersion: 2
+    x: 360.8
+    y: 239.2
+    width: 192.79999
+    height: 85.600006
+  State:
+    value: 2
+  GuardNode: {fileID: 0}
+  ChildList:
+  - {fileID: 1776578450291620324}
+  - {fileID: 1170247588029832321}
+  - {fileID: 7827330719559471761}
+  - {fileID: -3789731212438200998}
+--- !u!114 &7827330719559471761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: ActionNodeDelay
+  RectInGraph:
+    serializedVersion: 2
+    x: 704.8
+    y: 371.2
+    width: 171.20001
+    height: 104
+  State:
+    value: 0
+  GuardNode: {fileID: 556690289068730946}
+  ChildList: []
+  DelaySeconds: 0.34

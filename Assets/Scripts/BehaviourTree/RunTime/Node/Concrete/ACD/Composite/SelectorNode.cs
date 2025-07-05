@@ -7,13 +7,24 @@ namespace BehaviourTree
     {
         public override EState OnTick(float dt)
         {
-            // curNode ??= childList.First;
-            curNode = ChildLinkedList?.First;
+            if(curNode == null)
+            {
+                ChildList.ForEach(child => child.State.Value = EState.Failed);
+                curNode = ChildLinkedList?.First;
+            }
+            
             while (curNode != null)
             {
                 var res = curNode.Value.Tick(dt);
-                if (res is EState.Running or EState.Succeeded)
+                if (res is EState.Running)
+                {
                     return res;
+                }
+                if (res is EState.Succeeded)
+                {
+                    curNode = null;
+                    return res;
+                }
                 curNode = curNode.Next;
             }
             return EState.Failed;

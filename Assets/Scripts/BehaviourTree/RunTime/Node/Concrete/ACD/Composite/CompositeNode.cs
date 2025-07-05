@@ -7,14 +7,15 @@ namespace BehaviourTree
     public class CompositeNode : ACDNode
     {
         protected LinkedListNode<ACDNode> curNode;
+        
         public override EState OnTick(float dt)
         {
-            return EState.Succeeded;
+            throw new NotImplementedException();
         }
 
         public override void OnFail()
         {
-            curNode = null;
+            throw new NotImplementedException();
         }
 
         public override ACDNode AddChild(ACDNode child)

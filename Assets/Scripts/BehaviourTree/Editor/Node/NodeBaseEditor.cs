@@ -83,7 +83,6 @@ namespace BehaviourTree
         
         public virtual void OnSave()
         {
-            EditorUtility.SetDirty(NodeBase);
             NodeBase.RectInGraph = GetPosition();
         }
         
@@ -96,15 +95,27 @@ namespace BehaviourTree
             NodeBase = ScriptableObject.CreateInstance(nodeType) as T;
             NodeBase.NodeName = nodeType.Name;
         }
-        
+
+        readonly Dictionary<EState, Color> tickStateColorDic = new()
+        {
+            { EState.Running, Color.cyan },
+            { EState.Succeeded, Color.green },
+            { EState.Failed, Color.red }
+        };
         void DrawNodeField()
         {
+            style.backgroundColor = tickStateColorDic[NodeBase.State];
+            NodeBase.State.OnValueChangedAfter += evt =>
+            {
+                style.backgroundColor = tickStateColorDic[evt];
+            };
+            
             foreach (var field in fieldElementSet)
             {
                 extensionContainer.Remove(field);
             }
             fieldElementSet.Clear();
-
+            
             var fieldInfos = NodeBase.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)
                 .Where(f => f.GetCustomAttribute<DrawnFieldAttribute>() != null);
             foreach (var fieldInfo in fieldInfos)

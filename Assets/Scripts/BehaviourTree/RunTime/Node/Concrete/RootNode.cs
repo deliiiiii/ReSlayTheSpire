@@ -20,7 +20,7 @@ namespace BehaviourTree
             //     RunningNodeSet.ToArray()[^1].Tick(dt);
             //     return;
             // }
-            ChildNode?.Tick(dt);
+            State.Value = ChildNode?.Tick(dt) ?? EState.Failed;
         }
     }
 }
