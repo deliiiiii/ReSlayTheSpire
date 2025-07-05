@@ -11,7 +11,7 @@ namespace BehaviourTree
 {
     public interface INodeBaseEditor<out T> where T : NodeBase
     {
-        public T NodeBase { get; }
+        public T NodeBase { get; set; }
         public int? InEdgesCount { get; }
         public int? OutEdgesCount { get; }
         
@@ -21,6 +21,7 @@ namespace BehaviourTree
         /// 当树变化时调用，主要是从头开始构建NodeBase
         void OnRefreshTree();
         void OnSave();
+        void OnLoad();
     }
     
     
@@ -30,7 +31,7 @@ namespace BehaviourTree
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
         [ShowInInspector]
-        public T NodeBase { get; protected set; }
+        public T NodeBase { get; set; }
         public int? InEdgesCount => InEdges.Count();
         public int? OutEdgesCount => OutEdges.Count();
         public IEnumerable<Edge> InEdges => inputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
@@ -71,9 +72,8 @@ namespace BehaviourTree
         }
 
         // public virtual void OnLoad(T loadedNodeBase)
-        public virtual void OnLoad(T loadedNodeBase)
+        public virtual void OnLoad()
         {
-            NodeBase = loadedNodeBase;
             SetPosition(NodeBase.RectInGraph);
         }
         
@@ -157,8 +157,6 @@ namespace BehaviourTree
             {
                 nodeType = nodeType.MakeGenericType(typeof(int));
             }
-
-            // NodeBase = Activator.CreateInstance(nodeType) as T;
             NodeBase = ScriptableObject.CreateInstance(nodeType) as T;
             title = NodeBase.NodeName = nodeType.Name;
             DrawNodeField();

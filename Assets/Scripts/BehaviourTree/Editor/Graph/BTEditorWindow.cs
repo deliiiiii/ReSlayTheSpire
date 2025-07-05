@@ -40,7 +40,6 @@ namespace BehaviourTree
         void ConstructGraph()
         {
             view = new BTGraphView();
-            view.StretchToParentSize();
             rootVisualElement.Add(view);
         }
 
@@ -53,23 +52,24 @@ namespace BehaviourTree
                     type.InheritsFrom(baseType)
                     && type != baseType
                     && !type.IsAbstract
+                    && (type.BaseType?.IsAbstract ?? false)
                 )
-                // abstractNodeEditorType: ActionNodeEditor or CompositeNodeEditor or DecoratorNodeEditor ...
-                .ForEach(abstractNodeEditorType =>
+                // nodeEditorType: ActionNodeEditor or CompositeNodeEditor or DecoratorNodeEditor ...
+                .ForEach(nodeEditorType =>
                 {
-                    TypeCache.EditorToSubNodeDic[abstractNodeEditorType] = new List<Type>();
-                    var tBaseType = abstractNodeEditorType.BaseType!.GetGenericArguments()[0];
+                    
+                    TypeCache.EditorToSubNodeDic[nodeEditorType] = new List<Type>();
+                    var tBaseType = nodeEditorType.BaseType!.GetGenericArguments()[0];
                     var tSubTypes = tBaseType.SubType();
                     if (!tSubTypes.Any())
                     {
-                        TypeCache.EditorToSubNodeDic[abstractNodeEditorType].Add(tBaseType);
+                        TypeCache.EditorToSubNodeDic[nodeEditorType].Add(tBaseType);
                     }
                     else
                     {
                         tSubTypes.ForEach(tSubType =>
                         {
-                            //TODO 确保每个RT都有一个对应的Editor吗。好像不用
-                            TypeCache.EditorToSubNodeDic[abstractNodeEditorType].Add(tSubType);
+                            TypeCache.EditorToSubNodeDic[nodeEditorType].Add(tSubType);
                         });
                     }
                 });
@@ -115,20 +115,19 @@ namespace BehaviourTree
             var baseType = typeof(NodeBaseEditor<>);
             var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
             nodeTypes
-                // 如 ActionNodeEditor, CompositeNodeEditor, DecoratorNodeEditor
+                // ActionNodeEditor, CompositeNodeEditor, DecoratorNodeEditor, RootNodeEditor, GuardNodeEditor
                 .Where(type =>  
                     type.InheritsFrom(baseType)
                     && type != baseType
                     && !type.IsAbstract
-                    // ||
-                    // (type is GuardNodeEditor)
+                    && (type.BaseType?.IsAbstract ?? false)
                     ) 
-                .ForEach(nodeEditorConcrteType =>
+                .ForEach(nodeEditorConcreteType =>
                 {
                     // MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
-                    ret.Add(new Button(() => view.DrawNodeEditor(nodeEditorConcrteType))
+                    ret.Add(new Button(() => view.DrawNodeEditor(nodeEditorConcreteType))
                     {
-                        text = nodeEditorConcrteType.Name,
+                        text = nodeEditorConcreteType.Name,
                         style =
                         {
                             width = 200,

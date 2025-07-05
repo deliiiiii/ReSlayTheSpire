@@ -68,7 +68,7 @@ public abstract class ACDNode : NodeBase, IHasChild
 
     #region Parent & Child & Guard
 
-    public IEnumerable<NodeBase> ChildNodes => ChildList.Select(x => x as NodeBase);
+    public IEnumerable<ACDNode> ChildNodes => ChildList ?? Enumerable.Empty<ACDNode>();
     protected ACDNode FirstChild => ChildList?.Last?.Value;
     [ShowInInspector][JsonProperty] public LinkedList<ACDNode> ChildList { get; set; }
     

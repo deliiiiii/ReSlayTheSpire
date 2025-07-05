@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BehaviourTree
 {
     [Serializable]
     public class RootNode : NodeBase, IHasChild
     {
-        public IEnumerable<NodeBase> ChildNodes => new[] { ChildNode };
+        public IEnumerable<ACDNode> ChildNodes => ChildNode != null ? new[] { ChildNode } : Enumerable.Empty<ACDNode>();
         public ACDNode ChildNode;
         public override string ToString()
         {

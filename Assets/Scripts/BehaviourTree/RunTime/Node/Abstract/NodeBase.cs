@@ -16,7 +16,7 @@ public enum EState
 
 public interface IHasChild
 {
-    public IEnumerable<NodeBase> ChildNodes { get; }
+    public IEnumerable<ACDNode> ChildNodes { get; }
 }
 
 [Serializable]

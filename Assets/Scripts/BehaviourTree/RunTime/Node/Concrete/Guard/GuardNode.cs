@@ -3,7 +3,7 @@
 namespace BehaviourTree
 {
     [Serializable]
-    public abstract class GuardNode : NodeBase
+    public class GuardNode : NodeBase
     {
         [NonSerialized]
         public Func<bool> Condition;

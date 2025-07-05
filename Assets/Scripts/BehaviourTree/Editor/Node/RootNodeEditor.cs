@@ -46,9 +46,9 @@ namespace BehaviourTree
             }
         }
 
-        public override void OnLoad(RootNode loadedRootNode)
+        public override void OnLoad()
         {
-            base.OnLoad(loadedRootNode);
+            base.OnLoad();
         }
     }
 }

@@ -19,11 +19,13 @@ namespace BehaviourTree
         string path => $"Assets/{s1}/{s2}.asset";
         RootNodeEditor rootEditor;
 
-        static RootNode rootNode
+        static RootNode rtNootNode
         {
             get => TreeTest.Root;
             set => TreeTest.Root = value;
         }
+
+        static RootNode tempRootnode;
         public BTGraphView()
         {
             this.AddManipulator(new ContentZoomer());
@@ -31,6 +33,7 @@ namespace BehaviourTree
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
             graphViewChanged = OnGraphViewChanged;
+            this.StretchToParentSize();
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -78,7 +81,7 @@ namespace BehaviourTree
                 return;
             }
             rootEditor.OnRefreshTree();
-            rootNode = rootEditor.NodeBase;
+            tempRootnode = rootEditor.NodeBase;
         }
 
         void ClearGraph()
@@ -91,7 +94,7 @@ namespace BehaviourTree
         /// 
         /// </summary>
         /// <param name="nodeConcrete"> 如ActionNodeDebug，具体Node类</param>
-        NodeBaseEditor<T> CreateNodeEditorOnLoad<T>(T nodeConcrete) where T : NodeBase
+        INodeBaseEditor<NodeBase> CreateNodeEditorOnLoad<T>(T nodeConcrete) where T : NodeBase
         {
             var nodeConcreteType = nodeConcrete.GetType();
             // // SequenceNode -> CompositeNode, ActionNodeDebug -> ActionNode
@@ -99,15 +102,16 @@ namespace BehaviourTree
             // {
             //     nodeConcreteType = nodeConcreteType.BaseType;
             // }
-            if(Activator.CreateInstance(TypeCache.GetEditorBySubType(nodeConcreteType)) is not NodeBaseEditor<T> ins)
+            if(Activator.CreateInstance(TypeCache.GetEditorBySubType(nodeConcreteType)) is not INodeBaseEditor<NodeBase> ins)
             {
                 MyDebug.LogError($"Failed to create NodeBaseEditor for {nodeConcreteType.Name}");
                 return null;
             }
             MyDebug.Log($"CreateNodeEditorOnLoad: {ins.GetType().Name} for {nodeConcreteType.Name}");
             
-            AddElement(ins);
-            ins.OnLoad(nodeConcrete);
+            AddElement(ins as Node);
+            ins.NodeBase = nodeConcrete;
+            ins.OnLoad();
             return ins;
         }
         
@@ -133,11 +137,9 @@ namespace BehaviourTree
             }
             
             ClearGraph();
-            rootNode = loadedRoot;
-            rootEditor = CreateNodeEditorOnLoad(rootNode) as RootNodeEditor;
-            if (rootNode.ChildNode == null)
-                return;
-            RecursivelyReadChildNodes(rootNode);
+            tempRootnode = rtNootNode = loadedRoot;
+            rootEditor = CreateNodeEditorOnLoad(rtNootNode) as RootNodeEditor;
+            RecursivelyReadChildNodes(rtNootNode);
         }
         
         public void Save()
@@ -148,13 +150,14 @@ namespace BehaviourTree
                 return;
             }
 
+            rtNootNode = tempRootnode;
             var savedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(path);
-            if (savedRoot == null || !EditorUtility.IsPersistent(rootNode))
+            if (savedRoot == null || !EditorUtility.IsPersistent(rtNootNode))
             {
                 if(AssetDatabase.LoadAssetAtPath<RootNode>(path))
                     AssetDatabase.DeleteAsset(path);
-                AssetDatabase.CreateAsset(rootNode, path);
-                EditorUtility.SetDirty(rootNode);
+                AssetDatabase.CreateAsset(rtNootNode, path);
+                EditorUtility.SetDirty(rtNootNode);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
@@ -162,7 +165,7 @@ namespace BehaviourTree
             {
                 AssetDatabase.LoadAllAssetRepresentationsAtPath(path).ForEach(ass =>
                 {
-                    if (ass == rootNode)
+                    if (ass == rtNootNode)
                         return;
                     AssetDatabase.RemoveObjectFromAsset(ass);
                 });
@@ -170,7 +173,7 @@ namespace BehaviourTree
           
             
             rootEditor.OnSave();
-            EditorUtility.SetDirty(rootNode);
+            EditorUtility.SetDirty(rtNootNode);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }

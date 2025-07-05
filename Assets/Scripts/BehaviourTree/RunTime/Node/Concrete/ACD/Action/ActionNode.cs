@@ -4,7 +4,7 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    public abstract class ActionNode : ACDNode
+    public class ActionNode : ACDNode
     {
         [NonSerialized]
         public Action OnEnter;

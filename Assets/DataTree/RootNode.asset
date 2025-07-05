@@ -1,5 +1,27 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-1839081902493358344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeName: ActionNodeDebug
+  RectInGraph:
+    serializedVersion: 2
+    x: 326.4
+    y: 401.6
+    width: 154.4
+    height: 140.00003
+  GuardNode: {fileID: 0}
+  Content: 
+  DebugType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15,12 +37,12 @@ MonoBehaviour:
   NodeName: RootNode
   RectInGraph:
     serializedVersion: 2
-    x: 434
-    y: 71
-    width: 103
-    height: 77
-  ChildNode: {fileID: 1596831548047468003}
---- !u!114 &1596831548047468003
+    x: 268.8
+    y: 91.2
+    width: 106.400024
+    height: 97.600006
+  ChildNode: {fileID: 8709233437127622956}
+--- !u!114 &4620695605704505052
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29,18 +51,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
+  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeName: SequenceNode
+  NodeName: ActionNodeDelay
   RectInGraph:
     serializedVersion: 2
-    x: 272
-    y: 180
-    width: 186
-    height: 122
+    x: 64.8
+    y: 443.2
+    width: 171.2
+    height: 140
   GuardNode: {fileID: 0}
---- !u!114 &7189846824395095602
+  DelaySeconds: 4.76
+--- !u!114 &8709233437127622956
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -55,30 +78,8 @@ MonoBehaviour:
   NodeName: SelectorNode
   RectInGraph:
     serializedVersion: 2
-    x: 179
-    y: 331
-    width: 186
-    height: 122
+    x: 152
+    y: 247.99998
+    width: 192.79999
+    height: 121.600006
   GuardNode: {fileID: 0}
---- !u!114 &8122683098722629212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NodeName: ActionNodeDebug
-  RectInGraph:
-    serializedVersion: 2
-    x: 179
-    y: 499
-    width: 151
-    height: 141
-  GuardNode: {fileID: 0}
-  Content: 
-  DebugType: 0

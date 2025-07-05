@@ -15,6 +15,5 @@ namespace BehaviourTree
         {
             return parentType.Assembly.GetTypes().Where(x => x.IsSubclassOf(parentType));
         }
-        
     }
 }
