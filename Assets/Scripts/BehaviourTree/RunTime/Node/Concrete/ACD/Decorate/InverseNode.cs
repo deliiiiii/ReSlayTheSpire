@@ -5,10 +5,12 @@ namespace BehaviourTree
     [Serializable]
     public class InverseNode : DecorateNode
     {
-        public override EState OnTick(float dt)
+        public override EState OnTickChild(float dt)
         {
-            // 1变成0 0变成1
-            return ~FirstChild?.OnTick(dt) ?? EState.Failed;
+            var ret = FirstChild?.Tick(dt);
+            if(ret == null)
+                return EState.Failed;
+            return ret == EState.Succeeded ? EState.Failed : EState.Succeeded;
         }
         public override void OnFail()
         {

@@ -5,7 +5,7 @@ namespace BehaviourTree
     [Serializable]
     public class SequenceNode : CompositeNode
     {
-        public override EState OnTick(float dt)
+        public override EState OnTickChild(float dt)
         {
             if (curNode != null)
             {

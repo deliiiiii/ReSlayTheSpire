@@ -7,7 +7,7 @@ namespace BehaviourTree
     [Serializable]
     public class DecorateNode : ACDNode
     {
-        public override EState OnTick(float dt)
+        public override EState OnTickChild(float dt)
         {
             throw new NotImplementedException();
         }

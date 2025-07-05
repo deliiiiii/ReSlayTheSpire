@@ -16,7 +16,7 @@ public abstract class ACDNode : NodeBase
 {
     #region Tick
     [CanBeNull] public GuardNode GuardNode;
-    public abstract EState OnTick(float dt);
+    public abstract EState OnTickChild(float dt);
     public abstract void OnFail();
 
     public EState Tick(float dt)
@@ -37,7 +37,7 @@ public abstract class ACDNode : NodeBase
         //         curNode = curNode.Parent;
         //     } while (curNode != failedNode);
         // }
-        State.Value = OnTick(dt);
+        State.Value = OnTickChild(dt);
         // MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
         return State.Value;
     }

@@ -13,7 +13,7 @@ namespace BehaviourTree
         bool isRunning;
         protected bool isFinished;
         
-        public override EState OnTick(float dt)
+        public override EState OnTickChild(float dt)
         {
             if (!isRunning)
             {
