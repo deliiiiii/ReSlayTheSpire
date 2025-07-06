@@ -7,15 +7,7 @@ namespace BehaviourTree
     {
         public override EState OnTickChild(float dt)
         {
-            if (curNode != null)
-            {
-                var res = curNode.Value.Tick(dt);
-                if (res == EState.Succeeded)
-                {
-                    curNode = curNode.Next;
-                }
-            }
-            else
+            if (curNode == null)
             {
                 OnResetState();
                 curNode = ChildLinkedList?.First;
