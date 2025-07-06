@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 177.60004
     height: 104
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 4191034783883139436}
   ChildList: []
   DelaySeconds: 2.718
@@ -92,7 +92,7 @@ MonoBehaviour:
     width: 192.00002
     height: 104
   State:
-    value: 2
+    value: 1
   GuardNode: {fileID: 0}
   ChildList: []
   DelaySeconds: 1.14514
@@ -110,12 +110,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 422.4
+    x: 448
     y: 363.2
-    width: 188.80002
+    width: 188.79999
     height: 85.600006
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -9089256654224069358}
@@ -157,9 +157,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 294.4
-    y: 76.8
-    width: 88.80002
+    x: 311.2
+    y: 49.600002
+    width: 88.79999
     height: 61.6
   State:
     value: 2
@@ -183,6 +183,6 @@ MonoBehaviour:
     width: 160
     height: 98.39996
   State:
-    value: 0
+    value: 1
   Value: 42
   Threshold: 24
