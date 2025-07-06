@@ -25,10 +25,6 @@ namespace BehaviourTree
         string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
         RootNodeEditor rootEditor;
         RootNode rootNode;
-        // static RootNode rtNootNode
-        // {
-        //     set => TreeTest.StaticRoot = value;
-        // }
         static void InitDropDownDicCache()
         {
             var baseType = typeof(NodeBaseEditor<>);
@@ -79,7 +75,7 @@ namespace BehaviourTree
             if (rootEditor != null && nodeEditorType == typeof(RootNodeEditor))
                 return rootEditor;
             
-            // 利用反射调用构造函数, 参数列表恰好是T
+            // 利用反射调用构造函数, 参数列表恰好是{T}
             var ins = nodeEditorType
                 .GetConstructor(nodeEditorType.BaseType!.GetGenericArguments())
                 ?.Invoke(new object[]{nodeConcrete})
@@ -88,24 +84,6 @@ namespace BehaviourTree
             
             var node = ins as Node;
             AddElement(node);
-            
-            // node.RegisterCallback<MouseDownEvent>(evt =>
-            // {
-            //     MyDebug.Log($"Node {node.title} clicked.");
-            //     // 单击
-            //     if (evt.clickCount == 1)
-            //     {
-            //         if (node.userData is UnityEngine.Object targetObj)
-            //         {
-            //             Debug.Log($"Target object: {targetObj.name}");
-            //             // 选中该对象，Inspector 窗口会自动显示
-            //             Selection.activeObject = targetObj;
-            //             // 高亮对象
-            //             EditorGUIUtility.PingObject(targetObj); 
-            //         }
-            //     }
-            // });
-            
             return ins;
         }
         
@@ -211,8 +189,6 @@ namespace BehaviourTree
             
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            
-            // rtNootNode = rootEditor.NodeBase;
         }
     }
 }

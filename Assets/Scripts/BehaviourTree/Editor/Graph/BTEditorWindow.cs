@@ -16,9 +16,8 @@ namespace BehaviourTree
         static BTEditorWindow curWindow;
         static RootNode curRootNode;
 
-        static Dictionary<int, BTEditorWindow> windowDic = new();
+        static readonly Dictionary<int, BTEditorWindow> windowDic = new();
         
-        // [MenuItem("BTGraph/Open Graph Editor")]
         [UnityEditor.Callbacks.OnOpenAsset(1)]
         public static bool OnOpenAsset(int instanceID, int line)
         {
@@ -37,7 +36,6 @@ namespace BehaviourTree
 
         void OnDisable()
         {
-            // 移除值为this的Dic的项
             var kvp = windowDic.FirstOrDefault(kvp => kvp.Value == this);
             windowDic.Remove(kvp.Key);
         }
@@ -45,9 +43,9 @@ namespace BehaviourTree
         static void InitWindow()
         {
             var curId = curRootNode.GetInstanceID();
-            if (windowDic.ContainsKey(curId))
+            if (windowDic.TryGetValue(curId, out var value))
             {
-                curWindow = windowDic[curId];
+                curWindow = value;
                 curWindow.Focus();
                 return;
             }

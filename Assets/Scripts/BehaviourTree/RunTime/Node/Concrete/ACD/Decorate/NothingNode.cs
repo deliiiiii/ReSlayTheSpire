@@ -10,9 +10,5 @@ namespace BehaviourTree
             var ret = FirstChild?.Tick(dt);
             return ret ?? EState.Succeeded;
         }
-        public override void OnFail()
-        {
-            FirstChild?.OnFail();
-        }
     }
 }

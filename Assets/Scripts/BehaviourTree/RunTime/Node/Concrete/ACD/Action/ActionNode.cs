@@ -11,7 +11,7 @@ namespace BehaviourTree
         [NonSerialized]
         public Action<float> OnContinue;
         bool isRunning;
-        protected bool isFinished;
+        protected bool IsFinished;
         
         public override EState OnTickChild(float dt)
         {
@@ -21,16 +21,16 @@ namespace BehaviourTree
                 isRunning = true;
             }
             OnContinue?.Invoke(dt);
-            if (isFinished)
+            if (IsFinished)
             {
-                isRunning = isFinished = false;
+                isRunning = IsFinished = false;
                 return EState.Succeeded;
             }
             return EState.Running;
         }
         public override void OnFail()
         {
-            isRunning = isFinished = false;
+            isRunning = IsFinished = false;
         }
 
         public override ACDNode AddChild(ACDNode child)

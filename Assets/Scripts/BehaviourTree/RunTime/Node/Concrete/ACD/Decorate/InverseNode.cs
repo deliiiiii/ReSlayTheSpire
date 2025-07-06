@@ -14,9 +14,5 @@ namespace BehaviourTree
                 ret == EState.Running ? EState.Running :
                 EState.Succeeded;
         }
-        public override void OnFail()
-        {
-            FirstChild?.OnFail();
-        }
     }
 }

@@ -12,7 +12,7 @@ namespace BehaviourTree
             OnContinue = _ =>
             {
                 MyDebug.Log($" pos {Go.transform.localPosition}");
-                isFinished = true;
+                IsFinished = true;
             };
         }
     }

@@ -16,7 +16,7 @@ namespace BehaviourTree
             OnContinue = dt =>
             {
                 Timer += dt;
-                isFinished = Timer >= DelaySeconds;
+                IsFinished = Timer >= DelaySeconds;
             };
         }
         public override string ToString()

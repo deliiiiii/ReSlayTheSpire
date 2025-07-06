@@ -29,14 +29,5 @@ namespace BehaviourTree
             }
             return EState.Failed;
         }
-        public override void OnFail()
-        {
-            var fNode = ChildLinkedList?.First;
-            while (fNode != null)
-            {
-                fNode.Value.OnFail();
-                fNode = fNode.Next;
-            }
-        }
     }
 }

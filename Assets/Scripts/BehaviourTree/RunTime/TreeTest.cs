@@ -14,6 +14,7 @@ namespace BehaviourTree
 
         void Start()
         {
+            Application.targetFrameRate = 10;
             Binder.Update(Tick);
         }
 

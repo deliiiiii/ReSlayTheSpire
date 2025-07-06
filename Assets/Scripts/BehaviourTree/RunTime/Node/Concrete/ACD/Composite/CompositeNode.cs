@@ -15,7 +15,12 @@ namespace BehaviourTree
 
         public override void OnFail()
         {
-            throw new NotImplementedException();
+            var fNode = ChildLinkedList?.First;
+            while (fNode != null)
+            {
+                fNode.Value.OnFail();
+                fNode = fNode.Next;
+            }
         }
 
         public override ACDNode AddChild(ACDNode child)

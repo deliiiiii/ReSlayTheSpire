@@ -14,7 +14,7 @@ namespace BehaviourTree
 
         public override void OnFail()
         {
-            throw new NotImplementedException();
+            FirstChild?.OnFail();
         }
 
         public override ACDNode AddChild(ACDNode child)

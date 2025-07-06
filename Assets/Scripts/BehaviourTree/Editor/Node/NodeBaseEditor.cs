@@ -28,7 +28,6 @@ namespace BehaviourTree
     
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     { 
-        PropertyTree _propertyTree;
         public T NodeBase { get; set; }
 
         public IEnumerable<Edge> InEdges => inputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
@@ -37,10 +36,9 @@ namespace BehaviourTree
         public event Action<Type> OnTypeChanged;
         
         DropdownField typeField;
-        HashSet<VisualElement> fieldElementSet = new();
+        // HashSet<VisualElement> fieldElementSet = new();
+        PropertyTree _propertyTree;
         
-
-
         /// <summary>
         /// 最终是实例类ActionNodeEditor在调用
         /// [ActionNodeDebug, ActionNodeDelay, ...]
@@ -112,77 +110,12 @@ namespace BehaviourTree
                 style.backgroundColor = tickStateColorDic[evt];
             };
             
-            
             _propertyTree = PropertyTree.Create(NodeBase);
             var container = new IMGUIContainer(() =>
             {
                 _propertyTree.Draw();
             });
             extensionContainer.Add(container);
-
-            return;
-            
-            
-            
-            
-            // foreach (var field in fieldElementSet)
-            // {
-            //     extensionContainer.Remove(field);
-            // }
-            // fieldElementSet.Clear();
-            //
-            // var fieldInfos = NodeBase.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)
-            //     .Where(f => f.GetCustomAttribute<DrawnFieldAttribute>() != null);
-            // foreach (var fieldInfo in fieldInfos)
-            // {
-            //     VisualElement fieldElement = null;
-            //
-            //     if (fieldInfo.FieldType == typeof(string))
-            //     {
-            //         var textField = new TextField(fieldInfo.Name);
-            //         textField.value = (string)fieldInfo.GetValue(NodeBase);
-            //         textField.RegisterValueChangedCallback(evt =>
-            //         {
-            //             fieldInfo.SetValue(NodeBase, evt.newValue);
-            //         });
-            //         fieldElement = textField;
-            //     }
-            //     else if (fieldInfo.FieldType == typeof(int))
-            //     {
-            //         var intField = new IntegerField(fieldInfo.Name);
-            //         intField.value = (int)fieldInfo.GetValue(NodeBase);
-            //         intField.RegisterValueChangedCallback(evt =>
-            //         {
-            //             fieldInfo.SetValue(NodeBase, evt.newValue);
-            //         });
-            //         fieldElement = intField;
-            //     }
-            //     else if (fieldInfo.FieldType == typeof(float))
-            //     {
-            //         var floatField = new FloatField(fieldInfo.Name);
-            //         floatField.value = (float)fieldInfo.GetValue(NodeBase);
-            //         floatField.RegisterValueChangedCallback(evt =>
-            //         {
-            //             fieldInfo.SetValue(NodeBase, evt.newValue);
-            //         });
-            //         fieldElement = floatField;
-            //     }
-            //     else if (fieldInfo.FieldType == typeof(bool))
-            //     {
-            //         var boolField = new Toggle(fieldInfo.Name);
-            //         boolField.value = (bool)fieldInfo.GetValue(NodeBase);
-            //         boolField.RegisterValueChangedCallback(evt =>
-            //         {
-            //             fieldInfo.SetValue(NodeBase, evt.newValue);
-            //         });
-            //         fieldElement = boolField;
-            //     }
-            //
-            //     if (fieldElement == null)
-            //         continue;
-            //     extensionContainer.Add(fieldElement);
-            //     fieldElementSet.Add(fieldElement);
-            // }
         }
         void DrawTypeField()
         {
