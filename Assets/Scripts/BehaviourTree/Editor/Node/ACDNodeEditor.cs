@@ -19,7 +19,7 @@ namespace BehaviourTree
         }
         public Edge ConnectGuardNodeEditor(GuardNodeEditor guardNodeEditor)
         {
-            return InputGuardPort.ConnectTo(guardNodeEditor.outputPort);
+            return InputGuardPort.ConnectTo(guardNodeEditor.OutputPort);
         }
     }
     

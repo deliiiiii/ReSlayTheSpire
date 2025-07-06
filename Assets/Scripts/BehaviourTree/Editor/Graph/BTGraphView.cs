@@ -21,15 +21,15 @@ namespace BehaviourTree
                     && port.portType.IsAssignableFrom(startPort.portType))
                 .ToList();
         }
-        
-        
-        string s1 = "DataTree";
-        string s2 = nameof(RootNode);
+
+
+        readonly string s1 = "DataTree";
+        readonly string s2 = nameof(RootNode);
         string path => $"Assets/{s1}/{s2}.asset";
 
         
         static RootNodeEditor rootEditor;
-        public static RootNode rootNode;
+        static RootNode rootNode;
         static RootNode rtNootNode
         {
             set => TreeTest.StaticRoot = value;
@@ -78,12 +78,12 @@ namespace BehaviourTree
             InitDropDownDicCache();
         }
         
-        public INodeBaseEditor<NodeBase> DrawNodeEditor(Type nodeEditorType, NodeBase nodeconcrete = null)
+        public INodeBaseEditor<NodeBase> DrawNodeEditor(Type nodeEditorType, NodeBase nodeConcrete = null)
         {
             // 利用反射调用构造函数, 参数列表恰好是T
             var ins = nodeEditorType
                 .GetConstructor(nodeEditorType.BaseType!.GetGenericArguments())
-                ?.Invoke(new object[]{nodeconcrete})
+                ?.Invoke(new object[]{nodeConcrete})
                 as INodeBaseEditor<NodeBase>;
             ins.OnNodeEditorChanged += _ => OnGraphViewChanged(default);
             
@@ -161,6 +161,10 @@ namespace BehaviourTree
             if (parentNodeBase is RootNode parentNode)
             {
                 var childNode = parentNode.ChildNode;
+                if (childNode == null)
+                {
+                    return;
+                }
                 var childNodeEditor = DrawNodeEditorWithConcrete(childNode) as IACDNodeEditor<ACDNode>;
                 var rootNodeEditor = parentNodeEditor as RootNodeEditor;
                 AddElement(rootNodeEditor.ConnectChildNodeEditor(childNodeEditor));
@@ -184,17 +188,22 @@ namespace BehaviourTree
             }
         }
         
-        public void Load()
+        // public void Load()
+        // {
+        //     //TODO 运行时资源加载方式
+        //     var loadedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(path);
+        //     if (loadedRoot == null)
+        //     {
+        //         Debug.LogError($"Failed to load RootNode from {path}");
+        //         return;
+        //     }
+        //     OnLoad(loadedRoot);
+        // }
+
+        public void Load(RootNode loadedRootNode)
         {
-            //TODO 运行时资源加载方式
-            var loadedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(path);
-            if (loadedRoot == null)
-            {
-                Debug.LogError($"Failed to load RootNode from {path}");
-                return;
-            }
             nodes.ForEach(RemoveElement);
-            rootNode = loadedRoot;
+            rootNode = loadedRootNode;
             rootEditor = DrawNodeEditorWithConcrete(rootNode) as RootNodeEditor;
             CreateChildNodeEditors(rootEditor, rootNode);
         }

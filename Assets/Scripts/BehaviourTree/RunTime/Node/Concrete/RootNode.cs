@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 namespace BehaviourTree
 {
     [Serializable]
+    [CreateAssetMenu(fileName = "RootNode", menuName = "BehaviourTree/RootNode")]
     public class RootNode : NodeBase
     {
         public ACDNode ChildNode;

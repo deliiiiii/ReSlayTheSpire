@@ -13,41 +13,59 @@ namespace BehaviourTree
     public class BTEditorWindow : EditorWindow
     {
         static BTGraphView view;
-        static BTEditorWindow window;
-        static RootNode openedRootNode;
-        [MenuItem("BTGraph/Open Graph Editor")]
-        public static void OnOpen()
-        {
-            window = GetWindow<BTEditorWindow>();
-            window.titleContent = new GUIContent("BT Graph");
-            window.minSize = new Vector2(600, 400);
-            window.Show();
-        }
+        static BTEditorWindow curWindow;
+        static RootNode curRootNode;
+
+        static Dictionary<int, BTEditorWindow> windowDic = new();
         
+        // [MenuItem("BTGraph/Open Graph Editor")]
         [UnityEditor.Callbacks.OnOpenAsset(1)]
         public static bool OnOpenAsset(int instanceID, int line)
         {
             var obj = EditorUtility.InstanceIDToObject(instanceID);
             if (obj is not RootNode node)
                 return false; // 继续默认行为
-            openedRootNode = node;
-            OnOpen();
+            curRootNode = node;
+            InitWindow();
             return true; // 表示已处理，阻止默认行为
         }
         void OnEnable()
         {
-            view = new BTGraphView();
-            BTGraphView.rootNode = openedRootNode;
-            view.Load();
-            rootVisualElement.Add(view);
-            ConstructToolbar();
+            InitView();
+            InitToolbar();
         }
+
         void OnDisable()
         {
-            rootVisualElement.Remove(view);
+            // 移除值为this的Dic的项
+            var kvp = windowDic.FirstOrDefault(kvp => kvp.Value == this);
+            windowDic.Remove(kvp.Key);
         }
-        
-        void ConstructToolbar()
+
+        static void InitWindow()
+        {
+            var curId = curRootNode.GetInstanceID();
+            if (windowDic.ContainsKey(curId))
+            {
+                curWindow = windowDic[curId];
+                curWindow.Focus();
+                return;
+            }
+            curWindow = CreateWindow<BTEditorWindow>();
+            curWindow.titleContent = new GUIContent(curRootNode.name);
+            curWindow.minSize = new Vector2(600, 400);
+            curWindow.Show();
+            windowDic.Add(curId, curWindow);
+        }
+
+        void InitView()
+        {
+            view = new BTGraphView();
+            view.Load(curRootNode);
+            rootVisualElement.Add(view);
+        }
+
+        void InitToolbar()
         {
             var toolbar = new Toolbar();
             foreach (var btn in CollectButtons())
@@ -56,7 +74,8 @@ namespace BehaviourTree
             }
             rootVisualElement.Add(toolbar);
         }
-
+        
+        
         static IEnumerable<Button> CollectButtons()
         {
             List<Button> ret = new();

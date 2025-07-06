@@ -8,14 +8,14 @@ namespace BehaviourTree
         {
         }
      
-        public Port outputPort;
+        public Port OutputPort;
         protected override void DrawPort()
         {
-            outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
+            OutputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
                 typeof(GuardNodeEditor));
-            outputPort.portName = "Guarding ↓";
+            OutputPort.portName = "Guarding ↓";
             // outputPort.tooltip = typeof(IACDNodeEditor<ACDNode>).ToString();
-            outputContainer.Add(outputPort);
+            outputContainer.Add(OutputPort);
         }
 
         public override void OnRefreshTree()
