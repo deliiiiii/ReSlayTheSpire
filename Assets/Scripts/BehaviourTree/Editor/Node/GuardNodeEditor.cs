@@ -14,7 +14,7 @@ namespace BehaviourTree
             OutputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
                 typeof(GuardNodeEditor));
             OutputPort.portName = "Guarding ↓";
-            // outputPort.tooltip = typeof(IACDNodeEditor<ACDNode>).ToString();
+            OutputPort.tooltip = typeof(GuardNodeEditor).ToString();
             outputContainer.Add(OutputPort);
         }
 

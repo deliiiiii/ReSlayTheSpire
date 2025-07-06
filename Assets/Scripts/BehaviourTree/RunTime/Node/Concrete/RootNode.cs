@@ -7,7 +7,7 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    [CreateAssetMenu(fileName = "RootNode", menuName = "BehaviourTree/RootNode")]
+    [CreateAssetMenu(fileName = nameof(RootNode), menuName = "BehaviourTree/" + nameof(RootNode))]
     public class RootNode : NodeBase
     {
         public ACDNode ChildNode;
@@ -18,11 +18,6 @@ namespace BehaviourTree
 
         public void Tick(float dt)
         {
-            // if (RunningNodeSet != null && RunningNodeSet.Count > 0)
-            // {
-            //     RunningNodeSet.ToArray()[^1].Tick(dt);
-            //     return;
-            // }
             State.Value = ChildNode?.Tick(dt) ?? EState.Failed;
         }
     }
