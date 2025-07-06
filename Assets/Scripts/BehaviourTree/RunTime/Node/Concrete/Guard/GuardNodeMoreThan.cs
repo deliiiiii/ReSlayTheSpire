@@ -14,13 +14,6 @@ namespace BehaviourTree
         {
             Condition = () => Value > Threshold;
         }
-        // public GuardBaseMoreThan(int value, int threshold)
-        // {
-        //     this.value = value;
-        //     this.threshold = threshold;
-        //     Condition = () => this.value > this.threshold;
-        // }
-
         public override string ToString()
         {
             return $"{Value} > {Threshold}";

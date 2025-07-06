@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
-  privateRoot: {fileID: 11400000, guid: b59d322d799075b40acc55492d72c8a4, type: 2}
+  root: {fileID: 11400000, guid: b59d322d799075b40acc55492d72c8a4, type: 2}
 --- !u!1 &345953031
 GameObject:
   m_ObjectHideFlags: 0

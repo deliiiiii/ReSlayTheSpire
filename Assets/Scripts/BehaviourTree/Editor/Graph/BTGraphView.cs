@@ -22,18 +22,13 @@ namespace BehaviourTree
                 .ToList();
         }
 
-
-        readonly string s1 = "DataTree";
-        readonly string s2 = nameof(RootNode);
-        string path => $"Assets/{s1}/{s2}.asset";
-
-        
-        static RootNodeEditor rootEditor;
-        static RootNode rootNode;
-        static RootNode rtNootNode
-        {
-            set => TreeTest.StaticRoot = value;
-        }
+        string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
+        RootNodeEditor rootEditor;
+        RootNode rootNode;
+        // static RootNode rtNootNode
+        // {
+        //     set => TreeTest.StaticRoot = value;
+        // }
         static void InitDropDownDicCache()
         {
             var baseType = typeof(NodeBaseEditor<>);
@@ -80,6 +75,10 @@ namespace BehaviourTree
         
         public INodeBaseEditor<NodeBase> DrawNodeEditor(Type nodeEditorType, NodeBase nodeConcrete = null)
         {
+            // 不允许创建多个RootNodeEditor
+            if (rootEditor != null && nodeEditorType == typeof(RootNodeEditor))
+                return rootEditor;
+            
             // 利用反射调用构造函数, 参数列表恰好是T
             var ins = nodeEditorType
                 .GetConstructor(nodeEditorType.BaseType!.GetGenericArguments())
@@ -87,9 +86,9 @@ namespace BehaviourTree
                 as INodeBaseEditor<NodeBase>;
             ins.OnNodeEditorChanged += _ => OnGraphViewChanged(default);
             
-            
             var node = ins as Node;
             AddElement(node);
+            
             // node.RegisterCallback<MouseDownEvent>(evt =>
             // {
             //     MyDebug.Log($"Node {node.title} clicked.");
@@ -130,20 +129,14 @@ namespace BehaviourTree
                     return;
                 nodeEditor.NodeBase.ClearChildren();
             });
-            // Observable
-            //     .Timer(TimeSpan.FromMilliseconds(1000))
-            //     .Subscribe(_ =>
-            // {
-            //     
-            // });
-            
-            
             RefreshTree();
             Save();
             return graphViewChange;
         }
         
-        // 更新节点连接状态。。。
+        /// <summary>
+        ///  更新节点连接状态。。。
+        /// </summary>
         void RefreshTree()
         {
             rootEditor = nodes.FirstOrDefault(node => node is RootNodeEditor) as RootNodeEditor;
@@ -187,19 +180,6 @@ namespace BehaviourTree
                 });
             }
         }
-        
-        // public void Load()
-        // {
-        //     //TODO 运行时资源加载方式
-        //     var loadedRoot = AssetDatabase.LoadAssetAtPath<RootNode>(path);
-        //     if (loadedRoot == null)
-        //     {
-        //         Debug.LogError($"Failed to load RootNode from {path}");
-        //         return;
-        //     }
-        //     OnLoad(loadedRoot);
-        // }
-
         public void Load(RootNode loadedRootNode)
         {
             nodes.ForEach(RemoveElement);
@@ -210,42 +190,31 @@ namespace BehaviourTree
         
         void Save()
         {
-            // 
-            // if (rootEditor == null)
-            // {
-            //     MyDebug.LogError("No RootNodeEditor ... cannot save the tree.");
-            //     return;
-            // }
-
+            var nodeBaseEditors = nodes
+                .OfType<INodeBaseEditor<NodeBase>>().ToList();
+            IEnumerable<NodeBase> nodeBases = nodeBaseEditors
+                .Select(nodeEditor => nodeEditor.NodeBase)
+                .ToList();
             if (AssetDatabase.LoadAssetAtPath<RootNode>(path))
             {
-                // // 说明已经有的存档是上次存的，和现在的图没关系，应该删除
-                // if (!EditorUtility.IsPersistent(rootNode))
-                // {
-                //     AssetDatabase.DeleteAsset(path);
-                //     AssetDatabase.CreateAsset(rootNode, path);
-                // }
-                // else
-                // {
-                    AssetDatabase.LoadAllAssetRepresentationsAtPath(path).ForEach(ass =>
-                    {
-                        if (ass == null || ass == rootNode)
-                            return;
-                        AssetDatabase.RemoveObjectFromAsset(ass);
-                    });
-                // }
+                AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
+                    .Where(ass => !nodeBases.Contains(ass as NodeBase))
+                    .ForEach(AssetDatabase.RemoveObjectFromAsset);
             }
             else
             {
                 AssetDatabase.CreateAsset(rootNode, path);
             }
             EditorUtility.SetDirty(rootNode);
+            nodeBaseEditors.ForEach(nodeEditor =>
+            {
+                AssetDataBaseExtension.SafeAddSubAsset(nodeEditor.NodeBase, rootNode);
+            });
             
-            rootEditor.OnSave();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             
-            rtNootNode = rootEditor.NodeBase;
+            // rtNootNode = rootEditor.NodeBase;
         }
     }
 }

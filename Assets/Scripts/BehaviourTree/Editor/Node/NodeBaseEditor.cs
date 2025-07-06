@@ -20,10 +20,8 @@ namespace BehaviourTree
         public IEnumerable<Edge> OutEdges { get; }
         Rect GetRect();
         public event Action<Type> OnNodeEditorChanged;
-        /// 当树变化时调用，主要是从头开始构建NodeBase
+        /// 当树变化时调用，主要是从头开始构建NodeBase的连接关系
         void OnRefreshTree();
-        void OnSave();
-
     }
     
     
@@ -82,9 +80,8 @@ namespace BehaviourTree
         }
         
         protected abstract void DrawPort();
-        public abstract void OnRefreshTree();
-        
-        public virtual void OnSave()
+
+        public virtual void OnRefreshTree()
         {
             NodeBase.RectInGraph = GetPosition();
         }
@@ -96,7 +93,7 @@ namespace BehaviourTree
                 nodeType = nodeType.MakeGenericType(typeof(int));
             }
             NodeBase = ScriptableObject.CreateInstance(nodeType) as T;
-            NodeBase.NodeName = nodeType.Name;
+            NodeBase.name = nodeType.Name;
         }
 
         readonly Dictionary<EState, Color> tickStateColorDic = new()

@@ -12,7 +12,7 @@ namespace BehaviourTree
 {
     public class BTEditorWindow : EditorWindow
     {
-        static BTGraphView view;
+        static BTGraphView curView;
         static BTEditorWindow curWindow;
         static RootNode curRootNode;
 
@@ -24,10 +24,10 @@ namespace BehaviourTree
         {
             var obj = EditorUtility.InstanceIDToObject(instanceID);
             if (obj is not RootNode node)
-                return false; // 继续默认行为
+                return false;
             curRootNode = node;
             InitWindow();
-            return true; // 表示已处理，阻止默认行为
+            return true;
         }
         void OnEnable()
         {
@@ -56,19 +56,20 @@ namespace BehaviourTree
             curWindow.minSize = new Vector2(600, 400);
             curWindow.Show();
             windowDic.Add(curId, curWindow);
+            
         }
 
         void InitView()
         {
-            view = new BTGraphView();
-            view.Load(curRootNode);
-            rootVisualElement.Add(view);
+            curView = new BTGraphView();
+            curView.Load(curRootNode);
+            rootVisualElement.Add(curView);
         }
 
         void InitToolbar()
         {
             var toolbar = new Toolbar();
-            foreach (var btn in CollectButtons())
+            foreach (var btn in CollectButtons(curView))
             {
                 toolbar.Add(btn);
             }
@@ -76,7 +77,7 @@ namespace BehaviourTree
         }
         
         
-        static IEnumerable<Button> CollectButtons()
+        static IEnumerable<Button> CollectButtons(BTGraphView fView)
         {
             List<Button> ret = new();
             var baseType = typeof(NodeBaseEditor<>);
@@ -92,7 +93,7 @@ namespace BehaviourTree
                 .ForEach(nodeEditorConcreteType =>
                 {
                     // MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
-                    ret.Add(new Button(() => view.DrawNodeEditor(nodeEditorConcreteType))
+                    ret.Add(new Button(() => fView.DrawNodeEditor(nodeEditorConcreteType))
                     {
                         text = nodeEditorConcreteType.Name,
                         

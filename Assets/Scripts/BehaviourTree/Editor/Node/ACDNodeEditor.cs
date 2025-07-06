@@ -29,9 +29,6 @@ namespace BehaviourTree
         protected ACDNodeEditor(T nodeBase) : base(nodeBase)
         {
         }
-        
-        
-        
         public Port InputACDPort { get; protected set; }
         public Port InputGuardPort{ get; protected set; }
         public Port OutputPort { get; protected set; }
@@ -63,8 +60,8 @@ namespace BehaviourTree
         
         public override void OnRefreshTree()
         {
+            base.OnRefreshTree();
             NodeBase.ClearChildren();
-            // RectInGraph
             childsEditor
                 .OrderBy(editor => editor.GetRect().x)
                 .ForEach(childEditor =>
@@ -74,21 +71,10 @@ namespace BehaviourTree
                     childEditor.OnRefreshTree();
                 });
             
-            NodeBase.GuardNode = null;
-            // MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guard?.NodeName ?? "null"}");
             NodeBase.GuardNode = guard;
+            guardEditor?.OnRefreshTree();
+            // MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guard?.NodeName ?? "null"}");
         }
         
-        public override void OnSave()
-        {
-            base.OnSave();
-            AssetDataBaseExtension.SafeAddSubAsset(guard, this.NodeBase);
-            guardEditor?.OnSave();
-            childsEditor.ForEach(childEditor =>
-            {
-                AssetDataBaseExtension.SafeAddSubAsset(childEditor.NodeBase, this.NodeBase);
-                childEditor.OnSave();
-            });
-        }
     }
 }

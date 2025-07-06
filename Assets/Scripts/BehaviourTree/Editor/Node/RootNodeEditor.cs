@@ -31,6 +31,7 @@ namespace BehaviourTree
 
         public override void OnRefreshTree()
         {
+            base.OnRefreshTree();
             NodeBase.ChildNode = null;
             if (childEditor != null)
             {
@@ -39,16 +40,6 @@ namespace BehaviourTree
                 childEditor.OnRefreshTree();
             }
         }
-        public override void OnSave()
-        {
-            base.OnSave();
-            if (childEditor != null)
-            {
-                AssetDataBaseExtension.SafeAddSubAsset(childEditor.NodeBase, this.NodeBase);
-                childEditor.OnSave();
-            }
-        }
-        
         public Edge ConnectChildNodeEditor(IACDNodeEditor<ACDNode> childNodeEditor)
         {
             return outputPort.ConnectTo(childNodeEditor.InputACDPort);

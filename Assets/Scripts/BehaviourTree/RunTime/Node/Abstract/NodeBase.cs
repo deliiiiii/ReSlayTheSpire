@@ -17,10 +17,9 @@ public enum EState
 [Serializable]
 public abstract class NodeBase : ScriptableObject
 {
-    public string NodeName;
+    public string NodeName => ToString();
     public Rect RectInGraph;
     public Observable<EState> State = new(EState.Failed);
-
 
     public virtual void OnResetState()
     {

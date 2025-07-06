@@ -7,7 +7,6 @@ namespace BehaviourTree
         public GuardNodeEditor(GuardNode nodeBase) : base(nodeBase)
         {
         }
-     
         public Port OutputPort;
         protected override void DrawPort()
         {
@@ -17,10 +16,5 @@ namespace BehaviourTree
             OutputPort.tooltip = typeof(GuardNodeEditor).ToString();
             outputContainer.Add(OutputPort);
         }
-
-        public override void OnRefreshTree()
-        {
-        }
-        
     }
 }
