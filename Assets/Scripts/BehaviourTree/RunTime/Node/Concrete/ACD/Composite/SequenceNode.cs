@@ -17,7 +17,7 @@ namespace BehaviourTree
             }
             else
             {
-                ChildList.ForEach(child => child.State.Value = EState.Failed);
+                OnResetState();
                 curNode = ChildLinkedList?.First;
             }
             

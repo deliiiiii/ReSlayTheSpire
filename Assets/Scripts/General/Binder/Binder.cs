@@ -23,7 +23,7 @@ public static class Binder
         return new BindDataState(state);
     }
     
-    public static BindDataUpdate Update(Action<float> act, EUpdatePri priority)
+    public static BindDataUpdate Update(Action<float> act, EUpdatePri priority = EUpdatePri.Default)
     {
         var ret = new BindDataUpdate(act, priority);
         if(!Updater.UpdateDic.ContainsKey(priority))

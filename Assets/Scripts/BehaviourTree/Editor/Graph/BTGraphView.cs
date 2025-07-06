@@ -11,7 +11,6 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
-    [CustomEditor(typeof(RootNode))]
     public class BTGraphView : GraphView
     {
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -33,8 +32,7 @@ namespace BehaviourTree
         public static RootNode rootNode;
         static RootNode rtNootNode
         {
-            get => TreeTest.Root;
-            set => TreeTest.Root = value;
+            set => TreeTest.StaticRoot = value;
         }
         static void InitDropDownDicCache()
         {
@@ -88,7 +86,27 @@ namespace BehaviourTree
                 ?.Invoke(new object[]{nodeconcrete})
                 as INodeBaseEditor<NodeBase>;
             ins.OnNodeEditorChanged += _ => OnGraphViewChanged(default);
-            AddElement(ins as Node);
+            
+            
+            var node = ins as Node;
+            AddElement(node);
+            // node.RegisterCallback<MouseDownEvent>(evt =>
+            // {
+            //     MyDebug.Log($"Node {node.title} clicked.");
+            //     // 单击
+            //     if (evt.clickCount == 1)
+            //     {
+            //         if (node.userData is UnityEngine.Object targetObj)
+            //         {
+            //             Debug.Log($"Target object: {targetObj.name}");
+            //             // 选中该对象，Inspector 窗口会自动显示
+            //             Selection.activeObject = targetObj;
+            //             // 高亮对象
+            //             EditorGUIUtility.PingObject(targetObj); 
+            //         }
+            //     }
+            // });
+            
             return ins;
         }
         
@@ -112,13 +130,20 @@ namespace BehaviourTree
                     return;
                 nodeEditor.NodeBase.ClearChildren();
             });
-            Observable.NextFrame().Subscribe(_ =>
-            {
-                RefreshTree();
-                Save();
-            });
+            // Observable
+            //     .Timer(TimeSpan.FromMilliseconds(1000))
+            //     .Subscribe(_ =>
+            // {
+            //     
+            // });
+            
+            
+            RefreshTree();
+            Save();
             return graphViewChange;
         }
+        
+        // 更新节点连接状态。。。
         void RefreshTree()
         {
             rootEditor = nodes.FirstOrDefault(node => node is RootNodeEditor) as RootNodeEditor;
@@ -176,6 +201,7 @@ namespace BehaviourTree
         
         void Save()
         {
+            // 
             // if (rootEditor == null)
             // {
             //     MyDebug.LogError("No RootNodeEditor ... cannot save the tree.");
@@ -200,6 +226,11 @@ namespace BehaviourTree
                     });
                 // }
             }
+            else
+            {
+                AssetDatabase.CreateAsset(rootNode, path);
+            }
+            EditorUtility.SetDirty(rootNode);
             
             rootEditor.OnSave();
             AssetDatabase.SaveAssets();

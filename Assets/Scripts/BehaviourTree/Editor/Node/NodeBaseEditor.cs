@@ -18,10 +18,12 @@ namespace BehaviourTree
         
         public IEnumerable<Edge> InEdges { get; }
         public IEnumerable<Edge> OutEdges { get; }
+        Rect GetRect();
         public event Action<Type> OnNodeEditorChanged;
         /// 当树变化时调用，主要是从头开始构建NodeBase
         void OnRefreshTree();
         void OnSave();
+
     }
     
     
@@ -31,6 +33,7 @@ namespace BehaviourTree
 
         public IEnumerable<Edge> InEdges => inputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
         public IEnumerable<Edge> OutEdges => outputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
+        public Rect GetRect() => GetPosition();
         public event Action<Type> OnNodeEditorChanged;
         
         DropdownField typeField;

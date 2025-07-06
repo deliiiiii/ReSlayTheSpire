@@ -20,6 +20,12 @@ public abstract class NodeBase : ScriptableObject
     public string NodeName;
     public Rect RectInGraph;
     public Observable<EState> State = new(EState.Failed);
+
+
+    public virtual void OnResetState()
+    {
+        State.Value = EState.Failed;
+    }
 }
 
 }

@@ -19,6 +19,7 @@ public class BindDataUpdate
 
 public enum EUpdatePri
 {
+    Default = -1,
     MainModel = 0,
     // P1 = 1,
     // P2 = 2,

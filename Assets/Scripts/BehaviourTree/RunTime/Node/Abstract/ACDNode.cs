@@ -19,6 +19,14 @@ public abstract class ACDNode : NodeBase
     public abstract EState OnTickChild(float dt);
     public abstract void OnFail();
 
+    public override void OnResetState()
+    {
+        base.OnResetState();
+        GuardNode?.OnResetState();
+        ChildList?.ForEach(child => child.OnResetState());
+        
+    }
+
     public EState Tick(float dt)
     {
         if (!CheckGuardLocal())

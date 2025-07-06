@@ -9,7 +9,7 @@ namespace BehaviourTree
         {
             var ret = FirstChild?.Tick(dt);
             if(ret == null)
-                return EState.Failed;
+                return EState.Succeeded;
             return ret == EState.Succeeded ? EState.Failed : EState.Succeeded;
         }
         public override void OnFail()

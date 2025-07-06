@@ -5,21 +5,22 @@ namespace BehaviourTree
 {
     public class TreeTest : Singleton<TreeTest>
     {
-        [ShowInInspector] RootNode privateRoot;
-        public static RootNode Root
+        [ShowInInspector][SerializeField] RootNode root;
+        public static RootNode StaticRoot
         {
-            get => Instance.privateRoot;
-            set => Instance.privateRoot = value;
+            get => Instance.root;
+            set => Instance.root = value;
         }
-        void Update()
+
+        void Start()
         {
-            Tick(Time.deltaTime);
+            Binder.Update(Tick);
         }
 
         void Tick(float dt)
         {
             MyDebug.Log("----------Start Tick----------", LogType.Tick);
-            privateRoot.Tick(dt);
+            root.Tick(dt);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace BehaviourTree
         {
             if(curNode == null)
             {
-                ChildList.ForEach(child => child.State.Value = EState.Failed);
+                OnResetState();
                 curNode = ChildLinkedList?.First;
             }
             

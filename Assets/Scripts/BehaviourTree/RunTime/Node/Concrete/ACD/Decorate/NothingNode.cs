@@ -7,8 +7,8 @@ namespace BehaviourTree
     {
         public override EState OnTickChild(float dt)
         {
-            // 什么都不做
-            return EState.Succeeded;
+            var ret = FirstChild?.Tick(dt);
+            return ret ?? EState.Succeeded;
         }
         public override void OnFail()
         {

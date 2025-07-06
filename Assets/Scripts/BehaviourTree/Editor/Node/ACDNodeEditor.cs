@@ -64,12 +64,15 @@ namespace BehaviourTree
         public override void OnRefreshTree()
         {
             NodeBase.ClearChildren();
-            childsEditor.ForEach(childEditor =>
-            {
-                // MyDebug.Log($"Editor : {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
-                NodeBase.AddChild(childEditor.NodeBase);
-                childEditor.OnRefreshTree();
-            });
+            // RectInGraph
+            childsEditor
+                .OrderBy(editor => editor.GetRect().x)
+                .ForEach(childEditor =>
+                {
+                    // MyDebug.Log($"Editor : {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
+                    NodeBase.AddChild(childEditor.NodeBase);
+                    childEditor.OnRefreshTree();
+                });
             
             NodeBase.GuardNode = null;
             // MyDebug.Log($"Editor : {NodeBase.NodeName} AddGuard {guard?.NodeName ?? "null"}");
