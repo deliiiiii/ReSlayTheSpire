@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
-using Sirenix.Utilities;
-using UnityEngine.Serialization;
+using UnityEngine;
 
 namespace BehaviourTree
 {
@@ -15,7 +11,7 @@ namespace BehaviourTree
 public abstract class ACDNode : NodeBase
 {
     #region Tick
-    [CanBeNull] public GuardNode GuardNode;
+    [HideInInspector][CanBeNull] public GuardNode GuardNode;
     public abstract EState OnTickChild(float dt);
     public abstract void OnFail();
 
@@ -77,10 +73,8 @@ public abstract class ACDNode : NodeBase
 
     #region Parent & Child & Guard
     protected ACDNode FirstChild => ChildLinkedList?.Last?.Value;
-    // [OdinSerialize]
-    [ShowInInspector]
     protected LinkedList<ACDNode> ChildLinkedList => ChildList == null ? new() : new LinkedList<ACDNode>(ChildList);
-    public List<ACDNode> ChildList;
+    [HideInInspector]public List<ACDNode> ChildList;
     
 #if UNITY_EDITOR
     public abstract ACDNode AddChild(ACDNode child);

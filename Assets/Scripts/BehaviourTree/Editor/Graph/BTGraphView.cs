@@ -84,7 +84,7 @@ namespace BehaviourTree
                 .GetConstructor(nodeEditorType.BaseType!.GetGenericArguments())
                 ?.Invoke(new object[]{nodeConcrete})
                 as INodeBaseEditor<NodeBase>;
-            ins.OnNodeEditorChanged += _ => OnGraphViewChanged(default);
+            ins.OnTypeChanged += _ => OnGraphViewChanged(default);
             
             var node = ins as Node;
             AddElement(node);

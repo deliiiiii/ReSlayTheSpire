@@ -6,18 +6,17 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeDelay : ActionNode
     {
-        [DrawnField]
         public float DelaySeconds;
-        [ShowInInspector][ReadOnly]
-        float timer;
+        [ReadOnly]
+        public float Timer;
 
         void OnEnable()
         {
-            OnEnter = () => timer = 0;
+            OnEnter = () => Timer = 0;
             OnContinue = dt =>
             {
-                timer += dt;
-                isFinished = timer >= DelaySeconds;
+                Timer += dt;
+                isFinished = Timer >= DelaySeconds;
             };
         }
         public override string ToString()

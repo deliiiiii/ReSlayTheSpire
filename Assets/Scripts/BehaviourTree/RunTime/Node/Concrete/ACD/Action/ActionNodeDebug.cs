@@ -2,6 +2,7 @@
 
 namespace BehaviourTree
 {
+    [Serializable]
     public enum EDebugType
     {
         Log,
@@ -12,9 +13,7 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeDebug : ActionNode
     {
-        [DrawnField]
         public string Content;
-        [DrawnField]
         public EDebugType DebugType = EDebugType.Log;
 
         void OnEnable()

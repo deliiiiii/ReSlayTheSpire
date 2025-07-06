@@ -18,7 +18,9 @@ public enum EState
 public abstract class NodeBase : ScriptableObject
 {
     public string NodeName => ToString();
+    [HideInInspector]
     public Rect RectInGraph;
+    [HideInInspector]
     public Observable<EState> State = new(EState.Failed);
 
     public virtual void OnResetState()

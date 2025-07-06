@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -19,20 +20,21 @@ namespace BehaviourTree
         public IEnumerable<Edge> InEdges { get; }
         public IEnumerable<Edge> OutEdges { get; }
         Rect GetRect();
-        public event Action<Type> OnNodeEditorChanged;
+        public event Action<Type> OnTypeChanged;
         /// 当树变化时调用，主要是从头开始构建NodeBase的连接关系
         void OnRefreshTree();
     }
     
     
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
-    {
+    { 
+        PropertyTree _propertyTree;
         public T NodeBase { get; set; }
 
         public IEnumerable<Edge> InEdges => inputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
         public IEnumerable<Edge> OutEdges => outputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
         public Rect GetRect() => GetPosition();
-        public event Action<Type> OnNodeEditorChanged;
+        public event Action<Type> OnTypeChanged;
         
         DropdownField typeField;
         HashSet<VisualElement> fieldElementSet = new();
@@ -65,14 +67,14 @@ namespace BehaviourTree
                 SetPosition(NodeBase.RectInGraph);
             }
             
-            OnNodeEditorChanged += CreateNodeBase;
-            OnNodeEditorChanged += _ => DrawNodeField();
+            OnTypeChanged += CreateNodeBase;
+            OnTypeChanged += _ => DrawNodeField();
             
+            //隐藏名字栏
+            titleContainer.style.display = DisplayStyle.None;
             DrawPort();
             DrawTypeField();
             DrawNodeField();
-            //隐藏名字栏
-            titleContainer.style.display = DisplayStyle.None;
             
             RefreshPorts();
             expanded = true;
@@ -110,71 +112,84 @@ namespace BehaviourTree
                 style.backgroundColor = tickStateColorDic[evt];
             };
             
-            foreach (var field in fieldElementSet)
-            {
-                extensionContainer.Remove(field);
-            }
-            fieldElementSet.Clear();
             
-            var fieldInfos = NodeBase.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)
-                .Where(f => f.GetCustomAttribute<DrawnFieldAttribute>() != null);
-            foreach (var fieldInfo in fieldInfos)
+            _propertyTree = PropertyTree.Create(NodeBase);
+            var container = new IMGUIContainer(() =>
             {
-                VisualElement fieldElement = null;
+                _propertyTree.Draw();
+            });
+            extensionContainer.Add(container);
 
-                if (fieldInfo.FieldType == typeof(string))
-                {
-                    var textField = new TextField(fieldInfo.Name);
-                    textField.value = (string)fieldInfo.GetValue(NodeBase);
-                    textField.RegisterValueChangedCallback(evt =>
-                    {
-                        fieldInfo.SetValue(NodeBase, evt.newValue);
-                    });
-                    fieldElement = textField;
-                }
-                else if (fieldInfo.FieldType == typeof(int))
-                {
-                    var intField = new IntegerField(fieldInfo.Name);
-                    intField.value = (int)fieldInfo.GetValue(NodeBase);
-                    intField.RegisterValueChangedCallback(evt =>
-                    {
-                        fieldInfo.SetValue(NodeBase, evt.newValue);
-                    });
-                    fieldElement = intField;
-                }
-                else if (fieldInfo.FieldType == typeof(float))
-                {
-                    var floatField = new FloatField(fieldInfo.Name);
-                    floatField.value = (float)fieldInfo.GetValue(NodeBase);
-                    floatField.RegisterValueChangedCallback(evt =>
-                    {
-                        fieldInfo.SetValue(NodeBase, evt.newValue);
-                    });
-                    fieldElement = floatField;
-                }
-                else if (fieldInfo.FieldType == typeof(bool))
-                {
-                    var boolField = new Toggle(fieldInfo.Name);
-                    boolField.value = (bool)fieldInfo.GetValue(NodeBase);
-                    boolField.RegisterValueChangedCallback(evt =>
-                    {
-                        fieldInfo.SetValue(NodeBase, evt.newValue);
-                    });
-                    fieldElement = boolField;
-                }
-
-                if (fieldElement == null)
-                    continue;
-                extensionContainer.Add(fieldElement);
-                fieldElementSet.Add(fieldElement);
-            }
+            return;
+            
+            
+            
+            
+            // foreach (var field in fieldElementSet)
+            // {
+            //     extensionContainer.Remove(field);
+            // }
+            // fieldElementSet.Clear();
+            //
+            // var fieldInfos = NodeBase.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)
+            //     .Where(f => f.GetCustomAttribute<DrawnFieldAttribute>() != null);
+            // foreach (var fieldInfo in fieldInfos)
+            // {
+            //     VisualElement fieldElement = null;
+            //
+            //     if (fieldInfo.FieldType == typeof(string))
+            //     {
+            //         var textField = new TextField(fieldInfo.Name);
+            //         textField.value = (string)fieldInfo.GetValue(NodeBase);
+            //         textField.RegisterValueChangedCallback(evt =>
+            //         {
+            //             fieldInfo.SetValue(NodeBase, evt.newValue);
+            //         });
+            //         fieldElement = textField;
+            //     }
+            //     else if (fieldInfo.FieldType == typeof(int))
+            //     {
+            //         var intField = new IntegerField(fieldInfo.Name);
+            //         intField.value = (int)fieldInfo.GetValue(NodeBase);
+            //         intField.RegisterValueChangedCallback(evt =>
+            //         {
+            //             fieldInfo.SetValue(NodeBase, evt.newValue);
+            //         });
+            //         fieldElement = intField;
+            //     }
+            //     else if (fieldInfo.FieldType == typeof(float))
+            //     {
+            //         var floatField = new FloatField(fieldInfo.Name);
+            //         floatField.value = (float)fieldInfo.GetValue(NodeBase);
+            //         floatField.RegisterValueChangedCallback(evt =>
+            //         {
+            //             fieldInfo.SetValue(NodeBase, evt.newValue);
+            //         });
+            //         fieldElement = floatField;
+            //     }
+            //     else if (fieldInfo.FieldType == typeof(bool))
+            //     {
+            //         var boolField = new Toggle(fieldInfo.Name);
+            //         boolField.value = (bool)fieldInfo.GetValue(NodeBase);
+            //         boolField.RegisterValueChangedCallback(evt =>
+            //         {
+            //             fieldInfo.SetValue(NodeBase, evt.newValue);
+            //         });
+            //         fieldElement = boolField;
+            //     }
+            //
+            //     if (fieldElement == null)
+            //         continue;
+            //     extensionContainer.Add(fieldElement);
+            //     fieldElementSet.Add(fieldElement);
+            // }
         }
         void DrawTypeField()
         {
             typeField = new DropdownField(rtTypeList.Select(x => x.Name).ToList(), NodeBase.GetType().Name);
             typeField.RegisterValueChangedCallback(evt =>
             {
-                OnNodeEditorChanged?.Invoke(rtTypeList.First(x => x.Name == evt.newValue));
+                OnTypeChanged?.Invoke(rtTypeList.First(x => x.Name == evt.newValue));
             });
             extensionContainer.Add(typeField);
         }

@@ -10,6 +10,7 @@ namespace BehaviourTree
     [CreateAssetMenu(fileName = nameof(RootNode), menuName = "BehaviourTree/" + nameof(RootNode))]
     public class RootNode : NodeBase
     {
+        [HideInInspector]
         public ACDNode ChildNode;
         public override string ToString()
         {

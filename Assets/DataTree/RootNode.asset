@@ -16,10 +16,10 @@ MonoBehaviour:
     serializedVersion: 2
     x: 516.8
     y: 632.8
-    width: 177.60004
-    height: 104
+    width: 212.79999
+    height: 124
   State:
-    value: 2
+    value: 0
   GuardNode: {fileID: 4191034783883139436}
   ChildList: []
   DelaySeconds: 2.718
@@ -39,8 +39,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: -55.2
     y: 363.2
-    width: 179.2
-    height: 104
+    width: 212.8
+    height: 124
   State:
     value: 1
   GuardNode: {fileID: 0}
@@ -87,12 +87,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 191.2
-    y: 363.2
-    width: 192.00002
-    height: 104
+    x: 204.8
+    y: 351.2
+    width: 212.8
+    height: 124
   State:
-    value: 1
+    value: 2
   GuardNode: {fileID: 0}
   ChildList: []
   DelaySeconds: 1.14514
@@ -110,12 +110,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 448
-    y: 363.2
+    x: 460.8
+    y: 351.2
     width: 188.79999
     height: 85.600006
   State:
-    value: 2
+    value: 0
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -9089256654224069358}
@@ -133,10 +133,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 764.8
-    y: 372.80002
-    width: 264.8
-    height: 104.79999
+    x: 744
+    y: 375.2
+    width: 212.79999
+    height: 124
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -180,9 +180,33 @@ MonoBehaviour:
     serializedVersion: 2
     x: 342.4
     y: 534.4
-    width: 160
-    height: 98.39996
+    width: 212.80002
+    height: 100
   State:
-    value: 1
+    value: 0
   Value: 42
   Threshold: 24
+--- !u!114 &6621997015831002536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
+  m_Name: ActionNodeDebug
+  m_EditorClassIdentifier: 
+  RectInGraph:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  State:
+    value: 0
+  GuardNode: {fileID: 0}
+  ChildList: []
+  Content: 
+  DebugType: 0
