@@ -115,6 +115,8 @@ namespace BehaviourTree
         /// <param name="nodeConcrete"> 如ActionNodeDebug，具体Node类</param>
         INodeBaseEditor<NodeBase> DrawNodeEditorWithConcrete<T>(T nodeConcrete) where T : NodeBase
         {
+            if (nodeConcrete == null)
+                return null;
             var nodeConcreteType = nodeConcrete.GetType();
             var nodeEditorType = TypeCache.GetEditorByConcreteSubType(nodeConcreteType);
             return DrawNodeEditor(nodeEditorType, nodeConcrete);
@@ -154,10 +156,6 @@ namespace BehaviourTree
             if (parentNodeBase is RootNode parentNode)
             {
                 var childNode = parentNode.ChildNode;
-                if (childNode == null)
-                {
-                    return;
-                }
                 var childNodeEditor = DrawNodeEditorWithConcrete(childNode) as IACDNodeEditor<ACDNode>;
                 var rootNodeEditor = parentNodeEditor as RootNodeEditor;
                 AddElement(rootNodeEditor.ConnectChildNodeEditor(childNodeEditor));
