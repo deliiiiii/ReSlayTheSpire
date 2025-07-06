@@ -37,7 +37,8 @@ namespace BehaviourTree
         
         DropdownField typeField;
         // HashSet<VisualElement> fieldElementSet = new();
-        PropertyTree _propertyTree;
+        PropertyTree propertyTree;
+        IMGUIContainer propertyTreeContainer;
         
         /// <summary>
         /// 最终是实例类ActionNodeEditor在调用
@@ -110,12 +111,11 @@ namespace BehaviourTree
                 style.backgroundColor = tickStateColorDic[evt];
             };
             
-            _propertyTree = PropertyTree.Create(NodeBase);
-            var container = new IMGUIContainer(() =>
-            {
-                _propertyTree.Draw();
-            });
-            extensionContainer.Add(container);
+            propertyTree = PropertyTree.Create(NodeBase);
+            if(propertyTreeContainer != null)
+                extensionContainer.Remove(propertyTreeContainer);
+            propertyTreeContainer = new IMGUIContainer(() => propertyTree.Draw());
+            extensionContainer.Add(propertyTreeContainer);
         }
         void DrawTypeField()
         {

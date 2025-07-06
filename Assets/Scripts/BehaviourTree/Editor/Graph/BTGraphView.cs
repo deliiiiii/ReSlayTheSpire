@@ -136,8 +136,11 @@ namespace BehaviourTree
                 var childNode = parentNode.ChildNode;
                 var childNodeEditor = DrawNodeEditorWithConcrete(childNode) as IACDNodeEditor<ACDNode>;
                 var rootNodeEditor = parentNodeEditor as RootNodeEditor;
-                AddElement(rootNodeEditor.ConnectChildNodeEditor(childNodeEditor));
-                CreateChildNodeEditors(childNodeEditor, childNode);
+                if (childNodeEditor != null)
+                {
+                    AddElement(rootNodeEditor.ConnectChildNodeEditor(childNodeEditor));
+                    CreateChildNodeEditors(childNodeEditor, childNode);
+                }
                 return;
             }
             if (parentNodeBase is ACDNode acdNode)
