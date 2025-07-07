@@ -15,10 +15,5 @@ namespace BehaviourTree
         {
             return nameof(RootNode);
         }
-
-        public override EState Tick(float dt)
-        {
-            return State.Value = LastChild?.Tick(dt) ?? EState.Failed;
-        }
     }
 }

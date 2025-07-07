@@ -30,13 +30,22 @@ public abstract class NodeBase : ScriptableObject
     [HideInInspector]
     public Observable<EState> State = new(EState.Failed);
 
-    [HideInInspector] [CanBeNull] public GuardNode GuardNode;
-    protected abstract EChildCountType childCountType { get; set; }
     
-    public NodeBase LastChild => ChildLinkedList?.Last?.Value;
-    protected LinkedList<NodeBase> ChildLinkedList => ChildList == null ? new() : new LinkedList<NodeBase>(ChildList);
+    #region Guard
+    [HideInInspector] [CanBeNull] public GuardNode GuardNode;
+    bool CheckGuard()
+    {
+        return !GuardNode || GuardNode.Judge();
+    }
+    #endregion
+    
+    
+    #region Child
     [HideInInspector]
     public List<NodeBase> ChildList;
+    public NodeBase LastChild => ChildLinkedList?.Last?.Value;
+    protected abstract EChildCountType childCountType { get; set; }
+    protected LinkedList<NodeBase> ChildLinkedList => ChildList == null ? new() : new LinkedList<NodeBase>(ChildList);
 
     public void AddChild(NodeBase child)
     {
@@ -65,30 +74,42 @@ public abstract class NodeBase : ScriptableObject
     {
         ChildList?.Clear();
     }
+    #endregion
 
-    public virtual EState Tick(float dt)
+    #region Tick
+    public EState Tick(float dt)
     {
-        return EState.Succeeded;
+        if (!CheckGuard())
+        {
+            RecursiveDo(OnFail);
+            return State.Value = EState.Failed;
+        }
+        State.Value = OnTickChild(dt);
+        // MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
+        return State.Value;
     }
-
+    /// <summary>
+    /// 默认Tick最后一个节点， 没有节点时返回Succeeded
+    /// </summary>
+    /// <param name="dt"></param>
+    /// <returns></returns>
     protected virtual EState OnTickChild(float dt)
     {
-        return EState.Succeeded;
+        return LastChild?.Tick(dt) ?? EState.Succeeded;
     }
-
     protected static void OnFail(NodeBase target)
     {
         if(!target)
             return;
         target.State.Value = EState.Failed;
     }
-    
     protected static void OnResetState(NodeBase target)
     {
         if(!target)
             return;
         target.State.Value = EState.Failed;
     }
+    #endregion
     
     protected void RecursiveDo(Action<NodeBase> func)
     {

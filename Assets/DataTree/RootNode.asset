@@ -38,8 +38,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 311
-    y: -42
+    x: 300
+    y: -6
     width: 87
     height: 62
   State:
@@ -66,7 +66,7 @@ MonoBehaviour:
     width: 213
     height: 100
   State:
-    value: 0
+    value: 1
   GuardNode: {fileID: 0}
   ChildList: []
   Value: 42
@@ -113,11 +113,11 @@ MonoBehaviour:
     width: 213
     height: 124
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 0}
   ChildList: []
   DelaySeconds: 2.718
-  Timer: 0
+  Timer: 1.1998081
 --- !u!114 &3256989651206574489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,7 +137,7 @@ MonoBehaviour:
     width: 186
     height: 86
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: 7512937561549423645}
@@ -163,7 +163,7 @@ MonoBehaviour:
     width: 213
     height: 124
   State:
-    value: 0
+    value: 1
   GuardNode: {fileID: 0}
   ChildList: []
   Content: Deliiiiii
@@ -187,8 +187,8 @@ MonoBehaviour:
     width: 213
     height: 124
   State:
-    value: 0
+    value: 1
   GuardNode: {fileID: 944918452020931131}
   ChildList: []
   DelaySeconds: 1.14514
-  Timer: 0
+  Timer: 1.2421162
