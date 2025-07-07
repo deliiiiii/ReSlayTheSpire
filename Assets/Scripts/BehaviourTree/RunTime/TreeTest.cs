@@ -6,7 +6,7 @@ namespace BehaviourTree
     public class TreeTest : Singleton<TreeTest>
     {
         [ShowInInspector][SerializeField] RootNode root;
-
+        
         void Start()
         {
             Application.targetFrameRate = 10;

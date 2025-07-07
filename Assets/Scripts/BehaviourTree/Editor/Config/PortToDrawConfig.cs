@@ -25,10 +25,10 @@ namespace BehaviourTree.Config
                 .ToList();
             
             // // 删除不存在的节点类型
-            var nodeTypeNames = TypeCache.NodeTypes.Select(x => x.Name);
+            var nodeTypeNames = TypeCache.NodeGeneralTypes.Select(x => x.Name);
             TypeToPortToDrawData.RemoveAll(kvp => !nodeTypeNames.Contains(kvp.Key));
             
-            foreach (var nodeType in TypeCache.NodeTypes)
+            foreach (var nodeType in TypeCache.NodeGeneralTypes)
             {
                 TypeToPortToDrawData.TryAdd(nodeType.Name, new SerializableDictionary<string, SinglePortData>());
                 var portToDrawData = TypeToPortToDrawData[nodeType.Name];

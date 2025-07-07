@@ -13,6 +13,25 @@ using Direction = UnityEditor.Experimental.GraphView.Direction;
 
 namespace BehaviourTree
 {
+    public static class Ext
+    {
+        [CanBeNull]
+        public static IEnumerable<INodeBaseEditor<NodeBase>> ChildsEditor(this INodeBaseEditor<NodeBase> n) 
+            => n.OutputChildsPort?.connections?
+                .Where(port => port.input.node is INodeBaseEditor<NodeBase>)
+                .Select(port => port.input.node as INodeBaseEditor<NodeBase>);
+
+        [CanBeNull]
+        public static INodeBaseEditor<GuardNode> GuardingEditor(this INodeBaseEditor<NodeBase> n)
+            => n.InputGuardingPort?.connections?
+                .Where(port => port.output.node is INodeBaseEditor<GuardNode>)
+                .Select(port => port.output.node as INodeBaseEditor<GuardNode>)
+                .FirstOrDefault();
+        
+        [CanBeNull]
+        public static GuardNode GuardingNode(this INodeBaseEditor<NodeBase> n)
+            => n.GuardingEditor()?.NodeBase;
+    }
     public interface INodeBaseEditor<out T> where T : NodeBase
     {
         T NodeBase { get; }
@@ -22,7 +41,6 @@ namespace BehaviourTree
         Port OutputGuardedPort { get; }
 
         public event Action<Type> OnTypeChanged;
-
         [CanBeNull]
         public Edge ConnectChildNodeEditor(INodeBaseEditor<NodeBase> childNodeEditor)
         {
@@ -33,30 +51,39 @@ namespace BehaviourTree
         {
             return InputGuardingPort?.ConnectTo(guardNodeEditor.OutputGuardedPort);
         }
-        void OnRefreshTree();
+        
+        /// <summary>
+        /// 当树变化时调用，主要是从头开始构建NodeBase的连接关系
+        /// </summary>
+        public void OnRefreshTree()
+        {
+            NodeBase.RectInGraph = GetRect();
+            NodeBase.ClearChildren();
+            this.ChildsEditor()?
+                .OrderBy(editor => editor.GetRect().x)
+                .ForEach(childEditor =>
+                {
+                    // MyDebug.Log($"Editor : {NodeBase.name} AddChild {childEditor.NodeBase.name}");
+                    NodeBase.AddChild(childEditor.NodeBase);
+                    childEditor.OnRefreshTree();
+                });
+            
+            NodeBase.GuardNode = this.GuardingNode();
+            this.GuardingEditor()?.OnRefreshTree();
+            // MyDebug.Log($"Editor : {NodeBase.name} AddGuard {guard?.name ?? "null"}");
+        }
+        
         Rect GetRect();
     }
-
-
-    public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
+    
+    public class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
         public T NodeBase { get; private set; }
-        public Port InputParentPort { get; }
-        public Port InputGuardingPort { get;}
-        public Port OutputChildsPort { get; }
-        public Port OutputGuardedPort { get; }
-        [CanBeNull]
-        IEnumerable<INodeBaseEditor<NodeBase>> childsEditor =>
-            OutputChildsPort?.connections?
-                .Where(port => port.input.node is INodeBaseEditor<NodeBase>)
-                .Select(port => port.input.node as INodeBaseEditor<NodeBase>);
-        [CanBeNull]
-        INodeBaseEditor<GuardNode> guardingEditor =>
-            InputGuardingPort?.connections?
-                .Where(port => port.output.node is GuardNodeEditor)
-                .Select(port => port.output.node as GuardNodeEditor)
-                .FirstOrDefault();
-        [CanBeNull] GuardNode guardingNode => guardingEditor?.NodeBase;
+        public Port InputParentPort { get; protected set; }
+        public Port InputGuardingPort { get; protected set; }
+        public Port OutputChildsPort { get; protected set; }
+        public Port OutputGuardedPort { get; protected set; }
+        
         public event Action<Type> OnTypeChanged;
 
         public Rect GetRect() => GetPosition();
@@ -64,14 +91,14 @@ namespace BehaviourTree
         DropdownField typeField;
         PropertyTree propertyTree;
         IMGUIContainer propertyTreeContainer;
-
-        /// <summary>
-        /// 最终是实例类ActionNodeEditor在调用
-        /// [ActionNodeDebug, ActionNodeDelay, ...]
-        /// </summary>
-        List<Type> rtTypeList => TypeCache.EditorToSubNodeDic[GetType()];
-
+        
         static PortToDrawConfig portToDrawConfig;
+        readonly Dictionary<EState, Color> tickStateColorDic = new()
+        {
+            { EState.Running, Color.cyan },
+            { EState.Succeeded, Color.green },
+            { EState.Failed, Color.red }
+        };
 
         static NodeBaseEditor()
         {
@@ -82,19 +109,13 @@ namespace BehaviourTree
                 MyDebug.LogError("PortToDrawConfig not found, please create it in Assets/DataTree/PortToDrawConfig.asset");
             }
         }
-
-        public NodeBaseEditor(T nodeBase)
+        
+        public NodeBaseEditor(T nodeBase, bool isDefault)
         {
-            if (rtTypeList.Count == 0)
+            // MyDebug.Log($"NodeBaseEditor({nodeBase.GetType().Name}, {isDefault})");
+            if (isDefault)
             {
-                MyDebug.LogError($"No {GetType().Name} types found in the assembly.");
-                return;
-            }
-            // MyDebug.Log($"{GetType().Name} types found in the assembly.");
-
-            if (nodeBase == null)
-            {
-                CreateNodeBase(rtTypeList[0]);
+                CreateNodeBase(nodeBase.GetType());
                 SetPosition(new Rect(100, 100, 200, 150));
             }
             else
@@ -116,30 +137,10 @@ namespace BehaviourTree
             expanded = true;
             RefreshExpandedState();
         }
-
-        /// <summary>
-        /// 当树变化时调用，主要是从头开始构建NodeBase的连接关系
-        /// </summary>
-        public void OnRefreshTree()
-        {
-            NodeBase.RectInGraph = GetPosition();
-            NodeBase.ClearChildren();
-            childsEditor?
-                .OrderBy(editor => editor.GetRect().x)
-                .ForEach(childEditor =>
-                {
-                    // MyDebug.Log($"Editor : {NodeBase.name} AddChild {childEditor.NodeBase.name}");
-                    NodeBase.AddChild(childEditor.NodeBase);
-                    childEditor.OnRefreshTree();
-                });
-            
-            NodeBase.GuardNode = guardingNode;
-            guardingEditor?.OnRefreshTree();
-            // MyDebug.Log($"Editor : {NodeBase.name} AddGuard {guard?.name ?? "null"}");
-        }
         
-        void CreateNodeBase(Type nodeType)
+        void CreateNodeBase(Type t)
         {
+            var nodeType = t;
             if (nodeType.IsGenericType)
             {
                 nodeType = nodeType.MakeGenericType(typeof(int));
@@ -150,7 +151,7 @@ namespace BehaviourTree
 
         void DrawAllPorts()
         {
-            var portToDrawData = portToDrawConfig.TypeToPortToDrawData[NodeBase.GetNodeGeneralType().Name];
+            var portToDrawData = portToDrawConfig.TypeToPortToDrawData[NodeBase.GetGeneralType().Name];
             portToDrawData.ForEach(nameToPortData =>
             {
                 var value = nameToPortData.Value;
@@ -172,24 +173,17 @@ namespace BehaviourTree
                     .SetValue(this, ins, null);
             });
         }
-
-
+        
         void DrawTypeField()
         {
-            typeField = new DropdownField(rtTypeList.Select(x => x.Name).ToList(), NodeBase.GetType().Name);
+            var selections = TypeCache.GeneralToSelectionsDic[NodeBase.GetGeneralType()];
+            typeField = new DropdownField(selections.Select(x => x.Name).ToList(), NodeBase.GetType().Name);
             typeField.RegisterValueChangedCallback(evt =>
             {
-                OnTypeChanged?.Invoke(rtTypeList.First(x => x.Name == evt.newValue));
+                OnTypeChanged?.Invoke(selections.First(x => x.Name == evt.newValue));
             });
             extensionContainer.Add(typeField);
         }
-
-        readonly Dictionary<EState, Color> tickStateColorDic = new()
-        {
-            { EState.Running, Color.cyan },
-            { EState.Succeeded, Color.green },
-            { EState.Failed, Color.red }
-        };
 
         void DrawNodeField()
         {

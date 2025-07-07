@@ -23,8 +23,9 @@ namespace BehaviourTree
         }
 
         string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
-        RootNodeEditor rootEditor;
-        RootNode rootNode;
+        string tempPath => $"Assets/DataTree/{rootNode?.name ?? "null"}Temp.asset";
+        INodeBaseEditor<NodeBase> rootEditor;
+        NodeBase rootNode;
         
         
         public BTGraphView()
@@ -36,18 +37,33 @@ namespace BehaviourTree
             graphViewChanged = OnGraphViewChanged;
             this.StretchToParentSize();
         }
-        
-        public INodeBaseEditor<NodeBase> DrawNodeEditor(Type nodeEditorType, NodeBase nodeConcrete = null)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeConcreteType">如ActionNodeDebug，具体Node类</param>
+        /// <returns></returns>
+        public void DrawNodeEditorWithType(Type nodeConcreteType)
+        {
+            DrawNodeEditorWithIns(ScriptableObject.CreateInstance(nodeConcreteType) as NodeBase, true);
+        }
+            
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeConcrete">如ActionNodeDebug，具体Node类</param>
+        /// <param name="isDefault">nodeConcrete是否是默认值</param>
+        INodeBaseEditor<T> DrawNodeEditorWithIns<T>(T nodeConcrete, bool isDefault) where T : NodeBase
         {
             // 不允许创建多个RootNodeEditor
-            if (rootEditor != null && nodeEditorType == typeof(RootNodeEditor))
-                return rootEditor;
+            if (rootEditor != null && nodeConcrete?.GetType() == typeof(RootNode))
+                return rootEditor as INodeBaseEditor<T>;
             
             // 利用反射调用构造函数, 参数列表恰好是{T}
-            var ins = nodeEditorType
-                .GetConstructor(nodeEditorType.BaseType!.GetGenericArguments())
-                ?.Invoke(new object[]{nodeConcrete})
-                as INodeBaseEditor<NodeBase>;
+            var ins = typeof(NodeBaseEditor<T>)
+                    .GetConstructor(new []{typeof(T), typeof(bool)})
+                    ?.Invoke(new object[]{nodeConcrete, isDefault})
+                    as INodeBaseEditor<T>;
             ins.OnTypeChanged += _ => OnGraphViewChanged(default);
             
             var node = ins as Node;
@@ -55,19 +71,6 @@ namespace BehaviourTree
             return ins;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="nodeConcrete"> 如ActionNodeDebug，具体Node类</param>
-        INodeBaseEditor<NodeBase> DrawNodeEditorWithConcrete<T>(T nodeConcrete) where T : NodeBase
-        {
-            if (nodeConcrete == null)
-                return null;
-            var nodeConcreteType = nodeConcrete.GetType();
-            var nodeEditorType = TypeCache.GetEditorByConcreteSubType(nodeConcreteType);
-            return DrawNodeEditor(nodeEditorType, nodeConcrete);
-        }
-
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             MyDebug.LogWarning($"OnGraphViewChanged");
@@ -86,7 +89,7 @@ namespace BehaviourTree
         /// </summary>
         void RefreshTreeAndSave()
         {
-            rootEditor = nodes.FirstOrDefault(node => node is RootNodeEditor) as RootNodeEditor;
+            rootEditor = nodes.OfType<INodeBaseEditor<NodeBase>>().FirstOrDefault(node => node.NodeBase is RootNode);
             if (rootEditor == null)
             {
                 MyDebug.Log("No ROOT node found in the graph, will NOT save the graph.");
@@ -102,7 +105,7 @@ namespace BehaviourTree
             var guardNode = thisNodeBase.GuardNode;
             if (guardNode != null)
             {
-                var guardEditor = DrawNodeEditorWithConcrete(guardNode);
+                var guardEditor = DrawNodeEditorWithIns(guardNode, false);
                 var ele = thisNodeEditor.ConnectGuardNodeEditor(guardEditor);
                 if (ele == null)
                 {
@@ -115,7 +118,7 @@ namespace BehaviourTree
             }
             thisNodeBase.ChildList?.ForEach(childNode =>
             {
-                var childNodeEditor = DrawNodeEditorWithConcrete(childNode);
+                var childNodeEditor = DrawNodeEditorWithIns(childNode, false);
                 var ele = thisNodeEditor.ConnectChildNodeEditor(childNodeEditor);
                 if (ele == null)
                 {
@@ -132,9 +135,11 @@ namespace BehaviourTree
         {
             nodes.ForEach(RemoveElement);
             rootNode = loadedRootNode;
-            rootEditor = DrawNodeEditorWithConcrete(rootNode) as RootNodeEditor;
+            rootEditor = DrawNodeEditorWithIns(rootNode, false);
             CreateChildNodeEditors(rootEditor, rootNode);
         }
+        
+        bool rootNodeDeleted = false;
         void Save()
         {
             var nodeBaseEditors = nodes
@@ -145,29 +150,14 @@ namespace BehaviourTree
             if (AssetDatabase.LoadAssetAtPath<RootNode>(path))
             {
                 AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
-                    .Where(ass => !nodeBases.Contains(ass as NodeBase))
+                    .Where(ass => !nodeBases.Contains(ass))
                     .ForEach(AssetDatabase.RemoveObjectFromAsset);
-                
-                // // 最特殊的情况，其实是删除了根节点
-                // if (!EditorUtility.IsPersistent(rootNode))
-                // {
-                //     isRootDeleted = true;
-                //     var newRootNode = ScriptableObject.Instantiate(rootNode);
-                //     AssetDatabase.DeleteAsset(path);
-                //     
-                //     // AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
-                //     //     .ForEach(AssetDatabase.RemoveObjectFromAsset);
-                //     
-                //     EditorUtility.SetDirty(newRootNode);
-                //     AssetDatabase.SaveAssets();
-                //     AssetDatabase.Refresh();
-                //     Observable.Timer(TimeSpan.FromDays(1)).Subscribe(_ =>
-                //     {
-                //         isRootDeleted = false;
-                //         rootNode = newRootNode;
-                //         AssetDatabase.CreateAsset(newRootNode, path);
-                //     });
-                // }
+
+                if (!EditorUtility.IsPersistent(rootNode))
+                {
+                    rootNodeDeleted = true;
+                    AssetDatabase.CreateAsset(rootNode, tempPath);
+                }
             }
             else
             {

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -82,23 +79,14 @@ namespace BehaviourTree
         static IEnumerable<Button> CollectButtons(BTGraphView fView)
         {
             List<Button> ret = new();
-            var baseType = typeof(NodeBaseEditor<>);
-            var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
-            nodeTypes
-                // ActionNodeEditor, CompositeNodeEditor, DecoratorNodeEditor, RootNodeEditor, GuardNodeEditor
-                .Where(type =>  
-                    type.InheritsFrom(baseType)
-                    && type != baseType
-                    && !type.IsAbstract
-                    && (type.BaseType?.IsAbstract ?? false)
-                    ) 
-                .ForEach(nodeEditorConcreteType =>
+            var nodeGeneralTypes = TypeCache.NodeGeneralTypes;
+            nodeGeneralTypes
+                .ForEach(nodeGeneralType =>
                 {
                     // MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
-                    ret.Add(new Button(() => fView.DrawNodeEditor(nodeEditorConcreteType))
+                    ret.Add(new Button(() => fView.DrawNodeEditorWithType(TypeCache.GeneralToSelectionsDic[nodeGeneralType][0]))
                     {
-                        text = nodeEditorConcreteType.Name,
-                        
+                        text = nodeGeneralType.Name,
                         style =
                         {
                             width = 200,

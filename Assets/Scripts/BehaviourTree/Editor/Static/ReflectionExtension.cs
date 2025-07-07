@@ -6,10 +6,10 @@ namespace BehaviourTree
 {
     public static class ReflectionExtensions
     {
-        // public static Type FirstSubType(this Type parentType)
-        // {
-        //     return parentType.SubType().FirstOrDefault();
-        // }
+        public static Type FirstSubType(this Type parentType)
+        {
+            return parentType.SubType().FirstOrDefault();
+        }
         
         public static IEnumerable<Type> SubType(this Type parentType)
         {
