@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BehaviourTree
 {
-    public static class AssetDataBaseExtension
+    public static class AssetDataBaseExt
     {
         // public static void CloseAllWindows()
         // {

@@ -26,6 +26,9 @@ namespace BehaviourTree
         INodeBaseEditor<NodeBase> rootEditor;
         NodeBase rootNode;
         
+        IEnumerable<INodeBaseEditor<NodeBase>> nodes => 
+            base.nodes.OfType<INodeBaseEditor<NodeBase>>().ToList();
+        
         public BTGraphView()
         {
             this.AddManipulator(new ContentZoomer());
@@ -73,11 +76,9 @@ namespace BehaviourTree
         {
             MyDebug.LogWarning($"OnGraphViewChanged");
             nodes.ForEach(node =>
-            {
-                if (node is not INodeBaseEditor<NodeBase> nodeEditor)
-                    return;
-                nodeEditor.NodeBase.ClearChildren();
-            });
+                {
+                    node.NodeBase.ClearChildren();
+                });
             RefreshTreeAndSave();
             return graphViewChange;
         }
@@ -87,7 +88,7 @@ namespace BehaviourTree
         /// </summary>
         void RefreshTreeAndSave()
         {
-            rootEditor = nodes.OfType<INodeBaseEditor<NodeBase>>().FirstOrDefault(node => node.NodeBase is RootNode);
+            rootEditor = nodes.FirstOrDefault(node => node.NodeBase is RootNode);
             if (rootEditor == null)
             {
                 MyDebug.LogError("No ROOT node found in the graph, NOT save the graph and CLOSE the window!");
@@ -132,7 +133,7 @@ namespace BehaviourTree
         }
         public void Load(RootNode loadedRootNode)
         {
-            nodes.ForEach(RemoveElement);
+            base.nodes.ForEach(RemoveElement);
             rootNode = loadedRootNode;
             rootEditor = DrawNodeEditorWithIns(rootNode, false);
             CreateChildNodeEditors(rootEditor, rootNode);
@@ -140,9 +141,7 @@ namespace BehaviourTree
         
         void Save()
         {
-            var nodeBaseEditors = nodes
-                .OfType<INodeBaseEditor<NodeBase>>().ToList();
-            IEnumerable<NodeBase> nodeBases = nodeBaseEditors
+            IEnumerable<NodeBase> nodeBases = nodes
                 .Select(nodeEditor => nodeEditor.NodeBase)
                 .ToList();
             if (AssetDatabase.LoadAssetAtPath<RootNode>(path))
@@ -156,9 +155,9 @@ namespace BehaviourTree
                 AssetDatabase.CreateAsset(rootNode, path);
             }
             EditorUtility.SetDirty(rootNode);
-            nodeBaseEditors.ForEach(nodeEditor =>
+            nodes.ForEach(nodeEditor =>
             {
-                AssetDataBaseExtension.SafeAddSubAsset(nodeEditor.NodeBase, rootNode);
+                AssetDataBaseExt.SafeAddSubAsset(nodeEditor.NodeBase, rootNode);
             });
             
             AssetDatabase.SaveAssets();

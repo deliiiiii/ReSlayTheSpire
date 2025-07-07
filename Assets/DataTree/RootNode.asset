@@ -23,30 +23,6 @@ MonoBehaviour:
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: 7652693804652518871}
---- !u!114 &-8634386331081974034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
-  m_Name: ActionNodeDelay
-  m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
-  State:
-    value: 0
-  GuardNode: {fileID: 0}
-  ChildList: []
-  DelaySeconds: 0
-  Timer: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,9 +37,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 239.2
-    y: 24.8
-    width: 88.8
+    x: 260.8
+    y: 27.2
+    width: 88.80002
     height: 61.6
   State:
     value: 2
@@ -144,6 +120,30 @@ MonoBehaviour:
   - {fileID: 2466634454646049510}
   - {fileID: -8745942438462223872}
   - {fileID: 4613815503397224029}
+--- !u!114 &3529493576229495184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
+  m_Name: ActionNodeDebug
+  m_EditorClassIdentifier: 
+  RectInGraph:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  State:
+    value: 0
+  GuardNode: {fileID: 0}
+  ChildList: []
+  Content: 
+  DebugType: 0
 --- !u!114 &4613815503397224029
 MonoBehaviour:
   m_ObjectHideFlags: 0

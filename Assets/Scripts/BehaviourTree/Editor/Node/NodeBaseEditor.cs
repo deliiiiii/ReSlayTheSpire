@@ -13,38 +13,23 @@ using Direction = UnityEditor.Experimental.GraphView.Direction;
 
 namespace BehaviourTree
 {
-    public static class Ext
-    {
-        [CanBeNull]
-        public static IEnumerable<INodeBaseEditor<NodeBase>> ChildsEditor(this INodeBaseEditor<NodeBase> n) 
-            => n.OutputChildsPort?.connections?
-                .Where(port => port.input.node is INodeBaseEditor<NodeBase>)
-                .Select(port => port.input.node as INodeBaseEditor<NodeBase>);
-
-        [CanBeNull]
-        public static INodeBaseEditor<GuardNode> GuardingEditor(this INodeBaseEditor<NodeBase> n)
-            => n.InputGuardingPort?.connections?
-                .Where(port => port.output.node is INodeBaseEditor<GuardNode>)
-                .Select(port => port.output.node as INodeBaseEditor<GuardNode>)
-                .FirstOrDefault();
-        
-        [CanBeNull]
-        public static GuardNode GuardingNode(this INodeBaseEditor<NodeBase> n)
-            => n.GuardingEditor()?.NodeBase;
-    }
     public interface INodeBaseEditor<out T> where T : NodeBase
     {
         T NodeBase { get; }
+        [CanBeNull]
         Port InputParentPort { get; }
+        [CanBeNull]
         Port InputGuardingPort { get; }
-        Port OutputChildsPort { get; }
+        [CanBeNull]
+        Port OutputChildPorts { get; }
+        [CanBeNull]
         Port OutputGuardedPort { get; }
 
         public event Action<Type> OnTypeChanged;
         [CanBeNull]
         public Edge ConnectChildNodeEditor(INodeBaseEditor<NodeBase> childNodeEditor)
         {
-            return OutputChildsPort?.ConnectTo(childNodeEditor.InputParentPort);
+            return OutputChildPorts?.ConnectTo(childNodeEditor.InputParentPort);
         }
         [CanBeNull]
         public Edge ConnectGuardNodeEditor(INodeBaseEditor<NodeBase> guardNodeEditor)
@@ -59,7 +44,7 @@ namespace BehaviourTree
         {
             NodeBase.RectInGraph = GetRect();
             NodeBase.ClearChildren();
-            this.ChildsEditor()?
+            this.ChildEditors()?
                 .OrderBy(editor => editor.GetRect().x)
                 .ForEach(childEditor =>
                 {
@@ -81,7 +66,7 @@ namespace BehaviourTree
         public T NodeBase { get; private set; }
         public Port InputParentPort { get; protected set; }
         public Port InputGuardingPort { get; protected set; }
-        public Port OutputChildsPort { get; protected set; }
+        public Port OutputChildPorts { get; protected set; }
         public Port OutputGuardedPort { get; protected set; }
         
         public event Action<Type> OnTypeChanged;
