@@ -14,6 +14,9 @@ namespace BehaviourTree
         /// </summary>
         public static readonly List<Type> NodeGeneralTypes;
         public static readonly Dictionary<string, Type> PortTypeDic;
+        /// <summary>
+        /// kvp = (ActionNode, [ActionNodeXXX, ActionNodeXXX, ActionNodeXXX, ...])
+        /// </summary>
         public static readonly Dictionary<Type, List<Type>> GeneralToSelectionsDic;
         static TypeCache()
         {

@@ -16,10 +16,7 @@ namespace BehaviourTree
         static RootNode curRootNode;
         static BTEditorWindow()
         {
-            EditorApplication.quitting += () => windowDic.ForEach(kvp =>
-            {
-                CloseWindow(kvp.Key);
-            });
+            EditorApplication.quitting += () => windowDic.Keys.ForEach(CloseWindow);
         }
         void OnEnable()
         {
@@ -79,32 +76,27 @@ namespace BehaviourTree
         void InitToolbar()
         {
             var toolbar = new Toolbar();
-            foreach (var btn in CollectButtons(curView))
-            {
-                toolbar.Add(btn);
-            }
+            CollectButtons(curView).ForEach(toolbar.Add);
             rootVisualElement.Add(toolbar);
         }
         
         static IEnumerable<Button> CollectButtons(BTGraphView fView)
         {
             List<Button> ret = new();
-            var nodeGeneralTypes = TypeCache.NodeGeneralTypes;
-            nodeGeneralTypes
-                .ForEach(nodeGeneralType =>
+            TypeCache.NodeGeneralTypes.ForEach(nodeGeneralType =>
+            {
+                // MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
+                ret.Add(new Button(() => fView.DrawNodeEditorWithType(TypeCache.GeneralToSelectionsDic[nodeGeneralType][0]))
                 {
-                    // MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
-                    ret.Add(new Button(() => fView.DrawNodeEditorWithType(TypeCache.GeneralToSelectionsDic[nodeGeneralType][0]))
+                    text = nodeGeneralType.Name,
+                    style =
                     {
-                        text = nodeGeneralType.Name,
-                        style =
-                        {
-                            width = 200,
-                            height = 30,
-                            marginLeft = ret.Count == 0 ? 10: 0
-                        }
-                    });
+                        width = 200,
+                        height = 30,
+                        marginLeft = ret.Count == 0 ? 10: 0
+                    }
                 });
+            });
             return ret;
         }
     }
