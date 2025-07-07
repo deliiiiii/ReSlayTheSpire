@@ -22,10 +22,11 @@ namespace BehaviourTree
                 .ToList();
         }
 
-        string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
         INodeBaseEditor<NodeBase> rootEditor;
         NodeBase rootNode;
+        public event Action<int> OnRootNodeDeleted;
         
+        string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
         IEnumerable<INodeBaseEditor<NodeBase>> nodes => 
             base.nodes.OfType<INodeBaseEditor<NodeBase>>().ToList();
         
@@ -92,7 +93,7 @@ namespace BehaviourTree
             if (rootEditor == null)
             {
                 MyDebug.LogError("No ROOT node found in the graph, NOT save the graph and CLOSE the window!");
-                BTEditorWindow.CloseWindow(rootNode.GetInstanceID());
+                OnRootNodeDeleted?.Invoke(rootNode.GetInstanceID());
                 return;
             }
             rootEditor.OnRefreshTree();

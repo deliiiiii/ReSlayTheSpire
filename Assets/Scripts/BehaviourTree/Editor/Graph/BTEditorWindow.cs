@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -11,8 +12,10 @@ namespace BehaviourTree
     {
         static BTEditorWindow()
         {
-            EditorApplication.quitting += ClearWindowFunc;
-            ClearWindowFunc();
+            EditorApplication.quitting += () => windowDic.ForEach(kvp =>
+            {
+                CloseWindow(kvp.Key);
+            });
         }
         static readonly Dictionary<int, BTEditorWindow> windowDic = new();
         static BTGraphView curView;
@@ -40,13 +43,8 @@ namespace BehaviourTree
             InitWindow();
             return true;
         }
-
-        public static void OpenAssetAsWindow(int instanceID)
-        {
-            OnOpenAsset(instanceID, 424242);
-        }
         
-        public static void CloseWindow(int instanceID)
+        static void CloseWindow(int instanceID)
         {
             if (!windowDic.TryGetValue(instanceID, out var value))
                 return;
@@ -74,6 +72,7 @@ namespace BehaviourTree
         void InitView()
         {
             curView = new BTGraphView();
+            curView.OnRootNodeDeleted += CloseWindow;
             curView.Load(curRootNode);
             rootVisualElement.Add(curView);
         }
@@ -87,7 +86,6 @@ namespace BehaviourTree
             }
             rootVisualElement.Add(toolbar);
         }
-        
         
         static IEnumerable<Button> CollectButtons(BTGraphView fView)
         {
@@ -109,18 +107,6 @@ namespace BehaviourTree
                     });
                 });
             return ret;
-        }
-        
-        /// <summary>
-        /// 关闭windowDic中所有的窗口
-        /// </summary>
-        static void ClearWindowFunc()
-        {
-            foreach (var kvp in windowDic)
-            {
-                kvp.Value.Close();
-            }
-            windowDic.Clear();
         }
     }
  
