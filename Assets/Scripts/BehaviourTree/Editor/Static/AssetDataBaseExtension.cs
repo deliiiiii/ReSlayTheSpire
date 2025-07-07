@@ -6,14 +6,29 @@ namespace BehaviourTree
 {
     public static class AssetDataBaseExtension
     {
-        public static void CloseAllWindows()
+        // public static void CloseAllWindows()
+        // {
+        //     Resources.FindObjectsOfTypeAll<BTEditorWindow>().ForEach(w => w.Close());
+        // }
+        public static void SafeAddSubAsset(Object objectToAdd, Object assetObject)
         {
-            Resources.FindObjectsOfTypeAll<BTEditorWindow>().ForEach(w => w.Close());
-        }
-        public static void SafeAddSubAsset(UnityEngine.Object objectToAdd, UnityEngine.Object assetObject)
-        {
-            if (assetObject == null || objectToAdd == null || AssetDatabase.Contains(objectToAdd))
+            if (assetObject == null || objectToAdd == null)
+            {
+                MyDebug.LogError("AssetDatabaseExtension.SafeAddSubAsset: assetObject or objectToAdd is null");
                 return;
+            }
+
+            if (AssetDatabase.Contains(objectToAdd))
+            {
+                // MyDebug.LogError($"AssetDatabaseExtension.SafeAddSubAsset: {assetObject.name} already exists");
+                return;
+            }
+
+            if (!EditorUtility.IsPersistent(assetObject))
+            {
+                MyDebug.LogError($"AssetDatabaseExtension.SafeAddSubAsset: {assetObject.name} is NOT persistent");
+                return;
+            }
             AssetDatabase.AddObjectToAsset(objectToAdd, assetObject);
         }
     }

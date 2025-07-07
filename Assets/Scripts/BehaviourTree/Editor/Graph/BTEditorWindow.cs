@@ -40,6 +40,19 @@ namespace BehaviourTree
             InitWindow();
             return true;
         }
+
+        public static void OpenAssetAsWindow(int instanceID)
+        {
+            OnOpenAsset(instanceID, 424242);
+        }
+        
+        public static void CloseWindow(int instanceID)
+        {
+            if (!windowDic.TryGetValue(instanceID, out var value))
+                return;
+            value.Close();
+            windowDic.Remove(instanceID);
+        }
         
         static void InitWindow()
         {

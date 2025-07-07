@@ -1,5 +1,29 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8658247826244053033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
+  m_Name: GuardNodeMoreThan
+  m_EditorClassIdentifier: 
+  RectInGraph:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  State:
+    value: 0
+  GuardNode: {fileID: 0}
+  ChildList: []
+  Value: 0
+  Threshold: 0
 --- !u!114 &-2848382546855940492
 MonoBehaviour:
   m_ObjectHideFlags: 0

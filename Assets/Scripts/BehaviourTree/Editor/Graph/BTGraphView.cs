@@ -23,10 +23,8 @@ namespace BehaviourTree
         }
 
         string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
-        string tempPath => $"Assets/DataTree/{rootNode?.name ?? "null"}Temp.asset";
         INodeBaseEditor<NodeBase> rootEditor;
         NodeBase rootNode;
-        
         
         public BTGraphView()
         {
@@ -60,10 +58,10 @@ namespace BehaviourTree
                 return rootEditor as INodeBaseEditor<T>;
             
             // 利用反射调用构造函数, 参数列表恰好是{T}
-            var ins = typeof(NodeBaseEditor<T>)
+            if (typeof(NodeBaseEditor<T>)
                     .GetConstructor(new []{typeof(T), typeof(bool)})
-                    ?.Invoke(new object[]{nodeConcrete, isDefault})
-                    as INodeBaseEditor<T>;
+                    ?.Invoke(new object[]{nodeConcrete, isDefault}) is not INodeBaseEditor<T> ins)
+                return null;
             ins.OnTypeChanged += _ => OnGraphViewChanged(default);
             
             var node = ins as Node;
@@ -92,7 +90,8 @@ namespace BehaviourTree
             rootEditor = nodes.OfType<INodeBaseEditor<NodeBase>>().FirstOrDefault(node => node.NodeBase is RootNode);
             if (rootEditor == null)
             {
-                MyDebug.Log("No ROOT node found in the graph, will NOT save the graph.");
+                MyDebug.LogError("No ROOT node found in the graph, NOT save the graph and CLOSE the window!");
+                BTEditorWindow.CloseWindow(rootNode.GetInstanceID());
                 return;
             }
             rootEditor.OnRefreshTree();
@@ -139,7 +138,6 @@ namespace BehaviourTree
             CreateChildNodeEditors(rootEditor, rootNode);
         }
         
-        bool rootNodeDeleted = false;
         void Save()
         {
             var nodeBaseEditors = nodes
@@ -152,12 +150,6 @@ namespace BehaviourTree
                 AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
                     .Where(ass => !nodeBases.Contains(ass))
                     .ForEach(AssetDatabase.RemoveObjectFromAsset);
-
-                if (!EditorUtility.IsPersistent(rootNode))
-                {
-                    rootNodeDeleted = true;
-                    AssetDatabase.CreateAsset(rootNode, tempPath);
-                }
             }
             else
             {
