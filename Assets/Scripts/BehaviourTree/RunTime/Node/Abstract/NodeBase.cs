@@ -76,6 +76,7 @@ public abstract class NodeBase : ScriptableObject
     }
     #endregion
 
+    
     #region Tick
     public EState Tick(float dt)
     {
@@ -110,6 +111,7 @@ public abstract class NodeBase : ScriptableObject
         target.State.Value = EState.Failed;
     }
     #endregion
+    
     
     protected void RecursiveDo(Action<NodeBase> func)
     {

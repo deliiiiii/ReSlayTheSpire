@@ -41,10 +41,10 @@ namespace BehaviourTree
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
         public T NodeBase { get; private set; }
-        public Port InputParentPort { get; protected set; }
-        public Port InputGuardingPort { get; protected set; }
-        public Port OutputChildsPort { get; protected set; }
-        public Port OutputGuardedPort { get; protected set; }
+        public Port InputParentPort { get; }
+        public Port InputGuardingPort { get;}
+        public Port OutputChildsPort { get; }
+        public Port OutputGuardedPort { get; }
         [CanBeNull]
         IEnumerable<INodeBaseEditor<NodeBase>> childsEditor =>
             OutputChildsPort?.connections?

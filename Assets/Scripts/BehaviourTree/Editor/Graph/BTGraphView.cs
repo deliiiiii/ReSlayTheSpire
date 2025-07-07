@@ -77,24 +77,24 @@ namespace BehaviourTree
                     return;
                 nodeEditor.NodeBase.ClearChildren();
             });
-            RefreshTree();
-            Save();
+            RefreshTreeAndSave();
             return graphViewChange;
         }
         
         /// <summary>
         ///  更新节点连接状态。。。
         /// </summary>
-        void RefreshTree()
+        void RefreshTreeAndSave()
         {
             rootEditor = nodes.FirstOrDefault(node => node is RootNodeEditor) as RootNodeEditor;
             if (rootEditor == null)
             {
-                MyDebug.Log("No ROOT node found in the graph.");
+                MyDebug.Log("No ROOT node found in the graph, will NOT save the graph.");
                 return;
             }
             rootEditor.OnRefreshTree();
             rootNode = rootEditor.NodeBase;
+            Save();
         }
 
         void CreateChildNodeEditors(INodeBaseEditor<NodeBase> thisNodeEditor, NodeBase thisNodeBase)
@@ -135,7 +135,6 @@ namespace BehaviourTree
             rootEditor = DrawNodeEditorWithConcrete(rootNode) as RootNodeEditor;
             CreateChildNodeEditors(rootEditor, rootNode);
         }
-        
         void Save()
         {
             var nodeBaseEditors = nodes
@@ -148,6 +147,27 @@ namespace BehaviourTree
                 AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
                     .Where(ass => !nodeBases.Contains(ass as NodeBase))
                     .ForEach(AssetDatabase.RemoveObjectFromAsset);
+                
+                // // 最特殊的情况，其实是删除了根节点
+                // if (!EditorUtility.IsPersistent(rootNode))
+                // {
+                //     isRootDeleted = true;
+                //     var newRootNode = ScriptableObject.Instantiate(rootNode);
+                //     AssetDatabase.DeleteAsset(path);
+                //     
+                //     // AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
+                //     //     .ForEach(AssetDatabase.RemoveObjectFromAsset);
+                //     
+                //     EditorUtility.SetDirty(newRootNode);
+                //     AssetDatabase.SaveAssets();
+                //     AssetDatabase.Refresh();
+                //     Observable.Timer(TimeSpan.FromDays(1)).Subscribe(_ =>
+                //     {
+                //         isRootDeleted = false;
+                //         rootNode = newRootNode;
+                //         AssetDatabase.CreateAsset(newRootNode, path);
+                //     });
+                // }
             }
             else
             {
