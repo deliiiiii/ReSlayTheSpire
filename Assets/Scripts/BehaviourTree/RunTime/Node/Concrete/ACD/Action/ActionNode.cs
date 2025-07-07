@@ -6,14 +6,26 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNode : ACDNode
     {
+        protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
+        
         [NonSerialized]
         public Action OnEnter;
         [NonSerialized]
         public Action<float> OnContinue;
         bool isRunning;
         protected bool IsFinished;
-        
-        public override EState OnTickChild(float dt)
+
+        void OnEnable()
+        {
+            Binder.From(State).To(s =>
+            {
+                if(s == EState.Failed)
+                    isRunning = IsFinished = false;
+            });
+        }
+
+
+        protected override EState OnTickChild(float dt)
         {
             if (!isRunning)
             {
@@ -27,16 +39,6 @@ namespace BehaviourTree
                 return EState.Succeeded;
             }
             return EState.Running;
-        }
-        public override void OnFail()
-        {
-            isRunning = IsFinished = false;
-        }
-
-        public override ACDNode AddChild(ACDNode child)
-        {
-            // MyDebug.LogError("ActionNode cannot have children.");
-            return this;
         }
     }
 

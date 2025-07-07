@@ -1,51 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4578451793665930660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: ActionNodeDebug
-  m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 24.8
-    y: 42.4
-    width: 212.8
-    height: 124
-  State:
-    value: 0
-  GuardNode: {fileID: -2540151868088678441}
-  ChildList: []
-  Content: "\u91CD\u4E2D\u4E4B\u91CD"
-  DebugType: 0
---- !u!114 &-2540151868088678441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
-  m_Name: GuardNodeMoreThan
-  m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: -219.2
-    y: -84.8
-    width: 212.8
-    height: 100
-  State:
-    value: 0
-  Value: 21
-  Threshold: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 47.2
-    y: -115.2
-    width: 88.8
-    height: 61.600002
+    x: 387
+    y: 70
+    width: 87
+    height: 62
   State:
     value: 2
-  ChildNode: {fileID: -4578451793665930660}
+  GuardNode: {fileID: 0}
+  ChildList: []

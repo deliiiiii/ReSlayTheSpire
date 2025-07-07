@@ -10,16 +10,15 @@ namespace BehaviourTree
     [CreateAssetMenu(fileName = nameof(RootNode), menuName = "BehaviourTree/" + nameof(RootNode))]
     public class RootNode : NodeBase
     {
-        [HideInInspector]
-        public ACDNode ChildNode;
+        protected override EChildCountType childCountType { get; set; } = EChildCountType.Single;
         public override string ToString()
         {
             return nameof(RootNode);
         }
 
-        public void Tick(float dt)
+        public override EState Tick(float dt)
         {
-            State.Value = ChildNode?.Tick(dt) ?? EState.Failed;
+            return State.Value = LastChild?.Tick(dt) ?? EState.Failed;
         }
     }
 }

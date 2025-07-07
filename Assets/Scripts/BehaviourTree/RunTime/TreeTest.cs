@@ -6,11 +6,6 @@ namespace BehaviourTree
     public class TreeTest : Singleton<TreeTest>
     {
         [ShowInInspector][SerializeField] RootNode root;
-        // public static RootNode StaticRoot
-        // {
-        //     get => Instance.root;
-        //     set => Instance.root = value;
-        // }
 
         void Start()
         {

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using JetBrains.Annotations;
-using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace BehaviourTree
 {
@@ -11,23 +7,11 @@ namespace BehaviourTree
 public abstract class ACDNode : NodeBase
 {
     #region Tick
-    [HideInInspector][CanBeNull] public GuardNode GuardNode;
-    public abstract EState OnTickChild(float dt);
-    public abstract void OnFail();
-
-    public override void OnResetState()
-    {
-        base.OnResetState();
-        GuardNode?.OnResetState();
-        ChildList?.ForEach(child => child.OnResetState());
-        
-    }
-
-    public EState Tick(float dt)
+    public override EState Tick(float dt)
     {
         if (!CheckGuardLocal())
         {
-            OnFail();
+            RecursiveDo(OnFail);
             return State.Value = EState.Failed;
         }
         // var failedNode = CheckGuardGlobal();
@@ -68,31 +52,6 @@ public abstract class ACDNode : NodeBase
     //     //     return null;
     //     // return Parent.CheckGuard();
     // }
-    
-    #endregion
-
-    #region Parent & Child & Guard
-    protected ACDNode FirstChild => ChildLinkedList?.Last?.Value;
-    protected LinkedList<ACDNode> ChildLinkedList => ChildList == null ? new() : new LinkedList<ACDNode>(ChildList);
-    [HideInInspector]public List<ACDNode> ChildList;
-    
-#if UNITY_EDITOR
-    public abstract ACDNode AddChild(ACDNode child);
-    public bool RemoveChild(ACDNode child)
-    {
-        if (ChildList != null && ChildList.Contains(child))
-        {
-            ChildList.Remove(child);
-            return true;
-        }
-        return false;
-    }
-    public void ClearChildren()
-    {
-        ChildList?.Clear();
-    }
-    
-#endif
     #endregion
 }
 }

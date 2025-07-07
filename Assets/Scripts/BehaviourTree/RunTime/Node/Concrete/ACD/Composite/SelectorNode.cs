@@ -5,11 +5,11 @@ namespace BehaviourTree
     [Serializable]
     public class SelectorNode : CompositeNode
     {
-        public override EState OnTickChild(float dt)
+        protected override EState OnTickChild(float dt)
         {
             if(curNode == null)
             {
-                OnResetState();
+                RecursiveDo(OnResetState);
                 curNode = ChildLinkedList?.First;
             }
             

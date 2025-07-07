@@ -133,7 +133,7 @@ namespace BehaviourTree
         {
             if (parentNodeBase is RootNode parentNode)
             {
-                var childNode = parentNode.ChildNode;
+                var childNode = parentNode.LastChild;
                 var childNodeEditor = DrawNodeEditorWithConcrete(childNode) as IACDNodeEditor<ACDNode>;
                 var rootNodeEditor = parentNodeEditor as RootNodeEditor;
                 if (childNodeEditor != null)

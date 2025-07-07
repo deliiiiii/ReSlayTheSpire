@@ -5,9 +5,9 @@ namespace BehaviourTree
     [Serializable]
     public class NothingNode : DecorateNode
     {
-        public override EState OnTickChild(float dt)
+        protected override EState OnTickChild(float dt)
         {
-            var ret = FirstChild?.Tick(dt);
+            var ret = LastChild?.Tick(dt);
             return ret ?? EState.Succeeded;
         }
     }

@@ -32,11 +32,11 @@ namespace BehaviourTree
         public override void OnRefreshTree()
         {
             base.OnRefreshTree();
-            NodeBase.ChildNode = null;
+            NodeBase.ClearChildren();
             if (childEditor != null)
             {
                 // MyDebug.Log($"Root {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
-                NodeBase.ChildNode = childEditor.NodeBase;
+                NodeBase.AddChild(childEditor.NodeBase);
                 childEditor.OnRefreshTree();
             }
         }
