@@ -7,13 +7,13 @@ namespace BehaviourTree
         public GuardNodeEditor(GuardNode nodeBase) : base(nodeBase)
         {
         }
-        protected override void DrawPort()
-        {
-            OutputGuardedPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
-                typeof(GuardNodeEditor));
-            OutputGuardedPort.portName = "Guarding ↓";
-            OutputGuardedPort.tooltip = typeof(GuardNodeEditor).ToString();
-            outputContainer.Add(OutputGuardedPort);
-        }
+        // protected override void DrawPort()
+        // {
+        //     OutputGuardedPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
+        //         typeof(GuardNodeEditor));
+        //     OutputGuardedPort.portName = "Guarding ↓";
+        //     OutputGuardedPort.tooltip = typeof(GuardNodeEditor).ToString();
+        //     outputContainer.Add(OutputGuardedPort);
+        // }
     }
 }

@@ -117,6 +117,17 @@ public abstract class NodeBase : ScriptableObject
         func(GuardNode);
         ChildList?.ForEach(func);
     }
+
+    public Type GetNodeGeneralType()
+    {
+        var ret = GetType();
+        while (ret.BaseType != null && !ret.BaseType.IsAbstract)
+        {
+            ret = ret.BaseType;
+        }
+
+        return ret;
+    }
 }
 
 }

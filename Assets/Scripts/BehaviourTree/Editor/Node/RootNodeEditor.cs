@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using Sirenix.Utilities;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+﻿using UnityEditor.Experimental.GraphView;
 using Direction = UnityEditor.Experimental.GraphView.Direction;
 
 namespace BehaviourTree
@@ -12,13 +9,13 @@ namespace BehaviourTree
         {
         }
         
-        protected override void DrawPort()
-        {
-            OutputChildsPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
-                typeof(INodeBaseEditor<NodeBase>));
-            OutputChildsPort.portName = "Root ↓";
-            OutputChildsPort.tooltip = typeof(INodeBaseEditor<NodeBase>).ToString();
-            outputContainer.Add(OutputChildsPort);
-        }
+        // protected override void DrawPort()
+        // {
+        //     OutputChildsPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
+        //         typeof(INodeBaseEditor<NodeBase>));
+        //     OutputChildsPort.portName = "Root ↓";
+        //     OutputChildsPort.tooltip = typeof(INodeBaseEditor<NodeBase>).ToString();
+        //     outputContainer.Add(OutputChildsPort);
+        // }
     }
 }

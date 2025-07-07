@@ -9,14 +9,14 @@ namespace BehaviourTree
         {
         }
 
-        protected override void DrawPort()
-        {
-            base.DrawPort();
-            OutputChildsPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi,
-                typeof(INodeBaseEditor<NodeBase>));
-            OutputChildsPort.portName = "Com ↓";
-            OutputChildsPort.tooltip = typeof(INodeBaseEditor<NodeBase>).ToString();
-            outputContainer.Add(OutputChildsPort);
-        }
+        // protected override void DrawPort()
+        // {
+        //     base.DrawPort();
+        //     OutputChildsPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi,
+        //         typeof(INodeBaseEditor<NodeBase>));
+        //     OutputChildsPort.portName = "Com ↓";
+        //     OutputChildsPort.tooltip = typeof(INodeBaseEditor<NodeBase>).ToString();
+        //     outputContainer.Add(OutputChildsPort);
+        // }
     }
 }

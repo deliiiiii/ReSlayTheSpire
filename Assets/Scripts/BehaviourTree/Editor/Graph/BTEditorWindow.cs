@@ -12,12 +12,27 @@ namespace BehaviourTree
 {
     public class BTEditorWindow : EditorWindow
     {
+        static BTEditorWindow()
+        {
+            EditorApplication.quitting += ClearWindowFunc;
+            ClearWindowFunc();
+        }
+        static readonly Dictionary<int, BTEditorWindow> windowDic = new();
         static BTGraphView curView;
         static BTEditorWindow curWindow;
         static RootNode curRootNode;
-
-        static readonly Dictionary<int, BTEditorWindow> windowDic = new();
         
+        void OnEnable()
+        {
+            InitView();
+            InitToolbar();
+        }
+        void OnDisable()
+        {
+            var kvp = windowDic.FirstOrDefault(kvp => kvp.Value == this);
+            windowDic.Remove(kvp.Key);
+        }
+
         [UnityEditor.Callbacks.OnOpenAsset(1)]
         public static bool OnOpenAsset(int instanceID, int line)
         {
@@ -28,18 +43,7 @@ namespace BehaviourTree
             InitWindow();
             return true;
         }
-        void OnEnable()
-        {
-            InitView();
-            InitToolbar();
-        }
-
-        void OnDisable()
-        {
-            var kvp = windowDic.FirstOrDefault(kvp => kvp.Value == this);
-            windowDic.Remove(kvp.Key);
-        }
-
+        
         static void InitWindow()
         {
             var curId = curRootNode.GetInstanceID();
@@ -104,6 +108,18 @@ namespace BehaviourTree
                     });
                 });
             return ret;
+        }
+        
+        /// <summary>
+        /// 关闭windowDic中所有的窗口
+        /// </summary>
+        static void ClearWindowFunc()
+        {
+            foreach (var kvp in windowDic)
+            {
+                kvp.Value.Close();
+            }
+            windowDic.Clear();
         }
     }
  

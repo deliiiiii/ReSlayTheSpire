@@ -25,37 +25,6 @@ namespace BehaviourTree
         string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
         RootNodeEditor rootEditor;
         RootNode rootNode;
-        static void InitDropDownDicCache()
-        {
-            var baseType = typeof(NodeBaseEditor<>);
-            var nodeTypes = Assembly.GetExecutingAssembly().GetTypes();
-            nodeTypes
-                .Where(type =>  
-                    type.InheritsFrom(baseType)
-                    && type != baseType
-                    && !type.IsAbstract
-                    && (type.BaseType?.IsAbstract ?? false)
-                )
-                // nodeEditorType: ActionNodeEditor or CompositeNodeEditor or DecoratorNodeEditor ...
-                .ForEach(nodeEditorType =>
-                {
-                    
-                    TypeCache.EditorToSubNodeDic[nodeEditorType] = new List<Type>();
-                    var tBaseType = nodeEditorType.BaseType!.GetGenericArguments()[0];
-                    var tSubTypes = tBaseType.SubType();
-                    if (!tSubTypes.Any())
-                    {
-                        TypeCache.EditorToSubNodeDic[nodeEditorType].Add(tBaseType);
-                    }
-                    else
-                    {
-                        tSubTypes.ForEach(tSubType =>
-                        {
-                            TypeCache.EditorToSubNodeDic[nodeEditorType].Add(tSubType);
-                        });
-                    }
-                });
-        }
         
         
         public BTGraphView()
@@ -66,7 +35,6 @@ namespace BehaviourTree
             this.AddManipulator(new RectangleSelector());
             graphViewChanged = OnGraphViewChanged;
             this.StretchToParentSize();
-            InitDropDownDicCache();
         }
         
         public INodeBaseEditor<NodeBase> DrawNodeEditor(Type nodeEditorType, NodeBase nodeConcrete = null)
@@ -135,12 +103,28 @@ namespace BehaviourTree
             if (guardNode != null)
             {
                 var guardEditor = DrawNodeEditorWithConcrete(guardNode);
-                AddElement(thisNodeEditor.ConnectGuardNodeEditor(guardEditor));
+                var ele = thisNodeEditor.ConnectGuardNodeEditor(guardEditor);
+                if (ele == null)
+                {
+                    MyDebug.LogError($"Failed to connect guardNodeEditor {guardNode.name} for {thisNodeBase.name}, probably some port is NULL! Check the config.");
+                }
+                else
+                {
+                    AddElement(ele);
+                }
             }
             thisNodeBase.ChildList?.ForEach(childNode =>
             {
                 var childNodeEditor = DrawNodeEditorWithConcrete(childNode);
-                AddElement(thisNodeEditor.ConnectChildNodeEditor(childNodeEditor));
+                var ele = thisNodeEditor.ConnectChildNodeEditor(childNodeEditor);
+                if (ele == null)
+                {
+                    MyDebug.LogError($"Failed to connect childNodeEditor {childNode.name} for {thisNodeBase.name}, probably some port is NULL! Check the config.");
+                }
+                else
+                {
+                    AddElement(ele);
+                }
                 CreateChildNodeEditors(childNodeEditor, childNode);
             });
         }

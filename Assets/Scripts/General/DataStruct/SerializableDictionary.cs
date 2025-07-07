@@ -140,6 +140,20 @@ public class SerializableDictionary<TKey, TValue> :
     }
 
     public bool Remove(KeyValuePair<TKey, TValue> kvp) => Remove(kvp.Key);
+    public bool RemoveAll(Func<KeyValuePair<TKey, TValue>, bool> predicate)
+    {
+        var removed = false;
+        for (var i = list.Count - 1; i >= 0; i--)
+        {
+            var kvp = ToKeyValuePair(list[i]);
+            if (predicate(kvp))
+            {
+                removed = true;
+                Remove(kvp.Key);
+            }
+        }
+        return removed;
+    }
 
     #endregion
 
