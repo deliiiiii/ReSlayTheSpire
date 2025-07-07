@@ -13,18 +13,9 @@ namespace BehaviourTree
 {
     public class BTGraphView : GraphView
     {
-        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
-        {
-            return ports.ToList()
-                .Where(port => 
-                    port.direction != startPort.direction 
-                    && port.portType.IsAssignableFrom(startPort.portType))
-                .ToList();
-        }
-
+        public event Action<int> OnRootNodeDeleted;
         INodeBaseEditor<NodeBase> rootEditor;
         NodeBase rootNode;
-        public event Action<int> OnRootNodeDeleted;
         
         string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
         IEnumerable<INodeBaseEditor<NodeBase>> nodes => 
@@ -38,6 +29,14 @@ namespace BehaviourTree
             this.AddManipulator(new RectangleSelector());
             graphViewChanged = OnGraphViewChanged;
             this.StretchToParentSize();
+        }
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            return ports.ToList()
+                .Where(port => 
+                    port.direction != startPort.direction 
+                    && port.portType.IsAssignableFrom(startPort.portType))
+                .ToList();
         }
 
         /// <summary>

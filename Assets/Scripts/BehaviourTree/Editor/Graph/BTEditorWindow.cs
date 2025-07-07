@@ -10,6 +10,10 @@ namespace BehaviourTree
 {
     public class BTEditorWindow : EditorWindow
     {
+        static readonly Dictionary<int, BTEditorWindow> windowDic = new();
+        static BTGraphView curView;
+        static BTEditorWindow curWindow;
+        static RootNode curRootNode;
         static BTEditorWindow()
         {
             EditorApplication.quitting += () => windowDic.ForEach(kvp =>
@@ -17,11 +21,6 @@ namespace BehaviourTree
                 CloseWindow(kvp.Key);
             });
         }
-        static readonly Dictionary<int, BTEditorWindow> windowDic = new();
-        static BTGraphView curView;
-        static BTEditorWindow curWindow;
-        static RootNode curRootNode;
-        
         void OnEnable()
         {
             InitView();
@@ -34,7 +33,7 @@ namespace BehaviourTree
         }
 
         [UnityEditor.Callbacks.OnOpenAsset(1)]
-        public static bool OnOpenAsset(int instanceID, int line)
+        static bool OnOpenAsset(int instanceID, int line)
         {
             var obj = EditorUtility.InstanceIDToObject(instanceID);
             if (obj is not RootNode node)
