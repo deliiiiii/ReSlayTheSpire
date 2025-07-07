@@ -15,5 +15,10 @@ namespace BehaviourTree
         {
             return parentType.Assembly.GetTypes().Where(x => x.IsSubclassOf(parentType));
         }
+        
+        public static bool HasAttribute<T>(this Type type) where T : Attribute
+        {
+            return type.GetCustomAttributes(typeof(T), true).Length > 0;
+        }
     }
 }

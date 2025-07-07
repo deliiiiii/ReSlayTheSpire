@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
+using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
+// ReSharper disable InconsistentNaming
 
 namespace BehaviourTree.Config
 {
-    [Serializable]
-    public enum EPortType
-    {
-        Guard,
-        HasChild,
-    }
+    [PortType]
+    interface GuardPort{}
+    [PortType]
+    interface HasChildPort{}
+    
+    [PortType]
+    interface AllPort : GuardPort, HasChildPort{}
     
     [Serializable]
     public class SinglePortData
@@ -21,7 +20,13 @@ namespace BehaviourTree.Config
         public bool IsValid;
         public Direction Direction;
         public Port.Capacity Capacity;
-        public EPortType PortType;
-        public string Name;
+        [ValueDropdown(nameof(GetPortType))]
+        public string PortTypeName;
+        public string PortName;
+        
+        static IEnumerable GetPortType()
+        {
+            return TypeCache.PortTypeDic.Keys;
+        }
     }
 }

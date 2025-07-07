@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BehaviourTree.Config;
 using Sirenix.Utilities;
 
 namespace BehaviourTree
@@ -11,9 +12,10 @@ namespace BehaviourTree
         /// 缓存每个NodeBaseEditor的DropDownFieldData
         /// kvp = ActionNodeEditor, [ActionNodeDebug, ActionNodeDelay, ...]
         /// </summary>
-        public static Dictionary<Type, List<Type>> EditorToSubNodeDic;
+        public static readonly Dictionary<Type, List<Type>> EditorToSubNodeDic;
         // ActionNode, CompositeNode, DecoratorNode, GuardNode, RootNode
-        public static List<Type> NodeTypes;
+        public static readonly List<Type> NodeTypes;
+        public static readonly Dictionary<string, Type> PortTypeDic;
 
         static TypeCache()
         {
@@ -53,6 +55,12 @@ namespace BehaviourTree
                     && !type.IsAbstract
                     && (type.BaseType?.IsAbstract ?? false)
                 ).ToList();
+
+            PortTypeDic = new Dictionary<string, Type>();
+            typeof(SinglePortData).Assembly
+                .GetTypes()
+                .Where(x => x.HasAttribute<PortTypeAttribute>())
+                .ForEach(x => PortTypeDic.Add(x.Name, x));
         }
         
         

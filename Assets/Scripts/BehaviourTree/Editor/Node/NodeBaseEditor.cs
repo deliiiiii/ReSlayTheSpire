@@ -157,8 +157,8 @@ namespace BehaviourTree
                 if (!value.IsValid)
                     return;
                 var ins = InstantiatePort(Orientation.Vertical, value.Direction, value.Capacity,
-                    typeof(int));
-                ins.portName = value.Name;
+                    TypeCache.PortTypeDic[value.PortTypeName]);
+                ins.portName = value.PortName;
                 if (value.Direction == Direction.Input)
                 {
                     inputContainer.Add(ins);
