@@ -12,37 +12,13 @@ namespace BehaviourTree
         {
         }
         
-        Port outputPort;
-        IACDNodeEditor<ACDNode> childEditor =>
-            OutEdges
-                .Where(port => port.input.node is IACDNodeEditor<ACDNode>)
-                .Select(port => port.input.node as IACDNodeEditor<ACDNode>)
-                .FirstOrDefault();
-        
         protected override void DrawPort()
         {
-            outputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
-                typeof(IACDNodeEditor<ACDNode>));
-            outputPort.portName = "Root ↓";
-            outputPort.tooltip = typeof(IACDNodeEditor<ACDNode>).ToString();
-            outputContainer.Add(outputPort);
-            
-        }
-
-        public override void OnRefreshTree()
-        {
-            base.OnRefreshTree();
-            NodeBase.ClearChildren();
-            if (childEditor != null)
-            {
-                // MyDebug.Log($"Root {NodeBase.NodeName} AddChild {childEditor.NodeBase.NodeName}");
-                NodeBase.AddChild(childEditor.NodeBase);
-                childEditor.OnRefreshTree();
-            }
-        }
-        public Edge ConnectChildNodeEditor(IACDNodeEditor<ACDNode> childNodeEditor)
-        {
-            return outputPort.ConnectTo(childNodeEditor.InputACDPort);
+            OutputChildsPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
+                typeof(INodeBaseEditor<NodeBase>));
+            OutputChildsPort.portName = "Root ↓";
+            OutputChildsPort.tooltip = typeof(INodeBaseEditor<NodeBase>).ToString();
+            outputContainer.Add(OutputChildsPort);
         }
     }
 }

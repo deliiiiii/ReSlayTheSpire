@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -13,30 +15,48 @@ namespace BehaviourTree
 {
     public interface INodeBaseEditor<out T> where T : NodeBase
     {
-        public T NodeBase { get; }
-        public int? InEdgesCount => InEdges.Count();
-        public int? OutEdgesCount => OutEdges.Count();
-        
-        public IEnumerable<Edge> InEdges { get; }
-        public IEnumerable<Edge> OutEdges { get; }
-        Rect GetRect();
+        T NodeBase { get; }
+        Port InputParentPort { get; }
+        Port InputGuardingPort { get; }
+        Port OutputChildsPort { get; }
+        Port OutputGuardedPort { get; }
         public event Action<Type> OnTypeChanged;
-        /// 当树变化时调用，主要是从头开始构建NodeBase的连接关系
+        
+        public Edge ConnectChildNodeEditor(INodeBaseEditor<NodeBase> childNodeEditor)
+        {
+            return OutputChildsPort.ConnectTo(childNodeEditor.InputParentPort);
+        }
+        public Edge ConnectGuardNodeEditor(INodeBaseEditor<NodeBase> guardNodeEditor)
+        {
+            return InputGuardingPort.ConnectTo(guardNodeEditor.OutputGuardedPort);
+        }
         void OnRefreshTree();
+        Rect GetRect();
     }
     
     
     public abstract class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     { 
-        public T NodeBase { get; set; }
-
-        public IEnumerable<Edge> InEdges => inputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
-        public IEnumerable<Edge> OutEdges => outputContainer.Query<Port>().ToList()?.SelectMany(x => x.connections) ?? Enumerable.Empty<Edge>();
-        public Rect GetRect() => GetPosition();
+        public T NodeBase { get; private set; }
+        public Port InputParentPort { get; protected set; }
+        public Port InputGuardingPort { get; protected set; }
+        public Port OutputChildsPort { get; protected set; }
+        public Port OutputGuardedPort { get; protected set; }
+        IEnumerable<INodeBaseEditor<NodeBase>> childsEditor => 
+            OutputChildsPort?.connections?
+                .Where(port => port.input.node is INodeBaseEditor<NodeBase>)
+                .Select(port => port.input.node as INodeBaseEditor<NodeBase>);
+        INodeBaseEditor<GuardNode> guardingEditor =>
+            InputGuardingPort?.connections?
+                .Where(port => port.output.node is GuardNodeEditor)
+                .Select(port => port.output.node as GuardNodeEditor)
+                .FirstOrDefault();
+        [CanBeNull] GuardNode guardingNode => guardingEditor?.NodeBase;
         public event Action<Type> OnTypeChanged;
         
+        public Rect GetRect() => GetPosition();
+        
         DropdownField typeField;
-        // HashSet<VisualElement> fieldElementSet = new();
         PropertyTree propertyTree;
         IMGUIContainer propertyTreeContainer;
         
@@ -82,9 +102,23 @@ namespace BehaviourTree
         
         protected abstract void DrawPort();
 
-        public virtual void OnRefreshTree()
+        /// 当树变化时调用，主要是从头开始构建NodeBase的连接关系
+        public void OnRefreshTree()
         {
             NodeBase.RectInGraph = GetPosition();
+            NodeBase.ClearChildren();
+            childsEditor?
+                .OrderBy(editor => editor.GetRect().x)
+                .ForEach(childEditor =>
+                {
+                    // MyDebug.Log($"Editor : {NodeBase.name} AddChild {childEditor.NodeBase.name}");
+                    NodeBase.AddChild(childEditor.NodeBase);
+                    childEditor.OnRefreshTree();
+                });
+            
+            NodeBase.GuardNode = guardingNode;
+            guardingEditor?.OnRefreshTree();
+            // MyDebug.Log($"Editor : {NodeBase.name} AddGuard {guard?.name ?? "null"}");
         }
         
         void CreateNodeBase(Type nodeType)
@@ -112,8 +146,11 @@ namespace BehaviourTree
             };
             
             propertyTree = PropertyTree.Create(NodeBase);
-            if(propertyTreeContainer != null)
+            if (propertyTreeContainer != null)
+            {
                 extensionContainer.Remove(propertyTreeContainer);
+                propertyTree.Dispose();
+            }
             propertyTreeContainer = new IMGUIContainer(() => propertyTree.Draw());
             extensionContainer.Add(propertyTreeContainer);
         }

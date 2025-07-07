@@ -105,7 +105,7 @@ namespace BehaviourTree
             MyDebug.LogWarning($"OnGraphViewChanged");
             nodes.ForEach(node =>
             {
-                if (node is not IACDNodeEditor<ACDNode> nodeEditor)
+                if (node is not INodeBaseEditor<NodeBase> nodeEditor)
                     return;
                 nodeEditor.NodeBase.ClearChildren();
             });
@@ -129,35 +129,20 @@ namespace BehaviourTree
             rootNode = rootEditor.NodeBase;
         }
 
-        void CreateChildNodeEditors(INodeBaseEditor<NodeBase> parentNodeEditor, NodeBase parentNodeBase)
+        void CreateChildNodeEditors(INodeBaseEditor<NodeBase> thisNodeEditor, NodeBase thisNodeBase)
         {
-            if (parentNodeBase is RootNode parentNode)
+            var guardNode = thisNodeBase.GuardNode;
+            if (guardNode != null)
             {
-                var childNode = parentNode.LastChild;
-                var childNodeEditor = DrawNodeEditorWithConcrete(childNode) as IACDNodeEditor<ACDNode>;
-                var rootNodeEditor = parentNodeEditor as RootNodeEditor;
-                if (childNodeEditor != null)
-                {
-                    AddElement(rootNodeEditor.ConnectChildNodeEditor(childNodeEditor));
-                    CreateChildNodeEditors(childNodeEditor, childNode);
-                }
-                return;
+                var guardEditor = DrawNodeEditorWithConcrete(guardNode);
+                AddElement(thisNodeEditor.ConnectGuardNodeEditor(guardEditor));
             }
-            if (parentNodeBase is ACDNode acdNode)
+            thisNodeBase.ChildList?.ForEach(childNode =>
             {
-                var acdNodeEditor = parentNodeEditor as IACDNodeEditor<ACDNode>;
-                if (acdNode.GuardNode != null)
-                {
-                    var guardEditor = DrawNodeEditorWithConcrete(acdNode.GuardNode) as GuardNodeEditor;
-                    AddElement(acdNodeEditor.ConnectGuardNodeEditor(guardEditor));
-                }
-                acdNode.ChildList?.ForEach(childNode =>
-                {
-                    var childNodeEditor = DrawNodeEditorWithConcrete(childNode) as IACDNodeEditor<ACDNode>;
-                    AddElement(acdNodeEditor.ConnectChildNodeEditor(childNodeEditor));
-                    CreateChildNodeEditors(childNodeEditor, childNode);
-                });
-            }
+                var childNodeEditor = DrawNodeEditorWithConcrete(childNode);
+                AddElement(thisNodeEditor.ConnectChildNodeEditor(childNodeEditor));
+                CreateChildNodeEditors(childNodeEditor, childNode);
+            });
         }
         public void Load(RootNode loadedRootNode)
         {

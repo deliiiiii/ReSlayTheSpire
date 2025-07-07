@@ -5,7 +5,7 @@ using UnityEditor.Experimental.GraphView;
 namespace BehaviourTree
 {
     [Serializable]
-    public class DecorateNode : ACDNode
+    public class DecorateNode : NodeBase
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.Single;
     }

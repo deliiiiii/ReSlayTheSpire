@@ -4,7 +4,7 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    public class ActionNode : ACDNode
+    public class ActionNode : NodeBase
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
         
