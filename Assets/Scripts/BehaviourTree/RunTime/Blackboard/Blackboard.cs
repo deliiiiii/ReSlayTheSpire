@@ -1,79 +1,92 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
+using General;
 using Sirenix.Utilities;
+using UniRx;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace BehaviourTree
 {
+    [Serializable]
     public class Blackboard : ScriptableObject
     {
-        readonly SerializableDictionary<IBoardKey, Union> dic = new ();
-        readonly SerializableDictionary<string, IBoardKey> fieldNameToKeyDic = new ();
+        // SerializableDictionary<Type, Func<string, Func<Blackboard, IObservable<object>>>> exDic = new ();
 
-
+        public SerializableDictionary<Type, Func<Blackboard, string, object>> exxDic = new();
+        public Wrap<int> WInt;
+        public static Func<Blackboard, TField> CreateFieldGetter<TField>(Blackboard board, string fieldName) where TField : IComparable<TField>
+        {
+            var param = Expression.Parameter(board.GetType(), "x");
+            var field = Expression.Field(param, fieldName);
+            var lambda = Expression.Lambda<Func<Blackboard, TField>>(field, param);
+            return lambda.Compile();
+        }
+        
+        // public static Func<Blackboard, TField> CreateFieldGetter<TField>(Blackboard board, string fieldName) where TField : IComparable
+        // {
+        //     var param = Expression.Parameter(board.GetType(), "x");
+        //     var field = Expression.Field(param, fieldName);
+        //     var lambda = Expression.Lambda<Func<Blackboard, TField>>(field, param);
+        //     return lambda.Compile();
+        // }
+        //
+        // static Func<T, TProperty> CreatePropertyGetter<T, TProperty>(string propertyName) where T : Blackboard where TProperty : IComparable<TProperty>
+        // {
+        //     var param = Expression.Parameter(typeof(T), "x");
+        //     var property = Expression.Property(param, propertyName);
+        //     var lambda = Expression.Lambda<Func<T, TProperty>>(property, param);
+        //     return lambda.Compile();
+        // }
+        
+        // public static Func<Blackboard, T> CreateFieldGetterForTBoard<T>(string fieldName) where T : IComparable<T>
+        // {
+        //     return CreateFieldGetter<Blackboard, T>(this, fieldName);
+        // }
+        
         void OnEnable()
         {
-            GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .ForEach(member =>
+            GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .ForEach(fieldInfo =>
                 {
-                    switch (member)
+                    var fieldType = fieldInfo.FieldType;
+                    if (fieldType == typeof(float))
                     {
-                        case FieldInfo fieldInfo:
-                        {
-                            var key = Activator.CreateInstance(typeof(BoardKey<>).MakeGenericType(fieldInfo.FieldType), fieldInfo.Name) as IBoardKey;
-                            fieldNameToKeyDic.Add(fieldInfo.Name, key);
-                            dic.TryAdd(key, new Union());
-                            break;
-                        }
-                        case PropertyInfo propertyInfo:
-                        {
-                            var key = Activator.CreateInstance(typeof(BoardKey<>).MakeGenericType(propertyInfo.PropertyType), propertyInfo.Name) as IBoardKey;
-                            fieldNameToKeyDic.Add(propertyInfo.Name, key);
-                            dic.TryAdd(key, new Union());
-                            break;
-                        }
+                        var lambda = GetType().GetMethod(nameof(CreateFieldGetter))!
+                            .MakeGenericMethod(fieldInfo.GetType())
+                            .Invoke(this, new object[] { fieldInfo.Name });
+                        // 等同于
+                        CreateFieldGetter<float>(this, fieldInfo.Name);
+                    }
+                    if (fieldType == typeof(float))
+                    {
+                        exxDic.TryAdd(fieldType, CreateFieldGetter<float>);
+                    }
+                    else if (fieldType == typeof(int))
+                    {
+                        exxDic.TryAdd(fieldType, CreateFieldGetter<int>);
+                    }
+                    else if (fieldType == typeof(double))
+                    {
+                        exxDic.TryAdd(fieldType, CreateFieldGetter<double>);
+                    }
+                    else if (fieldType == typeof(string))
+                    {
+                        exxDic.TryAdd(fieldType, CreateFieldGetter<string>);
+                    }
+                    else if (fieldType == typeof(Enum))
+                    {
+                        exxDic.TryAdd(fieldType, CreateFieldGetter<Enum>);
                     }
                 });
         }
 
-        public bool Get<T>(string fieldName, out T fieldValue) where T : class
+        public T Get<T>(string fieldName)
         {
-            if (dic.TryGetValue(fieldNameToKeyDic[fieldName], out var unionValue))
-            {
-                fieldValue = unionValue.intVal as T;
-            }
-            fieldValue = default;
-            return false;
+            return (T)exxDic[typeof(T)](this, fieldName);
         }
-
-        public void Set<T>(string fieldName, T value) where T : class
-        {
-            
-        }
-
-        public bool Remove<T>(string fieldName, out T value) where T : class
-        {
-            value = default;
-            return false;
-        }
-
-        // Nullable支持 -- 重载方法
-        public void Set<T>(string fieldName, T? value) where T : struct
-        {
-            
-        }
-
-        public bool Get<T>(string fieldName, out T? value) where T : struct
-        {
-            value = default;
-            return false;
-        }
-
-        public bool Remove<T>(string fieldName, out T? value) where T : struct
-        {
-            value = default;
-            return false;
-        }
+        
     }
 }

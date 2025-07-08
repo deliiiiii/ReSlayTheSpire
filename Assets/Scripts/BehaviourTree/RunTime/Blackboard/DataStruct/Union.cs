@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace BehaviourTree
 {
+    [Serializable]
     public enum EBoardEValueType : byte
     {
         Undefined = 0, // 表示Key不存在
@@ -19,9 +20,9 @@ namespace BehaviourTree
         @object = 15, // 引用类型
     }
     
-    
-    [StructLayout(LayoutKind.Explicit)][Serializable]
-    public struct Union : IEquatable<Union>
+    [Serializable]
+    [StructLayout(LayoutKind.Explicit)]
+    public struct Union : IEquatable<Union>, IComparable<Union>
     {
         [FieldOffset(0)] public readonly EBoardEValueType BoardEValueType;
         [FieldOffset(1)] public int intVal;
