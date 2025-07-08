@@ -9,7 +9,7 @@ namespace BehaviourTree
         BlackboardTest board;
         void Update()
         {
-            MyDebug.Log(board.Get<float>("Float"));
+            MyDebug.Log(board.Get<BlackboardTest, float>("Float"));
         }
     }
 }
