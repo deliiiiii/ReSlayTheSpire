@@ -24,7 +24,7 @@ namespace BehaviourTree
     [StructLayout(LayoutKind.Explicit)]
     public struct Union : IEquatable<Union>, IComparable<Union>
     {
-        [FieldOffset(0)] public readonly EBoardEValueType BoardEValueType;
+        [FieldOffset(0)] public EBoardEValueType BoardEValueType;
         [FieldOffset(1)] public int intVal;
         [FieldOffset(1)] public long longVal;
         [FieldOffset(1)] public float floatVal;    

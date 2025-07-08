@@ -14,7 +14,7 @@ namespace BehaviourTree
     {
         public TField IGet<TField>(string fieldName)
         {
-            MyDebug.Log(GetType() + " " + typeof(T));
+            // MyDebug.Log(GetType() + " " + typeof(T));
             var param = Expression.Parameter(GetType(), "x");
             var field = Expression.Field(param, fieldName);
             var lambda = Expression.Lambda<Func<T, TField>>(field, param);

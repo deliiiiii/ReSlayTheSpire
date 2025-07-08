@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7175926407084367149
+--- !u!114 &-2573363957119407690
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,34 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
-  m_Name: GuardNodeCompare
+  m_Script: {fileID: 11500000, guid: 95f37d4af73745c6b1589607c5a819fb, type: 3}
+  m_Name: NothingNode
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
+    x: 588.8
+    y: 217.59999
+    width: 212.79999
+    height: 104
   State:
     value: 0
-  GuardNode: {fileID: 0}
-  ChildList: []
-  FromBlackboard:
-    intVal: 12
-    longVal: 12
-    floatVal: 1.7e-44
-    doubleVal: 6e-323
-    boolVal: 12
-    vector3: {x: 1.7e-44, y: 0, z: 0}
-  CompareTo:
-    intVal: 4
-    longVal: 4
-    floatVal: 6e-45
-    doubleVal: 2e-323
-    boolVal: 4
-    vector3: {x: 6e-45, y: 0, z: 0}
-  CompareType: 0
+  GuardNode: {fileID: 2579914684750561758}
+  ChildList:
+  - {fileID: -1812419812507973863}
 --- !u!114 &-1812419812507973863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,12 +37,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 565
-    y: 391
-    width: 213
-    height: 124
+    x: 564.8
+    y: 391.2
+    width: 212.79999
+    height: 144
   State:
-    value: 1
+    value: 0
   GuardNode: {fileID: 0}
   ChildList: []
   Content: "\u554A\u554A\u554A"
@@ -75,17 +61,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 509
-    y: 50
-    width: 220
-    height: 87
+    x: 719.2
+    y: -84.8
+    width: 380.8
+    height: 228.8
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList:
-  - {fileID: 5554589850631243413}
-  Blackboard: {fileID: 0}
---- !u!114 &5554589850631243413
+  - {fileID: -2573363957119407690}
+  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
+--- !u!114 &2579914684750561758
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,17 +80,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc923665e79a455d8362390bfbd8d0e6, type: 3}
-  m_Name: InverseNode
+  m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
+  m_Name: GuardNodeCompare
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 501
-    y: 213
-    width: 183
-    height: 86
+    x: 91.2
+    y: -28.8
+    width: 370.40002
+    height: 420
   State:
     value: 0
   GuardNode: {fileID: 0}
-  ChildList:
-  - {fileID: -1812419812507973863}
+  ChildList: []
+  FromBlackboard:
+    BoardEValueType: 0
+    intVal: 0
+    longVal: 0
+    floatVal: 0
+    doubleVal: 0
+    boolVal: 0
+    vector3: {x: 0, y: 0, z: 0}
+  CompareTo:
+    BoardEValueType: 0
+    intVal: 1046562734
+    longVal: 4494952716788909998
+    floatVal: 0.22
+    doubleVal: 0.00000003218651283054541
+    boolVal: 174
+    vector3: {x: 0.22, y: 0.22, z: 0.22}
+  CompareType: 1

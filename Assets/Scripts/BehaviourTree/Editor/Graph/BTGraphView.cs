@@ -58,8 +58,8 @@ namespace BehaviourTree
                 return rootEditor as INodeBaseEditor<T>;
             
             // 利用反射调用构造函数, 参数列表恰好是{T}
-            if (typeof(NodeBaseEditor<T>)
-                    .GetConstructor(new []{typeof(T), typeof(bool)})
+            if (typeof(NodeBaseEditor<>).MakeGenericType(nodeConcrete!.GetGeneralType())
+                    .GetConstructor(new []{nodeConcrete!.GetGeneralType(), typeof(bool)})
                     ?.Invoke(new object[]{nodeConcrete, isDefault}) is not INodeBaseEditor<T> ins)
                 return null;
             ins.OnTypeChanged += _ => OnGraphViewChanged(default);

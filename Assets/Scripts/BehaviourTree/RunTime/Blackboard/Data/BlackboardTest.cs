@@ -9,14 +9,11 @@ namespace BehaviourTree
     [CreateAssetMenu(fileName = nameof(BlackboardTest), menuName = "BehaviourTree/" + nameof(BlackboardTest))]
     public class BlackboardTest : Blackboard, IBlackboard<BlackboardTest>
     {
-        int i;
-        public float Float;
-        // string s;
-        // EState eState;
-        public int I 
-        {
-            get => i;
-            set => i = value;
-        }
+        public int Intttt;
+        public float Floattttt;
+        public EState Stateeee;
+        public bool Boolll;
+        public string Stringggg;
+        public Vector3 Vector3cc;
     }
 }

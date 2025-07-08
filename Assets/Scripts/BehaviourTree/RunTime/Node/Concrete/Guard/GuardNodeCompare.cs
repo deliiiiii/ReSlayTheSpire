@@ -11,6 +11,7 @@ namespace BehaviourTree
         MoreThanOrEqual,
         LessThanOrEqual
     }
+    [Serializable]
     public class GuardNodeCompare : GuardNode
     {
         public Union FromBlackboard;

@@ -32,7 +32,7 @@ public abstract class NodeBase : ScriptableObject
     
     
     #region Guard
-    [HideInInspector] [CanBeNull] public GuardNode GuardNode;
+    [CanBeNull] public GuardNode GuardNode;
     bool CheckGuard()
     {
         return !GuardNode || GuardNode.Judge();
