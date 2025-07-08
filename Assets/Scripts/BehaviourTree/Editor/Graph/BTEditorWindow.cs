@@ -14,19 +14,13 @@ namespace BehaviourTree
         static BTGraphView curView;
         static BTEditorWindow curWindow;
         static RootNode curRootNode;
-        static bool everOpened;
         static BTEditorWindow()
         {
-            EditorApplication.quitting += () => windowDic.Keys.ForEach(CloseWindow);
+            // 编译前关闭所有已打开窗口
+            AssemblyReloadEvents.beforeAssemblyReload += CloseAllWindows;
         }
         void OnEnable()
         {
-            if (!everOpened)
-            {
-                MyDebug.Log("Haven't ever opened any window probably due to recompiled, will CLOSE all windows.");
-                AssetDataBaseExt.CloseAllWindows();
-                return;
-            }
             InitView();
             InitToolbar();
         }
@@ -57,7 +51,6 @@ namespace BehaviourTree
             var obj = EditorUtility.InstanceIDToObject(instanceID);
             if (obj is not RootNode node)
                 return false;
-            everOpened = true;
             curRootNode = node;
             InitWindow();
             return true;
@@ -69,6 +62,15 @@ namespace BehaviourTree
                 return;
             value.Close();
             windowDic.Remove(instanceID);
+        }
+        
+        static void CloseAllWindows()
+        {
+            foreach (var kvp in windowDic.ToList())
+            {
+                kvp.Value.Close();
+            }
+            windowDic.Clear();
         }
         
         static void InitWindow()

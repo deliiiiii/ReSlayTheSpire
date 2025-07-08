@@ -6,10 +6,7 @@ namespace BehaviourTree
 {
     public static class AssetDataBaseExt
     {
-        public static void CloseAllWindows()
-        {
-            Resources.FindObjectsOfTypeAll<BTEditorWindow>().ForEach(w => w?.Close());
-        }
+        
         public static void SafeAddSubAsset(Object objectToAdd, Object assetObject)
         {
             if (assetObject == null || objectToAdd == null)
