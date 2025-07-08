@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -11,6 +9,10 @@ namespace BehaviourTree
     public class RootNode : NodeBase
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.Single;
+        
+        [InlineEditor]
+        public Blackboard Blackboard;
+        
         public override string ToString()
         {
             return nameof(RootNode);
