@@ -64,8 +64,32 @@ namespace BehaviourTree
                 EBoardEValueType.@double   => doubleVal.CompareTo(other.doubleVal),
                 EBoardEValueType.@bool     => boolVal.CompareTo(other.boolVal),
                 EBoardEValueType.@Vector3  => vector3.magnitude.CompareTo(other.vector3.magnitude),
-                _                          => 0
+                EBoardEValueType.@object   => 0,
+                _                          => 0,
             };
+        }
+
+        public void SetType(Type t)
+        {
+            if (t == typeof(int))
+                BoardEValueType = EBoardEValueType.@int;
+            else if (t == typeof(long))
+                BoardEValueType = EBoardEValueType.@long;
+            else if (t == typeof(float))
+                BoardEValueType = EBoardEValueType.@float;
+            else if (t == typeof(double))
+                BoardEValueType = EBoardEValueType.@double;
+            else if (t == typeof(bool))
+                BoardEValueType = EBoardEValueType.@bool;
+            else if (t == typeof(Vector3))
+                BoardEValueType = EBoardEValueType.@Vector3;
+            else if (t == typeof(object))
+                BoardEValueType = EBoardEValueType.@object;
+            else
+            {
+                MyDebug.LogError($"Unexpected type {t}");
+                BoardEValueType = EBoardEValueType.Undefined;
+            }
         }
     }
 }

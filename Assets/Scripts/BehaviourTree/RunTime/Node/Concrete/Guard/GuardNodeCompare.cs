@@ -1,4 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
+using Sirenix.Utilities;
 
 namespace BehaviourTree
 {
@@ -12,18 +18,29 @@ namespace BehaviourTree
         LessThanOrEqual
     }
     [Serializable]
-    public class GuardNodeCompare : GuardNode
+    public class GuardNodeCompare : GuardNode, IRequireBlackBoard
     {
-        public Union FromBlackboard;
-        public Union CompareTo;
-        
+        public Blackboard Blackboard { get; set; }
+        public string FromMemberName;
+        public Union FromMemberValue; //=> Blackboard.Get(FromMemberName);
+        [ShowInInspector]
+        public object FromMemberValue2 => FromMemberName != null ? Blackboard?.Get<object>(FromMemberName) : null;
+        public Union CompareToValue;
         public CompareType CompareType;
+        Dictionary<string, MemberInfo> memberInfoDic = new();
+        List<string> GetMemberList() => memberInfoDic.Keys.ToList();
         
         void OnEnable()
         {
+            memberInfoDic ??= new Dictionary<string, MemberInfo>();
+            Blackboard?.GetType().GetMembers().ForEach(memberInfo =>
+            {
+                memberInfoDic.TryAdd(memberInfo.Name, memberInfo);
+            });
+            
             Condition = () =>
             {
-                if (FromBlackboard.BoardEValueType == EBoardEValueType.@null || CompareTo.BoardEValueType == EBoardEValueType.@null)
+                if (FromMemberValue.BoardEValueType == EBoardEValueType.@null || CompareToValue.BoardEValueType == EBoardEValueType.@null)
                 {
                     // MyDebug.LogError("GuardNodeCompare: FromBlackboard or CompareTo is null");
                     return false;
@@ -31,12 +48,12 @@ namespace BehaviourTree
 
                 return CompareType switch
                 {
-                    CompareType.Equal => FromBlackboard.Equals(CompareTo),
-                    CompareType.NotEqual => !FromBlackboard.Equals(CompareTo),
-                    CompareType.MoreThan => FromBlackboard.CompareTo(CompareTo) > 0,
-                    CompareType.LessThan => FromBlackboard.CompareTo(CompareTo) < 0,
-                    CompareType.MoreThanOrEqual => FromBlackboard.CompareTo(CompareTo) >= 0,
-                    CompareType.LessThanOrEqual => FromBlackboard.CompareTo(CompareTo) <= 0,
+                    CompareType.Equal => FromMemberValue.Equals(CompareToValue),
+                    CompareType.NotEqual => !FromMemberValue.Equals(CompareToValue),
+                    CompareType.MoreThan => FromMemberValue.CompareTo(CompareToValue) > 0,
+                    CompareType.LessThan => FromMemberValue.CompareTo(CompareToValue) < 0,
+                    CompareType.MoreThanOrEqual => FromMemberValue.CompareTo(CompareToValue) >= 0,
+                    CompareType.LessThanOrEqual => FromMemberValue.CompareTo(CompareToValue) <= 0,
                     _ => true
                 };
             };

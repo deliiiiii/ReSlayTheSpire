@@ -25,5 +25,9 @@ namespace BehaviourTree
     public class Blackboard : ScriptableObject
     {
         public TField Get<TField>(string fieldName) => ((IBlackboard<Blackboard>)this).IGet<TField>(fieldName);
+        
+        // public int Get(string fieldName) => Get<int>(fieldName);
+        // public float GetFloat(string fieldName) => Get<float>(fieldName);
+        
     }
 }

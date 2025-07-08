@@ -17,5 +17,10 @@ namespace BehaviourTree
         {
             return nameof(RootNode);
         }
+        
+        public void OnRefreshTreeEnd()
+        {
+            RecursiveDo(x => SetBlackboard(x, Blackboard));
+        }
     }
 }

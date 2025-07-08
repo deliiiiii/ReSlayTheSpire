@@ -10,10 +10,10 @@ namespace BehaviourTree
     public class BlackboardTest : Blackboard, IBlackboard<BlackboardTest>
     {
         public int Intttt;
-        public float Floattttt;
+        public float Floatttt;
         public EState Stateeee;
-        public bool Boolll;
+        public bool Boollll;
         public string Stringggg;
-        public Vector3 Vector3cc;
+        public Vector3 Vector3333;
     }
 }

@@ -32,7 +32,7 @@ public abstract class NodeBase : ScriptableObject
     
     
     #region Guard
-    [CanBeNull] public GuardNode GuardNode;
+    [HideInInspector][CanBeNull] public GuardNode GuardNode;
     bool CheckGuard()
     {
         return !GuardNode || GuardNode.Judge();
@@ -111,6 +111,18 @@ public abstract class NodeBase : ScriptableObject
         target.State.Value = EState.Failed;
     }
     #endregion
+
+    
+    #region Interface
+    public static void SetBlackboard(NodeBase target, Blackboard blackboard)
+    {
+        if (target is IRequireBlackBoard req)
+        {
+            req.Blackboard = blackboard;
+        }
+    }
+    #endregion Interface
+    
     
     
     protected void RecursiveDo(Action<NodeBase> func)

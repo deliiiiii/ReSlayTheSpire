@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 571
-    y: 267
-    width: 183
-    height: 86
+    x: 571.2
+    y: 267.2
+    width: 188.79999
+    height: 85.600006
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -37,10 +37,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 293
-    y: -108
-    width: 220
-    height: 87
+    x: 300
+    y: -113.600006
+    width: 380.8
+    height: 208.8
   State:
     value: 2
   GuardNode: {fileID: 0}
@@ -62,8 +62,8 @@ MonoBehaviour:
   RectInGraph:
     serializedVersion: 2
     x: 300
-    y: 434
-    width: 213
+    y: 434.40002
+    width: 212.79999
     height: 100
   State:
     value: 1
@@ -85,9 +85,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 261
-    y: 267
-    width: 213
+    x: 260.8
+    y: 267.2
+    width: 212.80002
     height: 124
   State:
     value: 2
@@ -109,10 +109,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 311
+    x: 311.2
     y: 136
-    width: 186
-    height: 86
+    width: 192.79999
+    height: 85.59999
   State:
     value: 2
   GuardNode: {fileID: 0}
@@ -135,9 +135,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 827
-    y: 267
-    width: 213
+    x: 827.2
+    y: 267.2
+    width: 212.79999
     height: 124
   State:
     value: 0
@@ -159,9 +159,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: -11
-    y: 267
-    width: 213
+    x: -11.2
+    y: 267.2
+    width: 212.8
     height: 124
   State:
     value: 1
@@ -183,9 +183,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 541
-    y: 571
-    width: 213
+    x: 540.8
+    y: 571.2
+    width: 212.79999
     height: 124
   State:
     value: 1

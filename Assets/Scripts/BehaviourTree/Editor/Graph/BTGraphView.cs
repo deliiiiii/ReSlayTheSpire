@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Sirenix.Utilities;
-using UniRx;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -14,8 +12,8 @@ namespace BehaviourTree
     public class BTGraphView : GraphView
     {
         public event Action<int> OnRootNodeDeleted;
-        INodeBaseEditor<NodeBase> rootEditor;
-        NodeBase rootNode;
+        INodeBaseEditor<RootNode> rootEditor;
+        RootNode rootNode;
         
         string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
         IEnumerable<INodeBaseEditor<NodeBase>> nodeEditors => 
@@ -82,7 +80,7 @@ namespace BehaviourTree
         /// </summary>
         void RefreshTreeAndSave()
         {
-            rootEditor = nodeEditors.FirstOrDefault(node => node.NodeBase is RootNode);
+            rootEditor = nodeEditors.FirstOrDefault(node => node.NodeBase is RootNode) as INodeBaseEditor<RootNode>;
             if (rootEditor == null)
             {
                 MyDebug.LogError("No ROOT node found in the graph, NOT save the graph and CLOSE the window!");
@@ -91,6 +89,7 @@ namespace BehaviourTree
             }
             rootEditor.OnRefreshTree();
             rootNode = rootEditor.NodeBase;
+            rootNode?.OnRefreshTreeEnd();
             Save();
         }
 

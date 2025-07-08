@@ -61,9 +61,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 719.2
-    y: -84.8
-    width: 380.8
+    x: 741.6
+    y: -143.2
+    width: 380.80005
     height: 228.8
   State:
     value: 0
@@ -85,9 +85,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 91.2
+    x: 137.6
     y: -28.8
-    width: 370.40002
+    width: 370.4
     height: 420
   State:
     value: 0
