@@ -5,6 +5,8 @@ using System.Reflection;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
+using UnityEditor;
+using UnityEngine;
 
 namespace BehaviourTree
 {
@@ -20,24 +22,35 @@ namespace BehaviourTree
     [Serializable]
     public class GuardNodeCompare : GuardNode, IRequireBlackBoard
     {
-        public Blackboard Blackboard { get; set; }
-        public string FromMemberName;
-        public Union FromMemberValue; //=> Blackboard.Get(FromMemberName);
         [ShowInInspector]
-        public object FromMemberValue2 => FromMemberName != null ? Blackboard?.Get<object>(FromMemberName) : null;
+        public Blackboard Blackboard { get; set; }
+        public Union FromMemberValue; //=> Blackboard.Get(FromMemberName);
+        // [ShowInInspector]
+        // public object FromMemberValue2 => SelectedOption != string.Empty ? Blackboard?.Get<object>(SelectedOption) : null;
         public Union CompareToValue;
         public CompareType CompareType;
-        Dictionary<string, MemberInfo> memberInfoDic = new();
-        List<string> GetMemberList() => memberInfoDic.Keys.ToList();
+        Dictionary<string, MemberInfo> memberInfoDic;
         
+        
+        public int selectedIndex = 0;
+        string[] Options => memberInfoDic?.Keys.ToArray();
+        string SelectedOption => Options.Length == 0 ? string.Empty : Options[selectedIndex] ?? string.Empty;
+
+        public void DrawPopup()
+        {
+            if ((memberInfoDic ??= new Dictionary<string, MemberInfo>()).Count == 0)
+            {
+                Blackboard?.GetType().GetMembers().ForEach(memberInfo =>
+                {
+                    memberInfoDic.TryAdd(memberInfo.Name, memberInfo);
+                });
+            }
+            MyDebug.Log("GuardNodeCompare DrawPopup Options: " + string.Join(", ", Options));
+            selectedIndex = EditorGUILayout.Popup("sss", 0, Options);
+        }
+
         void OnEnable()
         {
-            memberInfoDic ??= new Dictionary<string, MemberInfo>();
-            Blackboard?.GetType().GetMembers().ForEach(memberInfo =>
-            {
-                memberInfoDic.TryAdd(memberInfo.Name, memberInfo);
-            });
-            
             Condition = () =>
             {
                 if (FromMemberValue.BoardEValueType == EBoardEValueType.@null || CompareToValue.BoardEValueType == EBoardEValueType.@null)

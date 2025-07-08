@@ -128,8 +128,9 @@ public abstract class NodeBase : ScriptableObject
     protected void RecursiveDo(Action<NodeBase> func)
     {
         func(this);
-        func(GuardNode);
-        ChildList?.ForEach(func);
+        if(GuardNode != null)
+            func(GuardNode);
+        ChildList?.ForEach(c => c.RecursiveDo(func));
     }
 
     public Type GetGeneralType()

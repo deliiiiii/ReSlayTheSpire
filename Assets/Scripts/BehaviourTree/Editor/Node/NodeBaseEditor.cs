@@ -185,6 +185,13 @@ namespace BehaviourTree
             propertyTree = PropertyTree.Create(NodeBase);
             propertyTreeContainer = new IMGUIContainer(() => propertyTree.Draw());
             extensionContainer.Add(propertyTreeContainer);
+
+            if (NodeBase is GuardNodeCompare g)
+            {
+                var popupContainer = new IMGUIContainer(g.DrawPopup);
+                extensionContainer.Add(popupContainer);
+            }
+                
         }
     }
 
