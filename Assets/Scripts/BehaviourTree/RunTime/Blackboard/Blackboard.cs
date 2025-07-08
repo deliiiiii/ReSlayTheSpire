@@ -76,10 +76,10 @@ namespace BehaviourTree
                     {
                         exxDic.TryAdd(fieldType, CreateFieldGetter<string>);
                     }
-                    else if (fieldType == typeof(Enum))
-                    {
-                        exxDic.TryAdd(fieldType, CreateFieldGetter<Enum>);
-                    }
+                    // else if (fieldType == typeof(Enum))
+                    // {
+                    //     exxDic.TryAdd(fieldType, CreateFieldGetter<Enum>);
+                    // }
                 });
         }
 
