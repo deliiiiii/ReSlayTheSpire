@@ -1,15 +1,15 @@
 ﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BehaviourTree
 {
     public class ExTest : MonoBehaviour
     {
-        [SerializeField]
-        BlackboardTest board;
+        public Blackboard Board;
         void Update()
         {
-            MyDebug.Log(board.Get<BlackboardTest, float>("Float"));
+            MyDebug.Log(Board.Get<float>("Float"));
         }
     }
 }
