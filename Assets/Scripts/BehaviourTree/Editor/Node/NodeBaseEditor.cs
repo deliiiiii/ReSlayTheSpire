@@ -72,13 +72,12 @@ namespace BehaviourTree
         public event Action<Type> OnTypeChanged;
 
         public Rect GetRect() => GetPosition();
-
         DropdownField typeField;
         PropertyTree propertyTree;
         IMGUIContainer propertyTreeContainer;
         
-        static PortToDrawConfig portToDrawConfig;
-        readonly Dictionary<EState, Color> tickStateColorDic = new()
+        static readonly PortToDrawConfig portToDrawConfig;
+        static readonly Dictionary<EState, Color> tickStateColorDic = new()
         {
             { EState.Running, Color.cyan },
             { EState.Succeeded, Color.green },

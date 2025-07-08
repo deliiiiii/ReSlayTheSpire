@@ -18,8 +18,8 @@ namespace BehaviourTree
         NodeBase rootNode;
         
         string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
-        IEnumerable<INodeBaseEditor<NodeBase>> nodes => 
-            base.nodes.OfType<INodeBaseEditor<NodeBase>>().ToList();
+        IEnumerable<INodeBaseEditor<NodeBase>> nodeEditors => 
+            nodes.OfType<INodeBaseEditor<NodeBase>>().ToList();
         
         public BTGraphView()
         {
@@ -39,10 +39,7 @@ namespace BehaviourTree
                 .ToList();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="nodeConcreteType">如ActionNodeDebug，具体Node类</param>
+        /// <param name="nodeConcreteType">如ActionNodeDebug，具体Node类型</param>
         /// <returns></returns>
         public void DrawNodeEditorWithType(Type nodeConcreteType)
         {
@@ -52,7 +49,7 @@ namespace BehaviourTree
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="nodeConcrete">如ActionNodeDebug，具体Node类</param>
+        /// <param name="nodeConcrete">如ActionNodeDebug, 具体Node类的实例</param>
         /// <param name="isDefault">nodeConcrete是否是默认值</param>
         INodeBaseEditor<T> DrawNodeEditorWithIns<T>(T nodeConcrete, bool isDefault) where T : NodeBase
         {
@@ -75,10 +72,7 @@ namespace BehaviourTree
         GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             MyDebug.LogWarning($"OnGraphViewChanged");
-            nodes.ForEach(node =>
-                {
-                    node.NodeBase.ClearChildren();
-                });
+            nodeEditors.ForEach(node => node.NodeBase.ClearChildren());
             RefreshTreeAndSave();
             return graphViewChange;
         }
@@ -88,7 +82,7 @@ namespace BehaviourTree
         /// </summary>
         void RefreshTreeAndSave()
         {
-            rootEditor = nodes.FirstOrDefault(node => node.NodeBase is RootNode);
+            rootEditor = nodeEditors.FirstOrDefault(node => node.NodeBase is RootNode);
             if (rootEditor == null)
             {
                 MyDebug.LogError("No ROOT node found in the graph, NOT save the graph and CLOSE the window!");
@@ -133,7 +127,7 @@ namespace BehaviourTree
         }
         public void Load(RootNode loadedRootNode)
         {
-            base.nodes.ForEach(RemoveElement);
+            nodes.ForEach(RemoveElement);
             rootNode = loadedRootNode;
             rootEditor = DrawNodeEditorWithIns(rootNode, false);
             CreateChildNodeEditors(rootEditor, rootNode);
@@ -141,7 +135,7 @@ namespace BehaviourTree
         
         void Save()
         {
-            IEnumerable<NodeBase> nodeBases = nodes
+            IEnumerable<NodeBase> nodeBases = nodeEditors
                 .Select(nodeEditor => nodeEditor.NodeBase)
                 .ToList();
             if (AssetDatabase.LoadAssetAtPath<RootNode>(path))
@@ -155,7 +149,7 @@ namespace BehaviourTree
                 AssetDatabase.CreateAsset(rootNode, path);
             }
             EditorUtility.SetDirty(rootNode);
-            nodes.ForEach(nodeEditor =>
+            nodeEditors.ForEach(nodeEditor =>
             {
                 AssetDataBaseExt.SafeAddSubAsset(nodeEditor.NodeBase, rootNode);
             });

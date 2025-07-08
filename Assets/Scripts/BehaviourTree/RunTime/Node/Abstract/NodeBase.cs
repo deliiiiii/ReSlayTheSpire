@@ -29,7 +29,7 @@ public abstract class NodeBase : ScriptableObject
     public Rect RectInGraph;
     [HideInInspector]
     public Observable<EState> State = new(EState.Failed);
-
+    
     
     #region Guard
     [HideInInspector] [CanBeNull] public GuardNode GuardNode;

@@ -14,12 +14,19 @@ namespace BehaviourTree
         static BTGraphView curView;
         static BTEditorWindow curWindow;
         static RootNode curRootNode;
+        static bool everOpened;
         static BTEditorWindow()
         {
             EditorApplication.quitting += () => windowDic.Keys.ForEach(CloseWindow);
         }
         void OnEnable()
         {
+            if (!everOpened)
+            {
+                MyDebug.Log("Haven't ever opened any window probably due to recompiled, will CLOSE all windows.");
+                AssetDataBaseExt.CloseAllWindows();
+                return;
+            }
             InitView();
             InitToolbar();
         }
@@ -28,6 +35,21 @@ namespace BehaviourTree
             var kvp = windowDic.FirstOrDefault(kvp => kvp.Value == this);
             windowDic.Remove(kvp.Key);
         }
+        
+        void InitView()
+        {
+            curView = new BTGraphView();
+            curView.OnRootNodeDeleted += CloseWindow;
+            curView.Load(curRootNode);
+            rootVisualElement.Add(curView);
+        }
+
+        void InitToolbar()
+        {
+            var toolbar = new Toolbar();
+            CollectButtons(curView).ForEach(toolbar.Add);
+            rootVisualElement.Add(toolbar);
+        }
 
         [UnityEditor.Callbacks.OnOpenAsset(1)]
         static bool OnOpenAsset(int instanceID, int line)
@@ -35,6 +57,7 @@ namespace BehaviourTree
             var obj = EditorUtility.InstanceIDToObject(instanceID);
             if (obj is not RootNode node)
                 return false;
+            everOpened = true;
             curRootNode = node;
             InitWindow();
             return true;
@@ -64,21 +87,6 @@ namespace BehaviourTree
             windowDic.Add(curId, curWindow);
             
         }
-
-        void InitView()
-        {
-            curView = new BTGraphView();
-            curView.OnRootNodeDeleted += CloseWindow;
-            curView.Load(curRootNode);
-            rootVisualElement.Add(curView);
-        }
-
-        void InitToolbar()
-        {
-            var toolbar = new Toolbar();
-            CollectButtons(curView).ForEach(toolbar.Add);
-            rootVisualElement.Add(toolbar);
-        }
         
         static IEnumerable<Button> CollectButtons(BTGraphView fView)
         {
@@ -100,6 +108,4 @@ namespace BehaviourTree
             return ret;
         }
     }
- 
-    
 }

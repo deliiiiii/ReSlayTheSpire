@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BehaviourTree
 {
-    public static class ReflectionExtensions
+    public static class ReflectionExt
     {
         public static Type FirstSubType(this Type parentType)
         {
