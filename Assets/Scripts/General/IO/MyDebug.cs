@@ -20,6 +20,7 @@ public static class MyDebug
         LogType.Tick,
         
     };
+    [HideInCallstack]
     public static void Log(object message, LogType logType = LogType.Default, int threshold = 0)
     {
         if (!canLog || !CheckLog(logType, threshold))
@@ -29,7 +30,7 @@ public static class MyDebug
         Debug.Log(message);
         
     }
-
+    [HideInCallstack]
     public static void LogWarning(object message, LogType logType = LogType.Default, int threshold = 0)
     {
         if (!canLogWarning || !CheckLog(logType, threshold))
@@ -39,6 +40,7 @@ public static class MyDebug
         Debug.LogWarning(message);
 
     }
+    [HideInCallstack]
     public static void LogError(object message, LogType logType = LogType.Default, int threshold = 0)
     {
         if (!canLogError || !CheckLog(logType, threshold))

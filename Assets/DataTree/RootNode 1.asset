@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2848382546855940492
+--- !u!114 &-7175926407084367149
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,19 +9,58 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
-  m_Name: SelectorNode
+  m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
+  m_Name: GuardNodeCompare
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 440
-    y: 324
-    width: 192.79999
-    height: 85.600006
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
+  FromBlackboard:
+    intVal: 12
+    longVal: 12
+    floatVal: 1.7e-44
+    doubleVal: 6e-323
+    boolVal: 12
+    vector3: {x: 1.7e-44, y: 0, z: 0}
+  CompareTo:
+    intVal: 4
+    longVal: 4
+    floatVal: 6e-45
+    doubleVal: 2e-323
+    boolVal: 4
+    vector3: {x: 6e-45, y: 0, z: 0}
+  CompareType: 0
+--- !u!114 &-1812419812507973863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
+  m_Name: ActionNodeDebug
+  m_EditorClassIdentifier: 
+  RectInGraph:
+    serializedVersion: 2
+    x: 565
+    y: 391
+    width: 213
+    height: 124
+  State:
+    value: 1
+  GuardNode: {fileID: 0}
+  ChildList: []
+  Content: "\u554A\u554A\u554A"
+  DebugType: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,12 +75,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 413.6
-    y: 197.59999
-    width: 88.79999
-    height: 61.600006
+    x: 509
+    y: 50
+    width: 220
+    height: 87
   State:
-    value: 2
+    value: 0
   GuardNode: {fileID: 0}
   ChildList:
-  - {fileID: -2848382546855940492}
+  - {fileID: 5554589850631243413}
+  Blackboard: {fileID: 0}
+--- !u!114 &5554589850631243413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc923665e79a455d8362390bfbd8d0e6, type: 3}
+  m_Name: InverseNode
+  m_EditorClassIdentifier: 
+  RectInGraph:
+    serializedVersion: 2
+    x: 501
+    y: 213
+    width: 183
+    height: 86
+  State:
+    value: 0
+  GuardNode: {fileID: 0}
+  ChildList:
+  - {fileID: -1812419812507973863}

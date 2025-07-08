@@ -9,17 +9,17 @@ namespace BehaviourTree
     {
         int i;
         float f;
-        string s;
-        EState eState;
+        // string s;
+        // EState eState;
         public int I
         {
             get => i;
             set => i = value;
         }
-
-        public List<int> IntList;
-        public Type T;
-        public List<EState> EList;
+        //
+        // public List<int> IntList;
+        // public Type T;
+        // public List<EState> EList;
 
     }
 }

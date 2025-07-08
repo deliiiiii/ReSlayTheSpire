@@ -37,10 +37,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 300
-    y: -122
-    width: 255
-    height: 187
+    x: 293
+    y: -108
+    width: 220
+    height: 87
   State:
     value: 2
   GuardNode: {fileID: 0}
