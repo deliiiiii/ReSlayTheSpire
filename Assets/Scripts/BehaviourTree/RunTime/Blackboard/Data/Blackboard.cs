@@ -32,6 +32,7 @@ namespace BehaviourTree
     [Serializable]
     public class Blackboard : ScriptableObject
     {
+        public float FFFFF;
         // public TField Get<TField>(string fieldName) => ((IBlackboard<Blackboard>)this).IGet<TField>(fieldName);
         public object Get(string fieldName)
         {

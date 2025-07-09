@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using Sirenix.Utilities;
 using UnityEditor;
-using UnityEngine;
-using UnityEngine.Serialization;
+using Object = UnityEngine.Object;
 
 namespace BehaviourTree
 {
@@ -24,20 +22,44 @@ namespace BehaviourTree
     public class GuardNodeCompare : GuardNode, IRequireBlackBoard
     {
         public Blackboard Blackboard { get; set; }
-        // [ShowInInspector]
-        SerializedObject fs;
-        [SerializeField] public SerializedProperty sp;
-        [HideInInspector]
-        public SerializedProperty CompareToValue;
-        public CompareType CompareTypeeeeeeeeeeeeeeeee;
+        [ReadOnly][ShowInInspector]
+        public Union FromValue => GetFromValue();
+        public Union ToValue;
+        public CompareType CompareType;
         
         Dictionary<string, FieldInfo> fieldInfoDic;
-        [OnValueChanged(nameof(OnOptionChanged))]
-        int selectedIndex = 0;
+        Observable<int> selectedIndex = new (0);
         string[] options;
-        
+        string selectedOption;
 
         public void DrawPopup()
+        {
+            if((options?.Length ?? 0) == 0 || selectedIndex == null)
+            {
+                options = new[] { "No Fields Available" }; 
+                return;
+            }
+            if (selectedIndex >= options.Length)
+            {
+                selectedIndex.Value = 0;
+            }
+            selectedIndex.Value = EditorGUILayout.Popup("Select Field", selectedIndex, options);
+        }
+
+        Union GetFromValue()
+        {
+            if (string.IsNullOrEmpty(selectedOption))
+                return Union.Null;
+            return Union.Create(fieldInfoDic[selectedOption].FieldType, Blackboard.Get(selectedOption));
+        }
+
+        void OnOptionChanged(int i)
+        {
+            selectedOption = options.Length != 0 ? options[i] : string.Empty;
+            MyDebug.Log($"OnOptionChanged {i} {selectedOption}");
+        }
+
+        void OnEnable()
         {
             if ((fieldInfoDic ??= new Dictionary<string, FieldInfo>()).Count == 0)
             {
@@ -47,34 +69,23 @@ namespace BehaviourTree
                 });
                 options = fieldInfoDic?.Keys.ToArray();
             }
-            if (Blackboard != null && fs == null)
-            {
-                fs = new SerializedObject(Blackboard);
-            }
-            selectedIndex = EditorGUILayout.Popup("Select Field", selectedIndex, options);
-            OnOptionChanged();
-        }
-
-        void OnOptionChanged()
-        {
-            var selectedOption = options.Length != 0 ? options[selectedIndex] : string.Empty;
-            sp = fs?.FindProperty(selectedOption);
-        }
-
-        void OnEnable()
-        {
-            fieldInfoDic = null;
+            selectedIndex.OnValueChangedAfter += OnOptionChanged;
+            OnOptionChanged(selectedIndex.Value);
             Condition = () =>
             {
-
-                return CompareTypeeeeeeeeeeeeeeeee switch
+                if (FromValue.BoardEValueType == EBoardEValueType.@null || ToValue.BoardEValueType == EBoardEValueType.@null)
                 {
-                    CompareType.Equal => sp.Equals(CompareToValue),
-                    CompareType.NotEqual => !sp.Equals(CompareToValue),
-                    // CompareType.MoreThan => fromSerializedPro.CompareTo(CompareToValue) > 0,
-                    // CompareType.LessThan => fromSerializedPro.CompareTo(CompareToValue) < 0,
-                    // CompareType.MoreThanOrEqual => fromSerializedPro.CompareTo(CompareToValue) >= 0,
-                    // CompareType.LessThanOrEqual => fromSerializedPro.CompareTo(CompareToValue) <= 0,
+                    // MyDebug.LogError("SerializedProperty or CompareToValue is null");
+                    return false;
+                }
+                return CompareType switch
+                {
+                    CompareType.Equal => FromValue.Equals(ToValue),
+                    CompareType.NotEqual => !FromValue.Equals(ToValue),
+                    CompareType.MoreThan => FromValue.CompareTo(ToValue) > 0,
+                    CompareType.LessThan => FromValue.CompareTo(ToValue) < 0,
+                    CompareType.MoreThanOrEqual => FromValue.CompareTo(ToValue) >= 0,
+                    CompareType.LessThanOrEqual => FromValue.CompareTo(ToValue) <= 0,
                     _ => true
                 };
             };

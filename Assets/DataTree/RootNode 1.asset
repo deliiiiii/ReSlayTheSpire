@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 183
     height: 92
   State:
-    value: 0
+    value: 1
   GuardNode: {fileID: 2579914684750561758}
   ChildList:
   - {fileID: -1812419812507973863}
@@ -42,7 +42,7 @@ MonoBehaviour:
     width: 213
     height: 130
   State:
-    value: 0
+    value: 1
   GuardNode: {fileID: 0}
   ChildList: []
   Content: "\u554A\u554A\u554A"
@@ -61,12 +61,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 742
-    y: -143
-    width: 381
-    height: 215
+    x: 702
+    y: -137
+    width: 220
+    height: 93
   State:
-    value: 0
+    value: 1
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -2573363957119407690}
@@ -85,12 +85,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 209
-    y: 27
+    x: 154
+    y: -6
     width: 213
-    height: 124
+    height: 224
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
-  CompareTypeeeeeeeeeeeeeeeee: 0
+  ToValue:
+    BoardEValueType: 2
+    intVal: -7
+    longVal: 0
+    floatVal: 0
+    doubleVal: 0
+    boolVal: 0
+    stringVal: 
+    vector3: {x: 0, y: 0, z: 0}
+  CompareType: 2
