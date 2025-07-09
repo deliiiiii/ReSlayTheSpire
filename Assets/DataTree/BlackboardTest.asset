@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f116596c16e4cb199976f3eb9819668, type: 3}
   m_Name: BlackboardTest
   m_EditorClassIdentifier: 
-  Intttt: -31
-  Floattttt: 0.58
+  Intttt: -8
+  Floatttt: 0
   Stateeee: 0
-  Boolll: 0
+  Boollll: 0
   Stringggg: 
-  Vector3cc: {x: 2, y: 6, z: 0}
+  Vector3333: {x: 0, y: 0, z: 0}

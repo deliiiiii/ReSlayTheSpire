@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 588.8
-    y: 217.59999
-    width: 212.79999
-    height: 104
+    x: 589
+    y: 218
+    width: 183
+    height: 92
   State:
     value: 0
   GuardNode: {fileID: 2579914684750561758}
@@ -37,10 +37,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 564.8
-    y: 391.2
-    width: 212.79999
-    height: 144
+    x: 565
+    y: 391
+    width: 213
+    height: 130
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -61,10 +61,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 741.6
-    y: -143.2
-    width: 380.80005
-    height: 228.8
+    x: 742
+    y: -143
+    width: 381
+    height: 215
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -85,28 +85,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 137.6
-    y: -28.8
-    width: 370.4
-    height: 420
+    x: 209
+    y: 27
+    width: 213
+    height: 124
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
-  FromBlackboard:
-    BoardEValueType: 0
-    intVal: 0
-    longVal: 0
-    floatVal: 0
-    doubleVal: 0
-    boolVal: 0
-    vector3: {x: 0, y: 0, z: 0}
-  CompareTo:
-    BoardEValueType: 0
-    intVal: 1046562734
-    longVal: 4494952716788909998
-    floatVal: 0.22
-    doubleVal: 0.00000003218651283054541
-    boolVal: 174
-    vector3: {x: 0.22, y: 0.22, z: 0.22}
-  CompareType: 1
+  CompareTypeeeeeeeeeeeeeeeee: 0

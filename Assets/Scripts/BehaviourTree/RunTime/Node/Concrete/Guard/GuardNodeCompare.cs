@@ -7,6 +7,7 @@ using Sirenix.Serialization;
 using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BehaviourTree
 {
@@ -22,51 +23,58 @@ namespace BehaviourTree
     [Serializable]
     public class GuardNodeCompare : GuardNode, IRequireBlackBoard
     {
-        [ShowInInspector]
         public Blackboard Blackboard { get; set; }
-        public Union FromMemberValue; //=> Blackboard.Get(FromMemberName);
         // [ShowInInspector]
-        // public object FromMemberValue2 => SelectedOption != string.Empty ? Blackboard?.Get<object>(SelectedOption) : null;
-        public Union CompareToValue;
-        public CompareType CompareType;
-        Dictionary<string, MemberInfo> memberInfoDic;
+        SerializedObject fs;
+        [SerializeField] public SerializedProperty sp;
+        [HideInInspector]
+        public SerializedProperty CompareToValue;
+        public CompareType CompareTypeeeeeeeeeeeeeeeee;
         
+        Dictionary<string, FieldInfo> fieldInfoDic;
+        [OnValueChanged(nameof(OnOptionChanged))]
+        int selectedIndex = 0;
+        string[] options;
         
-        public int selectedIndex = 0;
-        string[] Options => memberInfoDic?.Keys.ToArray();
-        string SelectedOption => Options.Length == 0 ? string.Empty : Options[selectedIndex] ?? string.Empty;
 
         public void DrawPopup()
         {
-            if ((memberInfoDic ??= new Dictionary<string, MemberInfo>()).Count == 0)
+            if ((fieldInfoDic ??= new Dictionary<string, FieldInfo>()).Count == 0)
             {
-                Blackboard?.GetType().GetMembers().ForEach(memberInfo =>
+                Blackboard?.GetType().GetFields().ForEach(fieldInfo =>
                 {
-                    memberInfoDic.TryAdd(memberInfo.Name, memberInfo);
+                    fieldInfoDic.TryAdd(fieldInfo.Name, fieldInfo);
                 });
+                options = fieldInfoDic?.Keys.ToArray();
             }
-            MyDebug.Log("GuardNodeCompare DrawPopup Options: " + string.Join(", ", Options));
-            selectedIndex = EditorGUILayout.Popup("sss", 0, Options);
+            if (Blackboard != null && fs == null)
+            {
+                fs = new SerializedObject(Blackboard);
+            }
+            selectedIndex = EditorGUILayout.Popup("Select Field", selectedIndex, options);
+            OnOptionChanged();
+        }
+
+        void OnOptionChanged()
+        {
+            var selectedOption = options.Length != 0 ? options[selectedIndex] : string.Empty;
+            sp = fs?.FindProperty(selectedOption);
         }
 
         void OnEnable()
         {
+            fieldInfoDic = null;
             Condition = () =>
             {
-                if (FromMemberValue.BoardEValueType == EBoardEValueType.@null || CompareToValue.BoardEValueType == EBoardEValueType.@null)
-                {
-                    // MyDebug.LogError("GuardNodeCompare: FromBlackboard or CompareTo is null");
-                    return false;
-                }
 
-                return CompareType switch
+                return CompareTypeeeeeeeeeeeeeeeee switch
                 {
-                    CompareType.Equal => FromMemberValue.Equals(CompareToValue),
-                    CompareType.NotEqual => !FromMemberValue.Equals(CompareToValue),
-                    CompareType.MoreThan => FromMemberValue.CompareTo(CompareToValue) > 0,
-                    CompareType.LessThan => FromMemberValue.CompareTo(CompareToValue) < 0,
-                    CompareType.MoreThanOrEqual => FromMemberValue.CompareTo(CompareToValue) >= 0,
-                    CompareType.LessThanOrEqual => FromMemberValue.CompareTo(CompareToValue) <= 0,
+                    CompareType.Equal => sp.Equals(CompareToValue),
+                    CompareType.NotEqual => !sp.Equals(CompareToValue),
+                    // CompareType.MoreThan => fromSerializedPro.CompareTo(CompareToValue) > 0,
+                    // CompareType.LessThan => fromSerializedPro.CompareTo(CompareToValue) < 0,
+                    // CompareType.MoreThanOrEqual => fromSerializedPro.CompareTo(CompareToValue) >= 0,
+                    // CompareType.LessThanOrEqual => fromSerializedPro.CompareTo(CompareToValue) <= 0,
                     _ => true
                 };
             };

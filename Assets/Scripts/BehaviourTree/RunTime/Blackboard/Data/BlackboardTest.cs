@@ -7,7 +7,7 @@ namespace BehaviourTree
 {
     [Serializable]
     [CreateAssetMenu(fileName = nameof(BlackboardTest), menuName = "BehaviourTree/" + nameof(BlackboardTest))]
-    public class BlackboardTest : Blackboard, IBlackboard<BlackboardTest>
+    public class BlackboardTest : Blackboard
     {
         public int Intttt;
         public float Floatttt;

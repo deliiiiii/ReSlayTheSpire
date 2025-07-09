@@ -75,6 +75,7 @@ namespace BehaviourTree
         DropdownField typeField;
         PropertyTree propertyTree;
         IMGUIContainer propertyTreeContainer;
+        IMGUIContainer popupContainer;
         
         static readonly PortToDrawConfig portToDrawConfig;
         static readonly Dictionary<EState, Color> tickStateColorDic = new()
@@ -97,29 +98,47 @@ namespace BehaviourTree
         public NodeBaseEditor(T nodeBase, bool isDefault)
         {
             // MyDebug.Log($"NodeBaseEditor({nodeBase.GetType().Name}, {isDefault})");
+            OnTypeChanged += OnTypeChange;
             if (isDefault)
             {
-                CreateNodeBase(nodeBase.GetType());
+                OnTypeChange(nodeBase.GetType());
                 SetPosition(new Rect(100, 100, 200, 150));
             }
             else
             {
                 NodeBase = nodeBase;
+                OnNodeBaseChange();
                 SetPosition(NodeBase.RectInGraph);
             }
-
-            OnTypeChanged += CreateNodeBase;
-            OnTypeChanged += _ => DrawNodeField();
-
+            
+            DrawAllPorts();
             //隐藏名字栏
             titleContainer.style.display = DisplayStyle.None;
-            DrawAllPorts();
-            DrawTypeField();
-            DrawNodeField();
+            //大小可以调整
+            capabilities |= Capabilities.Resizable;
+            RefreshAllSettings();
+        }
 
+        void RefreshAllSettings()
+        {
             RefreshPorts();
             expanded = true;
             RefreshExpandedState();
+        }
+        
+        void OnTypeChange(Type t)
+        {
+            CreateNodeBase(t);
+            OnNodeBaseChange();
+        }
+
+        void OnNodeBaseChange()
+        {
+            extensionContainer.Clear();
+            DrawTypeField();
+            DrawNodeField();
+            
+            RefreshAllSettings();
         }
         
         void CreateNodeBase(Type t)
@@ -178,17 +197,21 @@ namespace BehaviourTree
             };
 
             propertyTree?.Dispose();
-            if (propertyTreeContainer != null)
-            {
-                extensionContainer.Remove(propertyTreeContainer);
-            }
+            // if (propertyTreeContainer != null)
+            // {
+            //     extensionContainer.Remove(propertyTreeContainer);
+            // }
             propertyTree = PropertyTree.Create(NodeBase);
             propertyTreeContainer = new IMGUIContainer(() => propertyTree.Draw());
             extensionContainer.Add(propertyTreeContainer);
 
+            // if(popupContainer != null)
+            // {
+            //     extensionContainer.Remove(popupContainer);
+            // }
             if (NodeBase is GuardNodeCompare g)
             {
-                var popupContainer = new IMGUIContainer(g.DrawPopup);
+                popupContainer = new IMGUIContainer(g.DrawPopup);
                 extensionContainer.Add(popupContainer);
             }
                 
