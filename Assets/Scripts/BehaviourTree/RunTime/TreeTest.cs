@@ -17,7 +17,7 @@ namespace BehaviourTree
         void Tick(float dt)
         {
             MyDebug.Log("----------Start Tick----------", LogType.Tick);
-            root.Tick(dt);
+            root.TickAsync(dt);
         }
     }
 }

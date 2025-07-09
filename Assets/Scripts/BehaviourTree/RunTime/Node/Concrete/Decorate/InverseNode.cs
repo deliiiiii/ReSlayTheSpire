@@ -1,18 +1,24 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace BehaviourTree
 {
     [Serializable]
     public class InverseNode : DecorateNode
     {
-        protected override EState OnTickChild(float dt)
+        protected override async Task<EState> OnTickChild(float dt)
         {
-            var ret = LastChild?.Tick(dt);
-            if(ret == null)
+            if(LastChild == null)
+            {
                 return EState.Succeeded;
-            return ret == EState.Succeeded ? EState.Failed : 
-                ret == EState.Running ? EState.Running :
-                EState.Succeeded;
+            }
+            var ret = await LastChild.TickAsync(dt);
+            return ret switch
+            {
+                EState.Succeeded => EState.Failed,
+                EState.Running => EState.Running,
+                _ => EState.Succeeded
+            };
         }
     }
 }
