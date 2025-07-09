@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -21,7 +20,7 @@ namespace BehaviourTree
     }
     
     [Serializable]
-    public struct Union : IEquatable<Union>, IComparable<Union>
+    public struct Union : IComparable<Union>
     {
         public EBoardEValueType BoardEValueType;
         [ShowIf(nameof(isInt))]
@@ -41,28 +40,9 @@ namespace BehaviourTree
         [CanBeNull] [ShowIf(nameof(isObject))]
         public object objectVal; bool isObject => BoardEValueType == EBoardEValueType.@object;
         
-        public bool Equals(Union other)
-        {
-            if (BoardEValueType != other.BoardEValueType)
-                return false;
-
-            return BoardEValueType switch
-            {
-                EBoardEValueType.@int      => intVal == other.intVal,
-                EBoardEValueType.@long     => longVal == other.longVal,
-                EBoardEValueType.@float    => Math.Abs(floatVal - other.floatVal) < 0.0001f,
-                EBoardEValueType.@double   => Math.Abs(doubleVal - other.doubleVal) < 0.0001,
-                EBoardEValueType.@bool     => boolVal == other.boolVal,
-                EBoardEValueType.@string   => stringVal == other.stringVal,
-                EBoardEValueType.@Vector3  => vector3.Equals(other.vector3),
-                EBoardEValueType.@object   => ReferenceEquals(objectVal, other.objectVal),
-                _                          => true
-            };
-        }
-        
         public int CompareTo(Union other)
         {
-            if (BoardEValueType != other.BoardEValueType)
+            if (BoardEValueType == other.BoardEValueType)
                 return 0;
             
             return BoardEValueType switch

@@ -61,8 +61,8 @@ namespace BehaviourTree
                 }
                 return CompareType switch
                 {
-                    CompareType.Equal => FromValue.Equals(ToValue),
-                    CompareType.NotEqual => !FromValue.Equals(ToValue),
+                    CompareType.Equal => FromValue.CompareTo(ToValue) == 0,
+                    CompareType.NotEqual => FromValue.CompareTo(ToValue) != 0,
                     CompareType.MoreThan => FromValue.CompareTo(ToValue) > 0,
                     CompareType.LessThan => FromValue.CompareTo(ToValue) < 0,
                     CompareType.MoreThanOrEqual => FromValue.CompareTo(ToValue) >= 0,
