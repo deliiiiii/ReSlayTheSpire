@@ -18,11 +18,7 @@ namespace BehaviourTree.Config
         void OnEnable()
         {
             EditorUtility.SetDirty(this);
-            var portPropertyNames = typeof(NodeBaseEditor<>)
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(p => p.PropertyType == typeof(Port))
-                .Select(p => p.Name)
-                .ToList();
+            
             
             // // 删除不存在的节点类型
             var nodeTypeNames = TypeCache.NodeGeneralTypes.Select(x => x.Name);
@@ -33,8 +29,8 @@ namespace BehaviourTree.Config
                 TypeToPortToDrawData.TryAdd(nodeType.Name, new SerializableDictionary<string, SinglePortData>());
                 var portToDrawData = TypeToPortToDrawData[nodeType.Name];
                 // 删除不存在的端口字段
-                portToDrawData.RemoveAll(kvp => !portPropertyNames.Contains(kvp.Key));
-                foreach (var portPropertyName in portPropertyNames)
+                portToDrawData.RemoveAll(kvp => !TypeCache.PortPropertyNames.Contains(kvp.Key));
+                foreach (var portPropertyName in TypeCache.PortPropertyNames)
                 {
                     portToDrawData.TryAdd(portPropertyName, new SinglePortData());
                 }

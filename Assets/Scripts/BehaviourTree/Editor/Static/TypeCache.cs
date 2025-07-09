@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using BehaviourTree.Config;
 using Sirenix.Utilities;
-using UnityEngine;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 
 namespace BehaviourTree
 {
+    [InitializeOnLoad]
     public static class TypeCache
     { 
         /// <summary>
@@ -18,6 +21,8 @@ namespace BehaviourTree
         /// kvp = (ActionNode, [ActionNodeXXX, ActionNodeXXX, ActionNodeXXX, ...])
         /// </summary>
         public static readonly Dictionary<Type, List<Type>> GeneralToSelectionsDic;
+
+        public static readonly HashSet<string> PortPropertyNames;
         static TypeCache()
         {
             NodeGeneralTypes = typeof(NodeBase).Assembly.GetTypes()
@@ -43,7 +48,11 @@ namespace BehaviourTree
                         new List<Type>(){generalType});
             });
 
-
+            PortPropertyNames = typeof(NodeBaseEditor<>)
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(p => p.PropertyType == typeof(Port))
+                .Select(p => p.Name)
+                .ToHashSet();
         }
     }
 }

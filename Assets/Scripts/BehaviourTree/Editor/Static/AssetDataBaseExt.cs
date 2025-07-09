@@ -6,7 +6,6 @@ namespace BehaviourTree
 {
     public static class AssetDataBaseExt
     {
-        
         public static void SafeAddSubAsset(Object objectToAdd, Object assetObject)
         {
             if (assetObject == null || objectToAdd == null)
