@@ -197,24 +197,16 @@ namespace BehaviourTree
             };
 
             propertyTree?.Dispose();
-            // if (propertyTreeContainer != null)
-            // {
-            //     extensionContainer.Remove(propertyTreeContainer);
-            // }
             propertyTree = PropertyTree.Create(NodeBase);
             propertyTreeContainer = new IMGUIContainer(() => propertyTree.Draw());
             extensionContainer.Add(propertyTreeContainer);
-
-            // if(popupContainer != null)
-            // {
-            //     extensionContainer.Remove(popupContainer);
-            // }
-            if (NodeBase is GuardNodeCompare g)
+            
+            if (NodeBase is IHasPopup popup)
             {
-                popupContainer = new IMGUIContainer(g.DrawPopup);
+                popupContainer = new IMGUIContainer(popup.DrawPopup);
+                popup.Init();
                 extensionContainer.Add(popupContainer);
             }
-                
         }
     }
 

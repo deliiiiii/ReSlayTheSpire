@@ -5,7 +5,6 @@ using System.Reflection;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEditor;
-using Object = UnityEngine.Object;
 
 namespace BehaviourTree
 {
@@ -19,7 +18,7 @@ namespace BehaviourTree
         LessThanOrEqual
     }
     [Serializable]
-    public class GuardNodeCompare : GuardNode, IRequireBlackBoard
+    public class GuardNodeCompare : GuardNode, IRequireBlackBoard, IHasPopup
     {
         public Blackboard Blackboard { get; set; }
         [ReadOnly][ShowInInspector]
@@ -28,37 +27,22 @@ namespace BehaviourTree
         public CompareType CompareType;
         
         Dictionary<string, FieldInfo> fieldInfoDic;
-        Observable<int> selectedIndex = new (0);
-        string[] options;
-        string selectedOption;
 
-        public void DrawPopup()
-        {
-            if((options?.Length ?? 0) == 0 || selectedIndex == null)
-            {
-                options = new[] { "No Fields Available" }; 
-                return;
-            }
-            if (selectedIndex >= options.Length)
-            {
-                selectedIndex.Value = 0;
-            }
-            selectedIndex.Value = EditorGUILayout.Popup("Select Field", selectedIndex, options);
-        }
-
+        #region Popup
+        public MyEditorLayoutPopup Popup { get; set; }
+        public string PopUpName => "Select Field";
+        public string[] PopUpOptions => fieldInfoDic?.Keys.ToArray();
+        public int InitialSelectedIndex => selectedIndex;
+        public Action<int> SaveSelectedOption => x => selectedIndex = x;
+        int selectedIndex;
+        #endregion
+        
         Union GetFromValue()
         {
-            if (string.IsNullOrEmpty(selectedOption))
+            if (string.IsNullOrEmpty(Popup.SelectedOption))
                 return Union.Null;
-            return Union.Create(fieldInfoDic[selectedOption].FieldType, Blackboard.Get(selectedOption));
+            return Union.Create(fieldInfoDic[Popup.SelectedOption].FieldType, Blackboard.Get(Popup.SelectedOption));
         }
-
-        void OnOptionChanged(int i)
-        {
-            selectedOption = options.Length != 0 ? options[i] : string.Empty;
-            MyDebug.Log($"OnOptionChanged {i} {selectedOption}");
-        }
-
         void OnEnable()
         {
             if ((fieldInfoDic ??= new Dictionary<string, FieldInfo>()).Count == 0)
@@ -67,10 +51,7 @@ namespace BehaviourTree
                 {
                     fieldInfoDic.TryAdd(fieldInfo.Name, fieldInfo);
                 });
-                options = fieldInfoDic?.Keys.ToArray();
             }
-            selectedIndex.OnValueChangedAfter += OnOptionChanged;
-            OnOptionChanged(selectedIndex.Value);
             Condition = () =>
             {
                 if (FromValue.BoardEValueType == EBoardEValueType.@null || ToValue.BoardEValueType == EBoardEValueType.@null)
