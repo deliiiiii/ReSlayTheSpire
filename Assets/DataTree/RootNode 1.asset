@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 183
     height: 92
   State:
-    value: 1
+    value: 0
   GuardNode: {fileID: 2579914684750561758}
   ChildList:
   - {fileID: -1812419812507973863}
@@ -42,7 +42,7 @@ MonoBehaviour:
     width: 213
     height: 130
   State:
-    value: 1
+    value: 0
   GuardNode: {fileID: 0}
   ChildList: []
   Content: "\u554A\u554A\u554A"
@@ -66,7 +66,7 @@ MonoBehaviour:
     width: 220
     height: 93
   State:
-    value: 1
+    value: 0
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -2573363957119407690}
@@ -95,7 +95,7 @@ MonoBehaviour:
   ChildList: []
   ToValue:
     BoardEValueType: 2
-    intVal: -7
+    intVal: 14
     longVal: 0
     floatVal: 0
     doubleVal: 0

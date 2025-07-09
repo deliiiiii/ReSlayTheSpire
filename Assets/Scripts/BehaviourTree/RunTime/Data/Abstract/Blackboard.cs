@@ -30,7 +30,7 @@ namespace BehaviourTree
     //     // }
     // }
     [Serializable]
-    public class Blackboard : ScriptableObject
+    public abstract class Blackboard : ScriptableObject
     {
         public float FFFFF;
         // public TField Get<TField>(string fieldName) => ((IBlackboard<Blackboard>)this).IGet<TField>(fieldName);
