@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f116596c16e4cb199976f3eb9819668, type: 3}
-  m_Name: BlackboardTest
+  m_Script: {fileID: 1726182683, guid: a4865f1ab4504ed8a368670db22f409c, type: 3}
+  m_Name: AOTGenerationConfig
   m_EditorClassIdentifier: 
-  Intttt: 42
-  Floatttt: 0
-  Stateeee: 2
-  Boollll: 0
-  Stringggg: 
-  Vector3333: {x: 0, y: 0, z: 0}
+  automateBeforeBuilds: 0
+  deleteDllAfterBuilds: 1
+  AutomateForAllAOTPlatforms: 1
+  automateForPlatforms: 0900000014000000
+  supportSerializedTypes: []

@@ -17,7 +17,7 @@ MonoBehaviour:
     x: 749.6
     y: 207.2
     width: 192.80005
-    height: 92
+    height: 112
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -38,25 +38,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: -100
-    y: -52.8
-    width: 212.8
-    height: 244.8
+    x: 71.2
+    y: 17.600002
+    width: 254.40001
+    height: 106.4
   State:
     value: 1
   GuardNode: {fileID: 0}
   ChildList: []
-  blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
+  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
   ToValue:
     BoardEValueType: 2
-    intVal: 175
+    intVal: 42
     longVal: 0
     floatVal: 0
     doubleVal: 0
     boolVal: 0
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
-  CompareType: 3
+  CompareType: 0
+  SelectedOption: Intttt
 --- !u!114 &-6452500991402134267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,10 +72,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 287.2
-    y: 207.2
-    width: 192.79999
-    height: 92
+    x: 316.8
+    y: 188
+    width: 192.80002
+    height: 111.999985
   State:
     value: 2
   GuardNode: {fileID: -6947205287044544229}
@@ -95,15 +96,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 452
-    y: 327.2
-    width: 212.79999
-    height: 188.79999
+    x: 463.2
+    y: 356.80002
+    width: 240.79999
+    height: 130.4
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
-  blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
+  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
   ToValue:
     BoardEValueType: 2
     intVal: 24
@@ -113,6 +114,7 @@ MonoBehaviour:
     boolVal: 0
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
+  SelectedOption: Intttt
 --- !u!114 &-2393812710975925934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,16 +129,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 749.6
-    y: 376
-    width: 212.80005
-    height: 130.40002
+    x: 785.6
+    y: 356.80002
+    width: 128.80005
+    height: 130.4
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
   DelaySeconds: 0.99
-  Timer: 0.99342257
+  Timer: 0.9924963
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,10 +153,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 512
-    y: -224.8
+    x: 532
+    y: -156.8
     width: 88.79999
-    height: 68
+    height: 88
   State:
     value: 2
   GuardNode: {fileID: 0}
@@ -174,12 +176,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 443.2
-    y: 28.8
+    x: 488.8
+    y: 12
     width: 192.79999
-    height: 92.00001
+    height: 112
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -6452500991402134267}
@@ -198,15 +200,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 980.8
-    y: 327.2
-    width: 212.79999
-    height: 188.79999
+    x: 976.8
+    y: 356.80002
+    width: 240.79999
+    height: 130.4
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
-  blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
+  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
   ToValue:
     BoardEValueType: 2
     intVal: 42
@@ -216,6 +218,7 @@ MonoBehaviour:
     boolVal: 0
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
+  SelectedOption: Intttt
 --- !u!114 &4711099719438403748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,13 +233,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 211.2
-    y: 327.2
-    width: 212.8
+    x: 140.8
+    y: 356.80002
+    width: 128.8
     height: 130.4
   State:
     value: 2
   GuardNode: {fileID: 0}
   ChildList: []
-  DelaySeconds: 0.77
-  Timer: 0.2843273
+  DelaySeconds: 90.6
+  Timer: 50.904085

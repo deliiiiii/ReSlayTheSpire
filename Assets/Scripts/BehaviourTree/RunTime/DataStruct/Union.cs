@@ -22,6 +22,7 @@ namespace BehaviourTree
     [Serializable]
     public class Union : IComparable<Union>
     {
+        [ReadOnly]
         public EBoardEValueType BoardEValueType;
         [SerializeField][ShowIf(nameof(isInt))]
         int intVal; bool isInt => BoardEValueType == EBoardEValueType.@int;
@@ -116,6 +117,18 @@ namespace BehaviourTree
                 MyDebug.LogError($"Unexpected type {t}");
             }
             return ret;
+        }
+        public static EBoardEValueType ConvertType(Type t)
+        {
+            if (t == typeof(int)) return EBoardEValueType.@int;
+            if (t == typeof(long)) return EBoardEValueType.@long;
+            if (t == typeof(float)) return EBoardEValueType.@float;
+            if (t == typeof(double)) return EBoardEValueType.@double;
+            if (t == typeof(bool)) return EBoardEValueType.@bool;
+            if (t == typeof(string)) return EBoardEValueType.@string;
+            if (t == typeof(Vector3)) return EBoardEValueType.@Vector3;
+            if (t.IsEnum) return EBoardEValueType.@int;
+            return EBoardEValueType.@object;
         }
         public object GetValue()
         {

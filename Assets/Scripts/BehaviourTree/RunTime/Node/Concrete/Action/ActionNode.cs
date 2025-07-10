@@ -8,10 +8,11 @@ namespace BehaviourTree
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
         
-        [NonSerialized]
+        [HideInInspector]
         public Action OnEnter;
 
-        [NonSerialized] public Action<float> OnContinue;
+        [HideInInspector]
+        public Action<float> OnContinue;
         bool isRunning;
         protected bool IsFinished;
 
@@ -23,7 +24,10 @@ namespace BehaviourTree
                 if(s == EState.Failed)
                     isRunning = IsFinished = false;
             });
+            OnEnableAfter();
         }
+        
+        protected virtual void OnEnableAfter(){}
 
 
         protected override EState OnTickChild(float dt)

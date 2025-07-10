@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using BehaviourTree.Config;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Direction = UnityEditor.Experimental.GraphView.Direction;
@@ -61,9 +63,21 @@ namespace BehaviourTree
         Rect GetRect();
     }
     
+    [Serializable]
     public class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
-        public T NodeBase { get; private set; }
+        T nodeBase;
+        public T NodeBase
+        {
+            get => nodeBase;
+            set
+            {
+                if (nodeBase == value)
+                    return;
+                nodeBase = value;
+                OnNodeBaseChange();
+            }
+        }
         public Port InputParentPort { get; protected set; }
         public Port InputGuardingPort { get; protected set; }
         public Port OutputChildPorts { get; protected set; }
@@ -73,9 +87,8 @@ namespace BehaviourTree
 
         public Rect GetRect() => GetPosition();
         DropdownField typeField;
-        PropertyTree propertyTree;
-        IMGUIContainer propertyTreeContainer;
-        IMGUIContainer popupContainer;
+        ObjectField nodeField;
+        Label detailLabel;
         
         static readonly PortToDrawConfig portToDrawConfig;
         static readonly Dictionary<EState, Color> tickStateColorDic = new()
@@ -98,16 +111,15 @@ namespace BehaviourTree
         public NodeBaseEditor(T nodeBase, bool isDefault)
         {
             // MyDebug.Log($"NodeBaseEditor({nodeBase.GetType().Name}, {isDefault})");
-            OnTypeChanged += OnTypeChange;
+            OnTypeChanged += CreateNodeBase;
             if (isDefault)
             {
-                OnTypeChange(nodeBase.GetType());
+                CreateNodeBase(nodeBase.GetType());
                 SetPosition(new Rect(100, 100, 200, 150));
             }
             else
             {
                 NodeBase = nodeBase;
-                OnNodeBaseChange();
                 SetPosition(NodeBase.RectInGraph);
             }
             
@@ -126,19 +138,11 @@ namespace BehaviourTree
             RefreshExpandedState();
         }
         
-        void OnTypeChange(Type t)
-        {
-            CreateNodeBase(t);
-            OnNodeBaseChange();
-        }
-
         void OnNodeBaseChange()
         {
             extensionContainer.Clear();
             DrawTypeField();
             DrawNodeField();
-            
-            RefreshAllSettings();
         }
         
         void CreateNodeBase(Type t)
@@ -195,17 +199,37 @@ namespace BehaviourTree
             {
                 style.backgroundColor = tickStateColorDic[evt];
             };
-
-            propertyTree?.Dispose();
-            propertyTree = PropertyTree.Create(NodeBase);
-            propertyTreeContainer = new IMGUIContainer(() => propertyTree.Draw());
-            extensionContainer.Add(propertyTreeContainer);
             
-            if (NodeBase is IHasPopup popup)
+            nodeField = new ObjectField
             {
-                popupContainer = new IMGUIContainer(popup.DrawPopup);
-                popup.Init();
-                extensionContainer.Add(popupContainer);
+                objectType = NodeBase.GetType(),
+                value = NodeBase,
+                style =
+                {
+                    marginRight = -200,
+                },
+            };
+            extensionContainer.Add(nodeField);
+
+            if (NodeBase is IShowDetail sd)
+            {
+                if(detailLabel != null)
+                    extensionContainer.Remove(detailLabel);
+                detailLabel = new Label(sd.GetDetail())
+                {
+                    style =
+                    {
+                        whiteSpace = WhiteSpace.Normal,
+                        color = Color.white,
+                        fontSize = 15,
+                        unityFontStyleAndWeight = FontStyle.Bold,
+                    }
+                };
+                detailLabel.schedule.Execute(() =>
+                {
+                    detailLabel.text = sd.GetDetail();
+                }).Every(10);
+                extensionContainer.Add(detailLabel);
             }
         }
     }

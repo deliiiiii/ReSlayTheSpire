@@ -9,29 +9,13 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    public class ActionNodeSetValue: ActionNode, IRequireBlackBoard, IHasPopup
+    public class ActionNodeSetValue: ActionNode, IShowDetail
     {
-        [PropertyOrder(0)][ShowInInspector][Required][SerializeField]
-        Blackboard blackboard;
-        public Blackboard Blackboard
-        {
-            get => blackboard;
-            set => blackboard = value;
-        }
-        
+        [PropertyOrder(0)][Required]
+        public Blackboard Blackboard;
+
         [PropertyOrder(20)]
         public Union ToValue;
-        public MyEditorLayoutPopup Popup { get; set; }
-        public string PopUpName => "Select Field";
-        public string[] PopUpOptions => fieldInfoDic?.Keys.ToArray() ?? new string[]{};
-        public int InitialSelectedIndex => selectedIndex;
-        public Action<int> SaveSelectedOption => x =>
-        {
-            selectedIndex = x;
-            ToValue.BoardEValueType = 
-                Union.Create(fieldInfoDic[selectedOption].FieldType,
-                Blackboard.Get(selectedOption)).BoardEValueType;
-        };
         Dictionary<string, FieldInfo> fieldInfoDic => GetFieldInfoDic();
         Dictionary<string, FieldInfo> GetFieldInfoDic()
         {
@@ -44,15 +28,30 @@ namespace BehaviourTree
             });
             return ret;
         }
-        int selectedIndex;
-        string selectedOption => PopUpOptions[selectedIndex];
-        protected new void OnEnable()
+        [ValueDropdown(nameof(GetOptions))][OnValueChanged(nameof(OnOptionChanged))]
+        public string SelectedOption;
+        List<string> GetOptions()
         {
-            base.OnEnable();
+            return fieldInfoDic?.Keys.ToList() ?? new List<string>();
+        }
+
+        void OnOptionChanged()
+        {
+            ToValue.BoardEValueType =
+                Union.ConvertType(fieldInfoDic[SelectedOption].FieldType);
+        }
+
+        protected override void OnEnableAfter()
+        {
             OnEnter = () =>
             {
-                Blackboard.Set(selectedOption, ToValue.GetValue());
+                Blackboard.Set(SelectedOption, ToValue.GetValue());
             };
+        }
+
+        public string GetDetail()
+        {
+            return $"{Blackboard.name}.{SelectedOption} = {ToValue.GetValue()}";
         }
     }
 }

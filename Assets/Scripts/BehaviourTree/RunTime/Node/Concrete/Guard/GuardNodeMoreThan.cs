@@ -3,7 +3,7 @@
 namespace BehaviourTree
 {
     [Serializable]
-    public class GuardNodeMoreThan : GuardNode
+    public class GuardNodeMoreThan : GuardNode, IShowDetail
     {
         public int Value;
         public int Threshold;
@@ -12,7 +12,8 @@ namespace BehaviourTree
         {
             Condition = () => Value > Threshold;
         }
-        public override string ToString()
+
+        public string GetDetail()
         {
             return $"{Value} > {Threshold}";
         }

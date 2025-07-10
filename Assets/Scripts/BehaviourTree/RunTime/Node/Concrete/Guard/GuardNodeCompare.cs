@@ -19,37 +19,21 @@ namespace BehaviourTree
         LessThanOrEqual
     }
     [Serializable]
-    public class GuardNodeCompare : GuardNode, IRequireBlackBoard, IHasPopup
+    public class GuardNodeCompare : GuardNode, IShowDetail
     {
-        [PropertyOrder(0)][ShowInInspector][Required][SerializeField]
-        Blackboard blackboard;
-        public Blackboard Blackboard
-        {
-            get => blackboard;
-            set => blackboard = value;
-        }
+        [PropertyOrder(0)][Required]
+        public Blackboard Blackboard;
         
         [PropertyOrder(10)][ShowInInspector][ReadOnly]
-        Union fromValue => Blackboard == null || string.IsNullOrEmpty(selectedOption)
+        Union fromValue => Blackboard == null || string.IsNullOrEmpty(SelectedOption)
             ? Union.Null
-            : Union.Create(fieldInfoDic[selectedOption].FieldType,
-                Blackboard.Get(selectedOption));
+            : Union.Create(fieldInfoDic[SelectedOption].FieldType,
+                Blackboard.Get(SelectedOption));
         [PropertyOrder(20)]
         public Union ToValue;
         [PropertyOrder(30)]
         public CompareType CompareType;
         
-        #region Popup
-        public MyEditorLayoutPopup Popup { get; set; }
-        public string PopUpName => "Select Field";
-        public string[] PopUpOptions => fieldInfoDic.Keys.ToArray();
-        public int InitialSelectedIndex => selectedIndex;
-        public Action<int> SaveSelectedOption => x =>
-        {
-            selectedIndex = x;
-            ToValue.BoardEValueType = fromValue.BoardEValueType;
-        };
-
         Dictionary<string, FieldInfo> fieldInfoDic => GetFieldInfoDic();
         Dictionary<string, FieldInfo> GetFieldInfoDic()
         {
@@ -62,10 +46,18 @@ namespace BehaviourTree
             });
             return ret;
         }
-         
-        int selectedIndex;
-        string selectedOption => PopUpOptions[selectedIndex];
-        #endregion
+        [ValueDropdown(nameof(GetOptions))][OnValueChanged(nameof(OnOptionChanged))]
+        public string SelectedOption;
+        List<string> GetOptions()
+        {
+            return fieldInfoDic?.Keys.ToList() ?? new List<string>();
+        }
+
+        void OnOptionChanged()
+        {
+            ToValue.BoardEValueType =
+                Union.ConvertType(fieldInfoDic[SelectedOption].FieldType);
+        }
         
         
         void OnEnable()
@@ -88,6 +80,21 @@ namespace BehaviourTree
                     _ => true
                 };
             };
+        }
+
+        public string GetDetail()
+        {
+            string compareSymbol = CompareType switch
+            {
+                CompareType.Equal => "==",
+                CompareType.NotEqual => "!=",
+                CompareType.MoreThan => ">",
+                CompareType.LessThan => "<",
+                CompareType.MoreThanOrEqual => ">=",
+                CompareType.LessThanOrEqual => "<=",
+                _ => "?"
+            };
+            return $"{Blackboard.name}.{SelectedOption} {compareSymbol} {ToValue.GetValue()}";
         }
     }
 }

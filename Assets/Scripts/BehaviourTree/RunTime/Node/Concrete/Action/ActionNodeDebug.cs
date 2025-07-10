@@ -11,12 +11,12 @@ namespace BehaviourTree
     }
     
     [Serializable]
-    public class ActionNodeDebug : ActionNode
+    public class ActionNodeDebug : ActionNode, IShowDetail
     {
         public string Content;
         public EDebugType DebugType = EDebugType.Log;
 
-        void OnEnable()
+        protected override void OnEnableAfter()
         {
             OnEnter = () =>
             {
@@ -34,10 +34,10 @@ namespace BehaviourTree
                 }
             };
         }
-        
-        public override string ToString()
+
+        public string GetDetail()
         {
-            return $"{Content}";
+            return $"Debug {Content}";
         }
     }
 }
