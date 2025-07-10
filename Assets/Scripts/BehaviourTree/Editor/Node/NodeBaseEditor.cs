@@ -204,7 +204,6 @@ namespace BehaviourTree
             if (NodeBase is IHasPopup popup)
             {
                 popupContainer = new IMGUIContainer(popup.DrawPopup);
-                popup.Init();
                 extensionContainer.Add(popupContainer);
             }
         }

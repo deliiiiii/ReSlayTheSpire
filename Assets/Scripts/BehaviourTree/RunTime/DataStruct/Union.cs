@@ -20,7 +20,7 @@ namespace BehaviourTree
     }
     
     [Serializable]
-    public struct Union : IComparable<Union>
+    public class Union : IComparable<Union>
     {
         public EBoardEValueType BoardEValueType;
         [ShowIf(nameof(isInt))]
@@ -62,6 +62,7 @@ namespace BehaviourTree
         public static Union Null = Create(null, null);
         public static Union Create(Type t, object v)
         {
+            MyDebug.Log("Create Union with type: " + t?.Name + ", value: " + v);
             var ret = new Union
             {
                 BoardEValueType = EBoardEValueType.@null

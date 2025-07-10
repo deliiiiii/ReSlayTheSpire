@@ -20,38 +20,54 @@ namespace BehaviourTree
     [Serializable]
     public class GuardNodeCompare : GuardNode, IRequireBlackBoard, IHasPopup
     {
-        public Blackboard Blackboard { get; set; }
-        [ReadOnly][ShowInInspector]
-        public Union FromValue => GetFromValue();
-        public Union ToValue;
-        public CompareType CompareType;
-        
-        Dictionary<string, FieldInfo> fieldInfoDic;
+        [ShowInInspector] [PropertyOrder(0)][InlineEditor] Blackboard blackboard;
+        public Blackboard Blackboard
+        {
+            get => blackboard;
+            set => blackboard = value;
+        }
+        void OnBlackboardChanged()
+        {
+            fieldInfoDic = new Dictionary<string, FieldInfo>();
+            Blackboard?.GetType().GetFields().ForEach(fieldInfo =>
+            {
+                fieldInfoDic.TryAdd(fieldInfo.Name, fieldInfo);
+            });
+            (this as IHasPopup).Init();
+        }
 
+        Union fromValue;
+        Union FromValue
+        {
+            get
+            {
+                if (fromValue != null)
+                    return fromValue;
+                return fromValue = string.IsNullOrEmpty(Popup.SelectedOption)
+                    ? Union.Null
+                    : Union.Create(fieldInfoDic[Popup.SelectedOption].FieldType,
+                        Blackboard.Get(Popup.SelectedOption));
+            }
+        }
+        
         #region Popup
+        [PropertyOrder(10)]
         public MyEditorLayoutPopup Popup { get; set; }
         public string PopUpName => "Select Field";
-        public string[] PopUpOptions => fieldInfoDic?.Keys.ToArray();
+        public string[] PopUpOptions => fieldInfoDic?.Keys.ToArray() ?? new string[]{};
         public int InitialSelectedIndex => selectedIndex;
         public Action<int> SaveSelectedOption => x => selectedIndex = x;
+        Dictionary<string, FieldInfo> fieldInfoDic;
         int selectedIndex;
         #endregion
         
-        Union GetFromValue()
-        {
-            if (string.IsNullOrEmpty(Popup.SelectedOption))
-                return Union.Null;
-            return Union.Create(fieldInfoDic[Popup.SelectedOption].FieldType, Blackboard.Get(Popup.SelectedOption));
-        }
+        [PropertyOrder(20)]
+        public Union ToValue;
+        [PropertyOrder(30)]
+        public CompareType CompareType;
         void OnEnable()
         {
-            if ((fieldInfoDic ??= new Dictionary<string, FieldInfo>()).Count == 0)
-            {
-                Blackboard?.GetType().GetFields().ForEach(fieldInfo =>
-                {
-                    fieldInfoDic.TryAdd(fieldInfo.Name, fieldInfo);
-                });
-            }
+            OnBlackboardChanged();
             Condition = () =>
             {
                 if (FromValue.BoardEValueType == EBoardEValueType.@null || ToValue.BoardEValueType == EBoardEValueType.@null)

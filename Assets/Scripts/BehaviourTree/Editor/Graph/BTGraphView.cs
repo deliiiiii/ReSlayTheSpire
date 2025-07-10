@@ -89,7 +89,6 @@ namespace BehaviourTree
             }
             rootEditor.OnRefreshTree();
             rootNode = rootEditor.NodeBase;
-            rootNode?.OnRefreshTreeEnd();
             Save();
         }
 
