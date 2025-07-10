@@ -10,18 +10,19 @@ namespace BehaviourTree
         
         [NonSerialized]
         public Action OnEnter;
-        [NonSerialized]
-        public Action<float> OnContinue;
+
+        [NonSerialized] public Action<float> OnContinue;
         bool isRunning;
         protected bool IsFinished;
 
-        void OnEnable()
+        protected void OnEnable()
         {
-            Binder.From(State).To(s =>
-            {
-                if(s == EState.Failed)
-                    isRunning = IsFinished = false;
-            });
+            OnContinue = _ => IsFinished = true;
+            // Binder.From(State).To(s =>
+            // {
+            //     if(s == EState.Failed)
+            //         isRunning = IsFinished = false;
+            // });
         }
 
 

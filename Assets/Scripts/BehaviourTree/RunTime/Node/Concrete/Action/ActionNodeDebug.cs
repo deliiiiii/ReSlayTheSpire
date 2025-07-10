@@ -33,7 +33,6 @@ namespace BehaviourTree
                         break;
                 }
             };
-            OnContinue = _ => IsFinished = true;
         }
         
         public override string ToString()

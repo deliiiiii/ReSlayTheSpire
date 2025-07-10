@@ -7,7 +7,7 @@ namespace BehaviourTree
     public class MyEditorLayoutPopup
     {
         public readonly Observable<int> SelectedIndex = new (0);
-        public string SelectedOption;
+        string SelectedOption;
         string name;
         string[] options => GetOptions?.Invoke() ?? new[] { "No Fields Available" };
         Func<string[]> GetOptions;

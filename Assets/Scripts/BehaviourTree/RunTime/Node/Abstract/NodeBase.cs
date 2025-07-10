@@ -35,7 +35,7 @@ public abstract class NodeBase : ScriptableObject
     [HideInInspector][CanBeNull] public GuardNode GuardNode;
     bool CheckGuard()
     {
-        return !GuardNode || GuardNode.Judge();
+        return GuardNode?.Judge() ?? true;
     }
     #endregion
     

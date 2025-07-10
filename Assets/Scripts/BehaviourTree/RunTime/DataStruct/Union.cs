@@ -23,23 +23,46 @@ namespace BehaviourTree
     public class Union : IComparable<Union>
     {
         public EBoardEValueType BoardEValueType;
-        [ShowIf(nameof(isInt))]
+        [ShowIf(nameof(isInt))][OnValueChanged(nameof(OnValueChanged))]
         public int intVal; bool isInt => BoardEValueType == EBoardEValueType.@int;
-        [ShowIf(nameof(isLong))]
+        [ShowIf(nameof(isLong))][OnValueChanged(nameof(OnValueChanged))]
         public long longVal; bool isLong => BoardEValueType == EBoardEValueType.@long;
-        [ShowIf(nameof(isFloat))]
+        [ShowIf(nameof(isFloat))][OnValueChanged(nameof(OnValueChanged))]
         public float floatVal; bool isFloat => BoardEValueType == EBoardEValueType.@float;  
-        [ShowIf(nameof(isDouble))]
+        [ShowIf(nameof(isDouble))][OnValueChanged(nameof(OnValueChanged))]
         public double doubleVal; bool isDouble => BoardEValueType == EBoardEValueType.@double;
-        [ShowIf(nameof(isBool))]
+        [ShowIf(nameof(isBool))][OnValueChanged(nameof(OnValueChanged))]
         public bool boolVal; bool isBool => BoardEValueType == EBoardEValueType.@bool;
-        [ShowIf(nameof(isString))]
+        [ShowIf(nameof(isString))][OnValueChanged(nameof(OnValueChanged))]
         public string stringVal; bool isString => BoardEValueType == EBoardEValueType.@string;
-        [ShowIf(nameof(isVector3))]
+        [ShowIf(nameof(isVector3))][OnValueChanged(nameof(OnValueChanged))]
         public Vector3 vector3; bool isVector3 => BoardEValueType == EBoardEValueType.@Vector3;  
         [CanBeNull] [ShowIf(nameof(isObject))]
         public object objectVal; bool isObject => BoardEValueType == EBoardEValueType.@object;
-        
+
+        void OnValueChanged()
+        {
+            if(isInt)
+                objectVal = intVal;
+            else if(isLong)
+                objectVal = longVal;
+            else if(isFloat)
+                objectVal = floatVal;
+            else if(isDouble)
+                objectVal = doubleVal;
+            else if(isBool)
+                objectVal = boolVal;
+            else if(isString)
+                objectVal = stringVal;
+            else if(isVector3)
+                objectVal = vector3;
+            
+            MyDebug.Log($"onValueChanged: {BoardEValueType} -> {objectVal}");
+            // else if(isObject)
+            //     objectVal = objectVal;
+            // else
+            //     objectVal = null;
+        }
         public int CompareTo(Union other)
         {
             if (BoardEValueType != other.BoardEValueType)
@@ -64,12 +87,12 @@ namespace BehaviourTree
         public static Union Null = Create(null, null);
         public static Union Create(Type t, object v)
         {
-            MyDebug.Log("Create Union with type: " + t?.Name + ", value: " + v);
+            // MyDebug.Log("Create Union with type: " + t?.Name + ", value: " + v);
             var ret = new Union
             {
                 BoardEValueType = EBoardEValueType.@null
             };
-            if (t == null)
+            if (t == null || v == null)
             {
                 return ret;
             }
@@ -123,6 +146,7 @@ namespace BehaviourTree
             {
                 MyDebug.LogError($"Unexpected type {t}");
             }
+            ret.objectVal = v;
             return ret;
         }
     }

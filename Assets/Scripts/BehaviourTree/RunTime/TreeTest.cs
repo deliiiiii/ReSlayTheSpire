@@ -7,16 +7,20 @@ namespace BehaviourTree
     public class TreeTest : Singleton<TreeTest>
     {
         [ShowInInspector][SerializeField] RootNode root;
-        
+        public int TarFrameRate = 10;
+        public bool ShowStartTick = true;
         void Start()
         {
-            Application.targetFrameRate = 10;
+            Application.targetFrameRate = TarFrameRate;
             Binder.Update(Tick);
         }
 
         void Tick(float dt)
         {
-            MyDebug.Log("----------Start Tick----------", LogType.Tick);
+            if (ShowStartTick)
+            {
+                MyDebug.Log("----------Start Tick----------", LogType.Tick);
+            }
             root.Tick(dt);
         }
     }

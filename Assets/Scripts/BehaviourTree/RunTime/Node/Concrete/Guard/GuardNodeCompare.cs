@@ -20,26 +20,19 @@ namespace BehaviourTree
     [Serializable]
     public class GuardNodeCompare : GuardNode, IRequireBlackBoard, IHasPopup
     {
-        [PropertyOrder(0)][ShowInInspector][OnValueChanged(nameof(OnBBChanged))] Blackboard blackboard;
+        [PropertyOrder(0)][ShowInInspector][Required]
+        Blackboard blackboard;
         public Blackboard Blackboard
         {
             get => blackboard;
             set => blackboard = value;
         }
-        void OnBBChanged()
-        {
-            fieldInfoDic = new Dictionary<string, FieldInfo>();
-            Blackboard?.GetType().GetFields().ForEach(fieldInfo =>
-            {
-                fieldInfoDic.TryAdd(fieldInfo.Name, fieldInfo);
-            });
-        }
         
         [PropertyOrder(10)][ShowInInspector][ReadOnly]
-        Union fromValue => Blackboard == null || string.IsNullOrEmpty(Popup?.SelectedOption)
+        Union fromValue => Blackboard == null || string.IsNullOrEmpty(selectedOption)
             ? Union.Null
-            : Union.Create(fieldInfoDic[Popup.SelectedOption].FieldType,
-                Blackboard.Get(Popup.SelectedOption));
+            : Union.Create(fieldInfoDic[selectedOption].FieldType,
+                Blackboard.Get(selectedOption));
         [PropertyOrder(20)]
         public Union ToValue;
         [PropertyOrder(30)]
@@ -48,21 +41,34 @@ namespace BehaviourTree
         #region Popup
         public MyEditorLayoutPopup Popup { get; set; }
         public string PopUpName => "Select Field";
-        public string[] PopUpOptions => fieldInfoDic?.Keys.ToArray() ?? new string[]{};
+        public string[] PopUpOptions => fieldInfoDic.Keys.ToArray();
         public int InitialSelectedIndex => selectedIndex;
         public Action<int> SaveSelectedOption => x =>
         {
             selectedIndex = x;
             ToValue.BoardEValueType = fromValue.BoardEValueType;
         };
-        Dictionary<string, FieldInfo> fieldInfoDic;
+
+        Dictionary<string, FieldInfo> fieldInfoDic => GetFieldInfoDic();
+        Dictionary<string, FieldInfo> GetFieldInfoDic()
+        {
+            var ret = new Dictionary<string, FieldInfo>();
+            if (Blackboard == null)
+                return ret;
+            Blackboard.GetType().GetFields().ForEach(fieldInfo =>
+            {
+                ret.TryAdd(fieldInfo.Name, fieldInfo);
+            });
+            return ret;
+        }
+         
         int selectedIndex;
+        string selectedOption => PopUpOptions[selectedIndex];
         #endregion
         
         
         void OnEnable()
         {
-            OnBBChanged();
             Condition = () =>
             {
                 if (fromValue.BoardEValueType == EBoardEValueType.@null || ToValue.BoardEValueType == EBoardEValueType.@null)
