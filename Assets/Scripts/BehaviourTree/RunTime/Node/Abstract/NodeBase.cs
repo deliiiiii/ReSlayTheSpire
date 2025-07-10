@@ -33,7 +33,7 @@ public abstract class NodeBase : ScriptableObject
     
     
     #region Guard
-    [HideInInspector][CanBeNull][SerializeField] public GuardNode GuardNode;
+    [HideInInspector][CanBeNull] public GuardNode GuardNode;
     bool CheckGuard()
     {
         return !GuardNode || GuardNode.Judge();
@@ -42,8 +42,7 @@ public abstract class NodeBase : ScriptableObject
     
     
     #region Child
-    // [HideInInspector]
-    [InlineEditor][SerializeField]
+    [HideInInspector]
     public List<NodeBase> ChildList;
     public NodeBase LastChild => ChildLinkedList?.Last?.Value;
     protected abstract EChildCountType childCountType { get; set; }
