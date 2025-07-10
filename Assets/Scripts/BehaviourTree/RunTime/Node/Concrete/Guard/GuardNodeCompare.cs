@@ -20,56 +20,49 @@ namespace BehaviourTree
     [Serializable]
     public class GuardNodeCompare : GuardNode, IRequireBlackBoard, IHasPopup
     {
-        [PropertyOrder(0)][ShowInInspector][InlineEditor] Blackboard blackboard;
+        [PropertyOrder(0)][ShowInInspector][OnValueChanged(nameof(OnBBChanged))] Blackboard blackboard;
         public Blackboard Blackboard
         {
             get => blackboard;
             set => blackboard = value;
         }
-        [ShowInInspector]
-        Union fromValue;
-        
-        #region Popup
-        [PropertyOrder(10)]
-        public MyEditorLayoutPopup Popup { get; set; }
-        public string PopUpName => "Select Field";
-        public string[] PopUpOptions => FieldInfoDic?.Keys.ToArray() ?? new string[]{};
-        public int InitialSelectedIndex => selectedIndex;
-        public Action<int> SaveSelectedOption => x =>
+        void OnBBChanged()
         {
-            selectedIndex = x;
-            fromValue = string.IsNullOrEmpty(Popup.SelectedOption)
-                ? Union.Null
-                : Union.Create(FieldInfoDic[Popup.SelectedOption].FieldType,
-                    Blackboard.Get(Popup.SelectedOption));
-            ToValue.BoardEValueType = fromValue.BoardEValueType;
-        };
-
-        Dictionary<string, FieldInfo> fieldInfoDic;
-        public Dictionary<string, FieldInfo> FieldInfoDic
-        {
-            get
+            fieldInfoDic = new Dictionary<string, FieldInfo>();
+            Blackboard?.GetType().GetFields().ForEach(fieldInfo =>
             {
-                if ((fieldInfoDic?.Count ?? 0) == 0)
-                {
-                    fieldInfoDic = new Dictionary<string, FieldInfo>();
-                    Blackboard?.GetType().GetFields().ForEach(fieldInfo =>
-                    {
-                        fieldInfoDic.TryAdd(fieldInfo.Name, fieldInfo);
-                    });
-                }
-                return fieldInfoDic;
-            }
+                fieldInfoDic.TryAdd(fieldInfo.Name, fieldInfo);
+            });
         }
-        int selectedIndex;
-        #endregion
         
+        [PropertyOrder(10)][ShowInInspector][ReadOnly]
+        Union fromValue => Blackboard == null || string.IsNullOrEmpty(Popup?.SelectedOption)
+            ? Union.Null
+            : Union.Create(fieldInfoDic[Popup.SelectedOption].FieldType,
+                Blackboard.Get(Popup.SelectedOption));
         [PropertyOrder(20)]
         public Union ToValue;
         [PropertyOrder(30)]
         public CompareType CompareType;
+        
+        #region Popup
+        public MyEditorLayoutPopup Popup { get; set; }
+        public string PopUpName => "Select Field";
+        public string[] PopUpOptions => fieldInfoDic?.Keys.ToArray() ?? new string[]{};
+        public int InitialSelectedIndex => selectedIndex;
+        public Action<int> SaveSelectedOption => x =>
+        {
+            selectedIndex = x;
+            ToValue.BoardEValueType = fromValue.BoardEValueType;
+        };
+        Dictionary<string, FieldInfo> fieldInfoDic;
+        int selectedIndex;
+        #endregion
+        
+        
         void OnEnable()
         {
+            OnBBChanged();
             Condition = () =>
             {
                 if (fromValue.BoardEValueType == EBoardEValueType.@null || ToValue.BoardEValueType == EBoardEValueType.@null)

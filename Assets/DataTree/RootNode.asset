@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 571
-    y: 267
-    width: 183
+    x: 571.2
+    y: 267.2
+    width: 188.79999
     height: 92
   State:
     value: 0
@@ -37,16 +37,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: -121
-    y: -99
-    width: 220
-    height: 231
+    x: -176
+    y: -99.2
+    width: 377.6
+    height: 273.6
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
   ToValue:
-    BoardEValueType: 0
+    BoardEValueType: 2
     intVal: 0
     longVal: 0
     floatVal: 0
@@ -69,9 +69,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 300
-    y: -114
-    width: 87
+    x: 316.8
+    y: -30.4
+    width: 88.80002
     height: 68
   State:
     value: 2
@@ -93,9 +93,9 @@ MonoBehaviour:
   RectInGraph:
     serializedVersion: 2
     x: 300
-    y: 434
-    width: 213
-    height: 106
+    y: 434.40002
+    width: 212.79999
+    height: 106.39996
   State:
     value: 1
   GuardNode: {fileID: 0}
@@ -116,10 +116,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 261
-    y: 267
-    width: 213
-    height: 130
+    x: 260.8
+    y: 267.2
+    width: 212.80002
+    height: 130.4
   State:
     value: 2
   GuardNode: {fileID: 0}
@@ -140,9 +140,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 317
+    x: 316.8
     y: 132
-    width: 186
+    width: 192.80002
     height: 92
   State:
     value: 2
@@ -166,10 +166,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 827
-    y: 267
-    width: 213
-    height: 130
+    x: 827.2
+    y: 267.2
+    width: 212.79999
+    height: 130.4
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -190,10 +190,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: -11
-    y: 267
-    width: 213
-    height: 130
+    x: -11.2
+    y: 267.2
+    width: 212.8
+    height: 130.4
   State:
     value: 1
   GuardNode: {fileID: 0}
@@ -214,10 +214,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 541
-    y: 571
-    width: 213
-    height: 130
+    x: 540.8
+    y: 571.2
+    width: 212.79999
+    height: 130.40002
   State:
     value: 1
   GuardNode: {fileID: 944918452020931131}

@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 181
-    y: 41
-    width: 344
-    height: 292
+    x: -26.4
+    y: -80.8
+    width: 352
+    height: 263.2
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
   ToValue:
-    BoardEValueType: 6
+    BoardEValueType: 2
     intVal: 4
     longVal: 0
     floatVal: 0.21
@@ -46,10 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 589
-    y: 218
-    width: 183
-    height: 92
+    x: 588.8
+    y: 218.4
+    width: 188.79999
+    height: 92.000015
   State:
     value: 0
   GuardNode: {fileID: -8351635809365808001}
@@ -69,10 +69,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 565
-    y: 391
-    width: 213
-    height: 130
+    x: 564.8
+    y: 391.2
+    width: 212.79999
+    height: 130.40002
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -93,9 +93,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 565
+    x: 564.8
     y: -64
-    width: 87
+    width: 88.79999
     height: 68
   State:
     value: 0
