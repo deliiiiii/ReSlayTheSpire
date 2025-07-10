@@ -50,7 +50,7 @@ namespace BehaviourTree
             base.OnEnable();
             OnEnter = () =>
             {
-                Blackboard.Set(selectedOption, ToValue.objectVal);
+                Blackboard.Set(selectedOption, ToValue.GetValue());
             };
         }
     }

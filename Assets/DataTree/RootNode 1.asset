@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 192.80005
     height: 92
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -2393812710975925934}
@@ -38,24 +38,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: -86.4
-    y: -46.4
-    width: 297.6
-    height: 264.8
+    x: -100
+    y: -52.8
+    width: 212.8
+    height: 244.8
   State:
     value: 1
   GuardNode: {fileID: 0}
   ChildList: []
   ToValue:
     BoardEValueType: 2
-    intVal: 42
+    intVal: 175
     longVal: 0
     floatVal: 0
     doubleVal: 0
     boolVal: 0
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
-  CompareType: 0
+  CompareType: 3
 --- !u!114 &-6452500991402134267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +75,7 @@ MonoBehaviour:
     width: 192.79999
     height: 92
   State:
-    value: 2
+    value: 1
   GuardNode: {fileID: -6947205287044544229}
   ChildList:
   - {fileID: 4711099719438403748}
@@ -99,7 +99,7 @@ MonoBehaviour:
     width: 212.79999
     height: 188.79999
   State:
-    value: 0
+    value: 1
   GuardNode: {fileID: 0}
   ChildList: []
   ToValue:
@@ -130,11 +130,11 @@ MonoBehaviour:
     width: 212.80005
     height: 130.40002
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 0}
   ChildList: []
-  DelaySeconds: 4
-  Timer: 4.099181
+  DelaySeconds: 0.99
+  Timer: 0.59103876
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,15 +149,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 529.6
-    y: -218.40001
-    width: 88.80005
+    x: 547.2
+    y: -224.8
+    width: 88.79999
     height: 68
   State:
     value: 2
   GuardNode: {fileID: 0}
   ChildList:
-  - {fileID: 8669631178160180065}
+  - {fileID: 6745744525162401855}
 --- !u!114 &3809642575600428137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,10 +172,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 984.8
+    x: 980.8
     y: 327.2
-    width: 252.79999
-    height: 200.79999
+    width: 212.79999
+    height: 188.79999
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -184,7 +184,7 @@ MonoBehaviour:
     BoardEValueType: 2
     intVal: 42
     longVal: 0
-    floatVal: 42
+    floatVal: 0
     doubleVal: 0
     boolVal: 0
     stringVal: 
@@ -208,12 +208,12 @@ MonoBehaviour:
     width: 212.8
     height: 130.4
   State:
-    value: 2
+    value: 1
   GuardNode: {fileID: 0}
   ChildList: []
-  DelaySeconds: 2
-  Timer: 0.8371015
---- !u!114 &8669631178160180065
+  DelaySeconds: 0.77
+  Timer: 0.7729871
+--- !u!114 &6745744525162401855
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,8 +222,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
-  m_Name: SelectorNode
+  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
+  m_Name: SequenceNode
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2

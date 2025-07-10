@@ -18,11 +18,11 @@ namespace BehaviourTree
         protected void OnEnable()
         {
             OnContinue = _ => IsFinished = true;
-            // Binder.From(State).To(s =>
-            // {
-            //     if(s == EState.Failed)
-            //         isRunning = IsFinished = false;
-            // });
+            Binder.From(State).To(s =>
+            {
+                if(s == EState.Failed)
+                    isRunning = IsFinished = false;
+            });
         }
 
 
