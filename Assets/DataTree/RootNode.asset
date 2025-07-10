@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 571.2
-    y: 267.2
-    width: 188.79999
-    height: 85.600006
+    x: 571
+    y: 267
+    width: 246
+    height: 114
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -37,10 +37,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 300
-    y: -113.600006
-    width: 380.8
-    height: 208.8
+    x: 340
+    y: -145
+    width: 381
+    height: 264
   State:
     value: 2
   GuardNode: {fileID: 0}
@@ -62,9 +62,9 @@ MonoBehaviour:
   RectInGraph:
     serializedVersion: 2
     x: 300
-    y: 434.40002
-    width: 212.79999
-    height: 100
+    y: 434
+    width: 213
+    height: 130
   State:
     value: 1
   GuardNode: {fileID: 0}
@@ -85,10 +85,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 260.8
-    y: 267.2
-    width: 212.80002
-    height: 124
+    x: 261
+    y: 267
+    width: 213
+    height: 154
   State:
     value: 2
   GuardNode: {fileID: 0}
@@ -109,10 +109,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 311.2
+    x: 311
     y: 136
-    width: 192.79999
-    height: 85.59999
+    width: 248
+    height: 214
   State:
     value: 2
   GuardNode: {fileID: 0}
@@ -135,10 +135,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 827.2
-    y: 267.2
-    width: 212.79999
-    height: 124
+    x: 827
+    y: 267
+    width: 213
+    height: 154
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -159,10 +159,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: -11.2
-    y: 267.2
-    width: 212.8
-    height: 124
+    x: -11
+    y: 267
+    width: 213
+    height: 154
   State:
     value: 1
   GuardNode: {fileID: 0}
@@ -183,10 +183,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 540.8
-    y: 571.2
-    width: 212.79999
-    height: 124
+    x: 541
+    y: 571
+    width: 213
+    height: 154
   State:
     value: 1
   GuardNode: {fileID: 944918452020931131}

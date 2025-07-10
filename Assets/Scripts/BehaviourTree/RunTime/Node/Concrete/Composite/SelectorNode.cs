@@ -6,7 +6,7 @@ namespace BehaviourTree
     [Serializable]
     public class SelectorNode : CompositeNode
     {
-        protected override async Task<EState> OnTickChild(float dt)
+        protected override async Task<EState> OnTickChild()
         {
             if(curNode == null)
             {
@@ -16,11 +16,7 @@ namespace BehaviourTree
             
             while (curNode != null)
             {
-                var res = await curNode.Value.TickAsync(dt);
-                if (res is EState.Running)
-                {
-                    return res;
-                }
+                var res = await curNode.Value.TickAsync();
                 if (res is EState.Succeeded)
                 {
                     curNode = null;

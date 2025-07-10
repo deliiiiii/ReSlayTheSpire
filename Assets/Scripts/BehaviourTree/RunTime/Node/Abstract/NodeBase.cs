@@ -13,7 +13,6 @@ public enum EState
 {
     Failed,
     Succeeded,
-    Running,
 }
 
 public enum EChildCountType
@@ -42,7 +41,7 @@ public abstract class NodeBase : ScriptableObject
     
     
     #region Child
-    [HideInInspector]
+    // [HideInInspector]
     public List<NodeBase> ChildList;
     public NodeBase LastChild => ChildLinkedList?.Last?.Value;
     protected abstract EChildCountType childCountType { get; set; }
@@ -79,14 +78,14 @@ public abstract class NodeBase : ScriptableObject
 
     
     #region Tick
-    public async Task<EState> TickAsync(float dt)
+    public async Task<EState> TickAsync()
     {
         if (!CheckGuard())
         {
             RecursiveDo(OnFail);
             return State.Value = EState.Failed;
         }
-        State.Value = await OnTickChild(dt);
+        State.Value = await OnTickChild();
         // MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
         return State.Value;
     }
@@ -95,11 +94,11 @@ public abstract class NodeBase : ScriptableObject
     /// </summary>
     /// <param name="dt"></param>
     /// <returns></returns>
-    protected virtual async Task<EState> OnTickChild(float dt)
+    protected virtual async Task<EState> OnTickChild()
     {
         if(LastChild == null)
             return EState.Succeeded;
-        return await LastChild.TickAsync(dt);
+        return await LastChild.TickAsync();
     }
     protected static void OnFail(NodeBase target)
     {

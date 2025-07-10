@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 
 namespace BehaviourTree
@@ -13,12 +14,14 @@ namespace BehaviourTree
         void OnEnable()
         {
             OnEnter = () => Timer = 0;
-            OnContinue = dt =>
-            {
-                Timer += dt;
-                IsFinished = Timer >= DelaySeconds;
-            };
+            OnContinueAsync = Action();
         }
+
+        async Task Action()
+        {
+            await Task.Delay((int)(DelaySeconds * 1000));
+        }
+
         public override string ToString()
         {
             return $"Delay {DelaySeconds}s";
