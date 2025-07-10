@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -12,7 +11,7 @@ namespace BehaviourTree
         protected Action OnEnter;
         protected Task OnContinueAsync = Task.CompletedTask;
         
-        protected override async Task<EState> OnTickChild(CancellationTokenSource cts)
+        protected override async Task<EState> OnTickChild()
         { 
             OnEnter?.Invoke();
             await OnContinueAsync;

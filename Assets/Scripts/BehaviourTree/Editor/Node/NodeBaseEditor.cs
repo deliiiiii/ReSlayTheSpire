@@ -80,7 +80,7 @@ namespace BehaviourTree
         static readonly PortToDrawConfig portToDrawConfig;
         static readonly Dictionary<EState, Color> tickStateColorDic = new()
         {
-            // { EState.Running, Color.cyan },
+            { EState.Running, Color.cyan },
             { EState.Succeeded, Color.green },
             { EState.Failed, Color.red }
         };
@@ -190,7 +190,7 @@ namespace BehaviourTree
 
         void DrawNodeField()
         {
-            style.backgroundColor = tickStateColorDic.TryGetValue(NodeBase.State, out var color) ? color : Color.white;
+            style.backgroundColor = tickStateColorDic[NodeBase.State];
             NodeBase.State.OnValueChangedAfter += evt =>
             {
                 style.backgroundColor = tickStateColorDic[evt];

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BehaviourTree
@@ -7,13 +6,13 @@ namespace BehaviourTree
     [Serializable]
     public class InverseNode : DecorateNode
     {
-        protected override async Task<EState> OnTickChild(CancellationTokenSource cts)
+        protected override async Task<EState> OnTickChild()
         {
             if(LastChild == null)
             {
                 return EState.Succeeded;
             }
-            var ret = await LastChild.TickAsync(cts);
+            var ret = await LastChild.TickAsync();
             return ret switch
             {
                 EState.Succeeded => EState.Failed,

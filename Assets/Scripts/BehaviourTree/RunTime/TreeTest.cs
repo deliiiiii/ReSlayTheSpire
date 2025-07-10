@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -10,25 +9,19 @@ namespace BehaviourTree
     {
         [ShowInInspector][SerializeField] RootNode root;
         
-        void Start()
+        async void Start()
         {
             Application.targetFrameRate = 10;
-        }
-
-        async void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.S))
+            while (true)
+            {
                 await Tick();
+            }
         }
 
         async Task Tick()
         {
-            while (true)
-            {
-                using var cts = new CancellationTokenSource();
-                MyDebug.Log("----------Start Tick----------", LogType.Tick);
-                await root.TickAsync(cts);
-            }
+            MyDebug.Log("----------Start Tick----------", LogType.Tick);
+            await root.TickAsync();
         }
     }
 }

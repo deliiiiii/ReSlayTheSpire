@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BehaviourTree
 {
@@ -33,7 +32,7 @@ public abstract class NodeBase : ScriptableObject
     
     
     #region Guard
-    [HideInInspector][CanBeNull][SerializeField] public GuardNode GuardNode;
+    [HideInInspector][CanBeNull] public GuardNode GuardNode;
     bool CheckGuard()
     {
         return !GuardNode || GuardNode.Judge();
@@ -43,7 +42,6 @@ public abstract class NodeBase : ScriptableObject
     
     #region Child
     // [HideInInspector]
-    [InlineEditor][SerializeField]
     public List<NodeBase> ChildList;
     public NodeBase LastChild => ChildLinkedList?.Last?.Value;
     protected abstract EChildCountType childCountType { get; set; }
@@ -80,30 +78,27 @@ public abstract class NodeBase : ScriptableObject
 
     
     #region Tick
-    public async Task<EState> TickAsync(CancellationTokenSource cts)
+    public async Task<EState> TickAsync()
     {
         if (!CheckGuard())
         {
-            cts.Cancel();
             RecursiveDo(OnFail);
             return State.Value = EState.Failed;
         }
-        State.Value = await OnTickChild(cts);
+        State.Value = await OnTickChild();
         // MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
         return State.Value;
     }
-
     /// <summary>
     /// 默认Tick最后一个节点， 没有节点时返回Succeeded
     /// </summary>
-    /// <param name="cts"></param>
     /// <param name="dt"></param>
     /// <returns></returns>
-    protected virtual async Task<EState> OnTickChild(CancellationTokenSource cts)
+    protected virtual async Task<EState> OnTickChild()
     {
         if(LastChild == null)
             return EState.Succeeded;
-        return await LastChild.TickAsync(cts);
+        return await LastChild.TickAsync();
     }
     protected static void OnFail(NodeBase target)
     {
