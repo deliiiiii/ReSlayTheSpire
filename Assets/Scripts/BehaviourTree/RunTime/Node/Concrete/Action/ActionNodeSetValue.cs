@@ -4,13 +4,14 @@ using System.Linq;
 using System.Reflection;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using UnityEngine;
 
 namespace BehaviourTree
 {
     [Serializable]
     public class ActionNodeSetValue: ActionNode, IRequireBlackBoard, IHasPopup
     {
-        [PropertyOrder(0)][ShowInInspector][Required]
+        [PropertyOrder(0)][ShowInInspector][Required][SerializeField]
         Blackboard blackboard;
         public Blackboard Blackboard
         {

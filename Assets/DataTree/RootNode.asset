@@ -45,6 +45,7 @@ MonoBehaviour:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
+  blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
   ToValue:
     BoardEValueType: 2
     intVal: 0

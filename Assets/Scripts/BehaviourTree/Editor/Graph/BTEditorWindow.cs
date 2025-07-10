@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
+    [InitializeOnLoad]
     public class BTEditorWindow : EditorWindow
     {
         static readonly Dictionary<int, BTEditorWindow> windowDic = new();
@@ -18,6 +19,12 @@ namespace BehaviourTree
         {
             // 编译前关闭所有已打开窗口
             AssemblyReloadEvents.beforeAssemblyReload += CloseAllWindows;
+            // 关掉unity时关闭所有窗口 
+            EditorApplication.wantsToQuit += () =>
+            {
+                CloseAllWindows();
+                return true;
+            };
         }
         void OnEnable()
         {

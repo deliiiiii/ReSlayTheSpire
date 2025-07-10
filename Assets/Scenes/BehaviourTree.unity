@@ -168,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
   root: {fileID: 11400000, guid: e1922bb55bf73b74fbd6cae144bfdea2, type: 2}
-  TarFrameRate: 1000
+  TarFrameRate: 120
   ShowStartTick: 0
 --- !u!1 &345953031
 GameObject:

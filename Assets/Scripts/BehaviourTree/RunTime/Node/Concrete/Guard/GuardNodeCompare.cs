@@ -5,6 +5,7 @@ using System.Reflection;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEditor;
+using UnityEngine;
 
 namespace BehaviourTree
 {
@@ -20,7 +21,7 @@ namespace BehaviourTree
     [Serializable]
     public class GuardNodeCompare : GuardNode, IRequireBlackBoard, IHasPopup
     {
-        [PropertyOrder(0)][ShowInInspector][Required]
+        [PropertyOrder(0)][ShowInInspector][Required][SerializeField]
         Blackboard blackboard;
         public Blackboard Blackboard
         {
