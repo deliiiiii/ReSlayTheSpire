@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace BehaviourTree
 {
     [Serializable]
     public class SelectorNode : CompositeNode
     {
-        protected override async Task<EState> OnTickChild(float dt)
+        protected override EState OnTickChild(float dt)
         {
             if(curNode == null)
             {
@@ -16,7 +15,7 @@ namespace BehaviourTree
             
             while (curNode != null)
             {
-                var res = await curNode.Value.TickAsync(dt);
+                var res = curNode.Value.Tick(dt);
                 if (res is EState.Running)
                 {
                     return res;

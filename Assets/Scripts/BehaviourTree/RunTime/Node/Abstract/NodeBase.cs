@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -79,14 +78,14 @@ public abstract class NodeBase : ScriptableObject
 
     
     #region Tick
-    public async Task<EState> TickAsync(float dt)
+    public EState Tick(float dt)
     {
         if (!CheckGuard())
         {
             RecursiveDo(OnFail);
             return State.Value = EState.Failed;
         }
-        State.Value = await OnTickChild(dt);
+        State.Value = OnTickChild(dt);
         // MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
         return State.Value;
     }
@@ -95,11 +94,9 @@ public abstract class NodeBase : ScriptableObject
     /// </summary>
     /// <param name="dt"></param>
     /// <returns></returns>
-    protected virtual async Task<EState> OnTickChild(float dt)
+    protected virtual EState OnTickChild(float dt)
     {
-        if(LastChild == null)
-            return EState.Succeeded;
-        return await LastChild.TickAsync(dt);
+        return LastChild?.Tick(dt) ?? EState.Succeeded;
     }
     protected static void OnFail(NodeBase target)
     {

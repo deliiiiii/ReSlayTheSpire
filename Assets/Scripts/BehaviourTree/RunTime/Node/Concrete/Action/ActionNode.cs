@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -26,7 +25,7 @@ namespace BehaviourTree
         }
 
 
-        protected override async Task<EState> OnTickChild(float dt)
+        protected override EState OnTickChild(float dt)
         {
             if (!isRunning)
             {
