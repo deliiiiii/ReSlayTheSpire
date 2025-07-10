@@ -109,8 +109,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 338
-    y: 111
+    x: 311
+    y: 136
     width: 245
     height: 114
   State:
