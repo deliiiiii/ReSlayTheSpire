@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BehaviourTree
@@ -6,7 +7,7 @@ namespace BehaviourTree
     [Serializable]
     public class SequenceNode : CompositeNode
     {
-        protected override async Task<EState> OnTickChild()
+        protected override async Task<EState> OnTickChild(CancellationTokenSource cts)
         {
             if (curNode == null)
             {
@@ -16,7 +17,7 @@ namespace BehaviourTree
             
             while (curNode != null)
             {
-                var res = await curNode.Value.TickAsync();
+                var res = await curNode.Value.TickAsync(cts);
                 if (res is EState.Failed)
                 {
                     curNode = null;

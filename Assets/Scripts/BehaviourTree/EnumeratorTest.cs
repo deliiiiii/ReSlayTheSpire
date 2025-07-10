@@ -21,11 +21,6 @@ namespace BehaviourTree
             await Task.Delay(2000);
             MyDebug.Log("Awake 4" + s);            
         }
-
-        async Task TestAsync()
-        {
-            
-        }
         //cts = new CancellationTokenSource(); 
         //cts.CancelAfter(1000);
         //cts.Token.Register(() => 
