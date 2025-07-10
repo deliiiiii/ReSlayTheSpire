@@ -80,7 +80,7 @@ namespace BehaviourTree
         static readonly PortToDrawConfig portToDrawConfig;
         static readonly Dictionary<EState, Color> tickStateColorDic = new()
         {
-            { EState.Running, Color.cyan },
+            // { EState.Running, Color.cyan },
             { EState.Succeeded, Color.green },
             { EState.Failed, Color.red }
         };

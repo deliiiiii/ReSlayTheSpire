@@ -14,7 +14,6 @@ public enum EState
 {
     Failed,
     Succeeded,
-    Running,
 }
 
 public enum EChildCountType
@@ -37,7 +36,7 @@ public abstract class NodeBase : ScriptableObject
     [HideInInspector][CanBeNull] public GuardNode GuardNode;
     bool CheckGuard()
     {
-        return GuardNode?.Judge() ?? true;
+        return !GuardNode || GuardNode.Judge();
     }
     #endregion
     
@@ -82,16 +81,13 @@ public abstract class NodeBase : ScriptableObject
     #region Tick
     public async Task<EState> TickAsync(CancellationTokenSource cts)
     {
-        // if (cts.IsCancellationRequested)
-        //     return State.Value = EState.Failed;
-        var childCTS = new CancellationTokenSource();
         if (!CheckGuard())
         {
-            childCTS.Cancel();
+            cts.Cancel();
             RecursiveDo(OnFail);
             return State.Value = EState.Failed;
         }
-        State.Value = await OnTickChild(childCTS);
+        State.Value = await OnTickChild(cts);
         // MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
         return State.Value;
     }
@@ -104,8 +100,6 @@ public abstract class NodeBase : ScriptableObject
     /// <returns></returns>
     protected virtual async Task<EState> OnTickChild(CancellationTokenSource cts)
     {
-        if (cts.IsCancellationRequested)
-            throw new TaskCanceledException();
         if(LastChild == null)
             return EState.Succeeded;
         return await LastChild.TickAsync(cts);

@@ -10,16 +10,12 @@ namespace BehaviourTree
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
         protected Action OnEnter;
+        protected Task OnContinueAsync = Task.CompletedTask;
+        
         protected override async Task<EState> OnTickChild(CancellationTokenSource cts)
         { 
             OnEnter?.Invoke();
-            State.Value = EState.Running;
-            await OnContinueAsync();
-            return EState.Succeeded;
-        }
-
-        protected virtual async Task<EState> OnContinueAsync()
-        {
+            await OnContinueAsync;
             return EState.Succeeded;
         }
     }

@@ -13,14 +13,13 @@ namespace BehaviourTree
 
         void OnEnable()
         {
-            MyDebug.Log($"DelayNode OnEnable {DelaySeconds}s", LogType.Tick);
             OnEnter = () => Timer = 0;
+            OnContinueAsync = Action();
         }
 
-        protected override async Task<EState> OnContinueAsync()
+        async Task Action()
         {
             await Task.Delay((int)(DelaySeconds * 1000));
-            return EState.Succeeded;
         }
 
         public override string ToString()
