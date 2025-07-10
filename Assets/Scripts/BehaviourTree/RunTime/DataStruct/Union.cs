@@ -42,8 +42,10 @@ namespace BehaviourTree
         
         public int CompareTo(Union other)
         {
-            if (BoardEValueType == other.BoardEValueType)
-                return 0;
+            if (BoardEValueType != other.BoardEValueType)
+            {
+                MyDebug.LogWarning($"Cannot compare Union different types: {BoardEValueType} vs {other.BoardEValueType}");
+            }
             
             return BoardEValueType switch
             {

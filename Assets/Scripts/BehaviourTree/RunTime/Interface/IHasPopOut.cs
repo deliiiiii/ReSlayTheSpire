@@ -14,7 +14,7 @@ namespace BehaviourTree
         public Action<int> SaveSelectedOption { get; }
         public void Init()
         {
-            Popup = new(PopUpName, PopUpOptions, InitialSelectedIndex);
+            Popup = new(PopUpName,() => PopUpOptions, () => InitialSelectedIndex);
             Popup.SelectedIndex.OnValueChangedAfter += x => SaveSelectedOption(x);
         }
     }

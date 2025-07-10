@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8351635809365808001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
+  m_Name: GuardNodeCompare
+  m_EditorClassIdentifier: 
+  RectInGraph:
+    serializedVersion: 2
+    x: 181
+    y: 41
+    width: 344
+    height: 292
+  State:
+    value: 0
+  GuardNode: {fileID: 0}
+  ChildList: []
+  ToValue:
+    BoardEValueType: 6
+    intVal: 4
+    longVal: 0
+    floatVal: 0.21
+    doubleVal: 0
+    boolVal: 0
+    stringVal: 
+    vector3: {x: 0, y: 0, z: 0}
+  CompareType: 1
 --- !u!114 &-2573363957119407690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20,7 +52,7 @@ MonoBehaviour:
     height: 92
   State:
     value: 0
-  GuardNode: {fileID: 1248678705014982056}
+  GuardNode: {fileID: -8351635809365808001}
   ChildList:
   - {fileID: -1812419812507973863}
 --- !u!114 &-1812419812507973863
@@ -62,7 +94,7 @@ MonoBehaviour:
   RectInGraph:
     serializedVersion: 2
     x: 565
-    y: -72
+    y: -64
     width: 87
     height: 68
   State:
@@ -70,35 +102,3 @@ MonoBehaviour:
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -2573363957119407690}
---- !u!114 &1248678705014982056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
-  m_Name: GuardNodeCompare
-  m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 78
-    y: 78
-    width: 381
-    height: 313
-  State:
-    value: 0
-  GuardNode: {fileID: 0}
-  ChildList: []
-  ToValue:
-    BoardEValueType: 2
-    intVal: 0
-    longVal: 0
-    floatVal: 0
-    doubleVal: 0
-    boolVal: 0
-    stringVal: 
-    vector3: {x: 0, y: 0, z: 0}
-  CompareType: 0

@@ -9,13 +9,14 @@ namespace BehaviourTree
         public readonly Observable<int> SelectedIndex = new (0);
         public string SelectedOption;
         string name;
-        string[] options;
+        string[] options => GetOptions?.Invoke() ?? new[] { "No Fields Available" };
+        Func<string[]> GetOptions;
 
-        public MyEditorLayoutPopup(string name, string[] options, int selectedIndex)
+        public MyEditorLayoutPopup(string name, Func<string[]> GetOptions, Func<int> GetSelectedIndex)
         {
             this.name = name;
-            this.options = options;
-            this.SelectedIndex.Value = selectedIndex;
+            this.GetOptions = GetOptions;
+            this.SelectedIndex.Value = GetSelectedIndex?.Invoke() ?? 0;
             this.SelectedIndex.OnValueChangedAfter += OnOptionChanged;
             OnOptionChanged(this.SelectedIndex.Value);
         }
@@ -24,7 +25,6 @@ namespace BehaviourTree
         {
             if((options?.Length ?? 0) == 0 || SelectedIndex == null)
             {
-                options = new[] { "No Fields Available" }; 
                 return;
             }
             if (SelectedIndex >= options.Length)
