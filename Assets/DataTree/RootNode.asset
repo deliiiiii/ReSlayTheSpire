@@ -16,8 +16,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 571
     y: 267
-    width: 244
-    height: 145
+    width: 183
+    height: 92
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -37,12 +37,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 388
-    y: -83
-    width: 250
-    height: 148
+    x: 431
+    y: -128
+    width: 220
+    height: 93
   State:
-    value: 2
+    value: 0
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: 3256989651206574489}
@@ -64,12 +64,12 @@ MonoBehaviour:
     x: 300
     y: 434
     width: 213
-    height: 130
+    height: 106
   State:
-    value: 1
+    value: 0
   GuardNode: {fileID: 0}
   ChildList: []
-  Value: 42
+  Value: 15
   Threshold: 24
 --- !u!114 &2466634454646049510
 MonoBehaviour:
@@ -88,13 +88,13 @@ MonoBehaviour:
     x: 261
     y: 267
     width: 213
-    height: 154
+    height: 130
   State:
-    value: 2
+    value: 1
   GuardNode: {fileID: 0}
   ChildList: []
   DelaySeconds: 2.718
-  Timer: 1.135345
+  Timer: 0
 --- !u!114 &3256989651206574489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,10 +111,10 @@ MonoBehaviour:
     serializedVersion: 2
     x: 338
     y: 111
-    width: 245
-    height: 114
+    width: 186
+    height: 92
   State:
-    value: 2
+    value: 0
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: 7512937561549423645}
@@ -138,7 +138,7 @@ MonoBehaviour:
     x: 827
     y: 267
     width: 213
-    height: 154
+    height: 130
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -162,7 +162,7 @@ MonoBehaviour:
     x: -11
     y: 267
     width: 213
-    height: 154
+    height: 130
   State:
     value: 1
   GuardNode: {fileID: 0}
@@ -186,10 +186,10 @@ MonoBehaviour:
     x: 541
     y: 571
     width: 213
-    height: 154
+    height: 130
   State:
-    value: 1
+    value: 0
   GuardNode: {fileID: 944918452020931131}
   ChildList: []
   DelaySeconds: 1.14514
-  Timer: 1.1991947
+  Timer: 0
