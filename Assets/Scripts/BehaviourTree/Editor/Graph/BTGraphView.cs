@@ -137,25 +137,25 @@ namespace BehaviourTree
         
         void Save()
         {
-            IEnumerable<NodeBase> nodeBases = nodeEditors
-                .Where(nodeEditor => nodeEditor.NodeBase != null)
-                .Select(nodeEditor => nodeEditor.NodeBase)
-                .ToList();
+            // IEnumerable<NodeBase> nodeBases = nodeEditors
+            //     .Where(nodeEditor => nodeEditor.NodeBase != null)
+            //     .Select(nodeEditor => nodeEditor.NodeBase)
+            //     .ToList();
             if (AssetDatabase.LoadAssetAtPath<RootNode>(path))
             {
-                AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
-                    .Where(ass => ass != null && !nodeBases.Contains(ass))
-                    .ForEach(AssetDatabase.RemoveObjectFromAsset);
+                // AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
+                //     // .Where(ass => ass != null && !nodeBases.Contains(ass))
+                //     .ForEach(AssetDatabase.RemoveObjectFromAsset);
             }
             else
             {
                 AssetDatabase.CreateAsset(rootNode, path);
             }
             EditorUtility.SetDirty(rootNode);
-            nodeBases.ForEach(nodeBase =>
-            {
-                AssetDataBaseExt.SafeAddSubAsset(nodeBase, rootNode);
-            });
+            // nodeBases.ForEach(nodeBase =>
+            // {
+            //     AssetDataBaseExt.SafeAddSubAsset(nodeBase, rootNode);
+            // });
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
