@@ -16,8 +16,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 589
     y: 218
-    width: 244
-    height: 114
+    width: 183
+    height: 92
   State:
     value: 0
   GuardNode: {fileID: 2579914684750561758}
@@ -40,7 +40,7 @@ MonoBehaviour:
     x: 565
     y: 391
     width: 213
-    height: 154
+    height: 130
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -61,10 +61,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 674
-    y: -126
-    width: 381
-    height: 264
+    x: 702
+    y: -137
+    width: 220
+    height: 93
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -88,7 +88,7 @@ MonoBehaviour:
     x: 237
     y: 6
     width: 213
-    height: 228
+    height: 224
   State:
     value: 0
   GuardNode: {fileID: 0}

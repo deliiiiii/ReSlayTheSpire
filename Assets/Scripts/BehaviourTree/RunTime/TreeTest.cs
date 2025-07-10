@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -9,19 +8,16 @@ namespace BehaviourTree
     {
         [ShowInInspector][SerializeField] RootNode root;
         
-        async void Start()
+        void Start()
         {
             Application.targetFrameRate = 10;
-            while (true)
-            {
-                await Tick();
-            }
+            Binder.Update(Tick);
         }
 
-        async Task Tick()
+        void Tick(float dt)
         {
             MyDebug.Log("----------Start Tick----------", LogType.Tick);
-            await root.TickAsync();
+            root.TickAsync(dt);
         }
     }
 }

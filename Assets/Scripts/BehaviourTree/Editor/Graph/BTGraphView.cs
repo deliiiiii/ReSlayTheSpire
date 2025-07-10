@@ -109,10 +109,7 @@ namespace BehaviourTree
                     AddElement(ele);
                 }
             }
-            thisNodeBase.ChildList?
-                // 防止节点代码删除后, 引用丢失导致的 null
-                .Where(childNode => childNode != null)
-                .ForEach(childNode =>
+            thisNodeBase.ChildList?.ForEach(childNode =>
             {
                 var childNodeEditor = DrawNodeEditorWithIns(childNode, false);
                 var ele = thisNodeEditor.ConnectChildNodeEditor(childNodeEditor);
@@ -138,7 +135,6 @@ namespace BehaviourTree
         void Save()
         {
             IEnumerable<NodeBase> nodeBases = nodeEditors
-                .Where(nodeEditor => nodeEditor.NodeBase != null)
                 .Select(nodeEditor => nodeEditor.NodeBase)
                 .ToList();
             if (AssetDatabase.LoadAssetAtPath<RootNode>(path))

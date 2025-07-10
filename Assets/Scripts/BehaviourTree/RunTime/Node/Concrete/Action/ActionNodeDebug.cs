@@ -22,18 +22,18 @@ namespace BehaviourTree
             {
                 switch (DebugType)
                 {
+                    case EDebugType.Log:
+                        MyDebug.Log(Content, LogType.Tick);
+                        break;
                     case EDebugType.Warning:
                         MyDebug.LogWarning(Content, LogType.Tick);
                         break;
                     case EDebugType.Error:
                         MyDebug.LogError(Content, LogType.Tick);
                         break;
-                    case EDebugType.Log:
-                    default:
-                        MyDebug.Log(Content, LogType.Tick);
-                        break;
                 }
             };
+            OnContinue = _ => IsFinished = true;
         }
         
         public override string ToString()

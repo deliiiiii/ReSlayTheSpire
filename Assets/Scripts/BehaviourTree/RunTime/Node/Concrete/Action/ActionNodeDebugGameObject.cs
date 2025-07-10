@@ -9,7 +9,11 @@ namespace BehaviourTree
 
         void OnEnable()
         {
-            OnEnter = () => MyDebug.Log($" pos {Go.transform.localPosition}");
+            OnContinue = _ =>
+            {
+                MyDebug.Log($" pos {Go.transform.localPosition}");
+                IsFinished = true;
+            };
         }
     }
 }
