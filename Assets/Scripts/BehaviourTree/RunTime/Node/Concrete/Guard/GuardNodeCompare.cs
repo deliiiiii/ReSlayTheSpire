@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEditor;
@@ -21,7 +22,7 @@ namespace BehaviourTree
     [Serializable]
     public class GuardNodeCompare : GuardNode, IShowDetail
     {
-        [PropertyOrder(0)][Required]
+        [PropertyOrder(0)][Required] [CanBeNull]
         public Blackboard Blackboard;
         
         [PropertyOrder(10)][ShowInInspector][ReadOnly]
@@ -94,7 +95,7 @@ namespace BehaviourTree
                 CompareType.LessThanOrEqual => "<=",
                 _ => "?"
             };
-            return $"{Blackboard.name}.{SelectedOption} {compareSymbol} {ToValue.GetValue()}";
+            return $"{Blackboard?.name ?? "null"}.{SelectedOption} {compareSymbol} {ToValue.GetValue()}";
         }
     }
 }

@@ -119,11 +119,11 @@ MonoBehaviour:
             PortName: 
         - Key: InputGuardingPort
           Value:
-            IsValid: 0
+            IsValid: 1
             Direction: 0
             Capacity: 0
-            PortTypeName: 
-            PortName: 
+            PortTypeName: GuardPort
+            PortName: "AND \u2191"
         - Key: OutputGuardedPort
           Value:
             IsValid: 1

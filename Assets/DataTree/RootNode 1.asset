@@ -44,7 +44,7 @@ MonoBehaviour:
     height: 106.4
   State:
     value: 1
-  GuardNode: {fileID: 0}
+  GuardNode: {fileID: 7530516594398591454}
   ChildList: []
   Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
   ToValue:
@@ -153,8 +153,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 532
-    y: -156.8
+    x: 523.2
+    y: -135.2
     width: 88.79999
     height: 88
   State:
@@ -235,11 +235,45 @@ MonoBehaviour:
     serializedVersion: 2
     x: 140.8
     y: 356.80002
-    width: 128.8
+    width: 135.99998
     height: 130.4
   State:
     value: 2
   GuardNode: {fileID: 0}
   ChildList: []
   DelaySeconds: 90.6
-  Timer: 50.904085
+  Timer: 6.206899
+--- !u!114 &7530516594398591454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
+  m_Name: GuardNodeCompare
+  m_EditorClassIdentifier: 
+  RectInGraph:
+    serializedVersion: 2
+    x: -162.4
+    y: -121.600006
+    width: 283.2
+    height: 106.4
+  State:
+    value: 0
+  GuardNode: {fileID: 0}
+  ChildList: []
+  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
+  ToValue:
+    BoardEValueType: 6
+    intVal: 0
+    longVal: 0
+    floatVal: 0
+    doubleVal: 0
+    boolVal: 0
+    stringVal: 
+    vector3: {x: 0, y: 0, z: 0}
+  CompareType: 0
+  SelectedOption: Boollll

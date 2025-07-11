@@ -107,6 +107,7 @@ namespace BehaviourTree
                 {
                     AddElement(ele);
                 }
+                CreateChildNodeEditors(guardEditor, guardNode);
             }
             thisNodeBase.ChildList?.ForEach(childNode =>
             {

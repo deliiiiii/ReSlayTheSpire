@@ -11,7 +11,7 @@ namespace BehaviourTree
 
         public bool Judge()
         {
-            var ret = Condition();
+            var ret = Condition() && (GuardNode?.Judge() ?? true);
             State.Value = ret ? EState.Succeeded : EState.Failed;
             return ret;
         }

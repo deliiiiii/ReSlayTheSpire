@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeSetValue: ActionNode, IShowDetail
     {
-        [PropertyOrder(0)][Required]
+        [PropertyOrder(0)][Required] [CanBeNull] 
         public Blackboard Blackboard;
 
         [PropertyOrder(20)]
@@ -45,13 +46,13 @@ namespace BehaviourTree
         {
             OnEnter = () =>
             {
-                Blackboard.Set(SelectedOption, ToValue.GetValue());
+                Blackboard?.Set(SelectedOption, ToValue.GetValue());
             };
         }
 
         public string GetDetail()
         {
-            return $"{Blackboard.name}.{SelectedOption} = {ToValue.GetValue()}";
+            return $"{Blackboard?.name ?? "null"}.{SelectedOption} = {ToValue.GetValue()}";
         }
     }
 }
