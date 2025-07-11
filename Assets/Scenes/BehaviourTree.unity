@@ -651,6 +651,7 @@ MonoBehaviour:
     State:
       value: 0
     GuardNode:
+      rid: -2
     ChildList:
     - rid: 853993134440579084
   TarFrameRate: 10
