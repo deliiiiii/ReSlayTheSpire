@@ -199,7 +199,7 @@ namespace BehaviourTree
             {
                 style.backgroundColor = tickStateColorDic[evt];
             };
-            
+
             // TODO
             // nodeField = new ObjectField
             // {

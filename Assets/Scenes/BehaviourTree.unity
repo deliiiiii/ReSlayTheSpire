@@ -653,7 +653,7 @@ MonoBehaviour:
     GuardNode:
       rid: -2
     ChildList:
-    - rid: 853993134440579084
+    - rid: 853993134440579085
   TarFrameRate: 10
   ShowStartTick: 1
   references:
@@ -661,14 +661,91 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 853993134440579083
+    - rid: 853993134440579085
+      type: {class: SelectorNode, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        Name: 
+        RectInGraph:
+          serializedVersion: 2
+          x: 529
+          y: 324
+          width: 183
+          height: 92
+        State:
+          value: 0
+        GuardNode:
+          rid: -2
+        ChildList:
+        - rid: 853993134440579087
+        - rid: 853993134440579089
+    - rid: 853993134440579087
+      type: {class: ActionNodeUnityEvent, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        Name: 
+        RectInGraph:
+          serializedVersion: 2
+          x: 475
+          y: 484
+          width: 153
+          height: 111
+        State:
+          value: 0
+        GuardNode:
+          rid: 853993134440579090
+        ChildList: []
+        Event:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 1848710720104531392}
+              m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_MethodName: set_name
+              m_Mode: 5
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: aaa
+                m_BoolArgument: 0
+              m_CallState: 2
+    - rid: 853993134440579089
+      type: {class: ActionNodeUnityEvent, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        Name: 
+        RectInGraph:
+          serializedVersion: 2
+          x: 778
+          y: 467
+          width: 153
+          height: 111
+        State:
+          value: 0
+        GuardNode:
+          rid: -2
+        ChildList: []
+        Event:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 1848710720104531392}
+              m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_MethodName: set_name
+              m_Mode: 5
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: sss
+                m_BoolArgument: 0
+              m_CallState: 2
+    - rid: 853993134440579090
       type: {class: GuardNodeMoreThan, ns: BehaviourTree, asm: Assembly-CSharp}
       data:
         Name: 
         RectInGraph:
           serializedVersion: 2
-          x: 222
-          y: 176
+          x: 323
+          y: 380
           width: 173
           height: 87
         State:
@@ -678,23 +755,6 @@ MonoBehaviour:
         ChildList: []
         Value: 10
         Threshold: 0
-    - rid: 853993134440579084
-      type: {class: ActionNodeDebugger, ns: BehaviourTree, asm: Assembly-CSharp}
-      data:
-        Name: 
-        RectInGraph:
-          serializedVersion: 2
-          x: 527
-          y: 322
-          width: 125
-          height: 111
-        State:
-          value: 0
-        GuardNode:
-          rid: 853993134440579083
-        ChildList: []
-        Content: ddd
-        DebugType: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
