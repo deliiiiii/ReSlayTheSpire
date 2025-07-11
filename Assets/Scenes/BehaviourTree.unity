@@ -122,88 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &231639301
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 231639302}
-  - component: {fileID: 231639303}
-  m_Layer: 0
-  m_Name: TreeDelay
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &231639302
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 231639301}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &231639303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 231639301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fa5b9051f3097c45a04531635cc6d9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Root:
-    Name: Delay
-    RectInGraph:
-      serializedVersion: 2
-      x: 333
-      y: 161
-      width: 149
-      height: 80
-    State:
-      value: 0
-    GuardNode:
-      rid: -2
-    ChildList:
-    - rid: 853993139573358594
-  ShowStartTick: 1
-  IsRunning: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 853993139573358594
-      type: {class: ActionNodeDelay, ns: BehaviourTree, asm: Assembly-CSharp}
-      data:
-        Name: 
-        RectInGraph:
-          serializedVersion: 2
-          x: 255
-          y: 274
-          width: 200
-          height: 150
-        State:
-          value: 0
-        GuardNode:
-          rid: -2
-        ChildList: []
-        DelaySeconds: 2
-        Timer: 0
 --- !u!1 &345953031
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,6 +282,144 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1870199760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f116596c16e4cb199976f3eb9819668, type: 3}
+  m_Name: BlackboardTest
+  m_EditorClassIdentifier: 
+  Intttt: 42
+  Floatttt: 0
+  Stateeee: 2
+  Boollll: 0
+  Stringggg: 
+  Vector3333: {x: 0, y: 0, z: 0}
+--- !u!1 &1934403134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1934403136}
+  - component: {fileID: 1934403135}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1934403135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934403134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa5b9051f3097c45a04531635cc6d9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Root:
+    Name: Delay2
+    Position: {x: 323, y: 198}
+    Size: {x: 254, y: 137}
+    State:
+      value: 0
+    GuardNode:
+      rid: -2
+    ChildList:
+    - rid: 853993139573358773
+  ShowStartTick: 1
+  RunOnAwake: 0
+  SaveTime: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 853993139573358773
+      type: {class: ActionNodeDelay, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        Name: 
+        Position: {x: 400, y: 402}
+        Size: {x: 200, y: 150}
+        State:
+          value: 0
+        GuardNode:
+          rid: -2
+        ChildList: []
+        DelaySeconds: 2
+        Timer: 0
+--- !u!4 &1934403136
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934403134}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1969669042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1969669044}
+  - component: {fileID: 1969669043}
+  m_Layer: 0
+  m_Name: New Game Object
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1969669043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969669042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6307c68f29274071809ba7a82c05ab05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalOnScene: 0
+--- !u!4 &1969669044
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969669042}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1848710720104531392
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,7 +430,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5515200003599247093}
   - component: {fileID: 6827993396794868385}
-  - component: {fileID: 6827993396794868386}
   m_Layer: 0
   m_Name: TreeTest
   m_TagString: Untagged
@@ -411,114 +466,84 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Root:
     Name: RRR
-    RectInGraph:
-      serializedVersion: 2
-      x: 562
-      y: 216
-      width: 150
-      height: 69
+    Position: {x: 464, y: 176}
+    Size: {x: 162, y: 67}
     State:
-      value: 0
+      value: 2
     GuardNode:
       rid: -2
     ChildList:
-    - rid: 853993139573358598
-  ShowStartTick: 1
-  IsRunning: 1
+    - rid: 853993139573358766
+  ShowStartTick: 0
+  RunOnAwake: 1
+  SaveTime: 0.1
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 853993139573358593
-      type: {class: ActionNodeTreeHolder, ns: BehaviourTree, asm: Assembly-CSharp}
-      data:
-        Name: 
-        RectInGraph:
-          serializedVersion: 2
-          x: 316
-          y: 425
-          width: 199
-          height: 116
-        State:
-          value: 0
-        GuardNode:
-          rid: -2
-        ChildList: []
-        TreeHolder: {fileID: 231639303}
-    - rid: 853993139573358595
-      type: {class: ActionNodeDebugger, ns: BehaviourTree, asm: Assembly-CSharp}
-      data:
-        Name: 
-        RectInGraph:
-          serializedVersion: 2
-          x: 772
-          y: 425
-          width: 200
-          height: 150
-        State:
-          value: 0
-        GuardNode:
-          rid: -2
-        ChildList: []
-        Content: "\u7B49\u5F85\u7684"
-        DebugType: 0
-    - rid: 853993139573358598
+    - rid: 853993139573358766
       type: {class: SequenceNode, ns: BehaviourTree, asm: Assembly-CSharp}
       data:
         Name: 
-        RectInGraph:
-          serializedVersion: 2
-          x: 529
-          y: 324
-          width: 183
-          height: 92
+        Position: {x: 537, y: 269}
+        Size: {x: 178, y: 98}
         State:
-          value: 0
+          value: 2
         GuardNode:
           rid: -2
         ChildList:
-        - rid: 853993139573358593
-        - rid: 853993139573358600
-        - rid: 853993139573358595
-    - rid: 853993139573358600
+        - rid: 853993139573358767
+        - rid: 853993139573358774
+        curNodeId: 0
+    - rid: 853993139573358767
       type: {class: ActionNodeDelay, ns: BehaviourTree, asm: Assembly-CSharp}
       data:
         Name: 
-        RectInGraph:
-          serializedVersion: 2
-          x: 529
-          y: 425
-          width: 200
-          height: 150
+        Position: {x: 345, y: 415}
+        Size: {x: 200, y: 150}
+        State:
+          value: 2
+        GuardNode:
+          rid: 853993139573358769
+        ChildList: []
+        DelaySeconds: 8.42
+        Timer: 3.0658934
+    - rid: 853993139573358769
+      type: {class: GuardNodeCompare, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        Name: 
+        Position: {x: 136, y: 232}
+        Size: {x: 200, y: 150}
+        State:
+          value: 1
+        GuardNode:
+          rid: -2
+        ChildList: []
+        Blackboard: {fileID: 1870199760}
+        ToValue:
+          BoardEValueType: 6
+          intVal: 0
+          longVal: 0
+          floatVal: 0
+          doubleVal: 0
+          boolVal: 0
+          stringVal: 
+          vector3: {x: 0, y: 0, z: 0}
+        CompareType: 0
+        SelectedOption: Boollll
+    - rid: 853993139573358774
+      type: {class: ActionNodeTreeHolder, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        Name: 
+        Position: {x: 715, y: 432}
+        Size: {x: 200, y: 150}
         State:
           value: 0
         GuardNode:
           rid: -2
         ChildList: []
-        DelaySeconds: 2
-        Timer: 0
---- !u!65 &6827993396794868386
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1848710720104531392}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+        TreeHolder: {fileID: 1934403135}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -526,4 +551,5 @@ SceneRoots:
   - {fileID: 345953034}
   - {fileID: 685548696}
   - {fileID: 5515200003599247093}
-  - {fileID: 231639302}
+  - {fileID: 1969669044}
+  - {fileID: 1934403136}

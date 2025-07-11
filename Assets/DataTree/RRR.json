@@ -1,0 +1,308 @@
+{
+  "<childCountType>k__BackingField": 1,
+  "Name": "RRR",
+  "Position": {
+    "x": 464.0,
+    "y": 176.0,
+    "normalized": {
+      "x": 0.934997559,
+      "y": 0.354654223,
+      "magnitude": 1.0,
+      "sqrMagnitude": 1.0
+    },
+    "magnitude": 496.258,
+    "sqrMagnitude": 246272.0
+  },
+  "Size": {
+    "x": 162.0,
+    "y": 67.0,
+    "normalized": {
+      "x": 0.9240863,
+      "y": 0.38218385,
+      "normalized": {
+        "x": 0.924086332,
+        "y": 0.38218388,
+        "magnitude": 1.0,
+        "sqrMagnitude": 1.00000012
+      },
+      "magnitude": 0.99999994,
+      "sqrMagnitude": 0.99999994
+    },
+    "magnitude": 175.3083,
+    "sqrMagnitude": 30733.0
+  },
+  "State": {
+    "Value": 2
+  },
+  "GuardNode": null,
+  "ChildList": [
+    {
+      "$type": "BehaviourTree.SequenceNode, Assembly-CSharp",
+      "curNodeId": 0,
+      "Name": "",
+      "Position": {
+        "x": 537.0,
+        "y": 269.0,
+        "normalized": {
+          "x": 0.894093931,
+          "y": 0.447879463,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 600.608032,
+        "sqrMagnitude": 360730.0
+      },
+      "Size": {
+        "x": 178.0,
+        "y": 98.0,
+        "normalized": {
+          "x": 0.876008034,
+          "y": 0.482296556,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 203.194489,
+        "sqrMagnitude": 41288.0
+      },
+      "State": {
+        "Value": 2
+      },
+      "GuardNode": null,
+      "ChildList": [
+        {
+          "$type": "BehaviourTree.ActionNodeDelay, Assembly-CSharp",
+          "DelaySeconds": 8.42,
+          "Timer": 0.0782835,
+          "IsFinished": false,
+          "Name": "",
+          "Position": {
+            "x": 345.0,
+            "y": 415.0,
+            "normalized": {
+              "x": 0.63927263,
+              "y": 0.768980145,
+              "magnitude": 1.0,
+              "sqrMagnitude": 0.99999994
+            },
+            "magnitude": 539.675842,
+            "sqrMagnitude": 291250.0
+          },
+          "Size": {
+            "x": 200.0,
+            "y": 150.0,
+            "normalized": {
+              "x": 0.8,
+              "y": 0.6,
+              "magnitude": 1.0,
+              "sqrMagnitude": 1.0
+            },
+            "magnitude": 250.0,
+            "sqrMagnitude": 62500.0
+          },
+          "State": {
+            "Value": 2
+          },
+          "GuardNode": {
+            "$type": "BehaviourTree.GuardNodeCompare, Assembly-CSharp",
+            "Blackboard": {
+              "$type": "BehaviourTree.BlackboardTest, Assembly-CSharp",
+              "Intttt": 42,
+              "Floatttt": 0.0,
+              "Stateeee": 2,
+              "Boollll": false,
+              "Stringggg": "",
+              "Vector3333": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "magnitude": 0.0,
+                "sqrMagnitude": 0.0
+              },
+              "name": "BlackboardTest",
+              "hideFlags": 0
+            },
+            "ToValue": {
+              "BoardEValueType": 6
+            },
+            "CompareType": 0,
+            "SelectedOption": "Boollll",
+            "Name": "",
+            "Position": {
+              "x": 136.0,
+              "y": 232.0,
+              "normalized": {
+                "x": 0.505719543,
+                "y": 0.862698,
+                "normalized": {
+                  "x": 0.5057195,
+                  "y": 0.8626979,
+                  "normalized": {
+                    "x": 0.505719543,
+                    "y": 0.862697959,
+                    "magnitude": 1.0,
+                    "sqrMagnitude": 1.0
+                  },
+                  "magnitude": 0.99999994,
+                  "sqrMagnitude": 0.9999999
+                },
+                "magnitude": 1.00000012,
+                "sqrMagnitude": 1.00000012
+              },
+              "magnitude": 268.923767,
+              "sqrMagnitude": 72320.0
+            },
+            "Size": {
+              "x": 200.0,
+              "y": 150.0,
+              "normalized": {
+                "x": 0.8,
+                "y": 0.6,
+                "magnitude": 1.0,
+                "sqrMagnitude": 1.0
+              },
+              "magnitude": 250.0,
+              "sqrMagnitude": 62500.0
+            },
+            "State": {
+              "Value": 1
+            },
+            "GuardNode": null,
+            "ChildList": [],
+            "<childCountType>k__BackingField": 0
+          },
+          "ChildList": [],
+          "<childCountType>k__BackingField": 0,
+          "isRunning": true
+        },
+        {
+          "$type": "BehaviourTree.ActionNodeTreeHolder, Assembly-CSharp",
+          "TreeHolder": {
+            "Root": {
+              "<childCountType>k__BackingField": 1,
+              "Name": "Delay2",
+              "Position": {
+                "x": 323.0,
+                "y": 198.0,
+                "normalized": {
+                  "x": 0.8525633,
+                  "y": 0.522623956,
+                  "magnitude": 1.0,
+                  "sqrMagnitude": 1.0
+                },
+                "magnitude": 378.857483,
+                "sqrMagnitude": 143533.0
+              },
+              "Size": {
+                "x": 254.0,
+                "y": 137.0,
+                "normalized": {
+                  "x": 0.8801371,
+                  "y": 0.4747196,
+                  "magnitude": 1.0,
+                  "sqrMagnitude": 1.0
+                },
+                "magnitude": 288.5914,
+                "sqrMagnitude": 83285.0
+              },
+              "State": {
+                "Value": 1
+              },
+              "GuardNode": null,
+              "ChildList": [
+                {
+                  "$type": "BehaviourTree.ActionNodeDelay, Assembly-CSharp",
+                  "DelaySeconds": 2.0,
+                  "Timer": 2.00163436,
+                  "IsFinished": false,
+                  "Name": "",
+                  "Position": {
+                    "x": 400.0,
+                    "y": 402.0,
+                    "normalized": {
+                      "x": 0.7053413,
+                      "y": 0.708867967,
+                      "magnitude": 1.0,
+                      "sqrMagnitude": 1.00000012
+                    },
+                    "magnitude": 567.1014,
+                    "sqrMagnitude": 321604.0
+                  },
+                  "Size": {
+                    "x": 200.0,
+                    "y": 150.0,
+                    "normalized": {
+                      "x": 0.8,
+                      "y": 0.6,
+                      "magnitude": 1.0,
+                      "sqrMagnitude": 1.0
+                    },
+                    "magnitude": 250.0,
+                    "sqrMagnitude": 62500.0
+                  },
+                  "State": {
+                    "Value": 1
+                  },
+                  "GuardNode": null,
+                  "ChildList": [],
+                  "<childCountType>k__BackingField": 0,
+                  "isRunning": false
+                }
+              ]
+            },
+            "ShowStartTick": true,
+            "RunOnAwake": false,
+            "saveTimer": 0.0,
+            "SaveTime": 1.0,
+            "b": null,
+            "m_CancellationTokenSource": null,
+            "m_CachedPtr": {
+              "value": 1669769047200
+            },
+            "m_InstanceID": -49770,
+            "m_UnityRuntimeErrorString": null
+          },
+          "<childCountType>k__BackingField": 0,
+          "IsFinished": false,
+          "Name": "",
+          "Position": {
+            "x": 715.0,
+            "y": 432.0,
+            "normalized": {
+              "x": 0.85590446,
+              "y": 0.5171339,
+              "normalized": {
+                "x": 0.8559045,
+                "y": 0.517133951,
+                "magnitude": 1.0,
+                "sqrMagnitude": 1.00000012
+              },
+              "magnitude": 0.99999994,
+              "sqrMagnitude": 0.9999999
+            },
+            "magnitude": 835.3736,
+            "sqrMagnitude": 697849.0
+          },
+          "Size": {
+            "x": 200.0,
+            "y": 150.0,
+            "normalized": {
+              "x": 0.8,
+              "y": 0.6,
+              "magnitude": 1.0,
+              "sqrMagnitude": 1.0
+            },
+            "magnitude": 250.0,
+            "sqrMagnitude": 62500.0
+          },
+          "State": {
+            "Value": 0
+          },
+          "GuardNode": null,
+          "ChildList": [],
+          "isRunning": false
+        }
+      ],
+      "<childCountType>k__BackingField": 2
+    }
+  ]
+}

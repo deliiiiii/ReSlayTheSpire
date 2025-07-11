@@ -1,0 +1,86 @@
+{
+  "Name": "Delay",
+  "Position": {
+    "x": 483.0,
+    "y": 216.0,
+    "normalized": {
+      "x": 0.9128739,
+      "y": 0.408241749,
+      "normalized": {
+        "x": 0.9128738,
+        "y": 0.4082417,
+        "normalized": {
+          "x": 0.912873864,
+          "y": 0.408241719,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 0.99999994,
+        "sqrMagnitude": 0.9999999
+      },
+      "magnitude": 1.00000012,
+      "sqrMagnitude": 1.00000012
+    },
+    "magnitude": 529.098267,
+    "sqrMagnitude": 279945.0
+  },
+  "Size": {
+    "x": 125.0,
+    "y": 66.0,
+    "normalized": {
+      "x": 0.88430357,
+      "y": 0.4669123,
+      "normalized": {
+        "x": 0.8843036,
+        "y": 0.466912329,
+        "magnitude": 1.0,
+        "sqrMagnitude": 1.0
+      },
+      "magnitude": 0.99999994,
+      "sqrMagnitude": 0.9999999
+    },
+    "magnitude": 141.354172,
+    "sqrMagnitude": 19981.0
+  },
+  "State": {
+    "Value": 0
+  },
+  "GuardNode": null,
+  "ChildList": [
+    {
+      "$type": "BehaviourTree.ActionNodeDelay, Assembly-CSharp",
+      "DelaySeconds": 2.0,
+      "Timer": 0.0,
+      "Name": "",
+      "Position": {
+        "x": 418.0,
+        "y": 335.0,
+        "normalized": {
+          "x": 0.780322134,
+          "y": 0.6253778,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 535.6762,
+        "sqrMagnitude": 286949.0
+      },
+      "Size": {
+        "x": 190.0,
+        "y": 110.0,
+        "normalized": {
+          "x": 0.8654263,
+          "y": 0.5010363,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 219.544983,
+        "sqrMagnitude": 48200.0
+      },
+      "State": {
+        "Value": 0
+      },
+      "GuardNode": null,
+      "ChildList": []
+    }
+  ]
+}

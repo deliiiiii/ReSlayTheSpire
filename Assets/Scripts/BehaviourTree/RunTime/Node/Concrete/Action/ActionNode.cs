@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -7,10 +8,13 @@ namespace BehaviourTree
     public class ActionNode : NodeBase
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
-        
+        [JsonIgnore]
         public Action OnEnter;
+        [JsonIgnore]
         public Action<float> OnContinue;
+        [JsonProperty]
         bool isRunning;
+        [JsonProperty]
         protected bool IsFinished;
 
         public ActionNode()

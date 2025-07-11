@@ -44,7 +44,8 @@ namespace BehaviourTree
         /// </summary>
         public void OnRefreshTree()
         {
-            NodeBase.RectInGraph = GetRect();
+            NodeBase.Position = GetRect().position;
+            NodeBase.Size = GetRect().size;
             NodeBase.ClearChildren();
             this.ChildEditors()?
                 .OrderBy(editor => editor.GetRect().x)
@@ -115,12 +116,12 @@ namespace BehaviourTree
             if (isDefault)
             {
                 CreateNodeBase(nodeBase.GetType());
-                MySetPosition(new Rect(400, 400, 200, 150));
+                MySetRect(new Rect(400, 400, 200, 150));
             }
             else
             {
                 NodeBase = nodeBase;
-                MySetPosition(NodeBase.RectInGraph);
+                MySetRect(NodeBase.Position, NodeBase.Size);
             }
             
             DrawAllPorts();
@@ -131,11 +132,15 @@ namespace BehaviourTree
             RefreshAllSettings();
         }
 
-        public void MySetPosition(Rect newPos)
+        void MySetRect(Rect newPos)
         {
             base.SetPosition(newPos);
             style.width = newPos.width;
             style.height = newPos.height;
+        }
+        void MySetRect(Vector2 position, Vector2 size)
+        {
+            MySetRect(new Rect(position, size));
         }
 
         void RefreshAllSettings()

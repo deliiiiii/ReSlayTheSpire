@@ -20,6 +20,14 @@ namespace BehaviourTree
         {
             // 编译前关闭所有已打开窗口
             AssemblyReloadEvents.beforeAssemblyReload += CloseAllWindows;
+            // 退出PlayMode时关闭所有窗口
+            EditorApplication.playModeStateChanged += state =>
+            {
+                if (state == PlayModeStateChange.ExitingPlayMode)
+                {
+                    CloseAllWindows();
+                }
+            };
             // 关掉unity时关闭所有窗口 
             EditorApplication.wantsToQuit += () =>
             {

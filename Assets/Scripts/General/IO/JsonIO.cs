@@ -10,6 +10,10 @@ public static class JsonIO
     static JsonSerializerSettings settings = new JsonSerializerSettings
     {
         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        Formatting = Formatting.Indented,
+        TypeNameHandling = TypeNameHandling.Auto,
+        // 只序列化字段，不序列化属性
+        
         // Converters = new List<JsonConverter> { new Vector2Converter() }
     };
     public static void Write<T>(string f_pathPre,string f_name,T curEntity)

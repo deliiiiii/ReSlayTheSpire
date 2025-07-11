@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,14 +9,16 @@ namespace BehaviourTree
 {
     
     
-[Serializable]
+[Serializable][JsonObject(MemberSerialization = MemberSerialization.Fields)]
 public abstract class NodeBase
 {
     [ShowIf(nameof(IsRootNode))]
     public string Name;
     bool IsRootNode() => this is RootNode;
     [HideInInspector]
-    public Rect RectInGraph;
+    public Vector2 Position;
+    [HideInInspector]
+    public Vector2 Size;
     [HideInInspector]
     public Observable<EState> State = new(EState.Failed);
     
@@ -31,9 +34,9 @@ public abstract class NodeBase
     
     #region Child
     [SerializeReference] public List<NodeBase> ChildList;
-    public NodeBase LastChild => ChildLinkedList?.Last?.Value;
+    [JsonIgnore]public NodeBase LastChild => ChildLinkedList?.Last?.Value;
     protected abstract EChildCountType childCountType { get; set; }
-    protected LinkedList<NodeBase> ChildLinkedList => ChildList == null ? new() : new LinkedList<NodeBase>(ChildList);
+    [JsonIgnore]protected LinkedList<NodeBase> ChildLinkedList => ChildList == null ? new() : new LinkedList<NodeBase>(ChildList);
 
     public void AddChild(NodeBase child)
     {

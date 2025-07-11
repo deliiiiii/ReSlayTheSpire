@@ -7,26 +7,28 @@ namespace BehaviourTree
     {
         protected override EState OnTickChild(float dt)
         {
-            if(curNode == null)
+            if(curNodeId == -1)
             {
                 RecursiveDo(OnResetState);
-                curNode = ChildLinkedList?.First;
+                curNodeId = 0;
             }
             
-            while (curNode != null)
+            while (curNodeId != -1 && curNodeId < ChildList.Count)
             {
-                var res = curNode.Value.Tick(dt);
+                var res = ChildList[curNodeId].Tick(dt);
                 if (res is EState.Running)
                 {
                     return res;
                 }
                 if (res is EState.Succeeded)
                 {
-                    curNode = null;
+                    curNodeId = -1;
                     return res;
                 }
-                curNode = curNode.Next;
+
+                curNodeId++;
             }
+            curNodeId = -1;
             return EState.Failed;
         }
     }
