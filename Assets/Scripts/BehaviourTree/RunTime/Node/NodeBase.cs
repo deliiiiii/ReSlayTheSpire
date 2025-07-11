@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -10,7 +11,9 @@ namespace BehaviourTree
 [Serializable]
 public abstract class NodeBase
 {
+    [ShowIf(nameof(IsRootNode))]
     public string Name;
+    bool IsRootNode() => this is RootNode;
     [HideInInspector]
     public Rect RectInGraph;
     [HideInInspector]

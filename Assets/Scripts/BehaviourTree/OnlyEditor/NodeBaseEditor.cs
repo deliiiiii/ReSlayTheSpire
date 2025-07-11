@@ -85,7 +85,7 @@ namespace BehaviourTree
         
         public event Action<Type> OnTypeChanged;
 
-        public Rect GetRect() => GetPosition();
+        public Rect GetRect() => layout;
         DropdownField typeField;
         ObjectField nodeField;
         Label detailLabel;
@@ -115,12 +115,12 @@ namespace BehaviourTree
             if (isDefault)
             {
                 CreateNodeBase(nodeBase.GetType());
-                SetPosition(new Rect(100, 100, 200, 150));
+                MySetPosition(new Rect(100, 100, 200, 150));
             }
             else
             {
                 NodeBase = nodeBase;
-                SetPosition(NodeBase.RectInGraph);
+                MySetPosition(NodeBase.RectInGraph);
             }
             
             DrawAllPorts();
@@ -129,6 +129,13 @@ namespace BehaviourTree
             //大小可以调整
             capabilities |= Capabilities.Resizable;
             RefreshAllSettings();
+        }
+
+        public void MySetPosition(Rect newPos)
+        {
+            base.SetPosition(newPos);
+            style.width = newPos.width;
+            style.height = newPos.height;
         }
 
         void RefreshAllSettings()

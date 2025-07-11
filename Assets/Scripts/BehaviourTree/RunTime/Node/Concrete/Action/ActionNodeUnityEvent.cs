@@ -28,11 +28,8 @@ namespace BehaviourTree
             {
                 var methodName = Event.GetPersistentMethodName(i);
                 var target = Event.GetPersistentTarget(i);
-                sb.AppendLine($"Event {i}: {methodName} on {target}");
-                if(i < c - 1)
-                {
-                    sb.AppendLine("\n");
-                }
+                sb.AppendLine($"{methodName} on {target}");
+                sb.Replace("UnityEngine.", string.Empty);
             }
             return sb.ToString() == string.Empty ? "No event." : sb.ToString();
         }

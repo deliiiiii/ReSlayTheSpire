@@ -606,6 +606,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5515200003599247093}
   - component: {fileID: 6827993396794868385}
+  - component: {fileID: 6827993396794868386}
   m_Layer: 0
   m_Name: TreeTest
   m_TagString: Untagged
@@ -644,10 +645,10 @@ MonoBehaviour:
     Name: RRR
     RectInGraph:
       serializedVersion: 2
-      x: 638
-      y: 134
-      width: 87
-      height: 68
+      x: 562
+      y: 225
+      width: 150
+      height: 69
     State:
       value: 0
     GuardNode:
@@ -684,10 +685,10 @@ MonoBehaviour:
         Name: 
         RectInGraph:
           serializedVersion: 2
-          x: 475
-          y: 484
-          width: 153
-          height: 111
+          x: 520
+          y: 455
+          width: 281
+          height: 131
         State:
           value: 0
         GuardNode:
@@ -708,15 +709,27 @@ MonoBehaviour:
                 m_StringArgument: aaa
                 m_BoolArgument: 0
               m_CallState: 2
+            - m_Target: {fileID: 5515200003599247093}
+              m_TargetAssemblyTypeName: UnityEngine.Transform, UnityEngine
+              m_MethodName: LookAt
+              m_Mode: 2
+              m_Arguments:
+                m_ObjectArgument: {fileID: 345953034}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
     - rid: 853993134440579089
       type: {class: ActionNodeUnityEvent, ns: BehaviourTree, asm: Assembly-CSharp}
       data:
         Name: 
         RectInGraph:
           serializedVersion: 2
-          x: 778
-          y: 467
-          width: 153
+          x: 840
+          y: 455
+          width: 280
           height: 111
         State:
           value: 0
@@ -744,8 +757,8 @@ MonoBehaviour:
         Name: 
         RectInGraph:
           serializedVersion: 2
-          x: 323
-          y: 380
+          x: 268
+          y: 373
           width: 173
           height: 87
         State:
@@ -755,6 +768,27 @@ MonoBehaviour:
         ChildList: []
         Value: 10
         Threshold: 0
+--- !u!65 &6827993396794868386
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848710720104531392}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
