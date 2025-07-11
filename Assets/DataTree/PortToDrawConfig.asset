@@ -30,15 +30,15 @@ MonoBehaviour:
             Direction: 0
             Capacity: 0
             PortTypeName: GuardPort
-            PortName: "Guarded By \u2191"
-        - Key: OutputGuardedPort
+            PortName: "Guarded By\u2191"
+        - Key: OutputChildPorts
           Value:
             IsValid: 0
             Direction: 0
             Capacity: 0
             PortTypeName: 
             PortName: 
-        - Key: OutputChildPorts
+        - Key: OutputGuardedPort
           Value:
             IsValid: 0
             Direction: 0
@@ -61,14 +61,7 @@ MonoBehaviour:
             Direction: 0
             Capacity: 0
             PortTypeName: GuardPort
-            PortName: "Guarded By \u2191"
-        - Key: OutputGuardedPort
-          Value:
-            IsValid: 0
-            Direction: 0
-            Capacity: 0
-            PortTypeName: 
-            PortName: 
+            PortName: "Guarded By\u2191"
         - Key: OutputChildPorts
           Value:
             IsValid: 1
@@ -76,6 +69,13 @@ MonoBehaviour:
             Capacity: 1
             PortTypeName: HasChildPort
             PortName: "Com \u2193"
+        - Key: OutputGuardedPort
+          Value:
+            IsValid: 0
+            Direction: 0
+            Capacity: 0
+            PortTypeName: 
+            PortName: 
     - Key: DecorateNode
       Value:
         list:
@@ -92,14 +92,7 @@ MonoBehaviour:
             Direction: 0
             Capacity: 0
             PortTypeName: GuardPort
-            PortName: "Guarded By \u2191"
-        - Key: OutputGuardedPort
-          Value:
-            IsValid: 0
-            Direction: 0
-            Capacity: 0
-            PortTypeName: 
-            PortName: 
+            PortName: "Guarded By\u2191"
         - Key: OutputChildPorts
           Value:
             IsValid: 1
@@ -107,6 +100,13 @@ MonoBehaviour:
             Capacity: 0
             PortTypeName: HasChildPort
             PortName: "Dec \u2193"
+        - Key: OutputGuardedPort
+          Value:
+            IsValid: 0
+            Direction: 0
+            Capacity: 0
+            PortTypeName: 
+            PortName: 
     - Key: GuardNode
       Value:
         list:
@@ -123,14 +123,7 @@ MonoBehaviour:
             Direction: 0
             Capacity: 0
             PortTypeName: GuardPort
-            PortName: AND
-        - Key: OutputGuardedPort
-          Value:
-            IsValid: 1
-            Direction: 1
-            Capacity: 0
-            PortTypeName: GuardPort
-            PortName: "Guarding \u2193"
+            PortName: "AND \u2191"
         - Key: OutputChildPorts
           Value:
             IsValid: 0
@@ -138,6 +131,13 @@ MonoBehaviour:
             Capacity: 0
             PortTypeName: 
             PortName: 
+        - Key: OutputGuardedPort
+          Value:
+            IsValid: 1
+            Direction: 1
+            Capacity: 0
+            PortTypeName: GuardPort
+            PortName: "Guarding \u2193"
     - Key: RootNode
       Value:
         list:
@@ -153,14 +153,7 @@ MonoBehaviour:
             IsValid: 0
             Direction: 0
             Capacity: 0
-            PortTypeName: 
-            PortName: 
-        - Key: OutputGuardedPort
-          Value:
-            IsValid: 0
-            Direction: 1
-            Capacity: 0
-            PortTypeName: 
+            PortTypeName: GuardPort
             PortName: 
         - Key: OutputChildPorts
           Value:
@@ -169,3 +162,10 @@ MonoBehaviour:
             Capacity: 0
             PortTypeName: HasChildPort
             PortName: "Root \u2193"
+        - Key: OutputGuardedPort
+          Value:
+            IsValid: 0
+            Direction: 0
+            Capacity: 0
+            PortTypeName: 
+            PortName: 

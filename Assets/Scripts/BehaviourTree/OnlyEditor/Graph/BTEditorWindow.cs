@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
 using UnityEditor;
@@ -11,7 +12,7 @@ namespace BehaviourTree
     [InitializeOnLoad]
     public class BTEditorWindow : EditorWindow
     {
-        static readonly Dictionary<int, BTEditorWindow> windowDic = new();
+        static readonly Dictionary<string, BTEditorWindow> windowDic = new();
         static BTGraphView curView;
         static BTEditorWindow curWindow;
         static RootNode curRootNode;
@@ -51,19 +52,8 @@ namespace BehaviourTree
             CollectButtons(curView).ForEach(toolbar.Add);
             rootVisualElement.Add(toolbar);
         }
-
-        [UnityEditor.Callbacks.OnOpenAsset(1)]
-        static bool OnOpenAsset(int instanceID, int line)
-        {
-            var obj = EditorUtility.InstanceIDToObject(instanceID);
-            if (obj is not RootNode node)
-                return false;
-            curRootNode = node;
-            InitWindow();
-            return true;
-        }
         
-        static void CloseWindow(int instanceID)
+        static void CloseWindow(string instanceID)
         {
             if (!windowDic.TryGetValue(instanceID, out var value))
                 return;
@@ -80,30 +70,31 @@ namespace BehaviourTree
             windowDic.Clear();
         }
         
-        static void InitWindow()
+        public static void OpenGraph(RootNode rootNode)
         {
-            var curId = curRootNode.GetInstanceID();
-            if (windowDic.TryGetValue(curId, out var value))
+            curRootNode = rootNode;
+            var rootName = rootNode.Name;
+            if (windowDic.TryGetValue(rootName, out var value))
             {
                 curWindow = value;
                 curWindow.Focus();
                 return;
             }
             curWindow = CreateWindow<BTEditorWindow>();
-            curWindow.titleContent = new GUIContent(curRootNode.name);
+            curWindow.titleContent = new GUIContent(curRootNode.Name);
             curWindow.minSize = new Vector2(600, 400);
             curWindow.Show();
-            windowDic.Add(curId, curWindow);
-            
+            windowDic.Add(rootName, curWindow);
+
         }
         
         static IEnumerable<Button> CollectButtons(BTGraphView fView)
         {
             List<Button> ret = new();
-            TypeCache.NodeGeneralTypes.ForEach(nodeGeneralType =>
+            BTTypeCache.NodeGeneralTypes.ForEach(nodeGeneralType =>
             {
                 // MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
-                ret.Add(new Button(() => fView.DrawNodeEditorWithType(TypeCache.GeneralToSelectionsDic[nodeGeneralType][0]))
+                ret.Add(new Button(() => fView.DrawNodeEditorWithType(BTTypeCache.GeneralToSelectionsDic[nodeGeneralType][0]))
                 {
                     text = nodeGeneralType.Name.Replace("Node", ""),
                     style =
@@ -118,3 +109,5 @@ namespace BehaviourTree
         }
     }
 }
+
+#endif

@@ -1,10 +1,9 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BehaviourTree.Config;
 using JetBrains.Annotations;
-using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -12,6 +11,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Direction = UnityEditor.Experimental.GraphView.Direction;
+using Object = System.Object;
 
 namespace BehaviourTree
 {
@@ -110,7 +110,7 @@ namespace BehaviourTree
         
         public NodeBaseEditor(T nodeBase, bool isDefault)
         {
-            // MyDebug.Log($"NodeBaseEditor({nodeBase.GetType().Name}, {isDefault})");
+            MyDebug.Log($"NodeBaseEditor({nodeBase.GetType().Name}, {isDefault})");
             OnTypeChanged += CreateNodeBase;
             if (isDefault)
             {
@@ -152,8 +152,8 @@ namespace BehaviourTree
             {
                 nodeType = nodeType.MakeGenericType(typeof(int));
             }
-            NodeBase = ScriptableObject.CreateInstance(nodeType) as T;
-            NodeBase.name = nodeType.Name;
+            NodeBase = Activator.CreateInstance(nodeType) as T;
+            // NodeBase.name = nodeType.Name;
         }
 
         void DrawAllPorts()
@@ -165,7 +165,7 @@ namespace BehaviourTree
                 if (!value.IsValid)
                     return;
                 var ins = InstantiatePort(Orientation.Vertical, value.Direction, value.Capacity,
-                    TypeCache.PortTypeDic[value.PortTypeName]);
+                    BTTypeCache.PortTypeDic[value.PortTypeName]);
                 ins.portName = value.PortName;
                 if (value.Direction == Direction.Input)
                 {
@@ -183,7 +183,7 @@ namespace BehaviourTree
         
         void DrawTypeField()
         {
-            var selections = TypeCache.GeneralToSelectionsDic[NodeBase.GetGeneralType()];
+            var selections = BTTypeCache.GeneralToSelectionsDic[NodeBase.GetGeneralType()];
             typeField = new DropdownField(selections.Select(x => x.Name).ToList(), NodeBase.GetType().Name);
             typeField.RegisterValueChangedCallback(evt =>
             {
@@ -200,16 +200,17 @@ namespace BehaviourTree
                 style.backgroundColor = tickStateColorDic[evt];
             };
             
-            nodeField = new ObjectField
-            {
-                objectType = NodeBase.GetType(),
-                value = NodeBase,
-                style =
-                {
-                    marginRight = -200,
-                },
-            };
-            extensionContainer.Add(nodeField);
+            // TODO
+            // nodeField = new ObjectField
+            // {
+            //     objectType = NodeBase.GetType(),
+            //     value = NodeBase as UnityEngine.Object,
+            //     style =
+            //     {
+            //         marginRight = -200,
+            //     },
+            // };
+            // extensionContainer.Add(nodeField);
 
             if (NodeBase is IShowDetail sd)
             {
@@ -231,6 +232,5 @@ namespace BehaviourTree
             }
         }
     }
-
-    
 }
+#endif

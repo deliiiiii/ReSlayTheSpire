@@ -1,30 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Object = System.Object;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace BehaviourTree
 {
-
-
-public enum EState
-{
-    Failed,
-    Succeeded,
-    Running,
-}
-
-public enum EChildCountType
-{
-    None,
-    Single,
-    Multiple,
-}
-
+    
+    
 [Serializable]
-public abstract class NodeBase : ScriptableObject
+public abstract class NodeBase : Object
 {
+    public string Name;
     [HideInInspector]
     public Rect RectInGraph;
     [HideInInspector]
@@ -41,7 +32,8 @@ public abstract class NodeBase : ScriptableObject
     
     
     #region Child
-    [HideInInspector]
+    // [HideInInspector]
+    [ShowInInspector]
     public List<NodeBase> ChildList;
     public NodeBase LastChild => ChildLinkedList?.Last?.Value;
     protected abstract EChildCountType childCountType { get; set; }
@@ -100,13 +92,13 @@ public abstract class NodeBase : ScriptableObject
     }
     protected static void OnFail(NodeBase target)
     {
-        if(!target)
+        if(target == null)
             return;
         target.State.Value = EState.Failed;
     }
     protected static void OnResetState(NodeBase target)
     {
-        if(!target)
+        if(target == null)
             return;
         target.State.Value = EState.Failed;
     }

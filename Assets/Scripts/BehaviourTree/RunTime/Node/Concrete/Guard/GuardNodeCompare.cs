@@ -10,15 +10,6 @@ using UnityEngine;
 
 namespace BehaviourTree
 {
-    public enum CompareType
-    {
-        Equal,
-        NotEqual,
-        MoreThan,
-        LessThan,
-        MoreThanOrEqual,
-        LessThanOrEqual
-    }
     [Serializable]
     public class GuardNodeCompare : GuardNode, IShowDetail
     {

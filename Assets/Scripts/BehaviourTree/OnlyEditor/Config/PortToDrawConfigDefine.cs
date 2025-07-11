@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEditor.Experimental.GraphView;
@@ -26,7 +27,8 @@ namespace BehaviourTree.Config
         
         static IEnumerable GetPortType()
         {
-            return TypeCache.PortTypeDic.Keys;
+            return BTTypeCache.PortTypeDic.Keys;
         }
     }
 }
+#endif

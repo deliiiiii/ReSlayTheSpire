@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Object = System.Object;
 
 namespace BehaviourTree
 {
-    public class TreeTest : Singleton<TreeTest>
+    public class TreeTest : SerializedMonoBehaviour
     {
-        [ShowInInspector][SerializeField] RootNode root;
+        // [NonSerialized, OdinSerialize]
+        public RootNode Root;
         public int TarFrameRate = 10;
         public bool ShowStartTick = true;
         void Start()
@@ -21,7 +26,7 @@ namespace BehaviourTree
             {
                 MyDebug.Log("----------Start Tick----------", LogType.Tick);
             }
-            root.Tick(dt);
+            Root.Tick(dt);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +11,7 @@ using UnityEditor.Experimental.GraphView;
 namespace BehaviourTree
 {
     [InitializeOnLoad]
-    public static class TypeCache
+    public static class BTTypeCache
     { 
         /// <summary>
         /// ActionNode, CompositeNode, DecoratorNode, GuardNode, RootNode
@@ -23,7 +24,7 @@ namespace BehaviourTree
         public static readonly Dictionary<Type, List<Type>> GeneralToSelectionsDic;
 
         public static readonly HashSet<string> PortPropertyNames;
-        static TypeCache()
+        static BTTypeCache()
         {
             NodeGeneralTypes = typeof(NodeBase).Assembly.GetTypes()
                 .Where(type =>
@@ -56,3 +57,4 @@ namespace BehaviourTree
         }
     }
 }
+#endif

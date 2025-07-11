@@ -7,6 +7,11 @@ using Newtonsoft.Json;
 
 public static class JsonIO
 {
+    static JsonSerializerSettings settings = new JsonSerializerSettings
+    {
+        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        // Converters = new List<JsonConverter> { new Vector2Converter() }
+    };
     public static void Write<T>(string f_pathPre,string f_name,T curEntity)
     {
         //Debug.Log("write"+curEntity);
@@ -17,7 +22,7 @@ public static class JsonIO
             Directory.CreateDirectory(pathShort);
         }
         // string str = JsonUtility.ToJson(curEntity, true);
-        string str = JsonConvert.SerializeObject(curEntity, Formatting.Indented);
+        string str = JsonConvert.SerializeObject(curEntity, Formatting.Indented, settings);
         File.WriteAllText(path, str);
     }
     public static T Read<T>(string f_pathPre, string f_name)
@@ -30,7 +35,7 @@ public static class JsonIO
         }
         string str = File.ReadAllText(path);
         // return JsonUtility.FromJson<T>(str);
-        return JsonConvert.DeserializeObject<T>(str);
+        return JsonConvert.DeserializeObject<T>(str, settings);
     }
     public static void Delete(string f_pathPre, string f_name)
     {

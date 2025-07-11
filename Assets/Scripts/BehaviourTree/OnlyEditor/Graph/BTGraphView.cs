@@ -1,21 +1,20 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
     public class BTGraphView : GraphView
     {
-        public event Action<int> OnRootNodeDeleted;
+        public event Action<string> OnRootNodeDeleted;
         INodeBaseEditor<RootNode> rootEditor;
         RootNode rootNode;
         
-        string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
+        string path => $"Assets/DataTree/{rootNode?.Name ?? "null"}.asset";
         IEnumerable<INodeBaseEditor<NodeBase>> nodeEditors => 
             nodes.OfType<INodeBaseEditor<NodeBase>>().ToList();
         
@@ -41,7 +40,7 @@ namespace BehaviourTree
         /// <returns></returns>
         public void DrawNodeEditorWithType(Type nodeConcreteType)
         {
-            DrawNodeEditorWithIns(ScriptableObject.CreateInstance(nodeConcreteType) as NodeBase, true);
+            DrawNodeEditorWithIns(Activator.CreateInstance(nodeConcreteType) as NodeBase, true);
         }
             
         /// <summary>
@@ -84,7 +83,7 @@ namespace BehaviourTree
             if (rootEditor == null)
             {
                 MyDebug.LogError("No ROOT node found in the graph, NOT save the graph and CLOSE the window!");
-                OnRootNodeDeleted?.Invoke(rootNode.GetInstanceID());
+                OnRootNodeDeleted?.Invoke(rootNode.Name);
                 return;
             }
             rootEditor.OnRefreshTree();
@@ -101,7 +100,7 @@ namespace BehaviourTree
                 var ele = thisNodeEditor.ConnectGuardNodeEditor(guardEditor);
                 if (ele == null)
                 {
-                    MyDebug.LogError($"Failed to connect guardNodeEditor {guardNode.name} for {thisNodeBase.name}, probably some port is NULL! Check the config.");
+                    MyDebug.LogError($"Failed to connect guardNodeEditor {guardNode.Name} for {thisNodeBase.Name}, probably some port is NULL! Check the config.");
                 }
                 else
                 {
@@ -115,7 +114,7 @@ namespace BehaviourTree
                 var ele = thisNodeEditor.ConnectChildNodeEditor(childNodeEditor);
                 if (ele == null)
                 {
-                    MyDebug.LogError($"Failed to connect childNodeEditor {childNode.name} for {thisNodeBase.name}, probably some port is NULL! Check the config.");
+                    MyDebug.LogError($"Failed to connect childNodeEditor {childNode.Name} for {thisNodeBase.Name}, probably some port is NULL! Check the config.");
                 }
                 else
                 {
@@ -134,27 +133,28 @@ namespace BehaviourTree
         
         void Save()
         {
-            IEnumerable<NodeBase> nodeBases = nodeEditors
-                .Select(nodeEditor => nodeEditor.NodeBase)
-                .ToList();
-            if (AssetDatabase.LoadAssetAtPath<RootNode>(path))
-            {
-                AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
-                    .Where(ass => !nodeBases.Contains(ass))
-                    .ForEach(AssetDatabase.RemoveObjectFromAsset);
-            }
-            else
-            {
-                AssetDatabase.CreateAsset(rootNode, path);
-            }
-            EditorUtility.SetDirty(rootNode);
-            nodeEditors.ForEach(nodeEditor =>
-            {
-                AssetDataBaseExt.SafeAddSubAsset(nodeEditor.NodeBase, rootNode);
-            });
-            
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            // IEnumerable<NodeBase> nodeBases = nodeEditors
+            //     .Select(nodeEditor => nodeEditor.NodeBase)
+            //     .ToList();
+            // if (AssetDatabase.LoadAssetAtPath<RootNode>(path))
+            // {
+            //     AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
+            //         .Where(ass => !nodeBases.Contains(ass))
+            //         .ForEach(AssetDatabase.RemoveObjectFromAsset);
+            // }
+            // else
+            // {
+            //     AssetDatabase.CreateAsset(rootNode, path);
+            // }
+            // EditorUtility.SetDirty(rootNode);
+            // nodeEditors.ForEach(nodeEditor =>
+            // {
+            //     AssetDataBaseExt.SafeAddSubAsset(nodeEditor.NodeBase, rootNode);
+            // });
+            //
+            // AssetDatabase.SaveAssets();
+            // AssetDatabase.Refresh();
         }
     }
 }
+#endif
