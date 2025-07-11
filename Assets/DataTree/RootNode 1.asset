@@ -138,7 +138,7 @@ MonoBehaviour:
   GuardNode: {fileID: 0}
   ChildList: []
   DelaySeconds: 0.99
-  Timer: 0.9924963
+  Timer: 0.9931631
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,5 +241,5 @@ MonoBehaviour:
     value: 2
   GuardNode: {fileID: 0}
   ChildList: []
-  DelaySeconds: 90.6
-  Timer: 50.904085
+  DelaySeconds: 18.2
+  Timer: 4.2389665

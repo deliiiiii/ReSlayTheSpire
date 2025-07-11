@@ -20,7 +20,7 @@ namespace BehaviourTree
     }
     
     [Serializable]
-    public class Union : IComparable<Union>
+    public struct Union : IComparable<Union>
     {
         [ReadOnly]
         public EBoardEValueType BoardEValueType;

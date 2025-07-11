@@ -13,7 +13,7 @@ namespace BehaviourTree
         {
             var ret = Condition();
             State.Value = ret ? EState.Succeeded : EState.Failed;
-            return ret;
+            return ret && (GuardNode?.Judge() ?? true);
         }
     }
     
