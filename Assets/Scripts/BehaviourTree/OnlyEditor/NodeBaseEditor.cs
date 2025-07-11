@@ -115,7 +115,7 @@ namespace BehaviourTree
             if (isDefault)
             {
                 CreateNodeBase(nodeBase.GetType());
-                MySetPosition(new Rect(100, 100, 200, 150));
+                MySetPosition(new Rect(400, 400, 200, 150));
             }
             else
             {
