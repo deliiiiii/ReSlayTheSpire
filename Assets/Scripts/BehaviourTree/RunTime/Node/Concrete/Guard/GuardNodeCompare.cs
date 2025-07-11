@@ -5,14 +5,34 @@ using System.Reflection;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
-using UnityEditor;
-using UnityEngine;
 
 namespace BehaviourTree
 {
     [Serializable]
     public class GuardNodeCompare : GuardNode, IShowDetail
     {
+        public GuardNodeCompare()
+        {
+            Condition = () =>
+            {
+                if (fromValue.BoardEValueType == EBoardEValueType.@null || ToValue.BoardEValueType == EBoardEValueType.@null)
+                {
+                    // MyDebug.LogError("SerializedProperty or CompareToValue is null");
+                    return false;
+                }
+                return CompareType switch
+                {
+                    CompareType.Equal => fromValue.CompareTo(ToValue) == 0,
+                    CompareType.NotEqual => fromValue.CompareTo(ToValue) != 0,
+                    CompareType.MoreThan => fromValue.CompareTo(ToValue) > 0,
+                    CompareType.LessThan => fromValue.CompareTo(ToValue) < 0,
+                    CompareType.MoreThanOrEqual => fromValue.CompareTo(ToValue) >= 0,
+                    CompareType.LessThanOrEqual => fromValue.CompareTo(ToValue) <= 0,
+                    _ => true
+                };
+            };
+        }
+        
         [PropertyOrder(0)][Required] [CanBeNull]
         public Blackboard Blackboard;
         
@@ -49,29 +69,6 @@ namespace BehaviourTree
         {
             ToValue.BoardEValueType =
                 Union.ConvertType(fieldInfoDic[SelectedOption].FieldType);
-        }
-        
-        
-        void OnEnable()
-        {
-            Condition = () =>
-            {
-                if (fromValue.BoardEValueType == EBoardEValueType.@null || ToValue.BoardEValueType == EBoardEValueType.@null)
-                {
-                    // MyDebug.LogError("SerializedProperty or CompareToValue is null");
-                    return false;
-                }
-                return CompareType switch
-                {
-                    CompareType.Equal => fromValue.CompareTo(ToValue) == 0,
-                    CompareType.NotEqual => fromValue.CompareTo(ToValue) != 0,
-                    CompareType.MoreThan => fromValue.CompareTo(ToValue) > 0,
-                    CompareType.LessThan => fromValue.CompareTo(ToValue) < 0,
-                    CompareType.MoreThanOrEqual => fromValue.CompareTo(ToValue) >= 0,
-                    CompareType.LessThanOrEqual => fromValue.CompareTo(ToValue) <= 0,
-                    _ => true
-                };
-            };
         }
 
         public string GetDetail()

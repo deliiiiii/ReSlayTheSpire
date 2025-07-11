@@ -11,7 +11,7 @@ namespace BehaviourTree
         [SerializeField]
         public UnityEvent Event;
 
-        protected override void OnEnableAfter()
+        public ActionNodeUnityEvent()
         {
             OnEnter = () =>
             {

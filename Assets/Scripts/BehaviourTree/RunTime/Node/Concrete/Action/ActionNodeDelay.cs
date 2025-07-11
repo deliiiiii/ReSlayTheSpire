@@ -10,7 +10,7 @@ namespace BehaviourTree
         [ReadOnly]
         public float Timer;
 
-        protected override void OnEnableAfter()
+        public ActionNodeDelay()
         {
             OnEnter = () => Timer = 0;
             OnContinue = dt =>

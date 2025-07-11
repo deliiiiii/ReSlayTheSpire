@@ -644,33 +644,56 @@ MonoBehaviour:
     Name: RRR
     RectInGraph:
       serializedVersion: 2
-      x: -37
-      y: -4
+      x: 638
+      y: 134
       width: 87
       height: 68
     State:
       value: 0
+    GuardNode:
     ChildList:
-    - rid: 853993134440579077
+    - rid: 853993134440579084
   TarFrameRate: 10
   ShowStartTick: 1
   references:
     version: 2
     RefIds:
-    - rid: 853993134440579077
-      type: {class: ActionNodeDelay, ns: BehaviourTree, asm: Assembly-CSharp}
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 853993134440579083
+      type: {class: GuardNodeMoreThan, ns: BehaviourTree, asm: Assembly-CSharp}
       data:
         Name: 
         RectInGraph:
-          x: -79
-          y: 144
-          width: 142
+          serializedVersion: 2
+          x: 222
+          y: 176
+          width: 173
+          height: 87
+        State:
+          value: 0
+        GuardNode:
+          rid: -2
+        ChildList: []
+        Value: 10
+        Threshold: 0
+    - rid: 853993134440579084
+      type: {class: ActionNodeDebugger, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        Name: 
+        RectInGraph:
+          serializedVersion: 2
+          x: 527
+          y: 322
+          width: 125
           height: 111
         State:
           value: 0
+        GuardNode:
+          rid: 853993134440579083
         ChildList: []
-        DelaySeconds: 0
-        Timer: 0
+        Content: ddd
+        DebugType: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

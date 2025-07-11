@@ -7,7 +7,7 @@ namespace BehaviourTree
         public string Content;
         public EDebugType DebugType = EDebugType.Log;
 
-        protected override void OnEnableAfter()
+        public ActionNodeDebugger()
         {
             OnEnter = () =>
             {

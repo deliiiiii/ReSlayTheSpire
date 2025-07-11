@@ -1,21 +1,16 @@
 ﻿using System;
 using Sirenix.OdinInspector;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 namespace BehaviourTree
 {
     [Serializable]
     // [CreateAssetMenu(fileName = nameof(RootNode), menuName = "BehaviourTree/" + nameof(RootNode))]
     public class RootNode : NodeBase
     {
-#if UNITY_EDITOR
         [Button]
         void ShowGraph()
         {
             BTEditorWindow.OpenGraph(this);
         }
-#endif
         protected override EChildCountType childCountType { get; set; } = EChildCountType.Single;
         public override string ToString()
         {

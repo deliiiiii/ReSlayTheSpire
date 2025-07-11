@@ -8,7 +8,7 @@ namespace BehaviourTree
         public int Value;
         public int Threshold;
 
-        void OnEnable()
+        public GuardNodeMoreThan()
         {
             Condition = () => Value > Threshold;
         }

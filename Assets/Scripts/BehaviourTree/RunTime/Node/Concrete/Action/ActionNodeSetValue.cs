@@ -4,13 +4,20 @@ using System.Linq;
 using System.Reflection;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
-using UnityEngine;
 
 namespace BehaviourTree
 {
     [Serializable]
     public class ActionNodeSetValue: ActionNode, IShowDetail
     {
+        public ActionNodeSetValue()
+        {
+            OnEnter = () =>
+            {
+                Blackboard?.Set(SelectedOption, ToValue.GetValue());
+            };
+        }
+        
         [PropertyOrder(0)][Required]
         public Blackboard Blackboard;
 
@@ -41,13 +48,7 @@ namespace BehaviourTree
                 Union.ConvertType(fieldInfoDic[SelectedOption].FieldType);
         }
 
-        protected override void OnEnableAfter()
-        {
-            OnEnter = () =>
-            {
-                Blackboard.Set(SelectedOption, ToValue.GetValue());
-            };
-        }
+        
 
         public string GetDetail()
         {

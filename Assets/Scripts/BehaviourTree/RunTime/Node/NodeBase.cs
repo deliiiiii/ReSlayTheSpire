@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -19,7 +18,7 @@ public abstract class NodeBase
     
     
     #region Guard
-    [HideInInspector][CanBeNull] public GuardNode GuardNode;
+    [SerializeReference] [CanBeNull] public GuardNode GuardNode;
     bool CheckGuard()
     {
         return GuardNode?.Judge() ?? true;
@@ -28,8 +27,7 @@ public abstract class NodeBase
     
     
     #region Child
-    [SerializeReference]
-    public List<NodeBase> ChildList;
+    [SerializeReference] public List<NodeBase> ChildList;
     public NodeBase LastChild => ChildLinkedList?.Last?.Value;
     protected abstract EChildCountType childCountType { get; set; }
     protected LinkedList<NodeBase> ChildLinkedList => ChildList == null ? new() : new LinkedList<NodeBase>(ChildList);

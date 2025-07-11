@@ -110,7 +110,7 @@ namespace BehaviourTree
         
         public NodeBaseEditor(T nodeBase, bool isDefault)
         {
-            MyDebug.Log($"NodeBaseEditor({nodeBase.GetType().Name}, {isDefault})");
+            // MyDebug.Log($"NodeBaseEditor({nodeBase.GetType().Name}, {isDefault})");
             OnTypeChanged += CreateNodeBase;
             if (isDefault)
             {
