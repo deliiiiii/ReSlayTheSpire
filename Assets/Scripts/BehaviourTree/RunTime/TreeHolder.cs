@@ -14,8 +14,40 @@ namespace BehaviourTree
         public bool ShowStartTick = true;
         public bool RunOnStart;
         public bool EnableEvents = true;
-        public SerializableDictionary<EEvent, List<UnityEvent>> EventDic;
+        [HelpBox("Reset ↓", HelpBoxType.Warning)]
+        public bool IWantToResetDiccccc;
+        [HelpBox("Reset ↑", HelpBoxType.Warning)]
+        public bool IWantToRefillTheEventType;
+        public EEventK1 EventType;
+        public SerializableDictionary<EEventK1, SerializableDictionary<string, List<UnityEvent>>> TypeToEvents;
         BindDataUpdate b;
+        
+        void OnValidate()
+        {
+            if (Application.isPlaying)
+                return;
+            if (IWantToResetDiccccc)
+            {
+                IWantToResetDiccccc = false;
+                TypeToEvents = new SerializableDictionary<EEventK1, SerializableDictionary<string, List<UnityEvent>>>();
+                BTEvent.GetK1s().ForEach(k1 =>
+                {
+                    TypeToEvents.Add(k1, new SerializableDictionary<string, List<UnityEvent>>());
+                    BTEvent.GetK2sByK1(k1).ForEach(k2 =>
+                    {
+                        TypeToEvents[k1].Add(k2, new List<UnityEvent>());
+                    });
+                });
+            }
+            if (IWantToRefillTheEventType)
+            {
+                IWantToRefillTheEventType = false;
+                BTEvent.GetK2sByK1(EventType).ForEach(str =>
+                {
+                    TypeToEvents[EventType].TryAdd(str, new List<UnityEvent>());
+                });
+            }
+        }
         void Start()
         {
             Application.targetFrameRate = TarFrameRate;
@@ -36,11 +68,13 @@ namespace BehaviourTree
 
         void RegisterAllEvents()
         {
-            EventDic?.ForEach(kvp =>
+            if (TypeToEvents == null)
+                return;
+            TypeToEvents.Keys.ForEach(eventType =>
             {
-                kvp.Value.ForEach(e =>
+                TypeToEvents[eventType].Keys.ForEach(str =>
                 {
-                    BTEvent.RegisterEvent(kvp.Key, e.Invoke);
+                    TypeToEvents[eventType][str].ForEach(e => BTEvent.RegisterEvent((eventType, str), e.Invoke));
                 });
             });
         }

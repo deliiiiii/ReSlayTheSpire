@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
@@ -19,6 +20,7 @@ public static class Resourcer
         /// <param name="address">资源路径</param>
         /// <typeparam name="T">类型</typeparam>
         /// <returns>加载的资源</returns>
+        [CanBeNull]
         public static T LoadAsset<T>(string address) where T : Object
         {
             if (TryGetAssetFromCache(address, out T asset))
