@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: -48
-    y: 120
-    width: 245
+    x: -1
+    y: 184
+    width: 233
     height: 107
   State:
     value: 1
@@ -25,15 +25,39 @@ MonoBehaviour:
   Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
   ToValue:
     BoardEValueType: 2
-    intVal: 42
+    intVal: 86
     longVal: 0
     floatVal: 0
     doubleVal: 0
     boolVal: 0
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
-  CompareType: 0
+  CompareType: 3
   SelectedOption: Intttt
+--- !u!114 &-4216836362789671855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
+  m_Name: SelectorNode
+  m_EditorClassIdentifier: 
+  RectInGraph:
+    serializedVersion: 2
+    x: 308
+    y: 83
+    width: 186
+    height: 112
+  State:
+    value: 1
+  GuardNode: {fileID: 0}
+  ChildList:
+  - {fileID: 6586197138326359344}
+  - {fileID: 8356248935397494936}
 --- !u!114 &-412980413070229805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48,12 +72,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: -275
-    y: -27
-    width: 286
+    x: -197
+    y: 32
+    width: 291
     height: 107
   State:
-    value: 0
+    value: 1
   GuardNode: {fileID: 0}
   ChildList: []
   Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
@@ -63,7 +87,7 @@ MonoBehaviour:
     longVal: 0
     floatVal: 0
     doubleVal: 0
-    boolVal: 1
+    boolVal: 0
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
   CompareType: 0
@@ -82,16 +106,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 310
-    y: -27
+    x: 329
+    y: -77
     width: 87
     height: 88
   State:
     value: 1
   GuardNode: {fileID: 0}
   ChildList:
-  - {fileID: 528271699828440473}
---- !u!114 &528271699828440473
+  - {fileID: -4216836362789671855}
+--- !u!114 &6586197138326359344
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,18 +124,55 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: ActionNodeDebug
+  m_Script: {fileID: 11500000, guid: 7ef4bc58cefd4400878a440964169b24, type: 3}
+  m_Name: ActionNodeUnityEvent
   m_EditorClassIdentifier: 
   RectInGraph:
     serializedVersion: 2
-    x: 223
-    y: 176
-    width: 130
-    height: 131
+    x: 288
+    y: 301
+    width: 161
+    height: 150
   State:
     value: 1
   GuardNode: {fileID: -6230232767149675455}
   ChildList: []
-  Content: dddd
-  DebugType: 0
+  Event:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+--- !u!114 &8356248935397494936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ef4bc58cefd4400878a440964169b24, type: 3}
+  m_Name: ActionNodeUnityEvent
+  m_EditorClassIdentifier: 
+  RectInGraph:
+    serializedVersion: 2
+    x: 628
+    y: 139
+    width: 148
+    height: 148
+  State:
+    value: 0
+  GuardNode: {fileID: 0}
+  ChildList: []
+  Event:
+    rid: 853993134440579074
+  references:
+    version: 2
+    RefIds:
+    - rid: 853993134440579074
+      type: {class: UnityEvent, ns: UnityEngine.Events, asm: UnityEngine.CoreModule}
+      data:
+        m_PersistentCalls:
+          m_Calls: []

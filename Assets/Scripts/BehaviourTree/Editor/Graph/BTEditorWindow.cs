@@ -105,10 +105,10 @@ namespace BehaviourTree
                 // MyDebug.Log($"Adding button for {abstractNodeEditorType.Name}");
                 ret.Add(new Button(() => fView.DrawNodeEditorWithType(TypeCache.GeneralToSelectionsDic[nodeGeneralType][0]))
                 {
-                    text = nodeGeneralType.Name,
+                    text = nodeGeneralType.Name.Replace("Node", ""),
                     style =
                     {
-                        width = 200,
+                        width = 120,
                         height = 30,
                         marginLeft = ret.Count == 0 ? 10: 0
                     }

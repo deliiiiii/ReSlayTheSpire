@@ -213,8 +213,6 @@ namespace BehaviourTree
 
             if (NodeBase is IShowDetail sd)
             {
-                if(detailLabel != null)
-                    extensionContainer.Remove(detailLabel);
                 detailLabel = new Label(sd.GetDetail())
                 {
                     style =
