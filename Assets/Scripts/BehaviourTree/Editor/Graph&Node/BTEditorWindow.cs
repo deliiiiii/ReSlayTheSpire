@@ -28,28 +28,21 @@ namespace BehaviourTree
         }
         void OnEnable()
         {
-            InitView();
-            InitToolbar();
+            // InitView
+            curView = new BTGraphView();
+            curView.OnRootNodeDeleted += CloseWindow;
+            curView.Load(curRootNode);
+            rootVisualElement.Add(curView);
+            
+            // InitToolbar
+            var toolbar = new Toolbar();
+            CollectButtons(curView).ForEach(toolbar.Add);
+            rootVisualElement.Add(toolbar);
         }
         void OnDisable()
         {
             var kvp = windowDic.FirstOrDefault(kvp => kvp.Value == this);
             windowDic.Remove(kvp.Key);
-        }
-        
-        void InitView()
-        {
-            curView = new BTGraphView();
-            curView.OnRootNodeDeleted += CloseWindow;
-            curView.Load(curRootNode);
-            rootVisualElement.Add(curView);
-        }
-
-        void InitToolbar()
-        {
-            var toolbar = new Toolbar();
-            CollectButtons(curView).ForEach(toolbar.Add);
-            rootVisualElement.Add(toolbar);
         }
 
         [UnityEditor.Callbacks.OnOpenAsset(1)]
@@ -59,7 +52,19 @@ namespace BehaviourTree
             if (obj is not RootNode node)
                 return false;
             curRootNode = node;
-            InitWindow();
+            
+            // InitWindow
+            if (windowDic.TryGetValue(instanceID, out var value))
+            {
+                curWindow = value;
+                curWindow.Focus();
+                return true;
+            }
+            curWindow = CreateWindow<BTEditorWindow>();
+            curWindow.titleContent = new GUIContent(curRootNode.name);
+            curWindow.minSize = new Vector2(600, 400);
+            curWindow.Show();
+            windowDic.Add(instanceID, curWindow);
             return true;
         }
         
@@ -78,23 +83,6 @@ namespace BehaviourTree
                 kvp.Value.Close();
             }
             windowDic.Clear();
-        }
-        
-        static void InitWindow()
-        {
-            var curId = curRootNode.GetInstanceID();
-            if (windowDic.TryGetValue(curId, out var value))
-            {
-                curWindow = value;
-                curWindow.Focus();
-                return;
-            }
-            curWindow = CreateWindow<BTEditorWindow>();
-            curWindow.titleContent = new GUIContent(curRootNode.name);
-            curWindow.minSize = new Vector2(600, 400);
-            curWindow.Show();
-            windowDic.Add(curId, curWindow);
-            
         }
         
         static IEnumerable<Button> CollectButtons(BTGraphView fView)

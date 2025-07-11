@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 
-using UnityEditor.Experimental.GraphView;
-
-namespace BehaviourTree.Config
+namespace BehaviourTree
 {
     [Serializable]
     [CreateAssetMenu(fileName = nameof(PortToDrawConfig), menuName = "BehaviourTree/" + nameof(PortToDrawConfig))]

@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEditor.Experimental.GraphView;
 // ReSharper disable InconsistentNaming
 
-namespace BehaviourTree.Config
+namespace BehaviourTree
 {
     [PortType]
     interface GuardPort{}

@@ -15,7 +15,7 @@ namespace BehaviourTree
             Position = new Vector2(600, 200);
             Size = new Vector2(200, 200);
         }
-
+        
         protected override EChildCountType childCountType { get; set; } = EChildCountType.Single;
         public override string ToString()
         {
