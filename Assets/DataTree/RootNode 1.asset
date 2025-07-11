@@ -12,14 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
   m_Name: SequenceNode
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 749.6
-    y: 207.2
-    width: 192.80005
-    height: 112
+  Position: {x: 760.8, y: 54.399998}
+  Size: {x: 209.60004, y: 132.8}
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -2393812710975925934}
@@ -36,14 +32,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
   m_Name: GuardNodeCompare
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 71.2
-    y: 17.600002
-    width: 254.40001
-    height: 106.4
+  Position: {x: 52.8, y: -114.399994}
+  Size: {x: 267.2, y: 168.79999}
   State:
-    value: 1
+    value: 0
   GuardNode: {fileID: 7530516594398591454}
   ChildList: []
   Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
@@ -58,30 +50,6 @@ MonoBehaviour:
     vector3: {x: 0, y: 0, z: 0}
   CompareType: 0
   SelectedOption: Intttt
---- !u!114 &-6452500991402134267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
-  m_Name: SequenceNode
-  m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 316.8
-    y: 188
-    width: 192.80002
-    height: 111.999985
-  State:
-    value: 2
-  GuardNode: {fileID: -6947205287044544229}
-  ChildList:
-  - {fileID: 4711099719438403748}
-  - {fileID: -6124811042528678242}
 --- !u!114 &-6124811042528678242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,12 +62,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765a60156eb84ccaa17612c15af147e6, type: 3}
   m_Name: ActionNodeSetValue
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 463.2
-    y: 356.80002
-    width: 240.79999
-    height: 130.4
+  Position: {x: 387.2, y: 284}
+  Size: {x: 230.39996, y: 148}
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -127,18 +91,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
   m_Name: ActionNodeDelay
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 785.6
-    y: 356.80002
-    width: 128.80005
-    height: 130.4
+  Position: {x: 705.6, y: 276.80002}
+  Size: {x: 264.80005, y: 155.19998}
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 0}
   ChildList: []
   DelaySeconds: 0.99
-  Timer: 0.9924963
+  Timer: 0.19209708
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,17 +111,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode 1
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 523.2
-    y: -135.2
-    width: 88.79999
-    height: 88
+  Position: {x: 540.8, y: -275.19998}
+  Size: {x: 124, y: 85.59999}
   State:
     value: 2
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: 2628512622176978366}
+--- !u!114 &2344641784109174500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
+  m_Name: SelectorNode
+  m_EditorClassIdentifier: 
+  Position: {x: 304, y: 54.399998}
+  Size: {x: 236.79999, y: 157.6}
+  State:
+    value: 0
+  GuardNode: {fileID: -6947205287044544229}
+  ChildList:
+  - {fileID: 4711099719438403748}
+  - {fileID: -6124811042528678242}
 --- !u!114 &2628512622176978366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,17 +150,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
   m_Name: SelectorNode
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 488.8
-    y: 12
-    width: 192.79999
-    height: 112
+  Position: {x: 485.6, y: -124.8}
+  Size: {x: 173.6, y: 124}
   State:
     value: 2
   GuardNode: {fileID: 0}
   ChildList:
-  - {fileID: -6452500991402134267}
+  - {fileID: 2344641784109174500}
   - {fileID: -7566109692241280999}
 --- !u!114 &3809642575600428137
 MonoBehaviour:
@@ -198,12 +170,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765a60156eb84ccaa17612c15af147e6, type: 3}
   m_Name: ActionNodeSetValue
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 976.8
-    y: 356.80002
-    width: 240.79999
-    height: 130.4
+  Position: {x: 1034.4, y: 264.80002}
+  Size: {x: 252, y: 184.79999}
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -231,18 +199,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
   m_Name: ActionNodeDelay
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 140.8
-    y: 356.80002
-    width: 135.99998
-    height: 130.4
+  Position: {x: 123.2, y: 284}
+  Size: {x: 212.8, y: 165.6}
   State:
-    value: 2
+    value: 0
   GuardNode: {fileID: 0}
   ChildList: []
-  DelaySeconds: 90.6
-  Timer: 6.206899
+  DelaySeconds: 2.31
+  Timer: 0.4343705
 --- !u!114 &7530516594398591454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,12 +219,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
   m_Name: GuardNodeCompare
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: -162.4
-    y: -121.600006
-    width: 283.2
-    height: 106.4
+  Position: {x: -62.4, y: -310.4}
+  Size: {x: 231.20001, y: 185.6}
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -272,7 +232,7 @@ MonoBehaviour:
     longVal: 0
     floatVal: 0
     doubleVal: 0
-    boolVal: 0
+    boolVal: 1
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
   CompareType: 0

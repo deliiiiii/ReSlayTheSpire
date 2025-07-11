@@ -12,12 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95f37d4af73745c6b1589607c5a819fb, type: 3}
   m_Name: NothingNode
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 571.2
-    y: 267.2
-    width: 188.79999
-    height: 92
+  Position: {x: -264.8, y: 0}
+  Size: {x: 234.4, y: 108}
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -35,17 +31,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
   m_Name: GuardNodeCompare
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: -176
-    y: -99.2
-    width: 377.6
-    height: 273.6
+  Position: {x: -457.6, y: -334.4}
+  Size: {x: 219.20001, y: 156}
   State:
     value: 0
   GuardNode: {fileID: 0}
   ChildList: []
-  blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
+  Blackboard: {fileID: 0}
   ToValue:
     BoardEValueType: 2
     intVal: 0
@@ -56,6 +48,7 @@ MonoBehaviour:
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
   CompareType: 0
+  SelectedOption: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,12 +61,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 316.8
-    y: -30.4
-    width: 88.80002
-    height: 68
+  Position: {x: -132.8, y: -334.4}
+  Size: {x: 135.2, y: 107.20001}
   State:
     value: 2
   GuardNode: {fileID: 0}
@@ -91,12 +80,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
   m_Name: GuardNodeMoreThan
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 300
-    y: 434.40002
-    width: 212.79999
-    height: 106.39996
+  Position: {x: -264.8, y: 147.2}
+  Size: {x: 158.4, y: 112}
   State:
     value: 1
   GuardNode: {fileID: 0}
@@ -115,12 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
   m_Name: ActionNodeDelay
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 260.8
-    y: 267.2
-    width: 212.80002
-    height: 130.4
+  Position: {x: 32.8, y: 0}
+  Size: {x: 218.4, y: 134.4}
   State:
     value: 2
   GuardNode: {fileID: 0}
@@ -139,19 +120,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
   m_Name: SequenceNode
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 316.8
-    y: 132
-    width: 192.80002
-    height: 92
+  Position: {x: -199.2, y: -191.2}
+  Size: {x: 201.59999, y: 142.4}
   State:
     value: 2
   GuardNode: {fileID: -1506108497375322535}
   ChildList:
   - {fileID: 7512937561549423645}
-  - {fileID: 2466634454646049510}
   - {fileID: -8745942438462223872}
+  - {fileID: 2466634454646049510}
   - {fileID: 4613815503397224029}
 --- !u!114 &4613815503397224029
 MonoBehaviour:
@@ -165,12 +142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
   m_Name: ActionNodeDebug
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 827.2
-    y: 267.2
-    width: 212.79999
-    height: 130.4
+  Position: {x: 281.6, y: 12}
+  Size: {x: 296.80002, y: 166.4}
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -189,12 +162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
   m_Name: ActionNodeDebug
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: -11.2
-    y: 267.2
-    width: 212.8
-    height: 130.4
+  Position: {x: -534.4, y: -25.599998}
+  Size: {x: 232.00003, y: 135.2}
   State:
     value: 1
   GuardNode: {fileID: 0}
@@ -213,12 +182,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
   m_Name: ActionNodeDelay
   m_EditorClassIdentifier: 
-  RectInGraph:
-    serializedVersion: 2
-    x: 540.8
-    y: 571.2
-    width: 212.79999
-    height: 130.40002
+  Position: {x: -111.2, y: 259.2}
+  Size: {x: 227.2, y: 146.4}
   State:
     value: 1
   GuardNode: {fileID: 944918452020931131}

@@ -44,7 +44,8 @@ namespace BehaviourTree
         /// </summary>
         public void OnRefreshTree()
         {
-            NodeBase.RectInGraph = GetRect();
+            NodeBase.Position = GetRect().position;
+            NodeBase.Size = GetRect().size;
             NodeBase.ClearChildren();
             this.ChildEditors()?
                 .OrderBy(editor => editor.GetRect().x)
@@ -115,12 +116,12 @@ namespace BehaviourTree
             if (isDefault)
             {
                 CreateNodeBase(nodeBase.GetType());
-                SetPosition(new Rect(100, 100, 200, 150));
+                SetPosition(new Rect(600, 600, 400, 250));
             }
             else
             {
                 NodeBase = nodeBase;
-                SetPosition(NodeBase.RectInGraph);
+                MySetPosition(new Rect(NodeBase.Position, NodeBase.Size));
             }
             
             DrawAllPorts();
@@ -129,6 +130,13 @@ namespace BehaviourTree
             //大小可以调整
             capabilities |= Capabilities.Resizable;
             RefreshAllSettings();
+        }
+
+        void MySetPosition(Rect rect)
+        {
+            base.SetPosition(rect);
+            style.width = rect.width;
+            style.height = rect.height;
         }
 
         void RefreshAllSettings()
@@ -213,8 +221,6 @@ namespace BehaviourTree
 
             if (NodeBase is IShowDetail sd)
             {
-                if(detailLabel != null)
-                    extensionContainer.Remove(detailLabel);
                 detailLabel = new Label(sd.GetDetail())
                 {
                     style =

@@ -26,7 +26,9 @@ public enum EChildCountType
 public abstract class NodeBase : ScriptableObject
 {
     [HideInInspector]
-    public Rect RectInGraph;
+    public Vector2 Position;
+    [HideInInspector]
+    public Vector2 Size;
     [HideInInspector]
     public Observable<EState> State = new(EState.Failed);
     
