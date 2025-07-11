@@ -640,27 +640,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa5b9051f3097c45a04531635cc6d9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
   Root:
-    Name: ' aaa'
+    Name: RRR
     RectInGraph:
       serializedVersion: 2
-      x: 304
-      y: 53
+      x: -37
+      y: -4
       width: 87
       height: 68
     State:
       value: 0
+    ChildList:
+    - rid: 853993134440579077
   TarFrameRate: 10
   ShowStartTick: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 853993134440579077
+      type: {class: ActionNodeDelay, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        Name: 
+        RectInGraph:
+          x: -79
+          y: 144
+          width: 142
+          height: 111
+        State:
+          value: 0
+        ChildList: []
+        DelaySeconds: 0
+        Timer: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

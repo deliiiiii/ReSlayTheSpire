@@ -51,7 +51,7 @@ namespace BehaviourTree
 
         public string GetDetail()
         {
-            return $"{Blackboard.name}.{SelectedOption} = {ToValue.GetValue()}";
+            return $"{Blackboard?.name ?? "null"}.{SelectedOption} = {ToValue.GetValue()}";
         }
     }
 }

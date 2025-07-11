@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Object = System.Object;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace BehaviourTree
 {
     
     
 [Serializable]
-public abstract class NodeBase : Object
+public abstract class NodeBase
 {
     public string Name;
     [HideInInspector]
@@ -32,8 +28,7 @@ public abstract class NodeBase : Object
     
     
     #region Child
-    // [HideInInspector]
-    [ShowInInspector]
+    [SerializeReference]
     public List<NodeBase> ChildList;
     public NodeBase LastChild => ChildLinkedList?.Last?.Value;
     protected abstract EChildCountType childCountType { get; set; }

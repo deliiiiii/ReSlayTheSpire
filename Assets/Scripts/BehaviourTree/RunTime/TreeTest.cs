@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
-using UnityEngine.Serialization;
-using Object = System.Object;
 
 namespace BehaviourTree
 {
-    public class TreeTest : SerializedMonoBehaviour
+    public class TreeTest : MonoBehaviour
     {
-        // [NonSerialized, OdinSerialize]
         public RootNode Root;
         public int TarFrameRate = 10;
         public bool ShowStartTick = true;
@@ -19,7 +17,15 @@ namespace BehaviourTree
             Application.targetFrameRate = TarFrameRate;
             Binder.Update(Tick);
         }
-
+#if UNITY_EDITOR
+        [Button]
+        void SaveChange()
+        {
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+#endif
         void Tick(float dt)
         {
             if (ShowStartTick)
