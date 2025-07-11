@@ -173,7 +173,7 @@ MonoBehaviour:
   EnableEvents: 1
   IWantToResetDiccccc: 0
   IWantToRefillTheEventType: 0
-  EventType: 2
+  EventType: 1
   TypeToEvents:
     list:
     - Key: 0
@@ -221,6 +221,8 @@ MonoBehaviour:
         - Key: 222
           Value: []
         - Key: 333
+          Value: []
+        - Key: 999a
           Value: []
     - Key: 2
       Value:

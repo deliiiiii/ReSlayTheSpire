@@ -15,7 +15,7 @@ namespace BehaviourTree
         public bool RunOnStart;
         public bool EnableEvents = true;
         [HelpBox("Reset ↓", HelpBoxType.Warning)]
-        public bool IWantToResetDiccccc;
+        public bool IWantToRefillTheWholeDiccccc;
         [HelpBox("Reset ↑", HelpBoxType.Warning)]
         public bool IWantToRefillTheEventType;
         public EEventK1 EventType;
@@ -26,10 +26,10 @@ namespace BehaviourTree
         {
             if (Application.isPlaying)
                 return;
-            if (IWantToResetDiccccc)
+            if (IWantToRefillTheWholeDiccccc)
             {
-                IWantToResetDiccccc = false;
-                TypeToEvents = new SerializableDictionary<EEventK1, SerializableDictionary<string, List<UnityEvent>>>();
+                IWantToRefillTheWholeDiccccc = false;
+                MyDebug.Log("You Have Refilled The Whole Dic.");
                 BTEvent.GetK1s().ForEach(k1 =>
                 {
                     TypeToEvents.Add(k1, new SerializableDictionary<string, List<UnityEvent>>());
@@ -42,6 +42,7 @@ namespace BehaviourTree
             if (IWantToRefillTheEventType)
             {
                 IWantToRefillTheEventType = false;
+                MyDebug.Log($"You Have Refilled The Event Type: {EventType}");
                 BTEvent.GetK2sByK1(EventType).ForEach(str =>
                 {
                     TypeToEvents[EventType].TryAdd(str, new List<UnityEvent>());
