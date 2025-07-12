@@ -25,7 +25,7 @@ namespace BehaviourTree
     public class ActionNode : NodeBase, IShowDetail
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
-        [NotNull] protected Action OnEnter;
+        [CanBeNull] protected Action OnEnter;
         [CanBeNull] protected Action<float> OnContinue;
         [CanBeNull] protected Action OnDelayEnd;
 
@@ -35,9 +35,11 @@ namespace BehaviourTree
         public bool IsFinished;
 
         #region Debug
+        [OnValueChanged(nameof(OnDebugSettingsChanged))]
         public bool HasDebug;
         [ShowIf(nameof(HasDebug))] public string DebugContent;
         [ShowIf(nameof(HasDebug))] public EDebugType DebugType = EDebugType.Log;
+        Action debugOnDelayEnd;
         #endregion
 
 
@@ -66,23 +68,20 @@ namespace BehaviourTree
         protected override void OnEnable()
         {
             base.OnEnable();
-            OnEnter += () =>
+            debugOnDelayEnd = () =>
             {
-                if (HasDebug)
+                switch (DebugType)
                 {
-                    switch (DebugType)
-                    {
-                        case EDebugType.Warning:
-                            MyDebug.LogWarning(DebugContent, LogType.Tick);
-                            break;
-                        case EDebugType.Error:
-                            MyDebug.LogError(DebugContent, LogType.Tick);
-                            break;
-                        case EDebugType.Log:
-                        default:
-                            MyDebug.Log(DebugContent, LogType.Tick);
-                            break;
-                    }
+                    case EDebugType.Warning:
+                        MyDebug.LogWarning(DebugContent, LogType.Tick);
+                        break;
+                    case EDebugType.Error:
+                        MyDebug.LogError(DebugContent, LogType.Tick);
+                        break;
+                    case EDebugType.Log:
+                    default:
+                        MyDebug.Log(DebugContent, LogType.Tick);
+                        break;
                 }
             };
             framesOnContinue = dt =>
@@ -95,7 +94,18 @@ namespace BehaviourTree
                 DelaySecondsTimer += dt;
                 IsFinished = DelaySecondsTimer >= DelaySeconds;
             };
+            OnDebugSettingsChanged();
             OnDelaySettingsChanged();
+        }
+
+        void OnDebugSettingsChanged()
+        {
+            if (!HasDebug)
+            {
+                OnDelayEnd -= debugOnDelayEnd;
+                return;
+            }
+            OnDelayEnd += debugOnDelayEnd;
         }
         void OnDelaySettingsChanged()
         {
@@ -119,9 +129,9 @@ namespace BehaviourTree
             }
         }
         
-        protected override void OnFail()
+        protected override void OnReset()
         {
-            base.OnFail();
+            base.OnReset();
             IsRunning = IsFinished = false;
             DelayFramesTimer = 0;
             DelaySecondsTimer = 0;
@@ -130,7 +140,7 @@ namespace BehaviourTree
         {
             if (!IsRunning)
             {
-                OnEnter.Invoke();
+                OnEnter?.Invoke();
                 IsRunning = true;
             }
             OnContinue?.Invoke(dt);

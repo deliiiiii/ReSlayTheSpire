@@ -32,6 +32,7 @@ namespace BehaviourTree
             if (Running)
                 return;
             Running = true;
+            RecursiveDo(MyFail);
             RecursiveDo(MyReset);
             b = Binder.Update(dt => Tick(dt));
         }

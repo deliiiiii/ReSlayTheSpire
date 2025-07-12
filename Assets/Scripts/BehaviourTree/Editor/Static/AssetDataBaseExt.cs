@@ -1,5 +1,4 @@
-﻿using Sirenix.Utilities;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace BehaviourTree

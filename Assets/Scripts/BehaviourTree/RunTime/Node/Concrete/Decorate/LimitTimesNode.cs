@@ -9,16 +9,19 @@ namespace BehaviourTree
         public int LimitTimes = 1;
         public int LimitTimer = 0;
 
-        protected override void OnFail()
+        protected override void OnReset()
         {
-            base.OnFail();
+            base.OnReset();
             LimitTimer = 0;
         }
 
         protected override EState OnTickChild(float dt)
         {
-            if(LimitTimer >= LimitTimes)
+            if (LimitTimer >= LimitTimes)
+            {
+                LastChild?.RecursiveDo(MyFail);
                 return EState.Succeeded;
+            }
             var ret = LastChild?.Tick(dt);
             if(ret == null)
                 return EState.Succeeded;

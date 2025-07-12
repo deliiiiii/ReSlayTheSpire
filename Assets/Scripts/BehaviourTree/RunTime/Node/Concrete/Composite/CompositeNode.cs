@@ -11,9 +11,9 @@ namespace BehaviourTree
         protected override EChildCountType childCountType { get; set; } = EChildCountType.Multiple;
         [CanBeNull] protected LinkedListNode<NodeBase> curNode;
 
-        protected override void OnFail()
+        protected override void OnReset()
         {
-            base.OnFail();
+            base.OnReset();
             curNode = null;
         }
     }

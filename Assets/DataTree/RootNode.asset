@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5800505570642370201
+--- !u!114 &-7671512093609679375
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,81 +9,78 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
-  m_Name: GuardNodeCompare
+  m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
+  m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 249.6, y: 448.80002}
-  Size: {x: 208, y: 127.19998}
+  Position: {x: 286.4, y: 603.2}
+  Size: {x: 212, y: 162.40002}
   GuardNode: {fileID: 0}
-  ChildList: []
-  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
-  ToValue:
-    BoardEValueType: 6
-    intVal: 0
-    longVal: 0
-    floatVal: 0
-    doubleVal: 0
-    boolVal: 1
-    stringVal: 
-    vector3: {x: 0, y: 0, z: 0}
-  CompareType: 1
-  SelectedOption: Boollll
---- !u!114 &-4084852783369387779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
-  m_Name: SequenceNode
-  m_EditorClassIdentifier: 
-  Position: {x: 596.8, y: 432.80002}
-  Size: {x: 192.79999, y: 111.99997}
-  GuardNode: {fileID: 0}
-  ChildList:
-  - {fileID: -2410017488287984519}
-  - {fileID: 382384075418045579}
---- !u!114 &-2410017488287984519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 765a60156eb84ccaa17612c15af147e6, type: 3}
-  m_Name: ActionNodeSetValue
-  m_EditorClassIdentifier: 
-  Position: {x: 410.4, y: 612.8}
-  Size: {x: 243.19998, y: 151.20001}
-  GuardNode: {fileID: -5800505570642370201}
   ChildList: []
   IsRunning: 0
   IsFinished: 0
-  HasDebug: 0
-  DebugContent: 
+  HasDebug: 1
+  DebugContent: "\u2605\u2605\u2605"
   DebugType: 0
-  HasDelay: 1
+  HasDelay: 0
   DelayType: 0
-  DelayFrames: 200
+  DelayFrames: 0
   DelayFramesTimer: 0
   DelaySeconds: 0
   DelaySecondsTimer: 0
-  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
-  ToValue:
-    BoardEValueType: 2
-    intVal: 42
-    longVal: 0
-    floatVal: 0
-    doubleVal: 0
-    boolVal: 0
-    stringVal: 
-    vector3: {x: 0, y: 0, z: 0}
-  SelectedOption: Intttt
+--- !u!114 &-5274064586181910554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
+  m_Name: ActionNodeEmpty
+  m_EditorClassIdentifier: 
+  Position: {x: 999.2, y: 604}
+  Size: {x: 227.20001, y: 151.20001}
+  GuardNode: {fileID: 0}
+  ChildList: []
+  IsRunning: 0
+  IsFinished: 0
+  HasDebug: 1
+  DebugContent: "\u2605\u2605\u2605\u2605\u2605\u2605"
+  DebugType: 0
+  HasDelay: 1
+  DelayType: 1
+  DelayFrames: 0
+  DelayFramesTimer: 0
+  DelaySeconds: 1.85
+  DelaySecondsTimer: 1.8503518
+--- !u!114 &-5272941269076269755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
+  m_Name: ActionNodeEmpty
+  m_EditorClassIdentifier: 
+  Position: {x: 592, y: 603.2}
+  Size: {x: 135.20001, y: 152}
+  GuardNode: {fileID: 0}
+  ChildList: []
+  IsRunning: 0
+  IsFinished: 0
+  HasDebug: 1
+  DebugContent: "\u2605\u2605\u2605\u2605"
+  DebugType: 0
+  HasDelay: 0
+  DelayType: 0
+  DelayFrames: 0
+  DelayFramesTimer: 0
+  DelaySeconds: 0
+  DelaySecondsTimer: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,13 +93,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode
   m_EditorClassIdentifier: 
-  Position: {x: 612, y: 280}
-  Size: {x: 205.59998, y: 92}
+  Position: {x: 592, y: 168}
+  Size: {x: 205.59998, y: 91.999985}
   GuardNode: {fileID: 0}
   ChildList:
-  - {fileID: -4084852783369387779}
+  - {fileID: 4319439301526744795}
   Running: 1
---- !u!114 &382384075418045579
+--- !u!114 &2959327518532414317
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,32 +108,62 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 765a60156eb84ccaa17612c15af147e6, type: 3}
-  m_Name: ActionNodeSetValue
+  m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
+  m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 714.4, y: 612}
-  Size: {x: 260, y: 152}
+  Position: {x: 784, y: 603.2}
+  Size: {x: 151.20001, y: 152}
   GuardNode: {fileID: 0}
   ChildList: []
   IsRunning: 0
   IsFinished: 0
-  HasDebug: 0
-  DebugContent: 
+  HasDebug: 1
+  DebugContent: "\u2605\u2605\u2605\u2605\u2605"
   DebugType: 0
-  HasDelay: 1
+  HasDelay: 0
   DelayType: 0
-  DelayFrames: 200
+  DelayFrames: 0
   DelayFramesTimer: 0
   DelaySeconds: 0
   DelaySecondsTimer: 0
-  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
-  ToValue:
-    BoardEValueType: 2
-    intVal: 24
-    longVal: 0
-    floatVal: 0
-    doubleVal: 0
-    boolVal: 0
-    stringVal: 
-    vector3: {x: 0, y: 0, z: 0}
-  SelectedOption: Intttt
+--- !u!114 &4319439301526744795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1be339da6e4b49759e24d0861155cfc6, type: 3}
+  m_Name: LimitTimesNode
+  m_EditorClassIdentifier: 
+  Position: {x: 592, y: 288.80002}
+  Size: {x: 188.79999, y: 130.4}
+  GuardNode: {fileID: 0}
+  ChildList:
+  - {fileID: 7884927171236222180}
+  LimitTimes: 10
+  LimitTimer: 10
+--- !u!114 &7884927171236222180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
+  m_Name: SelectorNode
+  m_EditorClassIdentifier: 
+  Position: {x: 592, y: 449.6}
+  Size: {x: 227.20001, y: 130.4}
+  GuardNode: {fileID: 0}
+  ChildList:
+  - {fileID: -7671512093609679375}
+  - {fileID: -5272941269076269755}
+  - {fileID: 2959327518532414317}
+  - {fileID: -5274064586181910554}
+  IsRandom: 1
+  FixedSelections: 28000000320000000800000002000000

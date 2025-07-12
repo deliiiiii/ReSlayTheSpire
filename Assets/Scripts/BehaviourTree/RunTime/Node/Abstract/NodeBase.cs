@@ -33,11 +33,11 @@ public abstract class NodeBase : ScriptableObject
 
     protected virtual void OnEnable()
     {
-        Binder.From(State).To(s =>
-        {
-            if (s == EState.Failed)
-                OnFail();
-        });
+        // Binder.From(State).To(s =>
+        // {
+        //     if (s == EState.Failed)
+        //         OnFail();
+        // });
     }
     
     
@@ -53,6 +53,7 @@ public abstract class NodeBase : ScriptableObject
     #region Child
     [HideInInspector]
     public List<NodeBase> ChildList;
+    public int ChildCount => ChildList?.Count ?? 0;
     public NodeBase LastChild => ChildLinkedList?.Last?.Value;
     protected abstract EChildCountType childCountType { get; set; }
     protected LinkedList<NodeBase> ChildLinkedList => ChildList == null ? new() : new LinkedList<NodeBase>(ChildList);
@@ -92,7 +93,7 @@ public abstract class NodeBase : ScriptableObject
     {
         if (!CheckGuard())
         {
-            RecursiveDo(MyReset);
+            RecursiveDo(MyFail);
             return State.Value = EState.Failed;
         }
         return State.Value = OnTickChild(dt);
@@ -106,17 +107,29 @@ public abstract class NodeBase : ScriptableObject
     {
         return LastChild?.Tick(dt) ?? EState.Succeeded;
     }
+    protected static void MyFail(NodeBase target)
+    {
+        if(!target)
+            return;
+        target.State.Value = EState.Failed;
+        target.OnFail();
+    }
     protected static void MyReset(NodeBase target)
     {
         if(!target)
             return;
         target.State.Value = EState.Failed;
+        target.OnReset();
     }
 
     protected virtual void OnFail(){}
+    protected virtual void OnReset(){}
     #endregion
-    
-    protected void RecursiveDo(Action<NodeBase> func)
+
+
+    public virtual void OnRefreshTreeEnd(){}
+
+    public void RecursiveDo(Action<NodeBase> func)
     {
         func(this);
         func(GuardNode);

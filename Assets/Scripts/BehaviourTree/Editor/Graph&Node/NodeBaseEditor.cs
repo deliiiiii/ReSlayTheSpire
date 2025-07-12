@@ -56,6 +56,7 @@ namespace BehaviourTree
             NodeBase.GuardNode = this.GuardingNode();
             this.GuardingEditor()?.OnRefreshTree();
             // MyDebug.Log($"Editor : {NodeBase.name} AddGuard {guard?.name ?? "null"}");
+            NodeBase.OnRefreshTreeEnd();
         }
         
         Rect GetRect();
