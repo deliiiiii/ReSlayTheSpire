@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace BehaviourTree
 {
     public class TreeHolder : MonoBehaviour
     {
-        public RootNode Root;
+        [CanBeNull] public RootNode Root;
         public bool RunOnStart;
         public bool EnableEvents = true;
         [HelpBox("Reset ↓", HelpBoxType.Warning)]
@@ -51,7 +52,7 @@ namespace BehaviourTree
             if (EnableEvents)
                 RegisterAllEvents();
             if (RunOnStart)
-                Root.RestartTick();
+                Root?.RestartTick();
         }
 
         void RegisterAllEvents()

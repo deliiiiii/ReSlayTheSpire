@@ -166,9 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa5b9051f3097c45a04531635cc6d9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Root: {fileID: 11400000, guid: ae515534c26dd7546976d6cab0a22fab, type: 2}
-  TarFrameRate: 10
-  ShowStartTick: 0
+  Root: {fileID: 11400000, guid: b59d322d799075b40acc55492d72c8a4, type: 2}
   RunOnStart: 1
   EnableEvents: 1
   IWannaRefillTheWholeDiccccc: 0

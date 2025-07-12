@@ -30,13 +30,16 @@ namespace BehaviourTree
                 fieldInfoCache.Add(fieldName, GetType().GetField(fieldName));
             }
 
-            var genericType = fieldInfo?.FieldType.GetGenericTypeDefinition();
-            var tType = fieldInfo?.FieldType.GetGenericArguments()[0];
-            if (genericType == typeof(Observable<>))
+            if (fieldInfo?.FieldType.IsGenericType ?? false)
             {
-                genericType.MakeGenericType(tType)
-                    .GetField("value", BindingFlags.NonPublic | BindingFlags.Instance)
-                    ?.SetValue(fieldInfo.GetValue(this), value);
+                var genericType = fieldInfo?.FieldType.GetGenericTypeDefinition();
+                var tType = fieldInfo?.FieldType.GetGenericArguments()[0];
+                if (genericType == typeof(Observable<>))
+                {
+                    genericType.MakeGenericType(tType)
+                        .GetField("value", BindingFlags.NonPublic | BindingFlags.Instance)
+                        ?.SetValue(fieldInfo.GetValue(this), value);
+                }
                 return;
             }
             fieldInfo?.SetValue(this, value);

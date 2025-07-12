@@ -1,25 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8745942438462223872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95f37d4af73745c6b1589607c5a819fb, type: 3}
-  m_Name: NothingNode
-  m_EditorClassIdentifier: 
-  Position: {x: -264.8, y: 0}
-  Size: {x: 234.4, y: 108}
-  State:
-    value: 0
-  GuardNode: {fileID: 0}
-  ChildList:
-  - {fileID: 7652693804652518871}
---- !u!114 &-1506108497375322535
+--- !u!114 &-5800505570642370201
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31,24 +12,78 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
   m_Name: GuardNodeCompare
   m_EditorClassIdentifier: 
-  Position: {x: -457.6, y: -334.4}
-  Size: {x: 219.20001, y: 156}
-  State:
-    value: 0
+  Position: {x: 249.6, y: 448.80002}
+  Size: {x: 208, y: 127.19998}
   GuardNode: {fileID: 0}
   ChildList: []
-  Blackboard: {fileID: 0}
+  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
+  ToValue:
+    BoardEValueType: 6
+    intVal: 0
+    longVal: 0
+    floatVal: 0
+    doubleVal: 0
+    boolVal: 1
+    stringVal: 
+    vector3: {x: 0, y: 0, z: 0}
+  CompareType: 1
+  SelectedOption: Boollll
+--- !u!114 &-4084852783369387779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
+  m_Name: SequenceNode
+  m_EditorClassIdentifier: 
+  Position: {x: 596.8, y: 432.80002}
+  Size: {x: 192.79999, y: 111.99997}
+  GuardNode: {fileID: 0}
+  ChildList:
+  - {fileID: -2410017488287984519}
+  - {fileID: 382384075418045579}
+--- !u!114 &-2410017488287984519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765a60156eb84ccaa17612c15af147e6, type: 3}
+  m_Name: ActionNodeSetValue
+  m_EditorClassIdentifier: 
+  Position: {x: 410.4, y: 612.8}
+  Size: {x: 243.19998, y: 151.20001}
+  GuardNode: {fileID: -5800505570642370201}
+  ChildList: []
+  IsRunning: 0
+  IsFinished: 0
+  HasDebug: 0
+  DebugContent: 
+  DebugType: 0
+  HasDelay: 1
+  DelayType: 0
+  DelayFrames: 200
+  DelayFramesTimer: 0
+  DelaySeconds: 0
+  DelaySecondsTimer: 0
+  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
   ToValue:
     BoardEValueType: 2
-    intVal: 0
+    intVal: 42
     longVal: 0
     floatVal: 0
     doubleVal: 0
     boolVal: 0
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
-  CompareType: 0
-  SelectedOption: 
+  SelectedOption: Intttt
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,14 +96,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode
   m_EditorClassIdentifier: 
-  Position: {x: -132.8, y: -334.4}
-  Size: {x: 135.2, y: 107.20001}
-  State:
-    value: 2
+  Position: {x: 612, y: 280}
+  Size: {x: 205.59998, y: 92}
   GuardNode: {fileID: 0}
   ChildList:
-  - {fileID: 3256989651206574489}
---- !u!114 &944918452020931131
+  - {fileID: -4084852783369387779}
+  Running: 1
+--- !u!114 &382384075418045579
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,116 +111,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7ea45fdf76b4dcb8f32afc209ae8ab9, type: 3}
-  m_Name: GuardNodeMoreThan
+  m_Script: {fileID: 11500000, guid: 765a60156eb84ccaa17612c15af147e6, type: 3}
+  m_Name: ActionNodeSetValue
   m_EditorClassIdentifier: 
-  Position: {x: -264.8, y: 147.2}
-  Size: {x: 158.4, y: 112}
-  State:
-    value: 1
+  Position: {x: 714.4, y: 612}
+  Size: {x: 260, y: 152}
   GuardNode: {fileID: 0}
   ChildList: []
-  Value: 42
-  Threshold: 24
---- !u!114 &2466634454646049510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
-  m_Name: ActionNodeDelay
-  m_EditorClassIdentifier: 
-  Position: {x: 32.8, y: 0}
-  Size: {x: 218.4, y: 134.4}
-  State:
-    value: 2
-  GuardNode: {fileID: 0}
-  ChildList: []
-  DelaySeconds: 2.718
-  Timer: 1.135345
---- !u!114 &3256989651206574489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
-  m_Name: SequenceNode
-  m_EditorClassIdentifier: 
-  Position: {x: -199.2, y: -191.2}
-  Size: {x: 201.59999, y: 142.4}
-  State:
-    value: 2
-  GuardNode: {fileID: -1506108497375322535}
-  ChildList:
-  - {fileID: 7512937561549423645}
-  - {fileID: -8745942438462223872}
-  - {fileID: 2466634454646049510}
-  - {fileID: 4613815503397224029}
---- !u!114 &4613815503397224029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: ActionNodeDebug
-  m_EditorClassIdentifier: 
-  Position: {x: 281.6, y: 12}
-  Size: {x: 296.80002, y: 166.4}
-  State:
-    value: 0
-  GuardNode: {fileID: 0}
-  ChildList: []
-  Content: "\u9876\u9876\u9876\u9876"
+  IsRunning: 0
+  IsFinished: 0
+  HasDebug: 0
+  DebugContent: 
   DebugType: 0
---- !u!114 &7512937561549423645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
-  m_Name: ActionNodeDebug
-  m_EditorClassIdentifier: 
-  Position: {x: -534.4, y: -25.599998}
-  Size: {x: 232.00003, y: 135.2}
-  State:
-    value: 1
-  GuardNode: {fileID: 0}
-  ChildList: []
-  Content: Deliiiiii
-  DebugType: 0
---- !u!114 &7652693804652518871
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
-  m_Name: ActionNodeDelay
-  m_EditorClassIdentifier: 
-  Position: {x: -111.2, y: 259.2}
-  Size: {x: 227.2, y: 146.4}
-  State:
-    value: 1
-  GuardNode: {fileID: 944918452020931131}
-  ChildList: []
-  DelaySeconds: 1.14514
-  Timer: 1.1991947
+  HasDelay: 1
+  DelayType: 0
+  DelayFrames: 200
+  DelayFramesTimer: 0
+  DelaySeconds: 0
+  DelaySecondsTimer: 0
+  Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
+  ToValue:
+    BoardEValueType: 2
+    intVal: 24
+    longVal: 0
+    floatVal: 0
+    doubleVal: 0
+    boolVal: 0
+    stringVal: 
+    vector3: {x: 0, y: 0, z: 0}
+  SelectedOption: Intttt

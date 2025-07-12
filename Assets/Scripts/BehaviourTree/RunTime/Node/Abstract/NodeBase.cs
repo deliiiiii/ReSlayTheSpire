@@ -29,10 +29,9 @@ public abstract class NodeBase : ScriptableObject
     public Vector2 Position;
     [HideInInspector]
     public Vector2 Size;
-    [HideInInspector]
-    public Observable<EState> State = new(EState.Failed);
+    public readonly Observable<EState> State = new(EState.Failed);
 
-    protected NodeBase()
+    protected virtual void OnEnable()
     {
         Binder.From(State).To(s =>
         {

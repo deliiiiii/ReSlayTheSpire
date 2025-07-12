@@ -12,7 +12,11 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeSetValue: ActionNode, IShowDetail
     {
-        protected override Action OnEnter => () => Blackboard?.Set(SelectedOption, ToValue.GetValue());
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            OnDelayEnd += () => Blackboard?.Set(SelectedOption, ToValue.GetValue());
+        }
         
         [PropertyOrder(0)][Required] [CanBeNull] 
         public Blackboard Blackboard;
@@ -41,9 +45,9 @@ namespace BehaviourTree
             ToValue.BoardEValueType =
                 Union.ConvertType(fieldInfoDic[SelectedOption].FieldType);
         }
-        public string GetDetail()
+        public new string GetDetail()
         {
-            return $"{Blackboard?.name ?? "null"}.{SelectedOption} = {ToValue.GetValue()}";
+            return $"{base.GetDetail()}{Blackboard?.name ?? "null"}.{SelectedOption} = {ToValue.GetValue()}";
         }
     }
 }

@@ -13,8 +13,9 @@ namespace BehaviourTree
         [ReadOnly]
         public bool Running;
         [CanBeNull] BindDataUpdate b;
-        protected RootNode()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             if(Position.x != 0 || Position.y != 0)
                 return;
             Position = new Vector2(600, 200);

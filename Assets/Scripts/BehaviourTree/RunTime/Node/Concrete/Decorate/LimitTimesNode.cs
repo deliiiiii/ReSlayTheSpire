@@ -11,6 +11,7 @@ namespace BehaviourTree
 
         protected override void OnFail()
         {
+            base.OnFail();
             LimitTimer = 0;
         }
 
@@ -27,7 +28,7 @@ namespace BehaviourTree
         }
         public string GetDetail()
         {
-            return $"Limited[{LimitTimer}/{LimitTimes}]";
+            return $"Limited:{LimitTimer}/{LimitTimes}";
         }
     }
 }

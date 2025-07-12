@@ -7,7 +7,10 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeTree : ActionNode, IShowDetail
     {
-        protected override Action<float> OnContinue => dt =>
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            OnContinue = dt =>
             {
                 if (SubTreeRoot == null)
                 {
@@ -19,11 +22,12 @@ namespace BehaviourTree
                     return;
                 IsFinished = true;
             };
+        }
         [Required][CanBeNull]
         public RootNode SubTreeRoot;
-        public string GetDetail()
+        public new string GetDetail()
         {
-            return $"SubTree[{SubTreeRoot?.name ?? "null"}]";
+            return $"设置延迟无效！\n{base.GetDetail()}SubTree:{SubTreeRoot?.name ?? "null"}";
         }
     }
 }
