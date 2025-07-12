@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
+using UniRx;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace BehaviourTree
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
-            graphViewChanged = OnGraphViewChanged;
+            graphViewChanged = DelayOnGraphViewChanged;
             this.StretchToParentSize();
         }
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -60,18 +61,21 @@ namespace BehaviourTree
                     .GetConstructor(new []{nodeConcrete!.GetGeneralType(), typeof(bool)})
                     ?.Invoke(new object[]{nodeConcrete, isDefault}) is not INodeBaseEditor<T> ins)
                 return null;
-            ins.OnTypeChanged += _ => OnGraphViewChanged(default);
+            ins.OnTypeChanged += _ => DelayOnGraphViewChanged(default);
             
             var node = ins as Node;
             AddElement(node);
             return ins;
         }
         
-        GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+        GraphViewChange DelayOnGraphViewChanged(GraphViewChange graphViewChange)
         {
-            MyDebug.LogWarning($"OnGraphViewChanged");
-            nodeEditors.ForEach(node => node.NodeBase.ClearChildren());
-            RefreshTreeAndSave();
+            Observable.NextFrame().Subscribe(_ =>
+            {
+                MyDebug.LogWarning($"OnGraphViewChanged");
+                nodeEditors.ForEach(node => node.NodeBase.ClearChildren());
+                RefreshTreeAndSave();
+            });
             return graphViewChange;
         }
         
