@@ -12,17 +12,18 @@ namespace BehaviourTree
             base.OnEnable();
             OnContinue = dt =>
             {
-                if (SubTreeRoot == null)
-                {
-                    IsFinished = true;
-                    return;
-                }
-                var ret = SubTreeRoot.Tick(dt);
-                if (ret == EState.Running)
-                    return;
-                IsFinished = true;
+                var ret = SubTreeRoot?.TickTemplate(dt) ?? EState.Succeeded;
+                return ret;
             };
         }
+
+        protected override void OnReset()
+        {
+            base.OnReset();
+            SubTreeRoot?.RecursiveDo(CallReset);
+        }
+
+
         [Required][CanBeNull]
         public RootNode SubTreeRoot;
         public new string GetDetail()

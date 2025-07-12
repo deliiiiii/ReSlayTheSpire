@@ -30,15 +30,8 @@ public abstract class NodeBase : ScriptableObject
     [HideInInspector]
     public Vector2 Size;
     public readonly Observable<EState> State = new(EState.Failed);
-
-    protected virtual void OnEnable()
-    {
-        // Binder.From(State).To(s =>
-        // {
-        //     if (s == EState.Failed)
-        //         OnFail();
-        // });
-    }
+    
+    protected virtual void OnEnable(){}
     
     
     #region Guard
@@ -89,40 +82,32 @@ public abstract class NodeBase : ScriptableObject
 
     
     #region Tick
-    public EState Tick(float dt)
+    public EState TickTemplate(float dt)
     {
         if (!CheckGuard())
         {
-            RecursiveDo(MyFail);
+            RecursiveDo(CallReset);
             return State.Value = EState.Failed;
         }
-        return State.Value = OnTickChild(dt);
+        return State.Value = Tick(dt);
     }
     /// <summary>
     /// 默认Tick最后一个节点， 没有节点时返回Succeeded
     /// </summary>
     /// <param name="dt"></param>
     /// <returns></returns>
-    protected virtual EState OnTickChild(float dt)
+    protected virtual EState Tick(float dt)
     {
-        return LastChild?.Tick(dt) ?? EState.Succeeded;
+        return LastChild?.TickTemplate(dt) ?? EState.Succeeded;
     }
-    protected static void MyFail(NodeBase target)
+    
+    protected static void CallReset(NodeBase target)
     {
         if(!target)
             return;
-        target.State.Value = EState.Failed;
-        target.OnFail();
-    }
-    protected static void MyReset(NodeBase target)
-    {
-        if(!target)
-            return;
-        target.State.Value = EState.Failed;
         target.OnReset();
+        target.State.Value = EState.Failed;
     }
-
-    protected virtual void OnFail(){}
     protected virtual void OnReset(){}
     #endregion
 

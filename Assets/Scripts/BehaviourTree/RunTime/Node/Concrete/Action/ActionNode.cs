@@ -25,14 +25,9 @@ namespace BehaviourTree
     public class ActionNode : NodeBase, IShowDetail
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
-        [CanBeNull] protected Action OnEnter;
-        [CanBeNull] protected Action<float> OnContinue;
+        // [CanBeNull] protected Action OnEnter;
+        [CanBeNull] protected Func<float, EState> OnContinue;
         [CanBeNull] protected Action OnDelayEnd;
-
-        [HideInInspector]
-        public bool IsRunning;
-        [HideInInspector]
-        public bool IsFinished;
 
         #region Debug
         [OnValueChanged(nameof(OnDebugSettingsChanged))]
@@ -61,8 +56,8 @@ namespace BehaviourTree
         [ReadOnly][ShowIf(nameof(isDelaySeconds))]
         public float DelaySecondsTimer;
         
-        Action<float> framesOnContinue;
-        Action<float> secondsOnContinue;
+        Func<float, EState> framesOnContinue;
+        Func<float, EState> secondsOnContinue;
         #endregion
 
         protected override void OnEnable()
@@ -87,12 +82,16 @@ namespace BehaviourTree
             framesOnContinue = dt =>
             {
                 DelayFramesTimer++;
-                IsFinished = DelayFramesTimer >= DelayFrames;
+                if (DelayFramesTimer >= DelayFrames)
+                    return EState.Succeeded;
+                return EState.Running;
             };
             secondsOnContinue = dt =>
             {
                 DelaySecondsTimer += dt;
-                IsFinished = DelaySecondsTimer >= DelaySeconds;
+                if(DelaySecondsTimer >= DelaySeconds)
+                    return EState.Succeeded;
+                return EState.Running;
             };
             OnDebugSettingsChanged();
             OnDelaySettingsChanged();
@@ -111,7 +110,7 @@ namespace BehaviourTree
         {
             if (!HasDelay)
             {
-                OnContinue += _ => IsFinished = true;
+                OnContinue = _ => EState.Succeeded;
                 return;
             }
 
@@ -128,31 +127,33 @@ namespace BehaviourTree
                     break;
             }
         }
-        
+
         protected override void OnReset()
         {
             base.OnReset();
-            IsRunning = IsFinished = false;
             DelayFramesTimer = 0;
             DelaySecondsTimer = 0;
         }
-        protected override EState OnTickChild(float dt)
+        protected override EState Tick(float dt)
         {
-            if (!IsRunning)
+            // 上一帧完成，这一帧才重置
+            if (State.Value == EState.Succeeded)
             {
-                OnEnter?.Invoke();
-                IsRunning = true;
+                RecursiveDo(CallReset);
             }
-            OnContinue?.Invoke(dt);
-            if (IsFinished)
+            // if (State.Value == EState.Failed)
+            // {
+            //     OnEnter?.Invoke();
+            // }
+            var ret = OnContinue?.Invoke(dt) ?? EState.Succeeded;
+            if (ret == EState.Succeeded)
             {
-                IsRunning = IsFinished = false;
                 OnDelayEnd?.Invoke();
-                return EState.Succeeded;
             }
-            return EState.Running;
+            return ret;
         }
         
+        #region IShowDetail
         public string GetDetail()
         {
             StringBuilder sb = new StringBuilder();
@@ -202,9 +203,6 @@ namespace BehaviourTree
             };
             return $"Delay {t}{tTanni}/{dWithTanni}";
         }
+        #endregion
     }
-
-    
-
-    
 }

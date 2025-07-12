@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace BehaviourTree
 {
@@ -24,15 +25,16 @@ namespace BehaviourTree
             return 0;
         }
 
+        [NotNull]
         public static LinkedListNode<T> At<T>(this LinkedList<T> list, int index)
         {
-            if ((list?.Count ?? 0) == 0)
-                throw new NullReferenceException();
-            if (index < 0 || index >= list.Count)
-                throw new IndexOutOfRangeException();
+            // if ((list?.Count ?? 0) == 0)
+            //     throw new NullReferenceException();
+            // if (index < 0 || index >= list.Count)
+            //     throw new IndexOutOfRangeException();
             var current = list.First;
             for (int i = 0; i < index; i++)
-                current = current!.Next;
+                current = current?.Next;
             return current;
         }
     }

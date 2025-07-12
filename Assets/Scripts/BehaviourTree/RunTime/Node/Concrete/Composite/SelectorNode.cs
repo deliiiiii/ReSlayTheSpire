@@ -9,6 +9,9 @@ namespace BehaviourTree
     [Serializable]
     public class SelectorNode : CompositeNode, IShowDetail
     {
+        /// <summary>
+        /// 根据list随机数的权重,随机选择子节点，且失败后不会尝试下一个节点
+        /// </summary>
         public bool IsRandom;
         [ShowIf(nameof(IsRandom))]
         [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true)]
@@ -21,45 +24,25 @@ namespace BehaviourTree
             while (FixedSelections.Count > ChildCount)
                 FixedSelections.RemoveAt(FixedSelections.Count - 1);
         }
-        protected override EState OnTickChild(float dt)
+        
+        protected override EState Tick(float dt)
         {
-            if(curNode == null)
+            if (State.Value is not EState.Running)
             {
-                RecursiveDo(MyReset);
-                if (IsRandom)
-                {
-                    // 根据list随机数的权重,随机选择子节点，且失败后不会尝试下一个节点
-                    if (ChildLinkedList == null || ChildLinkedList.Count == 0)
-                    {
-                        return EState.Failed;
-                    }
-                    curNode = ChildLinkedList.At(FixedSelections.RandomIndexWeighted());
-                }
-                else
-                {
-                    curNode = ChildLinkedList?.First;
-                }
+                RecursiveDo(CallReset);
+                curNode = IsRandom ? 
+                    ChildLinkedList?.At(FixedSelections.RandomIndexWeighted()) :
+                    ChildLinkedList?.First;
             }
-
             if (IsRandom)
             {
-                var ret = curNode.Value.Tick(dt);
-                if (ret is not EState.Running)
-                {
-                    curNode = null;
-                }
-                return ret;
+                return curNode?.Value.TickTemplate(dt) ?? EState.Failed;
             }
             while (curNode != null)
             {
-                var ret = curNode.Value.Tick(dt);
-                if (ret is EState.Running)
+                var ret = curNode.Value.TickTemplate(dt);
+                if (ret is EState.Running or EState.Succeeded)
                 {
-                    return ret;
-                }
-                if (ret is EState.Succeeded)
-                {
-                    curNode = null;
                     return ret;
                 }
                 curNode = curNode.Next;

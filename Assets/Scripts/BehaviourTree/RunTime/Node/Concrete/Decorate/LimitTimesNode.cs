@@ -15,14 +15,14 @@ namespace BehaviourTree
             LimitTimer = 0;
         }
 
-        protected override EState OnTickChild(float dt)
+        protected override EState Tick(float dt)
         {
             if (LimitTimer >= LimitTimes)
             {
-                LastChild?.RecursiveDo(MyFail);
+                LastChild?.RecursiveDo(CallReset);
                 return EState.Succeeded;
             }
-            var ret = LastChild?.Tick(dt);
+            var ret = LastChild?.TickTemplate(dt);
             if(ret == null)
                 return EState.Succeeded;
             if(ret == EState.Succeeded)

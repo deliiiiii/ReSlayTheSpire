@@ -5,25 +5,20 @@ namespace BehaviourTree
     [Serializable]
     public class SequenceNode : CompositeNode
     {
-        protected override EState OnTickChild(float dt)
+        protected override EState Tick(float dt)
         {
-            if (curNode == null)
+            if (State.Value is not EState.Running)
             {
-                RecursiveDo(MyReset);
                 curNode = ChildLinkedList?.First;
+                RecursiveDo(CallReset);
             }
             
             while (curNode != null)
             {
-                var res = curNode.Value.Tick(dt);
-                if (res is EState.Running)
+                var ret = curNode.Value.TickTemplate(dt);
+                if (ret is EState.Running or EState.Failed)
                 {
-                    return res;
-                }
-                if (res is EState.Failed)
-                {
-                    curNode = null;
-                    return res;
+                    return ret;
                 }
                 curNode = curNode.Next;
             }
