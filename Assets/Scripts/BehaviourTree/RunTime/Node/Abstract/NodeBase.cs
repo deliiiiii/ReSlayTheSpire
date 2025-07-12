@@ -31,6 +31,15 @@ public abstract class NodeBase : ScriptableObject
     public Vector2 Size;
     [HideInInspector]
     public Observable<EState> State = new(EState.Failed);
+
+    protected NodeBase()
+    {
+        Binder.From(State).To(s =>
+        {
+            if (s == EState.Failed)
+                OnFail();
+        });
+    }
     
     
     #region Guard
@@ -84,12 +93,10 @@ public abstract class NodeBase : ScriptableObject
     {
         if (!CheckGuard())
         {
-            RecursiveDo(OnFail);
+            RecursiveDo(MyReset);
             return State.Value = EState.Failed;
         }
-        State.Value = OnTickChild(dt);
-        // MyDebug.Log($"\"{NodeName}\" Tick: {tickResult}", LogType.Tick);
-        return State.Value;
+        return State.Value = OnTickChild(dt);
     }
     /// <summary>
     /// 默认Tick最后一个节点， 没有节点时返回Succeeded
@@ -100,25 +107,20 @@ public abstract class NodeBase : ScriptableObject
     {
         return LastChild?.Tick(dt) ?? EState.Succeeded;
     }
-    protected static void OnFail(NodeBase target)
+    protected static void MyReset(NodeBase target)
     {
         if(!target)
             return;
         target.State.Value = EState.Failed;
     }
-    protected static void OnResetState(NodeBase target)
-    {
-        if(!target)
-            return;
-        target.State.Value = EState.Failed;
-    }
+
+    protected virtual void OnFail(){}
     #endregion
     
     protected void RecursiveDo(Action<NodeBase> func)
     {
         func(this);
-        if(GuardNode != null)
-            func(GuardNode);
+        func(GuardNode);
         ChildList?.ForEach(c => c.RecursiveDo(func));
     }
 

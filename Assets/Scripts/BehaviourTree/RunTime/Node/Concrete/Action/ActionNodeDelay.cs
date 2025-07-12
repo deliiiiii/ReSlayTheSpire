@@ -10,15 +10,12 @@ namespace BehaviourTree
         [ReadOnly]
         public float Timer;
 
-        protected override void OnEnableAfter()
+        protected override Action OnEnter => () => Timer = 0;
+        protected override Action<float> OnContinue => dt =>
         {
-            OnEnter = () => Timer = 0;
-            OnContinue = dt =>
-            {
-                Timer += dt;
-                IsFinished = Timer >= DelaySeconds;
-            };
-        }
+            Timer += dt;
+            IsFinished = Timer >= DelaySeconds;
+        };
 
         public string GetDetail()
         {

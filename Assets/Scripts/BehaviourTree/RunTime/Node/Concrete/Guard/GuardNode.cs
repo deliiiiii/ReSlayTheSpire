@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace BehaviourTree
 {
@@ -6,8 +7,7 @@ namespace BehaviourTree
     public class GuardNode : NodeBase
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
-        [NonSerialized]
-        protected Func<bool> Condition;
+        [NotNull] protected virtual Func<bool> Condition { get; } = () => true;
 
         public bool Judge()
         {

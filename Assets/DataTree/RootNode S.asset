@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
   m_Name: GuardNodeCompare
   m_EditorClassIdentifier: 
-  Position: {x: 248.8, y: 135.2}
-  Size: {x: 235.2, y: 126.399994}
+  Position: {x: 475.2, y: 892.8}
+  Size: {x: 235.20001, y: 126.400024}
   State:
-    value: 0
+    value: 1
   GuardNode: {fileID: 0}
   ChildList: []
   Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
   ToValue:
     BoardEValueType: 2
-    intVal: 25
+    intVal: 42
     longVal: 0
     floatVal: 0
     doubleVal: 0
@@ -42,10 +42,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
   m_Name: SequenceNode
   m_EditorClassIdentifier: 
-  Position: {x: 569.6, y: 299.2}
-  Size: {x: 192.80005, y: 112}
+  Position: {x: 819.2, y: 934.4}
+  Size: {x: 192.79999, y: 111.99994}
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: -7735885384291422943}
   ChildList:
   - {fileID: 4281229042159192432}
@@ -63,8 +63,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b01273f0edc04e93bd3e91e7236b48d8, type: 3}
   m_Name: ActionNodeDebug
   m_EditorClassIdentifier: 
-  Position: {x: 634.4, y: 457.6}
-  Size: {x: 135.19995, y: 132.00003}
+  Position: {x: 884, y: 1092.7999}
+  Size: {x: 135.20001, y: 132}
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -83,13 +83,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode S
   m_EditorClassIdentifier: 
-  Position: {x: 600, y: 77.600006}
-  Size: {x: 200, y: 200}
+  Position: {x: 919.2, y: 521.60004}
+  Size: {x: 199.99994, y: 200}
   State:
-    value: 0
+    value: 2
+  GuardNode: {fileID: 0}
+  ChildList:
+  - {fileID: 1301347053283667498}
+--- !u!114 &1301347053283667498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1be339da6e4b49759e24d0861155cfc6, type: 3}
+  m_Name: LimitTimesNode
+  m_EditorClassIdentifier: 
+  Position: {x: 884, y: 780}
+  Size: {x: 188.80005, y: 130.40002}
+  State:
+    value: 2
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -3890433923807373165}
+  LimitTimes: 19
+  LimitTimer: 6
 --- !u!114 &2417228831320438548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,8 +123,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765a60156eb84ccaa17612c15af147e6, type: 3}
   m_Name: ActionNodeSetValue
   m_EditorClassIdentifier: 
-  Position: {x: 860.8, y: 459.2}
-  Size: {x: 233.60004, y: 166.40002}
+  Position: {x: 1110.4, y: 1094.3999}
+  Size: {x: 233.59998, y: 166.40002}
   State:
     value: 0
   GuardNode: {fileID: 0}
@@ -131,11 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03c168b1dcb543a08da33443352b3712, type: 3}
   m_Name: ActionNodeDelay
   m_EditorClassIdentifier: 
-  Position: {x: 405.6, y: 457.6}
-  Size: {x: 128.80002, y: 130.4}
+  Position: {x: 655.2, y: 1092.7999}
+  Size: {x: 128.79999, y: 130.40002}
   State:
-    value: 0
+    value: 2
   GuardNode: {fileID: 0}
   ChildList: []
   DelaySeconds: 3.65
-  Timer: 3.6512036
+  Timer: 2.3998532

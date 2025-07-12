@@ -10,8 +10,6 @@ namespace BehaviourTree
     public class TreeHolder : MonoBehaviour
     {
         public RootNode Root;
-        public int TarFrameRate = 10;
-        public bool ShowStartTick = true;
         public bool RunOnStart;
         public bool EnableEvents = true;
         [HelpBox("Reset ↓", HelpBoxType.Warning)]
@@ -20,7 +18,6 @@ namespace BehaviourTree
         public bool IWannaRefillTheEventType;
         public EEventK1 EventType;
         public SerializableDictionary<EEventK1, SerializableDictionary<string, List<UnityEvent>>> TypeToEvents;
-        BindDataUpdate b;
         
         void OnValidate()
         {
@@ -51,20 +48,10 @@ namespace BehaviourTree
         }
         void Start()
         {
-            Application.targetFrameRate = TarFrameRate;
             if (EnableEvents)
                 RegisterAllEvents();
             if (RunOnStart)
-                b = Binder.Update(Tick);
-        }
-
-        void Tick(float dt)
-        {
-            if (ShowStartTick)
-            {
-                MyDebug.Log("----------Start Tick----------", LogType.Tick);
-            }
-            Root.Tick(dt);
+                Root.RestartTick();
         }
 
         void RegisterAllEvents()

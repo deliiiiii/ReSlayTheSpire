@@ -9,7 +9,7 @@ namespace BehaviourTree
         {
             if (curNode == null)
             {
-                RecursiveDo(OnResetState);
+                RecursiveDo(MyReset);
                 curNode = ChildLinkedList?.First;
             }
             

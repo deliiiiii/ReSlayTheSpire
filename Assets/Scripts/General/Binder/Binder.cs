@@ -26,8 +26,7 @@ public static class Binder
     public static BindDataUpdate Update(Action<float> act, EUpdatePri priority = EUpdatePri.Default)
     {
         var ret = new BindDataUpdate(act, priority);
-        if(!Updater.UpdateDic.ContainsKey(priority))
-            Updater.UpdateDic.Add(priority, new HashSet<BindDataUpdate>());
+        Updater.UpdateDic.TryAdd(priority, new HashSet<BindDataUpdate>());
         Updater.UpdateDic[priority].Add(ret);
         return ret;
     }

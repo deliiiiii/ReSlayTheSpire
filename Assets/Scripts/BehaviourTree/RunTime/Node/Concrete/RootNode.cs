@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,15 +9,36 @@ namespace BehaviourTree
     [CreateAssetMenu(fileName = nameof(RootNode), menuName = "BehaviourTree/" + nameof(RootNode))]
     public class RootNode : NodeBase
     {
-        public void OnEnable()
+        protected override EChildCountType childCountType { get; set; } = EChildCountType.Single;
+        [ReadOnly]
+        public bool Running;
+        [CanBeNull] BindDataUpdate b;
+        protected RootNode()
         {
             if(Position.x != 0 || Position.y != 0)
                 return;
             Position = new Vector2(600, 200);
             Size = new Vector2(200, 200);
         }
-        
-        protected override EChildCountType childCountType { get; set; } = EChildCountType.Single;
+        public void RestartTick()
+        {
+            StopTick();
+            StartTick();
+        }
+
+        public void StartTick()
+        {
+            if (Running)
+                return;
+            Running = true;
+            RecursiveDo(MyReset);
+            b = Binder.Update(dt => Tick(dt));
+        }
+        public void StopTick()
+        {
+            Running = false;
+            b?.UnBind();
+        }
         public override string ToString()
         {
             return nameof(RootNode);

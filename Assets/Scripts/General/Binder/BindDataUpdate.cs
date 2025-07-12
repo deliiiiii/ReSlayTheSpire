@@ -13,7 +13,8 @@ public class BindDataUpdate
 
     public void UnBind()
     {
-        Updater.UpdateDic[priority].Remove(this);
+        if(Updater.UpdateDic.TryGetValue(priority, out var value))
+            value.Remove(this);
     }
 }
 

@@ -19,4 +19,4 @@ MonoBehaviour:
   Stringggg: 
   Vector3333: {x: 0, y: 0, z: 0}
   IntObservable:
-    value: 30
+    value: 42

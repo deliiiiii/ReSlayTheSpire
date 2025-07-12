@@ -10,9 +10,13 @@ namespace BehaviourTree
             var ret = LastChild?.Tick(dt);
             if(ret == null)
                 return EState.Succeeded;
-            return ret == EState.Succeeded ? EState.Failed : 
-                ret == EState.Running ? EState.Running :
-                EState.Succeeded;
+            return ret.Value switch
+            {
+                EState.Succeeded => EState.Failed,
+                EState.Failed => EState.Succeeded,
+                EState.Running => EState.Running,
+                _ => ret.Value
+            };
         }
     }
 }

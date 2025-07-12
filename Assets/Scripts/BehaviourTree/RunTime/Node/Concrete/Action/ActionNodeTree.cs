@@ -7,12 +7,7 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeTree : ActionNode, IShowDetail
     {
-        [Required][CanBeNull]
-        public RootNode SubTreeRoot;
-
-        protected override void OnEnableAfter()
-        {
-            OnContinue = dt =>
+        protected override Action<float> OnContinue => dt =>
             {
                 if (SubTreeRoot == null)
                 {
@@ -24,7 +19,8 @@ namespace BehaviourTree
                     return;
                 IsFinished = true;
             };
-        }
+        [Required][CanBeNull]
+        public RootNode SubTreeRoot;
         public string GetDetail()
         {
             return $"SubTree[{SubTreeRoot?.name ?? "null"}]";

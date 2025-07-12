@@ -16,24 +16,22 @@ namespace BehaviourTree
         public string Content;
         public EDebugType DebugType = EDebugType.Log;
 
-        protected override void OnEnableAfter()
-        {
-            OnEnter = () =>
+        protected override Action OnEnter => () =>
             {
                 switch (DebugType)
                 {
-                    case EDebugType.Log:
-                        MyDebug.Log(Content, LogType.Tick);
-                        break;
                     case EDebugType.Warning:
                         MyDebug.LogWarning(Content, LogType.Tick);
                         break;
                     case EDebugType.Error:
                         MyDebug.LogError(Content, LogType.Tick);
                         break;
+                    case EDebugType.Log:
+                    default:
+                        MyDebug.Log(Content, LogType.Tick);
+                        break;
                 }
             };
-        }
 
         public string GetDetail()
         {

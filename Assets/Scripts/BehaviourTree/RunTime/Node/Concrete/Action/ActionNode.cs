@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -7,40 +8,28 @@ namespace BehaviourTree
     public class ActionNode : NodeBase
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
-        
-        [HideInInspector]
-        public Action OnEnter;
+        [CanBeNull] protected virtual Action OnEnter => null;
+        [NotNull] protected virtual Action<float> OnContinue => _ => IsFinished = true;
 
         [HideInInspector]
-        public Action<float> OnContinue;
-        bool isRunning;
-        protected bool IsFinished;
-
-        protected void OnEnable()
+        public bool IsRunning;
+        [HideInInspector]
+        public bool IsFinished;
+        protected override void OnFail()
         {
-            OnContinue = _ => IsFinished = true;
-            Binder.From(State).To(s =>
-            {
-                if(s == EState.Failed)
-                    isRunning = IsFinished = false;
-            });
-            OnEnableAfter();
+            IsRunning = IsFinished = false;
         }
-        
-        protected virtual void OnEnableAfter(){}
-
-
         protected override EState OnTickChild(float dt)
         {
-            if (!isRunning)
+            if (!IsRunning)
             {
                 OnEnter?.Invoke();
-                isRunning = true;
+                IsRunning = true;
             }
-            OnContinue?.Invoke(dt);
+            OnContinue.Invoke(dt);
             if (IsFinished)
             {
-                isRunning = IsFinished = false;
+                IsRunning = IsFinished = false;
                 return EState.Succeeded;
             }
             return EState.Running;

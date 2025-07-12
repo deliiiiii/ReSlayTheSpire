@@ -11,6 +11,7 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeEvent : ActionNode, IShowDetail
     {
+        protected override Action OnEnter => () => BTEvent.SendEvent((EventK1Type, EventK2));
         public EEventK1 EventK1Type;
         [ValueDropdown(nameof(GetK2sByK1))]
         public string EventK2;
@@ -23,11 +24,6 @@ namespace BehaviourTree
             }
             return k2s;
         }
-        protected override void OnEnableAfter()
-        {
-            OnEnter = () => { BTEvent.SendEvent((EventK1Type, EventK2)); };
-        }
-        
         public string GetDetail()
         {
             return $"{EventK1Type.ToString()}::{EventK2}";
