@@ -25,11 +25,21 @@ namespace BehaviourTree
         Dictionary<string, FieldInfo> fieldInfoCache = new();
         public void Set(string fieldName, object value)
         {
-            if (!fieldInfoCache.TryGetValue(fieldName, out var field))
+            if (!fieldInfoCache.TryGetValue(fieldName, out var fieldInfo))
             {
                 fieldInfoCache.Add(fieldName, GetType().GetField(fieldName));
             }
-            field?.SetValue(this, value);
+
+            var genericType = fieldInfo?.FieldType.GetGenericTypeDefinition();
+            var tType = fieldInfo?.FieldType.GetGenericArguments()[0];
+            if (genericType == typeof(Observable<>))
+            {
+                genericType.MakeGenericType(tType)
+                    .GetField("value", BindingFlags.NonPublic | BindingFlags.Instance)
+                    ?.SetValue(fieldInfo.GetValue(this), value);
+                return;
+            }
+            fieldInfo?.SetValue(this, value);
         }
     }
 }

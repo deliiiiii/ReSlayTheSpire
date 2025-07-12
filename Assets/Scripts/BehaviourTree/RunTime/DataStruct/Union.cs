@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -112,6 +113,24 @@ namespace BehaviourTree
                 ret.BoardEValueType = EBoardEValueType.@int;
                 ret.intVal = (int)v;
             }
+            // Observable<T>
+            else if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Observable<>))
+            {
+                var innerType = t.GetGenericArguments()[0];
+                ret.BoardEValueType = ConvertType(innerType);
+                if (ret.BoardEValueType == EBoardEValueType.@object)
+                {
+                    MyDebug.LogError($"Observable<{innerType.Name}> is not supported in Union");
+                }
+                else
+                {
+                    ret = Create(innerType, typeof(Observable<>)
+                        .MakeGenericType(innerType)
+                        .GetField("value", BindingFlags.NonPublic | BindingFlags.Instance)
+                        ?.GetValue(v));
+                }
+                
+            }
             else
             {
                 MyDebug.LogError($"Unexpected type {t}");
@@ -128,6 +147,8 @@ namespace BehaviourTree
             if (t == typeof(string)) return EBoardEValueType.@string;
             if (t == typeof(Vector3)) return EBoardEValueType.@Vector3;
             if (t.IsEnum) return EBoardEValueType.@int;
+            if (t.GetGenericTypeDefinition() == typeof(Observable<>))
+                return ConvertType(t.GetGenericArguments()[0]);
             return EBoardEValueType.@object;
         }
         public object GetValue()

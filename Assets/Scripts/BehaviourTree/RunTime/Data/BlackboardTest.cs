@@ -15,5 +15,7 @@ namespace BehaviourTree
         public bool Boollll;
         public string Stringggg;
         public Vector3 Vector3333;
+
+        public Observable<int> IntObservable;
     }
 }

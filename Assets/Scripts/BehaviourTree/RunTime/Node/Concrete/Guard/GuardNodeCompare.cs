@@ -93,7 +93,7 @@ namespace BehaviourTree
                 CompareType.LessThanOrEqual => "<=",
                 _ => "?"
             };
-            return $"{Blackboard?.name ?? "null"}.{SelectedOption} {compareSymbol} {ToValue.GetValue()}";
+            return $"{Blackboard?.name ?? "null"}.{SelectedOption}({fromValue.GetValue()}) {compareSymbol} {ToValue.GetValue()}";
         }
     }
 }
