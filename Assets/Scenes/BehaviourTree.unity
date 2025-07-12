@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 151640479}
   - component: {fileID: 151640480}
   m_Layer: 0
-  m_Name: TreeHolder F
+  m_Name: TreeHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

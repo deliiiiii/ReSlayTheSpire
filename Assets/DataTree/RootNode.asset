@@ -115,6 +115,32 @@ MonoBehaviour:
   ChildList:
   - {fileID: 4319439301526744795}
   Running: 1
+--- !u!114 &1891296194845640679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4316b55131de47a0bbb28a652c8b75d3, type: 3}
+  m_Name: ActionNodeTree
+  m_EditorClassIdentifier: 
+  Position: {x: 0, y: 0}
+  Size: {x: 0, y: 0}
+  GuardNode: {fileID: 0}
+  ChildList: []
+  HasDebug: 0
+  DebugContent: 
+  DebugType: 0
+  HasDelay: 0
+  DelayType: 0
+  DelayFrames: 0
+  DelayFramesTimer: 0
+  DelaySeconds: 0
+  DelaySecondsTimer: 0
+  SubTreeRoot: {fileID: 0}
 --- !u!114 &2959327518532414317
 MonoBehaviour:
   m_ObjectHideFlags: 0

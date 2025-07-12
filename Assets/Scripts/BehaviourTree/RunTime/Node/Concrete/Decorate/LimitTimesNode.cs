@@ -22,12 +22,10 @@ namespace BehaviourTree
                 LastChild?.RecursiveDo(CallReset);
                 return EState.Succeeded;
             }
-            var ret = LastChild?.TickTemplate(dt);
-            if(ret == null)
-                return EState.Succeeded;
+            var ret = LastChild?.TickTemplate(dt) ?? EState.Succeeded;
             if(ret == EState.Succeeded)
                 LimitTimer++;
-            return ret.Value;
+            return ret;
         }
         public string GetDetail()
         {

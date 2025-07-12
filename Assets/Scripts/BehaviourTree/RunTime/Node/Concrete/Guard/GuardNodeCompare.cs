@@ -24,7 +24,7 @@ namespace BehaviourTree
             {
                 if (fromValue.BoardEValueType == EBoardEValueType.@null || ToValue.BoardEValueType == EBoardEValueType.@null)
                 {
-                    // MyDebug.LogError("SerializedProperty or CompareToValue is null");
+                    // MyDebug.LogError("fromValue or ToValue is null");
                     return false;
                 }
                 return CompareType switch

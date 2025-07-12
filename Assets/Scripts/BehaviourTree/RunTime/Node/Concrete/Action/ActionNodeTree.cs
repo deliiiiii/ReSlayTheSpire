@@ -28,7 +28,8 @@ namespace BehaviourTree
         public RootNode SubTreeRoot;
         public new string GetDetail()
         {
-            return $"设置延迟无效！\n{base.GetDetail()}SubTree:{SubTreeRoot?.name ?? "null"}";
+            string warn = HasDelay ? "在这个节点上设置延迟无效！\n" : string.Empty;
+            return $"{warn}{base.GetDetail()}SubTree:{SubTreeRoot?.name ?? "null"}";
         }
     }
 }
