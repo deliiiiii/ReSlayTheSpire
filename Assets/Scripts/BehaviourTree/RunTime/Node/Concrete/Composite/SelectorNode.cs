@@ -52,6 +52,8 @@ namespace BehaviourTree
 
         public string GetDetail()
         {
+            if (!IsRandom)
+                return string.Empty;
             return $"Ran:[{string.Join(",", FixedSelections)}]";
         }
     }

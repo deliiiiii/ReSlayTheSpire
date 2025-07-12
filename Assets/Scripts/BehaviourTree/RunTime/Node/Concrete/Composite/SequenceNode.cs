@@ -9,8 +9,8 @@ namespace BehaviourTree
         {
             if (State.Value is not EState.Running)
             {
-                curNode = ChildLinkedList?.First;
                 RecursiveDo(CallReset);
+                curNode = ChildLinkedList?.First;
             }
             
             while (curNode != null)
