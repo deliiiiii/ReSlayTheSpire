@@ -86,7 +86,7 @@ MonoBehaviour:
   DelayFrames: 0
   DelayFramesTimer: 0
   DelaySeconds: 0.2
-  DelaySecondsTimer: 0
+  DelaySecondsTimer: 0.17999998
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

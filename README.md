@@ -1,16 +1,16 @@
 # 1 创建（或打开）配置文件(.asset)
 
-### 1.1 创建根节点(referred)
+### 1.1 创建根节点
 
 推荐在Assets/DataTree/中，右键Create-BahaviourTree-RootNode，创建根节点RootNode x.asset（资源名字任意）
 
 ![image-20250706193435324](https://raw.githubusercontent.com/deliiiiii/PictureRep/main/25/7/image-20250706193435324.png)
 
-用法：详见[3 运行](#3 运行(referred))
+用法：详见[3 运行]
 
 
 
-### 1.2 创建数据黑板(referred)
+### 1.2 创建数据黑板
 
 可以自定义脚本继承BahaviourTree.Blackboard类（Backboard继承ScriptableObject）。
 
@@ -52,11 +52,11 @@ Vector3
 Observable<T> // 一个包装类（其中T也是以上列出来的数据类型），定义了event Action<T> OnValueChangedAfter（值的变化事件）（其他更复杂的事件如【累计增加】【每间隔xx时间】咕咕），与Binder（自研数据绑定类）联合有妙妙效果，会让你感觉再也不用关注数据变化，写代码从此变成了体力活！
 ```
 
-用法：可被拖入GuardNodeCompare、ActionNodeSetValue节点的Blackboard字段，详见[2 编辑行为树](##2 编辑行为树(referred))
+用法：可被拖入GuardNodeCompare、ActionNodeSetValue节点的Blackboard字段，详见[2 编辑行为树]
 
 
 
-### 1.3 节点发送的事件名(referred)
+### 1.3 节点发送的事件名
 
 事件的键采用了双重字典的形式：
 
@@ -70,11 +70,11 @@ k1可扩充（只需在Assets/Scripts/BahaviourTree/RunTime/Event/BTEvent.cs的E
 
 k2可扩充（在Assets/DataTree/BTEventConfig.asset文件中，在某个Key的Value列表上点击+），不要删。
 
-用法：可在ActionNodeEvent节点上选择键名，详见[2 编辑行为树](##2 编辑行为树(referred))
+用法：可在ActionNodeEvent节点上选择键名，详见[2 编辑行为树]
 
-# 2 编辑行为树(referred)
+# 2 编辑行为树
 
-在Project窗口中双击在[1.1](##1.1 创建根节点(referred))中创建的.asset文件，即可打开节点编辑器，不同文件对应的编辑器窗口可以多开，窗口标题显示为文件名。
+在Project窗口中双击在[1.1]中创建的.asset文件，即可打开节点编辑器，不同文件对应的编辑器窗口可以多开，窗口标题显示为文件名。
 
 
 
@@ -103,9 +103,9 @@ k2可扩充（在Assets/DataTree/BTEventConfig.asset文件中，在某个Key的V
 | 子类名                 | Inspector                                                    | 执行                            | 返回          |
 | ---------------------- | ------------------------------------------------------------ | ------------------------------- | ------------- |
 | **ActionNodeEmpty**    | 什么其他的都没有                                             | 只是基类的Debug、Delay          | **Succeeded** |
-| **ActionNodeEvent**    | 指定[1.3](##1.3 节点发送的事件名(referred))中定义的双重键（Odin序列化了两个下拉框，无需手动输入k2字符串，键的扩充方法已在上文描述） | 发送一次名为k2的事件            | **Succeeded** |
-| **ActionNodeSetValue** | 拖入[1.2](##1.2 创建数据黑板(referred))中创建的数据黑板，指定黑板类中的字段名（反射自动拿到名字）、指定目标值（反射自动拿到类型） | 将黑板上的指定字段值改为ToValue | **Succeeded** |
-| **ActionNodeTree**     | 拖入一个[1.1](##1.1 创建根节点(referred))中创建的根节点      | 子树                            | 子树的返回值  |
+| **ActionNodeEvent**    | 指定[1.3]中定义的双重键（Odin序列化了两个下拉框，无需手动输入k2字符串，键的扩充方法已在上文描述） | 发送一次名为k2的事件            | **Succeeded** |
+| **ActionNodeSetValue** | 拖入[1.2]中创建的数据黑板，指定黑板类中的字段名（反射自动拿到名字）、指定目标值（反射自动拿到类型） | 将黑板上的指定字段值改为ToValue | **Succeeded** |
+| **ActionNodeTree**     | 拖入一个[1.1]中创建的根节点                                  | 子树                            | 子树的返回值  |
 
 ### 组合节点
 
@@ -152,7 +152,7 @@ PPS：节点的端口连接限制（输入or输出、连单个or多个、连接�
 
 
 
-# **3 运行(referred)**
+# **3 运行**
 
 打开场景Scenes/BehaviourTree.unity，找到TreeHolder物体上的脚本TreeHolder.cs
 
