@@ -22,18 +22,7 @@ namespace BehaviourTree
         public Blackboard Blackboard;
         [PropertyOrder(20)]
         public Union ToValue;
-        Dictionary<string, FieldInfo> fieldInfoDic => GetFieldInfoDic();
-        Dictionary<string, FieldInfo> GetFieldInfoDic()
-        {
-            var ret = new Dictionary<string, FieldInfo>();
-            if (Blackboard == null)
-                return ret;
-            Blackboard.GetType().GetFields().ForEach(fieldInfo =>
-            {
-                ret.TryAdd(fieldInfo.Name, fieldInfo);
-            });
-            return ret;
-        }
+        Dictionary<string, FieldInfo> fieldInfoDic => Blackboard?.GetFieldInfoDic();
         [ValueDropdown(nameof(GetOptions))][OnValueChanged(nameof(OnOptionChanged))]
         public string SelectedOption;
         List<string> GetOptions()

@@ -15,5 +15,10 @@ namespace BehaviourTree
         public Vector3 Vector3333;
 
         public Observable<int> IntObservable;
+
+        void OnEnable()
+        {
+            Binder.From(IntObservable).To(x => MyDebug.Log(x));
+        }
     }
 }

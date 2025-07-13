@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
-  m_Name: RootNode
+  m_Name: RootNode Gacha
   m_EditorClassIdentifier: 
   Position: {x: 592, y: 166.4}
   Size: {x: 205.59998, y: 92.000015}

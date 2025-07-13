@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -9,6 +10,15 @@ namespace BehaviourTree
     [Serializable]
     public abstract class Blackboard : ScriptableObject
     {
+        public Dictionary<string, FieldInfo> GetFieldInfoDic()
+        {
+            var ret = new Dictionary<string, FieldInfo>();
+            GetType().GetFields().ForEach(fieldInfo =>
+            {
+                ret.TryAdd(fieldInfo.Name, fieldInfo);
+            });
+            return ret;
+        }
         public object Get(string fieldName)
         {
             // var param = Expression.Parameter(GetType(), "x");
@@ -37,7 +47,7 @@ namespace BehaviourTree
                 if (genericType == typeof(Observable<>))
                 {
                     genericType.MakeGenericType(tType)
-                        .GetField("value", BindingFlags.NonPublic | BindingFlags.Instance)
+                        .GetProperty("Value", BindingFlags.Public | BindingFlags.Instance)
                         ?.SetValue(fieldInfo.GetValue(this), value);
                 }
                 return;
