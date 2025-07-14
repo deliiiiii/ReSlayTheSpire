@@ -16,7 +16,7 @@ namespace BehaviourTree
             EditorUtility.SetDirty(this);
             
             
-            // // 删除不存在的节点类型
+            // 删除不存在的节点类型
             var nodeTypeNames = TypeCache.NodeGeneralTypes.Select(x => x.Name);
             TypeToPortToDrawData.RemoveAll(kvp => !nodeTypeNames.Contains(kvp.Key));
             
