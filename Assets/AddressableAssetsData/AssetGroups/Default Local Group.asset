@@ -17,11 +17,113 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: ce7f416894bb52b4c889c890aeb32539
   m_SerializeEntries:
+  - m_GUID: 2874f57fde84cfe42bae288d31b1b5a7
+    m_Address: Assets/Art/BoxFigma/Box_3 (1).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3bfbd0fddc1858647917880d408ecbf5
+    m_Address: Assets/Art/BoxFigma/Box_4.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3dd4b36622243f040b51b2568aa7ae8a
+    m_Address: Assets/Art/BoxFigma/Box_2 (1).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4e2c560a50a47a04cb529cf58647da14
+    m_Address: Assets/Art/BoxFigma/Box_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63c25e29429f1d242a4932c0c351e3a9
+    m_Address: Assets/Art/BoxFigma/Box_3.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6470d8ee607cabd44975e7ef67a7d2d9
+    m_Address: Assets/Art/BoxFigma/Box_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b8225ef16065ba4e978add3119cee64
+    m_Address: Assets/Art/BoxFigma/Box_2 (3).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8096de72274f0744ebffbbe418170972
     m_Address: BTEventConfig
     m_ReadOnly: 0
     m_SerializedLabels:
     - DDellii
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 870a07af1c4e9664d9dd73a95efec143
+    m_Address: Assets/Art/BoxFigma/Box_2 (2).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f9c0e5b0522e674880128b46c2941d1
+    m_Address: Assets/Art/BoxFigma/Box_0.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 917bb6972224c0542a67f34742a4ac97
+    m_Address: Assets/Art/BoxFigma/Box_1 (2).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9cb1dcc053fbe8e4fb0377e21419e307
+    m_Address: Assets/Art/BoxFigma/Box_1 (1).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: adc2a86942c46b243b004068efa6a94c
+    m_Address: Assets/Art/BoxFigma/Box_t1 (2).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc9930c874dd2c844ac4f8a5a70915d8
+    m_Address: Assets/Art/BoxFigma/Box_t1.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bcaa0e0d0150e204b82a07aff6dd923b
+    m_Address: Assets/Art/BoxFigma/Box_3 (3).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cd1f10ccdfd906d44b6814853b9b9945
+    m_Address: Assets/Art/BoxFigma/Box_1 (3).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d1106512dee06f64bab15e1e81a57de2
+    m_Address: Assets/Art/BoxFigma/Box_3 (2).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da601f904018ef845a552d51eed8193c
+    m_Address: Assets/Art/BoxFigma/Box_t1 (1).png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BoxFigma
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 1055dd26826e7344f8716ae7d7f81e84, type: 2}

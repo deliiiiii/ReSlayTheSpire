@@ -84,13 +84,67 @@ public static class Resourcer
             return (T)assetHandle.Result;
         }
 
+        // /// <summary>
+        // /// 通过Label加载一组资源
+        // /// </summary>
+        // /// <param name="label"></param>
+        // /// <param name="parallel">并行加载</param>
+        // /// <exception cref="MFException"></exception>
+        // public static async UniTask LoadAssetsAsyncByLabel(string label, bool parallel = false)
+        // {
+        //     IList<IResourceLocation> resourceLocations = null;
+        //     // 先试图从缓存中获取Locations
+        //     if (!_labelLocationsCache.ContainsKey(label))
+        //     {
+        //         resourceLocations = await LoadResourceLocationsAsync(label);
+        //     }
+        //     else
+        //     {
+        //         resourceLocations = _labelLocationsCache[label];
+        //     }
+        //
+        //     if (resourceLocations.Count == 0)
+        //     {
+        //         throw new Exception($"标签[{label}]定位到的资源地址数量为0");
+        //     }
+        //
+        //     Stopwatch st = new Stopwatch();
+        //     st.Start();
+        //     // 加载资源
+        //     List<UniTask<Object>> tasks = parallel ? new List<UniTask<Object>>() : null;
+        //     foreach (var location in resourceLocations)
+        //     {
+        //         if (!parallel)
+        //         {
+        //             try
+        //             {
+        //                 await LoadAssetAsync<Object>(location.PrimaryKey);
+        //             }
+        //             catch (Exception e)
+        //             {
+        //                 MyDebug.LogError(e.Message);
+        //                 continue;
+        //             }
+        //         }
+        //         else
+        //         {
+        //             tasks.Add(LoadAssetAsync<Object>(location.PrimaryKey));
+        //         }
+        //     }
+        //
+        //     if (parallel) await UniTask.WhenAll(tasks);
+        //     st.Stop();
+        //     // MyDebug.LogInfo($"加载标签组{label}资源用时:{st.Elapsed.TotalMilliseconds}ms");
+        // }
+        
         /// <summary>
-        /// 通过Label加载一组资源
+        /// 通过Label异步加载一组资源，并返回资源列表
         /// </summary>
-        /// <param name="label"></param>
-        /// <param name="parallel">并行加载</param>
-        /// <exception cref="MFException"></exception>
-        public static async UniTask LoadAssetsAsyncByLabel(string label, bool parallel = false)
+        /// <param name="label">资源标签</param>
+        /// <param name="parallel">是否并行加载, 默认为true</param>
+        /// <typeparam name="T">资源类型</typeparam>
+        /// <returns>加载的资源列表</returns>
+        public static async UniTask<List<T>> LoadAssetsAsyncByLabel<T>(string label, bool parallel = true) where T : Object
         {
             IList<IResourceLocation> resourceLocations = null;
             // 先试图从缓存中获取Locations
@@ -110,32 +164,42 @@ public static class Resourcer
 
             Stopwatch st = new Stopwatch();
             st.Start();
-            // 加载资源
-            List<UniTask<Object>> tasks = parallel ? new List<UniTask<Object>>() : null;
-            foreach (var location in resourceLocations)
+            List<T> loadedAssets = new List<T>();
+            List<UniTask<T>> tasks = parallel ? new List<UniTask<T>>() : null;
+            try
             {
-                if (!parallel)
+                foreach (var location in resourceLocations)
                 {
-                    try
-                    {
-                        await LoadAssetAsync<Object>(location.PrimaryKey);
-                    }
-                    catch (Exception e)
-                    {
-                        MyDebug.LogError(e.Message);
-                        continue;
-                    }
+                    
+                        if (!parallel)
+                        {
+                            var asset = await LoadAssetAsync<T>(location.PrimaryKey);
+                            if (asset != null)
+                            {
+                                loadedAssets.Add(asset);
+                            }
+                            continue;
+                        }
+                        tasks.Add(LoadAssetAsync<T>(location.PrimaryKey));
+                    
                 }
-                else
+
+                if (parallel)
                 {
-                    tasks.Add(LoadAssetAsync<Object>(location.PrimaryKey));
+                    var results = await UniTask.WhenAll(tasks);
+                    loadedAssets.AddRange(results.Where(asset => asset != null));
                 }
             }
+            catch (Exception e)
+            {
+                MyDebug.LogError($"{typeof(T)} {e.Message}");
+            }
 
-            if (parallel) await UniTask.WhenAll(tasks);
             st.Stop();
-            // MyDebug.LogInfo($"加载标签组{label}资源用时:{st.Elapsed.TotalMilliseconds}ms");
+            // MFLogger.LogInfo($"加载标签组{label}资源用时:{st.Elapsed.TotalMilliseconds}ms");
+            return loadedAssets;
         }
+        
 
         /// <summary>
         /// 尝试从缓存中获取资源

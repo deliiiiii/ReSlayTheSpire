@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: ce7f416894bb52b4c889c890aeb32539
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 7181bfdaa8429df81daaa2b8b7101176
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -87,6 +87,7 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - DDellii
+    - BoxFigma
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 92468b259f906c54f8f2e4250d056bda, type: 2}
