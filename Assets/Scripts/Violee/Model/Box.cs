@@ -51,22 +51,7 @@ namespace Violee
                                 && (y & 10) != 10,
                 _ => y == from || (y | from) != y,
             };
-            // MyDebug.Log(
-            //     $"x = {x}, y = {y}, from = {from}, sWallIsConnect = {sIsConnect}, tWallIsConnect = {tIsConnect}");
             return sIsConnect && tIsConnect;
-        }
-        
-        [Button]
-        public void Test()
-        {
-            // 将walls转化为8位二进制输出
-            MyDebug.Log(Convert.ToString(walls, 2).PadLeft(8, '0'));
-            MyDebug.Log(IsConnect(this, EBoxSide.Up, EBoxSide.Right));
-            MyDebug.Log(IsConnect(this, EBoxSide.Right, EBoxSide.Down));
-            MyDebug.Log(IsConnect(this, EBoxSide.Down, EBoxSide.Left));
-            MyDebug.Log(IsConnect(this, EBoxSide.Left, EBoxSide.Up));
-            MyDebug.Log(IsConnect(this, EBoxSide.Up, EBoxSide.Down));
-            MyDebug.Log(IsConnect(this, EBoxSide.Right, EBoxSide.Left));
         }
     }
 }
