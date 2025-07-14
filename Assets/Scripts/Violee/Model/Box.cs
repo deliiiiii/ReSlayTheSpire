@@ -38,17 +38,17 @@ namespace Violee
             var from = small;
             if (big == 8 && small == 1)
                 from = 8;
-            var sIsConnect = (x & (s1 | s2)) == 0;
+            var sIsConnect = ((x & s1) | (x & s2)) == 0;
             var tIsConnect = (big, small) switch
             {
-                (4, 1) => (y & 0b0001 & 0b0010) == 0
-                                && (y & 0b0100 & 0b1000) == 0
-                                && (y & 0b0001 & 0b0100) == 0
-                                && (y & 0b0010 & 0b1000) == 0,
-                (8, 2) => (y & 0b0001 & 0b1000) == 0
-                                && (y & 0b0010 & 0b0100) == 0
-                                && (y & 0b0001 & 0b0100) == 0
-                                && (y & 0b0010 & 0b1000) == 0,
+                (4, 1) => (y & 3) != 3
+                                && (y & 12) != 12
+                                && (y & 5) != 5
+                                && (y & 10) != 10,
+                (8, 2) => (y & 9) != 9
+                                && (y & 6) != 6
+                                && (y & 5) != 5
+                                && (y & 10) != 10,
                 _ => y == from || (y | from) != y,
             };
             // MyDebug.Log(
