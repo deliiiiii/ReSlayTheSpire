@@ -19,6 +19,6 @@ namespace BehaviourTree
         void OnEnable()
         {
             Binder.From(IntObservable).To(x => MyDebug.Log(x));
-        }
+        }   
     }
 }

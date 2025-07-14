@@ -1,26 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee
 {
-    public class TestBoxGenerator : MonoBehaviour
+    public class MapModel : MonoBehaviour
     {
+        MapData mapData;
+        // Dictionary<Loc, BoxData> boxDic;
         public int Height = 4;
         public int Width = 6;
-
-        public Box Box;
-        async void Awake()
+        public SerializableDictionary<int, Sprite> SpriteDic;
+        async Task Awake()
         {
             var textures = await Resourcer.LoadAssetsAsyncByLabel<Texture2D>("BoxFigma");
-            MyDebug.Log($"Loaded {textures.Count} textures");
-
-            List<Sprite> sprites = new();
             textures.ForEach(t =>
             {
-                sprites.Add(Sprite.Create(
+                var match = Regex.Match(t.name, @"\d+");
+                int id = match.Success ? int.Parse(match.Value) : 0;
+                SpriteDic.Add(id, Sprite.Create(
                     t,
                     new Rect(0, 0, t.width, t.height),
                     new Vector2(0.5f, 0.5f),
@@ -29,22 +29,19 @@ namespace Violee
                     SpriteMeshType.Tight
                 ));
             });
-
+        }
+        public void StartGenerate()
+        {
             for(int i = 0; i < Height; i++)
             {
                 for(int j = 0; j < Width; j++)
                 {
-                    var box = new GameObject($"Box {i} {j}");
+                    var box = new GameObject($"Box {j} {i}");
                     box.transform.SetParent(transform);
                     box.transform.position = new Vector3(j, i, 0);
                     var boxRenderer = box.AddComponent<SpriteRenderer>();
-                    boxRenderer.sprite = sprites.RandomItem();
+                    boxRenderer.sprite = SpriteDic.Values.ToList().RandomItem();
                 }
-            }
-
-            for (int i = 1; i <= 8; i++)
-            {
-                MyDebug.Log((i & 3) == 0);
             }
         }
     }
