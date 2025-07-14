@@ -11,12 +11,13 @@ namespace Violee
         public int Height = 4;
         public int Width = 6;
 
+        public Box Box;
         async void Awake()
         {
             var textures = await Resourcer.LoadAssetsAsyncByLabel<Texture2D>("BoxFigma");
             MyDebug.Log($"Loaded {textures.Count} textures");
 
-            List<Sprite> sprites = new(); 
+            List<Sprite> sprites = new();
             textures.ForEach(t =>
             {
                 sprites.Add(Sprite.Create(
@@ -39,6 +40,11 @@ namespace Violee
                     var boxRenderer = box.AddComponent<SpriteRenderer>();
                     boxRenderer.sprite = sprites.RandomItem();
                 }
+            }
+
+            for (int i = 1; i <= 8; i++)
+            {
+                MyDebug.Log((i & 3) == 0);
             }
         }
     }
