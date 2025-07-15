@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
@@ -25,6 +26,36 @@ public static class ListExt
     public static T RandomItem<T>(this List<T> list)
     {
         return (list?.Count ?? 0) == 0 ? default : list[UnityEngine.Random.Range(0, list.Count)];
+    }
+    public static T RandomItem<T>(this List<T> list, Func<T, bool> filter)
+    {
+        return (list?.Count ?? 0) == 0 ? default : list.Where(filter).ToList().RandomItem();
+    }
+    
+    public static T RandomItemWeighted<T>(this List<T> list, Func<T, bool> filter, Func<T, int> weightFunc)
+    {
+        if ((list?.Count ?? 0) == 0)
+            return default;
+
+        var filteredList = list.Where(filter).ToList();
+        if (filteredList.Count == 0)
+            return default;
+
+        var weights = filteredList.Select(weightFunc).ToList();
+        var totalWeight = weights.Sum();
+        var randomValue = UnityEngine.Random.Range(0, totalWeight);
+        var curWeight = 0;
+
+        for (var i = 0; i < filteredList.Count; i++)
+        {
+            curWeight += weights[i];
+            if (curWeight >= randomValue)
+            {
+                return filteredList[i];
+            }
+        }
+
+        return default;
     }
 
     [NotNull]

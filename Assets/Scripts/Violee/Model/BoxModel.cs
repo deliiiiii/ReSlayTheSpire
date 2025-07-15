@@ -1,37 +1,47 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Sirenix.OdinInspector;
+using UnityEditor.Callbacks;
+using UnityEngine;
 
 namespace Violee
 {
     public class BoxModel : MonoBehaviour
     {
+        [ShowInInspector]
         BoxData boxData;
-        public static bool IsConnect(BoxData b, EBoxSide s1, EBoxSide s2)
+        
+        // 输入方向，输出可以
+        static Dictionary<byte, List<byte>> fromTosDic;
+        static Transform BoxParent = new GameObject("BoxParent").transform;
+        static Dictionary<Loc, BoxModel> boxModelDic = new ();
+        
+        // public static bool CanGoThroughFromTo(BoxData b, EBoxSide s1, EBoxSide s2)
+        // {
+        //     return CanGoThroughFromTo(b.Walls, (byte)s1, (byte)s2);
+        // }
+        public static void OnCreateBoxData(Loc loc, BoxData fBoxData)
         {
-            return IsConnect(b, (byte)s1, (byte)s2);
+            // TODO 对象池
+            var boxGO = new GameObject($"Box {loc.X} {loc.Y}");
+            boxGO.transform.SetParent(BoxParent);
+            boxGO.transform.position = new Vector3(loc.X, loc.Y, 0);
+            
+            var boxRenderer = boxGO.AddComponent<SpriteRenderer>();
+            boxRenderer.sprite = fBoxData.Sprite;
+            
+            var boxModel = boxGO.AddComponent<BoxModel>();
+            boxModel.boxData = fBoxData;
+            
+            boxModelDic.Add(loc, boxModel);
         }
-        static bool IsConnect(BoxData b,byte s1, byte s2)
+        public static void OnDestroyBoxData(Loc loc)
         {
-            var big = s1 > s2 ? s1 : s2;
-            var small = s1 < s2 ? s1 : s2;
-            var x = b.Walls & 0b1111;
-            var y = b.Walls >> 4;
-            var from = small;
-            if (big == 8 && small == 1)
-                from = 8;
-            var sIsConnect = ((x & s1) | (x & s2)) == 0;
-            var tIsConnect = (big, small) switch
-            {
-                (4, 1) => (y & 3) != 3
-                          && (y & 12) != 12
-                          && (y & 5) != 5
-                          && (y & 10) != 10,
-                (8, 2) => (y & 9) != 9
-                          && (y & 6) != 6
-                          && (y & 5) != 5
-                          && (y & 10) != 10,
-                _ => y == from || (y | from) != y,
-            };
-            return sIsConnect && tIsConnect;
+            // TODO 对象池
+            Destroy(boxModelDic[loc].gameObject);
+            boxModelDic.Remove(loc);
         }
     }
 }

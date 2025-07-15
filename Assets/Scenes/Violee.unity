@@ -166,10 +166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41172b789579468b958b3171bf09844f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Height: 4
+  Height: 6
   Width: 6
-  SpriteDic:
-    list: []
+  BoxConfig: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
 --- !u!1 &551786670
 GameObject:
   m_ObjectHideFlags: 0
