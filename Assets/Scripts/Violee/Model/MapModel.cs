@@ -94,27 +94,27 @@ namespace Violee
 
         public bool RefreshConfigOnAwake;
         public int YieldCount;
-        public int Height = 4;
-        public int Width = 6;
+
         
-        MapData mapData;
-        Stack<Loc> edgeLocStack;
+        #region BoxConfig
         [SerializeField]
         BoxConfig BoxConfig;
         List<BoxConfigSingle> BoxConfigs => BoxConfig.BoxConfigs;
-        
-        static BoxConfigSingle emptyBoxConfig;
-        static List<byte> allBoxWalls;
-        static EBoxSide[] allBoxSides;
+        BoxConfigSingle emptyBoxConfig;
+        List<byte> allBoxWalls;
+        EBoxSide[] allBoxSides;
         /// <summary>
         /// (walls, [outDir1, ...])
         /// </summary>
-        static Dictionary<byte, List<EBoxSide>> canGoOutDirsDic;
+        Dictionary<byte, List<EBoxSide>> canGoOutDirsDic;
         /// <summary>
         /// (dir, oppositeDir)
         /// </summary>
-        static Dictionary<EBoxSide, EBoxSide> oppositeDirDic;
-        static List<(Loc, EBoxSide)> GetNextLocAndDirList(Loc thisLoc)
+        Dictionary<EBoxSide, EBoxSide> oppositeDirDic;
+        #endregion
+        
+        
+        List<(Loc, EBoxSide)> GetNextLocAndDirList(Loc thisLoc)
         {
             var nextLocs = new List<(Loc, EBoxSide)>();
             allBoxSides.ForEach(dir =>
@@ -131,11 +131,16 @@ namespace Violee
             });
             return nextLocs;
         }
+        
+        
+        #region Map
+        public int Height = 4;
+        public int Width = 6;
+        MapData mapData;
+        Stack<Loc> edgeLocStack;
+        
         bool InMap(Loc loc) => loc.X >= 0 && loc.X < Width && loc.Y >= 0 && loc.Y < Height;
         bool HasBox(Loc loc) => mapData.BoxDic.ContainsKey(loc);
-
-        
-        #region Add & Remove
         void AddBox(Loc loc, BoxConfigSingle boxConfigSingle)
         {
             var t = boxConfigSingle.Texture2D;
@@ -154,20 +159,6 @@ namespace Violee
             mapData?.BoxDic?.Keys.ForEach(BoxModel.OnDestroyBoxData);
             mapData?.BoxDic?.Clear();
         }
-        #endregion
-        
-        
-        #region Event
-        void OnPlayerInputMove(int curX, int curY, int dx, int dy)
-        {
-            var nextLoc = new Loc(curX + dx, curY + dy);
-            if (!InMap(nextLoc))
-                return;
-            OnInputEnd?.Invoke(nextLoc);
-        }
-        #endregion
-        
-        
         [Button]
         async Task StartGenerate(Loc startLoc)
         {
@@ -220,5 +211,17 @@ namespace Violee
             
             OnGenerateMap?.Invoke();
         }
+        #endregion
+        
+        
+        #region Event
+        void OnPlayerInputMove(int curX, int curY, int dx, int dy)
+        {
+            var nextLoc = new Loc(curX + dx, curY + dy);
+            if (!InMap(nextLoc))
+                return;
+            OnInputEnd?.Invoke(nextLoc);
+        }
+        #endregion
     }
 }
