@@ -7,6 +7,5 @@ namespace Violee
     public class BoxConfig : ScriptableObject
     {
         public List<BoxConfigSingle> BoxConfigList;
-        public bool RefreshConfigOnAwake;
     }
 }

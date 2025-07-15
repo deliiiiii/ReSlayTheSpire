@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -19,16 +20,21 @@ namespace Violee
     {
         public EBoxDir Dir;
         public Observable<int> CostWall;
-        public List<BoxPointData> NextPointInBoxList;
+        public List<BoxPointData> NextPointsInBox;
         public BoxData BelongBox;
+        public Vector3 Pos => 
+            new (BelongBox.Pos.x + BoxHelper.dirToVec2Dic[Dir].x * offset, 
+                BelongBox.Pos.y + BoxHelper.dirToVec2Dic[Dir].y * offset, 0);
         public void UpdateNextPointCost()
         {
-            NextPointInBoxList.ForEach(nextPoint =>
+            foreach (var nextPoint in NextPointsInBox)
             {
                 nextPoint.CostWall.Value += 
                     BelongBox.CostTilt(Dir, nextPoint.Dir);
-            });
+            }
         }
+
+        static float offset => Configer.SettingsConfig.BoxCostPosOffset;
     }
     
     [Serializable]
@@ -38,6 +44,10 @@ namespace Violee
         {
             allDirs = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
         }
+        public BoxData()
+        {
+            InitPoint();
+        }
         
         public Vector2Int Pos;
         public byte Walls;
@@ -45,40 +55,40 @@ namespace Violee
         string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
         public const int CrossWallCost = 1;
         public Sprite Sprite;
-        public Dictionary<EBoxDir, BoxPointData> PointDic;
-        static EBoxDir[] allDirs;
+        [NotNull] public Dictionary<EBoxDir, BoxPointData> PointDic;
+        [NotNull] static EBoxDir[] allDirs;
         
         #region Path
-        public void InitPoint(EBoxDir[] allBoxSides)
+        void InitPoint()
         {
             PointDic = new Dictionary<EBoxDir, BoxPointData>();
-            allBoxSides.ForEach(dir =>
+            foreach (var dir in BoxHelper.allBoxDirs)
             {
                 PointDic.Add(dir, new BoxPointData()
                 {
                     Dir = dir,
                     BelongBox = this,
                     CostWall = new (int.MaxValue / 2),
-                    NextPointInBoxList = new List<BoxPointData>()
+                    NextPointsInBox = new List<BoxPointData>()
                 });
-                allDirs.ForEach(dir2 =>
+                foreach (var dir2 in allDirs)
                 {
                     if (dir == dir2)
                         return;
                     if (BoxHelper.oppositeDirDic[dir] == dir2)
                         return;
-                    PointDic[dir].NextPointInBoxList.Add(PointDic[dir2]);
-                });
-            });
+                    PointDic[dir].NextPointsInBox.Add(PointDic[dir2]);
+                }
+            }
         }
-        public int CostStraight(EBoxDir dir) => HasStraightWall(dir) ? 0 : CrossWallCost;
-        public int CostTilt(EBoxDir from, EBoxDir to) => HasTiltWallBetween(from, to) ? 0 : CrossWallCost;
+        public int CostStraight(EBoxDir dir) => CanGoStraightWall(dir) ? 0 : CrossWallCost;
+        public int CostTilt(EBoxDir from, EBoxDir to) => CanGoTiltWallBetween(from, to) ? 0 : CrossWallCost;
         #endregion
         
         
         #region GoCross
-        public static bool HasStraightWall(byte walls, EBoxDir dir) => (walls & (byte)dir) == 0;
-        bool HasStraightWall(EBoxDir dir) => (Walls & (byte)dir) == 0;
+        public static bool CanGoStraightWall(byte walls, EBoxDir dir) => (walls & (byte)dir) == 0;
+        bool CanGoStraightWall(EBoxDir dir) => (Walls & (byte)dir) == 0;
 
         /// <summary>
         /// dir1 dir2必须相邻！
@@ -86,7 +96,7 @@ namespace Violee
         /// <param name="dir1"></param>
         /// <param name="dir2"></param>
         /// <returns></returns>
-        bool HasTiltWallBetween(EBoxDir dir1, EBoxDir dir2)
+        bool CanGoTiltWallBetween(EBoxDir dir1, EBoxDir dir2)
         {
             var bigDir = dir1 > dir2 ? dir1 : dir2;
             var smallDif = dir1 < dir2 ? dir1 : dir2;

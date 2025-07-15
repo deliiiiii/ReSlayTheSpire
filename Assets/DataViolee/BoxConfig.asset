@@ -98,4 +98,3 @@ MonoBehaviour:
     Texture2D: {fileID: 2800000, guid: f4a63bb25786fa844b4f3a837a4d95be, type: 3}
     Sprite: {fileID: 0}
     BasicWeight: 100
-  RefreshConfigOnAwake: 1

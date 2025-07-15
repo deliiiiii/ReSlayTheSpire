@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.UIElements;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Violee
 {
@@ -20,14 +12,21 @@ namespace Violee
         {
             PlayerModel.OnInputMove += OnPlayerInputMove;
         }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+                StartGenerate();
+        }
+
         public int YieldCount;
         public int Height = 4;
         public int Width = 6;
         public Vector2Int StartPos;
-        EBoxDir startDir = EBoxDir.Up;
+        public EBoxDir StartDir = EBoxDir.Up;
         List<Vector2Int> emptyPosList;
-        MapData mapData;
         List<BoxConfigSingle> BoxConfigList => Configer.BoxConfigList;
+        static MapData mapData;
         
         #region Pos Functions
         bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
@@ -35,7 +34,6 @@ namespace Violee
         async Task<BoxData> AddBox(Vector2Int pos, BoxConfigSingle config)
         {
             await YieldFrames();
-            var t = config.Texture2D;
             var boxData = new BoxData()
             {
                 Pos = pos,
@@ -56,7 +54,10 @@ namespace Violee
         }
         void RemoveAllBoxes()
         {
-            mapData?.ForEach(boxData => OnRemoveBox?.Invoke(boxData.Pos));
+            foreach (var boxData in mapData)
+            {
+                OnRemoveBox?.Invoke(boxData.Pos);
+            }
             mapData?.Clear();
             emptyPosList = new List<Vector2Int>();
             for(int j = 0; j < Height; j++)
@@ -108,7 +109,6 @@ namespace Violee
 
         // 防止点击多次按钮
         bool isGenerating;
-        [Button]
         async Task StartGenerate()
         {
             if (isGenerating)
@@ -131,9 +131,8 @@ namespace Violee
         async Task Dijkstra()
         {
             pq = new SimplePriorityQueue<BoxPointData, int>();
-            mapData.ForEach(boxValue => boxValue.InitPoint(BoxHelper.allBoxSides));
             var startBox = mapData[StartPos];
-            var startPoint = startBox.PointDic[startDir];
+            var startPoint = startBox.PointDic[StartDir];
             startPoint.CostWall.Value = 0;
             pq.Enqueue(startPoint, 0);
             while (pq.Count != 0)
@@ -148,15 +147,29 @@ namespace Violee
                 {
                     var oppositeDir = BoxHelper.oppositeDirDic[curPoint.Dir];
                     var nextPoint = nextBox.PointDic[oppositeDir];
-                    var nextCost = nextPoint.CostWall;
-                    nextCost.Value = Math.Min(
-                        nextCost.Value,
+                    var nextCostOb = nextPoint.CostWall;
+                    nextCostOb.Value = Math.Min(
+                        nextCostOb.Value,
                         curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));
+                    pq.Enqueue(nextPoint, nextCostOb.Value);
                 }
-                // Enqueue
+                foreach (var n in curPoint.NextPointsInBox)
+                {
+                    pq.Enqueue(n, n.CostWall);
+                }
+                await YieldFrames();
             }
         }
-        
+
+
+        #region Function Got By Editor
+
+        public static List<BoxPointData> GetAllPoints()
+        {
+            return mapData.SelectMany(x => x.PointDic.Values).ToList();
+        }
+
+        #endregion
         
         #region Event
         public static event Action OnGenerateMap;

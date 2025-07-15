@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: SettingsConfig
   m_EditorClassIdentifier: Assembly-CSharp:Violee:SettingsConfig
   ShowBoxWhenCreated: 1
+  RefreshConfigOnAwake: 0
+  ShowBoxCost: 1
+  BoxCostPosOffset: 0.7

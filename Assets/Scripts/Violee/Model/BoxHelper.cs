@@ -1,32 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee
 {
+    // [InitializeOnLoad]
     public static class BoxHelper
     {
+        public static void GetSth()
+        {
+            
+        }
         static BoxHelper()
         {
             emptyBoxConfig = BoxConfigs.First(x => x.Walls == 0);
             allBoxWalls = BoxConfigs.Select(x => x.Walls).Distinct().ToList();
-            allBoxSides = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
-            
-            canGoOutDirsDic = new Dictionary<byte, List<EBoxDir>>();
-            allBoxWalls.ForEach(w =>
+            allBoxDirs = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
+            canGoOutDirsDic = new Dictionary<byte, HashSet<EBoxDir>>();
+            foreach (var w in allBoxWalls)
             {
-                canGoOutDirsDic.Add(w, new List<EBoxDir>());
-                allBoxSides.ForEach(dir =>
+                canGoOutDirsDic.Add(w, new HashSet<EBoxDir>());
+                foreach (var dir in allBoxDirs)
                 {
-                    if (BoxData.HasStraightWall(w, dir))
+                    if (BoxData.CanGoStraightWall(w, dir))
                     {
                         canGoOutDirsDic[w].Add(dir);
                     }
-                });
-            });
-
+                }
+            }
             oppositeDirDic = new Dictionary<EBoxDir, EBoxDir>()
             {
                 { EBoxDir.Up, EBoxDir.Down },
@@ -45,11 +47,11 @@ namespace Violee
         static List<BoxConfigSingle> BoxConfigs => Configer.BoxConfigList;
         public static BoxConfigSingle emptyBoxConfig;
         public static List<byte> allBoxWalls;
-        public static EBoxDir[] allBoxSides;
+        public static EBoxDir[] allBoxDirs;
         /// <summary>
         /// (walls, [outDir1, ...])
         /// </summary>
-        public static Dictionary<byte, List<EBoxDir>> canGoOutDirsDic;
+        public static Dictionary<byte, HashSet<EBoxDir>> canGoOutDirsDic;
         /// <summary>
         /// (dir, oppositeDir)
         /// </summary>
@@ -70,10 +72,10 @@ namespace Violee
         public static List<(Vector2Int, EBoxDir)> GetNextLocAndDirList(Vector2Int thisPos)
         {
             var ret = new List<(Vector2Int, EBoxDir)>();
-            allBoxSides.ForEach(dir =>
+            foreach (var dir in allBoxDirs)
             {
                 ret.Add((NextPos(thisPos, dir), oppositeDirDic[dir]));
-            });
+            }
             return ret;
         }
     }

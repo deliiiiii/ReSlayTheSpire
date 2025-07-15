@@ -24,8 +24,19 @@ namespace Violee
         protected override void Awake()
         {
             base.Awake();
-            if (BoxConfigIns.RefreshConfigOnAwake)
+            if (SettingsConfig.RefreshConfigOnAwake)
                 _ = LoadConfig();
+            foreach (var boxConfig in BoxConfigList)
+            {
+                var t = boxConfig.Texture2D;
+                boxConfig.Sprite = Sprite.Create(
+                    t,
+                    new Rect(0, 0, t.width, t.height),
+                    new Vector2(0.5f, 0.5f),
+                    100.0f,
+                    0,
+                    SpriteMeshType.Tight);
+            }
         }
 
         async Task LoadConfig()
@@ -34,7 +45,7 @@ namespace Violee
                 return;
             BoxConfigList = new List<BoxConfigSingle>();
             var textures = await Resourcer.LoadAssetsAsyncByLabel<Texture2D>("BoxFigma");
-            textures.ForEach(t =>
+            foreach (var t in textures)
             {
                 var match = Regex.Match(t.name, @"\d+");
                 var id = match.Success ? byte.Parse(match.Value) : new byte();
@@ -47,20 +58,7 @@ namespace Violee
                     BasicWeight = 100,
                 };
                 BoxConfigList.Add(boxConfig);
-            });
-            
-            BoxConfigList.ForEach(boxConfig =>
-            {
-                var t = boxConfig.Texture2D;
-                boxConfig.Sprite = Sprite.Create(
-                    t,
-                    new Rect(0, 0, t.width, t.height),
-                    new Vector2(0.5f, 0.5f),
-                    100.0f,
-                    0,
-                    SpriteMeshType.Tight);
-            });
-            
+            }
 #if UNITY_EDITOR
             EditorUtility.SetDirty(BoxConfigIns);
             AssetDatabase.SaveAssets();

@@ -17,7 +17,7 @@ namespace Violee
             MapModel.OnRemoveBox += DestroyBox;
             MapModel.OnInputEnd += ShowSprite;
         }
-        Dictionary<Vector2Int, BoxModel> boxModelDic = new ();
+        static readonly Dictionary<Vector2Int, BoxModel> boxModelDic = new ();
         #region Event
         void SpawnBox(Vector2Int vector2Int, BoxData fBoxData)
         {
