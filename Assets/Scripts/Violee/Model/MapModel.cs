@@ -90,9 +90,9 @@ namespace Violee
             PlayerModel.OnInputMove += OnPlayerInputMove;
         }
         public static event Action OnGenerateMap;
-        public static event Action<Loc, BoxData> OnAddBox;
-        public static event Action<Loc> OnRemoveBox;
-        public static event Action<Loc> OnInputEnd;
+        public static event Action<Vector2Int, BoxData> OnAddBox;
+        public static event Action<Vector2Int> OnRemoveBox;
+        public static event Action<Vector2Int> OnInputEnd;
 
         public bool RefreshConfigOnAwake;
         public int YieldCount;
@@ -116,9 +116,9 @@ namespace Violee
         #endregion
         
         
-        List<(Loc, EBoxSide)> GetNextLocAndDirList(Loc thisLoc)
+        List<(Vector2Int, EBoxSide)> GetNextLocAndDirList(Vector2Int thisVector2Int)
         {
-            var nextLocs = new List<(Loc, EBoxSide)>();
+            var nextLocs = new List<(Vector2Int, EBoxSide)>();
             allBoxSides.ForEach(dir =>
             {
                 var (dx, dy) = dir switch
@@ -129,7 +129,7 @@ namespace Violee
                     EBoxSide.Right => (1, 0),
                     _ => (0, 0),
                 };
-                nextLocs.Add((new Loc(thisLoc.X + dx, thisLoc.Y + dy), oppositeDirDic[dir]));
+                nextLocs.Add((new Vector2Int(thisVector2Int.x + dx, thisVector2Int.y + dy), oppositeDirDic[dir]));
             });
             return nextLocs;
         }
@@ -138,46 +138,47 @@ namespace Violee
         #region Map
         public int Height = 4;
         public int Width = 6;
+        public Vector2Int StartPos;
         MapData mapData;
-        List<Loc> emptyLocSet;
+        List<Vector2Int> emptyLocSet;
         
-        bool InMap(Loc loc) => loc.X >= 0 && loc.X < Width && loc.Y >= 0 && loc.Y < Height;
-        bool HasBox(Loc loc) => mapData.BoxDic.ContainsKey(loc);
-        async Task AddBox(Loc loc, BoxConfigSingle boxConfigSingle)
+        bool InMap(Vector2Int vector2Int) => vector2Int.x >= 0 && vector2Int.x < Width && vector2Int.y >= 0 && vector2Int.y < Height;
+        bool HasBox(Vector2Int vector2Int) => mapData.BoxDic.ContainsKey(vector2Int);
+        async Task AddBox(Vector2Int vector2Int, BoxConfigSingle boxConfigSingle)
         {
             await YieldFrames();
             var t = boxConfigSingle.Texture2D;
             var boxData = new BoxData(boxConfigSingle.Walls, boxConfigSingle.Sprite);
-            mapData.BoxDic.Add(loc, boxData);
-            emptyLocSet.Remove(loc);
-            OnAddBox?.Invoke(loc, boxData);
-            MyDebug.Log($"Add box {boxConfigSingle.Walls} at {loc}");
+            mapData.BoxDic.Add(vector2Int, boxData);
+            emptyLocSet.Remove(vector2Int);
+            OnAddBox?.Invoke(vector2Int, boxData);
+            MyDebug.Log($"Add box {boxConfigSingle.Walls} at {vector2Int}");
         }
-        void RemoveBox(Loc loc)
+        void RemoveBox(Vector2Int vector2Int)
         {
-            mapData.BoxDic.Remove(loc);
-            emptyLocSet.Add(loc);
-            OnRemoveBox?.Invoke(loc);
+            mapData.BoxDic.Remove(vector2Int);
+            emptyLocSet.Add(vector2Int);
+            OnRemoveBox?.Invoke(vector2Int);
         }
         void RemoveAllBoxes()
         {
             mapData?.BoxDic?.Keys.ForEach(loc => OnRemoveBox?.Invoke(loc));
             mapData?.BoxDic?.Clear();
-            emptyLocSet = new List<Loc>();
+            emptyLocSet = new List<Vector2Int>();
             for(int j = 0; j < Height; j++)
             {
                 for(int i = 0; i < Width; i++)
                 {
-                    emptyLocSet.Add(new Loc(i, j));
+                    emptyLocSet.Add(new Vector2Int(i, j));
                 }
             }
         }
 
-        async Task GenerateOneFakeConnection()
+        async Task GenerateOneFakeConnection(bool startWithStartLoc)
         {
-            var edgeLocStack = new Stack<Loc>();
+            var edgeLocStack = new Stack<Vector2Int>();
             // 每个伪连通块的第一个是空格子
-            var firstLoc = emptyLocSet[0];
+            var firstLoc = startWithStartLoc ? StartPos : emptyLocSet[0];
             await AddBox(firstLoc, emptyBoxConfig);
             edgeLocStack.Push(firstLoc);
             while (edgeLocStack.Count > 0)
@@ -213,7 +214,7 @@ namespace Violee
         // 防止点击多次按钮
         bool isGenerating;
         [Button]
-        async Task StartGenerate(Loc startLoc)
+        async Task StartGenerate()
         {
             if (isGenerating)
                 return;
@@ -221,11 +222,12 @@ namespace Violee
             RemoveAllBoxes();
             mapData = new MapData()
             {
-                BoxDic = new SerializableDictionary<Loc, BoxData>()
+                BoxDic = new SerializableDictionary<Vector2Int, BoxData>()
             };
+            await GenerateOneFakeConnection(true);
             while (emptyLocSet.Count > 0)
             {
-                await GenerateOneFakeConnection();
+                await GenerateOneFakeConnection(false);
             }
 
             await AStar();
@@ -243,7 +245,7 @@ namespace Violee
         #region Event
         void OnPlayerInputMove(int curX, int curY, int dx, int dy)
         {
-            var nextLoc = new Loc(curX + dx, curY + dy);
+            var nextLoc = new Vector2Int(curX + dx, curY + dy);
             if (!InMap(nextLoc))
                 return;
             OnInputEnd?.Invoke(nextLoc);

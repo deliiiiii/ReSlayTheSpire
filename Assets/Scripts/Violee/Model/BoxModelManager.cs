@@ -17,14 +17,14 @@ namespace Violee
             MapModel.OnRemoveBox += DestroyBox;
             MapModel.OnInputEnd += ShowSprite;
         }
-        Dictionary<Loc, BoxModel> boxModelDic = new ();
+        Dictionary<Vector2Int, BoxModel> boxModelDic = new ();
         #region Event
-        void SpawnBox(Loc loc, BoxData fBoxData)
+        void SpawnBox(Vector2Int vector2Int, BoxData fBoxData)
         {
             // TODO 对象池
-            var boxGO = new GameObject($"Box {loc.X} {loc.Y}");
+            var boxGO = new GameObject($"Box {vector2Int.x} {vector2Int.y}");
             boxGO.transform.SetParent(transform);
-            boxGO.transform.position = new Vector3(loc.X, loc.Y, 0);
+            boxGO.transform.position = new Vector3(vector2Int.x, vector2Int.y, 0);
             
             var boxRenderer = boxGO.AddComponent<SpriteRenderer>();
             boxRenderer.sprite = fBoxData.Sprite;
@@ -33,18 +33,18 @@ namespace Violee
             var boxModel = boxGO.AddComponent<BoxModel>();
             boxModel.BoxData = fBoxData;
             
-            boxModelDic.Add(loc, boxModel);
+            boxModelDic.Add(vector2Int, boxModel);
         }
         
-        void DestroyBox(Loc loc)
+        void DestroyBox(Vector2Int vector2Int)
         {
             // TODO 对象池
-            Destroy(boxModelDic[loc].gameObject);
-            boxModelDic.Remove(loc);
+            Destroy(boxModelDic[vector2Int].gameObject);
+            boxModelDic.Remove(vector2Int);
         }
-        void ShowSprite(Loc loc)
+        void ShowSprite(Vector2Int vector2Int)
         {
-            boxModelDic[loc].GetComponent<SpriteRenderer>().enabled = true;
+            boxModelDic[vector2Int].GetComponent<SpriteRenderer>().enabled = true;
         }
         #endregion
     }

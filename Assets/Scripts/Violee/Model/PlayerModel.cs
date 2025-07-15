@@ -49,11 +49,11 @@ namespace Violee
             OnInputMove?.Invoke(playerData.X, playerData.Y, 0, 0);
         }
 
-        void OnInputEnd(Loc loc)
+        void OnInputEnd(Vector2Int vector2Int)
         {
-            playerData.X = loc.X;
-            playerData.Y = loc.Y;
-            transform.position = new Vector3(loc.X, loc.Y, 0);
+            playerData.X = vector2Int.x;
+            playerData.Y = vector2Int.y;
+            transform.position = new Vector3(vector2Int.x, vector2Int.y, 0);
         }
 
         

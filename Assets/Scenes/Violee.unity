@@ -399,6 +399,7 @@ MonoBehaviour:
   BoxConfig: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
   Height: 6
   Width: 6
+  StartDir: 1
 --- !u!1 &551786670
 GameObject:
   m_ObjectHideFlags: 0
