@@ -34,7 +34,7 @@ namespace Violee
             }
         }
 
-        static float offset => Configer.SettingsConfig.BoxCostPosOffset;
+        static float offset => Configer.Instance.SettingsConfig.BoxCostPosOffset;
     }
     
     [Serializable]

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Sirenix.OdinInspector;
-using UnityEditor.Callbacks;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Violee
@@ -28,7 +22,7 @@ namespace Violee
             
             var boxRenderer = boxGO.AddComponent<SpriteRenderer>();
             boxRenderer.sprite = fBoxData.Sprite;
-            boxRenderer.enabled = Configer.SettingsConfig.ShowBoxWhenCreated;
+            boxRenderer.enabled = Configer.Instance.SettingsConfig.ShowBoxWhenCreated;
             
             var boxModel = boxGO.AddComponent<BoxModel>();
             boxModel.BoxData = fBoxData;

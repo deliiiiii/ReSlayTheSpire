@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Violee
@@ -12,20 +13,13 @@ namespace Violee
         {
             PlayerModel.OnInputMove += OnPlayerInputMove;
         }
-
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.R))
-                StartGenerate();
-        }
-
         public int YieldCount;
         public int Height = 4;
         public int Width = 6;
         public Vector2Int StartPos;
         public EBoxDir StartDir = EBoxDir.Up;
         List<Vector2Int> emptyPosList;
-        List<BoxConfigSingle> BoxConfigList => Configer.BoxConfigList;
+        List<BoxConfigSingle> BoxConfigList => Configer.Instance.BoxConfig.BoxConfigList;
         static MapData mapData;
         
         #region Pos Functions
@@ -109,6 +103,7 @@ namespace Violee
 
         // 防止点击多次按钮
         bool isGenerating;
+        [Button]
         async Task StartGenerate()
         {
             if (isGenerating)

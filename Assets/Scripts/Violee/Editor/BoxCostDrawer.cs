@@ -20,7 +20,7 @@ namespace Violee.Editor
         }
         void OnSceneGUI()
         {
-            if(Configer.SettingsConfig.ShowBoxCost)
+            if(Configer.Instance.SettingsConfig.ShowBoxCost)
             {
                 foreach(var point in MapModel.GetAllPoints())
                 {

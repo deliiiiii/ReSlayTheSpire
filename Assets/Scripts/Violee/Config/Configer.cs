@@ -10,23 +10,14 @@ namespace Violee
 {
     public class Configer : Singleton<Configer>
     {
-        public BoxConfig BoxConfigIns;
-
-        public static List<BoxConfigSingle> BoxConfigList
-        {
-            get => Instance.BoxConfigIns.BoxConfigList;
-            private set => Instance.BoxConfigIns.BoxConfigList = value;
-        }
+        public BoxConfig BoxConfig;
+        public SettingsConfig SettingsConfig;
         
-        public SettingsConfig SettingsConfigIns;
-        public static SettingsConfig SettingsConfig => Instance.SettingsConfigIns;
-
-        protected override void Awake()
+        async void Start()
         {
-            base.Awake();
             if (SettingsConfig.RefreshConfigOnAwake)
-                _ = LoadConfig();
-            foreach (var boxConfig in BoxConfigList)
+                 await LoadConfig();
+            foreach (var boxConfig in BoxConfig.BoxConfigList)
             {
                 var t = boxConfig.Texture2D;
                 boxConfig.Sprite = Sprite.Create(
@@ -41,9 +32,9 @@ namespace Violee
 
         async Task LoadConfig()
         {
-            if (BoxConfigList == null)
+            if (BoxConfig.BoxConfigList == null)
                 return;
-            BoxConfigList = new List<BoxConfigSingle>();
+            BoxConfig.BoxConfigList = new List<BoxConfigSingle>();
             var textures = await Resourcer.LoadAssetsAsyncByLabel<Texture2D>("BoxFigma");
             foreach (var t in textures)
             {
@@ -57,14 +48,14 @@ namespace Violee
                     // 强制刷新所有权重
                     BasicWeight = 100,
                 };
-                BoxConfigList.Add(boxConfig);
+                BoxConfig.BoxConfigList.Add(boxConfig);
             }
 #if UNITY_EDITOR
-            EditorUtility.SetDirty(BoxConfigIns);
+            EditorUtility.SetDirty(BoxConfig);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 #endif
-            BoxConfigList.Sort((x, y) => x.Walls - y.Walls);
+            BoxConfig.BoxConfigList.Sort((x, y) => x.Walls - y.Walls);
             Debug.Log("LoadConfig Completed");
         }
     }

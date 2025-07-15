@@ -7,7 +7,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     static T instance;
     public bool GlobalOnScene;
 
-    protected static T Instance => instance ? instance : FindObjectOfType<T>() ? FindObjectOfType<T>() : new GameObject().AddComponent<T>();
+    public static T Instance => instance ? instance : FindObjectOfType<T>() ? FindObjectOfType<T>() : new GameObject().AddComponent<T>();
 
     protected virtual void Awake()
     {

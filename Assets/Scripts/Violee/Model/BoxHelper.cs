@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Violee
@@ -14,8 +15,8 @@ namespace Violee
         }
         static BoxHelper()
         {
-            emptyBoxConfig = BoxConfigs.First(x => x.Walls == 0);
-            allBoxWalls = BoxConfigs.Select(x => x.Walls).Distinct().ToList();
+            emptyBoxConfig = BoxConfigList.First(x => x.Walls == 0);
+            allBoxWalls = BoxConfigList.Select(x => x.Walls).Distinct().ToList();
             allBoxDirs = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
             canGoOutDirsDic = new Dictionary<byte, HashSet<EBoxDir>>();
             foreach (var w in allBoxWalls)
@@ -44,7 +45,7 @@ namespace Violee
                 { EBoxDir.Right, new Vector2Int(1, 0) }
             };
         }
-        static List<BoxConfigSingle> BoxConfigs => Configer.BoxConfigList;
+        static List<BoxConfigSingle> BoxConfigList => Configer.Instance.BoxConfig.BoxConfigList;
         public static BoxConfigSingle emptyBoxConfig;
         public static List<byte> allBoxWalls;
         public static EBoxDir[] allBoxDirs;
