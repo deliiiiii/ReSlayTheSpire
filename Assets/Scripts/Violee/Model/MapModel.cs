@@ -169,7 +169,7 @@ namespace Violee
         
         
         [Button]
-        public async Task StartGenerate(Loc startLoc)
+        async Task StartGenerate(Loc startLoc)
         {
             RemoveAllBoxes();
             mapData = new MapData()

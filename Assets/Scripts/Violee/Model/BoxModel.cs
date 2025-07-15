@@ -23,7 +23,6 @@ namespace Violee
         // TODO 输入方向，输出可以
         // static Dictionary<byte, List<byte>> fromTosDic;
         static Dictionary<Loc, BoxModel> boxModelDic = new ();
-        static bool showByDefault = false;
 
 
         void ShowSprite(Loc loc)
@@ -40,13 +39,14 @@ namespace Violee
             
             var boxRenderer = boxGO.AddComponent<SpriteRenderer>();
             boxRenderer.sprite = fBoxData.Sprite;
-            boxRenderer.enabled = showByDefault;
+            boxRenderer.enabled = SettingsModel.SettingsConfig.ShowBoxWhenCreated;
             
             var boxModel = boxGO.AddComponent<BoxModel>();
             boxModel.boxData = fBoxData;
             
             boxModelDic.Add(loc, boxModel);
         }
+        
         public static void OnDestroyBoxData(Loc loc)
         {
             // TODO 对象池
