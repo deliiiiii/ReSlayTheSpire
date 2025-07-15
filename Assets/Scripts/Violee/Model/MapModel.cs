@@ -134,6 +134,10 @@ namespace Violee
         [Button]
         async Task Dijkstra()
         {
+            if (OnBeginDij != null)
+            {
+                await OnBeginDij.Invoke();
+            }
             var vSet = new HashSet<BoxPointData>();
             var inQSet = new HashSet<BoxPointData>();
             int c = 0;
@@ -198,6 +202,7 @@ namespace Violee
         public static event Action<Vector2Int, BoxData> OnAddBox;
         public static event Action<Vector2Int> OnRemoveBox;
         public static event Action<Vector2Int> OnInputEnd;
+        public static event Func<Task> OnBeginDij;
         void OnPlayerInputMove(int curX, int curY, int dx, int dy)
         {
             var nextLoc = new Vector2Int(curX + dx, curY + dy);
