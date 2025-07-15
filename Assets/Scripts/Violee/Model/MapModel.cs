@@ -14,6 +14,8 @@ namespace Violee
         {
             PlayerModel.OnInputMove += OnPlayerInputMove;
         }
+
+        public GameObject CurPointHint;
         public int YieldCount;
         public int Height = 4;
         public int Width = 6;
@@ -129,38 +131,57 @@ namespace Violee
         }
 
         SimplePriorityQueue<BoxPointData, int> pq;
+        [Button]
         async Task Dijkstra()
         {
-            pq = new SimplePriorityQueue<BoxPointData, int>();
-            var startBox = mapData[StartPos];
-            var startPoint = startBox.PointDic[StartDir];
-            startPoint.CostWall.Value = 0;
-            pq.Enqueue(startPoint, 0);
-            while (pq.Count != 0)
+            var vSet = new HashSet<BoxPointData>();
+            var inQSet = new HashSet<BoxPointData>();
+            int c = 0;
+            try
             {
-                var curPoint = pq.Dequeue();
-                var curCost = curPoint.CostWall;
-                var curBox = curPoint.BelongBox;
-                curPoint.UpdateNextPointCost();
-                var nextPos = BoxHelper.NextPos(curBox.Pos, curPoint.Dir);
-                var nextBox = mapData[nextPos];
-                if (InMap(nextPos))
+                pq = new SimplePriorityQueue<BoxPointData, int>();
+                var startBox = mapData[StartPos];
+                var startPoint = startBox.PointDic[StartDir];
+                startPoint.CostWall.Value = 0;
+                pq.Enqueue(startPoint, 0);
+                while (pq.Count != 0)
                 {
-                    var oppositeDir = BoxHelper.oppositeDirDic[curPoint.Dir];
-                    var nextPoint = nextBox.PointDic[oppositeDir];
-                    var nextCostOb = nextPoint.CostWall;
-                    nextCostOb.Value = Math.Min(
-                        nextCostOb.Value,
-                        curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));
-                    pq.Enqueue(nextPoint, nextCostOb.Value);
+                    c++;
+                    var curPoint = pq.Dequeue();
+                    vSet.Add(curPoint);
+                    var curCost = curPoint.CostWall;
+                    var curBox = curPoint.BelongBox;
+                    curPoint.UpdateNextPointCost();
+                    var nextPos = BoxHelper.NextPos(curBox.Pos, curPoint.Dir);
+                    if (InMap(nextPos))
+                    {
+                        var nextBox = mapData[nextPos];
+                        var oppositeDir = BoxHelper.oppositeDirDic[curPoint.Dir];
+                        var nextPoint = nextBox.PointDic[oppositeDir];
+                        var nextCostOb = nextPoint.CostWall;
+                        nextCostOb.Value = Math.Min(
+                            nextCostOb.Value,
+                            curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));
+                        if (!vSet.Contains(nextPoint) && inQSet.Add(nextPoint))
+                        {
+                            pq.Enqueue(nextPoint, nextCostOb.Value);
+                        }
+                    }
+                    foreach (var nextPoint in curPoint.NextPointsInBox)
+                    {
+                        if (vSet.Contains(nextPoint) || !inQSet.Add(nextPoint))
+                            continue;
+                        pq.Enqueue(nextPoint, nextPoint.CostWall);
+                    }
+                    CurPointHint.transform.position = curPoint.Pos;
+                    await YieldFrames();
                 }
-
-                foreach (var n in curPoint.NextPointsInBox)
-                {
-                    pq.Enqueue(n, n.CostWall);
-                }
-
-                await YieldFrames();
+                MyDebug.Log($"Dijkstra finished! Count = {c}");
+            }
+            catch (Exception e)
+            {
+                MyDebug.LogError(e);
+                throw;
             }
         }
 

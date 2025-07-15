@@ -24,7 +24,8 @@ namespace Violee.Editor
             {
                 foreach(var point in MapModel.GetAllPoints())
                 {
-                    Handles.Label(point.Pos, "9", labelStyle);
+                    var str = point.CostWall > 1e5 ? "∞" : point.CostWall.ToString();
+                    Handles.Label(point.Pos, str, labelStyle);
                 }
             }
             SceneView.RepaintAll();

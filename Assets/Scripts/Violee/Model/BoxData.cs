@@ -16,7 +16,7 @@ namespace Violee
         Left = 8
     }
 
-    public class BoxPointData
+    public class BoxPointData: IComparable<BoxPointData>, IEquatable<BoxPointData>
     {
         public EBoxDir Dir;
         public Observable<int> CostWall;
@@ -29,21 +29,29 @@ namespace Violee
         {
             foreach (var nextPoint in NextPointsInBox)
             {
-                nextPoint.CostWall.Value += 
-                    BelongBox.CostTilt(Dir, nextPoint.Dir);
+                nextPoint.CostWall.Value = Math.Min(
+                    nextPoint.CostWall.Value,
+                    CostWall + BelongBox.CostTilt(Dir, nextPoint.Dir));
             }
         }
 
         static float offset => Configer.Instance.SettingsConfig.BoxCostPosOffset;
+        public int CompareTo(BoxPointData other)
+        {
+            if (BelongBox != other.BelongBox)
+                return -1;
+            return Dir.CompareTo(other.Dir);
+        }
+
+        public bool Equals(BoxPointData other)
+        {
+            return CompareTo(other) == 0;
+        }
     }
     
     [Serializable]
     public class BoxData
     {
-        static BoxData()
-        {
-            allDirs = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
-        }
         public BoxData()
         {
             InitPoint();
@@ -56,7 +64,6 @@ namespace Violee
         public const int CrossWallCost = 1;
         public Sprite Sprite;
         [NotNull] public Dictionary<EBoxDir, BoxPointData> PointDic;
-        [NotNull] static EBoxDir[] allDirs;
         
         #region Path
         void InitPoint()
@@ -71,17 +78,20 @@ namespace Violee
                     CostWall = new (int.MaxValue / 2),
                     NextPointsInBox = new List<BoxPointData>()
                 });
-                foreach (var dir2 in allDirs)
+            }
+
+            foreach (var dir in BoxHelper.allBoxDirs)
+            {
+                foreach (var dir2 in BoxHelper.allBoxDirs)
                 {
                     if (dir == dir2)
                         continue;
                     if (BoxHelper.oppositeDirDic[dir] == dir2)
                         continue;
-                    if (!PointDic.ContainsKey(dir))
-                        continue;
                     PointDic[dir].NextPointsInBox.Add(PointDic[dir2]);
                 }
             }
+            
         }
         public int CostStraight(EBoxDir dir) => CanGoStraightWall(dir) ? 0 : CrossWallCost;
         public int CostTilt(EBoxDir from, EBoxDir to) => CanGoTiltWallBetween(from, to) ? 0 : CrossWallCost;
