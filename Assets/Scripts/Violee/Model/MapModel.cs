@@ -158,7 +158,7 @@ namespace Violee
         }
         void RemoveAllBoxes()
         {
-            mapData?.BoxDic?.Keys.ForEach(BoxModel.DestroyBox);
+            mapData?.BoxDic?.Keys.ForEach(loc => OnRemoveBox?.Invoke(loc));
             mapData?.BoxDic?.Clear();
         }
         [Button]

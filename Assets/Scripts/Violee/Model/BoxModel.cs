@@ -9,20 +9,21 @@ using UnityEngine;
 
 namespace Violee
 {
-    public class BoxModel : MonoBehaviour
+    public class BoxModel : Singleton<BoxModel>
     {
-        void Awake()
+        protected override void Awake()
         {
-            boxParent ??= new GameObject("BoxParent").transform;
+            base.Awake();
+            boxParent = new GameObject("BoxParent").transform;
             MapModel.OnAddBox += SpawnBox;
             MapModel.OnRemoveBox += DestroyBox;
             MapModel.OnInputEnd += ShowSprite;
         }
-
+        
         [ShowInInspector]
         BoxData boxData;
         Dictionary<Loc, BoxModel> boxModelDic = new ();
-        static Transform boxParent;
+        Transform boxParent;
 
         
         #region Event
