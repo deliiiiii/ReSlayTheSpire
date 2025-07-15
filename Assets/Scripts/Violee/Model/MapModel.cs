@@ -86,19 +86,23 @@ namespace Violee
                 { EBoxSide.Left, EBoxSide.Right },
                 { EBoxSide.Right, EBoxSide.Left }
             };
+            
+            PlayerModel.OnInputMove += OnPlayerInputMove;
         }
+        public static event Action OnGenerateMap;
+        public static event Action<Loc> OnInputEnd;
 
         public bool RefreshConfigOnAwake;
         public int YieldCount;
         public int Height = 4;
         public int Width = 6;
         
-        // [ShowInInspector]
         MapData mapData;
         Stack<Loc> edgeLocStack;
         [SerializeField]
         BoxConfig BoxConfig;
         List<BoxConfigSingle> BoxConfigs => BoxConfig.BoxConfigs;
+        
         static BoxConfigSingle emptyBoxConfig;
         static List<byte> allBoxWalls;
         static EBoxSide[] allBoxSides;
@@ -127,10 +131,10 @@ namespace Violee
             });
             return nextLocs;
         }
-        // bool NotInMap(Loc loc) => loc.X < 0 || loc.X >= Width || loc.Y < 0 || loc.Y >= Height;
         bool InMap(Loc loc) => loc.X >= 0 && loc.X < Width && loc.Y >= 0 && loc.Y < Height;
         bool HasBox(Loc loc) => mapData.BoxDic.ContainsKey(loc);
 
+        
         #region Add & Remove
         void AddBox(Loc loc, BoxConfigSingle boxConfigSingle)
         {
@@ -140,19 +144,29 @@ namespace Violee
             BoxModel.OnCreateBoxData(loc, boxData);
             MyDebug.Log($"Add box {boxConfigSingle.Walls} at {loc}");
         }
-
         void RemoveBox(Loc loc)
         {
             mapData.BoxDic.Remove(loc);
             BoxModel.OnDestroyBoxData(loc);
         }
-
         void RemoveAllBoxes()
         {
             mapData?.BoxDic?.Keys.ForEach(BoxModel.OnDestroyBoxData);
             mapData?.BoxDic?.Clear();
         }
         #endregion
+        
+        
+        #region Event
+        void OnPlayerInputMove(int curX, int curY, int dx, int dy)
+        {
+            var nextLoc = new Loc(curX + dx, curY + dy);
+            if (!InMap(nextLoc))
+                return;
+            OnInputEnd?.Invoke(nextLoc);
+        }
+        #endregion
+        
         
         [Button]
         public async Task StartGenerate(Loc startLoc)
@@ -203,6 +217,8 @@ namespace Violee
                     }
                 }
             }
+            
+            OnGenerateMap?.Invoke();
         }
     }
 }
