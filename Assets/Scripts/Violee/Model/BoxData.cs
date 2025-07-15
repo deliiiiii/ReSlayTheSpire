@@ -27,6 +27,7 @@ namespace Violee
         
         public byte Walls;
         public Sprite Sprite;
+        public Dictionary<EBoxSide, (int,int)> CostDic;
         
         public bool HasWallS1 => (Walls & 0b00000001) != 0;
         public bool HasWallS2 => (Walls & 0b00000010) != 0;
@@ -45,23 +46,23 @@ namespace Violee
         {
             var big = dir1 > dir2 ? dir1 : dir2;
             var small = dir1 < dir2 ? dir1 : dir2;
-            var x = Walls & 0b1111;
-            var y = Walls >> 4;
+            var sWalls = Walls & 0b1111;
+            var tWalls = Walls >> 4;
             var from = small;
             if (big == 8 && small == 1)
                 from = 8;
-            var sIsConnect = ((x & dir1) | (x & dir2)) == 0;
+            var sIsConnect = ((sWalls & dir1) | (sWalls & dir2)) == 0;
             var tIsConnect = (big, small) switch
             {
-                (4, 1) => (y & 3) != 3
-                          && (y & 12) != 12
-                          && (y & 5) != 5
-                          && (y & 10) != 10,
-                (8, 2) => (y & 9) != 9
-                          && (y & 6) != 6
-                          && (y & 5) != 5
-                          && (y & 10) != 10,
-                _ => y == from || (y | from) != y,
+                (4, 1) => (tWalls & 3) != 3
+                          && (tWalls & 12) != 12
+                          && (tWalls & 5) != 5
+                          && (tWalls & 10) != 10,
+                (8, 2) => (tWalls & 9) != 9
+                          && (tWalls & 6) != 6
+                          && (tWalls & 5) != 5
+                          && (tWalls & 10) != 10,
+                _ => tWalls == from || (tWalls | from) != tWalls,
             };
             return sIsConnect && tIsConnect;
         }

@@ -61,7 +61,6 @@ namespace Violee
                     100.0f,
                     0,
                     SpriteMeshType.Tight);
-                MyDebug.Log($"TTT {boxConfig.Texture2D == null}  {boxConfig.Sprite == null}");
             });
             
             allBoxWalls = BoxConfigs.Select(x => x.Walls).Distinct().ToList();
