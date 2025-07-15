@@ -14,23 +14,19 @@ namespace Violee
         void Awake()
         {
             boxParent ??= new GameObject("BoxParent").transform;
+            MapModel.OnAddBox += SpawnBox;
+            MapModel.OnRemoveBox += DestroyBox;
             MapModel.OnInputEnd += ShowSprite;
         }
 
         [ShowInInspector]
         BoxData boxData;
+        Dictionary<Loc, BoxModel> boxModelDic = new ();
         static Transform boxParent;
-        // TODO 输入方向，输出可以
-        // static Dictionary<byte, List<byte>> fromTosDic;
-        static Dictionary<Loc, BoxModel> boxModelDic = new ();
 
-
-        void ShowSprite(Loc loc)
-        {
-            boxModelDic[loc].GetComponent<SpriteRenderer>().enabled = true;
-        }
         
-        public static void OnCreateBoxData(Loc loc, BoxData fBoxData)
+        #region Event
+        void SpawnBox(Loc loc, BoxData fBoxData)
         {
             // TODO 对象池
             var boxGO = new GameObject($"Box {loc.X} {loc.Y}");
@@ -47,11 +43,16 @@ namespace Violee
             boxModelDic.Add(loc, boxModel);
         }
         
-        public static void OnDestroyBoxData(Loc loc)
+        void DestroyBox(Loc loc)
         {
             // TODO 对象池
             Destroy(boxModelDic[loc].gameObject);
             boxModelDic.Remove(loc);
         }
+        void ShowSprite(Loc loc)
+        {
+            boxModelDic[loc].GetComponent<SpriteRenderer>().enabled = true;
+        }
+        #endregion
     }
 }

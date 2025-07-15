@@ -90,6 +90,8 @@ namespace Violee
             PlayerModel.OnInputMove += OnPlayerInputMove;
         }
         public static event Action OnGenerateMap;
+        public static event Action<Loc, BoxData> OnAddBox;
+        public static event Action<Loc> OnRemoveBox;
         public static event Action<Loc> OnInputEnd;
 
         public bool RefreshConfigOnAwake;
@@ -146,17 +148,17 @@ namespace Violee
             var t = boxConfigSingle.Texture2D;
             var boxData = new BoxData(boxConfigSingle.Walls, boxConfigSingle.Sprite);
             mapData.BoxDic.Add(loc, boxData);
-            BoxModel.OnCreateBoxData(loc, boxData);
+            OnAddBox?.Invoke(loc, boxData);
             MyDebug.Log($"Add box {boxConfigSingle.Walls} at {loc}");
         }
         void RemoveBox(Loc loc)
         {
             mapData.BoxDic.Remove(loc);
-            BoxModel.OnDestroyBoxData(loc);
+            OnRemoveBox?.Invoke(loc);
         }
         void RemoveAllBoxes()
         {
-            mapData?.BoxDic?.Keys.ForEach(BoxModel.OnDestroyBoxData);
+            mapData?.BoxDic?.Keys.ForEach(BoxModel.DestroyBox);
             mapData?.BoxDic?.Clear();
         }
         [Button]
