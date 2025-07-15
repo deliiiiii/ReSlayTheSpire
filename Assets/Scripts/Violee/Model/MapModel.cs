@@ -209,9 +209,15 @@ namespace Violee
                 await Task.Yield();
             }
         }
+
+        // 防止点击多次按钮
+        bool isGenerating;
         [Button]
         async Task StartGenerate(Loc startLoc)
         {
+            if (isGenerating)
+                return;
+            isGenerating = true;
             RemoveAllBoxes();
             mapData = new MapData()
             {
@@ -224,6 +230,7 @@ namespace Violee
 
             await AStar();
             OnGenerateMap?.Invoke();
+            isGenerating = false;
         }
 
         async Task AStar()
