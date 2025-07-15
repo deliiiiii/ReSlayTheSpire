@@ -16,138 +16,20 @@ namespace Violee
 {
     public class MapModel : MonoBehaviour
     {
-        async Task LoadConfig()
+        void Awake()
         {
-            if (BoxConfig == null)
-                return;
-            BoxConfig.BoxConfigs = new List<BoxConfigSingle>();
-            var textures = await Resourcer.LoadAssetsAsyncByLabel<Texture2D>("BoxFigma");
-            textures.ForEach(t =>
-            {
-                var match = Regex.Match(t.name, @"\d+");
-                var id = match.Success ? byte.Parse(match.Value) : new byte();
-                var boxConfig = new BoxConfigSingle()
-                {
-                    Name = t.name,
-                    Walls = id,
-                    Texture2D = t,
-                    // 强制刷新所有权重
-                    BasicWeight = 100,
-                };
-                BoxConfigs.Add(boxConfig);
-            });
-#if UNITY_EDITOR
-            EditorUtility.SetDirty(BoxConfig);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-#endif
-            BoxConfigs.Sort((x, y) => x.Walls - y.Walls);
-            Debug.Log("LoadConfig Completed");
-        }
-        async void Awake()
-        {
-            if(RefreshConfigOnAwake)
-            {
-                await LoadConfig();
-            }
-
-            
-            emptyBoxConfig = BoxConfigs.First(x => x.Walls == 0);
-            BoxConfigs.ForEach(boxConfig =>
-            {
-                var t = boxConfig.Texture2D;
-                boxConfig.Sprite = Sprite.Create(
-                    t,
-                    new Rect(0, 0, t.width, t.height),
-                    new Vector2(0.5f, 0.5f),
-                    100.0f,
-                    0,
-                    SpriteMeshType.Tight);
-            });
-            
-            allBoxWalls = BoxConfigs.Select(x => x.Walls).Distinct().ToList();
-            allBoxSides = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
-            
-            canGoOutDirsDic = new Dictionary<byte, List<EBoxDir>>();
-            allBoxWalls.ForEach(w =>
-            {
-                canGoOutDirsDic.Add(w, new List<EBoxDir>());
-                allBoxSides.ForEach(dir =>
-                {
-                    if (BoxData.CanGoOutAt(w, dir))
-                    {
-                        canGoOutDirsDic[w].Add(dir);
-                    }
-                });
-            });
-
-            oppositeDirDic = new Dictionary<EBoxDir, EBoxDir>()
-            {
-                { EBoxDir.Up, EBoxDir.Down },
-                { EBoxDir.Down, EBoxDir.Up },
-                { EBoxDir.Left, EBoxDir.Right },
-                { EBoxDir.Right, EBoxDir.Left }
-            };
-            
             PlayerModel.OnInputMove += OnPlayerInputMove;
         }
-        public static event Action OnGenerateMap;
-        public static event Action<Vector2Int, BoxData> OnAddBox;
-        public static event Action<Vector2Int> OnRemoveBox;
-        public static event Action<Vector2Int> OnInputEnd;
-
-        public bool RefreshConfigOnAwake;
         public int YieldCount;
-
-        
-        #region BoxConfig
-        [SerializeField]
-        BoxConfig BoxConfig;
-        List<BoxConfigSingle> BoxConfigs => BoxConfig.BoxConfigs;
-        BoxConfigSingle emptyBoxConfig;
-        List<byte> allBoxWalls;
-        EBoxDir[] allBoxSides;
-        /// <summary>
-        /// (walls, [outDir1, ...])
-        /// </summary>
-        Dictionary<byte, List<EBoxDir>> canGoOutDirsDic;
-        /// <summary>
-        /// (dir, oppositeDir)
-        /// </summary>
-        Dictionary<EBoxDir, EBoxDir> oppositeDirDic;
-        readonly Dictionary<EBoxDir, Vector2Int> dirToVec2Dic = new()
-        {
-            { EBoxDir.Up, new Vector2Int(0, 1) },
-            { EBoxDir.Down, new Vector2Int(0, -1) },
-            { EBoxDir.Left, new Vector2Int(-1, 0) },
-            { EBoxDir.Right, new Vector2Int(1, 0) }
-        };
-        Vector2Int NextPos(Vector2Int thisLoc, EBoxDir dir)
-        {
-            return new Vector2Int(thisLoc.x + dirToVec2Dic[dir].x, thisLoc.y + dirToVec2Dic[dir].y);
-        }
-        #endregion
-        
-        
-        List<(Vector2Int, EBoxDir)> GetNextLocAndDirList(Vector2Int thisPos)
-        {
-            var nextPoses = new List<(Vector2Int, EBoxDir)>();
-            allBoxSides.ForEach(dir =>
-            {
-                nextPoses.Add((NextPos(thisPos, dir), oppositeDirDic[dir]));
-            });
-            return nextPoses;
-        }
-        
-        
-        #region Map
         public int Height = 4;
         public int Width = 6;
         public Vector2Int StartPos;
         EBoxDir startDir = EBoxDir.Up;
-        MapData mapData;
         List<Vector2Int> emptyPosList;
+        MapData mapData;
+        List<BoxConfigSingle> BoxConfigList => Configer.BoxConfigList;
         
+        #region Pos Functions
         bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
         bool HasBox(Vector2Int pos) => mapData.Contains(pos);
         async Task<BoxData> AddBox(Vector2Int pos, BoxConfigSingle config)
@@ -185,28 +67,29 @@ namespace Violee
                 }
             }
         }
+        #endregion
 
         async Task GenerateOneFakeConnection(bool startWithStartLoc)
         {
             var edgeBoxStack = new Stack<BoxData>();
             // 每个伪连通块的第一个是空格子
             var firstLoc = startWithStartLoc ? StartPos : emptyPosList[0];
-            var firstBox =  await AddBox(firstLoc, emptyBoxConfig);
+            var firstBox =  await AddBox(firstLoc, BoxHelper.emptyBoxConfig);
             edgeBoxStack.Push(firstBox);
             while (edgeBoxStack.Count > 0)
             {
                 var curBox = edgeBoxStack.Pop();
                 var curWall = curBox.Walls;
-                var nextPairs = GetNextLocAndDirList(curBox.Pos);
+                var nextPairs = BoxHelper.GetNextLocAndDirList(curBox.Pos);
                 foreach (var pair in nextPairs)
                 {
                     if (InMap(pair.Item1) 
                         && !HasBox(pair.Item1) 
-                        && canGoOutDirsDic[curWall].Contains(oppositeDirDic[pair.Item2]))
+                        && BoxHelper.canGoOutDirsDic[curWall].Contains(BoxHelper.oppositeDirDic[pair.Item2]))
                     {
                         var wall = 
-                            BoxConfigs.RandomItemWeighted(
-                                x => canGoOutDirsDic[x.Walls].Contains(pair.Item2),
+                            BoxConfigList.RandomItemWeighted(
+                                x => BoxHelper.canGoOutDirsDic[x.Walls].Contains(pair.Item2),
                                 x => x.BasicWeight);
                         var nextBox = await AddBox(pair.Item1, wall);
                         edgeBoxStack.Push(nextBox);
@@ -248,21 +131,38 @@ namespace Violee
         async Task Dijkstra()
         {
             pq = new SimplePriorityQueue<BoxPointData, int>();
-            mapData.ForEach(boxValue => boxValue.InitPoint(allBoxSides));
-            var startBox = mapData[StartPos].BoxPointDic[startDir];
-            startBox.CostWall.Value = 0;
-            pq.Enqueue(startBox, 0);
+            mapData.ForEach(boxValue => boxValue.InitPoint(BoxHelper.allBoxSides));
+            var startBox = mapData[StartPos];
+            var startPoint = startBox.PointDic[startDir];
+            startPoint.CostWall.Value = 0;
+            pq.Enqueue(startPoint, 0);
             while (pq.Count != 0)
             {
-                var curBoxPoint = pq.Dequeue();
-                curBoxPoint.UpdateCostInBox();
-                // NextPos()
+                var curPoint = pq.Dequeue();
+                var curCost = curPoint.CostWall;
+                var curBox = curPoint.BelongBox;
+                curPoint.UpdateNextPointCost();
+                var nextPos = BoxHelper.NextPos(curBox.Pos, curPoint.Dir);
+                var nextBox = mapData[nextPos];
+                if (InMap(nextPos))
+                {
+                    var oppositeDir = BoxHelper.oppositeDirDic[curPoint.Dir];
+                    var nextPoint = nextBox.PointDic[oppositeDir];
+                    var nextCost = nextPoint.CostWall;
+                    nextCost.Value = Math.Min(
+                        nextCost.Value,
+                        curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));
+                }
+                // Enqueue
             }
         }
-        #endregion
         
         
         #region Event
+        public static event Action OnGenerateMap;
+        public static event Action<Vector2Int, BoxData> OnAddBox;
+        public static event Action<Vector2Int> OnRemoveBox;
+        public static event Action<Vector2Int> OnInputEnd;
         void OnPlayerInputMove(int curX, int curY, int dx, int dy)
         {
             var nextLoc = new Vector2Int(curX + dx, curY + dy);

@@ -6,6 +6,7 @@ namespace Violee
     [CreateAssetMenu(fileName = nameof(BoxConfig), menuName = "Violee/" + nameof(BoxConfig))]
     public class BoxConfig : ScriptableObject
     {
-        public List<BoxConfigSingle> BoxConfigs;
+        public List<BoxConfigSingle> BoxConfigList;
+        public bool RefreshConfigOnAwake;
     }
 }

@@ -19,17 +19,14 @@ namespace Violee
     {
         public EBoxDir Dir;
         public Observable<int> CostWall;
-        public List<BoxPointData> NextPointList;
+        public List<BoxPointData> NextPointInBoxList;
         public BoxData BelongBox;
-        
-
-        
-        public void UpdateCostInBox()
+        public void UpdateNextPointCost()
         {
-            NextPointList.ForEach(nextPoint =>
+            NextPointInBoxList.ForEach(nextPoint =>
             {
                 nextPoint.CostWall.Value += 
-                    BelongBox.CanGoThroughFromToInside(Dir, nextPoint.Dir) ? 0 : 1;
+                    BelongBox.CostTilt(Dir, nextPoint.Dir);
             });
         }
     }
@@ -37,58 +34,59 @@ namespace Violee
     [Serializable]
     public class BoxData
     {
-        
-        static EBoxDir[] allDirs;
         static BoxData()
         {
             allDirs = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
         }
-        [ShowInInspector]
-        string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
-
+        
         public Vector2Int Pos;
         public byte Walls;
+        [ShowInInspector]
+        string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
+        public const int CrossWallCost = 1;
         public Sprite Sprite;
-        public Dictionary<EBoxDir, BoxPointData> BoxPointDic;
-
+        public Dictionary<EBoxDir, BoxPointData> PointDic;
+        static EBoxDir[] allDirs;
         
         #region Path
         public void InitPoint(EBoxDir[] allBoxSides)
         {
-            BoxPointDic = new Dictionary<EBoxDir, BoxPointData>();
+            PointDic = new Dictionary<EBoxDir, BoxPointData>();
             allBoxSides.ForEach(dir =>
             {
-                BoxPointDic.Add(dir, new BoxPointData()
+                PointDic.Add(dir, new BoxPointData()
                 {
                     Dir = dir,
                     BelongBox = this,
                     CostWall = new (int.MaxValue / 2),
-                    NextPointList = new List<BoxPointData>()
+                    NextPointInBoxList = new List<BoxPointData>()
                 });
                 allDirs.ForEach(dir2 =>
                 {
                     if (dir == dir2)
                         return;
-                    BoxPointDic[dir].NextPointList.Add(BoxPointDic[dir2]);
+                    if (BoxHelper.oppositeDirDic[dir] == dir2)
+                        return;
+                    PointDic[dir].NextPointInBoxList.Add(PointDic[dir2]);
                 });
             });
         }
+        public int CostStraight(EBoxDir dir) => HasStraightWall(dir) ? 0 : CrossWallCost;
+        public int CostTilt(EBoxDir from, EBoxDir to) => HasTiltWallBetween(from, to) ? 0 : CrossWallCost;
         #endregion
         
         
         #region GoCross
-        // public bool HasWallS1 => (Walls & 0b00000001) != 0;
-        // public bool HasWallS2 => (Walls & 0b00000010) != 0;
-        // public bool HasWallS4 => (Walls & 0b00000100) != 0;
-        // public bool HasWallS8 => (Walls & 0b00001000) != 0;
-        // public bool HasWallT12 => (Walls & 0b00010000) != 0;
-        // public bool HasWallT24 => (Walls & 0b00100000) != 0;
-        // public bool HasWallT48 => (Walls & 0b01000000) != 0;
-        // public bool HasWallT81 => (Walls & 0b10000000) != 0;
-        public static bool CanGoOutAt(byte walls, EBoxDir dir) => (walls & (byte)dir) == 0;
-        bool ThisCanGoOutAt(EBoxDir dir) => (Walls & (byte)dir) == 0;
+        public static bool HasStraightWall(byte walls, EBoxDir dir) => (walls & (byte)dir) == 0;
+        bool HasStraightWall(EBoxDir dir) => (Walls & (byte)dir) == 0;
 
-        public bool CanGoThroughFromToInside(EBoxDir dir1, EBoxDir dir2)
+        /// <summary>
+        /// dir1 dir2必须相邻！
+        /// </summary>
+        /// <param name="dir1"></param>
+        /// <param name="dir2"></param>
+        /// <returns></returns>
+        bool HasTiltWallBetween(EBoxDir dir1, EBoxDir dir2)
         {
             var bigDir = dir1 > dir2 ? dir1 : dir2;
             var smallDif = dir1 < dir2 ? dir1 : dir2;
@@ -111,10 +109,6 @@ namespace Violee
                           && (x & 10) != 10,
                 _ => x == fromDif || (x | fromDif) != x
             };
-        }
-        bool CanGoThroughFromToOut(EBoxDir dir1, EBoxDir dir2)
-        {
-            return CanGoThroughFromToInside(dir1, dir2) && ThisCanGoOutAt(dir1) && ThisCanGoOutAt(dir2);
         }
         #endregion
     }

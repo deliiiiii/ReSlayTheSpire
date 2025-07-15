@@ -28,7 +28,7 @@ namespace Violee
             
             var boxRenderer = boxGO.AddComponent<SpriteRenderer>();
             boxRenderer.sprite = fBoxData.Sprite;
-            boxRenderer.enabled = SettingsModel.SettingsConfig.ShowBoxWhenCreated;
+            boxRenderer.enabled = Configer.SettingsConfig.ShowBoxWhenCreated;
             
             var boxModel = boxGO.AddComponent<BoxModel>();
             boxModel.BoxData = fBoxData;

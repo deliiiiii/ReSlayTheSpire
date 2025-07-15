@@ -394,12 +394,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41172b789579468b958b3171bf09844f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RefreshConfigOnAwake: 0
   YieldCount: 1
-  BoxConfig: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
   Height: 6
   Width: 6
-  StartDir: 1
+  StartPos: {x: 0, y: 0}
 --- !u!1 &551786670
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +501,7 @@ GameObject:
   - component: {fileID: 960940001}
   - component: {fileID: 960940002}
   m_Layer: 0
-  m_Name: SettingsModel
+  m_Name: Configer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -522,7 +520,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2077954182}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &960940002
 MonoBehaviour:
@@ -533,10 +531,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 960940000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fccd0fd9c4204077a031f5562b529aad, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b2c7ebfc21c4f1498c883331feb2df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
+  BoxConfigIns: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
   SettingsConfigIns: {fileID: 11400000, guid: a045e28f41ce60340acfb1d0f7d5e9fa, type: 2}
 --- !u!1 &2077954181
 GameObject:
@@ -570,7 +569,6 @@ Transform:
   - {fileID: 366055543}
   - {fileID: 128387275}
   - {fileID: 46712394}
-  - {fileID: 960940001}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
@@ -579,4 +577,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 551786673}
   - {fileID: 116651264}
+  - {fileID: 960940001}
   - {fileID: 2077954182}

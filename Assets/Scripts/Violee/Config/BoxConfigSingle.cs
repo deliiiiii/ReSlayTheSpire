@@ -8,7 +8,7 @@ namespace Violee
     [Serializable]
     public class BoxConfigSingle
     {
-        [ReadOnly]
+        [HideInInspector]
         public string Name;
         [HideInInspector]
         public byte Walls;
@@ -18,6 +18,4 @@ namespace Violee
         public Sprite Sprite;
         public int BasicWeight;
     }
-
-    
 }
