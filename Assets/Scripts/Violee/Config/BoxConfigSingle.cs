@@ -14,8 +14,6 @@ namespace Violee
         public byte Walls;
         [ReadOnly]
         public Texture2D Texture2D;
-        [HideInInspector]
-        public Sprite Sprite;
         public int BasicWeight;
     }
 

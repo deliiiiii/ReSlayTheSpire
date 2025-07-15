@@ -24,41 +24,47 @@ namespace Violee
             {
                 var match = Regex.Match(t.name, @"\d+");
                 var id = match.Success ? byte.Parse(match.Value) : new byte();
-
-                var sprite = Sprite.Create(
-                    t,
-                    new Rect(0, 0, t.width, t.height),
-                    new Vector2(0.5f, 0.5f),
-                    100.0f,
-                    0,
-                    SpriteMeshType.Tight
-                );
                 var boxConfig = new BoxConfigSingle()
                 {
                     Name = t.name,
                     Walls = id,
                     Texture2D = t,
-                    Sprite = sprite,
                     // 强制刷新所有权重
-                    // BasicWeight = 100,
+                    BasicWeight = 100,
                 };
-                BoxConfig.BoxConfigs.Add(boxConfig);
-                
-                if(id == 0)
-                    emptyBoxConfig = boxConfig;
+                BoxConfigs.Add(boxConfig);
             });
 #if UNITY_EDITOR
             EditorUtility.SetDirty(BoxConfig);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 #endif
-            BoxConfig.BoxConfigs.Sort((x, y) => x.Walls - y.Walls);
+            BoxConfigs.Sort((x, y) => x.Walls - y.Walls);
             Debug.Log("LoadConfig Completed");
         }
         async void Awake()
         {
-            await LoadConfig();
-            allBoxWalls = BoxConfig.BoxConfigs.Select(x => x.Walls).Distinct().ToList();
+            if(RefreshConfigOnAwake)
+            {
+                await LoadConfig();
+            }
+
+            
+            emptyBoxConfig = BoxConfigs.First(x => x.Walls == 0);
+            BoxConfigs.ForEach(boxConfig =>
+            {
+                var t = boxConfig.Texture2D;
+                boxConfig.Sprite = Sprite.Create(
+                    t,
+                    new Rect(0, 0, t.width, t.height),
+                    new Vector2(0.5f, 0.5f),
+                    100.0f,
+                    0,
+                    SpriteMeshType.Tight);
+                MyDebug.Log($"TTT {boxConfig.Texture2D == null}  {boxConfig.Sprite == null}");
+            });
+            
+            allBoxWalls = BoxConfigs.Select(x => x.Walls).Distinct().ToList();
             allBoxSides = (EBoxSide[])Enum.GetValues(typeof(EBoxSide));
             
             canGoOutDirsDic = new Dictionary<byte, List<EBoxSide>>();
@@ -83,6 +89,8 @@ namespace Violee
             };
         }
 
+        public bool RefreshConfigOnAwake;
+        public int YieldCount;
         public int Height = 4;
         public int Width = 6;
         
@@ -91,6 +99,7 @@ namespace Violee
         Stack<Loc> edgeLocStack;
         [SerializeField]
         BoxConfig BoxConfig;
+        List<BoxConfigSingle> BoxConfigs => BoxConfig.BoxConfigs;
         static BoxConfigSingle emptyBoxConfig;
         static List<byte> allBoxWalls;
         static EBoxSide[] allBoxSides;
@@ -126,6 +135,7 @@ namespace Violee
         #region Add & Remove
         void AddBox(Loc loc, BoxConfigSingle boxConfigSingle)
         {
+            var t = boxConfigSingle.Texture2D;
             var boxData = new BoxData(boxConfigSingle.Walls, boxConfigSingle.Sprite);
             mapData.BoxDic.Add(loc, boxData);
             BoxModel.OnCreateBoxData(loc, boxData);
@@ -182,10 +192,13 @@ namespace Violee
                         && canGoOutDirsDic[curWall].Contains(oppositeDirDic[pair.Item2]))
                     {
                         var wall = 
-                            BoxConfig.BoxConfigs.RandomItemWeighted(
+                            BoxConfigs.RandomItemWeighted(
                                 x => canGoOutDirsDic[x.Walls].Contains(pair.Item2),
                                 x => x.BasicWeight);
-                        await Task.Yield();
+                        for (int y = 0; y < YieldCount; y++)
+                        {
+                            await Task.Yield();
+                        }
                         AddBox(pair.Item1, wall);
                         edgeLocStack.Push(pair.Item1);
                     }
