@@ -139,6 +139,7 @@ namespace Violee
         public int Height = 4;
         public int Width = 6;
         public Vector2Int StartPos;
+        EBoxSide startDir = EBoxSide.Up;
         MapData mapData;
         List<Vector2Int> emptyLocSet;
         
@@ -235,9 +236,24 @@ namespace Violee
             isGenerating = false;
         }
 
+        SimplePriorityQueue<BoxPointData, int> pq;
         async Task AStar()
         {
-            await Task.Delay(0);
+            pq = new SimplePriorityQueue<BoxPointData, int>();
+            mapData.BoxDic.Values.ForEach(boxValue =>  boxValue.ResetCost(allBoxSides));
+            var startBoxPoint = mapData.BoxDic[StartPos].BoxPointDic[startDir];
+            startBoxPoint.CostWall = 0;
+            pq.Enqueue(startBoxPoint, 0);
+            while (pq.Count != 0)
+            {
+                var curBoxPoint = pq.Dequeue();
+                var curDir = curBoxPoint.Dir;
+                BoxData.NextDirDic[curDir].ForEach(nextDir =>
+                {
+                    var nextBoxPoint = mapData.BoxDic[StartPos].BoxPointDic[nextDir];
+                    /// ...
+                });
+            }
         }
         #endregion
         
