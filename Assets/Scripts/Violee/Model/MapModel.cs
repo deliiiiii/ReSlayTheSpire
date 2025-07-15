@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee
@@ -48,10 +49,7 @@ namespace Violee
         }
         void RemoveAllBoxes()
         {
-            foreach (var boxData in mapData)
-            {
-                OnRemoveBox?.Invoke(boxData.Pos);
-            }
+            mapData?.ForEach(boxData => OnRemoveBox?.Invoke(boxData.Pos));
             mapData?.Clear();
             emptyPosList = new List<Vector2Int>();
             for(int j = 0; j < Height; j++)
@@ -158,12 +156,10 @@ namespace Violee
 
 
         #region Function Got By Editor
-
         public static List<BoxPointData> GetAllPoints()
         {
-            return mapData.SelectMany(x => x.PointDic.Values).ToList();
+            return mapData?.SelectMany(x => x.PointDic.Values).ToList() ?? new List<BoxPointData>();
         }
-
         #endregion
         
         #region Event

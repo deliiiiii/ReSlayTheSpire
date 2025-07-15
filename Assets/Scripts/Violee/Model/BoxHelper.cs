@@ -17,7 +17,12 @@ namespace Violee
         {
             emptyBoxConfig = BoxConfigList.First(x => x.Walls == 0);
             allBoxWalls = BoxConfigList.Select(x => x.Walls).Distinct().ToList();
-            allBoxDirs = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
+            allBoxDirs = new List<EBoxDir>();
+            var array = Enum.GetValues(typeof(EBoxDir));
+            for (int i = 0; i < array.Length; i++)
+            {
+                allBoxDirs.Add((EBoxDir)array.GetValue(i));
+            }
             canGoOutDirsDic = new Dictionary<byte, HashSet<EBoxDir>>();
             foreach (var w in allBoxWalls)
             {
@@ -48,7 +53,7 @@ namespace Violee
         static List<BoxConfigSingle> BoxConfigList => Configer.Instance.BoxConfig.BoxConfigList;
         public static BoxConfigSingle emptyBoxConfig;
         public static List<byte> allBoxWalls;
-        public static EBoxDir[] allBoxDirs;
+        public static List<EBoxDir> allBoxDirs;
         /// <summary>
         /// (walls, [outDir1, ...])
         /// </summary>

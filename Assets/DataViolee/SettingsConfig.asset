@@ -15,4 +15,4 @@ MonoBehaviour:
   ShowBoxWhenCreated: 1
   RefreshConfigOnAwake: 1
   ShowBoxCost: 1
-  BoxCostPosOffset: 0.7
+  BoxCostPosOffset: 0.35

@@ -74,9 +74,9 @@ namespace Violee
                 foreach (var dir2 in allDirs)
                 {
                     if (dir == dir2)
-                        return;
+                        continue;
                     if (BoxHelper.oppositeDirDic[dir] == dir2)
-                        return;
+                        continue;
                     PointDic[dir].NextPointsInBox.Add(PointDic[dir2]);
                 }
             }
