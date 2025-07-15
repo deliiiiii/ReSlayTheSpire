@@ -104,20 +104,28 @@ namespace Violee
         [Button]
         async Task StartGenerate()
         {
-            if (isGenerating)
-                return;
-            isGenerating = true;
-            RemoveAllBoxes();
-            mapData = new MapData();
-            await GenerateOneFakeConnection(true);
-            while (emptyPosList.Count > 0)
+            try
             {
-                await GenerateOneFakeConnection(false);
-            }
+                if (isGenerating)
+                    return;
+                isGenerating = true;
+                RemoveAllBoxes();
+                mapData = new MapData();
+                await GenerateOneFakeConnection(true);
+                while (emptyPosList.Count > 0)
+                {
+                    await GenerateOneFakeConnection(false);
+                }
 
-            // await Dijkstra();
-            OnGenerateMap?.Invoke();
-            isGenerating = false;
+                // await Dijkstra();
+                OnGenerateMap?.Invoke();
+                isGenerating = false;
+            }
+            catch (Exception e)
+            {
+                MyDebug.LogError(e);
+                throw;
+            }
         }
 
         SimplePriorityQueue<BoxPointData, int> pq;
@@ -146,10 +154,12 @@ namespace Violee
                         curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));
                     pq.Enqueue(nextPoint, nextCostOb.Value);
                 }
+
                 foreach (var n in curPoint.NextPointsInBox)
                 {
                     pq.Enqueue(n, n.CostWall);
                 }
+
                 await YieldFrames();
             }
         }

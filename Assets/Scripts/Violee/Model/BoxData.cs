@@ -77,6 +77,8 @@ namespace Violee
                         continue;
                     if (BoxHelper.oppositeDirDic[dir] == dir2)
                         continue;
+                    if (!PointDic.ContainsKey(dir))
+                        continue;
                     PointDic[dir].NextPointsInBox.Add(PointDic[dir2]);
                 }
             }
