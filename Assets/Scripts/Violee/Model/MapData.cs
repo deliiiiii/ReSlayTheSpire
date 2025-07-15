@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Violee
 {
     [Serializable]
-    public class MapData
+    public class MapData : KeyedCollection<Vector2Int, BoxData>
     {
-        public SerializableDictionary<Vector2Int, BoxData> BoxDic;
+        protected override Vector2Int GetKeyForItem(BoxData item)
+        {
+            return item.Pos;
+        }
     }
 }

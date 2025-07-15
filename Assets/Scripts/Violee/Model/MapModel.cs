@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -64,12 +66,12 @@ namespace Violee
             });
             
             allBoxWalls = BoxConfigs.Select(x => x.Walls).Distinct().ToList();
-            allBoxSides = (EBoxSide[])Enum.GetValues(typeof(EBoxSide));
+            allBoxSides = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
             
-            canGoOutDirsDic = new Dictionary<byte, List<EBoxSide>>();
+            canGoOutDirsDic = new Dictionary<byte, List<EBoxDir>>();
             allBoxWalls.ForEach(w =>
             {
-                canGoOutDirsDic.Add(w, new List<EBoxSide>());
+                canGoOutDirsDic.Add(w, new List<EBoxDir>());
                 allBoxSides.ForEach(dir =>
                 {
                     if (BoxData.CanGoOutAt(w, dir))
@@ -79,12 +81,12 @@ namespace Violee
                 });
             });
 
-            oppositeDirDic = new Dictionary<EBoxSide, EBoxSide>()
+            oppositeDirDic = new Dictionary<EBoxDir, EBoxDir>()
             {
-                { EBoxSide.Up, EBoxSide.Down },
-                { EBoxSide.Down, EBoxSide.Up },
-                { EBoxSide.Left, EBoxSide.Right },
-                { EBoxSide.Right, EBoxSide.Left }
+                { EBoxDir.Up, EBoxDir.Down },
+                { EBoxDir.Down, EBoxDir.Up },
+                { EBoxDir.Left, EBoxDir.Right },
+                { EBoxDir.Right, EBoxDir.Left }
             };
             
             PlayerModel.OnInputMove += OnPlayerInputMove;
@@ -104,34 +106,37 @@ namespace Violee
         List<BoxConfigSingle> BoxConfigs => BoxConfig.BoxConfigs;
         BoxConfigSingle emptyBoxConfig;
         List<byte> allBoxWalls;
-        EBoxSide[] allBoxSides;
+        EBoxDir[] allBoxSides;
         /// <summary>
         /// (walls, [outDir1, ...])
         /// </summary>
-        Dictionary<byte, List<EBoxSide>> canGoOutDirsDic;
+        Dictionary<byte, List<EBoxDir>> canGoOutDirsDic;
         /// <summary>
         /// (dir, oppositeDir)
         /// </summary>
-        Dictionary<EBoxSide, EBoxSide> oppositeDirDic;
+        Dictionary<EBoxDir, EBoxDir> oppositeDirDic;
+        readonly Dictionary<EBoxDir, Vector2Int> dirToVec2Dic = new()
+        {
+            { EBoxDir.Up, new Vector2Int(0, 1) },
+            { EBoxDir.Down, new Vector2Int(0, -1) },
+            { EBoxDir.Left, new Vector2Int(-1, 0) },
+            { EBoxDir.Right, new Vector2Int(1, 0) }
+        };
+        Vector2Int NextPos(Vector2Int thisLoc, EBoxDir dir)
+        {
+            return new Vector2Int(thisLoc.x + dirToVec2Dic[dir].x, thisLoc.y + dirToVec2Dic[dir].y);
+        }
         #endregion
         
         
-        List<(Vector2Int, EBoxSide)> GetNextLocAndDirList(Vector2Int thisVector2Int)
+        List<(Vector2Int, EBoxDir)> GetNextLocAndDirList(Vector2Int thisPos)
         {
-            var nextLocs = new List<(Vector2Int, EBoxSide)>();
+            var nextPoses = new List<(Vector2Int, EBoxDir)>();
             allBoxSides.ForEach(dir =>
             {
-                var (dx, dy) = dir switch
-                {
-                    EBoxSide.Up => (0, 1),
-                    EBoxSide.Down => (0, -1),
-                    EBoxSide.Left => (-1, 0),
-                    EBoxSide.Right => (1, 0),
-                    _ => (0, 0),
-                };
-                nextLocs.Add((new Vector2Int(thisVector2Int.x + dx, thisVector2Int.y + dy), oppositeDirDic[dir]));
+                nextPoses.Add((NextPos(thisPos, dir), oppositeDirDic[dir]));
             });
-            return nextLocs;
+            return nextPoses;
         }
         
         
@@ -139,54 +144,60 @@ namespace Violee
         public int Height = 4;
         public int Width = 6;
         public Vector2Int StartPos;
-        EBoxSide startDir = EBoxSide.Up;
+        EBoxDir startDir = EBoxDir.Up;
         MapData mapData;
-        List<Vector2Int> emptyLocSet;
+        List<Vector2Int> emptyPosList;
         
-        bool InMap(Vector2Int vector2Int) => vector2Int.x >= 0 && vector2Int.x < Width && vector2Int.y >= 0 && vector2Int.y < Height;
-        bool HasBox(Vector2Int vector2Int) => mapData.BoxDic.ContainsKey(vector2Int);
-        async Task AddBox(Vector2Int vector2Int, BoxConfigSingle boxConfigSingle)
+        bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
+        bool HasBox(Vector2Int pos) => mapData.Contains(pos);
+        async Task<BoxData> AddBox(Vector2Int pos, BoxConfigSingle config)
         {
             await YieldFrames();
-            var t = boxConfigSingle.Texture2D;
-            var boxData = new BoxData(boxConfigSingle.Walls, boxConfigSingle.Sprite);
-            mapData.BoxDic.Add(vector2Int, boxData);
-            emptyLocSet.Remove(vector2Int);
-            OnAddBox?.Invoke(vector2Int, boxData);
-            MyDebug.Log($"Add box {boxConfigSingle.Walls} at {vector2Int}");
+            var t = config.Texture2D;
+            var boxData = new BoxData()
+            {
+                Pos = pos,
+                Walls = config.Walls,
+                Sprite = config.Sprite,
+            };
+            mapData.Add(boxData);
+            emptyPosList.Remove(pos);
+            OnAddBox?.Invoke(pos, boxData);
+            MyDebug.Log($"Add box {config.Walls} at {pos}");
+            return boxData;
         }
-        void RemoveBox(Vector2Int vector2Int)
+        void RemoveBox(BoxData boxData)
         {
-            mapData.BoxDic.Remove(vector2Int);
-            emptyLocSet.Add(vector2Int);
-            OnRemoveBox?.Invoke(vector2Int);
+            mapData.Remove(boxData);
+            emptyPosList.Add(boxData.Pos);
+            OnRemoveBox?.Invoke(boxData.Pos);
         }
         void RemoveAllBoxes()
         {
-            mapData?.BoxDic?.Keys.ForEach(loc => OnRemoveBox?.Invoke(loc));
-            mapData?.BoxDic?.Clear();
-            emptyLocSet = new List<Vector2Int>();
+            mapData?.ForEach(boxData => OnRemoveBox?.Invoke(boxData.Pos));
+            mapData?.Clear();
+            emptyPosList = new List<Vector2Int>();
             for(int j = 0; j < Height; j++)
             {
                 for(int i = 0; i < Width; i++)
                 {
-                    emptyLocSet.Add(new Vector2Int(i, j));
+                    emptyPosList.Add(new Vector2Int(i, j));
                 }
             }
         }
 
         async Task GenerateOneFakeConnection(bool startWithStartLoc)
         {
-            var edgeLocStack = new Stack<Vector2Int>();
+            var edgeBoxStack = new Stack<BoxData>();
             // 每个伪连通块的第一个是空格子
-            var firstLoc = startWithStartLoc ? StartPos : emptyLocSet[0];
-            await AddBox(firstLoc, emptyBoxConfig);
-            edgeLocStack.Push(firstLoc);
-            while (edgeLocStack.Count > 0)
+            var firstLoc = startWithStartLoc ? StartPos : emptyPosList[0];
+            var firstBox =  await AddBox(firstLoc, emptyBoxConfig);
+            edgeBoxStack.Push(firstBox);
+            while (edgeBoxStack.Count > 0)
             {
-                var curEdgeLoc = edgeLocStack.Pop();
-                var curWall = mapData.BoxDic[curEdgeLoc].Walls;
-                var nextPairs = GetNextLocAndDirList(curEdgeLoc);
+                var curBox = edgeBoxStack.Pop();
+                var curWall = curBox.Walls;
+                var nextPairs = GetNextLocAndDirList(curBox.Pos);
                 foreach (var pair in nextPairs)
                 {
                     if (InMap(pair.Item1) 
@@ -197,8 +208,8 @@ namespace Violee
                             BoxConfigs.RandomItemWeighted(
                                 x => canGoOutDirsDic[x.Walls].Contains(pair.Item2),
                                 x => x.BasicWeight);
-                        await AddBox(pair.Item1, wall);
-                        edgeLocStack.Push(pair.Item1);
+                        var nextBox = await AddBox(pair.Item1, wall);
+                        edgeBoxStack.Push(nextBox);
                     }
                 }
             }
@@ -221,38 +232,31 @@ namespace Violee
                 return;
             isGenerating = true;
             RemoveAllBoxes();
-            mapData = new MapData()
-            {
-                BoxDic = new SerializableDictionary<Vector2Int, BoxData>()
-            };
+            mapData = new MapData();
             await GenerateOneFakeConnection(true);
-            while (emptyLocSet.Count > 0)
+            while (emptyPosList.Count > 0)
             {
                 await GenerateOneFakeConnection(false);
             }
 
-            await AStar();
+            // await Dijkstra();
             OnGenerateMap?.Invoke();
             isGenerating = false;
         }
 
         SimplePriorityQueue<BoxPointData, int> pq;
-        async Task AStar()
+        async Task Dijkstra()
         {
             pq = new SimplePriorityQueue<BoxPointData, int>();
-            mapData.BoxDic.Values.ForEach(boxValue =>  boxValue.ResetCost(allBoxSides));
-            var startBoxPoint = mapData.BoxDic[StartPos].BoxPointDic[startDir];
-            startBoxPoint.CostWall = 0;
-            pq.Enqueue(startBoxPoint, 0);
+            mapData.ForEach(boxValue => boxValue.InitPoint(allBoxSides));
+            var startBox = mapData[StartPos].BoxPointDic[startDir];
+            startBox.CostWall.Value = 0;
+            pq.Enqueue(startBox, 0);
             while (pq.Count != 0)
             {
                 var curBoxPoint = pq.Dequeue();
-                var curDir = curBoxPoint.Dir;
-                BoxData.NextDirDic[curDir].ForEach(nextDir =>
-                {
-                    var nextBoxPoint = mapData.BoxDic[StartPos].BoxPointDic[nextDir];
-                    /// ...
-                });
+                curBoxPoint.UpdateCostInBox();
+                // NextPos()
             }
         }
         #endregion

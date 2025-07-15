@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Violee
 {
-    public enum EBoxSide
+    public enum EBoxDir
     {
         Up = 1,
         Right = 2,
@@ -17,66 +17,78 @@ namespace Violee
 
     public class BoxPointData
     {
-        public EBoxSide Dir;
-        public int CostWall;
+        public EBoxDir Dir;
+        public Observable<int> CostWall;
+        public List<BoxPointData> NextPointList;
+        public BoxData BelongBox;
+        
+
+        
+        public void UpdateCostInBox()
+        {
+            NextPointList.ForEach(nextPoint =>
+            {
+                nextPoint.CostWall.Value += 
+                    BelongBox.CanGoThroughFromToInside(Dir, nextPoint.Dir) ? 0 : 1;
+            });
+        }
     }
     
     [Serializable]
     public class BoxData
     {
+        
+        static EBoxDir[] allDirs;
         static BoxData()
         {
-            NextDirDic = new();
-            var allDirs = (EBoxSide[])Enum.GetValues(typeof(EBoxSide));
-            allDirs.ForEach(dir =>
+            allDirs = (EBoxDir[])Enum.GetValues(typeof(EBoxDir));
+        }
+        [ShowInInspector]
+        string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
+
+        public Vector2Int Pos;
+        public byte Walls;
+        public Sprite Sprite;
+        public Dictionary<EBoxDir, BoxPointData> BoxPointDic;
+
+        
+        #region Path
+        public void InitPoint(EBoxDir[] allBoxSides)
+        {
+            BoxPointDic = new Dictionary<EBoxDir, BoxPointData>();
+            allBoxSides.ForEach(dir =>
             {
-                NextDirDic.Add(dir, new List<EBoxSide>());
+                BoxPointDic.Add(dir, new BoxPointData()
+                {
+                    Dir = dir,
+                    BelongBox = this,
+                    CostWall = new (int.MaxValue / 2),
+                    NextPointList = new List<BoxPointData>()
+                });
                 allDirs.ForEach(dir2 =>
                 {
                     if (dir == dir2)
                         return;
-                    NextDirDic[dir].Add(dir2);
+                    BoxPointDic[dir].NextPointList.Add(BoxPointDic[dir2]);
                 });
             });
-        }
-        public BoxData(byte walls, Sprite sprite)
-        {
-            Walls = walls;
-            Sprite = sprite;
-        }
-        [ShowInInspector]
-        string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
-        
-        public byte Walls;
-        public Sprite Sprite;
-        public Dictionary<EBoxSide, BoxPointData> BoxPointDic;
-        
-        public bool HasWallS1 => (Walls & 0b00000001) != 0;
-        public bool HasWallS2 => (Walls & 0b00000010) != 0;
-        public bool HasWallS4 => (Walls & 0b00000100) != 0;
-        public bool HasWallS8 => (Walls & 0b00001000) != 0;
-        public bool HasWallT12 => (Walls & 0b00010000) != 0;
-        public bool HasWallT24 => (Walls & 0b00100000) != 0;
-        public bool HasWallT48 => (Walls & 0b01000000) != 0;
-        public bool HasWallT81 => (Walls & 0b10000000) != 0;
-
-        
-        #region Path
-
-        public static Dictionary<EBoxSide, List<EBoxSide>> NextDirDic;
-        public void ResetCost(EBoxSide[] allBoxSides)
-        {
-            BoxPointDic = new Dictionary<EBoxSide, BoxPointData>();
-            allBoxSides.ForEach(dir => BoxPointDic.Add(dir, new BoxPointData(){CostWall = int.MaxValue / 2}));
         }
         #endregion
         
         
         #region GoCross
-        public static bool CanGoOutAt(byte walls, EBoxSide dir) => (walls & (byte)dir) == 0;
-        bool ThisCanGoOutAt(EBoxSide dir) => (Walls & (byte)dir) == 0;
+        // public bool HasWallS1 => (Walls & 0b00000001) != 0;
+        // public bool HasWallS2 => (Walls & 0b00000010) != 0;
+        // public bool HasWallS4 => (Walls & 0b00000100) != 0;
+        // public bool HasWallS8 => (Walls & 0b00001000) != 0;
+        // public bool HasWallT12 => (Walls & 0b00010000) != 0;
+        // public bool HasWallT24 => (Walls & 0b00100000) != 0;
+        // public bool HasWallT48 => (Walls & 0b01000000) != 0;
+        // public bool HasWallT81 => (Walls & 0b10000000) != 0;
+        public static bool CanGoOutAt(byte walls, EBoxDir dir) => (walls & (byte)dir) == 0;
+        bool ThisCanGoOutAt(EBoxDir dir) => (Walls & (byte)dir) == 0;
 
-        public bool CanGoThroughFromToInside(EBoxSide dir1, EBoxSide dir2)
+        public bool CanGoThroughFromToInside(EBoxDir dir1, EBoxDir dir2)
         {
             var bigDir = dir1 > dir2 ? dir1 : dir2;
             var smallDif = dir1 < dir2 ? dir1 : dir2;
@@ -100,7 +112,7 @@ namespace Violee
                 _ => x == fromDif || (x | fromDif) != x
             };
         }
-        bool CanGoThroughFromToOut(EBoxSide dir1, EBoxSide dir2)
+        bool CanGoThroughFromToOut(EBoxDir dir1, EBoxDir dir2)
         {
             return CanGoThroughFromToInside(dir1, dir2) && ThisCanGoOutAt(dir1) && ThisCanGoOutAt(dir2);
         }
