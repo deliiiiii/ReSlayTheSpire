@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Violee
 {
@@ -30,20 +33,26 @@ namespace Violee
                     0,
                     SpriteMeshType.Tight
                 );
-                ;
                 var boxConfig = new BoxConfigSingle()
                 {
                     Name = t.name,
                     Walls = id,
+                    Texture2D = t,
                     Sprite = sprite,
-                    BasicWeight = 1,
+                    // 强制刷新所有权重
+                    // BasicWeight = 100,
                 };
                 BoxConfig.BoxConfigs.Add(boxConfig);
                 
                 if(id == 0)
                     emptyBoxConfig = boxConfig;
             });
-            
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(BoxConfig);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+#endif
+            BoxConfig.BoxConfigs.Sort((x, y) => x.Walls - y.Walls);
             Debug.Log("LoadConfig Completed");
         }
         async void Awake()
@@ -149,7 +158,6 @@ namespace Violee
             edgeLocStack.Push(startLoc);
             while (edgeLocStack.Count > 0)
             {
-                await Task.Yield();
                 var curEdgeLoc = edgeLocStack.Pop();
                 var curWall = mapData.BoxDic[curEdgeLoc].Walls;
 
@@ -166,7 +174,6 @@ namespace Violee
                 //         edgeLocStack.Push(pair.Item1);
                 //     });
                 
-                
                 var nextPairs = GetNextLocAndDirList(curEdgeLoc);
                 foreach (var pair in nextPairs)
                 {
@@ -178,6 +185,7 @@ namespace Violee
                             BoxConfig.BoxConfigs.RandomItemWeighted(
                                 x => canGoOutDirsDic[x.Walls].Contains(pair.Item2),
                                 x => x.BasicWeight);
+                        await Task.Yield();
                         AddBox(pair.Item1, wall);
                         edgeLocStack.Push(pair.Item1);
                     }
