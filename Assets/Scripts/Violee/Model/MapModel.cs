@@ -139,57 +139,51 @@ namespace Violee
         public int Height = 4;
         public int Width = 6;
         MapData mapData;
-        Stack<Loc> edgeLocStack;
+        List<Loc> emptyLocSet;
         
         bool InMap(Loc loc) => loc.X >= 0 && loc.X < Width && loc.Y >= 0 && loc.Y < Height;
         bool HasBox(Loc loc) => mapData.BoxDic.ContainsKey(loc);
-        void AddBox(Loc loc, BoxConfigSingle boxConfigSingle)
+        async Task AddBox(Loc loc, BoxConfigSingle boxConfigSingle)
         {
+            await YieldFrames();
             var t = boxConfigSingle.Texture2D;
             var boxData = new BoxData(boxConfigSingle.Walls, boxConfigSingle.Sprite);
             mapData.BoxDic.Add(loc, boxData);
+            emptyLocSet.Remove(loc);
             OnAddBox?.Invoke(loc, boxData);
             MyDebug.Log($"Add box {boxConfigSingle.Walls} at {loc}");
         }
         void RemoveBox(Loc loc)
         {
             mapData.BoxDic.Remove(loc);
+            emptyLocSet.Add(loc);
             OnRemoveBox?.Invoke(loc);
         }
         void RemoveAllBoxes()
         {
             mapData?.BoxDic?.Keys.ForEach(loc => OnRemoveBox?.Invoke(loc));
             mapData?.BoxDic?.Clear();
-        }
-        [Button]
-        async Task StartGenerate(Loc startLoc)
-        {
-            RemoveAllBoxes();
-            mapData = new MapData()
+            emptyLocSet = new List<Loc>();
+            for(int j = 0; j < Height; j++)
             {
-                BoxDic = new SerializableDictionary<Loc, BoxData>()
-            };
-            edgeLocStack = new Stack<Loc>();
-            AddBox(startLoc, emptyBoxConfig);
-            edgeLocStack.Push(startLoc);
+                for(int i = 0; i < Width; i++)
+                {
+                    emptyLocSet.Add(new Loc(i, j));
+                }
+            }
+        }
+
+        async Task GenerateOneFakeConnection()
+        {
+            var edgeLocStack = new Stack<Loc>();
+            // 每个伪连通块的第一个是空格子
+            var firstLoc = emptyLocSet[0];
+            await AddBox(firstLoc, emptyBoxConfig);
+            edgeLocStack.Push(firstLoc);
             while (edgeLocStack.Count > 0)
             {
                 var curEdgeLoc = edgeLocStack.Pop();
                 var curWall = mapData.BoxDic[curEdgeLoc].Walls;
-
-                // GetNextLocAndDirList(curEdgeLoc)
-                //     .Where(pair =>
-                //         InMap(pair.Item1)
-                //         && !HasBox(pair.Item1)
-                //         // 当前格的当前方向可以出去
-                //         && canGoOutDirsDic[curWall].Contains(oppositeDirDic[pair.Item2]))
-                //     .ForEach(pair =>
-                //     {
-                //         var wall = allBoxWalls.RandomItem(w => canGoOutDirsDic[w].Contains(pair.Item2));
-                //         AddBox(pair.Item1, wall);
-                //         edgeLocStack.Push(pair.Item1);
-                //     });
-                
                 var nextPairs = GetNextLocAndDirList(curEdgeLoc);
                 foreach (var pair in nextPairs)
                 {
@@ -201,17 +195,40 @@ namespace Violee
                             BoxConfigs.RandomItemWeighted(
                                 x => canGoOutDirsDic[x.Walls].Contains(pair.Item2),
                                 x => x.BasicWeight);
-                        for (int y = 0; y < YieldCount; y++)
-                        {
-                            await Task.Yield();
-                        }
-                        AddBox(pair.Item1, wall);
+                        await AddBox(pair.Item1, wall);
                         edgeLocStack.Push(pair.Item1);
                     }
                 }
             }
-            
+        }
+
+        async Task YieldFrames()
+        {
+            for (int y = 0; y < YieldCount; y++)
+            {
+                await Task.Yield();
+            }
+        }
+        [Button]
+        async Task StartGenerate(Loc startLoc)
+        {
+            RemoveAllBoxes();
+            mapData = new MapData()
+            {
+                BoxDic = new SerializableDictionary<Loc, BoxData>()
+            };
+            while (emptyLocSet.Count > 0)
+            {
+                await GenerateOneFakeConnection();
+            }
+
+            await AStar();
             OnGenerateMap?.Invoke();
+        }
+
+        async Task AStar()
+        {
+            await Task.Delay(0);
         }
         #endregion
         
