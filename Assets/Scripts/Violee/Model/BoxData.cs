@@ -65,11 +65,16 @@ namespace Violee
         public byte Walls;
         [ShowInInspector]
         string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
-        public const int CrossWallCost = 1;
+        public bool HasIthWall(int i) => (Walls & (1 << i)) != 0;
+        
+        
+        // TODO 1：之后在sprite上自己划线？ 2：拿预制体的3d模型
         public Sprite Sprite;
-        [NotNull] public SerializableDictionary<EBoxDir, BoxPointData> PointDic;
+        
         
         #region Path
+        public const int CrossWallCost = 1;
+        [NotNull] public SerializableDictionary<EBoxDir, BoxPointData> PointDic;
         public void InitPoint()
         {
             PointDic = new SerializableDictionary<EBoxDir, BoxPointData>();

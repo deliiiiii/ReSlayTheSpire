@@ -1915,6 +1915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ba551c04c2941ca9497148b9657e7ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BoxPrefab: {fileID: 5599340466771819531, guid: d1e1e796887664d4b900a3c7069e5b3c, type: 3}
 --- !u!1 &664134739
 GameObject:
   m_ObjectHideFlags: 0
@@ -1932,7 +1933,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &664134740
 Transform:
   m_ObjectHideFlags: 0
@@ -2831,9 +2832,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurPointHint: {fileID: 1859779783}
-  YieldCount: 0
-  Height: 20
-  Width: 20
+  YieldCount: 1
+  Height: 6
+  Width: 6
   StartPos: {x: 0, y: 0}
   StartDir: 1
 --- !u!1 &988193877
@@ -3981,7 +3982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1282909136
 Transform:
   m_ObjectHideFlags: 0
@@ -4704,7 +4705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1536509199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4933,7 +4934,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1659511581
 Transform:
   m_ObjectHideFlags: 0
@@ -6644,7 +6645,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4459864850019384736, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384738, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_RootOrder
@@ -6735,7 +6736,15 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384740, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: crosshairImage
+      value: 
+      objectReference: {fileID: 21300000, guid: 14a0fb2a49476114bacda930c4c10965, type: 3}
+    - target: {fileID: 4459864850019384740, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: unlimitedSprint
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459864850019384741, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
