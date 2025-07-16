@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: BoxConfig
   m_EditorClassIdentifier: 
   BoxConfigList:
-  - Name: Box240
-    Walls: 240
-    Texture2D: {fileID: 2800000, guid: 047864e3767443846b3f08b42cdf2158, type: 3}
+  - Name: Box0
+    Walls: 0
+    Texture2D: {fileID: 2800000, guid: 67c8e066c4cc26b4ebe5747349dc8af8, type: 3}
+    Sprite: {fileID: 0}
+    BasicWeight: 25
+  - Name: Box1
+    Walls: 1
+    Texture2D: {fileID: 2800000, guid: d7e08d6672ca0624dbee250c67e91537, type: 3}
     Sprite: {fileID: 0}
     BasicWeight: 100
-  - Name: Box8
-    Walls: 8
-    Texture2D: {fileID: 2800000, guid: 229354147df967644bcd35cf144230f0, type: 3}
-    Sprite: {fileID: 0}
-    BasicWeight: 100
-  - Name: Box9
-    Walls: 9
-    Texture2D: {fileID: 2800000, guid: 2845d0c8e8625c545991703e6d0b7449, type: 3}
+  - Name: Box2
+    Walls: 2
+    Texture2D: {fileID: 2800000, guid: f4a63bb25786fa844b4f3a837a4d95be, type: 3}
     Sprite: {fileID: 0}
     BasicWeight: 100
   - Name: Box3
@@ -33,24 +33,9 @@ MonoBehaviour:
     Texture2D: {fileID: 2800000, guid: 31f4fd9932fa7634abde73b463943454, type: 3}
     Sprite: {fileID: 0}
     BasicWeight: 100
-  - Name: Box160
-    Walls: 160
-    Texture2D: {fileID: 2800000, guid: 3218f70dcae473b478e0e6fb14b3818d, type: 3}
-    Sprite: {fileID: 0}
-    BasicWeight: 100
-  - Name: Box13
-    Walls: 13
-    Texture2D: {fileID: 2800000, guid: 666a986610de9ad418276e9689dabefb, type: 3}
-    Sprite: {fileID: 0}
-    BasicWeight: 100
-  - Name: Box0
-    Walls: 0
-    Texture2D: {fileID: 2800000, guid: 67c8e066c4cc26b4ebe5747349dc8af8, type: 3}
-    Sprite: {fileID: 0}
-    BasicWeight: 100
-  - Name: Box14
-    Walls: 14
-    Texture2D: {fileID: 2800000, guid: 76e23b04fdea4164a930fcc0fa0ee4e7, type: 3}
+  - Name: Box4
+    Walls: 4
+    Texture2D: {fileID: 2800000, guid: d2262981af6a51b44a0e72a60c9a41f9, type: 3}
     Sprite: {fileID: 0}
     BasicWeight: 100
   - Name: Box6
@@ -62,39 +47,54 @@ MonoBehaviour:
     Walls: 7
     Texture2D: {fileID: 2800000, guid: 86e5c1db540f1d84d92941c8a438c7b1, type: 3}
     Sprite: {fileID: 0}
+    BasicWeight: 200
+  - Name: Box8
+    Walls: 8
+    Texture2D: {fileID: 2800000, guid: 229354147df967644bcd35cf144230f0, type: 3}
+    Sprite: {fileID: 0}
+    BasicWeight: 100
+  - Name: Box9
+    Walls: 9
+    Texture2D: {fileID: 2800000, guid: 2845d0c8e8625c545991703e6d0b7449, type: 3}
+    Sprite: {fileID: 0}
     BasicWeight: 100
   - Name: Box11
     Walls: 11
     Texture2D: {fileID: 2800000, guid: 97187afca6117e94bba0ad96938b6f61, type: 3}
     Sprite: {fileID: 0}
-    BasicWeight: 100
-  - Name: Box15
-    Walls: 15
-    Texture2D: {fileID: 2800000, guid: 9e36a8c5b2f1bb94797b3c31a90775dc, type: 3}
-    Sprite: {fileID: 0}
-    BasicWeight: 100
-  - Name: Box80
-    Walls: 80
-    Texture2D: {fileID: 2800000, guid: bd6424a9d430ff64c8c8d18c94907581, type: 3}
-    Sprite: {fileID: 0}
-    BasicWeight: 100
+    BasicWeight: 200
   - Name: Box12
     Walls: 12
     Texture2D: {fileID: 2800000, guid: c35881829601b204a8d72f3a3edf9887, type: 3}
     Sprite: {fileID: 0}
-    BasicWeight: 100
-  - Name: Box4
-    Walls: 4
-    Texture2D: {fileID: 2800000, guid: d2262981af6a51b44a0e72a60c9a41f9, type: 3}
+    BasicWeight: 200
+  - Name: Box13
+    Walls: 13
+    Texture2D: {fileID: 2800000, guid: 666a986610de9ad418276e9689dabefb, type: 3}
     Sprite: {fileID: 0}
-    BasicWeight: 100
-  - Name: Box1
-    Walls: 1
-    Texture2D: {fileID: 2800000, guid: d7e08d6672ca0624dbee250c67e91537, type: 3}
+    BasicWeight: 200
+  - Name: Box14
+    Walls: 14
+    Texture2D: {fileID: 2800000, guid: 76e23b04fdea4164a930fcc0fa0ee4e7, type: 3}
     Sprite: {fileID: 0}
-    BasicWeight: 100
-  - Name: Box2
-    Walls: 2
-    Texture2D: {fileID: 2800000, guid: f4a63bb25786fa844b4f3a837a4d95be, type: 3}
+    BasicWeight: 200
+  - Name: Box15
+    Walls: 15
+    Texture2D: {fileID: 2800000, guid: 9e36a8c5b2f1bb94797b3c31a90775dc, type: 3}
     Sprite: {fileID: 0}
-    BasicWeight: 100
+    BasicWeight: 200
+  - Name: Box80
+    Walls: 80
+    Texture2D: {fileID: 2800000, guid: bd6424a9d430ff64c8c8d18c94907581, type: 3}
+    Sprite: {fileID: 0}
+    BasicWeight: 300
+  - Name: Box160
+    Walls: 160
+    Texture2D: {fileID: 2800000, guid: 3218f70dcae473b478e0e6fb14b3818d, type: 3}
+    Sprite: {fileID: 0}
+    BasicWeight: 300
+  - Name: Box240
+    Walls: 240
+    Texture2D: {fileID: 2800000, guid: 047864e3767443846b3f08b42cdf2158, type: 3}
+    Sprite: {fileID: 0}
+    BasicWeight: 300

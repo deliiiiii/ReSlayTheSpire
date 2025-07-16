@@ -134,12 +134,15 @@ namespace Violee
         [Button]
         async Task Dijkstra()
         {
+            foreach (var boxData in mapData)
+            {
+                boxData.InitPoint();
+            }
             if (OnBeginDij != null)
             {
                 await OnBeginDij.Invoke();
             }
             var vSet = new HashSet<BoxPointData>();
-            var inQSet = new HashSet<BoxPointData>();
             int c = 0;
             try
             {
@@ -162,20 +165,24 @@ namespace Violee
                         var nextBox = mapData[nextPos];
                         var oppositeDir = BoxHelper.oppositeDirDic[curPoint.Dir];
                         var nextPoint = nextBox.PointDic[oppositeDir];
-                        var nextCostOb = nextPoint.CostWall;
-                        nextCostOb.Value = Math.Min(
-                            nextCostOb.Value,
+                        nextPoint.CostWall.Value = Math.Min(
+                            nextPoint.CostWall.Value,
                             curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));
-                        if (!vSet.Contains(nextPoint) && inQSet.Add(nextPoint))
+                        if (!vSet.Contains(nextPoint))
                         {
-                            pq.Enqueue(nextPoint, nextCostOb.Value);
+                            if(pq.Contains(nextPoint))
+                                pq.Remove(nextPoint);
+                            pq.Enqueue(nextPoint, nextPoint.CostWall);
                         }
                     }
                     foreach (var nextPoint in curPoint.NextPointsInBox)
                     {
-                        if (vSet.Contains(nextPoint) || !inQSet.Add(nextPoint))
-                            continue;
-                        pq.Enqueue(nextPoint, nextPoint.CostWall);
+                        if (!vSet.Contains(nextPoint))
+                        {
+                            if(pq.Contains(nextPoint))
+                                pq.Remove(nextPoint);
+                            pq.Enqueue(nextPoint, nextPoint.CostWall);
+                        }
                     }
                     CurPointHint.transform.position = curPoint.Pos;
                     await YieldFrames();

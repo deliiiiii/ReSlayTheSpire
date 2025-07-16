@@ -9,32 +9,48 @@ namespace Violee.View
 {
     public class MapView : ViewBase
     {
-        Dictionary<BoxPointData, Text> costTxtDic;
+        Dictionary<BoxPointData,(BindDataAct<int>, Text)> costTxtDic;
         public int TxtPerFrame = 100;
         public Text CostTxtTemplate;
 
         void Awake()
         {
-            MapModel.OnBeginDij += BindAllCostTxt;
+            if (Configer.Instance.SettingsConfig.ShowBoxCost)
+            {
+                MapModel.OnBeginDij += BindAllCostTxt;
+            }
+        }
+
+        async Task DestroyAllCostTxt()
+        {
+            if (costTxtDic != null)
+            {
+                foreach (var pair in costTxtDic.Values)
+                {
+                    // TODO 对象池
+                    pair.Item1.UnBind();
+                    Destroy(pair.Item2);
+                }
+            }
         }
         async Task BindAllCostTxt()
         {
             try
             {
-                // TODO 对象池
-                costTxtDic?.Values.ForEach(Destroy);
-                costTxtDic = new Dictionary<BoxPointData, Text>();
+                await DestroyAllCostTxt();
+                costTxtDic = new();
                 int c = 0;
                 foreach (var point in MapModel.GetAllPoints())
                 {
                     var txt = Instantiate(CostTxtTemplate, transform);
                     txt.transform.position = point.Pos;
                     txt.gameObject.SetActive(true);
-                    costTxtDic.Add(point, txt);
-                    Binder.From(point.CostWall).To(v =>
+                    var b = Binder.From(point.CostWall).To(v =>
                     {
                         txt.text = v > 1e9 ? "∞" : point.CostWall.ToString();
-                    }).Immediate();
+                    });
+                    b.Immediate();
+                    costTxtDic.Add(point, (b, txt));
                     c++;
                     if (c >= TxtPerFrame)
                     {

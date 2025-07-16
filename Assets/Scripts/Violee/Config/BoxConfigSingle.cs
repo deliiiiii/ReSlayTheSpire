@@ -10,11 +10,11 @@ namespace Violee
     {
         [HideInInspector]
         public string Name;
-        // [HideInInspector]
+        [HideInInspector]
         public byte Walls;
         [ReadOnly]
         public Texture2D Texture2D;
-        // [HideInInspector]
+        [HideInInspector]
         public Sprite Sprite;
         public int BasicWeight;
     }

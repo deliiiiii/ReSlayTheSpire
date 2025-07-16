@@ -16,11 +16,15 @@ namespace Violee
         Left = 8
     }
 
+    [Serializable]
     public class BoxPointData: IComparable<BoxPointData>, IEquatable<BoxPointData>
     {
         public EBoxDir Dir;
         public Observable<int> CostWall;
+        public Observable<int> CostStep;
+        [HideInInspector]
         public List<BoxPointData> NextPointsInBox;
+        [HideInInspector]
         public BoxData BelongBox;
         public Vector3 Pos => 
             new (BelongBox.Pos.x + BoxHelper.dirToVec2Dic[Dir].x * offset, 
@@ -63,12 +67,12 @@ namespace Violee
         string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
         public const int CrossWallCost = 1;
         public Sprite Sprite;
-        [NotNull] public Dictionary<EBoxDir, BoxPointData> PointDic;
+        [NotNull] public SerializableDictionary<EBoxDir, BoxPointData> PointDic;
         
         #region Path
-        void InitPoint()
+        public void InitPoint()
         {
-            PointDic = new Dictionary<EBoxDir, BoxPointData>();
+            PointDic = new SerializableDictionary<EBoxDir, BoxPointData>();
             foreach (var dir in BoxHelper.allBoxDirs)
             {
                 PointDic.Add(dir, new BoxPointData()
