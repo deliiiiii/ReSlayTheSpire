@@ -23,6 +23,7 @@ namespace Violee.View
 
         async Task DestroyAllCostTxt()
         {
+            int c = 0;
             if (costTxtDic != null)
             {
                 foreach (var pair in costTxtDic.Values)
@@ -30,6 +31,12 @@ namespace Violee.View
                     // TODO 对象池
                     pair.Item1.UnBind();
                     Destroy(pair.Item2);
+                    c++;
+                    if (c >= TxtPerFrame)
+                    {
+                        await Task.Yield();
+                        c = 0;
+                    }
                 }
             }
         }
@@ -37,7 +44,8 @@ namespace Violee.View
         {
             try
             {
-                await DestroyAllCostTxt();
+                
+                DestroyAllCostTxt();
                 costTxtDic = new();
                 int c = 0;
                 foreach (var point in MapModel.GetAllPoints())

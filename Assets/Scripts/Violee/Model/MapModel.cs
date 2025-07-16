@@ -12,7 +12,7 @@ namespace Violee
     {
         void Awake()
         {
-            PlayerModel.OnInputMove += OnPlayerInputMove;
+            // PlayerModel.OnInputMove += OnPlayerInputMove;
         }
 
         public GameObject CurPointHint;
