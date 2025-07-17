@@ -32,9 +32,9 @@ namespace Violee
         public EBoxDir Dir;
         public Observable<int> CostWall;
         public Observable<int> CostStep;
-        [HideInInspector]
+        [NonSerialized]
         public List<BoxPointData> NextPointsInBox;
-        [HideInInspector]
+        [NonSerialized]
         public BoxData BelongBox;
         public Vector2 Pos2D => 
             new (BelongBox.Pos.x + BoxHelper.dirToVec2Dic[Dir].x * offset, 
@@ -126,7 +126,8 @@ namespace Violee
         
         
         #region Path
-        public const int CrossWallCost = 1;
+        public const int SWallCost = 10;
+        public const int TWallCost = 1;
         public SerializableDictionary<EBoxDir, BoxPointData> PointDic;
         public void InitPoint()
         {
@@ -155,8 +156,8 @@ namespace Violee
             }
             
         }
-        public int CostStraight(EBoxDir dir) => HasWallByDir(dir) ? CrossWallCost : 0;
-        public int CostTilt(EBoxDir from, EBoxDir to) => CanGoTiltWallBetween(from, to) ? 0 : CrossWallCost;
+        public int CostStraight(EBoxDir dir) => HasWallByDir(dir) ? SWallCost : 0;
+        public int CostTilt(EBoxDir from, EBoxDir to) => CanGoTiltWallBetween(from, to) ? 0 : TWallCost;
         
         /// <summary>
         /// dir1 dir2必须相邻！

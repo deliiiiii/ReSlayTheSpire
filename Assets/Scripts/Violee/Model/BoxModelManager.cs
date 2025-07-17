@@ -9,13 +9,11 @@ namespace Violee
         {
             MapModel.OnAddBox += (pos2D, fBoxData) => SpawnBox3D(BoxHelper.Pos2DTo3D(pos2D), fBoxData);
             MapModel.OnRemoveBox += DestroyBox;
-            MapModel.OnInputEnd += ShowSprite;
         }
 
         public BoxModel BoxPrefab;
         Dictionary<EWallType, GameObject> wallPrefabDic;
-        Transform threeDParent;
-        Transform ThreeDParent
+        Transform threeDParent; Transform ThreeDParent
         {
             get
             {
@@ -45,10 +43,11 @@ namespace Violee
             Destroy(boxModel3DDic[pos3D].gameObject);
             boxModel3DDic.Remove(pos3D);
         }
-        void ShowSprite(Vector2Int vector2Int)
-        {
-            // TODO 小地图逐渐显示
-        }
+        
+        // // TODO 小地图逐渐显示
+        // void ShowSprite(Vector2Int vector2Int)
+        // {
+        // }
         #endregion
     }
 }

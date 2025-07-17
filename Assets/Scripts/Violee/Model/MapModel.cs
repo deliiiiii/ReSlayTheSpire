@@ -146,6 +146,11 @@ namespace Violee
                     MyDebug.LogWarning("正在生成地图，请稍后再点");
                     return;
                 }
+                if (isDij)
+                {
+                    MyDebug.LogWarning("正在Dijkstra，请稍后再点");
+                    return;
+                }
                 isGenerating = true;
                 RemoveAllBoxes();
                 mapData = new MapData();
@@ -155,9 +160,8 @@ namespace Violee
                     await GenerateOneFakeConnection(false);
                 }
 
-                // await Dijkstra();
-                OnGenerateMap?.Invoke();
                 isGenerating = false;
+                await Dijkstra();
             }
             catch (Exception e)
             {
@@ -166,6 +170,7 @@ namespace Violee
             }
         }
 
+        bool isDij;
         SimplePriorityQueue<BoxPointData, int> pq;
         [Button]
         async Task Dijkstra()
@@ -175,6 +180,13 @@ namespace Violee
                 MyDebug.LogWarning("正在生成地图，请稍后再点");
                 return;
             }
+            if (isDij)
+            {
+                MyDebug.LogWarning("正在Dijkstra，请稍后再点");
+                return;
+            }
+
+            isDij = true;
             foreach (var boxData in mapData)
             {
                 boxData.InitPoint();
@@ -234,6 +246,8 @@ namespace Violee
                 MyDebug.LogError(e);
                 throw;
             }
+
+            isDij = false;
         }
 
 
@@ -245,18 +259,9 @@ namespace Violee
         #endregion
         
         #region Event
-        public static event Action OnGenerateMap;
         public static event Action<Vector2Int, BoxData> OnAddBox;
         public static event Action<Vector2Int> OnRemoveBox;
-        public static event Action<Vector2Int> OnInputEnd;
         public static event Func<Task> OnBeginDij;
-        void OnPlayerInputMove(int curX, int curY, int dx, int dy)
-        {
-            var nextLoc = new Vector2Int(curX + dx, curY + dy);
-            if (!InMap(nextLoc))
-                return;
-            OnInputEnd?.Invoke(nextLoc);
-        }
         #endregion
     }
 }
