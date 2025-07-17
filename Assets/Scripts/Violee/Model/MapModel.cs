@@ -10,12 +10,6 @@ namespace Violee
 {
     public class MapModel : MonoBehaviour
     {
-        void Awake()
-        {
-            // PlayerModel.OnInputMove += OnPlayerInputMove;
-        }
-
-        public GameObject CurPointHint;
         public int YieldCount;
         public int Height = 4;
         public int Width = 6;
@@ -184,7 +178,6 @@ namespace Violee
                             pq.Enqueue(nextPoint, nextPoint.CostWall);
                         }
                     }
-                    CurPointHint.transform.position = curPoint.Pos2D;
                     await YieldFrames();
                 }
                 MyDebug.Log($"Dijkstra finished! Count = {c}");

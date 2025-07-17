@@ -66,14 +66,8 @@ namespace Violee
     [Serializable]
     public class BoxData
     {
-        public BoxData()
-        {
-            InitPoint();
-        }
-        
         public Vector2Int Pos;
         public byte Walls;
-        public const int WallTypeCount = 6;
         [ShowInInspector]
         string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
         public bool HasWall(EWallType t)
