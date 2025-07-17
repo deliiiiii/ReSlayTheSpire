@@ -16,6 +16,16 @@ namespace Violee
         Left = 8
     }
 
+    public enum EWallType
+    {
+        S1,
+        S2,
+        S4,
+        S8,
+        T1248,
+        T2481,
+    }
+
     [Serializable]
     public class BoxPointData: IComparable<BoxPointData>, IEquatable<BoxPointData>
     {
@@ -26,9 +36,9 @@ namespace Violee
         public List<BoxPointData> NextPointsInBox;
         [HideInInspector]
         public BoxData BelongBox;
-        public Vector3 Pos => 
+        public Vector2 Pos2D => 
             new (BelongBox.Pos.x + BoxHelper.dirToVec2Dic[Dir].x * offset, 
-                BelongBox.Pos.y + BoxHelper.dirToVec2Dic[Dir].y * offset, 0);
+                BelongBox.Pos.y + BoxHelper.dirToVec2Dic[Dir].y * offset);
         public void UpdateNextPointCost()
         {
             foreach (var nextPoint in NextPointsInBox)
@@ -63,11 +73,24 @@ namespace Violee
         
         public Vector2Int Pos;
         public byte Walls;
+        public const int WallTypeCount = 6;
         [ShowInInspector]
         string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
-        public bool HasIthWall(int i) => (Walls & (1 << i)) != 0;
-        
-        
+        public bool HasWall(EWallType t)
+        {
+            return t switch
+            {
+                EWallType.S1 => (Walls & (1 << 0)) != 0,
+                EWallType.S2 => (Walls & (1 << 1)) != 0,
+                EWallType.S4 => (Walls & (1 << 2)) != 0,
+                EWallType.S8 => (Walls & (1 << 3)) != 0,
+                EWallType.T1248 => (Walls & (1 << 4)) != 0 && (Walls & (1 << 6)) != 0,
+                EWallType.T2481 => (Walls & (1 << 5)) != 0 && (Walls & (1 << 7)) != 0,
+                _ => false,
+            };
+        }
+
+
         // TODO 1：之后在sprite上自己划线？ 2：拿预制体的3d模型
         public Sprite Sprite;
         

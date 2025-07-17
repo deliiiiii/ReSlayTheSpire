@@ -51,7 +51,7 @@ namespace Violee.View
                 foreach (var point in MapModel.GetAllPoints())
                 {
                     var txt = Instantiate(CostTxtTemplate, transform);
-                    txt.transform.position = point.Pos;
+                    txt.transform.position = BoxHelper.Pos2DTo3D(point.Pos2D) + Vector3.up * 0.1f;
                     txt.gameObject.SetActive(true);
                     var b = Binder.From(point.CostWall).To(v =>
                     {

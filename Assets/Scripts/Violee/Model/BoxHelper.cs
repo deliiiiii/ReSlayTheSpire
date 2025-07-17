@@ -84,5 +84,7 @@ namespace Violee
             }
             return ret;
         }
+        
+        public static Vector3 Pos2DTo3D(Vector2 pos2D) => new (pos2D.x * 10f, 0, pos2D.y * 10f);
     }
 }

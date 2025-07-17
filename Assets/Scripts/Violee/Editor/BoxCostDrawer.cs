@@ -26,7 +26,7 @@ namespace Violee.Editor
                 foreach(var point in cachedPoints)
                 {
                     var str = point.CostWall > 1e5 ? "∞" : point.CostWall.ToString();
-                    Handles.Label(point.Pos, str, labelStyle);
+                    Handles.Label(point.Pos2D, str, labelStyle);
                 }
             }
         }

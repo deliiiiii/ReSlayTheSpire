@@ -30,14 +30,10 @@ public class FirstPersonController : MonoBehaviour
 
     // Crosshair
     public bool lockCursor = true;
-    public bool crosshair = true;
-    public Sprite crosshairImage;
-    public Color crosshairColor = Color.white;
 
     // Internal Variables
     private float yaw = 0.0f;
     private float pitch = 0.0f;
-    private Image crosshairObject;
 
     #region Camera Zoom Variables
 
@@ -74,6 +70,7 @@ public class FirstPersonController : MonoBehaviour
     public float sprintFOVStepTime = 10f;
 
     // Sprint Bar
+    public CanvasGroup sprintBarCG;
     public bool useSprintBar = true;
     public bool hideBarWhenFull = true;
     public Image sprintBarBG;
@@ -82,7 +79,6 @@ public class FirstPersonController : MonoBehaviour
     public float sprintBarHeightPercent = .015f;
 
     // Internal Variables
-    private CanvasGroup sprintBarCG;
     private bool isSprinting = false;
     private float sprintRemaining;
     private float sprintBarWidth;
@@ -135,8 +131,6 @@ public class FirstPersonController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        crosshairObject = GetComponentInChildren<Image>();
-
         // Set internal variables
         playerCamera.fieldOfView = fov;
         originalScale = transform.localScale;
@@ -156,20 +150,7 @@ public class FirstPersonController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        if(crosshair)
-        {
-            crosshairObject.sprite = crosshairImage;
-            crosshairObject.color = crosshairColor;
-        }
-        else
-        {
-            crosshairObject.gameObject.SetActive(false);
-        }
-
         #region Sprint Bar
-
-        sprintBarCG = GetComponentInChildren<CanvasGroup>();
-
         if(useSprintBar)
         {
             sprintBarBG.gameObject.SetActive(true);
@@ -565,23 +546,6 @@ public class FirstPersonController : MonoBehaviour
 
         fpc.lockCursor = EditorGUILayout.ToggleLeft(new GUIContent("Lock and Hide Cursor", "Turns off the cursor visibility and locks it to the middle of the screen."), fpc.lockCursor);
 
-        fpc.crosshair = EditorGUILayout.ToggleLeft(new GUIContent("Auto Crosshair", "Determines if the basic crosshair will be turned on, and sets is to the center of the screen."), fpc.crosshair);
-
-        // Only displays crosshair options if crosshair is enabled
-        if(fpc.crosshair) 
-        { 
-            EditorGUI.indentLevel++; 
-            EditorGUILayout.BeginHorizontal(); 
-            EditorGUILayout.PrefixLabel(new GUIContent("Crosshair Image", "Sprite to use as the crosshair.")); 
-            fpc.crosshairImage = (Sprite)EditorGUILayout.ObjectField(fpc.crosshairImage, typeof(Sprite), false);
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            fpc.crosshairColor = EditorGUILayout.ColorField(new GUIContent("Crosshair Color", "Determines the color of the crosshair."), fpc.crosshairColor);
-            EditorGUILayout.EndHorizontal();
-            EditorGUI.indentLevel--; 
-        }
-
         EditorGUILayout.Space();
 
         #region Camera Zoom Setup
@@ -644,7 +608,11 @@ public class FirstPersonController : MonoBehaviour
             EditorGUILayout.BeginHorizontal();
             fpc.hideBarWhenFull = EditorGUILayout.ToggleLeft(new GUIContent("Hide Full Bar", "Hides the sprint bar when sprint duration is full, and fades the bar in when sprinting. Disabling this will leave the bar on screen at all times when the sprint bar is enabled."), fpc.hideBarWhenFull);
             EditorGUILayout.EndHorizontal();
-
+            fpc.sprintBarCG = (CanvasGroup)EditorGUILayout.ObjectField(fpc.sprintBarCG, typeof(CanvasGroup), true);
+            EditorGUILayout.BeginHorizontal();
+            
+            EditorGUILayout.EndHorizontal();
+            
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel(new GUIContent("Bar BG", "Object to be used as sprint bar background."));
             fpc.sprintBarBG = (Image)EditorGUILayout.ObjectField(fpc.sprintBarBG, typeof(Image), true);

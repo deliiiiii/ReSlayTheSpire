@@ -184,7 +184,7 @@ namespace Violee
                             pq.Enqueue(nextPoint, nextPoint.CostWall);
                         }
                     }
-                    CurPointHint.transform.position = curPoint.Pos;
+                    CurPointHint.transform.position = curPoint.Pos2D;
                     await YieldFrames();
                 }
                 MyDebug.Log($"Dijkstra finished! Count = {c}");
