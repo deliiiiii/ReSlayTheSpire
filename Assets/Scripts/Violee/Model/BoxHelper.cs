@@ -9,28 +9,23 @@ namespace Violee
     // [InitializeOnLoad]
     public static class BoxHelper
     {
-        public static void GetSth()
-        {
-            
-        }
         static BoxHelper()
         {
-            emptyBoxConfig = BoxConfigList.First(x => x.Walls == 0);
-            allBoxWalls = BoxConfigList.Select(x => x.Walls).Distinct().ToList();
-            allBoxDirs = new List<EBoxDir>();
+            EmptyBoxConfig = BoxConfigList.First(x => x.Walls == 0);
+            AllBoxDirs = new List<EBoxDir>();
             var array = Enum.GetValues(typeof(EBoxDir));
             for (int i = 0; i < array.Length; i++)
             {
-                allBoxDirs.Add((EBoxDir)array.GetValue(i));
+                AllBoxDirs.Add((EBoxDir)array.GetValue(i));
             }
-            oppositeDirDic = new Dictionary<EBoxDir, EBoxDir>()
+            OppositeDirDic = new Dictionary<EBoxDir, EBoxDir>()
             {
                 { EBoxDir.Up, EBoxDir.Down },
                 { EBoxDir.Down, EBoxDir.Up },
                 { EBoxDir.Left, EBoxDir.Right },
                 { EBoxDir.Right, EBoxDir.Left }
             };
-            dirToVec2Dic = new Dictionary<EBoxDir, Vector2Int>()
+            DirToVec2Dic = new Dictionary<EBoxDir, Vector2Int>()
             {
                 { EBoxDir.Up, new Vector2Int(0, 1) },
                 { EBoxDir.Down, new Vector2Int(0, -1) },
@@ -39,22 +34,21 @@ namespace Violee
             };
         }
         static List<BoxConfigSingle> BoxConfigList => Configer.Instance.BoxConfig.BoxConfigList;
-        public static BoxConfigSingle emptyBoxConfig;
-        public static List<byte> allBoxWalls;
-        public static List<EBoxDir> allBoxDirs;
+        public static readonly BoxConfigSingle EmptyBoxConfig;
+        public static readonly List<EBoxDir> AllBoxDirs;
         /// <summary>
         /// (dir, oppositeDir)
         /// </summary>
-        public static Dictionary<EBoxDir, EBoxDir> oppositeDirDic;
+        public static readonly Dictionary<EBoxDir, EBoxDir> OppositeDirDic;
 
-        public static Dictionary<EBoxDir, Vector2Int> dirToVec2Dic;
+        public static readonly Dictionary<EBoxDir, Vector2Int> DirToVec2Dic;
         
         /// <param name="thisLoc">(1, 1)</param>
         /// <param name="dir">Up</param>
         /// <returns>(1, 2)</returns>
         public static Vector2Int NextPos(Vector2Int thisLoc, EBoxDir dir)
         {
-            return new Vector2Int(thisLoc.x + dirToVec2Dic[dir].x, thisLoc.y + dirToVec2Dic[dir].y);
+            return new Vector2Int(thisLoc.x + DirToVec2Dic[dir].x, thisLoc.y + DirToVec2Dic[dir].y);
         }
         
         /// <param name="thisPos">(1, 1)</param>
@@ -62,9 +56,9 @@ namespace Violee
         public static List<(Vector2Int, EBoxDir)> GetNextLocAndGoInDirList(Vector2Int thisPos)
         {
             var ret = new List<(Vector2Int, EBoxDir)>();
-            foreach (var dir in allBoxDirs)
+            foreach (var dir in AllBoxDirs)
             {
-                ret.Add((NextPos(thisPos, dir), oppositeDirDic[dir]));
+                ret.Add((NextPos(thisPos, dir), OppositeDirDic[dir]));
             }
             return ret;
         }

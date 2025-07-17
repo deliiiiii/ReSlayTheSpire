@@ -37,8 +37,8 @@ namespace Violee
         [NonSerialized]
         public BoxData BelongBox;
         public Vector2 Pos2D => 
-            new (BelongBox.Pos.x + BoxHelper.dirToVec2Dic[Dir].x * offset, 
-                BelongBox.Pos.y + BoxHelper.dirToVec2Dic[Dir].y * offset);
+            new (BelongBox.Pos.x + BoxHelper.DirToVec2Dic[Dir].x * offset, 
+                BelongBox.Pos.y + BoxHelper.DirToVec2Dic[Dir].y * offset);
         public void UpdateNextPointCost()
         {
             foreach (var nextPoint in NextPointsInBox)
@@ -132,7 +132,7 @@ namespace Violee
         public void InitPoint()
         {
             PointDic = new SerializableDictionary<EBoxDir, BoxPointData>();
-            foreach (var dir in BoxHelper.allBoxDirs)
+            foreach (var dir in BoxHelper.AllBoxDirs)
             {
                 PointDic.Add(dir, new BoxPointData()
                 {
@@ -143,13 +143,13 @@ namespace Violee
                 });
             }
 
-            foreach (var dir in BoxHelper.allBoxDirs)
+            foreach (var dir in BoxHelper.AllBoxDirs)
             {
-                foreach (var dir2 in BoxHelper.allBoxDirs)
+                foreach (var dir2 in BoxHelper.AllBoxDirs)
                 {
                     if (dir == dir2)
                         continue;
-                    if (BoxHelper.oppositeDirDic[dir] == dir2)
+                    if (BoxHelper.OppositeDirDic[dir] == dir2)
                         continue;
                     PointDic[dir].NextPointsInBox.Add(PointDic[dir2]);
                 }

@@ -64,7 +64,7 @@ namespace Violee
             var edgeBoxStack = new Stack<BoxData>();
             // 每个伪连通块的第一个是空格子
             var firstLoc = startWithStartLoc ? StartPos : emptyPosList[0];
-            var firstBox = await AddBox(firstLoc, BoxHelper.emptyBoxConfig);
+            var firstBox = await AddBox(firstLoc, BoxHelper.EmptyBoxConfig);
             edgeBoxStack.Push(firstBox);
             while (edgeBoxStack.Count > 0)
             {
@@ -75,7 +75,7 @@ namespace Violee
                     // “下一格”
                     var nextPos = nextPair.Item1;
                     var nextGoInDir = nextPair.Item2;
-                    var curGoOutDir = BoxHelper.oppositeDirDic[nextPair.Item2];
+                    var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];
                     if (!InMap(nextPos))
                     {
                         curBox.AddSWallByDir(curGoOutDir);
@@ -95,7 +95,7 @@ namespace Violee
                             var nextNextPos = nextNextPair.Item1;
                             // “下一格”的相邻格的走入方向
                             var nextNextGoInDir = nextNextPair.Item2;
-                            var nextGoOutDir = BoxHelper.oppositeDirDic[nextNextPair.Item2];
+                            var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextPair.Item2];
                             if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
                                 var nextNextBox = mapData[nextNextPos];
@@ -216,7 +216,7 @@ namespace Violee
                     if (InMap(nextPos))
                     {
                         var nextBox = mapData[nextPos];
-                        var oppositeDir = BoxHelper.oppositeDirDic[curPoint.Dir];
+                        var oppositeDir = BoxHelper.OppositeDirDic[curPoint.Dir];
                         var nextPoint = nextBox.PointDic[oppositeDir];
                         nextPoint.CostWall.Value = Math.Min(
                             nextPoint.CostWall.Value,
