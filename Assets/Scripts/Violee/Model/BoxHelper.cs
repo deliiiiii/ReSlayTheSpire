@@ -23,18 +23,6 @@ namespace Violee
             {
                 allBoxDirs.Add((EBoxDir)array.GetValue(i));
             }
-            canGoOutDirsDic = new Dictionary<byte, HashSet<EBoxDir>>();
-            foreach (var w in allBoxWalls)
-            {
-                canGoOutDirsDic.Add(w, new HashSet<EBoxDir>());
-                foreach (var dir in allBoxDirs)
-                {
-                    if (BoxData.CanGoStraightWall(w, dir))
-                    {
-                        canGoOutDirsDic[w].Add(dir);
-                    }
-                }
-            }
             oppositeDirDic = new Dictionary<EBoxDir, EBoxDir>()
             {
                 { EBoxDir.Up, EBoxDir.Down },
@@ -55,10 +43,6 @@ namespace Violee
         public static List<byte> allBoxWalls;
         public static List<EBoxDir> allBoxDirs;
         /// <summary>
-        /// (walls, [outDir1, ...])
-        /// </summary>
-        public static Dictionary<byte, HashSet<EBoxDir>> canGoOutDirsDic;
-        /// <summary>
         /// (dir, oppositeDir)
         /// </summary>
         public static Dictionary<EBoxDir, EBoxDir> oppositeDirDic;
@@ -75,7 +59,7 @@ namespace Violee
         
         /// <param name="thisPos">(1, 1)</param>
         /// <returns>List: ((1, 2), Up), ((2, 1), Right), ((1, 0), Down), ((0, 1), Left)</returns>
-        public static List<(Vector2Int, EBoxDir)> GetNextLocAndDirList(Vector2Int thisPos)
+        public static List<(Vector2Int, EBoxDir)> GetNextLocAndGoInDirList(Vector2Int thisPos)
         {
             var ret = new List<(Vector2Int, EBoxDir)>();
             foreach (var dir in allBoxDirs)

@@ -17,7 +17,7 @@ MonoBehaviour:
     Walls: 0
     Texture2D: {fileID: 2800000, guid: 67c8e066c4cc26b4ebe5747349dc8af8, type: 3}
     Sprite: {fileID: 0}
-    BasicWeight: 25
+    BasicWeight: 10
   - Name: Box1
     Walls: 1
     Texture2D: {fileID: 2800000, guid: d7e08d6672ca0624dbee250c67e91537, type: 3}
@@ -97,4 +97,4 @@ MonoBehaviour:
     Walls: 240
     Texture2D: {fileID: 2800000, guid: 047864e3767443846b3f08b42cdf2158, type: 3}
     Sprite: {fileID: 0}
-    BasicWeight: 300
+    BasicWeight: 100

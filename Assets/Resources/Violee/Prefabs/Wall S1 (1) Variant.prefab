@@ -68,6 +68,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 52
       objectReference: {fileID: 0}
+    - target: {fileID: 6654039859223826148, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6749675700770882995, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7325060923543277094, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
       propertyPath: m_VersionIndex
       value: 43

@@ -67,10 +67,28 @@ namespace Violee
     public class BoxData
     {
         public Vector2Int Pos;
+        // // TODO 1：之后在sprite上自己划线？ 2：拿预制体的3d模型
+        // public Sprite Sprite;
+        public event Action<EWallType> OnAddWall;
+        public event Action<EWallType> OnRemoveWall;
+        #region Walls
         public byte Walls;
         [ShowInInspector]
         string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
-        public bool HasWall(EWallType t)
+
+        EWallType WallDirToType(EBoxDir dir)
+        {
+            return dir switch
+            {
+                EBoxDir.Up => EWallType.S1,
+                EBoxDir.Right => EWallType.S2,
+                EBoxDir.Down => EWallType.S4,
+                EBoxDir.Left => EWallType.S8,
+            };
+        }
+        public static bool HasWallByDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
+        public bool HasWallByDir(EBoxDir dir) => (Walls & (byte)dir) != 0;
+        public bool HasWallByType(EWallType t)
         {
             return t switch
             {
@@ -80,18 +98,36 @@ namespace Violee
                 EWallType.S8 => (Walls & (1 << 3)) != 0,
                 EWallType.T1248 => (Walls & (1 << 4)) != 0 && (Walls & (1 << 6)) != 0,
                 EWallType.T2481 => (Walls & (1 << 5)) != 0 && (Walls & (1 << 7)) != 0,
-                _ => false,
             };
         }
-
-
-        // TODO 1：之后在sprite上自己划线？ 2：拿预制体的3d模型
-        public Sprite Sprite;
+        public void AddSWallByDir(EBoxDir dir)
+        {
+            Walls = dir switch
+            {
+                EBoxDir.Up => (byte)(Walls | (1 << 0)),
+                EBoxDir.Right => (byte)(Walls | (1 << 1)),
+                EBoxDir.Down => (byte)(Walls | (1 << 2)),
+                EBoxDir.Left => (byte)(Walls | (1 << 3)),
+            };
+            OnAddWall?.Invoke(WallDirToType(dir));
+        }
+        public void RemoveSWallByDir(EBoxDir dir)
+        {
+            Walls = dir switch
+            {
+                EBoxDir.Up =>     (byte)(Walls & ~(1 << 0)),
+                EBoxDir.Right =>  (byte)(Walls & ~(1 << 1)),
+                EBoxDir.Down =>   (byte)(Walls & ~(1 << 2)),
+                EBoxDir.Left =>   (byte)(Walls & ~(1 << 3)),
+            };
+            OnRemoveWall?.Invoke(WallDirToType(dir));
+        }
+        #endregion
         
         
         #region Path
         public const int CrossWallCost = 1;
-        [NotNull] public SerializableDictionary<EBoxDir, BoxPointData> PointDic;
+        public SerializableDictionary<EBoxDir, BoxPointData> PointDic;
         public void InitPoint()
         {
             PointDic = new SerializableDictionary<EBoxDir, BoxPointData>();
@@ -119,15 +155,9 @@ namespace Violee
             }
             
         }
-        public int CostStraight(EBoxDir dir) => CanGoStraightWall(dir) ? 0 : CrossWallCost;
+        public int CostStraight(EBoxDir dir) => HasWallByDir(dir) ? CrossWallCost : 0;
         public int CostTilt(EBoxDir from, EBoxDir to) => CanGoTiltWallBetween(from, to) ? 0 : CrossWallCost;
-        #endregion
         
-        
-        #region GoCross
-        public static bool CanGoStraightWall(byte walls, EBoxDir dir) => (walls & (byte)dir) == 0;
-        bool CanGoStraightWall(EBoxDir dir) => (Walls & (byte)dir) == 0;
-
         /// <summary>
         /// dir1 dir2必须相邻！
         /// </summary>

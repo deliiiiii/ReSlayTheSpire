@@ -14,12 +14,22 @@ namespace Violee
         public void InitData(BoxData fBoxData)
         {
             boxData = fBoxData;
+            boxData.OnAddWall += wallType => SetWallActive(wallType, true);
+            boxData.OnRemoveWall += wallType => SetWallActive(wallType, false);
             name = $"Box {fBoxData.Pos.x} {fBoxData.Pos.y}";
-            WallDic?.ForEach(pair =>
+            WallDic?.Keys.ForEach(wallType =>
             {
-                if (fBoxData.HasWall(pair.Key))
-                    pair.Value.gameObject.SetActive(true);
+                if (fBoxData.HasWallByType(wallType))
+                {
+                    SetWallActive(wallType, true);
+                }
             });
+            
+        }
+
+        void SetWallActive(EWallType wallType, bool isActive)
+        {
+            WallDic[wallType].gameObject.SetActive(isActive);
         }
     }
 }

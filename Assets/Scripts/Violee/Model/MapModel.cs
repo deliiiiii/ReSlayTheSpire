@@ -10,7 +10,8 @@ namespace Violee
 {
     public class MapModel : MonoBehaviour
     {
-        public int YieldCount;
+        [MinValue(0)]
+        public float YieldCount;
         public int Height = 4;
         public int Width = 6;
         public Vector2Int StartPos;
@@ -29,7 +30,7 @@ namespace Violee
             {
                 Pos = pos,
                 Walls = config.Walls,
-                Sprite = config.Sprite,
+                // Sprite = config.Sprite,
             };
             mapData.Add(boxData);
             emptyPosList.Remove(pos);
@@ -63,36 +64,74 @@ namespace Violee
             var edgeBoxStack = new Stack<BoxData>();
             // 每个伪连通块的第一个是空格子
             var firstLoc = startWithStartLoc ? StartPos : emptyPosList[0];
-            var firstBox =  await AddBox(firstLoc, BoxHelper.emptyBoxConfig);
+            var firstBox = await AddBox(firstLoc, BoxHelper.emptyBoxConfig);
             edgeBoxStack.Push(firstBox);
             while (edgeBoxStack.Count > 0)
             {
                 var curBox = edgeBoxStack.Pop();
-                var curWall = curBox.Walls;
-                var nextPairs = BoxHelper.GetNextLocAndDirList(curBox.Pos);
-                foreach (var pair in nextPairs)
+                var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos);
+                foreach (var nextPair in nextPairs)
                 {
-                    if (InMap(pair.Item1) 
-                        && !HasBox(pair.Item1) 
-                        && BoxHelper.canGoOutDirsDic[curWall].Contains(BoxHelper.oppositeDirDic[pair.Item2]))
+                    // “下一格”
+                    var nextPos = nextPair.Item1;
+                    var nextGoInDir = nextPair.Item2;
+                    var curGoOutDir = BoxHelper.oppositeDirDic[nextPair.Item2];
+                    if (!InMap(nextPos))
                     {
-                        var wall = 
+                        curBox.AddSWallByDir(curGoOutDir);
+                        MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
+                        continue;
+                    }
+                    if (!HasBox(nextPos) && !curBox.HasWallByDir(curGoOutDir))
+                    {
+                        var boxconfig = 
                             BoxConfigList.RandomItemWeighted(
-                                x => BoxHelper.canGoOutDirsDic[x.Walls].Contains(pair.Item2),
+                                x => !BoxData.HasWallByDir(x.Walls, nextGoInDir),
                                 x => x.BasicWeight);
-                        var nextBox = await AddBox(pair.Item1, wall);
+                        var nextBox = await AddBox(nextPos, boxconfig);
+                        var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
+                        foreach (var nextNextPair in nextNextPairs)
+                        {
+                            var nextNextPos = nextNextPair.Item1;
+                            // “下一格”的相邻格的走入方向
+                            var nextNextGoInDir = nextNextPair.Item2;
+                            var nextGoOutDir = BoxHelper.oppositeDirDic[nextNextPair.Item2];
+                            if (InMap(nextNextPos) && HasBox(nextNextPos))
+                            {
+                                var nextNextBox = mapData[nextNextPos];
+                                if (nextNextBox.HasWallByDir(nextNextGoInDir))
+                                {
+                                    nextBox.RemoveSWallByDir(nextGoOutDir);
+                                    MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
+                                }
+                            }
+                        }
+                        
                         edgeBoxStack.Push(nextBox);
                     }
                 }
             }
         }
 
+        int countNotYieldFrame;
         async Task YieldFrames()
         {
-            for (int y = 0; y < YieldCount; y++)
+            if (YieldCount >= 1)
             {
+                for (int y = 0; y < YieldCount; y++)
+                {
+                    await Task.Yield();
+                }
+                return;
+            }
+
+            countNotYieldFrame++;
+            if (1f / countNotYieldFrame <= YieldCount)
+            {
+                countNotYieldFrame = 0;
                 await Task.Yield();
             }
+
         }
 
         // 防止点击多次按钮
@@ -103,7 +142,10 @@ namespace Violee
             try
             {
                 if (isGenerating)
+                {
+                    MyDebug.LogWarning("正在生成地图，请稍后再点");
                     return;
+                }
                 isGenerating = true;
                 RemoveAllBoxes();
                 mapData = new MapData();
@@ -128,6 +170,11 @@ namespace Violee
         [Button]
         async Task Dijkstra()
         {
+            if (isGenerating)
+            {
+                MyDebug.LogWarning("正在生成地图，请稍后再点");
+                return;
+            }
             foreach (var boxData in mapData)
             {
                 boxData.InitPoint();
@@ -193,7 +240,7 @@ namespace Violee
         #region Function Got By Editor
         public static List<BoxPointData> GetAllPoints()
         {
-            return mapData?.SelectMany(x => x.PointDic.Values).ToList() ?? new List<BoxPointData>();
+            return mapData?.SelectMany(x => x.PointDic?.Values).ToList() ?? new List<BoxPointData>();
         }
         #endregion
         
