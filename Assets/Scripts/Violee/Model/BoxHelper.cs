@@ -24,6 +24,13 @@ namespace Violee
             {
                 AllWallTypes.Add((EWallType)array.GetValue(i));
             }
+            NearDirDic = new Dictionary<EBoxDir, List<EBoxDir>>()
+            {
+                { EBoxDir.Up, new List<EBoxDir>() { EBoxDir.Left , EBoxDir.Right }},
+                { EBoxDir.Down, new List<EBoxDir>() { EBoxDir.Left , EBoxDir.Right }},
+                { EBoxDir.Left, new List<EBoxDir>() { EBoxDir.Up , EBoxDir.Down }},
+                { EBoxDir.Right, new List<EBoxDir>() { EBoxDir.Up , EBoxDir.Down }}
+            };
             OppositeDirDic = new Dictionary<EBoxDir, EBoxDir>()
             {
                 { EBoxDir.Up, EBoxDir.Down },
@@ -43,6 +50,7 @@ namespace Violee
         public static readonly BoxConfigSingle EmptyBoxConfig;
         public static readonly List<EBoxDir> AllBoxDirs;
         public static readonly List<EWallType> AllWallTypes;
+        public static readonly Dictionary<EBoxDir, List<EBoxDir>> NearDirDic;
         
         /// <summary>
         /// (dir, oppositeDir)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using QFramework;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Violee.View
@@ -10,11 +11,12 @@ namespace Violee.View
     public class MapView : ViewBase
     {
         Dictionary<BoxPointData,(BindDataAct<int>, Text)> costTxtDic;
-        public int TxtPerFrame = 100;
-        public Text CostTxtTemplate;
+        public Text CostTxtPrefab;
+        ObjectPool<Text> costTxtPool;
 
         void Awake()
         {
+            costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform);
             if (Configer.SettingsConfig.ShowBoxCost)
             {
                 MapModel.OnBeginDij += BindAllCostTxt;
@@ -23,20 +25,13 @@ namespace Violee.View
 
         async Task DestroyAllCostTxt()
         {
-            int c = 0;
             if (costTxtDic != null)
             {
                 foreach (var pair in costTxtDic.Values)
                 {
-                    // TODO 对象池
                     pair.Item1.UnBind();
-                    Destroy(pair.Item2);
-                    c++;
-                    if (c >= TxtPerFrame)
-                    {
-                        await Task.Yield();
-                        c = 0;
-                    }
+                    costTxtPool.MyDestroy(pair.Item2);
+                    await Configer.SettingsConfig.YieldFrames(multi : 1 / 4f);
                 }
             }
         }
@@ -46,11 +41,9 @@ namespace Violee.View
             {
                 await DestroyAllCostTxt();
                 costTxtDic = new();
-                int c = 0;
                 foreach (var point in MapModel.GetAllPoints())
                 {
-                    var txt = Instantiate(CostTxtTemplate, transform);
-                    txt.transform.position = BoxHelper.Pos2DTo3D(point.Pos2D) + Vector3.up * 0.1f;
+                    var txt = await costTxtPool.MyInstantiate(BoxHelper.Pos2DTo3D(point.Pos2D) + Vector3.up * 0.1f);
                     txt.gameObject.SetActive(true);
                     var b = Binder.From(point.CostWall).To(v =>
                     {
@@ -58,12 +51,7 @@ namespace Violee.View
                     });
                     b.Immediate();
                     costTxtDic.Add(point, (b, txt));
-                    c++;
-                    if (c >= TxtPerFrame)
-                    {
-                        await Task.Yield();
-                        c = 0;
-                    }
+                    await Configer.SettingsConfig.YieldFrames(multi : 1 / 4f);
                 }
             }
             catch (Exception e)

@@ -7,27 +7,27 @@ namespace Violee
     {
         void Awake()
         {
+            boxModelPool = new ObjectPool<BoxModel>(BoxPrefab, transform);
             MapModel.OnAddBox += (pos2D, fBoxData) => SpawnBox3D(BoxHelper.Pos2DTo3D(pos2D), fBoxData);
             MapModel.OnRemoveBox += DestroyBox;
         }
 
         public BoxModel BoxPrefab;
-        static readonly Dictionary<Vector3, BoxModel> boxModel3DDic = new ();
-        
+        static ObjectPool<BoxModel> boxModelPool;
+        static Dictionary<Vector3, BoxModel> boxModel3DDic = new ();
         
         #region Event
-        void SpawnBox3D(Vector3 pos3D, BoxData fBoxData)
+        async void SpawnBox3D(Vector3 pos3D, BoxData fBoxData)
         {
-            var boxModel = Instantiate(BoxPrefab, pos3D, Quaternion.identity, transform);
+            var boxModel = await boxModelPool.MyInstantiate(pos3D);
             boxModel.ReadData(fBoxData);
             boxModel3DDic.Add(pos3D, boxModel);
         }
         
         void DestroyBox(Vector2Int pos2D)
         {
-            // TODO 对象池
             var pos3D = BoxHelper.Pos2DTo3D(pos2D);
-            Destroy(boxModel3DDic[pos3D].gameObject);
+            boxModelPool.MyDestroy(boxModel3DDic[pos3D]);
             boxModel3DDic.Remove(pos3D);
         }
         #endregion

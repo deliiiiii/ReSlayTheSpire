@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace Violee
         T2481 = 1 << 5 | 1 << 7,
     }
 
-    [Serializable]
+    
     public class BoxPointData
     {
         public EBoxDir Dir;
@@ -46,10 +47,10 @@ namespace Violee
         }
     }
     
-    [Serializable]
+    // [Serializable]
     public class BoxData
     {
-        BoxData(){}
+        protected BoxData(){}
         public static BoxData Create(Vector2Int pos, BoxConfigSingle config)
         {
             var ret = new BoxData()
@@ -108,24 +109,26 @@ namespace Violee
         #region Path
         public const int WallCost = 10;
         public const int DoorCost = 1;
-        public SerializableDictionary<EBoxDir, BoxPointData> PointDic;
+        [NonSerialized]
+        public Dictionary<EBoxDir, BoxPointData> PointDic;
         static float offset => Configer.SettingsConfig.BoxCostPosOffset;
+        // static float offset = 0.35f;
         public void InitPoint()
         {
-            PointDic = new SerializableDictionary<EBoxDir, BoxPointData>();
+            PointDic = new Dictionary<EBoxDir, BoxPointData>();
             foreach (var dir in BoxHelper.AllBoxDirs)
             {
                 PointDic.Add(dir, new BoxPointData()
                 {
                     Dir = dir,
                     CostWall = new (int.MaxValue / 2),
+                    
                     Pos2D = new (Pos.x + BoxHelper.DirToVec2Dic[dir].x * offset, 
-                            Pos.y + BoxHelper.DirToVec2Dic[dir].y * offset),
+                    Pos.y + BoxHelper.DirToVec2Dic[dir].y * offset),
                     BelongBox = this,
-                    NextPointsInBox = new List<BoxPointData>(),
+                    NextPointsInBox = new List<BoxPointData>()
                 });
             }
-
             foreach (var dir in BoxHelper.AllBoxDirs)
             {
                 foreach (var dir2 in BoxHelper.AllBoxDirs)
@@ -137,7 +140,6 @@ namespace Violee
                     PointDic[dir].NextPointsInBox.Add(PointDic[dir2]);
                 }
             }
-            
         }
 
         public int CostStraight(EBoxDir dir)

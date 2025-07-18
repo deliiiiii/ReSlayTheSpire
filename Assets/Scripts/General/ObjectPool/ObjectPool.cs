@@ -1,64 +1,75 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-public class ObjectPool : MonoBehaviour
+public class ObjectPool<T> where T : MonoBehaviour
 {
-    GameObject tPrefab;
-    [HelpBox("设置对象池父物体，不设置则在同级Sible中生成新物体作为父物体",HelpBoxType.Info)]
-    [SerializeField]
-    Transform objectPoolParent;
-    int initCount = 16;
-    int poolCount;
-    List<GameObject> allObject;
-    Stack<GameObject> availableObject;
-    public void Initialize()
+    public ObjectPool(T tPrefab, Transform transform)
     {
-        allObject = new();
-        availableObject = new();
-        tPrefab = gameObject;
-        if(objectPoolParent == null)
-        {
-            GameObject g = new GameObject(name + "Pool");
-            g.transform.parent = transform.parent;
-            objectPoolParent = g.transform;
-        }
-        MyCreateNew(poolCount);
+        this.tPrefab = tPrefab;
+        objParent = transform;
+        _ = MyCreateNew(initCount);
     }
-    void MyCreateNew(int newCount)
+    T tPrefab;
+    Transform objParent;
+    readonly int initCount = 256;
+    readonly Stack<T> availableObject = new();
+    int poolCount => availableObject.Count;
+    bool inited;
+    async Task MyCreateNew(int newCount)
     {
-        for (int i = 0; i < newCount; i++)
+        try
         {
-            GameObject g = Instantiate(tPrefab, Vector3.zero, Quaternion.identity, objectPoolParent);
-            g.SetActive(false);
-            allObject.Add(g);
-            availableObject.Push(g);
+            for (int i = 0; i < newCount; i++)
+            {
+                if (!Application.isPlaying)
+                    return;
+                var g = Object.Instantiate(tPrefab, tPrefab.transform.position, tPrefab.transform.rotation, objParent);
+                g.gameObject.SetActive(false);
+                availableObject.Push(g);
+                if(!inited)
+                    await Task.Yield();
+            }
         }
+        catch (Exception e)
+        {
+            MyDebug.LogError(e);
+            throw;
+        }
+        inited = true;
     }
 
-    public GameObject MyInstantiate(Vector3 fPos, Quaternion fRot, Transform fParent = null)
+    public async Task<T> MyInstantiate(Vector3 fPos)
     {
-        if (availableObject.Count == 0)
+        try
         {
-            MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
+            if (availableObject.Count == 0)
+            {
+                await MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
+            }
+            var g = availableObject.Pop();
+            g.transform.position = fPos;
+            g.transform.SetParent(objParent, worldPositionStays: false);
+            g.gameObject.SetActive(true);
+            return g;
         }
-        GameObject g = availableObject.Pop();
-        g.transform.SetPositionAndRotation(fPos, fRot);
-        if (fParent != null)
-            g.transform.parent = fParent;
-        else
-            g.transform.parent = objectPoolParent;
-        g.gameObject.SetActive(true);
-        return g;
+        catch (Exception e)
+        {
+            MyDebug.LogError(e);
+            throw;
+        }
     }
-    public void MyDestroy(GameObject obj)
+    public void MyDestroy(T obj)
     {
         if (obj == null)
         {
-            Debug.LogError("MyDestroy null " + tPrefab.name + " !");
+            MyDebug.LogError("MyDestroy null " + tPrefab.name + " !");
             return;
         }
-        obj.SetActive(false);
+        obj.gameObject.SetActive(false);
         availableObject.Push(obj);
     }
 }

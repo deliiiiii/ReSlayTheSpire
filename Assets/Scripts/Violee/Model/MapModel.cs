@@ -8,38 +8,12 @@ using UnityEngine;
 
 namespace Violee
 {
-    public class MapModel : MonoBehaviour
+    public class MapModel : Singleton<MapModel>
     {
         #region Public Functions
         public static List<BoxPointData> GetAllPoints()
         {
             return mapData?.SelectMany(x => x.PointDic?.Values).ToList() ?? new List<BoxPointData>();
-        }
-        #endregion
-        
-        
-        #region Yield Control
-        [Header("Yield Control")]
-        [MinValue(0)]
-        public float YieldCount;
-        int countNotYieldFrame;
-        async Task YieldFrames()
-        {
-            if (YieldCount >= 1)
-            {
-                for (int y = 0; y < YieldCount; y++)
-                {
-                    await Task.Yield();
-                }
-                return;
-            }
-
-            countNotYieldFrame++;
-            if (1f / countNotYieldFrame <= YieldCount)
-            {
-                countNotYieldFrame = 0;
-                await Task.Yield();
-            }
         }
         #endregion
         
@@ -55,12 +29,12 @@ namespace Violee
         bool HasBox(Vector2Int pos) => mapData.Contains(pos);
         async Task<BoxData> AddBox(Vector2Int pos, BoxConfigSingle config)
         {
-            await YieldFrames();
+            await Configer.SettingsConfig.YieldFrames();
             var boxData = BoxData.Create(pos, config);
             mapData.Add(boxData);
             emptyPosList.Remove(pos);
             OnAddBox?.Invoke(pos, boxData);
-            MyDebug.Log($"Add box {config.Walls} at {pos}");
+            // MyDebug.Log($"Add box {config.Walls} at {pos}");
             return boxData;
         }
         void RemoveBox(BoxData boxData)
@@ -107,7 +81,7 @@ namespace Violee
                     if (!InMap(nextPos))
                     {
                         curBox.AddSWallByDir(curGoOutDir, WallData.NoDoor);
-                        MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
+                        // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
                         continue;
                     }
                     if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir))
@@ -130,7 +104,7 @@ namespace Violee
                                 if (nextNextBox.HasSWallByDir(nextNextGoInDir))
                                 {
                                     nextBox.RemoveSWallByDir(nextGoOutDir);
-                                    MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
+                                    // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
                                 }
                             }
                         }
@@ -143,8 +117,9 @@ namespace Violee
         
         // 防止点击多次按钮
         bool isGenerating;
+        public static async Task StartGenerate2() => await Instance.StartGenerate();
         [Button]
-        async Task StartGenerate()
+        public async Task StartGenerate()
         {
             try
             {
@@ -192,7 +167,6 @@ namespace Violee
                 MyDebug.LogWarning("正在Dijkstra，请稍后再点");
                 return;
             }
-
             isDij = true;
             foreach (var boxData in mapData)
             {
@@ -244,7 +218,7 @@ namespace Violee
                             pq.Enqueue(nextPoint, nextPoint.CostWall);
                         }
                     }
-                    await YieldFrames();
+                    await Configer.SettingsConfig.YieldFrames();
                 }
                 MyDebug.Log($"Dijkstra finished! Count = {c}");
             }

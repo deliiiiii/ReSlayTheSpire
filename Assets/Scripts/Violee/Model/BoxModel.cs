@@ -21,6 +21,7 @@ namespace Violee
             name = $"Box {fBoxData.Pos.x} {fBoxData.Pos.y}";
             WallDic?.Keys.ForEach(wallType =>
             {
+                SetWall(wallType, false, EDoorType.None);
                 if (fBoxData.HasWallByType(wallType))
                 {
                     SetWall(wallType, true, fBoxData.WallDic[wallType].DoorType);
