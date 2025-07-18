@@ -24,12 +24,6 @@ namespace Violee
             {
                 AllWallTypes.Add((EWallType)array.GetValue(i));
             }
-            AllDoorTypes = new List<EDoorType>();
-            array = Enum.GetValues(typeof(EDoorType));
-            for (int i = 0; i < array.Length; i++)
-            {
-                AllDoorTypes.Add((EDoorType)array.GetValue(i));
-            }
             OppositeDirDic = new Dictionary<EBoxDir, EBoxDir>()
             {
                 { EBoxDir.Up, EBoxDir.Down },
@@ -45,11 +39,10 @@ namespace Violee
                 { EBoxDir.Right, new Vector2Int(1, 0) }
             };
         }
-        static List<BoxConfigSingle> BoxConfigList => Configer.Instance.BoxConfig.BoxConfigList;
+        static List<BoxConfigSingle> BoxConfigList => Configer.BoxConfig.BoxConfigList;
         public static readonly BoxConfigSingle EmptyBoxConfig;
         public static readonly List<EBoxDir> AllBoxDirs;
         public static readonly List<EWallType> AllWallTypes;
-        public static readonly List<EDoorType> AllDoorTypes;
         
         /// <summary>
         /// (dir, oppositeDir)

@@ -15,7 +15,7 @@ namespace Violee.View
 
         void Awake()
         {
-            if (Configer.Instance.SettingsConfig.ShowBoxCost)
+            if (Configer.SettingsConfig.ShowBoxCost)
             {
                 MapModel.OnBeginDij += BindAllCostTxt;
             }

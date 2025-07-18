@@ -5703,8 +5703,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
-  BoxConfig: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
-  SettingsConfig: {fileID: 11400000, guid: a045e28f41ce60340acfb1d0f7d5e9fa, type: 2}
+  BoxConfigIns: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
+  SettingsConfigIns: {fileID: 11400000, guid: a045e28f41ce60340acfb1d0f7d5e9fa, type: 2}
 --- !u!4 &1901459850
 Transform:
   m_ObjectHideFlags: 0

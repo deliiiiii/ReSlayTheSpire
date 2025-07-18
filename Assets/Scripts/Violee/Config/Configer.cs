@@ -10,24 +10,16 @@ namespace Violee
 {
     public class Configer : Singleton<Configer>
     {
-        public BoxConfig BoxConfig;
-        public SettingsConfig SettingsConfig;
+        public BoxConfig BoxConfigIns;
+        public SettingsConfig SettingsConfigIns;
+
+        public static BoxConfig BoxConfig => Instance.BoxConfigIns;
+        public static SettingsConfig SettingsConfig => Instance.SettingsConfigIns;
         
         async void Start()
         {
             if (SettingsConfig.RefreshConfigOnAwake)
                  await LoadConfig();
-            // foreach (var boxConfig in BoxConfig.BoxConfigList)
-            // {
-            //     var t = boxConfig.Texture2D;
-            //     boxConfig.Sprite = Sprite.Create(
-            //         t,
-            //         new Rect(0, 0, t.width, t.height),
-            //         new Vector2(0.5f, 0.5f),
-            //         100.0f,
-            //         0,
-            //         SpriteMeshType.Tight);
-            // }
         }
 
         async Task LoadConfig()

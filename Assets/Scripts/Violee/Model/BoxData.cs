@@ -109,7 +109,7 @@ namespace Violee
         public const int WallCost = 10;
         public const int DoorCost = 1;
         public SerializableDictionary<EBoxDir, BoxPointData> PointDic;
-        static float offset => Configer.Instance.SettingsConfig.BoxCostPosOffset;
+        static float offset => Configer.SettingsConfig.BoxCostPosOffset;
         public void InitPoint()
         {
             PointDic = new SerializableDictionary<EBoxDir, BoxPointData>();

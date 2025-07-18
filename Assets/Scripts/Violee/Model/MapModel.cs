@@ -10,17 +10,47 @@ namespace Violee
 {
     public class MapModel : MonoBehaviour
     {
+        #region Public Functions
+        public static List<BoxPointData> GetAllPoints()
+        {
+            return mapData?.SelectMany(x => x.PointDic?.Values).ToList() ?? new List<BoxPointData>();
+        }
+        #endregion
+        
+        
+        #region Yield Control
+        [Header("Yield Control")]
         [MinValue(0)]
         public float YieldCount;
+        int countNotYieldFrame;
+        async Task YieldFrames()
+        {
+            if (YieldCount >= 1)
+            {
+                for (int y = 0; y < YieldCount; y++)
+                {
+                    await Task.Yield();
+                }
+                return;
+            }
+
+            countNotYieldFrame++;
+            if (1f / countNotYieldFrame <= YieldCount)
+            {
+                countNotYieldFrame = 0;
+                await Task.Yield();
+            }
+        }
+        #endregion
+        
+        
+        #region PosInMap, Box
+        [Header("Map Settings")]
         public int Height = 4;
         public int Width = 6;
         public Vector2Int StartPos;
         public EBoxDir StartDir = EBoxDir.Up;
-        List<Vector2Int> emptyPosList;
-        List<BoxConfigSingle> BoxConfigList => Configer.Instance.BoxConfig.BoxConfigList;
         static MapData mapData;
-        
-        #region Pos Functions
         bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
         bool HasBox(Vector2Int pos) => mapData.Contains(pos);
         async Task<BoxData> AddBox(Vector2Int pos, BoxConfigSingle config)
@@ -54,11 +84,14 @@ namespace Violee
         }
         #endregion
 
+
+        #region Generate
+        HashSet<Vector2Int> emptyPosList;
         async Task GenerateOneFakeConnection(bool startWithStartLoc)
         {
             var edgeBoxStack = new Stack<BoxData>();
             // 每个伪连通块的第一个是空格子
-            var firstLoc = startWithStartLoc ? StartPos : emptyPosList[0];
+            var firstLoc = startWithStartLoc ? StartPos : emptyPosList.First();
             var firstBox = await AddBox(firstLoc, BoxHelper.EmptyBoxConfig);
             edgeBoxStack.Push(firstBox);
             while (edgeBoxStack.Count > 0)
@@ -80,7 +113,7 @@ namespace Violee
                     if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir))
                     {
                         var boxconfig = 
-                            BoxConfigList.RandomItemWeighted(
+                            Configer.BoxConfig.BoxConfigList.RandomItemWeighted(
                                 x => !BoxData.HasWallByByteAndDir(x.Walls, nextGoInDir),
                                 x => x.BasicWeight);
                         var nextBox = await AddBox(nextPos, boxconfig);
@@ -107,28 +140,7 @@ namespace Violee
                 }
             }
         }
-
-        int countNotYieldFrame;
-        async Task YieldFrames()
-        {
-            if (YieldCount >= 1)
-            {
-                for (int y = 0; y < YieldCount; y++)
-                {
-                    await Task.Yield();
-                }
-                return;
-            }
-
-            countNotYieldFrame++;
-            if (1f / countNotYieldFrame <= YieldCount)
-            {
-                countNotYieldFrame = 0;
-                await Task.Yield();
-            }
-
-        }
-
+        
         // 防止点击多次按钮
         bool isGenerating;
         [Button]
@@ -244,14 +256,8 @@ namespace Violee
 
             isDij = false;
         }
-
-
-        #region Function Got By Editor
-        public static List<BoxPointData> GetAllPoints()
-        {
-            return mapData?.SelectMany(x => x.PointDic?.Values).ToList() ?? new List<BoxPointData>();
-        }
         #endregion
+        
         
         #region Event
         public static event Action<Vector2Int, BoxData> OnAddBox;

@@ -21,7 +21,7 @@ namespace Violee
         static EDoorType RandomDoor()
         {
             var ran = UnityEngine.Random.value;
-            return ran <= Configer.Instance.BoxConfig.DoorPossibility ? EDoorType.Wooden : EDoorType.None;
+            return ran <= Configer.BoxConfig.DoorPossibility ? EDoorType.Wooden : EDoorType.None;
         }
         
         public EDoorType DoorType;
