@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee
@@ -18,16 +15,16 @@ namespace Violee
 
     public enum EWallType
     {
-        S1,
-        S2,
-        S4,
-        S8,
-        T1248,
-        T2481,
+        S1 = 1 << 0,
+        S2 = 1 << 1,
+        S4 = 1 << 2,
+        S8 = 1 << 3,
+        T1248 = 1 << 4 | 1 << 6,
+        T2481 = 1 << 5 | 1 << 7,
     }
 
     [Serializable]
-    public class BoxPointData: IComparable<BoxPointData>, IEquatable<BoxPointData>
+    public class BoxPointData
     {
         public EBoxDir Dir;
         public Observable<int> CostWall;
@@ -36,9 +33,8 @@ namespace Violee
         public List<BoxPointData> NextPointsInBox;
         [NonSerialized]
         public BoxData BelongBox;
-        public Vector2 Pos2D => 
-            new (BelongBox.Pos.x + BoxHelper.DirToVec2Dic[Dir].x * offset, 
-                BelongBox.Pos.y + BoxHelper.DirToVec2Dic[Dir].y * offset);
+        [NonSerialized]
+        public Vector2 Pos2D;
         public void UpdateNextPointCost()
         {
             foreach (var nextPoint in NextPointsInBox)
@@ -48,33 +44,35 @@ namespace Violee
                     CostWall + BelongBox.CostTilt(Dir, nextPoint.Dir));
             }
         }
-
-        static float offset => Configer.Instance.SettingsConfig.BoxCostPosOffset;
-        public int CompareTo(BoxPointData other)
-        {
-            if (BelongBox != other.BelongBox)
-                return -1;
-            return Dir.CompareTo(other.Dir);
-        }
-
-        public bool Equals(BoxPointData other)
-        {
-            return CompareTo(other) == 0;
-        }
     }
     
     [Serializable]
     public class BoxData
     {
+        BoxData(){}
+        public static BoxData Create(Vector2Int pos, BoxConfigSingle config)
+        {
+            var ret = new BoxData()
+            {
+                Pos = pos,
+                wallsByte = config.Walls,
+            };
+            foreach (var wallType in BoxHelper.AllWallTypes)
+            {
+                if((ret.wallsByte & (int)wallType) == (int)wallType)
+                    ret.WallDic.Add(wallType, WallData.Create());
+            }
+            return ret;
+        }
+        
         public Vector2Int Pos;
         // // TODO 1：之后在sprite上自己划线？ 2：拿预制体的3d模型
         // public Sprite Sprite;
-        public event Action<EWallType> OnAddWall;
+        public event Action<EWallType, WallData> OnAddWall;
         public event Action<EWallType> OnRemoveWall;
         #region Walls
-        public byte Walls;
-        [ShowInInspector]
-        string WallsInBinary => Convert.ToString(Walls, 2).PadLeft(8, '0');
+        [NonSerialized] byte wallsByte;
+        [NotNull] public SerializableDictionary<EWallType, WallData> WallDic = new();
 
         EWallType WallDirToType(EBoxDir dir)
         {
@@ -86,49 +84,32 @@ namespace Violee
                 EBoxDir.Left => EWallType.S8,
             };
         }
-        public static bool HasWallByDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
-        public bool HasWallByDir(EBoxDir dir) => (Walls & (byte)dir) != 0;
-        public bool HasWallByType(EWallType t)
+        public static bool HasWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
+        public bool HasWallByType(EWallType t) => WallDic.ContainsKey(t);
+        public bool HasSWallByDir(EBoxDir dir) => HasWallByType(WallDirToType(dir));
+        public void AddSWallByDir(EBoxDir dir, WallData wallData)
         {
-            return t switch
-            {
-                EWallType.S1 => (Walls & (1 << 0)) != 0,
-                EWallType.S2 => (Walls & (1 << 1)) != 0,
-                EWallType.S4 => (Walls & (1 << 2)) != 0,
-                EWallType.S8 => (Walls & (1 << 3)) != 0,
-                EWallType.T1248 => (Walls & (1 << 4)) != 0 && (Walls & (1 << 6)) != 0,
-                EWallType.T2481 => (Walls & (1 << 5)) != 0 && (Walls & (1 << 7)) != 0,
-            };
-        }
-        public void AddSWallByDir(EBoxDir dir)
-        {
-            Walls = dir switch
-            {
-                EBoxDir.Up => (byte)(Walls | (1 << 0)),
-                EBoxDir.Right => (byte)(Walls | (1 << 1)),
-                EBoxDir.Down => (byte)(Walls | (1 << 2)),
-                EBoxDir.Left => (byte)(Walls | (1 << 3)),
-            };
-            OnAddWall?.Invoke(WallDirToType(dir));
+            var wallType = WallDirToType(dir);
+            RemoveSWallByDir(dir);
+            WallDic.Add(wallType, wallData);
+            OnAddWall?.Invoke(wallType, wallData);
         }
         public void RemoveSWallByDir(EBoxDir dir)
         {
-            Walls = dir switch
+            var wallType = WallDirToType(dir);
+            if (WallDic.Remove(wallType))
             {
-                EBoxDir.Up =>     (byte)(Walls & ~(1 << 0)),
-                EBoxDir.Right =>  (byte)(Walls & ~(1 << 1)),
-                EBoxDir.Down =>   (byte)(Walls & ~(1 << 2)),
-                EBoxDir.Left =>   (byte)(Walls & ~(1 << 3)),
-            };
-            OnRemoveWall?.Invoke(WallDirToType(dir));
+                OnRemoveWall?.Invoke(wallType);
+            }
         }
         #endregion
         
         
         #region Path
-        public const int SWallCost = 10;
-        public const int TWallCost = 1;
+        public const int WallCost = 10;
+        public const int DoorCost = 1;
         public SerializableDictionary<EBoxDir, BoxPointData> PointDic;
+        static float offset => Configer.Instance.SettingsConfig.BoxCostPosOffset;
         public void InitPoint()
         {
             PointDic = new SerializableDictionary<EBoxDir, BoxPointData>();
@@ -137,9 +118,11 @@ namespace Violee
                 PointDic.Add(dir, new BoxPointData()
                 {
                     Dir = dir,
-                    BelongBox = this,
                     CostWall = new (int.MaxValue / 2),
-                    NextPointsInBox = new List<BoxPointData>()
+                    Pos2D = new (Pos.x + BoxHelper.DirToVec2Dic[dir].x * offset, 
+                            Pos.y + BoxHelper.DirToVec2Dic[dir].y * offset),
+                    BelongBox = this,
+                    NextPointsInBox = new List<BoxPointData>(),
                 });
             }
 
@@ -156,8 +139,35 @@ namespace Violee
             }
             
         }
-        public int CostStraight(EBoxDir dir) => HasWallByDir(dir) ? SWallCost : 0;
-        public int CostTilt(EBoxDir from, EBoxDir to) => CanGoTiltWallBetween(from, to) ? 0 : TWallCost;
+
+        public int CostStraight(EBoxDir dir)
+        {
+            if (!HasSWallByDir(dir))
+                return 0;
+            if(WallDic[WallDirToType(dir)].DoorType == EDoorType.Wooden)
+                return DoorCost;
+            return WallCost;
+        }
+
+        public int CostTilt(EBoxDir from, EBoxDir to)
+        {
+            if (CanGoTiltWallBetween(from, to))
+                return 0;
+            var t = (from, to) switch
+            {
+                (EBoxDir.Up, EBoxDir.Right)
+                    or (EBoxDir.Right, EBoxDir.Up)
+                    or (EBoxDir.Down, EBoxDir.Left)
+                    or (EBoxDir.Left, EBoxDir.Down) => EWallType.T1248,
+                (EBoxDir.Up, EBoxDir.Left)
+                    or (EBoxDir.Left, EBoxDir.Up)
+                    or (EBoxDir.Down, EBoxDir.Right)
+                    or (EBoxDir.Right, EBoxDir.Down) => EWallType.T2481,
+            };
+            if(WallDic[t].DoorType == EDoorType.Wooden)
+                return DoorCost;
+            return WallCost;
+        }
         
         /// <summary>
         /// dir1 dir2必须相邻！
@@ -172,7 +182,7 @@ namespace Violee
             var big = (byte)bigDir;
             var small = (byte)smallDif;
             // tilt walls
-            var x = Walls >> 4;
+            var x = wallsByte >> 4;
             var fromDif = small;
             if (big == 8 && small == 1)
                 fromDif = 8;
@@ -186,7 +196,7 @@ namespace Violee
                           && (x & 6) != 6
                           && (x & 5) != 5
                           && (x & 10) != 10,
-                _ => x == fromDif || (x | fromDif) != x
+                _ => x == 0 || x == fromDif || (x | fromDif) != x
             };
         }
         #endregion

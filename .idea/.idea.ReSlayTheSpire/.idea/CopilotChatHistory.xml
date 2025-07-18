@@ -4,6 +4,12 @@
     <option name="conversations">
       <list>
         <Conversation>
+          <option name="createTime" value="1752810137870" />
+          <option name="id" value="01981ba0290e7ea4a0c3eac2642691e7" />
+          <option name="title" value="新对话 2025年7月18日 11:42:17" />
+          <option name="updateTime" value="1752810137870" />
+        </Conversation>
+        <Conversation>
           <option name="createTime" value="1752723866427" />
           <option name="id" value="0198167bc33b776b90ee77d6d1be8059" />
           <option name="title" value="EditorGUILayout.ObjectField(fpc.sprintBarCG, typeo" />

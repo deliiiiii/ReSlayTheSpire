@@ -26,12 +26,7 @@ namespace Violee
         async Task<BoxData> AddBox(Vector2Int pos, BoxConfigSingle config)
         {
             await YieldFrames();
-            var boxData = new BoxData()
-            {
-                Pos = pos,
-                Walls = config.Walls,
-                // Sprite = config.Sprite,
-            };
+            var boxData = BoxData.Create(pos, config);
             mapData.Add(boxData);
             emptyPosList.Remove(pos);
             OnAddBox?.Invoke(pos, boxData);
@@ -48,12 +43,12 @@ namespace Violee
         {
             mapData?.ForEach(boxData => OnRemoveBox?.Invoke(boxData.Pos));
             mapData?.Clear();
-            emptyPosList = new List<Vector2Int>();
+            emptyPosList = new ();
             for(int j = 0; j < Height; j++)
             {
                 for(int i = 0; i < Width; i++)
                 {
-                    emptyPosList.Add(new Vector2Int(i, j));
+                    emptyPosList.Add(new(i, j));
                 }
             }
         }
@@ -78,15 +73,15 @@ namespace Violee
                     var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];
                     if (!InMap(nextPos))
                     {
-                        curBox.AddSWallByDir(curGoOutDir);
+                        curBox.AddSWallByDir(curGoOutDir, WallData.NoDoor);
                         MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
                         continue;
                     }
-                    if (!HasBox(nextPos) && !curBox.HasWallByDir(curGoOutDir))
+                    if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir))
                     {
                         var boxconfig = 
                             BoxConfigList.RandomItemWeighted(
-                                x => !BoxData.HasWallByDir(x.Walls, nextGoInDir),
+                                x => !BoxData.HasWallByByteAndDir(x.Walls, nextGoInDir),
                                 x => x.BasicWeight);
                         var nextBox = await AddBox(nextPos, boxconfig);
                         var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
@@ -99,7 +94,7 @@ namespace Violee
                             if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
                                 var nextNextBox = mapData[nextNextPos];
-                                if (nextNextBox.HasWallByDir(nextNextGoInDir))
+                                if (nextNextBox.HasSWallByDir(nextNextGoInDir))
                                 {
                                     nextBox.RemoveSWallByDir(nextGoOutDir);
                                     MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");

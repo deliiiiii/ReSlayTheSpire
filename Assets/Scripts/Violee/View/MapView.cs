@@ -44,8 +44,7 @@ namespace Violee.View
         {
             try
             {
-                
-                DestroyAllCostTxt();
+                await DestroyAllCostTxt();
                 costTxtDic = new();
                 int c = 0;
                 foreach (var point in MapModel.GetAllPoints())

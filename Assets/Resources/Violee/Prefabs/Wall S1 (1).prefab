@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3577ef57b2f48fd8cf8ff8b65d933e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallData:
+    DoorType: 0
   Door: {fileID: 4690139194113425635}
   NotDoor: {fileID: 3671564070237400239}
 --- !u!1 &6654039859223826148
@@ -129,6 +131,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
       propertyPath: m_Name
       value: WallS1 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
       propertyPath: m_IsActive
@@ -413,6 +419,10 @@ PrefabInstance:
       value: WallS1 0
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -693,6 +703,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
       propertyPath: m_Name
       value: WallS1 0 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
       propertyPath: m_IsActive
@@ -977,6 +991,10 @@ PrefabInstance:
       value: WallS1 1 (2)
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -1257,6 +1275,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: c5f38da3050cb02439779a0f8c63c844, type: 3}
       propertyPath: m_Name
       value: Wall_Door_01_Grey (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: c5f38da3050cb02439779a0f8c63c844, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: c5f38da3050cb02439779a0f8c63c844, type: 3}
       propertyPath: m_IsActive
@@ -2043,6 +2065,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4690139194113425635}
     m_Modifications:
+    - target: {fileID: 100000, guid: c5f38da3050cb02439779a0f8c63c844, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: c5f38da3050cb02439779a0f8c63c844, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -2836,6 +2862,10 @@ PrefabInstance:
       value: WallS1 0 (1)
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -3118,6 +3148,10 @@ PrefabInstance:
       value: WallS1 1 (1)
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 862f30f8cda8c0245829d380006f32e4, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -3398,6 +3432,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 38779c9653e8f684cab84123989672e1, type: 3}
       propertyPath: m_Name
       value: Door_02 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 38779c9653e8f684cab84123989672e1, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 38779c9653e8f684cab84123989672e1, type: 3}
       propertyPath: m_RootOrder

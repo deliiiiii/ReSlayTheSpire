@@ -32,7 +32,7 @@ namespace Violee
         void SpawnBox3D(Vector3 pos3D, BoxData fBoxData)
         {
             var boxModel = Instantiate(BoxPrefab, pos3D, Quaternion.identity, ThreeDParent);
-            boxModel.InitData(fBoxData);
+            boxModel.ReadData(fBoxData);
             boxModel3DDic.Add(pos3D, boxModel);
         }
         

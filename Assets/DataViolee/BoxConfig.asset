@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de30a77feef24ad08d01b362c33b86a5, type: 3}
   m_Name: BoxConfig
   m_EditorClassIdentifier: 
+  DoorPossibility: 0.85
   BoxConfigList:
   - Name: Box0
     Walls: 0
@@ -52,7 +53,7 @@ MonoBehaviour:
   - Name: Box11
     Walls: 11
     Texture2D: {fileID: 2800000, guid: 97187afca6117e94bba0ad96938b6f61, type: 3}
-    BasicWeight: 200
+    BasicWeight: 400
   - Name: Box12
     Walls: 12
     Texture2D: {fileID: 2800000, guid: c35881829601b204a8d72f3a3edf9887, type: 3}
@@ -60,15 +61,15 @@ MonoBehaviour:
   - Name: Box13
     Walls: 13
     Texture2D: {fileID: 2800000, guid: 666a986610de9ad418276e9689dabefb, type: 3}
-    BasicWeight: 200
+    BasicWeight: 400
   - Name: Box14
     Walls: 14
     Texture2D: {fileID: 2800000, guid: 76e23b04fdea4164a930fcc0fa0ee4e7, type: 3}
-    BasicWeight: 200
+    BasicWeight: 400
   - Name: Box15
     Walls: 15
     Texture2D: {fileID: 2800000, guid: 9e36a8c5b2f1bb94797b3c31a90775dc, type: 3}
-    BasicWeight: 200
+    BasicWeight: 400
   - Name: Box80
     Walls: 80
     Texture2D: {fileID: 2800000, guid: bd6424a9d430ff64c8c8d18c94907581, type: 3}
@@ -80,4 +81,4 @@ MonoBehaviour:
   - Name: Box240
     Walls: 240
     Texture2D: {fileID: 2800000, guid: 047864e3767443846b3f08b42cdf2158, type: 3}
-    BasicWeight: 100
+    BasicWeight: 10000
