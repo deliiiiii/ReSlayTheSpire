@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using Violee;
 using Object = UnityEngine.Object;
 
 public class ObjectPool<T> where T : MonoBehaviour
@@ -18,7 +19,6 @@ public class ObjectPool<T> where T : MonoBehaviour
     readonly int initCount = 256;
     readonly Stack<T> availableObject = new();
     int poolCount => availableObject.Count;
-    bool inited;
     async Task MyCreateNew(int newCount)
     {
         try
@@ -30,8 +30,7 @@ public class ObjectPool<T> where T : MonoBehaviour
                 var g = Object.Instantiate(tPrefab, tPrefab.transform.position, tPrefab.transform.rotation, objParent);
                 g.gameObject.SetActive(false);
                 availableObject.Push(g);
-                if(!inited)
-                    await Task.Yield();
+                await Configer.SettingsConfig.YieldFrames(1/3.28f);
             }
         }
         catch (Exception e)
@@ -39,7 +38,6 @@ public class ObjectPool<T> where T : MonoBehaviour
             MyDebug.LogError(e);
             throw;
         }
-        inited = true;
     }
 
     public async Task<T> MyInstantiate(Vector3 fPos)

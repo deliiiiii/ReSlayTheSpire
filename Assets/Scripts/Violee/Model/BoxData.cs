@@ -47,7 +47,7 @@ namespace Violee
         }
     }
     
-    // [Serializable]
+    [Serializable]
     public class BoxData
     {
         protected BoxData(){}
@@ -112,7 +112,6 @@ namespace Violee
         [NonSerialized]
         public Dictionary<EBoxDir, BoxPointData> PointDic;
         static float offset => Configer.SettingsConfig.BoxCostPosOffset;
-        // static float offset = 0.35f;
         public void InitPoint()
         {
             PointDic = new Dictionary<EBoxDir, BoxPointData>();

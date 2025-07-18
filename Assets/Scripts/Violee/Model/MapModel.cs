@@ -117,7 +117,6 @@ namespace Violee
         
         // 防止点击多次按钮
         bool isGenerating;
-        public static async Task StartGenerate2() => await Instance.StartGenerate();
         [Button]
         public async Task StartGenerate()
         {

@@ -31,7 +31,7 @@ namespace Violee.View
                 {
                     pair.Item1.UnBind();
                     costTxtPool.MyDestroy(pair.Item2);
-                    await Configer.SettingsConfig.YieldFrames(multi : 1 / 4f);
+                    await Configer.SettingsConfig.YieldFrames(multi : 1 / 10f);
                 }
             }
         }
