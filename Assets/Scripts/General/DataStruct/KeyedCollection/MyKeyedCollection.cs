@@ -12,17 +12,18 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-   
+using System.Linq;
+
 [Serializable]
 [System.Runtime.InteropServices.ComVisible(false)]
 [DebuggerDisplay("Count = {Count}")]        
 public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
 {
-    const int defaultThreshold = 0;
+    const int DefaultThreshold = 0;
 
     IEqualityComparer<TKey> comparer;
     [SerializeField]
-    SerializableDictionary<TKey,TItem> dict = new ();
+    SerializableDictionary<TKey,TItem> Dict = new ();
     int keyCount;
     int threshold;
     Func<TItem, TKey> keyMapper;
@@ -31,15 +32,11 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
     {
         this.keyMapper = keyMapper;
     }
-    protected MyKeyedCollection(): this(null, defaultThreshold) {}
-
-    protected MyKeyedCollection(IEqualityComparer<TKey> comparer): this(comparer, defaultThreshold) {}
+    protected MyKeyedCollection(): this(null, DefaultThreshold) {}
 
 
-    protected MyKeyedCollection(IEqualityComparer<TKey> comparer, int dictionaryCreationThreshold) {
-        if (comparer == null) { 
-            comparer = EqualityComparer<TKey>.Default;
-        }
+    protected MyKeyedCollection(IEqualityComparer<TKey> comparer, int dictionaryCreationThreshold = DefaultThreshold) {
+        comparer ??= EqualityComparer<TKey>.Default;
 
         if (dictionaryCreationThreshold == -1) {
             dictionaryCreationThreshold = int.MaxValue;
@@ -57,6 +54,7 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
     TKey GetKeyForItem(TItem item) => keyMapper(item);
 
     public IEqualityComparer<TKey> Comparer => comparer;
+    public ICollection<TKey> Keys => Dict.Keys;
 
     public TItem this[TKey key] {
         get {
@@ -65,8 +63,8 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
                 throw new ArgumentNullException(nameof(key), "Key cannot be null.");
             }
 
-            if (dict != null) {
-                return dict[key];
+            if (Dict != null) {
+                return Dict[key];
             }
 
             foreach (TItem item in Items) {
@@ -75,7 +73,6 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
 
             // ThrowHelper.ThrowKeyNotFoundException();
             throw new KeyNotFoundException($"Key '{key}' not found in the collection.");
-            return default(TItem);
         }
     }
 
@@ -85,31 +82,21 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
             throw new ArgumentNullException(nameof(key), "Key cannot be null.");
         }
         
-        if (dict != null) {
-            return dict.ContainsKey(key);
-        }
-
-        if (key != null) {
-            foreach (TItem item in Items) {
-                if (comparer.Equals(GetKeyForItem(item), key)) return true;
-            }
-        }
-        return false;
+        return Dict?.ContainsKey(key) ?? Items.Any(item => comparer.Equals(GetKeyForItem(item), key));
     }
-    public bool TryGetValue(TKey key, out TItem item) => dict.TryGetValue(key, out item);
+    public new bool Contains(TItem item) {
+        return Contains(GetKeyForItem(item));
+    }
+    public bool TryGetValue(TKey key, out TItem item) => Dict.TryGetValue(key, out item);
 
     private bool ContainsItem(TItem item) {                        
         TKey key;
-        if( (dict == null) || ((key = GetKeyForItem(item)) == null)) {
+        if( (Dict == null) || ((key = GetKeyForItem(item)) == null)) {
             return Items.Contains(item);
         }
 
-        TItem itemInDict;
-        bool exist = dict.TryGetValue(key, out itemInDict);
-        if( exist) {
-            return EqualityComparer<TItem>.Default.Equals(itemInDict, item);
-        }
-        return false;
+        bool exist = Dict.TryGetValue(key, out var itemInDict);
+        return exist && EqualityComparer<TItem>.Default.Equals(itemInDict, item);
     }
 
     public bool Remove(TKey key) {
@@ -118,28 +105,26 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
             throw new ArgumentNullException(nameof(key), "Key cannot be null.");
         }
         
-        if (dict != null) {
-            if (dict.ContainsKey(key)) {
-                return Remove(dict[key]);
-            }
-
-            return false;
+        if (Dict != null)
+        {
+            return Dict.TryGetValue(key, out var value) && base.Remove(value);
         }
 
-        if (key != null) {
-            for (int i = 0; i < Items.Count; i++) {
-                if (comparer.Equals(GetKeyForItem(Items[i]), key)) {
-                    RemoveItem(i);
-                    return true;
-                }
-            }
+        for (int i = 0; i < Items.Count; i++)
+        {
+            if (!comparer.Equals(GetKeyForItem(Items[i]), key)) continue;
+            RemoveItem(i);
+            return true;
         }
         return false;
     }
-    
-    protected IDictionary<TKey,TItem> Dictionary {
-        get { return dict; }
+
+    public new bool Remove(TItem item)
+    {
+        return Remove(GetKeyForItem(item));
     }
+    
+    protected IDictionary<TKey,TItem> Dictionary => Dict;
 
     protected void ChangeItemKey(TItem item, TKey newKey) {
         // check if the item exists in the collection
@@ -148,23 +133,20 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
             throw new KeyNotFoundException($"Item '{item}' not found in the collection.");
         }
 
-        TKey oldKey = GetKeyForItem(item);            
-        if (!comparer.Equals(oldKey, newKey)) {
-            if (newKey != null) {
-                AddKey(newKey, item);
-            }
+        TKey oldKey = GetKeyForItem(item);
+        if (comparer.Equals(oldKey, newKey)) return;
+        if (newKey != null) {
+            AddKey(newKey, item);
+        }
 
-            if (oldKey != null) {
-                RemoveKey(oldKey);
-            }
+        if (oldKey != null) {
+            RemoveKey(oldKey);
         }
     }
 
     protected override void ClearItems() {
         base.ClearItems();
-        if (dict != null) {
-            dict.Clear();
-        }
+        Dict?.Clear();
 
         keyCount = 0;
     }
@@ -190,8 +172,8 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
         TKey oldKey = GetKeyForItem(Items[index]);
 
         if (comparer.Equals(oldKey, newKey)) {
-            if (newKey != null && dict != null) {
-                dict[newKey] = item;
+            if (newKey != null && Dict != null) {
+                Dict[newKey] = item;
             }
         }
         else {
@@ -207,12 +189,12 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
     }
 
     private void AddKey(TKey key, TItem item) {
-        if (dict != null) {
-            dict.Add(key, item);
+        if (Dict != null) {
+            Dict.Add(key, item);
         }
         else if (keyCount == threshold) {
             CreateDictionary();
-            dict.Add(key, item);
+            Dict!.Add(key, item);
         }
         else {
             if (Contains(key)) {
@@ -226,19 +208,19 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
 
     private void CreateDictionary() {
         // TODO 
-        dict = new SerializableDictionary<TKey,TItem>();
+        Dict = new SerializableDictionary<TKey,TItem>();
         foreach (TItem item in Items) {
             TKey key = GetKeyForItem(item);
             if (key != null) {
-                dict.Add(key, item);
+                Dict.Add(key, item);
             }
         }
     }
 
     private void RemoveKey(TKey key) {
         Contract.Assert(key != null, "key shouldn't be null!");
-        if (dict != null) {
-            dict.Remove(key);
+        if (Dict != null) {
+            Dict.Remove(key);
         }
         else {
             keyCount--;

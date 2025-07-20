@@ -34,18 +34,18 @@ namespace Violee
             MyDebug.Log($"Add box {config.Walls} at {pos}");
             boxKList.Add(boxData);
             emptyPosSet.Remove(pos);
-            OnAddBoxAsync?.Invoke(pos, boxData);
+            OnAddBoxAsync?.Invoke(boxData);
             return boxData;
         }
         void RemoveBox(BoxData boxData)
         {
             boxKList.Remove(boxData);
             emptyPosSet.Add(boxData.Pos);
-            OnRemoveBox?.Invoke(boxData.Pos);
+            OnRemoveBox?.Invoke(boxData);
         }
         void RemoveAllBoxes()
         {
-            boxKList?.ForEach(boxData => OnRemoveBox?.Invoke(boxData.Pos));
+            boxKList?.ForEach(boxData => OnRemoveBox?.Invoke(boxData));
             boxKList?.Clear();
             emptyPosSet = new ();
             for(int j = 0; j < Height; j++)
@@ -233,8 +233,8 @@ namespace Violee
         
         
         #region Event
-        public static event Func<Vector2Int, BoxData, Task> OnAddBoxAsync;
-        public static event Action<Vector2Int> OnRemoveBox;
+        public static event Func<BoxData, Task> OnAddBoxAsync;
+        public static event Action<BoxData> OnRemoveBox;
         public static event Func<Task> OnBeginDij;
         #endregion
     }

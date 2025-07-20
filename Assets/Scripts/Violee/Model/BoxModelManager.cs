@@ -10,7 +10,7 @@ namespace Violee
         void Awake()
         {
             boxModelPool = new ObjectPool<BoxModel>(BoxPrefab, transform);
-            MapModel.OnAddBoxAsync += (pos2D, fBoxData) => SpawnBox3D(BoxHelper.Pos2DTo3D(pos2D), fBoxData);
+            MapModel.OnAddBoxAsync += fBoxData => SpawnBox3D(fBoxData);
             MapModel.OnRemoveBox += DestroyBox;
         }
 
@@ -19,16 +19,16 @@ namespace Violee
         #endregion
         
         static ObjectPool<BoxModel> boxModelPool;
-        static Dictionary<Vector3, BoxModel> boxModel3DDic = new ();
+        static MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
         
         #region Event
-        async Task SpawnBox3D(Vector3 pos3D, BoxData fBoxData)
+        async Task SpawnBox3D(BoxData fBoxData)
         {
             try
             {
-                var boxModel = await boxModelPool.MyInstantiate(pos3D);
+                var boxModel = await boxModelPool.MyInstantiate();
                 boxModel.ReadData(fBoxData);
-                boxModel3DDic.Add(pos3D, boxModel);
+                boxModel3DDic.Add(boxModel);
             }
             catch (Exception e)
             {
@@ -37,9 +37,9 @@ namespace Violee
             }
         }
         
-        void DestroyBox(Vector2Int pos2D)
+        void DestroyBox(BoxData fBoxData)
         {
-            var pos3D = BoxHelper.Pos2DTo3D(pos2D);
+            var pos3D = BoxHelper.Pos2DTo3D(fBoxData.Pos);
             boxModelPool.MyDestroy(boxModel3DDic[pos3D]);
             boxModel3DDic.Remove(pos3D);
         }

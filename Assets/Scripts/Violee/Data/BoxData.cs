@@ -103,9 +103,9 @@ namespace Violee
         }
         public void RemoveSWall(WallData newData)
         {
-            if (wallKList.Contains(newData.WallType))
+            if (wallKList.Contains(newData))
             {
-                wallKList.Remove(newData.WallType);
+                wallKList.Remove(newData);
                 OnRemoveWall?.Invoke(newData);
             }
         }

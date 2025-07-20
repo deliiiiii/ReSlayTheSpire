@@ -37,6 +37,7 @@ namespace Violee
                     SetWall(wallData, true);
                 }
             });
+            transform.position = BoxHelper.Pos2DTo3D(fBoxData.Pos);
         }
 
         void SetWall(WallData wallData, bool isActive)
@@ -44,7 +45,8 @@ namespace Violee
             var wallType = wallData.WallType;
             var doorType = wallData.DoorType;
             wallKList[wallType].gameObject.SetActive(isActive);
-            wallKList[wallType].SetDoor(doorType);
+            if(isActive)
+                wallKList[wallType].SetDoor(doorType);
         }
     }
 }

@@ -40,6 +40,25 @@ public class ObjectPool<T> where T : MonoBehaviour
         }
     }
 
+    public async Task<T> MyInstantiate()
+    {
+        try
+        {
+            if (availableObject.Count == 0)
+            {
+                await MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
+            }
+            var g = availableObject.Pop();
+            g.transform.SetParent(objParent, worldPositionStays: false);
+            g.gameObject.SetActive(true);
+            return g;
+        }
+        catch (Exception e)
+        {
+            MyDebug.LogError(e);
+            throw;
+        }
+    }
     public async Task<T> MyInstantiate(Vector3 fPos)
     {
         try
@@ -60,6 +79,28 @@ public class ObjectPool<T> where T : MonoBehaviour
             throw;
         }
     }
+    public async Task<T> MyInstantiate(Vector3 fPos, Quaternion fRot)
+    {
+        try
+        {
+            if (availableObject.Count == 0)
+            {
+                await MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
+            }
+            var g = availableObject.Pop();
+            g.transform.position = fPos;
+            g.transform.rotation = fRot;
+            g.transform.SetParent(objParent, worldPositionStays: false);
+            g.gameObject.SetActive(true);
+            return g;
+        }
+        catch (Exception e)
+        {
+            MyDebug.LogError(e);
+            throw;
+        }
+    }
+    
     public void MyDestroy(T obj)
     {
         if (obj == null)
