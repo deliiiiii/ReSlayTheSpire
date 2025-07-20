@@ -32,8 +32,9 @@ namespace Violee
             wallKList?.Select(w => w.WallData).ForEach(wallData =>
             {
                 SetWall(wallData, false);
-                if (fBoxData.HasWallByType(wallData.WallType))
+                if (fBoxData.HasWallByType(wallData.WallType, out var wallDataNew))
                 {
+                    wallData = wallDataNew;
                     SetWall(wallData, true);
                 }
             });

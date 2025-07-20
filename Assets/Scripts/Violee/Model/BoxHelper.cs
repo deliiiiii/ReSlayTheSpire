@@ -79,6 +79,7 @@ namespace Violee
                 EBoxDir.Right => EWallType.S2,
                 EBoxDir.Down => EWallType.S4,
                 EBoxDir.Left => EWallType.S8,
+                _ => throw new ArgumentException($"Invalid direction: {dir}")
             };
         }
     }

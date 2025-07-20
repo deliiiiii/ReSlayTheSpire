@@ -37,7 +37,7 @@ namespace Violee
         [NonSerialized]
         public List<BoxPointData> NextPointsInBox;
         [NonSerialized]
-        public BoxData BelongBox;
+        public readonly BoxData BelongBox;
         [NonSerialized]
         public Vector2 Pos2D;
         public void UpdateNextPointCost()
@@ -81,10 +81,10 @@ namespace Violee
 
         [NotNull] MyKeyedCollection<EWallType, WallData> wallKList = new(w => w.WallType);
         
-        public static bool HasWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
+        public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
 
-        public bool HasWallByType(EWallType wallType) => 
-            wallKList.Contains(wallType);
+        public bool HasWallByType(EWallType wallType, out WallData wallData) => 
+            wallKList.TryGetValue(wallType, out wallData);
         public bool HasSWallByDir(EBoxDir dir, out WallData wallData) => 
             wallKList.TryGetValue(BoxHelper.WallDirToType(dir), out wallData);
         public void AddSWall(WallData wallData)
@@ -92,14 +92,6 @@ namespace Violee
             RemoveSWall(wallData);
             wallKList.Add(wallData);
             OnAddWall?.Invoke(wallData);
-        }
-
-        public void RemoveSWall(EBoxDir dir)
-        {
-            if (HasSWallByDir(dir, out var wallData))
-            {
-                RemoveSWall(wallData);
-            }
         }
         public void RemoveSWall(WallData newData)
         {
@@ -167,6 +159,7 @@ namespace Violee
                     or (EBoxDir.Left, EBoxDir.Up)
                     or (EBoxDir.Down, EBoxDir.Right)
                     or (EBoxDir.Right, EBoxDir.Down) => EWallType.T2481,
+                _ => throw new ArgumentException($"from{from} and to{to} must be adjacent directions!"),
             };
             if(wallKList[t].DoorType == EDoorType.Wooden)
                 return DoorCost;

@@ -88,7 +88,7 @@ namespace Violee
                     {
                         var boxConfig = 
                             Configer.BoxConfig.BoxConfigList.RandomItemWeighted(
-                                x => !BoxData.HasWallByByteAndDir(x.Walls, nextGoInDir),
+                                x => !BoxData.HasSWallByByteAndDir(x.Walls, nextGoInDir),
                                 x => x.BasicWeight);
                         var nextBox = await AddBoxAsync(nextPos, boxConfig);
                         var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
@@ -101,9 +101,9 @@ namespace Violee
                             if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
                                 var nextNextBox = boxKList[nextNextPos];
-                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
+                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out var wallData))
                                 {
-                                    nextBox.RemoveSWall(nextGoOutDir);
+                                    nextBox.RemoveSWall(wallData);
                                     // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
                                 }
                             }
