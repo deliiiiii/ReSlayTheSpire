@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 
 namespace Violee
 {
     public enum EDoorType
     {
+        Random,
         None,
         Wooden,
     }
@@ -13,9 +13,15 @@ namespace Violee
     {
         WallData() { }
 
-        public static WallData Create()
+        public static WallData Create(EBoxDir dir, EDoorType doorType)
+            => Create(BoxHelper.WallDirToType(dir), doorType);
+        public static WallData Create(EWallType wallType, EDoorType doorType)
         {
-            return new WallData() { DoorType = RandomDoor() };
+            return new WallData()
+            {
+                WallType = wallType,
+                DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType
+            };
         }
 
         static EDoorType RandomDoor()
@@ -24,9 +30,8 @@ namespace Violee
             return ran <= Configer.BoxConfig.DoorPossibility ? EDoorType.Wooden : EDoorType.None;
         }
         
+        public EWallType WallType;
         public EDoorType DoorType;
-
-        public static WallData NoDoor => new WallData() { DoorType = EDoorType.None };
     }
     
 }

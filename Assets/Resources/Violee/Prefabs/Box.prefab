@@ -127,24 +127,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boxData:
     Pos: {x: 0, y: 0}
-    WallDic:
-      list: []
-    PointDic:
-      list: []
-  WallDic:
-    list:
-    - Key: 1
-      Value: {fileID: 314099916519323059}
-    - Key: 2
-      Value: {fileID: 9681638042843068}
-    - Key: 4
-      Value: {fileID: 1006801020935745163}
-    - Key: 8
-      Value: {fileID: 5635491233879673322}
-    - Key: 80
-      Value: {fileID: 3814611452900442636}
-    - Key: 160
-      Value: {fileID: 3003268450641862884}
+  WallListIns:
+  - {fileID: 314099916519323059}
+  - {fileID: 9681638042843068}
+  - {fileID: 1006801020935745163}
+  - {fileID: 5635491233879673322}
+  - {fileID: 3814611452900442636}
+  - {fileID: 3003268450641862884}
 --- !u!1001 &3459221412192617700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -276,6 +265,10 @@ PrefabInstance:
     - target: {fileID: 8098708554769221484, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
       propertyPath: m_VersionIndex
       value: 73
+      objectReference: {fileID: 0}
+    - target: {fileID: 9094129808267496718, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
+      propertyPath: WallData.WallType
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 9201456838543638275, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
       propertyPath: m_Layer
@@ -434,6 +427,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 109
       objectReference: {fileID: 0}
+    - target: {fileID: 8664725291397199252, guid: 2ff50f57fd40c154ba68ca06cebf59d3, type: 3}
+      propertyPath: WallData.WallType
+      value: 80
+      objectReference: {fileID: 0}
     - target: {fileID: 8771247771622213529, guid: 2ff50f57fd40c154ba68ca06cebf59d3, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -591,6 +588,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 109
       objectReference: {fileID: 0}
+    - target: {fileID: 8664725291397199252, guid: 2ff50f57fd40c154ba68ca06cebf59d3, type: 3}
+      propertyPath: WallData.WallType
+      value: 160
+      objectReference: {fileID: 0}
     - target: {fileID: 8771247771622213529, guid: 2ff50f57fd40c154ba68ca06cebf59d3, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -747,6 +748,10 @@ PrefabInstance:
     - target: {fileID: 8098708554769221484, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
       propertyPath: m_VersionIndex
       value: 73
+      objectReference: {fileID: 0}
+    - target: {fileID: 9094129808267496718, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
+      propertyPath: WallData.WallType
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9201456838543638275, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
       propertyPath: m_Layer
@@ -909,6 +914,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 70
       objectReference: {fileID: 0}
+    - target: {fileID: 9094129808267496718, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
+      propertyPath: WallData.WallType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9201456838543638275, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -1065,6 +1074,10 @@ PrefabInstance:
     - target: {fileID: 8098708554769221484, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
       propertyPath: m_VersionIndex
       value: 73
+      objectReference: {fileID: 0}
+    - target: {fileID: 9094129808267496718, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
+      propertyPath: WallData.WallType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9201456838543638275, guid: 1f75daa3776fffe429b6a98fdff9a5e2, type: 3}
       propertyPath: m_Layer

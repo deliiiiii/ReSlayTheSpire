@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Violee
 {
-    public enum EBoxDir
+    public enum EBoxDir : byte
     {
         Up = 1,
         Right = 2,
@@ -14,7 +13,7 @@ namespace Violee
         Left = 8
     }
 
-    public enum EWallType
+    public enum EWallType : byte
     {
         S1 = 1 << 0,
         S2 = 1 << 1,
@@ -27,6 +26,11 @@ namespace Violee
     
     public class BoxPointData
     {
+        public BoxPointData(BoxData belongBox)
+        {
+            BelongBox = belongBox;
+        }
+        
         public EBoxDir Dir;
         public Observable<int> CostWall;
         public Observable<int> CostStep;
@@ -50,7 +54,7 @@ namespace Violee
     [Serializable]
     public class BoxData
     {
-        protected BoxData(){}
+        BoxData(){}
         public static BoxData Create(Vector2Int pos, BoxConfigSingle config)
         {
             var ret = new BoxData()
@@ -61,7 +65,7 @@ namespace Violee
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
                 if((ret.wallsByte & (int)wallType) == (int)wallType)
-                    ret.WallDic.Add(wallType, WallData.Create());
+                    ret.wallKList.Add(WallData.Create(wallType, EDoorType.Random));
             }
             return ret;
         }
@@ -69,38 +73,40 @@ namespace Violee
         public Vector2Int Pos;
         // // TODO 1：之后在sprite上自己划线？ 2：拿预制体的3d模型
         // public Sprite Sprite;
-        public event Action<EWallType, WallData> OnAddWall;
-        public event Action<EWallType> OnRemoveWall;
+        public event Action<WallData> OnAddWall;
+        public event Action<WallData> OnRemoveWall;
         #region Walls
-        [NonSerialized] byte wallsByte;
-        [NotNull] public SerializableDictionary<EWallType, WallData> WallDic = new();
+        [NonSerialized] 
+        byte wallsByte;
 
-        EWallType WallDirToType(EBoxDir dir)
-        {
-            return dir switch
-            {
-                EBoxDir.Up => EWallType.S1,
-                EBoxDir.Right => EWallType.S2,
-                EBoxDir.Down => EWallType.S4,
-                EBoxDir.Left => EWallType.S8,
-            };
-        }
+        [NotNull] MyKeyedCollection<EWallType, WallData> wallKList = new(w => w.WallType);
+        
         public static bool HasWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
-        public bool HasWallByType(EWallType t) => WallDic.ContainsKey(t);
-        public bool HasSWallByDir(EBoxDir dir) => HasWallByType(WallDirToType(dir));
-        public void AddSWallByDir(EBoxDir dir, WallData wallData)
+
+        public bool HasWallByType(EWallType wallType) => 
+            wallKList.Contains(wallType);
+        public bool HasSWallByDir(EBoxDir dir, out WallData wallData) => 
+            wallKList.TryGetValue(BoxHelper.WallDirToType(dir), out wallData);
+        public void AddSWall(WallData wallData)
         {
-            var wallType = WallDirToType(dir);
-            RemoveSWallByDir(dir);
-            WallDic.Add(wallType, wallData);
-            OnAddWall?.Invoke(wallType, wallData);
+            RemoveSWall(wallData);
+            wallKList.Add(wallData);
+            OnAddWall?.Invoke(wallData);
         }
-        public void RemoveSWallByDir(EBoxDir dir)
+
+        public void RemoveSWall(EBoxDir dir)
         {
-            var wallType = WallDirToType(dir);
-            if (WallDic.Remove(wallType))
+            if (HasSWallByDir(dir, out var wallData))
             {
-                OnRemoveWall?.Invoke(wallType);
+                RemoveSWall(wallData);
+            }
+        }
+        public void RemoveSWall(WallData newData)
+        {
+            if (wallKList.Contains(newData.WallType))
+            {
+                wallKList.Remove(newData.WallType);
+                OnRemoveWall?.Invoke(newData);
             }
         }
         #endregion
@@ -109,22 +115,19 @@ namespace Violee
         #region Path
         public const int WallCost = 10;
         public const int DoorCost = 1;
-        [NonSerialized]
-        public Dictionary<EBoxDir, BoxPointData> PointDic;
+        public MyKeyedCollection<EBoxDir, BoxPointData> PointKList;
         static float offset => Configer.SettingsConfig.BoxCostPosOffset;
         public void InitPoint()
         {
-            PointDic = new Dictionary<EBoxDir, BoxPointData>();
+            PointKList = new MyKeyedCollection<EBoxDir, BoxPointData>(b => b.Dir);
             foreach (var dir in BoxHelper.AllBoxDirs)
             {
-                PointDic.Add(dir, new BoxPointData()
+                PointKList.Add(new BoxPointData(this)
                 {
                     Dir = dir,
                     CostWall = new (int.MaxValue / 2),
-                    
                     Pos2D = new (Pos.x + BoxHelper.DirToVec2Dic[dir].x * offset, 
-                    Pos.y + BoxHelper.DirToVec2Dic[dir].y * offset),
-                    BelongBox = this,
+                        Pos.y + BoxHelper.DirToVec2Dic[dir].y * offset),
                     NextPointsInBox = new List<BoxPointData>()
                 });
             }
@@ -136,16 +139,16 @@ namespace Violee
                         continue;
                     if (BoxHelper.OppositeDirDic[dir] == dir2)
                         continue;
-                    PointDic[dir].NextPointsInBox.Add(PointDic[dir2]);
+                    PointKList[dir].NextPointsInBox.Add(PointKList[dir2]);
                 }
             }
         }
 
         public int CostStraight(EBoxDir dir)
         {
-            if (!HasSWallByDir(dir))
+            if (!HasSWallByDir(dir, out var wallData))
                 return 0;
-            if(WallDic[WallDirToType(dir)].DoorType == EDoorType.Wooden)
+            if(wallData.DoorType == EDoorType.Wooden)
                 return DoorCost;
             return WallCost;
         }
@@ -165,7 +168,7 @@ namespace Violee
                     or (EBoxDir.Down, EBoxDir.Right)
                     or (EBoxDir.Right, EBoxDir.Down) => EWallType.T2481,
             };
-            if(WallDic[t].DoorType == EDoorType.Wooden)
+            if(wallKList[t].DoorType == EDoorType.Wooden)
                 return DoorCost;
             return WallCost;
         }

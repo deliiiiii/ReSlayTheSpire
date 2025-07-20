@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Violee
@@ -8,20 +10,31 @@ namespace Violee
         void Awake()
         {
             boxModelPool = new ObjectPool<BoxModel>(BoxPrefab, transform);
-            MapModel.OnAddBox += (pos2D, fBoxData) => SpawnBox3D(BoxHelper.Pos2DTo3D(pos2D), fBoxData);
+            MapModel.OnAddBoxAsync += (pos2D, fBoxData) => SpawnBox3D(BoxHelper.Pos2DTo3D(pos2D), fBoxData);
             MapModel.OnRemoveBox += DestroyBox;
         }
 
+        #region Drag In
         public BoxModel BoxPrefab;
+        #endregion
+        
         static ObjectPool<BoxModel> boxModelPool;
         static Dictionary<Vector3, BoxModel> boxModel3DDic = new ();
         
         #region Event
-        async void SpawnBox3D(Vector3 pos3D, BoxData fBoxData)
+        async Task SpawnBox3D(Vector3 pos3D, BoxData fBoxData)
         {
-            var boxModel = await boxModelPool.MyInstantiate(pos3D);
-            boxModel.ReadData(fBoxData);
-            boxModel3DDic.Add(pos3D, boxModel);
+            try
+            {
+                var boxModel = await boxModelPool.MyInstantiate(pos3D);
+                boxModel.ReadData(fBoxData);
+                boxModel3DDic.Add(pos3D, boxModel);
+            }
+            catch (Exception e)
+            {
+                MyDebug.LogError(e);
+                throw;
+            }
         }
         
         void DestroyBox(Vector2Int pos2D)

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Violee
 {
-    // [InitializeOnLoad]
     public static class BoxHelper
     {
         static BoxHelper()
@@ -24,13 +22,6 @@ namespace Violee
             {
                 AllWallTypes.Add((EWallType)array.GetValue(i));
             }
-            NearDirDic = new Dictionary<EBoxDir, List<EBoxDir>>()
-            {
-                { EBoxDir.Up, new List<EBoxDir>() { EBoxDir.Left , EBoxDir.Right }},
-                { EBoxDir.Down, new List<EBoxDir>() { EBoxDir.Left , EBoxDir.Right }},
-                { EBoxDir.Left, new List<EBoxDir>() { EBoxDir.Up , EBoxDir.Down }},
-                { EBoxDir.Right, new List<EBoxDir>() { EBoxDir.Up , EBoxDir.Down }}
-            };
             OppositeDirDic = new Dictionary<EBoxDir, EBoxDir>()
             {
                 { EBoxDir.Up, EBoxDir.Down },
@@ -50,7 +41,6 @@ namespace Violee
         public static readonly BoxConfigSingle EmptyBoxConfig;
         public static readonly List<EBoxDir> AllBoxDirs;
         public static readonly List<EWallType> AllWallTypes;
-        public static readonly Dictionary<EBoxDir, List<EBoxDir>> NearDirDic;
         
         /// <summary>
         /// (dir, oppositeDir)
@@ -80,5 +70,16 @@ namespace Violee
         }
         
         public static Vector3 Pos2DTo3D(Vector2 pos2D) => new (pos2D.x * 10f, 0, pos2D.y * 10f);
+        
+        public static EWallType WallDirToType(EBoxDir dir)
+        {
+            return dir switch
+            {
+                EBoxDir.Up => EWallType.S1,
+                EBoxDir.Right => EWallType.S2,
+                EBoxDir.Down => EWallType.S4,
+                EBoxDir.Left => EWallType.S8,
+            };
+        }
     }
 }

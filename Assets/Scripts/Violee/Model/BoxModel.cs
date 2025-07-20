@@ -1,4 +1,7 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -10,29 +13,38 @@ namespace Violee
         BoxData boxData;
 
         #region Drag In
-        public SerializableDictionary<EWallType, WallModel> WallDic;
+        public List<WallModel> WallListIns;
+        readonly MyKeyedCollection<EWallType, WallModel> wallKList = new(w => w.WallData.WallType);
         #endregion
+
+        void Awake()
+        {
+            wallKList.Clear();
+            wallKList.AddRange(WallListIns);
+        }
 
         public void ReadData(BoxData fBoxData)
         {
             boxData = fBoxData;
-            boxData.OnAddWall += (wallType, wallData) => SetWall(wallType, true, wallData.DoorType);
-            boxData.OnRemoveWall += wallType => SetWall(wallType, false, EDoorType.None);
+            boxData.OnAddWall += wallData => SetWall(wallData, true);
+            boxData.OnRemoveWall += wallData => SetWall(wallData, false);
             name = $"Box {fBoxData.Pos.x} {fBoxData.Pos.y}";
-            WallDic?.Keys.ForEach(wallType =>
+            wallKList?.Select(w => w.WallData).ForEach(wallData =>
             {
-                SetWall(wallType, false, EDoorType.None);
-                if (fBoxData.HasWallByType(wallType))
+                SetWall(wallData, false);
+                if (fBoxData.HasWallByType(wallData.WallType))
                 {
-                    SetWall(wallType, true, fBoxData.WallDic[wallType].DoorType);
+                    SetWall(wallData, true);
                 }
             });
         }
 
-        void SetWall(EWallType wallType, bool isActive, EDoorType doorType)
+        void SetWall(WallData wallData, bool isActive)
         {
-            WallDic[wallType].gameObject.SetActive(isActive);
-            WallDic[wallType].SetIsDoor(doorType);
+            var wallType = wallData.WallType;
+            var doorType = wallData.DoorType;
+            wallKList[wallType].gameObject.SetActive(isActive);
+            wallKList[wallType].SetDoor(doorType);
         }
     }
 }

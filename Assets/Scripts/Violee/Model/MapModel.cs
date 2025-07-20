@@ -13,7 +13,7 @@ namespace Violee
         #region Public Functions
         public static List<BoxPointData> GetAllPoints()
         {
-            return mapData?.SelectMany(x => x.PointDic?.Values).ToList() ?? new List<BoxPointData>();
+            return boxKList?.SelectMany(x => x.PointKList).ToList() ?? new List<BoxPointData>();
         }
         #endregion
         
@@ -24,35 +24,35 @@ namespace Violee
         public int Width = 6;
         public Vector2Int StartPos;
         public EBoxDir StartDir = EBoxDir.Up;
-        static MapData mapData;
+        static readonly MyKeyedCollection<Vector2Int, BoxData> boxKList = new (b => b.Pos);
         bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
-        bool HasBox(Vector2Int pos) => mapData.Contains(pos);
-        async Task<BoxData> AddBox(Vector2Int pos, BoxConfigSingle config)
+        bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
+        async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfigSingle config)
         {
             await Configer.SettingsConfig.YieldFrames();
             var boxData = BoxData.Create(pos, config);
-            mapData.Add(boxData);
-            emptyPosList.Remove(pos);
-            OnAddBox?.Invoke(pos, boxData);
-            // MyDebug.Log($"Add box {config.Walls} at {pos}");
+            MyDebug.Log($"Add box {config.Walls} at {pos}");
+            boxKList.Add(boxData);
+            emptyPosSet.Remove(pos);
+            OnAddBoxAsync?.Invoke(pos, boxData);
             return boxData;
         }
         void RemoveBox(BoxData boxData)
         {
-            mapData.Remove(boxData);
-            emptyPosList.Add(boxData.Pos);
+            boxKList.Remove(boxData);
+            emptyPosSet.Add(boxData.Pos);
             OnRemoveBox?.Invoke(boxData.Pos);
         }
         void RemoveAllBoxes()
         {
-            mapData?.ForEach(boxData => OnRemoveBox?.Invoke(boxData.Pos));
-            mapData?.Clear();
-            emptyPosList = new ();
+            boxKList?.ForEach(boxData => OnRemoveBox?.Invoke(boxData.Pos));
+            boxKList?.Clear();
+            emptyPosSet = new ();
             for(int j = 0; j < Height; j++)
             {
                 for(int i = 0; i < Width; i++)
                 {
-                    emptyPosList.Add(new(i, j));
+                    emptyPosSet.Add(new(i, j));
                 }
             }
         }
@@ -60,13 +60,13 @@ namespace Violee
 
 
         #region Generate
-        HashSet<Vector2Int> emptyPosList;
+        HashSet<Vector2Int> emptyPosSet;
         async Task GenerateOneFakeConnection(bool startWithStartLoc)
         {
             var edgeBoxStack = new Stack<BoxData>();
             // 每个伪连通块的第一个是空格子
-            var firstLoc = startWithStartLoc ? StartPos : emptyPosList.First();
-            var firstBox = await AddBox(firstLoc, BoxHelper.EmptyBoxConfig);
+            var firstLoc = startWithStartLoc ? StartPos : emptyPosSet.First();
+            var firstBox = await AddBoxAsync(firstLoc, BoxHelper.EmptyBoxConfig);
             edgeBoxStack.Push(firstBox);
             while (edgeBoxStack.Count > 0)
             {
@@ -80,17 +80,17 @@ namespace Violee
                     var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];
                     if (!InMap(nextPos))
                     {
-                        curBox.AddSWallByDir(curGoOutDir, WallData.NoDoor);
+                        curBox.AddSWall(WallData.Create(curGoOutDir, EDoorType.None));
                         // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
                         continue;
                     }
-                    if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir))
+                    if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
                     {
-                        var boxconfig = 
+                        var boxConfig = 
                             Configer.BoxConfig.BoxConfigList.RandomItemWeighted(
                                 x => !BoxData.HasWallByByteAndDir(x.Walls, nextGoInDir),
                                 x => x.BasicWeight);
-                        var nextBox = await AddBox(nextPos, boxconfig);
+                        var nextBox = await AddBoxAsync(nextPos, boxConfig);
                         var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
                         foreach (var nextNextPair in nextNextPairs)
                         {
@@ -100,10 +100,10 @@ namespace Violee
                             var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextPair.Item2];
                             if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
-                                var nextNextBox = mapData[nextNextPos];
-                                if (nextNextBox.HasSWallByDir(nextNextGoInDir))
+                                var nextNextBox = boxKList[nextNextPos];
+                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
                                 {
-                                    nextBox.RemoveSWallByDir(nextGoOutDir);
+                                    nextBox.RemoveSWall(nextGoOutDir);
                                     // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
                                 }
                             }
@@ -134,9 +134,8 @@ namespace Violee
                 }
                 isGenerating = true;
                 RemoveAllBoxes();
-                mapData = new MapData();
                 await GenerateOneFakeConnection(true);
-                while (emptyPosList.Count > 0)
+                while (emptyPosSet.Count > 0)
                 {
                     await GenerateOneFakeConnection(false);
                 }
@@ -166,22 +165,23 @@ namespace Violee
                 MyDebug.LogWarning("正在Dijkstra，请稍后再点");
                 return;
             }
-            isDij = true;
-            foreach (var boxData in mapData)
-            {
-                boxData.InitPoint();
-            }
-            if (OnBeginDij != null)
-            {
-                await OnBeginDij.Invoke();
-            }
-            var vSet = new HashSet<BoxPointData>();
-            int c = 0;
             try
             {
+                isDij = true;
+                foreach (var boxData in boxKList)
+                {
+                    boxData.InitPoint();
+                }
+                if (OnBeginDij != null)
+                {
+                    await OnBeginDij.Invoke();
+                }
+                var vSet = new HashSet<BoxPointData>();
+                int c = 0;
+            
                 pq = new SimplePriorityQueue<BoxPointData, int>();
-                var startBox = mapData[StartPos];
-                var startPoint = startBox.PointDic[StartDir];
+                var startBox = boxKList[StartPos];
+                var startPoint = startBox.PointKList[StartDir];
                 startPoint.CostWall.Value = 0;
                 pq.Enqueue(startPoint, 0);
                 while (pq.Count != 0)
@@ -195,9 +195,9 @@ namespace Violee
                     var nextPos = BoxHelper.NextPos(curBox.Pos, curPoint.Dir);
                     if (InMap(nextPos))
                     {
-                        var nextBox = mapData[nextPos];
+                        var nextBox = boxKList[nextPos];
                         var oppositeDir = BoxHelper.OppositeDirDic[curPoint.Dir];
-                        var nextPoint = nextBox.PointDic[oppositeDir];
+                        var nextPoint = nextBox.PointKList[oppositeDir];
                         nextPoint.CostWall.Value = Math.Min(
                             nextPoint.CostWall.Value,
                             curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));
@@ -233,7 +233,7 @@ namespace Violee
         
         
         #region Event
-        public static event Action<Vector2Int, BoxData> OnAddBox;
+        public static event Func<Vector2Int, BoxData, Task> OnAddBoxAsync;
         public static event Action<Vector2Int> OnRemoveBox;
         public static event Func<Task> OnBeginDij;
         #endregion
