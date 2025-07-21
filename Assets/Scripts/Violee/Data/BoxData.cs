@@ -94,6 +94,14 @@ namespace Violee
             wallsByte |= (byte)wallData.WallType;
             OnAddWall?.Invoke(wallData);
         }
+
+        public void RemoveSWall(EBoxDir dir)
+        {
+            if(wallKList.TryGetValue(BoxHelper.WallDirToType(dir), out var wallData))
+            {
+                RemoveSWall(wallData);
+            }
+        }
         public void RemoveSWall(WallData newData)
         {
             if (wallKList.Contains(newData))

@@ -101,9 +101,9 @@ namespace Violee
                             if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
                                 var nextNextBox = boxKList[nextNextPos];
-                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out var wallData))
+                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
                                 {
-                                    nextBox.RemoveSWall(wallData);
+                                    nextBox.RemoveSWall(nextGoOutDir);
                                     // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
                                 }
                             }
