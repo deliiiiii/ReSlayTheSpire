@@ -37,7 +37,10 @@ namespace Violee
                 { EBoxDir.Right, new Vector2Int(1, 0) }
             };
         }
+
+        public const float BoxSize = 10;
         static List<BoxConfigSingle> BoxConfigList => Configer.BoxConfig.BoxConfigList;
+        static float pointOffset => Configer.SettingsConfig.BoxCostPosOffset;
         public static readonly BoxConfigSingle EmptyBoxConfig;
         public static readonly List<EBoxDir> AllBoxDirs;
         public static readonly List<EWallType> AllWallTypes;
@@ -47,7 +50,7 @@ namespace Violee
         /// </summary>
         public static readonly Dictionary<EBoxDir, EBoxDir> OppositeDirDic;
 
-        public static readonly Dictionary<EBoxDir, Vector2Int> DirToVec2Dic;
+        static readonly Dictionary<EBoxDir, Vector2Int> DirToVec2Dic;
         
         /// <param name="thisLoc">(1, 1)</param>
         /// <param name="dir">Up</param>
@@ -69,7 +72,13 @@ namespace Violee
             return ret;
         }
         
-        public static Vector3 Pos2DTo3D(Vector2 pos2D) => new (pos2D.x * 10f, 0, pos2D.y * 10f);
+        public static Vector3 Pos2DTo3DBox(Vector2 pos2D) => new (pos2D.x * BoxSize, 0, pos2D.y * BoxSize);
+        public static Vector3 Pos2DTo3DPoint(Vector2 pos2D, EBoxDir dir) =>
+            Pos2DTo3DBox(pos2D) + new Vector3(DirToVec2Dic[dir].x * BoxSize * pointOffset, 0, DirToVec2Dic[dir].y * BoxSize * pointOffset);
+        public static Vector3 Pos2DTo3DEdge(Vector2 pos2D, EBoxDir dir) =>
+            Pos2DTo3DBox(pos2D) + new Vector3(DirToVec2Dic[dir].x * BoxSize / 2, 0, DirToVec2Dic[dir].y * BoxSize / 2);
+        public static Vector2Int Pos3DTo2D(Vector3 pos3D) => 
+            new ((int)((pos3D.x + BoxSize / 2) / BoxSize), (int)((pos3D.z + BoxSize / 2) / BoxSize));
         
         public static EWallType WallDirToType(EBoxDir dir)
         {

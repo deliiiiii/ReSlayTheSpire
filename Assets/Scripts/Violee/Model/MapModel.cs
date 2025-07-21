@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using Unity.Mathematics;
 using UnityEngine;
+using Violee.Player;
 
 namespace Violee
 {
@@ -24,7 +26,7 @@ namespace Violee
         public int Width = 6;
         public Vector2Int StartPos;
         public EBoxDir StartDir = EBoxDir.Up;
-        static readonly MyKeyedCollection<Vector2Int, BoxData> boxKList = new (b => b.Pos);
+        static readonly MyKeyedCollection<Vector2Int, BoxData> boxKList = new (b => b.Pos2D);
         bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
         bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
         async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfigSingle config)
@@ -40,7 +42,7 @@ namespace Violee
         void RemoveBox(BoxData boxData)
         {
             boxKList.Remove(boxData);
-            emptyPosSet.Add(boxData.Pos);
+            emptyPosSet.Add(boxData.Pos2D);
             OnRemoveBox?.Invoke(boxData);
         }
         void RemoveAllBoxes()
@@ -71,7 +73,7 @@ namespace Violee
             while (edgeBoxStack.Count > 0)
             {
                 var curBox = edgeBoxStack.Pop();
-                var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos);
+                var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos2D);
                 foreach (var nextPair in nextPairs)
                 {
                     // “下一格”
@@ -132,6 +134,8 @@ namespace Violee
                     MyDebug.LogWarning("正在Dijkstra，请稍后再点");
                     return;
                 }
+                playerVisitTick?.UnBind();
+                
                 isGenerating = true;
                 RemoveAllBoxes();
                 await GenerateOneFakeConnection(true);
@@ -170,7 +174,7 @@ namespace Violee
                 isDij = true;
                 foreach (var boxData in boxKList)
                 {
-                    boxData.InitPoint();
+                    boxData.ResetCost();
                 }
                 if (OnBeginDij != null)
                 {
@@ -192,7 +196,7 @@ namespace Violee
                     var curCost = curPoint.CostWall;
                     var curBox = curPoint.BelongBox;
                     curPoint.UpdateNextPointCost();
-                    var nextPos = BoxHelper.NextPos(curBox.Pos, curPoint.Dir);
+                    var nextPos = BoxHelper.NextPos(curBox.Pos2D, curPoint.Dir);
                     if (InMap(nextPos))
                     {
                         var nextBox = boxKList[nextPos];
@@ -228,7 +232,43 @@ namespace Violee
             }
 
             isDij = false;
+            OnGenerateEnd?.Invoke(BoxHelper.Pos2DTo3DPoint(StartPos, StartDir));
+            
+            playerVisitTick = Binder.Update(_ => TickPlayerVisit());
         }
+
+        BindDataUpdate playerVisitTick;
+        
+        void TickPlayerVisit()
+        {
+            var playerPos = PlayerModel.Instance.transform.position;
+            var x = playerPos.x;
+            var z = playerPos.z;
+            var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);
+            var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);
+            if (!HasBox(boxPos2D))
+            {
+                MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
+                return;
+            }
+            BoxHelper.AllBoxDirs.ForEach(dir =>
+            {
+                var edgeCenterPos = BoxHelper.Pos2DTo3DEdge(boxPos2D, dir);
+                var edgeX = edgeCenterPos.x;
+                var edgeZ = edgeCenterPos.z;
+                var pointData = boxKList[boxPos2D].PointKList[dir];
+                // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
+                if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * 0.45f
+                    && !pointData.Visited)
+                {
+                    pointData.Visited.Value = true;
+                    MyDebug.Log($"Enter Point!!{boxPos2D}:{dir}");
+                }
+            });
+            
+            
+        }
+
         #endregion
         
         
@@ -236,6 +276,8 @@ namespace Violee
         public static event Func<BoxData, Task> OnAddBoxAsync;
         public static event Action<BoxData> OnRemoveBox;
         public static event Func<Task> OnBeginDij;
+        public static event Action<Vector3> OnGenerateEnd;
+
         #endregion
     }
 }

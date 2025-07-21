@@ -48,10 +48,10 @@ public class BindDataAct<T> where T : IComparable
         latestAct = act;
     }
 
-    public void Immediate()
+    public BindDataAct<T> Immediate()
     {
         latestAct(osv.Value);
-        // return this;
+        return this;
     }
 
 

@@ -16,8 +16,9 @@ namespace Violee
         #region Drag In
         public List<WallModel> WallListIns;
         [SerializeField]
-        SerializableDictionary<EBoxDir, GameObject> pointDic;
+        SerializableDictionary<EBoxDir, BoxPointModel> pointDic;
         readonly MyKeyedCollection<EWallType, WallModel> wallKList = new(w => w.WallData.WallType);
+        HashSet<BindDataAct<bool>> visitBindSet = new ();
         #endregion
 
         void Awake()
@@ -31,9 +32,15 @@ namespace Violee
             boxData = fBoxData;
             boxData.OnAddWall += wallData => SetWall(wallData, true);
             boxData.OnRemoveWall += wallData => SetWall(wallData, false);
-            name = $"Box {fBoxData.Pos.x} {fBoxData.Pos.y}";
+            name = $"Box {fBoxData.Pos2D.x} {fBoxData.Pos2D.y}";
 
-            pointDic?.Values.ForEach(go => go.SetActive(false));
+            visitBindSet.ForEach(b => b.UnBind());
+            visitBindSet.Clear();
+            fBoxData.PointKList.ForEach(p =>
+            {
+                pointDic[p.Dir].BoxPointData = p;
+                visitBindSet.Add(Binder.From(p.Visited).To(pointDic[p.Dir].gameObject.SetActive).Immediate());
+            });
             
             wallKList?.Select(w => w.WallData).ForEach(wallData =>
             {
@@ -44,7 +51,7 @@ namespace Violee
                     SetWall(wallData, true);
                 }
             });
-            transform.position = BoxHelper.Pos2DTo3D(fBoxData.Pos);
+            transform.position = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
         }
 
         void SetWall(WallData wallData, bool isActive)

@@ -22,8 +22,9 @@ namespace Violee
         T1248 = 1 << 4 | 1 << 6,
         T2481 = 1 << 5 | 1 << 7,
     }
-
     
+
+    [Serializable]
     public class BoxPointData
     {
         public BoxPointData(BoxData belongBox)
@@ -34,12 +35,15 @@ namespace Violee
         public EBoxDir Dir;
         public Observable<int> CostWall;
         public Observable<int> CostStep;
+        public Observable<bool> Visited;
+        
+        
         [NonSerialized]
         public List<BoxPointData> NextPointsInBox;
         [NonSerialized]
         public readonly BoxData BelongBox;
         [NonSerialized]
-        public Vector2 Pos2D;
+        public Vector3 Pos3D;
         public void UpdateNextPointCost()
         {
             foreach (var nextPoint in NextPointsInBox)
@@ -59,7 +63,7 @@ namespace Violee
         {
             var ret = new BoxData()
             {
-                Pos = pos,
+                Pos2D = pos,
                 wallsByte = config.Walls,
             };
             foreach (var wallType in BoxHelper.AllWallTypes)
@@ -67,10 +71,11 @@ namespace Violee
                 if((ret.wallsByte & (int)wallType) == (int)wallType)
                     ret.wallKList.Add(WallData.Create(wallType, EDoorType.Random));
             }
+            ret.InitPoint();
             return ret;
         }
         
-        public Vector2Int Pos;
+        public Vector2Int Pos2D;
         // // TODO 1：之后在sprite上自己划线？ 2：拿预制体的3d模型
         // public Sprite Sprite;
         public event Action<WallData> OnAddWall;
@@ -119,7 +124,7 @@ namespace Violee
         public const int DoorCost = 1;
         public MyKeyedCollection<EBoxDir, BoxPointData> PointKList;
         static float offset => Configer.SettingsConfig.BoxCostPosOffset;
-        public void InitPoint()
+        void InitPoint()
         {
             PointKList = new MyKeyedCollection<EBoxDir, BoxPointData>(b => b.Dir);
             foreach (var dir in BoxHelper.AllBoxDirs)
@@ -128,8 +133,8 @@ namespace Violee
                 {
                     Dir = dir,
                     CostWall = new (int.MaxValue / 2),
-                    Pos2D = new (Pos.x + BoxHelper.DirToVec2Dic[dir].x * offset, 
-                        Pos.y + BoxHelper.DirToVec2Dic[dir].y * offset),
+                    Visited = new(false),
+                    Pos3D = BoxHelper.Pos2DTo3DPoint(Pos2D, dir),
                     NextPointsInBox = new List<BoxPointData>()
                 });
             }
@@ -143,6 +148,15 @@ namespace Violee
                         continue;
                     PointKList[dir].NextPointsInBox.Add(PointKList[dir2]);
                 }
+            }
+        }
+
+        public void ResetCost()
+        {
+            foreach (var pointData in PointKList)
+            {
+                pointData.CostWall.Value = int.MaxValue / 2;
+                pointData.Visited.Value = false;
             }
         }
 

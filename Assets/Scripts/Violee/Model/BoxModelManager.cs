@@ -10,7 +10,7 @@ namespace Violee
         void Awake()
         {
             boxModelPool = new ObjectPool<BoxModel>(BoxPrefab, transform);
-            MapModel.OnAddBoxAsync += fBoxData => SpawnBox3D(fBoxData);
+            MapModel.OnAddBoxAsync += SpawnBox3D;
             MapModel.OnRemoveBox += DestroyBox;
         }
 
@@ -39,7 +39,7 @@ namespace Violee
         
         void DestroyBox(BoxData fBoxData)
         {
-            var pos3D = BoxHelper.Pos2DTo3D(fBoxData.Pos);
+            var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
             boxModelPool.MyDestroy(boxModel3DDic[pos3D]);
             boxModel3DDic.Remove(pos3D);
         }

@@ -9,7 +9,8 @@ namespace Violee
     {
         public bool RefreshConfigOnAwake;
         public bool ShowBoxCost = true;
-        public float BoxCostPosOffset = 0.7f;
+        [MinValue(0)][MaxValue(0.5f)]
+        public float BoxCostPosOffset = 0.35f;
         
         
         #region Yield Control

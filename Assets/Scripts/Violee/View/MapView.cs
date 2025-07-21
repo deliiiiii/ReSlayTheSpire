@@ -43,7 +43,7 @@ namespace Violee.View
                 costTxtDic = new();
                 foreach (var point in MapModel.GetAllPoints())
                 {
-                    var txt = await costTxtPool.MyInstantiate(BoxHelper.Pos2DTo3D(point.Pos2D) + Vector3.up * 0.1f);
+                    var txt = await costTxtPool.MyInstantiate(point.Pos3D + Vector3.up * 0.1f);
                     txt.gameObject.SetActive(true);
                     var b = Binder.From(point.CostWall).To(v =>
                     {
