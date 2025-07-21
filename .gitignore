@@ -74,3 +74,25 @@ crashlytics-build.properties
 
 
 EXE/
+Packages/packages-lock.json
+Assets/QFramework/Toolkits/UIKit/Tests.unitypackage.meta
+Assets/QFramework/Toolkits/UIKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/ResKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/AudioKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/TableKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/SingletonKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/PoolKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/LocaleKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/IOCKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/GridKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/FSMKit/Examples.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/EventKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/DeclareKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/CodeGenKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/BindableKit/Example.unitypackage.meta
+Assets/QFramework/Toolkits/_CoreKit/ActionKit/Example.unitypackage.meta
+Assets/QFramework/Framework/Examples.unitypackage.meta
+Assets/Plugins/Pay/Sirenix/Demos/Sample - RPG Editor.unitypackage.meta
+Assets/Plugins/Pay/Sirenix/Demos/Editor Windows.unitypackage.meta
+Assets/Plugins/Pay/Sirenix/Demos/Custom Drawers.unitypackage.meta
+Assets/Plugins/Pay/Sirenix/Demos/Custom Attribute Processors.unitypackage.meta
