@@ -20,7 +20,11 @@ namespace Violee
             return new WallData()
             {
                 WallType = wallType,
-                DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType
+                HasWall = false,
+                HasFoundWall = new Observable<bool>(false),
+                DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType,
+                HasFoundDoor = new Observable<bool>(false),
+                Opened = false,
             };
         }
 
@@ -32,7 +36,10 @@ namespace Violee
         
         public EWallType WallType;
         public bool HasWall;
+        public Observable<bool> HasFoundWall;
         public EDoorType DoorType;
+        public bool HasDoor => DoorType != EDoorType.None;
+        public Observable<bool> HasFoundDoor;
         public bool Opened;
     }
     

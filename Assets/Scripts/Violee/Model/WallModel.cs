@@ -8,8 +8,9 @@ namespace Violee
         #region Drag In
         [SerializeField] Transform Door;
         [SerializeField] Transform NotDoor;
-        [SerializeField] SpriteRenderer LockedSprite;
-        [SerializeField] SpriteRenderer UnlockedSprite;
+        [SerializeField] SpriteRenderer WallSprite;
+        [SerializeField] GameObject LockedSprite;
+        [SerializeField] GameObject UnlockedSprite;
         #endregion
         public void ReadData(WallData wallData)
         {
@@ -20,31 +21,44 @@ namespace Violee
                 return;
             }
             gameObject.SetActive(true);
+            Binder.From(WallData.HasFoundWall).To(v => WallSprite.enabled = v).Immediate();
+            Binder.From(WallData.HasFoundDoor).To(_ =>SetDoorSprite()).Immediate();
             switch (wallData.DoorType)
             {
                 case EDoorType.None:
                     Door.gameObject.SetActive(false);
                     NotDoor.gameObject.SetActive(true);
-                    LockedSprite.enabled = false;
-                    UnlockedSprite.enabled = false;
                     break;
                 case EDoorType.Wooden:
                     Door.gameObject.SetActive(true);
                     NotDoor.gameObject.SetActive(false);
-                    if (WallData.Opened)
-                    {
-                        LockedSprite.enabled = false;
-                        UnlockedSprite.enabled = true;
-                    }
-                    else
-                    {
-                        LockedSprite.enabled = true;
-                        UnlockedSprite.enabled = false;
-                    }
                     break;
-                default: break;
             }
-            
+
+            SetDoorSprite();
+        }
+
+        // event
+        public void FindWallAndDoor()
+        {
+            WallData.HasFoundWall.Value = true;
+            if(WallData.HasDoor)
+                WallData.HasFoundDoor.Value = true;
+        }
+        void SetDoorSprite()
+        {
+            if (!WallData.HasFoundDoor)
+                return;
+            if (WallData.Opened)
+            {
+                LockedSprite.SetActive(false);
+                UnlockedSprite.SetActive(true);
+            }
+            else
+            {
+                LockedSprite.SetActive(true);
+                UnlockedSprite.SetActive(false);
+            }
         }
     }
 }

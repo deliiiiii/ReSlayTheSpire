@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Violee.View
 {
-    public class MapView : ViewBase
+    public class MapView : MonoBehaviour
     {
         Dictionary<BoxPointData,(BindDataAct<int>, Text)> costTxtDic;
         public Text CostTxtPrefab;

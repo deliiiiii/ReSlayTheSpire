@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de30a77feef24ad08d01b362c33b86a5, type: 3}
   m_Name: BoxConfig
   m_EditorClassIdentifier: 
-  DoorPossibility: 0.6
+  DoorPossibility: 0.66
   BoxConfigList:
   - Name: Box0
     Walls: 0
