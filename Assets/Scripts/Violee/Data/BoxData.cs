@@ -91,6 +91,7 @@ namespace Violee
         {
             RemoveSWall(wallData);
             wallKList.Add(wallData);
+            wallsByte |= (byte)wallData.WallType;
             OnAddWall?.Invoke(wallData);
         }
         public void RemoveSWall(WallData newData)
@@ -98,6 +99,7 @@ namespace Violee
             if (wallKList.Contains(newData))
             {
                 wallKList.Remove(newData);
+                wallsByte &= (byte)~(byte)newData.WallType;
                 OnRemoveWall?.Invoke(newData);
             }
         }

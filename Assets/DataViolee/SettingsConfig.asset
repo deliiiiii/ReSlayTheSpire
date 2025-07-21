@@ -15,4 +15,4 @@ MonoBehaviour:
   RefreshConfigOnAwake: 0
   ShowBoxCost: 1
   BoxCostPosOffset: 0.35
-  YieldCount: 0
+  YieldCount: 0.2
