@@ -15,6 +15,8 @@ namespace Violee
 
         #region Drag In
         public List<WallModel> WallListIns;
+        [SerializeField]
+        SerializableDictionary<EBoxDir, GameObject> pointDic;
         readonly MyKeyedCollection<EWallType, WallModel> wallKList = new(w => w.WallData.WallType);
         #endregion
 
@@ -30,6 +32,9 @@ namespace Violee
             boxData.OnAddWall += wallData => SetWall(wallData, true);
             boxData.OnRemoveWall += wallData => SetWall(wallData, false);
             name = $"Box {fBoxData.Pos.x} {fBoxData.Pos.y}";
+
+            pointDic?.Values.ForEach(go => go.SetActive(false));
+            
             wallKList?.Select(w => w.WallData).ForEach(wallData =>
             {
                 SetWall(wallData, false);
