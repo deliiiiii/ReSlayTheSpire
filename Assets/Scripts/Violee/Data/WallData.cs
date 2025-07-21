@@ -31,7 +31,9 @@ namespace Violee
         }
         
         public EWallType WallType;
+        public bool HasWall;
         public EDoorType DoorType;
+        public bool Opened;
     }
     
 }

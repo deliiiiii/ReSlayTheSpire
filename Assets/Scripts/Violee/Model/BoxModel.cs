@@ -47,20 +47,16 @@ namespace Violee
                 SetWall(wallData, false);
                 if (fBoxData.HasWallByType(wallData.WallType, out var wallDataNew))
                 {
-                    wallData = wallDataNew;
-                    SetWall(wallData, true);
+                    SetWall(wallDataNew, true);
                 }
             });
             transform.position = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
         }
 
-        void SetWall(WallData wallData, bool isActive)
+        void SetWall(WallData wallData, bool hasWall)
         {
-            var wallType = wallData.WallType;
-            var doorType = wallData.DoorType;
-            wallKList[wallType].gameObject.SetActive(isActive);
-            if(isActive)
-                wallKList[wallType].SetDoor(doorType);
+            wallData.HasWall = hasWall;
+            wallKList[wallData.WallType].ReadData(wallData);
         }
     }
 }
