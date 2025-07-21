@@ -27,8 +27,8 @@ namespace Violee
         public void ReadData(BoxData fBoxData)
         {
             boxData = fBoxData;
-            boxData.OnAddWall += wallData => SetWall(wallData, true);
-            boxData.OnRemoveWall += wallData => SetWall(wallData, false);
+            boxData.OnAddWall += wallData => SetHasWall(wallData, true);
+            boxData.OnRemoveWall += wallData => SetHasWall(wallData, false);
             name = $"Box {fBoxData.Pos2D.x} {fBoxData.Pos2D.y}";
 
             visitBindSet.ForEach(b => b.UnBind());
@@ -41,16 +41,16 @@ namespace Violee
             
             wallKList?.Select(w => w.WallData).ForEach(wallData =>
             {
-                SetWall(wallData, false);
+                SetHasWall(wallData, false);
                 if (fBoxData.HasWallByType(wallData.WallType, out var wallDataNew))
                 {
-                    SetWall(wallDataNew, true);
+                    SetHasWall(wallDataNew, true);
                 }
             });
             transform.position = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
         }
 
-        void SetWall(WallData wallData, bool hasWall)
+        void SetHasWall(WallData wallData, bool hasWall)
         {
             wallData.HasWall = hasWall;
             wallKList[wallData.WallType].ReadData(wallData);

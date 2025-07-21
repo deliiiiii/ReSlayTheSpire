@@ -48,7 +48,11 @@ namespace Violee
         void SetDoorSprite()
         {
             if (!WallData.HasFoundDoor)
+            {
+                LockedSprite.SetActive(false);
+                UnlockedSprite.SetActive(false);
                 return;
+            }
             if (WallData.Opened)
             {
                 LockedSprite.SetActive(false);
