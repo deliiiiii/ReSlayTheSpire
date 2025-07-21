@@ -1,0 +1,80 @@
+﻿using Cinemachine;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Violee.View
+{
+    public class MinimapView : ViewBase
+    {
+        public Button ReGenerateBtn;
+        public RenderTexture TarTexture;
+        public CinemachineVirtualCamera MinimapCameraVirtual;
+        public Camera MinimapCamera;
+        public RawImage MinimapImg;
+        public RawImage FullScreenImg;
+        public float ChangeSpeed = 1.2f;
+        public float MiniSize = 12f;
+        bool isMinimap => MinimapImg.enabled;
+        void Awake()
+        {
+            Binder.From(ReGenerateBtn).To(() => MapModel.Generate());
+            Binder.Update(_ =>
+            {
+                if (Input.GetKeyDown(KeyCode.R))
+                    MapModel.Generate();
+            });
+            Binder.Update(SwitchMap);
+            ShowMinimap();
+        }
+
+        void SwitchMap(float dt)
+        {
+            ChangeFOV(dt);
+            if (!Input.GetKeyDown(KeyCode.Tab))
+                return;
+            if (isMinimap)
+            {
+                ShowFullScreenMap();
+                return;
+            }
+            ShowMinimap();
+        }
+
+        void ChangeFOV(float dt)
+        {
+            var tarSize = isMinimap ? MiniSize : MapModel.MaxSize / 1.818f;
+            if (!Mathf.Approximately(MinimapCameraVirtual.m_Lens.OrthographicSize, tarSize))
+            {
+                MinimapCameraVirtual.m_Lens.OrthographicSize = Mathf.Lerp(MinimapCameraVirtual.m_Lens.OrthographicSize,
+                    tarSize,
+                    ChangeSpeed * dt);
+            }
+        }
+        void ShowMinimap()
+        {
+            RefreshTexture(256, 256);
+            FullScreenImg.enabled = false;
+            MinimapImg.enabled = true;
+        }
+
+        void ShowFullScreenMap()
+        {
+            // 设置gameObject的 RectTransform长宽
+            FullScreenImg.gameObject.GetComponent<RectTransform>().sizeDelta  = new Vector2(Screen.height, Screen.height);
+            RefreshTexture(Screen.height, Screen.height);
+            FullScreenImg.enabled = true;
+            MinimapImg.enabled = false;
+        }
+        
+        void RefreshTexture(int width, int height)
+        {
+            TarTexture.Release();
+            TarTexture.width = width;
+            TarTexture.height = height;
+            TarTexture.Create();
+            MinimapCamera.targetTexture = TarTexture;
+            MinimapImg.texture = TarTexture;
+            FullScreenImg.texture = TarTexture;
+        }
+    }
+}

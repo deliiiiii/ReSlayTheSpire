@@ -17,6 +17,9 @@ namespace Violee
         {
             return boxKList?.SelectMany(x => x.PointKList).ToList() ?? new List<BoxPointData>();
         }
+
+        public static async Task Generate() => await Instance.StartGenerate();
+        public static float MaxSize => Mathf.Max(Instance.Width, Instance.Height) * BoxHelper.BoxSize;
         #endregion
         
         
