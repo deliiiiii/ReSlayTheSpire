@@ -20,7 +20,11 @@ namespace Violee
         bool isIdle => gameFSM.IsState(EGameState.Idle);
         protected void Start()
         {
-            Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(_ => MapModel.TickPlayerVisit());
+            Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(dt =>
+            {
+                MapModel.TickPlayerVisit();
+                PlayerModel.Tick(dt);
+            });
             Binder.From(gameFSM.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);
             
             MapModel.DijkstraFunc.Guard += () => isIdle;

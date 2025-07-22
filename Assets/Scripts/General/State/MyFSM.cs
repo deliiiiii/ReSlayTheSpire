@@ -33,7 +33,7 @@ public class MyFSM<T> where T : Enum
 
     MyState curState;
     Enum curStateEnum;
-    [ShowInInspector]string curStateName => curStateEnum.ToString();
+    [ShowInInspector]string curStateName => curStateEnum?.ToString() ?? "Null";
     void Launch(T startState)
     {
         curState = GetState(startState);

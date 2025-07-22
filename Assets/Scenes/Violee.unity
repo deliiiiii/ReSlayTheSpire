@@ -7552,7 +7552,7 @@ Transform:
   m_GameObject: {fileID: 909429582}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 22, z: 0}
+  m_LocalPosition: {x: 0, y: 24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13069,12 +13069,12 @@ GameObject:
   - component: {fileID: 1610896601}
   - component: {fileID: 1610896600}
   m_Layer: 5
-  m_Name: Button (Legacy)
+  m_Name: Button R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1610896599
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17666,12 +17666,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4918451714722057860}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 4, z: 0}
+  m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4918451716113458206}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4918451714722057860
 GameObject:
@@ -17919,11 +17919,11 @@ GameObject:
   - component: {fileID: 4918451716113458204}
   - component: {fileID: 4918451716113458205}
   - component: {fileID: 4918451716113458201}
-  - component: {fileID: 4918451716113458200}
   - component: {fileID: 4918451716113458208}
+  - component: {fileID: 4918451716113458200}
   - component: {fileID: 4918451716113458209}
   m_Layer: 8
-  m_Name: Player
+  m_Name: PlayerModel
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17942,6 +17942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 4918451714722057862}
+  CameraOffset: {x: 0, y: 1.7, z: 0}
   fov: 111.5
   invertCamera: 0
   cameraCanMove: 1
@@ -18005,7 +18006,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -18084,12 +18085,11 @@ Transform:
   m_GameObject: {fileID: 4918451716113458194}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4918451714774874116}
-  - {fileID: 4918451714722057857}
   - {fileID: 496760067}
   - {fileID: 1586788630}
   m_Father: {fileID: 2083257669}
@@ -18214,6 +18214,7 @@ SceneRoots:
   - {fileID: 370688511}
   - {fileID: 705507995}
   - {fileID: 1901459850}
+  - {fileID: 4918451714722057857}
   - {fileID: 909429586}
   - {fileID: 1536509203}
   - {fileID: 343383920}

@@ -18,6 +18,7 @@ public class FirstPersonController : MonoBehaviour
     #region Camera Movement Variables
 
     public Camera playerCamera;
+    public Vector3 CameraOffset = new (0, 2, 0);
 
     public float fov = 60f;
     public bool invertCamera = false;
@@ -178,7 +179,7 @@ public class FirstPersonController : MonoBehaviour
 
     float camRotation;
 
-    private void Update()
+    public void Tick()
     {
         #region Camera
 
@@ -200,8 +201,11 @@ public class FirstPersonController : MonoBehaviour
             // Clamp pitch between lookAngle
             pitch = Mathf.Clamp(pitch, -maxLookAngle, maxLookAngle);
 
+            // transform.localEulerAngles = new Vector3(0, yaw, 0);
+            // playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
             transform.localEulerAngles = new Vector3(0, yaw, 0);
-            playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+            playerCamera.transform.eulerAngles = new Vector3(pitch, yaw, 0);
+            playerCamera.transform.position = transform.position + transform.TransformDirection(CameraOffset);
         }
 
         #region Camera Zoom
