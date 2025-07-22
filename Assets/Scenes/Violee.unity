@@ -17943,10 +17943,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 4918451714722057862}
   CameraOffset: {x: 0, y: 1.7, z: 0}
-  fov: 111.5
+  fov: 75
   invertCamera: 0
   cameraCanMove: 1
-  mouseSensitivity: 0.95
+  mouseSensitivity: 0.68
   maxLookAngle: 50
   lockCursor: 1
   enableZoom: 1
@@ -17962,8 +17962,8 @@ MonoBehaviour:
   sprintKey: 304
   sprintSpeed: 6.16
   sprintDuration: 5
-  sprintCooldown: 0.5
-  sprintFOV: 120
+  sprintCooldown: 0
+  sprintFOV: 90
   sprintFOVStepTime: 10
   sprintBarCG: {fileID: 4918451715183663750}
   useSprintBar: 0
