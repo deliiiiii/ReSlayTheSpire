@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Violee.Player;
 
 namespace Violee
 {
@@ -17,23 +18,24 @@ namespace Violee
         [ShowInInspector]
         MyFSM<EGameState> gameFSM = new ();
         bool isIdle => gameFSM.IsState(EGameState.Idle);
-        bool isPlaying => gameFSM.IsState(EGameState.Playing);
-
-        // TODO start比其他Awake晚。要不要控制一下初始化顺顺序？
         protected void Start()
         {
             Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(_ => MapModel.TickPlayerVisit());
+            Binder.From(gameFSM.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);
             
-            MapModel.StartGenerateFunc.Guard += () => isIdle || isPlaying;
             MapModel.DijkstraFunc.Guard += () => isIdle;
             MapModel.OnBeginGenerate += () => gameFSM.ChangeState(EGameState.GeneratingMap);
             MapModel.OnEndGenerate += () => gameFSM.ChangeState(EGameState.Idle);
-            MapModel.OnBeginDij += async () =>
+            MapModel.OnBeginDij += () =>
             {
                 gameFSM.ChangeState(EGameState.GeneratingMap);
-                await Task.CompletedTask;
+                return Task.CompletedTask;
             };
-            MapModel.OnEndDij += _ => gameFSM.ChangeState(EGameState.Playing);
+            MapModel.OnEndDij += pos3D =>
+            {
+                gameFSM.ChangeState(EGameState.Playing);
+                PlayerModel.OnEnterPlaying(pos3D);
+            };
             
             Binder.Update(_ =>
             {
@@ -41,8 +43,6 @@ namespace Violee
                     MapModel.StartGenerateFunc.TryInvoke();
             });
             Binder.Update(gameFSM.Update);
-            
-            gameFSM.ChangeState(EGameState.Idle);
         }
     }
 }

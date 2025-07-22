@@ -145,9 +145,153 @@
                   <list />
                 </option>
               </Turn>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;用户的问题是关于`LmVmwWrq`事件传递的`Evxgli6`参数无法传递到`tznvUHN`的`Hgzgv`的`LmVmgvi`函数。从提供的`TznvNlwvo.xh`文件中可以看到，`LmVmwWrq`事件是一个带`Evxgli6`参数的事件，但`tznvUHN`的`LmVmgvi`回调函数没有接收参数。需要修改`tznvUHN`的`LmVmgvi`回调函数以支持参数传递。&lt;/gsrmprmt&gt;&#10;&#10;为了解决这个问题，我将修改`TznvNlwvo.xh`文件中的`LmVmwWrq`事件处理逻辑，确保`Evxgli6`参数能够传递到`tznvUHN`的`Hgzgv`的`LmVmgvi`函数。以下是具体的修改方案：&#10;&#10;8. 修改`LmVmwWrq`事件处理逻辑，将`Evxgli6`参数传递给`tznvUHN`的`LmVmgvi`回调函数。&#10;7. 确保`tznvUHN`的`LmVmgvi`回调函数能够接收并处理`Evxgli6`参数。&#10;&#10;&#10;&lt;vwrg_urov&gt;&#10;&#10;&lt;kzgs&gt;W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Erlovv/Nlwvo/TznvNlwvo.xh&lt;/kzgs&gt;&#10;&lt;cxlmgvmg&gt;fhrmt Hbhgvn;\mfhrmt Hbhgvn.Gsivzwrmt.Gzhph;\mfhrmt Hrivmrc.LwrmRmhkvxgli;\mfhrmt FmrgbVmtrmv;\mfhrmt Erlovv.Kozbvi;\m\mmznvhkzxv Erlovv\m{\m    kfyorx vmfn VTznvHgzgv\m    {\m        Rwov,\m        TvmvizgrmtNzk,\m        Kozbrmt,\m        DzgxsrmtNzk,\m    }\m    kfyorx xozhh TznvNlwvo : Hrmtovglm&amp;og;TznvNlwvo&amp;tg;\m    {\m        [HsldRmRmhkvxgli]\m        NbUHN&amp;og;VTznvHgzgv&amp;tg; tznvUHN = mvd ();\m        yllo rhRwov =&amp;tg; tznvUHN.RhHgzgv(VTznvHgzgv.Rwov);\m        yllo rhKozbrmt =&amp;tg; tznvUHN.RhHgzgv(VTznvHgzgv.Kozbrmt);\m\m        kilgvxgvw elrw Hgzig()\m        {\m            Yrmwvi.Uiln(tznvUHN.TvgHgzgv(VTznvHgzgv.Kozbrmt)).LmFkwzgv(_ =&amp;tg; NzkNlwvo.GrxpKozbviErhrg());\m            Yrmwvi.Uiln(tznvUHN.TvgHgzgv(VTznvHgzgv.Kozbrmt)).LmVmgvi(_ =&amp;tg; KozbviNlwvo.LmVmgviKozbrmt());\m            \m            NzkNlwvo.HgzigTvmvizgvUfmx.Tfziw += () =&amp;tg; rhRwov || rhKozbrmt;\m            NzkNlwvo.WrqphgizUfmx.Tfziw += () =&amp;tg; rhRwov;\m            NzkNlwvo.LmYvtrmTvmvizgv += () =&amp;tg; tznvUHN.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);\m            NzkNlwvo.LmVmwTvmvizgv += () =&amp;tg; tznvUHN.XszmtvHgzgv(VTznvHgzgv.Rwov);\m            NzkNlwvo.LmYvtrmWrq += zhbmx () =&amp;tg;\m            {\m                tznvUHN.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);\m                zdzrg Gzhp.XlnkovgvwGzhp;\m            };\m            NzkNlwvo.LmVmwWrq += klhrgrlm =&amp;tg;\m            {\m                tznvUHN.XszmtvHgzgv(VTznvHgzgv.Kozbrmt, klhrgrlm);\m            };\m            \m            Yrmwvi.Fkwzgv(_ =&amp;tg;\m            {\m                ru (Rmkfg.TvgPvbWldm(PvbXlwv.I))\m                    NzkNlwvo.HgzigTvmvizgvUfmx.GibRmelpv();\m            });\m            Yrmwvi.Fkwzgv(tznvUHN.Fkwzgv);\m            \m            tznvUHN.XszmtvHgzgv(VTznvHgzgv.Rwov);\m        }\m    }\m}&amp;jflg;,&#10;  &amp;jflg;rmhgifxgrlmh&amp;jflg;: &amp;jflg;修改LmVmwWrq事件处理逻辑，将Evxgli6参数传递给tznvUHN的LmVmgvi回调函数。&amp;jflg;&#10;}&#10;&#10;&lt;/cxlmgvmg&gt;&#10;&lt;kzgs&gt;W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Erlovv/Nlwvo/TznvNlwvo.xh&lt;/kzgs&gt;&#10;&lt;xlmgvmg&gt;{&amp;jflg;ivkozxv&amp;jflg;: &amp;jflg;fhrmt Hbhgvn;\mfhrmt Hbhgvn.Gsivzwrmt.Gzhph;\mfhrmt Hrivmrc.LwrmRmhkvxgli;\mfhrmt FmrgbVmtrmv;\mfhrmt Erlovv.Kozbvi;\m\mmznvhkzxv Erlovv\m{\m    kfyorx vmfn VTznvHgzgv\m    {\m        Rwov,\m        TvmvizgrmtNzk,\m        Kozbrmt,\m        DzgxsrmtNzk,\m    }\m    kfyorx xozhh TznvNlwvo : Hrmtovglm&amp;og;TznvNlwvo&amp;tg;\m    {\m        [HsldRmRmhkvxgli]\m        NbUHN&amp;og;VTznvHgzgv&amp;tg; tznvUHN = mvd ();\m        yllo rhRwov =&amp;tg; tznvUHN.RhHgzgv(VTznvHgzgv.Rwov);\m        yllo rhKozbrmt =&amp;tg; tznvUHN.RhHgzgv(VTznvHgzgv.Kozbrmt);\m\m        kilgvxgvw elrw Hgzig()\m        {\m            Yrmwvi.Uiln(tznvUHN.TvgHgzgv(VTznvHgzgv.Kozbrmt)).LmFkwzgv(_ =&amp;tg; NzkNlwvo.GrxpKozbviErhrg());\m            Yrmwvi.Uiln(tznvUHN.TvgHgzgv(VTznvHgzgv.Kozbrmt)).LmVmgvi(_ =&amp;tg; KozbviNlwvo.LmVmgviKozbrmt());\m            \m            NzkNlwvo.HgzigTvmvizgvUfmx.Tfziw += () =&amp;tg; rhRwov || rhKozbrmt;\m            NzkNlwvo.WrqphgizUfmx.Tfziw += () =&amp;tg; rhRwov;\m            NzkNlwvo.LmYvtrmTvmvizgv += () =&amp;tg; tznvUHN.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);\m            NzkNlwvo.LmVmwTvmvizgv += () =&amp;tg; tznvUHN.XszmtvHgzgv(VTznvHgzgv.Rwov);\m            NzkNlwvo.LmYvtrmWrq += zhbmx () =&amp;tg;\m            {\m                tznvUHN.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);\m                zdzrg Gzhp.XlnkovgvwGzhp;\m            };\m            NzkNlwvo.LmVmwWrq += klhrgrlm =&amp;tg;\m            {\m                tznvUHN.XszmtvHgzgv(VTznvHgzgv.Kozbrmt, klhrgrlm);\m            };\m            \m            Yrmwvi.Fkwzgv(_ =&amp;tg;\m            {\m                ru (Rmkfg.TvgPvbWldm(PvbXlwv.I))\m                    NzkNlwvo.HgzigTvmvizgvUfmx.GibRmelpv();\m            });\m            Yrmwvi.Fkwzgv(tznvUHN.Fkwzgv);\m            \m            tznvUHN.XszmtvHgzgv(VTznvHgzgv.Rwov);\m        }\m    }\m}&amp;jflg;}&#10;&lt;/xlmgvmg&gt;&#10;&lt;c_vwrg_gzhp_rw&gt;xzoo_uxvz165u-1uz4-57y9-128u-45yv0x680133&lt;/c_vwrg_gzhp_rw&gt;&#10;&lt;gzhp_rw&gt;xzoo_uxvz165u-1uz4-57y9-128u-45yv0x680133&lt;/gzhp_rw&gt;&#10;&lt;rmhgifxgrlmh&gt;修改LmVmwWrq事件处理逻辑，将Evxgli6参数传递给tznvUHN的LmVmgvi回调函数。&lt;/rmhgifxgrlmh&gt;&#10;&lt;vckozmzgrlm&gt;修改LmVmwWrq事件处理逻辑，确保Evxgli6参数能够传递到tznvUHN的LmVmgvi回调函数&lt;/vckozmzgrlm&gt;&#10;&lt;/vwrg_urov&gt;&#10;&lt;gsrmprmt&gt;任务已完成，`LmVmwWrq`事件处理逻辑已修改，确保`Evxgli6`参数能够传递到`tznvUHN`的`LmVmgvi`回调函数。用户的问题已解决。&lt;/gsrmprmt&gt;&#10;&#10;&#10;修改了`LmVmwWrq`事件处理逻辑，确保`Evxgli6`参数能够传递到`tznvUHN`的`LmVmgvi`回调函数，解决了参数传递问题。" />
+                <option name="chatMode" value="AGENT" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="GameModel.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="        yllo rhRwov =&gt; tznvUHN.RhHgzgv(VTznvHgzgv.Rwov);" />
+                      <option name="end_line" value="16" />
+                      <option name="filename" value="GameModel.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="end">
+                            <Position>
+                              <option name="character" value="56" />
+                              <option name="line" value="16" />
+                            </Position>
+                          </option>
+                          <option name="start">
+                            <Position>
+                              <option name="line" value="16" />
+                            </Position>
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="start_line" value="16" />
+                      <option name="type" value="code_block" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="commitId">
+                  <list>
+                    <option value="e32251e1497c4ef661e7419fcd97431a09a60e6a" />
+                    <option value="d21d0c99331c36f405fcc2e1614103df57b8826a" />
+                  </list>
+                </option>
+                <option name="conversationId" value="0198301bef7179ab91d7602829b1399f" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" value="using System;&#10;using System.Threading.Tasks;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public enum EGameState&#10;    {&#10;        Idle,&#10;        GeneratingMap,&#10;        Playing,&#10;        WatchingMap,&#10;    }&#10;    public class GameModel : Singleton&lt;GameModel&gt;&#10;    {&#10;        MyFSM&lt;EGameState&gt; gameFSM = new ();&#10;        bool isIdle =&gt; gameFSM.IsState(EGameState.Idle);&#10;&#10;        // TODO start比其他Awake晚。要不要控制一下初始化顺顺序？&#10;        protected void Start()&#10;        {&#10;            Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(_ =&gt; MapModel.TickPlayerVisit());&#10;            &#10;            MapModel.StartGenerateFunc.Guard += () =&gt; isIdle;&#10;            MapModel.DijkstraFunc.Guard += () =&gt; isIdle;&#10;            MapModel.OnBeginGenerate += () =&gt; gameFSM.ChangeState(EGameState.GeneratingMap);&#10;            MapModel.OnBeginDij += async () =&gt;&#10;            {&#10;                gameFSM.ChangeState(EGameState.GeneratingMap);&#10;                await Task.CompletedTask;&#10;            };&#10;            MapModel.OnEndDij += _ =&gt; gameFSM.ChangeState(EGameState.Playing);&#10;            &#10;            Binder.Update(_ =&gt;&#10;            {&#10;                if (Input.GetKeyDown(KeyCode.R))&#10;                    MapModel.StartGenerateFunc.TryInvoke();&#10;            });&#10;            Binder.Update(gameFSM.Update);&#10;            &#10;            gameFSM.ChangeState(EGameState.Idle);&#10;        }&#10;    }&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="28629" />
+                <option name="messageId" value="01983048f6a77685a1d27609aaef6f4a" />
+                <option name="outputToken" value="910" />
+                <option name="question" value="LmVmwWrq传递的Evxgli6传不到tznvUHN的Hgzgv的Lmvmgvi函数怎么办" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="toolCallIds">
+                  <list>
+                    <option value="call_fcea834f-8fa5-42b0-871f-54be9c319866" />
+                  </list>
+                </option>
+                <option name="totalToken" value="29539" />
+                <option name="variables">
+                  <list />
+                </option>
+              </Turn>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;用户的问题是关于`XszmtvHgzgv`方法的通用性和可变参数列表的效率问题。当前`tznvUHN.XszmtvHgzgv`方法在`TznvNlwvo.xh`中用于切换状态，但用户希望保持其通用性，同时避免因可变参数列表导致的效率问题。可以通过以下方式解决：&#10;&#10;8. **通用性**：确保`XszmtvHgzgv`方法不依赖于特定状态或参数，保持其通用性。&#10;7. **效率优化**：避免使用可变参数列表，改为通过事件或回调传递额外数据。&#10;&#10;具体修改方案：&#10;- 将`LmVmgvi`回调的参数传递逻辑从`XszmtvHgzgv`方法中解耦，改为通过事件或状态上下文对象传递数据。&#10;- 在`TznvNlwvo`中定义状态上下文对象，用于存储和传递状态切换时的额外数据。&lt;/gsrmprmt&gt;&#10;&#10;我将修改`TznvNlwvo.xh`文件，引入状态上下文对象并优化`XszmtvHgzgv`方法的实现：&#10;&#10;&#10;&lt;vwrg_urov&gt;&#10;&#10;&lt;kzgs&gt;W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Erlovv/Nlwvo/TznvNlwvo.xh&lt;/kzgs&gt;&#10;&lt;cxlmgvmg&gt;fhrmt Hbhgvn;\mfhrmt Hbhgvn.Gsivzwrmt.Gzhph;\mfhrmt Hrivmrc.LwrmRmhkvxgli;\mfhrmt FmrgbVmtrmv;\mfhrmt Erlovv.Kozbvi;\m\mmznvhkzxv Erlovv\m{\m    kfyorx vmfn VTznvHgzgv\m    {\m        Rwov,\m        TvmvizgrmtNzk,\m        Kozbrmt,\m        DzgxsrmtNzk,\m    }\m\m    kfyorx xozhh HgzgvXlmgvcg\m    {\m        kfyorx Evxgli6? Klhrgrlm { tvg; hvg; }\m        // 可根据需要扩展其他上下文数据\m    }\m\m    kfyorx xozhh TznvNlwvo : Hrmtovglm&amp;og;TznvNlwvo&amp;tg;\m    {\m        [HsldRmRmhkvxgli]\m        NbUHN&amp;og;VTznvHgzgv&amp;tg; tznvUHN = mvd ();\m        yllo rhRwov =&amp;tg; tznvUHN.RhHgzgv(VTznvHgzgv.Rwov);\m        yllo rhKozbrmt =&amp;tg; tznvUHN.RhHgzgv(VTznvHgzgv.Kozbrmt);\m\m        kirezgv HgzgvXlmgvcg _xfiivmgXlmgvcg = mvd HgzgvXlmgvcg();\m\m        kilgvxgvw elrw Hgzig()\m        {\m            Yrmwvi.Uiln(tznvUHN.TvgHgzgv(VTznvHgzgv.Kozbrmt)).LmFkwzgv(_ =&amp;tg; NzkNlwvo.GrxpKozbviErhrg());\m            Yrmwvi.Uiln(tznvUHN.TvgHgzgv(VTznvHgzgv.Kozbrmt)).LmVmgvi(_ =&amp;tg; KozbviNlwvo.LmVmgviKozbrmt(_xfiivmgXlmgvcg.Klhrgrlm));\m            \m            NzkNlwvo.HgzigTvmvizgvUfmx.Tfziw += () =&amp;tg; rhRwov || rhKozbrmt;\m            NzkNlwvo.WrqphgizUfmx.Tfziw += () =&amp;tg; rhRwov;\m            NzkNlwvo.LmYvtrmTvmvizgv += () =&amp;tg; tznvUHN.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);\m            NzkNlwvo.LmVmwTvmvizgv += () =&amp;tg; tznvUHN.XszmtvHgzgv(VTznvHgzgv.Rwov);\m            NzkNlwvo.LmYvtrmWrq += zhbmx () =&amp;tg;\m            {\m                tznvUHN.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);\m                zdzrg Gzhp.XlnkovgvwGzhp;\m            };\m            NzkNlwvo.LmVmwWrq += klhrgrlm =&amp;tg;\m            {\m                _xfiivmgXlmgvcg.Klhrgrlm = klhrgrlm;\m                tznvUHN.XszmtvHgzgv(VTznvHgzgv.Kozbrmt);\m            };\m            \m            Yrmwvi.Fkwzgv(_ =&amp;tg;\m            {\m                ru (Rmkfg.TvgPvbWldm(PvbXlwv.I))\m                    NzkNlwvo.HgzigTvmvizgvUfmx.GibRmelpv();\m            });\m            Yrmwvi.Fkwzgv(tznvUHN.Fkwzgv);\m            \m            tznvUHN.XszmtvHgzgv(VTznvHgzgv.Rwov);\m        }\m    }\m}&amp;jflg;,&#10;  &amp;jflg;rmhgifxgrlmh&amp;jflg;: &amp;jflg;引入状态上下文对象并优化XszmtvHgzgv方法，避免可变参数列表，保持通用性。&amp;jflg;&#10;}&#10;&#10;&lt;/cxlmgvmg&gt;&#10;&lt;kzgs&gt;W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Erlovv/Nlwvo/TznvNlwvo.xh&lt;/kzgs&gt;&#10;&lt;xlmgvmg&gt;{&amp;jflg;ivkozxv&amp;jflg;: &amp;jflg;fhrmt Hbhgvn;\mfhrmt Hbhgvn.Gsivzwrmt.Gzhph;\mfhrmt Hrivmrc.LwrmRmhkvxgli;\mfhrmt FmrgbVmtrmv;\mfhrmt Erlovv.Kozbvi;\m\mmznvhkzxv Erlovv\m{\m    kfyorx vmfn VTznvHgzgv\m    {\m        Rwov,\m        TvmvizgrmtNzk,\m        Kozbrmt,\m        DzgxsrmtNzk,\m    }\m\m    kfyorx xozhh HgzgvXlmgvcg\m    {\m        kfyorx Evxgli6? Klhrgrlm { tvg; hvg; }\m        // \f46vu\f3160\f363v\f0299\f1018\f3730\f4x44\f4823\f5vw3\f5v9z\f5v9y\f3412\f3429\f363v\m    }\m\m    kfyorx xozhh TznvNlwvo : Hrmtovglm&amp;og;TznvNlwvo&amp;tg;\m    {\m        [HsldRmRmhkvxgli]\m        NbUHN&amp;og;VTznvHgzgv&amp;tg; tznvUHN = mvd ();\m        yllo rhRwov =&amp;tg; tznvUHN.RhHgzgv(VTznvHgzgv.Rwov);\m        yllo rhKozbrmt =&amp;tg; tznvUHN.RhHgzgv(VTznvHgzgv.Kozbrmt);\m\m        kirezgv HgzgvXlmgvcg _xfiivmgXlmgvcg = mvd HgzgvXlmgvcg();\m\m        kilgvxgvw elrw Hgzig()\m        {\m            Yrmwvi.Uiln(tznvUHN.TvgHgzgv(VTznvHgzgv.Kozbrmt)).LmFkwzgv(_ =&amp;tg; NzkNlwvo.GrxpKozbviErhrg());\m            Yrmwvi.Uiln(tznvUHN.TvgHgzgv(VTznvHgzgv.Kozbrmt)).LmVmgvi(_ =&amp;tg; KozbviNlwvo.LmVmgviKozbrmt(_xfiivmgXlmgvcg.Klhrgrlm));\m            \m            NzkNlwvo.HgzigTvmvizgvUfmx.Tfziw += () =&amp;tg; rhRwov || rhKozbrmt;\m            NzkNlwvo.WrqphgizUfmx.Tfziw += () =&amp;tg; rhRwov;\m            NzkNlwvo.LmYvtrmTvmvizgv += () =&amp;tg; tznvUHN.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);\m            NzkNlwvo.LmVmwTvmvizgv += () =&amp;tg; tznvUHN.XszmtvHgzgv(VTznvHgzgv.Rwov);\m            NzkNlwvo.LmYvtrmWrq += zhbmx () =&amp;tg;\m            {\m                tznvUHN.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);\m                zdzrg Gzhp.XlnkovgvwGzhp;\m            };\m            NzkNlwvo.LmVmwWrq += klhrgrlm =&amp;tg;\m            {\m                _xfiivmgXlmgvcg.Klhrgrlm = klhrgrlm;\m                tznvUHN.XszmtvHgzgv(VTznvHgzgv.Kozbrmt);\m            };\m            \m            Yrmwvi.Fkwzgv(_ =&amp;tg;\m            {\m                ru (Rmkfg.TvgPvbWldm(PvbXlwv.I))\m                    NzkNlwvo.HgzigTvmvizgvUfmx.GibRmelpv();\m            });\m            Yrmwvi.Fkwzgv(tznvUHN.Fkwzgv);\m            \m            tznvUHN.XszmtvHgzgv(VTznvHgzgv.Rwov);\m        }\m    }\m}&amp;jflg;}&#10;&lt;/xlmgvmg&gt;&#10;&lt;c_vwrg_gzhp_rw&gt;xzoo_945wz763-342v-5256-y831-492x16wv106y&lt;/c_vwrg_gzhp_rw&gt;&#10;&lt;gzhp_rw&gt;xzoo_945wz763-342v-5256-y831-492x16wv106y&lt;/gzhp_rw&gt;&#10;&lt;rmhgifxgrlmh&gt;引入状态上下文对象并优化XszmtvHgzgv方法，避免可变参数列表，保持通用性。&lt;/rmhgifxgrlmh&gt;&#10;&lt;vckozmzgrlm&gt;引入状态上下文对象并优化XszmtvHgzgv方法，避免可变参数列表&lt;/vckozmzgrlm&gt;&#10;&lt;/vwrg_urov&gt;&#10;&lt;gsrmprmt&gt;任务已完成，`TznvNlwvo.xh`中引入了状态上下文对象并优化了`XszmtvHgzgv`方法，避免了可变参数列表，同时保持了方法的通用性。用户的问题已解决。&lt;/gsrmprmt&gt;&#10;&#10;&#10;在`TznvNlwvo`中引入了状态上下文对象并优化了`XszmtvHgzgv`方法，避免了可变参数列表，同时保持了方法的通用性。" />
+                <option name="chatMode" value="AGENT" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="GameModel.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="commitId">
+                  <list>
+                    <option value="985de2230426e4d82683ef518ad4603ee66cd6f7" />
+                    <option value="846d47ff1f2a6b81fa42d055fa9100c5cf54f74d" />
+                  </list>
+                </option>
+                <option name="conversationId" value="0198301bef7179ab91d7602829b1399f" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" value="using System;&#10;using System.Threading.Tasks;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public enum EGameState&#10;    {&#10;        Idle,&#10;        GeneratingMap,&#10;        Playing,&#10;        WatchingMap,&#10;    }&#10;    public class GameModel : Singleton&lt;GameModel&gt;&#10;    {&#10;        MyFSM&lt;EGameState&gt; gameFSM = new ();&#10;        bool isIdle =&gt; gameFSM.IsState(EGameState.Idle);&#10;&#10;        protected override void Awake()&#10;        {&#10;            base.Awake();&#10;            &#10;            Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(_ =&gt; MapModel.TickPlayerVisit());&#10;            &#10;            MapModel.StartGenerateFunc.Guard += () =&gt; isIdle;&#10;            MapModel.DijkstraFunc.Guard += () =&gt; isIdle;&#10;            MapModel.OnBeginGenerate += () =&gt; gameFSM.ChangeState(EGameState.GeneratingMap);&#10;            MapModel.OnBeginDij += async () =&gt;&#10;            {&#10;                gameFSM.ChangeState(EGameState.GeneratingMap);&#10;                await Task.CompletedTask;&#10;            };&#10;            MapModel.OnEndDij += _ =&gt; gameFSM.ChangeState(EGameState.Playing);&#10;            &#10;            Binder.Update(_ =&gt;&#10;            {&#10;                if (Input.GetKeyDown(KeyCode.R))&#10;                    MapModel.StartGenerateFunc.TryInvoke();&#10;            });&#10;            Binder.Update(gameFSM.Update);&#10;            &#10;            gameFSM.ChangeState(EGameState.Idle);&#10;        }&#10;    }&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="27781" />
+                <option name="messageId" value="0198304a64be74a3b45f534d266b3cbf" />
+                <option name="outputToken" value="926" />
+                <option name="question" value="我的XszmtvHgzgv对于所有Hgzgv是通用的，不能为了这一个改。而且可变参数列表效率是不是太低了" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="toolCallIds">
+                  <list>
+                    <option value="call_054da236-657e-4743-b168-507c83de893b" />
+                  </list>
+                </option>
+                <option name="totalToken" value="28707" />
+                <option name="variables">
+                  <list />
+                </option>
+              </Turn>
             </list>
           </option>
-          <option name="updateTime" value="1753154015371" />
+          <option name="updateTime" value="1753156865377" />
         </Conversation>
         <Conversation>
           <option name="createTime" value="1753066747929" />

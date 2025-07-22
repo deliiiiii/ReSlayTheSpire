@@ -30,14 +30,15 @@ public class MyFSM<T> where T : Enum
         stateDic.Add(e, state);
         return state;
     }
+
     MyState curState;
-    [ShowInInspector]
     Enum curStateEnum;
+    [ShowInInspector]string curStateName => curStateEnum.ToString();
     void Launch(T startState)
     {
         curState = GetState(startState);
         curStateEnum = startState;
-        curState?.Enter();
+        curState.Enter();
     }
     public void Update(float dt)
     {
@@ -50,8 +51,8 @@ public class MyFSM<T> where T : Enum
             Launch(e);
             return;
         }
-        MyState newState = GetState(e);
-        curState?.Exit();
+        var newState = GetState(e);
+        curState.Exit();
         curState = newState;
         curStateEnum = e;
         curState.Enter();
