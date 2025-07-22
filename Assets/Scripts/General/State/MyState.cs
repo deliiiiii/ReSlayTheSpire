@@ -10,11 +10,11 @@ public class MyState
     {
         OnExit?.Invoke();
     }
-    public void Update()
+    public void Update(float dt)
     {
-        OnUpdate?.Invoke();
+        OnUpdate?.Invoke(dt);
     }
-    public event Action OnUpdate;
+    public event Action<float> OnUpdate;
     public event Action OnEnter;
     public event Action OnExit;
 }

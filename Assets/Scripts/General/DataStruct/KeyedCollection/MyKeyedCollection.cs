@@ -207,7 +207,7 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
     }
 
     private void CreateDictionary() {
-        // TODO 
+        // TODO comparer
         Dict = new SerializableDictionary<TKey,TItem>();
         foreach (TItem item in Items) {
             TKey key = GetKeyForItem(item);

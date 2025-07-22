@@ -22,7 +22,7 @@ public class BindDataState
         return this;
     }
     
-    public BindDataState OnUpdate(Action act)
+    public BindDataState OnUpdate(Action<float> act)
     {
         state.OnUpdate -= act;
         state.OnUpdate += act;

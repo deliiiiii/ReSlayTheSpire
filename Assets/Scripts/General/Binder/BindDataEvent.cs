@@ -4,6 +4,7 @@ using UnityEngine.Events;
 public class BindDataEvent
 {
     readonly UnityEvent evt;
+    UnityAction act;
     public BindDataEvent(UnityEvent evt)
     {
         this.evt = evt;
@@ -11,8 +12,8 @@ public class BindDataEvent
     
     public BindDataEvent To(UnityAction act)
     {
-        UnBindAll();
         evt.AddListener(act);
+        this.act = act;
         return this;
     }
     
@@ -27,7 +28,10 @@ public class BindDataEvent
     {
         evt.RemoveAllListeners();
     }
-    
-    //TODO UnBind
+
+    public void UnBind()
+    {
+        evt.RemoveListener(act);
+    }
     
 }

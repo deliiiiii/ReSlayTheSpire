@@ -17,12 +17,6 @@ namespace Violee.View
         bool isMinimap => MinimapImg.enabled;
         void Awake()
         {
-            Binder.From(ReGenerateBtn).To(() => MapModel.Generate());
-            Binder.Update(_ =>
-            {
-                if (Input.GetKeyDown(KeyCode.R))
-                    MapModel.Generate();
-            });
             Binder.Update(SwitchMap);
             ShowMinimap();
         }
@@ -42,7 +36,7 @@ namespace Violee.View
 
         void ChangeFOV(float dt)
         {
-            var tarSize = isMinimap ? MiniSize : MapModel.MaxSize / 1.818f;
+            var tarSize = isMinimap ? MiniSize : MapModel.MaxSize / 1.616f;
             if (!Mathf.Approximately(MinimapCameraVirtual.m_Lens.OrthographicSize, tarSize))
             {
                 MinimapCameraVirtual.m_Lens.OrthographicSize = Mathf.Lerp(MinimapCameraVirtual.m_Lens.OrthographicSize,

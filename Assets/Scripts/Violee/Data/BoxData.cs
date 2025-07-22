@@ -76,8 +76,6 @@ namespace Violee
         }
         
         public Vector2Int Pos2D;
-        // // TODO 1：之后在sprite上自己划线？ 2：拿预制体的3d模型
-        // public Sprite Sprite;
         public event Action<WallData> OnAddWall;
         public event Action<WallData> OnRemoveWall;
         #region Walls

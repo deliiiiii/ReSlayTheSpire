@@ -6,52 +6,58 @@ using UnityEngine;
 [Serializable]
 public class MyFSM<T> where T : Enum
 {       
-    Dictionary<string, MyState> stateDic;
+    Dictionary<T, MyState> stateDic;
 
     public MyFSM()
     {
-        stateDic = new Dictionary<string, MyState>();
+        stateDic = new Dictionary<T, MyState>();
         foreach (var e in Enum.GetValues(typeof(T)))
         {
-            stateDic.Add(e.ToString(), new MyState());
+            stateDic.Add((T)e, new MyState());
         }
     }
-    public MyState GetState(string stateType)
+    public MyState GetState(T e)
     {
-        if (stateType == null)
+        if (e == null)
         {
             return null;
         }
-        if (stateDic.TryGetValue(stateType, out var value))
+        if (stateDic.TryGetValue(e, out var value))
         {
             return value;
         }
         MyState state = new();
-        stateDic.Add(stateType, state);
+        stateDic.Add(e, state);
         return state;
     }
     MyState curState;
-    [ShowInInspector]string curStateName => curState.GetType().ToString();
-    void Launch(string startStateType)
+    [ShowInInspector]
+    Enum curStateEnum;
+    void Launch(T startState)
     {
-        curState = GetState(startStateType);
+        curState = GetState(startState);
+        curStateEnum = startState;
         curState?.Enter();
     }
-    public void Update()
+    public void Update(float dt)
     {
-        curState?.Update();
+        curState?.Update(dt);
     }
-    public void ChangeState(string newStateType)
+    public void ChangeState(T e)
     {
         if (curState == null)
         {
-            Launch(newStateType);
+            Launch(e);
             return;
         }
-        MyState newState = GetState(newStateType);
+        MyState newState = GetState(e);
         curState?.Exit();
         curState = newState;
+        curStateEnum = e;
         curState.Enter();
     }
     
+    public bool IsState(Enum e) => Equals(curStateEnum, e);
+    public bool IsState(Enum e1, Enum e2) => Equals(curStateEnum, e1) || Equals(curStateEnum, e2);
+    public bool IsState(Enum e1, Enum e2, Enum e3) => Equals(curStateEnum, e1) || Equals(curStateEnum, e2) || Equals(curStateEnum, e3);
 }

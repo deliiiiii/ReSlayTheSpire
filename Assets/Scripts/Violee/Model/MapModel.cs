@@ -12,13 +12,49 @@ namespace Violee
 {
     public class MapModel : Singleton<MapModel>
     {
+        protected override void Awake()
+        {
+            base.Awake();
+            
+            StartGenerateFunc = new (_StartGenerate);
+            DijkstraFunc = new (_Dijkstra);
+        }
+
         #region Public Functions
         public static List<BoxPointData> GetAllPoints()
         {
             return boxKList?.SelectMany(x => x.PointKList).ToList() ?? new List<BoxPointData>();
         }
-
-        public static async Task Generate() => await Instance.StartGenerate();
+        public static void TickPlayerVisit() => Instance._TickPlayerVisit();
+        void _TickPlayerVisit()
+        {
+            var playerPos = PlayerModel.Instance.transform.position;
+            var x = playerPos.x;
+            var z = playerPos.z;
+            var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);
+            var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);
+            if (!HasBox(boxPos2D))
+            {
+                MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
+                return;
+            }
+            BoxHelper.AllBoxDirs.ForEach(dir =>
+            {
+                var edgeCenterPos = BoxHelper.Pos2DTo3DEdge(boxPos2D, dir);
+                var edgeX = edgeCenterPos.x;
+                var edgeZ = edgeCenterPos.z;
+                var pointData = boxKList[boxPos2D].PointKList[dir];
+                // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
+                if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * 0.45f
+                    && !pointData.Visited)
+                {
+                    pointData.Visited.Value = true;
+                    MyDebug.Log($"Enter Point!!{boxPos2D}:{dir}");
+                }
+            });
+        }
+        public static GuardedFunc<Task> StartGenerateFunc;
+        public static GuardedFunc<Task> DijkstraFunc;
         public static float MaxSize => Mathf.Max(Instance.Width, Instance.Height) * BoxHelper.BoxSize;
         #endregion
         
@@ -66,6 +102,26 @@ namespace Violee
 
         #region Generate
         HashSet<Vector2Int> emptyPosSet;
+        async Task _StartGenerate()
+        {
+            try
+            {
+                OnBeginGenerate?.Invoke();
+                RemoveAllBoxes();
+                await GenerateOneFakeConnection(true);
+                while (emptyPosSet.Count > 0)
+                {
+                    await GenerateOneFakeConnection(false);
+                }
+                OnEndGenerate?.Invoke();
+                await (DijkstraFunc.TryInvoke() ?? Task.CompletedTask);
+            }
+            catch (Exception e)
+            {
+                MyDebug.LogError(e);
+                throw;
+            }
+        }
         async Task GenerateOneFakeConnection(bool startWithStartLoc)
         {
             var edgeBoxStack = new Stack<BoxData>();
@@ -119,62 +175,10 @@ namespace Violee
                 }
             }
         }
-        
-        // 防止点击多次按钮
-        bool isGenerating;
-        [Button]
-        public async Task StartGenerate()
+        async Task _Dijkstra()
         {
             try
             {
-                if (isGenerating)
-                {
-                    MyDebug.LogWarning("正在生成地图，请稍后再点");
-                    return;
-                }
-                if (isDij)
-                {
-                    MyDebug.LogWarning("正在Dijkstra，请稍后再点");
-                    return;
-                }
-                playerVisitTick?.UnBind();
-                
-                isGenerating = true;
-                RemoveAllBoxes();
-                await GenerateOneFakeConnection(true);
-                while (emptyPosSet.Count > 0)
-                {
-                    await GenerateOneFakeConnection(false);
-                }
-
-                isGenerating = false;
-                await Dijkstra();
-            }
-            catch (Exception e)
-            {
-                MyDebug.LogError(e);
-                throw;
-            }
-        }
-
-        bool isDij;
-        SimplePriorityQueue<BoxPointData, int> pq;
-        [Button]
-        async Task Dijkstra()
-        {
-            if (isGenerating)
-            {
-                MyDebug.LogWarning("正在生成地图，请稍后再点");
-                return;
-            }
-            if (isDij)
-            {
-                MyDebug.LogWarning("正在Dijkstra，请稍后再点");
-                return;
-            }
-            try
-            {
-                isDij = true;
                 foreach (var boxData in boxKList)
                 {
                     boxData.ResetCost();
@@ -184,16 +188,14 @@ namespace Violee
                     await OnBeginDij.Invoke();
                 }
                 var vSet = new HashSet<BoxPointData>();
-                int c = 0;
             
-                pq = new SimplePriorityQueue<BoxPointData, int>();
+                var pq = new SimplePriorityQueue<BoxPointData, int>();
                 var startBox = boxKList[StartPos];
                 var startPoint = startBox.PointKList[StartDir];
                 startPoint.CostWall.Value = 0;
                 pq.Enqueue(startPoint, 0);
                 while (pq.Count != 0)
                 {
-                    c++;
                     var curPoint = pq.Dequeue();
                     vSet.Add(curPoint);
                     var curCost = curPoint.CostWall;
@@ -211,75 +213,42 @@ namespace Violee
                         if (!vSet.Contains(nextPoint))
                         {
                             if(pq.Contains(nextPoint))
-                                pq.Remove(nextPoint);
-                            pq.Enqueue(nextPoint, nextPoint.CostWall);
+                                pq.UpdatePriority(nextPoint, nextPoint.CostWall);
+                            else
+                                pq.Enqueue(nextPoint, nextPoint.CostWall);
                         }
                     }
-                    foreach (var nextPoint in curPoint.NextPointsInBox)
-                    {
-                        if (!vSet.Contains(nextPoint))
+                    curPoint.NextPointsInBox
+                        .Where(nextPoint => !vSet.Contains(nextPoint))
+                        .ForEach(nextPoint =>
                         {
-                            if(pq.Contains(nextPoint))
-                                pq.Remove(nextPoint);
-                            pq.Enqueue(nextPoint, nextPoint.CostWall);
-                        }
-                    }
+                            if (pq.Contains(nextPoint))
+                                pq.UpdatePriority(nextPoint, nextPoint.CostWall);
+                            else
+                                pq.Enqueue(nextPoint, nextPoint.CostWall);
+                        });
                     await Configer.SettingsConfig.YieldFrames();
                 }
-                MyDebug.Log($"Dijkstra finished! Count = {c}");
+                MyDebug.Log("Dijkstra finished!");
+                OnEndDij?.Invoke(BoxHelper.Pos2DTo3DPoint(StartPos, StartDir));
             }
             catch (Exception e)
             {
                 MyDebug.LogError(e);
                 throw;
             }
-
-            isDij = false;
-            OnGenerateEnd?.Invoke(BoxHelper.Pos2DTo3DPoint(StartPos, StartDir));
-            
-            playerVisitTick = Binder.Update(_ => TickPlayerVisit());
         }
-
-        BindDataUpdate playerVisitTick;
-        
-        void TickPlayerVisit()
-        {
-            var playerPos = PlayerModel.Instance.transform.position;
-            var x = playerPos.x;
-            var z = playerPos.z;
-            var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);
-            var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);
-            if (!HasBox(boxPos2D))
-            {
-                MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
-                return;
-            }
-            BoxHelper.AllBoxDirs.ForEach(dir =>
-            {
-                var edgeCenterPos = BoxHelper.Pos2DTo3DEdge(boxPos2D, dir);
-                var edgeX = edgeCenterPos.x;
-                var edgeZ = edgeCenterPos.z;
-                var pointData = boxKList[boxPos2D].PointKList[dir];
-                // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
-                if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * 0.45f
-                    && !pointData.Visited)
-                {
-                    pointData.Visited.Value = true;
-                    MyDebug.Log($"Enter Point!!{boxPos2D}:{dir}");
-                }
-            });
-            
-            
-        }
-
         #endregion
         
         
         #region Event
         public static event Func<BoxData, Task> OnAddBoxAsync;
         public static event Action<BoxData> OnRemoveBox;
+
+        public static event Action OnBeginGenerate;
+        public static event Action OnEndGenerate;
         public static event Func<Task> OnBeginDij;
-        public static event Action<Vector3> OnGenerateEnd;
+        public static event Action<Vector3> OnEndDij;
 
         #endregion
     }

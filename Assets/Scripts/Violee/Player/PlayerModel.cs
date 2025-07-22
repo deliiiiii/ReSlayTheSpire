@@ -8,7 +8,7 @@ namespace Violee.Player
         protected override void Awake()
         {
             base.Awake();
-            MapModel.OnGenerateEnd += pos3D => transform.position = pos3D;
+            MapModel.OnEndDij += pos3D => transform.position = pos3D;
         }
     }
 }

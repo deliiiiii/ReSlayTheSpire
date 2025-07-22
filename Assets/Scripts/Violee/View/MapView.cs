@@ -10,7 +10,7 @@ namespace Violee.View
 {
     public class MapView : MonoBehaviour
     {
-        Dictionary<BoxPointData,(BindDataAct<int>, Text)> costTxtDic;
+        Dictionary<BoxPointData, (BindDataAct<int>, Text)> costTxtDic;
         public Text CostTxtPrefab;
         ObjectPool<Text> costTxtPool;
 
