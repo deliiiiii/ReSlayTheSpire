@@ -6,7 +6,6 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Unity.Mathematics;
 using UnityEngine;
-using Violee.Player;
 
 namespace Violee
 {
@@ -45,7 +44,7 @@ namespace Violee
                 var edgeZ = edgeCenterPos.z;
                 var pointData = boxKList[boxPos2D].PointKList[dir];
                 // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
-                if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * 0.45f
+                if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfig.WalkInTolerance
                     && !pointData.Visited)
                 {
                     pointData.Visited.Value = true;

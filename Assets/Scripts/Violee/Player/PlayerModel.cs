@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Violee.Player
+namespace Violee
 {
     public class PlayerModel : Singleton<PlayerModel>
     {

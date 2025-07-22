@@ -82,3 +82,4 @@ MonoBehaviour:
     Walls: 240
     Texture2D: {fileID: 2800000, guid: 047864e3767443846b3f08b42cdf2158, type: 3}
     BasicWeight: 600
+  WalkInTolerance: 0.49

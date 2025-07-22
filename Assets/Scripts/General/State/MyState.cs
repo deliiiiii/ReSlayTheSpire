@@ -17,6 +17,4 @@ public class MyState
     public event Action<float> OnUpdate;
     public event Action OnEnter;
     public event Action OnExit;
-    public event Action<EventArgs> OnEnterWithArg;
-    public event Action<EventArgs> OnExitWithArg;
 }
