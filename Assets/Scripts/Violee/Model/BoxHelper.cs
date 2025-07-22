@@ -38,7 +38,7 @@ namespace Violee
             };
         }
 
-        public const float BoxSize = 10;
+        public const float BoxSize = 15;
         static List<BoxConfigSingle> BoxConfigList => Configer.BoxConfig.BoxConfigList;
         static float pointOffset => Configer.SettingsConfig.BoxCostPosOffset;
         public static readonly BoxConfigSingle EmptyBoxConfig;
