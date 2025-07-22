@@ -19,7 +19,7 @@ namespace Violee.Player
         {
             Instance.transform.position = pos3D;
             Instance.rg.useGravity = true;
-            Instance.mr.enabled = true;s
+            Instance.mr.enabled = true;
         }
         
         public static void OnExitPlaying()
