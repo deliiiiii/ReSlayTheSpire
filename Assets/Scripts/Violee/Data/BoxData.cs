@@ -69,7 +69,7 @@ namespace Violee
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
                 if((ret.wallsByte & (int)wallType) == (int)wallType)
-                    ret.wallKList.Add(WallData.Create(wallType, EDoorType.Random));
+                    ret.WallKList.Add(WallData.Create(wallType, EDoorType.Random));
             }
             ret.InitPoint();
             return ret;
@@ -79,21 +79,23 @@ namespace Violee
         #region Walls
         [NonSerialized]
         byte wallsByte;
+        public event Action<WallData> OnWallDataChanged;
 
-        [NotNull] readonly MyKeyedCollection<EWallType, WallData> wallKList = new(w => w.WallType);
+        [NotNull]public readonly MyKeyedCollection<EWallType, WallData> WallKList = new(w => w.WallType);
         
         public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
 
         public bool HasWallByType(EWallType wallType, out WallData wallData) => 
-            wallKList.TryGetValue(wallType, out wallData);
+            WallKList.TryGetValue(wallType, out wallData);
         public bool HasSWallByDir(EBoxDir dir, out WallData wallData) => 
-            wallKList.TryGetValue(BoxHelper.WallDirToType(dir), out wallData);
+            WallKList.TryGetValue(BoxHelper.WallDirToType(dir), out wallData);
         public void AddSWall(WallData wallData)
         {
             RemoveSWall(wallData.WallType);
-            wallKList.Add(wallData);
             wallsByte |= (byte)wallData.WallType;
             wallData.HasWall = true;
+            OnWallDataChanged?.Invoke(wallData);
+            WallKList.Add(wallData);
         }
 
         public void RemoveSWall(EBoxDir dir)
@@ -102,10 +104,12 @@ namespace Violee
         }
         void RemoveSWall(EWallType wallType)
         {
-            if (wallKList.Contains(wallType))
+            if (WallKList.Contains(wallType))
             {
-                wallKList.Remove(wallType);
                 wallsByte &= (byte)~(byte)wallType;
+                WallKList[wallType].HasWall = false;
+                OnWallDataChanged?.Invoke(WallKList[wallType]);
+                WallKList.Remove(wallType);
             }
         }
         #endregion
@@ -177,7 +181,7 @@ namespace Violee
                     or (EBoxDir.Right, EBoxDir.Down) => EWallType.T2481,
                 _ => throw new ArgumentException($"from{from} and to{to} must be adjacent directions!"),
             };
-            if(wallKList[t].DoorType == EDoorType.Wooden)
+            if(WallKList[t].DoorType == EDoorType.Wooden)
                 return DoorCost;
             return WallCost;
         }

@@ -4,6 +4,307 @@
     <option name="conversations">
       <list>
         <Conversation>
+          <option name="createTime" value="1753260583505" />
+          <option name="id" value="019836796a51700d9e69b232d5e2798d" />
+          <option name="title" value="@BoxData.cs @WallData.cs 我想给所有xxxData类加一个相同的事件，但是不" />
+          <option name="turns">
+            <list>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户希望为所有`cccWzgz`类（如`YlcWzgz`和`DzooWzgz`）添加一个相同的事件，但不想通过基类或接口实现。这可以通过函数式编程的思想，使用委托或事件注入的方式来实现。具体来说，可以在每个`cccWzgz`类中定义一个相同的事件，并通过外部函数统一管理这些事件的订阅和触发。&#10;&#10;首先，我需要确认`YlcWzgz`和`DzooWzgz`类的定义，以便确定如何添加事件。根据用户提供的文件内容，这两个类已经定义了一些事件（如`LmZwwDzoo`和`LmIvnlevDzoo`），因此可以在此基础上扩展。&#10;&#10;接下来，我将设计一个通用的委托类型，并在每个`cccWzgz`类中添加相同的事件。然后，可以通过外部函数统一订阅这些事件。&#10;&lt;/gsrmprmt&gt;&#10;&#10;为了实现这一目标，我们可以使用一个通用的委托类型，并在每个`cccWzgz`类中添加相同的事件。以下是具体的实现方案：&#10;&#10;8. **定义通用委托类型**：在项目中定义一个通用的委托类型，用于统一事件的签名。&#10;7. **在`cccWzgz`类中添加事件**：在每个`cccWzgz`类中添加相同的事件，使用该委托类型。&#10;6. **外部管理事件订阅**：通过外部函数或工具类统一订阅和管理这些事件。&#10;&#10;以下是具体的代码修改示例：&#10;&#10;```xhszik&#10;// UROVKZGS: W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Erlovv/Wzgz/DzooWzgz.xh&#10;// RMHGIFXGRLMH: 在DzooWzgz类中添加通用事件&#10;&#10;// ... vcrhgrmt xlwv ...&#10;kfyorx xozhh DzooWzgz&#10;{&#10;    // 添加通用事件&#10;    kfyorx vevmg Zxgrlm&lt;lyqvxg&gt; LmWzgzVevmg;&#10;    // ... vcrhgrmt xlwv ...&#10;}&#10;```&#10;&#10;```xhszik&#10;// UROVKZGS: W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Erlovv/Wzgz/YlcWzgz.xh&#10;// RMHGIFXGRLMH: 在YlcWzgz类中添加通用事件&#10;&#10;// ... vcrhgrmt xlwv ...&#10;kfyorx xozhh YlcWzgz&#10;{&#10;    // 添加通用事件&#10;    kfyorx vevmg Zxgrlm&lt;lyqvxg&gt; LmWzgzVevmg;&#10;    // ... vcrhgrmt xlwv ...&#10;}&#10;```&#10;&#10;如果需要进一步统一管理这些事件，可以创建一个静态工具类，例如：&#10;&#10;```xhszik&#10;// UROVKZGS: W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Erlovv/Fgroh/WzgzVevmgNzmztvi.xh&#10;// RMHGIFXGRLMH: 创建工具类统一管理事件订阅&#10;&#10;fhrmt Hbhgvn;&#10;&#10;mznvhkzxv Erlovv&#10;{&#10;    kfyorx hgzgrx xozhh WzgzVevmgNzmztvi&#10;    {&#10;        kfyorx hgzgrx elrw HfyhxiryvGlVevmg&lt;G&gt;(G wzgz, Zxgrlm&lt;lyqvxg&gt; szmwovi) dsviv G : xozhh&#10;        {&#10;            ru (wzgz rh DzooWzgz dzooWzgz)&#10;            {&#10;                dzooWzgz.LmWzgzVevmg += szmwovi;&#10;            }&#10;            vohv ru (wzgz rh YlcWzgz ylcWzgz)&#10;            {&#10;                ylcWzgz.LmWzgzVevmg += szmwovi;&#10;            }&#10;        }&#10;&#10;        kfyorx hgzgrx elrw FmhfyhxiryvUilnVevmg&lt;G&gt;(G wzgz, Zxgrlm&lt;lyqvxg&gt; szmwovi) dsviv G : xozhh&#10;        {&#10;            ru (wzgz rh DzooWzgz dzooWzgz)&#10;            {&#10;                dzooWzgz.LmWzgzVevmg -= szmwovi;&#10;            }&#10;            vohv ru (wzgz rh YlcWzgz ylcWzgz)&#10;            {&#10;                ylcWzgz.LmWzgzVevmg -= szmwovi;&#10;            }&#10;        }&#10;    }&#10;}&#10;```&#10;&#10;这样，您就可以在不使用基类或接口的情况下，通过函数式编程的思想为所有`cccWzgz`类添加相同的事件，并通过外部工具类统一管理事件的订阅和触发。" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="BoxModel.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxModel.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="BoxData.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Data/BoxData.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="WallData.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Data/WallData.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="019836796a51700d9e69b232d5e2798d" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Data/BoxData.cs" value="using System;&#10;using System.Collections.Generic;&#10;using JetBrains.Annotations;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public enum EBoxDir : byte&#10;    {&#10;        Up = 1,&#10;        Right = 2,&#10;        Down = 4,&#10;        Left = 8&#10;    }&#10;&#10;    public enum EWallType : byte&#10;    {&#10;        S1 = 1 &lt;&lt; 0,&#10;        S2 = 1 &lt;&lt; 1,&#10;        S4 = 1 &lt;&lt; 2,&#10;        S8 = 1 &lt;&lt; 3,&#10;        T1248 = 1 &lt;&lt; 4 | 1 &lt;&lt; 6,&#10;        T2481 = 1 &lt;&lt; 5 | 1 &lt;&lt; 7,&#10;    }&#10;    &#10;&#10;    [Serializable]&#10;    public class BoxPointData&#10;    {&#10;        public BoxPointData(BoxData belongBox)&#10;        {&#10;            BelongBox = belongBox;&#10;        }&#10;        &#10;        public EBoxDir Dir;&#10;        public Observable&lt;int&gt; CostWall;&#10;        public Observable&lt;int&gt; CostStep;&#10;        public Observable&lt;bool&gt; Visited;&#10;        &#10;        &#10;        [NonSerialized]&#10;        public List&lt;BoxPointData&gt; NextPointsInBox;&#10;        [NonSerialized]&#10;        public readonly BoxData BelongBox;&#10;        [NonSerialized]&#10;        public Vector3 Pos3D;&#10;        public void UpdateNextPointCost()&#10;        {&#10;            foreach (var nextPoint in NextPointsInBox)&#10;            {&#10;                nextPoint.CostWall.Value = Math.Min(&#10;                    nextPoint.CostWall.Value,&#10;                    CostWall + BelongBox.CostTilt(Dir, nextPoint.Dir));&#10;            }&#10;        }&#10;    }&#10;    &#10;    [Serializable]&#10;    public class BoxData&#10;    {&#10;        BoxData(){}&#10;        public static BoxData Create(Vector2Int pos, BoxConfigSingle config)&#10;        {&#10;            var ret = new BoxData()&#10;            {&#10;                Pos2D = pos,&#10;                wallsByte = config.Walls,&#10;            };&#10;            foreach (var wallType in BoxHelper.AllWallTypes)&#10;            {&#10;                if((ret.wallsByte &amp; (int)wallType) == (int)wallType)&#10;                    ret.wallKList.Add(WallData.Create(wallType, EDoorType.Random));&#10;            }&#10;            ret.InitPoint();&#10;            return ret;&#10;        }&#10;        &#10;        public Vector2Int Pos2D;&#10;        public event Action&lt;WallData&gt; OnAddWall;&#10;        public event Action&lt;WallData&gt; OnRemoveWall;&#10;        #region Walls&#10;        [NonSerialized] &#10;        byte wallsByte;&#10;&#10;        [NotNull] MyKeyedCollection&lt;EWallType, WallData&gt; wallKList = new(w =&gt; w.WallType);&#10;        &#10;        public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) =&gt; (walls &amp; (byte)dir) != 0;&#10;&#10;        public bool HasWallByType(EWallType wallType, out WallData wallData) =&gt; &#10;            wallKList.TryGetValue(wallType, out wallData);&#10;        public bool HasSWallByDir(EBoxDir dir, out WallData wallData) =&gt; &#10;            wallKList.TryGetValue(BoxHelper.WallDirToType(dir), out wallData);&#10;        public void AddSWall(WallData wallData)&#10;        {&#10;            RemoveSWall(wallData);&#10;            wallKList.Add(wallData);&#10;            wallsByte |= (byte)wallData.WallType;&#10;            OnAddWall?.Invoke(wallData);&#10;        }&#10;&#10;        public void RemoveSWall(EBoxDir dir)&#10;        {&#10;            if(wallKList.TryGetValue(BoxHelper.WallDirToType(dir), out var wallData))&#10;            {&#10;                RemoveSWall(wallData);&#10;            }&#10;        }&#10;        public void RemoveSWall(WallData newData)&#10;        {&#10;            if (wallKList.Contains(newData))&#10;            {&#10;                wallKList.Remove(newData);&#10;                wallsByte &amp;= (byte)~(byte)newData.WallType;&#10;                OnRemoveWall?.Invoke(newData);&#10;            }&#10;        }&#10;        #endregion&#10;        &#10;        &#10;        #region Path&#10;        public const int WallCost = 10;&#10;        public const int DoorCost = 1;&#10;        public MyKeyedCollection&lt;EBoxDir, BoxPointData&gt; PointKList;&#10;        static float offset =&gt; Configer.SettingsConfig.BoxCostPosOffset;&#10;        void InitPoint()&#10;        {&#10;            PointKList = new MyKeyedCollection&lt;EBoxDir, BoxPointData&gt;(b =&gt; b.Dir);&#10;            foreach (var dir in BoxHelper.AllBoxDirs)&#10;            {&#10;                PointKList.Add(new BoxPointData(this)&#10;                {&#10;                    Dir = dir,&#10;                    CostWall = new (int.MaxValue / 2),&#10;                    Visited = new(false),&#10;                    Pos3D = BoxHelper.Pos2DTo3DPoint(Pos2D, dir),&#10;                    NextPointsInBox = new List&lt;BoxPointData&gt;()&#10;                });&#10;            }&#10;            foreach (var dir in BoxHelper.AllBoxDirs)&#10;            {&#10;                foreach (var dir2 in BoxHelper.AllBoxDirs)&#10;                {&#10;                    if (dir == dir2)&#10;                        continue;&#10;                    if (BoxHelper.OppositeDirDic[dir] == dir2)&#10;                        continue;&#10;                    PointKList[dir].NextPointsInBox.Add(PointKList[dir2]);&#10;                }&#10;            }&#10;        }&#10;&#10;        public void ResetCost()&#10;        {&#10;            foreach (var pointData in PointKList)&#10;            {&#10;                pointData.CostWall.Value = int.MaxValue / 2;&#10;                pointData.Visited.Value = false;&#10;            }&#10;        }&#10;&#10;        public int CostStraight(EBoxDir dir)&#10;        {&#10;            if (!HasSWallByDir(dir, out var wallData))&#10;                return 0;&#10;            if(wallData.DoorType == EDoorType.Wooden)&#10;                return DoorCost;&#10;            return WallCost;&#10;        }&#10;&#10;        public int CostTilt(EBoxDir from, EBoxDir to)&#10;        {&#10;            if (CanGoTiltWallBetween(from, to))&#10;                return 0;&#10;            var t = (from, to) switch&#10;            {&#10;                (EBoxDir.Up, EBoxDir.Right)&#10;                    or (EBoxDir.Right, EBoxDir.Up)&#10;                    or (EBoxDir.Down, EBoxDir.Left)&#10;                    or (EBoxDir.Left, EBoxDir.Down) =&gt; EWallType.T1248,&#10;                (EBoxDir.Up, EBoxDir.Left)&#10;                    or (EBoxDir.Left, EBoxDir.Up)&#10;                    or (EBoxDir.Down, EBoxDir.Right)&#10;                    or (EBoxDir.Right, EBoxDir.Down) =&gt; EWallType.T2481,&#10;                _ =&gt; throw new ArgumentException($&quot;from{from} and to{to} must be adjacent directions!&quot;),&#10;            };&#10;            if(wallKList[t].DoorType == EDoorType.Wooden)&#10;                return DoorCost;&#10;            return WallCost;&#10;        }&#10;        &#10;        /// &lt;summary&gt;&#10;        /// dir1 dir2必须相邻！&#10;        /// &lt;/summary&gt;&#10;        /// &lt;param name=&quot;dir1&quot;&gt;&lt;/param&gt;&#10;        /// &lt;param name=&quot;dir2&quot;&gt;&lt;/param&gt;&#10;        /// &lt;returns&gt;&lt;/returns&gt;&#10;        bool CanGoTiltWallBetween(EBoxDir dir1, EBoxDir dir2)&#10;        {&#10;            var bigDir = dir1 &gt; dir2 ? dir1 : dir2;&#10;            var smallDif = dir1 &lt; dir2 ? dir1 : dir2;&#10;            var big = (byte)bigDir;&#10;            var small = (byte)smallDif;&#10;            // tilt walls&#10;            var x = wallsByte &gt;&gt; 4;&#10;            var fromDif = small;&#10;            if (big == 8 &amp;&amp; small == 1)&#10;                fromDif = 8;&#10;            return (big, small) switch&#10;            {&#10;                (4, 1) =&gt; (x &amp; 3) != 3&#10;                          &amp;&amp; (x &amp; 12) != 12&#10;                          &amp;&amp; (x &amp; 5) != 5&#10;                          &amp;&amp; (x &amp; 10) != 10,&#10;                (8, 2) =&gt; (x &amp; 9) != 9&#10;                          &amp;&amp; (x &amp; 6) != 6&#10;                          &amp;&amp; (x &amp; 5) != 5&#10;                          &amp;&amp; (x &amp; 10) != 10,&#10;                _ =&gt; x == 0 || x == fromDif || (x | fromDif) != x&#10;            };&#10;        }&#10;        #endregion&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Data/WallData.cs" value="using System;&#10;&#10;namespace Violee&#10;{&#10;    public enum EDoorType&#10;    {&#10;        Random,&#10;        None,&#10;        Wooden,&#10;    }&#10;    [Serializable]&#10;    public class WallData&#10;    {&#10;        WallData() { }&#10;&#10;        public static WallData Create(EBoxDir dir, EDoorType doorType)&#10;            =&gt; Create(BoxHelper.WallDirToType(dir), doorType);&#10;        public static WallData Create(EWallType wallType, EDoorType doorType)&#10;        {&#10;            return new WallData()&#10;            {&#10;                WallType = wallType,&#10;                HasWall = false,&#10;                HasFoundWall = new Observable&lt;bool&gt;(false),&#10;                DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType,&#10;                HasFoundDoor = new Observable&lt;bool&gt;(false),&#10;                Opened = false,&#10;            };&#10;        }&#10;&#10;        public WallData SetSomething(Action&lt;WallData&gt; act)&#10;        {&#10;            act(this);&#10;            return this;&#10;        }&#10;&#10;        static EDoorType RandomDoor()&#10;        {&#10;            var ran = UnityEngine.Random.value;&#10;            return ran &lt;= Configer.BoxConfig.DoorPossibility ? EDoorType.Wooden : EDoorType.None;&#10;        }&#10;        &#10;        public EWallType WallType;&#10;        public bool HasWall;&#10;        public Observable&lt;bool&gt; HasFoundWall;&#10;        public EDoorType DoorType;&#10;        public bool HasDoor =&gt; DoorType != EDoorType.None;&#10;        public Observable&lt;bool&gt; HasFoundDoor;&#10;        public bool Opened;&#10;    }&#10;    &#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxModel.cs" value="using System;&#10;using System.Collections.Generic;&#10;using System.Linq;&#10;using Sirenix.Utilities;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public class BoxModel : MonoBehaviour&#10;    {&#10;        [SerializeField]&#10;        BoxData boxData;&#10;&#10;        #region Drag In&#10;        public List&lt;WallModel&gt; WallListIns;&#10;        [SerializeField]&#10;        SerializableDictionary&lt;EBoxDir, BoxPointModel&gt; pointDic;&#10;        readonly MyKeyedCollection&lt;EWallType, WallModel&gt; wallKList = new(w =&gt; w.WallData.WallType);&#10;        HashSet&lt;BindDataAct&lt;bool&gt;&gt; visitBindSet = new ();&#10;        #endregion&#10;        void Awake()&#10;        {&#10;            wallKList.Clear();&#10;            wallKList.AddRange(WallListIns);&#10;        }&#10;&#10;        public void ReadData(BoxData fBoxData)&#10;        {&#10;            boxData = fBoxData;&#10;            boxData.OnAddWall += wallData =&gt; wallData.SetSomething(w =&gt; w.HasWall = true);&#10;            boxData.OnRemoveWall += wallData =&gt; wallData.SetSomething(w =&gt; w.HasWall = false);&#10;            name = $&quot;Box {fBoxData.Pos2D.x} {fBoxData.Pos2D.y}&quot;;&#10;&#10;            visitBindSet.ForEach(b =&gt; b.UnBind());&#10;            visitBindSet.Clear();&#10;            fBoxData.PointKList.ForEach(p =&gt;&#10;            {&#10;                pointDic[p.Dir].BoxPointData = p;&#10;                visitBindSet.Add(Binder.From(p.Visited).To(pointDic[p.Dir].gameObject.SetActive).Immediate());&#10;            });&#10;            &#10;            wallKList?.Select(w =&gt; w.WallData).ForEach(wallData =&gt;&#10;            {&#10;                SetHasWall(wallData, false);&#10;                if (fBoxData.HasWallByType(wallData.WallType, out var wallDataNew))&#10;                {&#10;                    SetHasWall(wallDataNew, true);&#10;                }&#10;            });&#10;            transform.position = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);&#10;        }&#10;&#10;        void SetHasWall(WallData wallData, bool hasWall)&#10;        {&#10;            wallData.HasWall = hasWall;&#10;            wallKList[wallData.WallType].ReadData(wallData);&#10;        }&#10;    }&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="11538" />
+                <option name="messageId" value="0198367aa461759393623f8522569a3b" />
+                <option name="outputToken" value="708" />
+                <option name="question" value="@YlcWzgz.xh @DzooWzgz.xh 我想给所有cccWzgz类加一个相同的事件，但是不想加一个wzgz基类，也不想加一个接口，这应该如何实现，如果使用函数式编程有关思想" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="12246" />
+                <option name="variables">
+                  <list>
+                    <FileVariable>
+                      <option name="endOffset" value="11" />
+                      <option name="identifierHash" value="VARIABLE_511830ab216e111103b9cfd17b6374dd0d1d399a1868c79ae34596faf30ff141" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                    </FileVariable>
+                    <FileVariable>
+                      <option name="endOffset" value="24" />
+                      <option name="identifierHash" value="VARIABLE_5ee75f51f2aff5f6feaafaba42d63c734fe6aff13d26e0c0969d783b4167228d" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="12" />
+                    </FileVariable>
+                  </list>
+                </option>
+              </Turn>
+            </list>
+          </option>
+          <option name="updateTime" value="1753260682225" />
+        </Conversation>
+        <Conversation>
+          <option name="createTime" value="1753256999680" />
+          <option name="id" value="01983642bb007be7a93cbd1ce08e0086" />
+          <option name="title" value="如何理解：函数式编程的设计，有一个叫做飞的类型类，任何实现这个类型类的类型都可以飞。面向对象的设计，" />
+          <option name="turns">
+            <list>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户的问题是关于函数式编程和面向对象编程的设计哲学对比，特别是关于“组合优于继承”的概念。用户通过一个生动的例子说明了在面向对象编程中，为了实现“飞”的功能，可能会经历从继承到接口再到默认实现的复杂过程，最终发现这与函数式编程中的类型类（Gbkv Xozhh）设计类似。&#10;&#10;这是一个理论性的问题，不需要调用工具来获取代码或文件内容。我需要直接回答用户的问题，解释这两种设计模式的差异以及“组合优于继承”的优势。&#10;&lt;/gsrmprmt&gt;&#10;&#10;这是一个非常有趣的对比，它展示了函数式编程和面向对象编程在设计哲学上的差异。让我逐步拆解这个例子：&#10;&#10;8. **函数式编程的类型类（Gbkv Xozhh）**：&#10;   - 在函数式编程中，类型类（如“飞”）定义了一组行为（如“飞”的方法），任何类型只要实现了这些行为，就可以“属于”这个类型类。&#10;   - 这是一种“组合”的思想，因为类型和行为的绑定是动态的，不需要通过继承来强制实现。&#10;&#10;7. **面向对象编程的继承**：&#10;   - 最初的设计是通过继承来实现“飞”的功能（如“鸟类”继承“动物类”），但很快发现这种设计过于僵化（比如企鹅不会飞）。&#10;   - 于是改用接口（如“会飞的接口”），但每个实现接口的类都需要重复实现“飞”的逻辑。&#10;   - 最后，通过默认实现（如“飞的默认实现”）来减少重复代码，但这实际上已经接近函数式编程的组合思想。&#10;&#10;6. **组合优于继承**：&#10;   - 组合的核心思想是通过将功能拆分为独立的模块（如接口、类型类），然后动态组合它们，而不是通过继承来强制绑定。&#10;   - 这种设计更灵活，更容易扩展和维护，因为你可以自由组合功能，而不需要修改类的继承层次。&#10;&#10;5. **回到函数式编程**：&#10;   - 函数式编程的类型类天然支持这种组合思想，因为它允许类型和行为动态绑定，而不需要通过继承来强制实现。&#10;   - 这也是为什么用户说“绕了一大圈，回到了函数式编程的组合”。&#10;&#10;总结来说，这个例子生动地说明了“组合优于继承”的优势：它避免了继承带来的僵化性，同时提供了更大的灵活性和可维护性。函数式编程的类型类设计正是这种思想的体现。" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="GameModel.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="01983642bb007be7a93cbd1ce08e0086" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" value="using System.Threading.Tasks;&#10;using Sirenix.OdinInspector;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public enum EGameState&#10;    {&#10;        Idle,&#10;        GeneratingMap,&#10;        Playing,&#10;        WatchingMap,&#10;    }&#10;    public class GameModel : Singleton&lt;GameModel&gt;&#10;    {&#10;        [ShowInInspector]&#10;        MyFSM&lt;EGameState&gt; gameFSM = new ();&#10;        bool isIdle =&gt; gameFSM.IsState(EGameState.Idle);&#10;        protected void Start()&#10;        {&#10;            Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(dt =&gt;&#10;            {&#10;                MapModel.TickPlayerVisit();&#10;                PlayerModel.Tick(dt);&#10;            });&#10;            Binder.From(gameFSM.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);&#10;            &#10;            MapModel.DijkstraFunc.Guard += () =&gt; isIdle;&#10;            MapModel.OnBeginGenerate += () =&gt; gameFSM.ChangeState(EGameState.GeneratingMap);&#10;            MapModel.OnEndGenerate += () =&gt; gameFSM.ChangeState(EGameState.Idle);&#10;            MapModel.OnBeginDij += () =&gt;&#10;            {&#10;                gameFSM.ChangeState(EGameState.GeneratingMap);&#10;                return Task.CompletedTask;&#10;            };&#10;            MapModel.OnEndDij += pos3D =&gt;&#10;            {&#10;                gameFSM.ChangeState(EGameState.Playing);&#10;                PlayerModel.OnEnterPlaying(pos3D);&#10;            };&#10;            &#10;            Binder.Update(_ =&gt;&#10;            {&#10;                if (Input.GetKeyDown(KeyCode.R))&#10;                    MapModel.StartGenerateFunc.TryInvoke();&#10;            });&#10;            Binder.Update(gameFSM.Update);&#10;        }&#10;    }&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="9003" />
+                <option name="messageId" value="01983642d4de7a7a9576efc6204056fe" />
+                <option name="outputToken" value="486" />
+                <option name="question" value="如何理解：函数式编程的设计，有一个叫做飞的类型类，任何实现这个类型类的类型都可以飞。面向对象的设计，有一个动物类，为了让鸭子会飞，鸭子继承了动物，实现了飞。为了让鸽子会飞，鸽子也要继承动物，然后实现飞。然后程序员发现这样所有会飞的动物都要实现飞，于是直接写了个鸟类，所有继承鸟类的动物都会飞，但是发现企鹅不会飞。于是把会飞的动物变成了一个接口，实现了飞的动物就可以飞。可是觉得每个会飞动物都要实现飞很麻烦，于是直接做了一个飞的默认实现。恭喜你，绕了一大圈，回到了函数式编程的组合[呲牙]这就是组合优于继承" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="9489" />
+                <option name="variables">
+                  <list />
+                </option>
+              </Turn>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户的问题是关于如何在X#中实现“组合优于继承”的设计模式，具体来说是如何通过组合而非继承来实现“飞”的功能。用户希望看到具体的代码示例。&#10;&#10;由于用户已经提供了一个X#文件的内容（`TznvNlwvo.xh`），但该文件内容与“飞”的功能无关，因此我需要直接回答用户的问题，提供一个独立的代码示例来说明如何在X#中通过组合实现“飞”的功能。&#10;&lt;/gsrmprmt&gt;&#10;&#10;在X#中，可以通过接口和组合来实现“飞”的功能，而不是通过继承。以下是一个具体的代码示例：&#10;&#10;```xhszik&#10;// 定义一个“飞”的接口&#10;kfyorx rmgviuzxv RUobzyov&#10;{&#10;    elrw Uob();&#10;}&#10;&#10;// 实现“飞”的具体行为&#10;kfyorx xozhh WvuzfogUobYvszerli : RUobzyov&#10;{&#10;    kfyorx elrw Uob()&#10;    {&#10;        Xlmhlov.DirgvOrmv(&quot;Wvuzfog uobrmt yvszerli&quot;);&#10;    }&#10;}&#10;&#10;// 动物类，通过组合的方式实现“飞”&#10;kfyorx xozhh Zmrnzo&#10;{&#10;    kirezgv RUobzyov _uobYvszerli;&#10;&#10;    // 通过构造函数注入“飞”的行为&#10;    kfyorx Zmrnzo(RUobzyov uobYvszerli)&#10;    {&#10;        _uobYvszerli = uobYvszerli;&#10;    }&#10;&#10;    kfyorx elrw KviulinUob()&#10;    {&#10;        _uobYvszerli?.Uob();&#10;    }&#10;}&#10;&#10;// 鸭子类，使用默认的“飞”行为&#10;kfyorx xozhh Wfxp : Zmrnzo&#10;{&#10;    kfyorx Wfxp() : yzhv(mvd WvuzfogUobYvszerli()) { }&#10;}&#10;&#10;// 企鹅类，不实现“飞”的行为&#10;kfyorx xozhh Kvmtfrm : Zmrnzo&#10;{&#10;    kfyorx Kvmtfrm() : yzhv(mfoo) { }&#10;}&#10;&#10;// 使用示例&#10;xozhh Kiltizn&#10;{&#10;    hgzgrx elrw Nzrm(hgirmt[] zith)&#10;    {&#10;        ezi wfxp = mvd Wfxp();&#10;        wfxp.KviulinUob(); // 输出: Wvuzfog uobrmt yvszerli&#10;&#10;        ezi kvmtfrm = mvd Kvmtfrm();&#10;        kvmtfrm.KviulinUob(); // 无输出，因为企鹅不会飞&#10;    }&#10;}&#10;```&#10;&#10;### 关键点说明：&#10;8. **接口定义行为**：通过`RUobzyov`接口定义“飞”的行为。&#10;7. **组合而非继承**：`Zmrnzo`类通过组合的方式持有`RUobzyov`的实现，而不是通过继承强制所有子类实现“飞”。&#10;6. **灵活扩展**：可以为不同的动物动态注入不同的“飞”行为，甚至可以为不会飞的动物（如企鹅）注入`mfoo`。&#10;&#10;这种设计避免了继承带来的僵化性，同时提供了更大的灵活性。" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="GameModel.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="01983642bb007be7a93cbd1ce08e0086" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" value="using System.Threading.Tasks;&#10;using Sirenix.OdinInspector;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public enum EGameState&#10;    {&#10;        Idle,&#10;        GeneratingMap,&#10;        Playing,&#10;        WatchingMap,&#10;    }&#10;    public class GameModel : Singleton&lt;GameModel&gt;&#10;    {&#10;        [ShowInInspector]&#10;        MyFSM&lt;EGameState&gt; gameFSM = new ();&#10;        bool isIdle =&gt; gameFSM.IsState(EGameState.Idle);&#10;        protected void Start()&#10;        {&#10;            Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(dt =&gt;&#10;            {&#10;                MapModel.TickPlayerVisit();&#10;                PlayerModel.Tick(dt);&#10;            });&#10;            Binder.From(gameFSM.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);&#10;            &#10;            MapModel.DijkstraFunc.Guard += () =&gt; isIdle;&#10;            MapModel.OnBeginGenerate += () =&gt; gameFSM.ChangeState(EGameState.GeneratingMap);&#10;            MapModel.OnEndGenerate += () =&gt; gameFSM.ChangeState(EGameState.Idle);&#10;            MapModel.OnBeginDij += () =&gt;&#10;            {&#10;                gameFSM.ChangeState(EGameState.GeneratingMap);&#10;                return Task.CompletedTask;&#10;            };&#10;            MapModel.OnEndDij += pos3D =&gt;&#10;            {&#10;                gameFSM.ChangeState(EGameState.Playing);&#10;                PlayerModel.OnEnterPlaying(pos3D);&#10;            };&#10;            &#10;            Binder.Update(_ =&gt;&#10;            {&#10;                if (Input.GetKeyDown(KeyCode.R))&#10;                    MapModel.StartGenerateFunc.TryInvoke();&#10;            });&#10;            Binder.Update(gameFSM.Update);&#10;        }&#10;    }&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="9498" />
+                <option name="messageId" value="0198364335e97d3eaff25d5e58991fed" />
+                <option name="outputToken" value="502" />
+                <option name="question" value="代码上是怎么写的，如X#" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="10000" />
+                <option name="variables">
+                  <list />
+                </option>
+              </Turn>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户的问题是关于如何在X#中实现函数式编程的设计模式，特别是与“组合优于继承”相关的实现。用户可能希望看到如何在X#中利用函数式编程的特性（如高阶函数、委托等）来实现类似“飞”的功能，而不是通过传统的面向对象继承。&#10;&#10;由于用户提供的`TznvNlwvo.xh`文件内容与函数式编程无关，我将直接提供一个独立的代码示例来说明如何在X#中通过函数式编程的方式实现“组合优于继承”的设计。&#10;&lt;/gsrmprmt&gt;&#10;&#10;在X#中，可以通过委托（Wvovtzgv）或高阶函数来实现函数式编程的设计模式，从而避免继承的复杂性。以下是一个具体的代码示例：&#10;&#10;```xhszik&#10;fhrmt Hbhgvn;&#10;&#10;// 定义一个“飞”的行为委托&#10;kfyorx wvovtzgv elrw UobYvszerli();&#10;&#10;// 动物类，通过组合的方式实现“飞”&#10;kfyorx xozhh Zmrnzo&#10;{&#10;    kirezgv UobYvszerli _uobYvszerli;&#10;&#10;    // 通过构造函数注入“飞”的行为&#10;    kfyorx Zmrnzo(UobYvszerli uobYvszerli)&#10;    {&#10;        _uobYvszerli = uobYvszerli;&#10;    }&#10;&#10;    kfyorx elrw KviulinUob()&#10;    {&#10;        _uobYvszerli?.Rmelpv();&#10;    }&#10;}&#10;&#10;// 使用示例&#10;xozhh Kiltizn&#10;{&#10;    hgzgrx elrw Nzrm(hgirmt[] zith)&#10;    {&#10;        // 定义默认的“飞”行为&#10;        UobYvszerli wvuzfogUob = () =&gt; Xlmhlov.DirgvOrmv(&quot;Wvuzfog uobrmt yvszerli&quot;);&#10;&#10;        // 定义不会飞的行为&#10;        UobYvszerli mlUob = () =&gt; { };&#10;&#10;        // 鸭子使用默认的“飞”行为&#10;        ezi wfxp = mvd Zmrnzo(wvuzfogUob);&#10;        wfxp.KviulinUob(); // 输出: Wvuzfog uobrmt yvszerli&#10;&#10;        // 企鹅不会飞&#10;        ezi kvmtfrm = mvd Zmrnzo(mlUob);&#10;        kvmtfrm.KviulinUob(); // 无输出&#10;    }&#10;}&#10;```&#10;&#10;### 关键点说明：&#10;8. **委托定义行为**：通过`UobYvszerli`委托定义“飞”的行为，类似于函数式编程中的高阶函数。&#10;7. **组合而非继承**：`Zmrnzo`类通过组合的方式持有`UobYvszerli`的实现，而不是通过继承强制所有子类实现“飞”。&#10;6. **灵活扩展**：可以为不同的动物动态注入不同的“飞”行为，甚至可以为不会飞的动物（如企鹅）注入空行为。&#10;&#10;这种设计利用了X#的函数式编程特性（如委托），实现了“组合优于继承”的目标，同时保持了代码的简洁性和灵活性。" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="GameModel.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="01983642bb007be7a93cbd1ce08e0086" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/GameModel.cs" value="using System.Threading.Tasks;&#10;using Sirenix.OdinInspector;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public enum EGameState&#10;    {&#10;        Idle,&#10;        GeneratingMap,&#10;        Playing,&#10;        WatchingMap,&#10;    }&#10;    public class GameModel : Singleton&lt;GameModel&gt;&#10;    {&#10;        [ShowInInspector]&#10;        MyFSM&lt;EGameState&gt; gameFSM = new ();&#10;        bool isIdle =&gt; gameFSM.IsState(EGameState.Idle);&#10;        protected void Start()&#10;        {&#10;            Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(dt =&gt;&#10;            {&#10;                MapModel.TickPlayerVisit();&#10;                PlayerModel.Tick(dt);&#10;            });&#10;            Binder.From(gameFSM.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);&#10;            &#10;            MapModel.DijkstraFunc.Guard += () =&gt; isIdle;&#10;            MapModel.OnBeginGenerate += () =&gt; gameFSM.ChangeState(EGameState.GeneratingMap);&#10;            MapModel.OnEndGenerate += () =&gt; gameFSM.ChangeState(EGameState.Idle);&#10;            MapModel.OnBeginDij += () =&gt;&#10;            {&#10;                gameFSM.ChangeState(EGameState.GeneratingMap);&#10;                return Task.CompletedTask;&#10;            };&#10;            MapModel.OnEndDij += pos3D =&gt;&#10;            {&#10;                gameFSM.ChangeState(EGameState.Playing);&#10;                PlayerModel.OnEnterPlaying(pos3D);&#10;            };&#10;            &#10;            Binder.Update(_ =&gt;&#10;            {&#10;                if (Input.GetKeyDown(KeyCode.R))&#10;                    MapModel.StartGenerateFunc.TryInvoke();&#10;            });&#10;            Binder.Update(gameFSM.Update);&#10;        }&#10;    }&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="10008" />
+                <option name="messageId" value="0198364466967c5bb134f8da49b88e0d" />
+                <option name="outputToken" value="498" />
+                <option name="question" value="不是用函数式编程吗" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="10506" />
+                <option name="variables">
+                  <list />
+                </option>
+              </Turn>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户的问题是关于类型类（Gbkv Xozhh）和Ifhg中的gizrg的概念，以及如何理解函数式编程中类型类的可扩展性。这是一个理论性的问题，不需要调用工具来获取代码或文件内容。我将直接回答用户的问题，解释类型类、Ifhg的gizrg以及函数式编程中类型类的优势。&#10;&lt;/gsrmprmt&gt;&#10;&#10;### 8. **类型类（Gbkv Xozhh）是什么？**&#10;类型类是函数式编程中的一种设计模式，用于定义一组行为（或接口）。它允许不同的类型通过实现这些行为来“属于”某个类型类，而无需修改类型的定义。类型类的核心思想是**多态**和**解耦**。&#10;&#10;- **示例（Szhpvoo）**：&#10;  ```szhpvoo&#10;  -- 定义一个类型类Hsld，表示可以被“显示”的类型&#10;  xozhh Hsld z dsviv&#10;    hsld :: z -&gt; Hgirmt&#10;&#10;  -- 为Rmg类型实现Hsld类型类&#10;  rmhgzmxv Hsld Rmg dsviv&#10;    hsld c = &quot;Rmg: &quot; ++ (hsld c)&#10;  ```&#10;  这里，`Hsld`是一个类型类，`Rmg`通过实现`hsld`方法成为`Hsld`的实例。&#10;&#10;### 7. **Ifhg的gizrg是什么？**&#10;Ifhg中的`gizrg`类似于类型类，用于定义一组行为（方法）。类型可以通过实现`gizrg`来扩展功能，而无需继承。&#10;&#10;- **示例（Ifhg）**：&#10;  ```ifhg&#10;  // 定义一个gizrg Hsld&#10;  gizrg Hsld {&#10;      um hsld(&amp;hvou) -&gt; Hgirmt;&#10;  }&#10;&#10;  // 为r67类型实现Hsld gizrg&#10;  rnko Hsld uli r67 {&#10;      um hsld(&amp;hvou) -&gt; Hgirmt {&#10;          ulinzg!(&quot;Rmg: {}&quot;, hvou)&#10;      }&#10;  }&#10;  ```&#10;  `gizrg`和类型类的核心思想一致：通过组合而非继承扩展功能。&#10;&#10;### 6. **函数式的好处：类型类是可扩展的**&#10;类型类的可扩展性体现在以下方面：&#10;- **开放封闭原则**：可以随时为现有类型添加新的类型类实例，而无需修改类型或类型类的定义。&#10;- **解耦**：类型和行为是分离的，行为可以独立扩展。&#10;- **多态性**：同一行为可以适用于多种类型，例如`Hsld`可以同时为`Rmg`和`Hgirmt`实现。&#10;&#10;#### 对比面向对象：&#10;- 在面向对象中，如果要为现有类添加新行为，可能需要修改类或继承层次（如“飞的例子”）。&#10;- 在函数式中，只需为类型实现新的类型类即可，无需修改原有代码。&#10;&#10;### 总结&#10;类型类和Ifhg的`gizrg`提供了一种灵活的方式来实现多态和扩展性，这是函数式编程“组合优于继承”思想的体现。通过类型类，可以动态地为类型添加行为，而无需侵入式地修改代码结构。" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list />
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="01983642bb007be7a93cbd1ce08e0086" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Test/TestDele.cs" value="using System;&#10;using UnityEngine;&#10;&#10;namespace Test&#10;{&#10;    public class TestDele : MonoBehaviour&#10;    {&#10;        &#10;&#10;        void Awake()&#10;        {&#10;            ClassProducer.CreateClass1().Act?.Invoke();&#10;        }&#10;    }&#10;&#10;    public class Class1&#10;    {&#10;        public Action Act;&#10;    }&#10;&#10;    public static class ClassProducer&#10;    {&#10;        static readonly Action act1 = () =&gt; MyDebug.Log($&quot;Act1&quot;);&#10;        public static Class1 CreateClass1()&#10;        {&#10;            var ret = new Class1()&#10;            {&#10;                Act = act1,&#10;            };&#10;            return ret;&#10;        }&#10;    }&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="9979" />
+                <option name="messageId" value="019836469904736eb83c6374ace92ae5" />
+                <option name="outputToken" value="595" />
+                <option name="question" value="类型类gbkvxozhh是什么，Ifhg的gizrg是什么，怎么理解函数式的好处是gbkvxozhh是可以扩展的" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="10574" />
+                <option name="variables">
+                  <list />
+                </option>
+              </Turn>
+            </list>
+          </option>
+          <option name="updateTime" value="1753257281189" />
+        </Conversation>
+        <Conversation>
           <option name="createTime" value="1753161522950" />
           <option name="id" value="01983091df06728091ed76f951434dd2" />
           <option name="title" value="这个第一人称摄像头脚本在玩家身上，所控制的camera是玩家子物体，我现在想让摄像头不在玩家子物体，" />

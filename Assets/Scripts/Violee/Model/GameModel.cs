@@ -16,6 +16,7 @@ namespace Violee
         [ShowInInspector]
         MyFSM<EGameState> gameFSM = new ();
         bool isIdle => gameFSM.IsState(EGameState.Idle);
+        bool isPlaying => gameFSM.IsState(EGameState.Playing);
         protected void Start()
         {
             Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(dt =>
@@ -25,6 +26,8 @@ namespace Violee
             });
             Binder.From(gameFSM.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);
             
+            
+            MapModel.StartGenerateFunc.Guard += () => isIdle || isPlaying;
             MapModel.DijkstraFunc.Guard += () => isIdle;
             MapModel.OnBeginGenerate += () => gameFSM.ChangeState(EGameState.GeneratingMap);
             MapModel.OnEndGenerate += () => gameFSM.ChangeState(EGameState.Idle);
@@ -44,6 +47,8 @@ namespace Violee
                 if (Input.GetKeyDown(KeyCode.R))
                     MapModel.StartGenerateFunc.TryInvoke();
             });
+            
+            gameFSM.ChangeState(EGameState.Idle);
             Binder.Update(gameFSM.Update);
         }
     }

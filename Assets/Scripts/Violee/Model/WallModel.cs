@@ -23,7 +23,7 @@ namespace Violee
             gameObject.SetActive(true);
             Binder.From(WallData.HasFoundWall).To(v => WallSprite.enabled = v).Immediate();
             Binder.From(WallData.HasFoundDoor).To(_ =>SetDoorSprite()).Immediate();
-            switch (wallData.DoorType)
+            switch (WallData.DoorType)
             {
                 case EDoorType.None:
                     Door.gameObject.SetActive(false);

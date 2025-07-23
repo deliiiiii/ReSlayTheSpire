@@ -27,30 +27,23 @@ namespace Violee
         public void ReadData(BoxData fBoxData)
         {
             boxData = fBoxData;
-            name = $"Box {fBoxData.Pos2D.x} {fBoxData.Pos2D.y}";
+            name = $"Box {boxData.Pos2D.x} {boxData.Pos2D.y}";
 
             visitBindSet.ForEach(b => b.UnBind());
             visitBindSet.Clear();
-            fBoxData.PointKList.ForEach(p =>
+            boxData.PointKList.ForEach(p =>
             {
                 pointDic[p.Dir].BoxPointData = p;
                 visitBindSet.Add(Binder.From(p.Visited).To(pointDic[p.Dir].gameObject.SetActive).Immediate());
             });
+            boxData.OnWallDataChanged += OnWallDataChanged;
+            boxData.WallKList.ForEach(OnWallDataChanged);
             
-            wallKList?.Select(w => w.WallData).ForEach(wallData =>
-            {
-                SetHasWall(wallData, false);
-                if (fBoxData.HasWallByType(wallData.WallType, out var wallDataNew))
-                {
-                    SetHasWall(wallDataNew, true);
-                }
-            });
-            transform.position = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
+            transform.position = BoxHelper.Pos2DTo3DBox(boxData.Pos2D);
         }
 
-        void SetHasWall(WallData wallData, bool hasWall)
+        void OnWallDataChanged(WallData wallData)
         {
-            wallData.HasWall = hasWall;
             wallKList[wallData.WallType].ReadData(wallData);
         }
     }

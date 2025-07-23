@@ -20,18 +20,12 @@ namespace Violee
             return new WallData()
             {
                 WallType = wallType,
-                HasWall = false,
+                HasWall = true,
                 HasFoundWall = new Observable<bool>(false),
                 DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType,
                 HasFoundDoor = new Observable<bool>(false),
                 Opened = false,
             };
-        }
-
-        public WallData SetSomething(Action<WallData> act)
-        {
-            act(this);
-            return this;
         }
 
         static EDoorType RandomDoor()
