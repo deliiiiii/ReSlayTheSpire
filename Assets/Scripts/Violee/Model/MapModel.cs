@@ -24,9 +24,8 @@ namespace Violee
         {
             return boxKList?.SelectMany(x => x.PointKList).ToList() ?? new List<BoxPointData>();
         }
-        public static void TickPlayerVisit()
+        public static void TickPlayerVisit(Vector3 playerPos)
         {
-            var playerPos = PlayerModel.Instance.transform.position;
             var x = playerPos.x;
             var z = playerPos.z;
             var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);
@@ -36,7 +35,8 @@ namespace Violee
                 MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
                 return;
             }
-            BoxHelper.AllBoxDirs.ForEach(dir =>
+
+            foreach (var dir in BoxHelper.AllBoxDirs)
             {
                 var edgeCenterPos = BoxHelper.Pos2DTo3DEdge(boxPos2D, dir);
                 var edgeX = edgeCenterPos.x;
@@ -49,7 +49,7 @@ namespace Violee
                     pointData.Visited.Value = true;
                     MyDebug.Log($"Enter Point!!{boxPos2D}:{dir}");
                 }
-            });
+            };
         }
         public static GuardedFunc<Task> StartGenerateFunc;
         public static GuardedFunc<Task> DijkstraFunc;

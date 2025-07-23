@@ -21,7 +21,7 @@ namespace Violee
         {
             Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(dt =>
             {
-                MapModel.TickPlayerVisit();
+                MapModel.TickPlayerVisit(PlayerModel.Instance.transform.position);
                 PlayerModel.Tick(dt);
             });
             Binder.From(gameFSM.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);
