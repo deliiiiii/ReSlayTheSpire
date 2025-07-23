@@ -15,6 +15,8 @@ namespace Violee
         public void ReadData(WallData wallData)
         {
             this.WallData = wallData;
+            Door.gameObject.SetActive(false);
+            NotDoor.gameObject.SetActive(false);
             if (!WallData.HasWall)
             {
                 gameObject.SetActive(false);
@@ -26,12 +28,10 @@ namespace Violee
             switch (WallData.DoorType)
             {
                 case EDoorType.None:
-                    Door.gameObject.SetActive(false);
                     NotDoor.gameObject.SetActive(true);
                     break;
                 case EDoorType.Wooden:
                     Door.gameObject.SetActive(true);
-                    NotDoor.gameObject.SetActive(false);
                     break;
             }
 
@@ -47,22 +47,16 @@ namespace Violee
         }
         void SetDoorSprite()
         {
+            LockedSprite.SetActive(false);
+            UnlockedSprite.SetActive(false);
             if (!WallData.HasFoundDoor)
             {
-                LockedSprite.SetActive(false);
-                UnlockedSprite.SetActive(false);
                 return;
             }
             if (WallData.Opened)
-            {
-                LockedSprite.SetActive(false);
                 UnlockedSprite.SetActive(true);
-            }
             else
-            {
                 LockedSprite.SetActive(true);
-                UnlockedSprite.SetActive(false);
-            }
         }
     }
 }

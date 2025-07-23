@@ -9,7 +9,7 @@ namespace Violee
     {
         void Awake()
         {
-            boxModelPool = new ObjectPool<BoxModel>(BoxPrefab, transform);
+            boxModelPool = new ObjectPool<BoxModel>(BoxPrefab, transform, 42);
             MapModel.OnAddBoxAsync += SpawnBox3D;
             MapModel.OnRemoveBox += DestroyBox;
         }

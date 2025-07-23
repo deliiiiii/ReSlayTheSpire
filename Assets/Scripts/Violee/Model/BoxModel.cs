@@ -38,7 +38,6 @@ namespace Violee
             });
             boxData.OnWallDataChanged += OnWallDataChanged;
             boxData.WallKList.ForEach(OnWallDataChanged);
-            
             transform.position = BoxHelper.Pos2DTo3DBox(boxData.Pos2D);
         }
 

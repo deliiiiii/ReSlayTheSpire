@@ -8,15 +8,16 @@ using Object = UnityEngine.Object;
 
 public class ObjectPool<T> where T : MonoBehaviour
 {
-    public ObjectPool(T tPrefab, Transform transform)
+    public ObjectPool(T tPrefab, Transform transform, int initCount = 36)
     {
         this.tPrefab = tPrefab;
+        this.initCount = initCount;
         objParent = transform;
         _ = MyCreateNew(initCount);
     }
     T tPrefab;
     Transform objParent;
-    readonly int initCount = 256;
+    readonly int initCount;
     readonly Stack<T> availableObject = new();
     int poolCount => availableObject.Count;
     async Task MyCreateNew(int newCount)

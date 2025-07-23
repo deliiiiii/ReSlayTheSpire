@@ -59,6 +59,7 @@ namespace Violee
     public class BoxData
     {
         BoxData(){}
+        
         public static BoxData Create(Vector2Int pos, BoxConfigSingle config)
         {
             var ret = new BoxData()
@@ -68,8 +69,9 @@ namespace Violee
             };
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
-                if((ret.wallsByte & (int)wallType) == (int)wallType)
-                    ret.WallKList.Add(WallData.Create(wallType, EDoorType.Random));
+                ret.WallKList.Add(WallData.Create(wallType, EDoorType.Random));
+                if ((ret.wallsByte & (int)wallType) == (int)wallType)
+                    ret.WallKList[wallType].HasWall = true;
             }
             ret.InitPoint();
             return ret;
@@ -85,32 +87,26 @@ namespace Violee
         
         public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
 
-        public bool HasWallByType(EWallType wallType, out WallData wallData) => 
-            WallKList.TryGetValue(wallType, out wallData);
-        public bool HasSWallByDir(EBoxDir dir, out WallData wallData) => 
-            WallKList.TryGetValue(BoxHelper.WallDirToType(dir), out wallData);
+        public bool HasSWallByDir(EBoxDir dir, out WallData wallData)
+        {
+            wallData = WallKList[BoxHelper.WallDirToType(dir)];
+            return wallData.HasWall;
+        }
         public void AddSWall(WallData wallData)
         {
-            RemoveSWall(wallData.WallType);
             wallsByte |= (byte)wallData.WallType;
             wallData.HasWall = true;
             OnWallDataChanged?.Invoke(wallData);
-            WallKList.Add(wallData);
         }
-
         public void RemoveSWall(EBoxDir dir)
         {
             RemoveSWall(BoxHelper.WallDirToType(dir));
         }
         void RemoveSWall(EWallType wallType)
         {
-            if (WallKList.Contains(wallType))
-            {
-                wallsByte &= (byte)~(byte)wallType;
-                WallKList[wallType].HasWall = false;
-                OnWallDataChanged?.Invoke(WallKList[wallType]);
-                WallKList.Remove(wallType);
-            }
+            wallsByte &= (byte)~wallType;
+            WallKList[wallType].HasWall = false;
+            OnWallDataChanged?.Invoke(WallKList[wallType]);
         }
         #endregion
         
