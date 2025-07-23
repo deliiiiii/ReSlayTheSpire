@@ -28,6 +28,12 @@ namespace Violee
             };
         }
 
+        public WallData SetSomething(Action<WallData> act)
+        {
+            act(this);
+            return this;
+        }
+
         static EDoorType RandomDoor()
         {
             var ran = UnityEngine.Random.value;

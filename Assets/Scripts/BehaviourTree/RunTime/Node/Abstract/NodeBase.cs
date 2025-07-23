@@ -120,7 +120,7 @@ public abstract class NodeBase : ScriptableObject
         func(GuardNode);
         ChildList?.ForEach(c => c.RecursiveDo(func));
     }
-
+    
     public Type GetGeneralType()
     {
         var ret = GetType();

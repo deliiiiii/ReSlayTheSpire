@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -17,7 +18,6 @@ namespace Violee
         readonly MyKeyedCollection<EWallType, WallModel> wallKList = new(w => w.WallData.WallType);
         HashSet<BindDataAct<bool>> visitBindSet = new ();
         #endregion
-
         void Awake()
         {
             wallKList.Clear();
@@ -27,8 +27,6 @@ namespace Violee
         public void ReadData(BoxData fBoxData)
         {
             boxData = fBoxData;
-            boxData.OnAddWall += wallData => SetHasWall(wallData, true);
-            boxData.OnRemoveWall += wallData => SetHasWall(wallData, false);
             name = $"Box {fBoxData.Pos2D.x} {fBoxData.Pos2D.y}";
 
             visitBindSet.ForEach(b => b.UnBind());

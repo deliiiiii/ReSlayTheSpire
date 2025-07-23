@@ -76,13 +76,11 @@ namespace Violee
         }
         
         public Vector2Int Pos2D;
-        public event Action<WallData> OnAddWall;
-        public event Action<WallData> OnRemoveWall;
         #region Walls
-        [NonSerialized] 
+        [NonSerialized]
         byte wallsByte;
 
-        [NotNull] MyKeyedCollection<EWallType, WallData> wallKList = new(w => w.WallType);
+        [NotNull] readonly MyKeyedCollection<EWallType, WallData> wallKList = new(w => w.WallType);
         
         public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
 
@@ -92,34 +90,30 @@ namespace Violee
             wallKList.TryGetValue(BoxHelper.WallDirToType(dir), out wallData);
         public void AddSWall(WallData wallData)
         {
-            RemoveSWall(wallData);
+            RemoveSWall(wallData.WallType);
             wallKList.Add(wallData);
             wallsByte |= (byte)wallData.WallType;
-            OnAddWall?.Invoke(wallData);
+            wallData.HasWall = true;
         }
 
         public void RemoveSWall(EBoxDir dir)
         {
-            if(wallKList.TryGetValue(BoxHelper.WallDirToType(dir), out var wallData))
-            {
-                RemoveSWall(wallData);
-            }
+            RemoveSWall(BoxHelper.WallDirToType(dir));
         }
-        public void RemoveSWall(WallData newData)
+        void RemoveSWall(EWallType wallType)
         {
-            if (wallKList.Contains(newData))
+            if (wallKList.Contains(wallType))
             {
-                wallKList.Remove(newData);
-                wallsByte &= (byte)~(byte)newData.WallType;
-                OnRemoveWall?.Invoke(newData);
+                wallKList.Remove(wallType);
+                wallsByte &= (byte)~(byte)wallType;
             }
         }
         #endregion
         
         
         #region Path
-        public const int WallCost = 10;
-        public const int DoorCost = 1;
+        const int WallCost = 10;
+        const int DoorCost = 1;
         public MyKeyedCollection<EBoxDir, BoxPointData> PointKList;
         static float offset => Configer.SettingsConfig.BoxCostPosOffset;
         void InitPoint()

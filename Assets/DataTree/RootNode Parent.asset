@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e71ea6caf7fa4c7f8bbacd88184474d3, type: 3}
   m_Name: GuardNodeAlwaysFalse
   m_EditorClassIdentifier: 
-  Position: {x: 913.6, y: 169.59999}
-  Size: {x: 177.59998, y: 88}
-  GuardNode: {fileID: 0}
+  Position: {x: 1058, y: 252}
+  Size: {x: 178, y: 88}
+  GuardNode: {fileID: 8408690717040699374}
   ChildList: []
 --- !u!114 &-4901902376481657929
 MonoBehaviour:
@@ -28,8 +28,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4316b55131de47a0bbb28a652c8b75d3, type: 3}
   m_Name: ActionNodeTree
   m_EditorClassIdentifier: 
-  Position: {x: 633.6, y: 356.80002}
-  Size: {x: 183.20001, y: 151.99997}
+  Position: {x: 597, y: 395}
+  Size: {x: 183, y: 152}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 0
@@ -54,8 +54,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
   m_Name: SequenceNode
   m_EditorClassIdentifier: 
-  Position: {x: 558.4, y: 213.59999}
-  Size: {x: 188, y: 88.80002}
+  Position: {x: 542, y: 207}
+  Size: {x: 188, y: 89}
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -592874135340784174}
@@ -74,8 +74,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 376.8, y: 358.40002}
-  Size: {x: 164.79999, y: 135.20001}
+  Position: {x: 294, y: 373}
+  Size: {x: 165, y: 135}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 0
@@ -86,7 +86,7 @@ MonoBehaviour:
   DelayFrames: 0
   DelayFramesTimer: 0
   DelaySeconds: 0.2
-  DelaySecondsTimer: 0.17999998
+  DelaySecondsTimer: 0.20281759
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,12 +99,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode Parent
   m_EditorClassIdentifier: 
-  Position: {x: 636, y: 91.2}
-  Size: {x: 88.79999, y: 68}
+  Position: {x: 542, y: 35}
+  Size: {x: 89, y: 68}
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -2985045243772225967}
-  Running: 0
+  Running: 1
 --- !u!114 &4151616926838606558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,8 +117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 867.2, y: 358.40002}
-  Size: {x: 223.99994, y: 150.39996}
+  Position: {x: 834, y: 396}
+  Size: {x: 224, y: 150}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 0
@@ -142,8 +142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 1139.2, y: 363.2}
-  Size: {x: 132.80005, y: 130.40002}
+  Position: {x: 1175, y: 396}
+  Size: {x: 133, y: 130}
   GuardNode: {fileID: -5828376765232821127}
   ChildList: []
   HasDebug: 0
@@ -155,3 +155,19 @@ MonoBehaviour:
   DelayFramesTimer: 0
   DelaySeconds: 0
   DelaySecondsTimer: 0
+--- !u!114 &8408690717040699374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71ea6caf7fa4c7f8bbacd88184474d3, type: 3}
+  m_Name: GuardNodeAlwaysFalse
+  m_EditorClassIdentifier: 
+  Position: {x: 894, y: 119}
+  Size: {x: 173, y: 88}
+  GuardNode: {fileID: 0}
+  ChildList: []
