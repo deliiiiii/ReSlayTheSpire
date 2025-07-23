@@ -24,8 +24,7 @@ namespace Violee
         {
             return boxKList?.SelectMany(x => x.PointKList).ToList() ?? new List<BoxPointData>();
         }
-        public static void TickPlayerVisit() => Instance._TickPlayerVisit();
-        void _TickPlayerVisit()
+        public static void TickPlayerVisit()
         {
             var playerPos = PlayerModel.Instance.transform.position;
             var x = playerPos.x;
@@ -66,11 +65,11 @@ namespace Violee
         public EBoxDir StartDir = EBoxDir.Up;
         static readonly MyKeyedCollection<Vector2Int, BoxData> boxKList = new (b => b.Pos2D);
         bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
-        bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
+        static bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
         async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfigSingle config)
         {
             await Configer.SettingsConfig.YieldFrames();
-            var boxData = BoxData.Create(pos, config);
+            var boxData = new BoxData(pos, config);
             MyDebug.Log($"Add box {config.Walls} at {pos}");
             boxKList.Add(boxData);
             emptyPosSet.Remove(pos);

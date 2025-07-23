@@ -23,58 +23,43 @@ namespace Violee
         T2481 = 1 << 5 | 1 << 7,
     }
     
-
-    [Serializable]
-    public class BoxPointData
-    {
-        public BoxPointData(BoxData belongBox)
-        {
-            BelongBox = belongBox;
-        }
-        
-        public EBoxDir Dir;
-        public Observable<int> CostWall;
-        public Observable<int> CostStep;
-        public Observable<bool> Visited;
-        
-        
-        [NonSerialized]
-        public List<BoxPointData> NextPointsInBox;
-        [NonSerialized]
-        public readonly BoxData BelongBox;
-        [NonSerialized]
-        public Vector3 Pos3D;
-        public void UpdateNextPointCost()
-        {
-            foreach (var nextPoint in NextPointsInBox)
-            {
-                nextPoint.CostWall.Value = Math.Min(
-                    nextPoint.CostWall.Value,
-                    CostWall + BelongBox.CostTilt(Dir, nextPoint.Dir));
-            }
-        }
-    }
-    
     [Serializable]
     public class BoxData
     {
-        BoxData(){}
-        
-        public static BoxData Create(Vector2Int pos, BoxConfigSingle config)
+        public BoxData(Vector2Int pos, BoxConfigSingle config)
         {
-            var ret = new BoxData()
-            {
-                Pos2D = pos,
-                wallsByte = config.Walls,
-            };
+            Pos2D = pos;
+            wallsByte = config.Walls;
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
-                ret.WallKList.Add(WallData.Create(wallType, EDoorType.Random));
-                if ((ret.wallsByte & (int)wallType) == (int)wallType)
-                    ret.WallKList[wallType].HasWall = true;
+                WallKList.Add(WallData.Create(wallType, EDoorType.Random));
+                if ((wallsByte & (int)wallType) == (int)wallType)
+                    WallKList[wallType].HasWall = true;
             }
-            ret.InitPoint();
-            return ret;
+            PointKList = new MyKeyedCollection<EBoxDir, BoxPointData>(b => b.Dir);
+            foreach (var dir in BoxHelper.AllBoxDirs)
+            {
+                PointKList.Add(new BoxPointData()
+                {
+                    BelongBox = this,
+                    Dir = dir,
+                    CostWall = new (int.MaxValue / 2),
+                    Visited = new(false),
+                    Pos3D = BoxHelper.Pos2DTo3DPoint(Pos2D, dir),
+                    NextPointsInBox = new List<BoxPointData>()
+                });
+            }
+            foreach (var dir in BoxHelper.AllBoxDirs)
+            {
+                foreach (var dir2 in BoxHelper.AllBoxDirs)
+                {
+                    if (dir == dir2)
+                        continue;
+                    if (BoxHelper.OppositeDirDic[dir] == dir2)
+                        continue;
+                    PointKList[dir].NextPointsInBox.Add(PointKList[dir2]);
+                }
+            }
         }
         
         public Vector2Int Pos2D;
@@ -115,33 +100,6 @@ namespace Violee
         const int WallCost = 10;
         const int DoorCost = 1;
         public MyKeyedCollection<EBoxDir, BoxPointData> PointKList;
-        static float offset => Configer.SettingsConfig.BoxCostPosOffset;
-        void InitPoint()
-        {
-            PointKList = new MyKeyedCollection<EBoxDir, BoxPointData>(b => b.Dir);
-            foreach (var dir in BoxHelper.AllBoxDirs)
-            {
-                PointKList.Add(new BoxPointData(this)
-                {
-                    Dir = dir,
-                    CostWall = new (int.MaxValue / 2),
-                    Visited = new(false),
-                    Pos3D = BoxHelper.Pos2DTo3DPoint(Pos2D, dir),
-                    NextPointsInBox = new List<BoxPointData>()
-                });
-            }
-            foreach (var dir in BoxHelper.AllBoxDirs)
-            {
-                foreach (var dir2 in BoxHelper.AllBoxDirs)
-                {
-                    if (dir == dir2)
-                        continue;
-                    if (BoxHelper.OppositeDirDic[dir] == dir2)
-                        continue;
-                    PointKList[dir].NextPointsInBox.Add(PointKList[dir2]);
-                }
-            }
-        }
 
         public void ResetCost()
         {
