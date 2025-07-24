@@ -1,5 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using UnityEngine;
+using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
+
 //Mono单例
 //需要被继承 xxx : Singleton<xxx>
 //获取单例 xxx.Instance
@@ -7,7 +10,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
     public bool GlobalOnScene;
 
-    [field: AllowNull, MaybeNull]
+    [NotNull]
     protected static T Instance
     {
         get
@@ -43,7 +46,8 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 // ReSharper disable once InconsistentNaming
 public class SingletonCS<T> where T : SingletonCS<T>, new()
 {
-    public static T? Instance
+    [NotNull]
+    public static T Instance
     {
         get
         {

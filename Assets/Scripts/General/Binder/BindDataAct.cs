@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -6,8 +7,8 @@ public class BindDataAct<T>(Observable<T> osv)
     where T : IComparable
 {
     protected Observable<T> osv = osv;
-    protected UnityAction<T>? act;
-    UnityAction<T>? latestAct;
+    protected UnityAction<T> act;
+    UnityAction<T> latestAct;
 
     public BindDataAct<T> To(UnityAction<T> act)
     {
@@ -25,7 +26,7 @@ public class BindDataAct<T>(Observable<T> osv)
         return ret;
     }
 
-    public BindDataActImg<T> ToImg(Image img, Func<float, float>? func = null)
+    public BindDataActImg<T> ToImg(Image img, [CanBeNull] Func<float, float> func = null)
     {
         BeforeTo();
         func ??= v => v;
