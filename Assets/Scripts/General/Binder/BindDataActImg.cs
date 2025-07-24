@@ -10,7 +10,6 @@ public class BindDataActImg<T> : BindDataAct<T> where T : IComparable
         act = (_) => img.fillAmount = func(osv);
     }
     Image img;
-    string format;
     Func<float, float> func;
     float deltaPerSecond = float.MaxValue;
     public BindDataActImg<T> Fluent(float deltaPerSecond)

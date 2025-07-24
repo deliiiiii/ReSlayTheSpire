@@ -12,7 +12,6 @@ namespace Violee
         protected override void Awake()
         {
             base.Awake();
-            
             StartGenerateFunc = new (_StartGenerate);
             DijkstraFunc = new (_Dijkstra);
         }
@@ -20,7 +19,7 @@ namespace Violee
         #region Public Functions
         public static List<BoxPointData> GetAllPoints()
         {
-            return boxKList?.SelectMany(x => x.PointKList).ToList() ?? new List<BoxPointData>();
+            return boxKList.SelectMany(x => x.PointKList).ToList();
         }
         public static void TickPlayerVisit(Vector3 playerPos)
         {
@@ -49,8 +48,9 @@ namespace Violee
                 }
             }
         }
-        public static GuardedFunc<Task> StartGenerateFunc;
-        public static GuardedFunc<Task> DijkstraFunc;
+
+        public static GuardedFunc<Task> StartGenerateFunc = null!;
+        public static GuardedFunc<Task> DijkstraFunc = null!;
         public static float MaxSize => Mathf.Max(Instance.Width, Instance.Height) * BoxHelper.BoxSize;
         #endregion
         
@@ -82,9 +82,9 @@ namespace Violee
         }
         void RemoveAllBoxes()
         {
-            boxKList?.ForEach(boxData => OnRemoveBox?.Invoke(boxData));
-            boxKList?.Clear();
-            emptyPosSet = new ();
+            boxKList.ForEach(boxData => OnRemoveBox?.Invoke(boxData));
+            boxKList.Clear();
+            emptyPosSet.Clear();
             for(int j = 0; j < Height; j++)
             {
                 for(int i = 0; i < Width; i++)
@@ -97,7 +97,8 @@ namespace Violee
 
 
         #region Generate
-        HashSet<Vector2Int> emptyPosSet;
+
+        readonly HashSet<Vector2Int> emptyPosSet = [];
         async Task _StartGenerate()
         {
             try
@@ -238,13 +239,13 @@ namespace Violee
         
         
         #region Event
-        public static event Func<BoxData, Task>? OnAddBoxAsync;
-        public static event Action<BoxData>? OnRemoveBox;
+        public static event Func<BoxData, Task> OnAddBoxAsync;
+        public static event Action<BoxData> OnRemoveBox;
 
-        public static event Action? OnBeginGenerate;
-        public static event Action? OnEndGenerate;
-        public static event Func<Task>? OnBeginDij;
-        public static event Action<Vector3>? OnEndDij;
+        public static event Action OnBeginGenerate;
+        public static event Action OnEndGenerate;
+        public static event Func<Task> OnBeginDij;
+        public static event Action<Vector3> OnEndDij;
 
         #endregion
     }

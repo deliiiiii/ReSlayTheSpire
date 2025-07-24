@@ -1,15 +1,10 @@
 ﻿using System;
 using UnityEngine.Events;
 
-public class BindDataEvent
+public class BindDataEvent(UnityEvent evt)
 {
-    readonly UnityEvent evt;
-    UnityAction act;
-    public BindDataEvent(UnityEvent evt)
-    {
-        this.evt = evt;
-    }
-    
+    UnityAction? act;
+
     public BindDataEvent To(UnityAction act)
     {
         evt.AddListener(act);

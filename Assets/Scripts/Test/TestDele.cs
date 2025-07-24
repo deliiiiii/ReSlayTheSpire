@@ -6,11 +6,7 @@ namespace Test
 {
     public class IsExternalInit : MonoBehaviour
     {
-        public int TestPro
-        {
-            get;
-            set => field = value;
-        }
+        public int TestPro { get; set; }
 
         public event Action? EventTest;
 

@@ -1,19 +1,20 @@
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 //Mono单例
 //需要被继承 xxx : Singleton<xxx>
 //获取单例 xxx.Instance
 public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
-    static T instance;
     public bool GlobalOnScene;
 
+    [field: AllowNull, MaybeNull]
     protected static T Instance
     {
         get
         {
-            instance ??= FindObjectOfType<T>();
-            instance ??= new GameObject().AddComponent<T>(); 
-            return instance;
+            field ??= FindObjectOfType<T>();
+            field ??= new GameObject().AddComponent<T>(); 
+            return field;
         }
     }
 
@@ -42,14 +43,13 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 // ReSharper disable once InconsistentNaming
 public class SingletonCS<T> where T : SingletonCS<T>, new()
 {
-    static T instance;
-    public static T Instance
+    public static T? Instance
     {
         get
         {
-            instance ??= new T();
-            instance.OnInit();
-            return instance;
+            field ??= new T();
+            field.OnInit();
+            return field;
         }
     }
     protected virtual void OnInit()
