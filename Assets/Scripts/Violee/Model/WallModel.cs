@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Violee
 {
-    public class WallModel : MonoBehaviour
+    public class WallModel : ModelBase<WallData>
     {
-        public WallData WallData;
         #region Drag In
         [SerializeField] Transform Door;
         [SerializeField] Transform NotDoor;
@@ -12,20 +12,19 @@ namespace Violee
         [SerializeField] GameObject LockedSprite;
         [SerializeField] GameObject UnlockedSprite;
         #endregion
-        public void ReadData(WallData wallData)
+        protected override void ReadDataInternal()
         {
-            this.WallData = wallData;
             Door.gameObject.SetActive(false);
             NotDoor.gameObject.SetActive(false);
-            if (!WallData.HasWall)
+            if (!data.HasWall)
             {
                 gameObject.SetActive(false);
                 return;
             }
             gameObject.SetActive(true);
-            Binder.From(WallData.HasFoundWall).To(v => WallSprite.enabled = v).Immediate();
-            Binder.From(WallData.HasFoundDoor).To(_ =>SetDoorSprite()).Immediate();
-            switch (WallData.DoorType)
+            Binder.From(data.HasFoundWall).To(v => WallSprite.enabled = v).Immediate();
+            Binder.From(data.HasFoundDoor).To(_ =>SetDoorSprite()).Immediate();
+            switch (data.DoorType)
             {
                 case EDoorType.None:
                     NotDoor.gameObject.SetActive(true);
@@ -41,19 +40,19 @@ namespace Violee
         // event
         public void FindWallAndDoor()
         {
-            WallData.HasFoundWall.Value = true;
-            if(WallData.HasDoor)
-                WallData.HasFoundDoor.Value = true;
+            data.HasFoundWall.Value = true;
+            if(data.HasDoor)
+                data.HasFoundDoor.Value = true;
         }
         void SetDoorSprite()
         {
             LockedSprite.SetActive(false);
             UnlockedSprite.SetActive(false);
-            if (!WallData.HasFoundDoor)
+            if (!data.HasFoundDoor)
             {
                 return;
             }
-            if (WallData.Opened)
+            if (data.Opened)
                 UnlockedSprite.SetActive(true);
             else
                 LockedSprite.SetActive(true);

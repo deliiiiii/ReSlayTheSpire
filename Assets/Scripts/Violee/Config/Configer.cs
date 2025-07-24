@@ -24,9 +24,7 @@ namespace Violee
 
         async Task LoadConfig()
         {
-            if (BoxConfig.BoxConfigList == null)
-                return;
-            BoxConfig.BoxConfigList = new List<BoxConfigSingle>();
+            BoxConfig.BoxConfigList = [];
             var textures = await Resourcer.LoadAssetsAsyncByLabel<Texture2D>("BoxFigma");
             foreach (var t in textures)
             {

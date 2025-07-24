@@ -16,8 +16,9 @@ namespace Violee
             objParent = transform;
             _ = MyCreateNew(initCount);
         }
-        T tPrefab;
-        Transform objParent;
+
+        readonly T tPrefab;
+        readonly Transform objParent;
         readonly int initCount;
         readonly Stack<T> availableObject = new();
         int poolCount => availableObject.Count;

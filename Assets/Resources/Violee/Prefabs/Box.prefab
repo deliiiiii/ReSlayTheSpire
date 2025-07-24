@@ -129,18 +129,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6895addea3fe4b73878a1c66755e8146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boxData:
+  Data:
     Pos2D: {x: 0, y: 0}
     PointKList:
       Dict:
         list: []
-  wallListIns:
-  - {fileID: 314099916519323059}
-  - {fileID: 9681638042843068}
-  - {fileID: 1006801020935745163}
-  - {fileID: 5635491233879673322}
-  - {fileID: 3814611452900442636}
-  - {fileID: 3003268450641862884}
+  wallDic:
+    list:
+    - Key: 1
+      Value: {fileID: 314099916519323059}
+    - Key: 2
+      Value: {fileID: 9681638042843068}
+    - Key: 4
+      Value: {fileID: 1006801020935745163}
+    - Key: 8
+      Value: {fileID: 5635491233879673322}
+    - Key: 80
+      Value: {fileID: 3814611452900442636}
+    - Key: 160
+      Value: {fileID: 3003268450641862884}
   pointDic:
     list:
     - Key: 1

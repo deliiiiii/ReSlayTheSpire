@@ -6,12 +6,12 @@ namespace Violee.View
 {
     public class MinimapView : ViewBase
     {
-        public Button ReGenerateBtn;
-        public RenderTexture TarTexture;
-        public CinemachineVirtualCamera MinimapCameraVirtual;
-        public Camera MinimapCamera;
-        public RawImage MinimapImg;
-        public RawImage FullScreenImg;
+        public required Button ReGenerateBtn;
+        public required RenderTexture TarTexture;
+        public required CinemachineVirtualCamera MinimapCameraVirtual;
+        public required Camera MinimapCamera;
+        public required RawImage MinimapImg;
+        public required RawImage FullScreenImg;
         public float ChangeSpeed = 1.2f;
         public float MiniSize = 12f;
         bool isMinimap => MinimapImg.enabled;
@@ -36,7 +36,7 @@ namespace Violee.View
 
         void ChangeFOV(float dt)
         {
-            var tarSize = isMinimap ? MiniSize : MapModel.MaxSize / 1.616f;
+            var tarSize = isMinimap ? MiniSize : BoxModelManager.MaxSize / 1.616f;
             if (!Mathf.Approximately(MinimapCameraVirtual.m_Lens.OrthographicSize, tarSize))
             {
                 MinimapCameraVirtual.m_Lens.OrthographicSize = Mathf.Lerp(MinimapCameraVirtual.m_Lens.OrthographicSize,

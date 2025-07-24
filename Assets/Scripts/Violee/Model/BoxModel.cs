@@ -7,45 +7,29 @@ using UnityEngine;
 
 namespace Violee
 {
-    public class BoxModel : MonoBehaviour
+    public class BoxModel : ModelBase<BoxData>
     {
 #pragma warning disable CS8618
-        #region Inspector
-        [SerializeField][ReadOnly] BoxData boxData;
-        [SerializeField] List<WallModel> wallListIns;
+        [SerializeField] SerializableDictionary<EWallType, WallModel> wallDic;
         [SerializeField] SerializableDictionary<EBoxDir, BoxPointModel> pointDic;
-        #endregion
 #pragma warning restore CS8618
         
-        
-        readonly MyKeyedCollection<EWallType, WallModel> wallKList = new(w => w.WallData.WallType);
-        readonly HashSet<BindDataAct<bool>> visitBindSet = new ();
-        void Awake()
+        protected override void ReadDataInternal()
         {
-            wallKList.Clear();
-            wallKList.AddRange(wallListIns);
-        }
-
-        public void ReadData(BoxData fBoxData)
-        {
-            boxData = fBoxData;
-            name = $"Box {boxData.Pos2D.x} {boxData.Pos2D.y}";
-
-            visitBindSet.ForEach(b => b.UnBind());
-            visitBindSet.Clear();
-            boxData.PointKList.ForEach(p =>
+            name = $"Box {data.Pos2D.x} {data.Pos2D.y}";
+            
+            data.PointKList.ForEach(p =>
             {
-                pointDic[p.Dir].BoxPointData = p;
-                visitBindSet.Add(Binder.From(p.Visited).To(pointDic[p.Dir].gameObject.SetActive).Immediate());
+                pointDic[p.Dir].ReadData(p);
             });
-            boxData.OnWallDataChanged += OnWallDataChanged;
-            boxData.WallKList.ForEach(OnWallDataChanged);
-            transform.position = BoxHelper.Pos2DTo3DBox(boxData.Pos2D);
+            data.OnWallDataChanged += OnWallDataChanged;
+            data.WallKList.ForEach(OnWallDataChanged);
+            transform.position = BoxHelper.Pos2DTo3DBox(data.Pos2D);
         }
 
         void OnWallDataChanged(WallData wallData)
         {
-            wallKList[wallData.WallType].ReadData(wallData);
+            wallDic[wallData.WallType].ReadData(wallData);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,33 +14,33 @@ public class MapView : MonoBehaviour
 #pragma warning restore CS8618
     
     readonly Dictionary<BoxPointData, (BindDataAct<int>, Text)> costTxtDic = new ();
-    ObjectPool<Text>? CostTxtPool => field ??= new ObjectPool<Text>(CostTxtPrefab, transform);
+
+    ObjectPool<Text> costTxtPool = null!;
 
     void Awake()
     {
+        costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform);
         if (Configer.SettingsConfig.ShowBoxCost)
         {
-            MapModel.OnBeginDij += BindAllCostTxt;
+            BoxModelManager.OnBeginDij += BindAllCostTxt;
         }
     }
 
-    async Task DestroyAllCostTxt()
+    void DestroyAllCostTxt()
     {
         foreach (var pair in costTxtDic.Values)
         {
-            pair.Item1.UnBind();
-            CostTxtPool.MyDestroy(pair.Item2);
-            await Configer.SettingsConfig.YieldFrames(multi : 1 / 10f);
+            costTxtPool.MyDestroy(pair.Item2);
         }
     }
     async Task BindAllCostTxt()
     {
         try
         {
-            await DestroyAllCostTxt();
-            foreach (var point in MapModel.GetAllPoints())
+            DestroyAllCostTxt();
+            foreach (var point in BoxModelManager.GetAllPoints())
             {
-                var txt = await CostTxtPool.MyInstantiate(point.Pos3D + Vector3.up * 0.1f);
+                var txt = await costTxtPool.MyInstantiate(point.Pos3D + Vector3.up * 0.1f);
                 txt.gameObject.SetActive(true);
                 var b = Binder.From(point.CostWall).To(v =>
                 {

@@ -7,21 +7,25 @@ using UnityEngine;
 
 namespace Violee;
 
-public class MapModel : Singleton<MapModel>
+public class BoxModelManager : Singleton<BoxModelManager>
 {
+    protected override void Awake()
+    {
+        base.Awake();
+        boxModelPool = new ObjectPool<BoxModel>(BoxPrefab, transform, 42);
+    }
+
     #region Inspector
     [Header("Map Settings")]
     [SerializeField] int height = 4;
     [SerializeField] int width = 6;
     [SerializeField] Vector2Int startPos;
     [SerializeField] EBoxDir startDir = EBoxDir.Up;
+    public BoxModel BoxPrefab = null!;
     #endregion
     
     
     #region Public Event & Functions
-    public static event Func<BoxData, Task> OnAddBoxAsync;
-    public static event Action<BoxData> OnRemoveBox;
-
     public static event Action OnBeginGenerate;
     public static event Action OnEndGenerate;
     public static event Func<Task> OnBeginDij;
@@ -79,18 +83,18 @@ public class MapModel : Singleton<MapModel>
         MyDebug.Log($"Add box {config.Walls} at {pos}");
         boxKList.Add(boxData);
         emptyPosSet.Remove(pos);
-        OnAddBoxAsync?.Invoke(boxData);
+        SpawnBox3D(boxData);
         return boxData;
     }
     static void RemoveBox(BoxData boxData)
     {
         boxKList.Remove(boxData);
         emptyPosSet.Add(boxData.Pos2D);
-        OnRemoveBox?.Invoke(boxData);
+        DestroyBox(boxData);
     }
     static void RemoveAllBoxes()
     {
-        boxKList.ForEach(boxData => OnRemoveBox?.Invoke(boxData));
+        boxKList.ForEach(DestroyBox);
         boxKList.Clear();
         emptyPosSet.Clear();
         for(int j = 0; j < Height; j++)
@@ -183,6 +187,7 @@ public class MapModel : Singleton<MapModel>
     {
         try
         {
+            MyDebug.Log("Dijkstra 1");
             foreach (var boxData in boxKList)
             {
                 boxData.ResetCost();
@@ -191,6 +196,7 @@ public class MapModel : Singleton<MapModel>
             {
                 await OnBeginDij.Invoke();
             }
+            MyDebug.Log("Dijkstra 2");
             var vSet = new HashSet<BoxPointData>();
         
             var pq = new SimplePriorityQueue<BoxPointData, int>();
@@ -241,6 +247,24 @@ public class MapModel : Singleton<MapModel>
             MyDebug.LogError(e);
             throw;
         }
+    }
+
+
+
+    static ObjectPool<BoxModel> boxModelPool = null!;
+    static readonly MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
+    static void SpawnBox3D(BoxData fBoxData)
+    {
+        var boxModel =  boxModelPool.MyInstantiate().Result;
+        boxModel.ReadData(fBoxData);
+        boxModel3DDic.Add(boxModel);
+    }
+        
+    static void DestroyBox(BoxData fBoxData)
+    {
+        var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
+        boxModelPool.MyDestroy(boxModel3DDic[pos3D]);
+        boxModel3DDic.Remove(pos3D);
     }
     #endregion
 }

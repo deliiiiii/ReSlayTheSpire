@@ -9,11 +9,11 @@ namespace Violee
     public class BoxConfigSingle
     {
         [HideInInspector]
-        public string Name;
+        public string Name = string.Empty;
         [HideInInspector]
         public byte Walls;
         [ReadOnly]
-        public Texture2D Texture2D;
+        public required Texture2D Texture2D;
         // [HideInInspector]
         // public Sprite Sprite;
         public int BasicWeight;

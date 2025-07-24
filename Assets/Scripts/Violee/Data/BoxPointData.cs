@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Violee
 {
     [Serializable]
-    public class BoxPointData
+    public class BoxPointData : DataBase
     {
         public EBoxDir Dir;
         public Observable<int> CostWall = new (int.MaxValue / 2);

@@ -11,7 +11,7 @@ namespace Violee
         Playing,
         WatchingMap,
     }
-    public class GameModel : Singleton<GameModel>
+    public class GameManager : Singleton<GameManager>
     {
         [ShowInInspector]
         MyFSM<EGameState> gameFsm = new ();
@@ -21,22 +21,22 @@ namespace Violee
         {
             Binder.From(gameFsm.GetState(EGameState.Playing)).OnUpdate(dt =>
             {
-                MapModel.TickPlayerVisit(PlayerModel.Instance.transform.position);
+                BoxModelManager.TickPlayerVisit(PlayerModel.Instance.transform.position);
                 PlayerModel.Tick(dt);
             });
             Binder.From(gameFsm.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);
             
             
-            MapModel.StartGenerateFunc.Guard += () => isIdle || isPlaying;
-            MapModel.DijkstraFunc.Guard += () => isIdle;
-            MapModel.OnBeginGenerate += () => gameFsm.ChangeState(EGameState.GeneratingMap);
-            MapModel.OnEndGenerate += () => gameFsm.ChangeState(EGameState.Idle);
-            MapModel.OnBeginDij += () =>
+            BoxModelManager.StartGenerateFunc.Guard += () => isIdle || isPlaying;
+            BoxModelManager.DijkstraFunc.Guard += () => isIdle;
+            BoxModelManager.OnBeginGenerate += () => gameFsm.ChangeState(EGameState.GeneratingMap);
+            BoxModelManager.OnEndGenerate += () => gameFsm.ChangeState(EGameState.Idle);
+            BoxModelManager.OnBeginDij += () =>
             {
                 gameFsm.ChangeState(EGameState.GeneratingMap);
                 return Task.CompletedTask;
             };
-            MapModel.OnEndDij += pos3D =>
+            BoxModelManager.OnEndDij += pos3D =>
             {
                 gameFsm.ChangeState(EGameState.Playing);
                 PlayerModel.OnEnterPlaying(pos3D);
@@ -45,7 +45,7 @@ namespace Violee
             Binder.Update(_ =>
             {
                 if (Input.GetKeyDown(KeyCode.R))
-                    MapModel.StartGenerateFunc.TryInvoke();
+                    BoxModelManager.StartGenerateFunc.TryInvoke();
             });
             
             gameFsm.ChangeState(EGameState.Idle);

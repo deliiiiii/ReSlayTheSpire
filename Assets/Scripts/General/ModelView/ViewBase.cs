@@ -15,5 +15,5 @@ public abstract partial class ViewBase : MonoBehaviour
         modelDic.Add(model.GetType(), model);
         return model;
     }
-    static T GetModel<T>() where T : ModelBase => modelDic[typeof(T)] ? modelDic[typeof(T)] as T: null;
+    static T? GetModel<T>() where T : ModelBase => modelDic[typeof(T)] ? modelDic[typeof(T)] as T: null;
 }

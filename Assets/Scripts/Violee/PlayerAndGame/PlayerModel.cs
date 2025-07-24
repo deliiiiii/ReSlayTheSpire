@@ -5,15 +5,11 @@ namespace Violee
 {
     public class PlayerModel : Singleton<PlayerModel>
     {
-        Rigidbody rg;
-        MeshRenderer mr;
-        FirstPersonController fpc;
+        FirstPersonController fpc = null!;
 
         protected override void Awake()
         {
             base.Awake();
-            rg = GetComponent<Rigidbody>();
-            mr = GetComponent<MeshRenderer>();
             fpc = GetComponent<FirstPersonController>();
             gameObject.SetActive(false);
         }

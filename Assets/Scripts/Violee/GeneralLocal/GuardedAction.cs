@@ -6,7 +6,7 @@ namespace Violee
 {
     public class GuardedAction(Action action)
     {
-        public event Func<bool> Guard;
+        public event Func<bool>? Guard;
 
         public void TryInvoke()
         {
@@ -30,7 +30,7 @@ namespace Violee
 
     public class GuardedAction<T1>(Action<T1> action)
     {
-        public event Func<bool> Guard;
+        public event Func<bool>? Guard;
 
         public void TryInvoke(T1 t1)
         {
@@ -54,7 +54,7 @@ namespace Violee
 
     public class GuardedAction<T1, T2>(Action<T1, T2> action)
     {
-        public event Func<bool> Guard;
+        public event Func<bool>? Guard;
 
         public void TryInvoke(T1 t1, T2 t2)
         {
@@ -78,7 +78,7 @@ namespace Violee
 
     public class GuardedFunc<TResult>(Func<TResult> func)
     {
-        public event Func<bool> Guard;
+        public event Func<bool>? Guard;
 
         public TResult TryInvoke()
         {
@@ -96,7 +96,7 @@ namespace Violee
 
     public class GuardedFunc<T1, TResult>(Func<T1, TResult> func)
     {
-        public event Func<bool> Guard;
+        public event Func<bool>? Guard;
 
         public TResult TryInvoke(T1 t1)
         {

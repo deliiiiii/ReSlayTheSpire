@@ -29,7 +29,7 @@ namespace Violee
                 { EBoxDir.Left, EBoxDir.Right },
                 { EBoxDir.Right, EBoxDir.Left }
             };
-            DirToVec2Dic = new Dictionary<EBoxDir, Vector2Int>()
+            dirToVec2Dic = new Dictionary<EBoxDir, Vector2Int>()
             {
                 { EBoxDir.Up, new Vector2Int(0, 1) },
                 { EBoxDir.Down, new Vector2Int(0, -1) },
@@ -50,14 +50,14 @@ namespace Violee
         /// </summary>
         public static readonly Dictionary<EBoxDir, EBoxDir> OppositeDirDic;
 
-        static readonly Dictionary<EBoxDir, Vector2Int> DirToVec2Dic;
+        static readonly Dictionary<EBoxDir, Vector2Int> dirToVec2Dic;
         
         /// <param name="thisLoc">(1, 1)</param>
         /// <param name="dir">Up</param>
         /// <returns>(1, 2)</returns>
         public static Vector2Int NextPos(Vector2Int thisLoc, EBoxDir dir)
         {
-            return new Vector2Int(thisLoc.x + DirToVec2Dic[dir].x, thisLoc.y + DirToVec2Dic[dir].y);
+            return new Vector2Int(thisLoc.x + dirToVec2Dic[dir].x, thisLoc.y + dirToVec2Dic[dir].y);
         }
         
         /// <param name="thisPos">(1, 1)</param>
@@ -74,9 +74,9 @@ namespace Violee
         
         public static Vector3 Pos2DTo3DBox(Vector2 pos2D) => new (pos2D.x * BoxSize, 0, pos2D.y * BoxSize);
         public static Vector3 Pos2DTo3DPoint(Vector2 pos2D, EBoxDir dir) =>
-            Pos2DTo3DBox(pos2D) + new Vector3(DirToVec2Dic[dir].x * BoxSize * pointOffset, 0, DirToVec2Dic[dir].y * BoxSize * pointOffset);
+            Pos2DTo3DBox(pos2D) + new Vector3(dirToVec2Dic[dir].x * BoxSize * pointOffset, 0, dirToVec2Dic[dir].y * BoxSize * pointOffset);
         public static Vector3 Pos2DTo3DEdge(Vector2 pos2D, EBoxDir dir) =>
-            Pos2DTo3DBox(pos2D) + new Vector3(DirToVec2Dic[dir].x * BoxSize / 2, 0, DirToVec2Dic[dir].y * BoxSize / 2);
+            Pos2DTo3DBox(pos2D) + new Vector3(dirToVec2Dic[dir].x * BoxSize / 2, 0, dirToVec2Dic[dir].y * BoxSize / 2);
         public static Vector2Int Pos3DTo2D(Vector3 pos3D) => 
             new ((int)((pos3D.x + BoxSize / 2) / BoxSize), (int)((pos3D.z + BoxSize / 2) / BoxSize));
         

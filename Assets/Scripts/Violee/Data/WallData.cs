@@ -9,7 +9,7 @@ namespace Violee
         Wooden,
     }
     [Serializable]
-    public class WallData(EWallType wallType, EDoorType doorType)
+    public class WallData(EWallType wallType, EDoorType doorType) : DataBase
     {
         public WallData(EBoxDir dir, EDoorType doorType) : this(BoxHelper.WallDirToType(dir), doorType){}
 

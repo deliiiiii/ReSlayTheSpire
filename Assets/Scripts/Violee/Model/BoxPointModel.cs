@@ -2,8 +2,11 @@
 
 namespace Violee
 {
-    public class BoxPointModel : MonoBehaviour
+    public class BoxPointModel : ModelBase<BoxPointData>
     {
-        public BoxPointData BoxPointData;
+        protected override void ReadDataInternal()
+        {
+            // ...
+        }
     }
 }

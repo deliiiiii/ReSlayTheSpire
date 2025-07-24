@@ -1,19 +1,15 @@
-﻿// CHANGE LOG
-// 
-// CHANGES || version VERSION
-//
-// "Enable/Disable Headbob, Changed look rotations - should result in reduced camera jitters" || version 1.0.1
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 #if UNITY_EDITOR
     using UnityEditor;
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 #endif
 
 public class FirstPersonController : MonoBehaviour
 {
-    private Rigidbody rb;
+    Rigidbody rb;
 
     #region Camera Movement Variables
 
@@ -21,7 +17,7 @@ public class FirstPersonController : MonoBehaviour
     public Vector3 CameraOffset = new (0, 2, 0);
 
     public float fov = 60f;
-    public bool invertCamera = false;
+    public bool invertCamera;
     public bool cameraCanMove = true;
     public float mouseSensitivity = 2f;
     public float maxLookAngle = 50f;
@@ -30,19 +26,19 @@ public class FirstPersonController : MonoBehaviour
     public bool lockCursor = true;
 
     // Internal Variables
-    private float yaw = 0.0f;
-    private float pitch = 0.0f;
+    float yaw;
+    float pitch;
 
     #region Camera Zoom Variables
 
     public bool enableZoom = true;
-    public bool holdToZoom = false;
+    public bool holdToZoom;
     public KeyCode zoomKey = KeyCode.Mouse1;
     public float zoomFOV = 30f;
     public float zoomStepTime = 5f;
 
     // Internal Variables
-    private bool isZoomed = false;
+    bool isZoomed;
 
     #endregion
     #endregion
@@ -54,12 +50,12 @@ public class FirstPersonController : MonoBehaviour
     public float maxVelocityChange = 10f;
 
     // Internal Variables
-    private bool isWalking = false;
+    bool isWalking;
 
     #region Sprint
 
     public bool enableSprint = true;
-    public bool unlimitedSprint = false;
+    public bool unlimitedSprint;
     public KeyCode sprintKey = KeyCode.LeftShift;
     public float sprintSpeed = 7f;
     public float sprintDuration = 5f;
@@ -77,12 +73,12 @@ public class FirstPersonController : MonoBehaviour
     public float sprintBarHeightPercent = .015f;
 
     // Internal Variables
-    private bool isSprinting = false;
-    private float sprintRemaining;
-    private float sprintBarWidth;
-    private float sprintBarHeight;
-    private bool isSprintCooldown = false;
-    private float sprintCooldownReset;
+    bool isSprinting;
+    float sprintRemaining;
+    float sprintBarWidth;
+    float sprintBarHeight;
+    bool isSprintCooldown;
+    float sprintCooldownReset;
 
     #endregion
 
@@ -93,7 +89,7 @@ public class FirstPersonController : MonoBehaviour
     public float jumpPower = 5f;
 
     // Internal Variables
-    private bool isGrounded = false;
+    bool isGrounded;
 
     #endregion
 
@@ -106,8 +102,8 @@ public class FirstPersonController : MonoBehaviour
     public float speedReduction = .5f;
 
     // Internal Variables
-    private bool isCrouched = false;
-    private Vector3 originalScale;
+    bool isCrouched;
+    Vector3 originalScale;
 
     #endregion
     #endregion
@@ -120,12 +116,12 @@ public class FirstPersonController : MonoBehaviour
     public Vector3 bobAmount = new Vector3(.15f, .05f, 0f);
 
     // Internal Variables
-    private Vector3 jointOriginalPos;
-    private float timer = 0;
+    Vector3 jointOriginalPos;
+    float timer;
 
     #endregion
 
-    private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
 
@@ -213,17 +209,10 @@ public class FirstPersonController : MonoBehaviour
         if (enableZoom)
         {
             // Changes isZoomed when key is pressed
-            // Behavior for toogle zoom
+            // Behavior for toggle zoom
             if(Input.GetKeyDown(zoomKey) && !holdToZoom && !isSprinting)
             {
-                if (!isZoomed)
-                {
-                    isZoomed = true;
-                }
-                else
-                {
-                    isZoomed = false;
-                }
+                isZoomed = !isZoomed;
             }
 
             // Changes isZoomed when key is pressed
@@ -240,7 +229,7 @@ public class FirstPersonController : MonoBehaviour
                 }
             }
 
-            // Lerps camera.fieldOfView to allow for a smooth transistion
+            // Lerp camera.fieldOfView to allow for a smooth transition
             if(isZoomed)
             {
                 playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, zoomFOV, zoomStepTime * Time.deltaTime);
@@ -366,7 +355,7 @@ public class FirstPersonController : MonoBehaviour
                 isWalking = false;
             }
 
-            // All movement calculations shile sprint is active
+            // All movement calculations while sprint is active
             if (enableSprint && Input.GetKey(sprintKey) && sprintRemaining > 0f && !isSprintCooldown)
             {
                 targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
@@ -378,7 +367,7 @@ public class FirstPersonController : MonoBehaviour
                 velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
                 velocityChange.y = 0;
 
-                // Player is only moving when valocity change != 0
+                // Player is only moving when velocity change != 0
                 // Makes sure fov change only happens during movement
                 if (velocityChange.x != 0 || velocityChange.z != 0)
                 {
@@ -402,7 +391,7 @@ public class FirstPersonController : MonoBehaviour
             {
                 isSprinting = false;
 
-                if (hideBarWhenFull && sprintRemaining == sprintDuration)
+                if (hideBarWhenFull && Mathf.Approximately(sprintRemaining, sprintDuration))
                 {
                     sprintBarCG.alpha -= 3 * Time.deltaTime;
                 }
@@ -423,14 +412,14 @@ public class FirstPersonController : MonoBehaviour
         #endregion
     }
 
-    // Sets isGrounded based on a raycast sent straigth down from the player object
-    private void CheckGround()
+    // Sets isGrounded based on a raycast sent straight down from the player object
+    void CheckGround()
     {
         Vector3 origin = new Vector3(transform.position.x, transform.position.y - (transform.localScale.y * .5f), transform.position.z);
         Vector3 direction = transform.TransformDirection(Vector3.down);
         float distance = .75f;
 
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, distance))
+        if (Physics.Raycast(origin, direction, out _, distance))
         {
             Debug.DrawRay(origin, direction * distance, Color.red);
             isGrounded = true;
@@ -441,7 +430,7 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    private void Jump()
+    void Jump()
     {
         // Adds force to the player rigidbody to jump
         if (isGrounded)
@@ -457,7 +446,7 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    private void Crouch()
+    void Crouch()
     {
         // Stands player up to full height
         // Brings walkSpeed back up to original speed
@@ -479,7 +468,7 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    private void HeadBob()
+    void HeadBob()
     {
         if(isWalking)
         {
@@ -514,13 +503,13 @@ public class FirstPersonController : MonoBehaviour
 
 // Custom Editor
 #if UNITY_EDITOR
-    [CustomEditor(typeof(FirstPersonController)), InitializeOnLoadAttribute]
+    [CustomEditor(typeof(FirstPersonController))]
     public class FirstPersonControllerEditor : Editor
     {
     FirstPersonController fpc;
     SerializedObject SerFPC;
 
-    private void OnEnable()
+    void OnEnable()
     {
         fpc = (FirstPersonController)target;
         SerFPC = new SerializedObject(fpc);
