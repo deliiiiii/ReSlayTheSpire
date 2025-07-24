@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d606e8641a4149fcb90baf245d658bd8, type: 3}
   m_Name: SettingsConfig
   m_EditorClassIdentifier: 
-  RefreshConfigOnAwake: 1
+  RefreshConfigOnAwake: 0
   ShowBoxCost: 1
   BoxCostPosOffset: 0.37
   YieldCount: 0.47
