@@ -1,0 +1,16 @@
+{
+    "name": "BHRumtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8b779b61c8bed72409294131dca64e73"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

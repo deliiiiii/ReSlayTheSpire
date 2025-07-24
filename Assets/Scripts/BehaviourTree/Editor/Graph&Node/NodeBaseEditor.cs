@@ -6,9 +6,9 @@ using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
+using Direction = UnityEditor.Experimental.GraphView.Direction;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Direction = UnityEditor.Experimental.GraphView.Direction;
 
 namespace BehaviourTree
 {

@@ -5,15 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/ReSlayTheSpire.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 0
-    path: Assets/Scenes/UIScaler.unity
-    guid: a533b04ded9175a4bb7d6f31fa8e752b
   - enabled: 1
-    path: Assets/Scenes/BehaviourTree.unity
-    guid: bda0ba91a551f354e991f6169e1955e6
+    path: Assets/Scenes/Violee.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: e58a0916644441545a942b9c806ea954, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: f6f7ee4c2c2508642a4b27d422c7fc76, type: 2}
