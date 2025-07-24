@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -8,20 +9,21 @@ namespace Violee
 {
     public class BoxModel : MonoBehaviour
     {
-        [SerializeField]
-        BoxData boxData;
-
-        #region Drag In
-        public List<WallModel> WallListIns;
-        [SerializeField]
-        SerializableDictionary<EBoxDir, BoxPointModel> pointDic;
-        readonly MyKeyedCollection<EWallType, WallModel> wallKList = new(w => w.WallData.WallType);
-        HashSet<BindDataAct<bool>> visitBindSet = new ();
+#pragma warning disable CS8618
+        #region Inspector
+        [SerializeField][ReadOnly] BoxData boxData;
+        [SerializeField] List<WallModel> wallListIns;
+        [SerializeField] SerializableDictionary<EBoxDir, BoxPointModel> pointDic;
         #endregion
+#pragma warning restore CS8618
+        
+        
+        readonly MyKeyedCollection<EWallType, WallModel> wallKList = new(w => w.WallData.WallType);
+        readonly HashSet<BindDataAct<bool>> visitBindSet = new ();
         void Awake()
         {
             wallKList.Clear();
-            wallKList.AddRange(WallListIns);
+            wallKList.AddRange(wallListIns);
         }
 
         public void ReadData(BoxData fBoxData)

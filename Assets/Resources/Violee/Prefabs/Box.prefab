@@ -134,7 +134,7 @@ MonoBehaviour:
     PointKList:
       Dict:
         list: []
-  WallListIns:
+  wallListIns:
   - {fileID: 314099916519323059}
   - {fileID: 9681638042843068}
   - {fileID: 1006801020935745163}

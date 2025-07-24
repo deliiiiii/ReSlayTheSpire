@@ -8,17 +8,14 @@ namespace Violee
     public class BoxPointData
     {
         public EBoxDir Dir;
-        public Observable<int> CostWall;
-        public Observable<int> CostStep;
-        public Observable<bool> Visited;
-        
-        
-        [NonSerialized]
-        public List<BoxPointData> NextPointsInBox;
-        [NonSerialized]
-        public BoxData BelongBox;
-        [NonSerialized]
-        public Vector3 Pos3D;
+        public Observable<int> CostWall = new (int.MaxValue / 2);
+        // public Observable<int> CostStep;
+        public Observable<bool> Visited = new (false);
+
+
+        [NonSerialized] public List<BoxPointData> NextPointsInBox = [];
+        [NonSerialized] public required BoxData BelongBox;
+        [NonSerialized] public Vector3 Pos3D;
         public void UpdateNextPointCost()
         {
             foreach (var nextPoint in NextPointsInBox)

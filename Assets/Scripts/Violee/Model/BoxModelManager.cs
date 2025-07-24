@@ -19,7 +19,7 @@ namespace Violee
         #endregion
         
         static ObjectPool<BoxModel> boxModelPool;
-        static MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
+        static readonly MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
         
         #region Event
         async Task SpawnBox3D(BoxData fBoxData)

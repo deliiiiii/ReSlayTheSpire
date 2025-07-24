@@ -7711,10 +7711,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
-  Height: 6
-  Width: 6
-  StartPos: {x: 0, y: 0}
-  StartDir: 1
+  height: 6
+  width: 6
+  startPos: {x: 0, y: 0}
+  startDir: 1
 --- !u!43 &962145190
 Mesh:
   m_ObjectHideFlags: 0

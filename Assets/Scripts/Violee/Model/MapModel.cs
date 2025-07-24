@@ -18,7 +18,14 @@ public class MapModel : Singleton<MapModel>
     #endregion
     
     
-    #region Public Functions
+    #region Public Event & Functions
+    public static event Func<BoxData, Task> OnAddBoxAsync;
+    public static event Action<BoxData> OnRemoveBox;
+
+    public static event Action OnBeginGenerate;
+    public static event Action OnEndGenerate;
+    public static event Func<Task> OnBeginDij;
+    public static event Action<Vector3> OnEndDij;
     public static List<BoxPointData> GetAllPoints()
     {
         return boxKList.SelectMany(x => x.PointKList).ToList();
@@ -138,7 +145,7 @@ public class MapModel : Singleton<MapModel>
                 var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];
                 if (!InMap(nextPos))
                 {
-                    curBox.AddSWall(WallData.Create(curGoOutDir, EDoorType.None));
+                    curBox.AddSWall(new WallData(curGoOutDir, EDoorType.None));
                     // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
                     continue;
                 }
@@ -236,17 +243,4 @@ public class MapModel : Singleton<MapModel>
         }
     }
     #endregion
-    
-    
-    #region Event
-    public static event Func<BoxData, Task> OnAddBoxAsync;
-    public static event Action<BoxData> OnRemoveBox;
-
-    public static event Action OnBeginGenerate;
-    public static event Action OnEndGenerate;
-    public static event Func<Task> OnBeginDij;
-    public static event Action<Vector3> OnEndDij;
-    #endregion
-    
-    
 }

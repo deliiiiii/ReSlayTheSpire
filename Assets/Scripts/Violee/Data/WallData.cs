@@ -9,24 +9,9 @@ namespace Violee
         Wooden,
     }
     [Serializable]
-    public class WallData
+    public class WallData(EWallType wallType, EDoorType doorType)
     {
-        WallData() { }
-
-        public static WallData Create(EBoxDir dir, EDoorType doorType)
-            => Create(BoxHelper.WallDirToType(dir), doorType);
-        public static WallData Create(EWallType wallType, EDoorType doorType)
-        {
-            return new WallData()
-            {
-                WallType = wallType,
-                HasWall = false,
-                HasFoundWall = new Observable<bool>(false),
-                DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType,
-                HasFoundDoor = new Observable<bool>(false),
-                Opened = false,
-            };
-        }
+        public WallData(EBoxDir dir, EDoorType doorType) : this(BoxHelper.WallDirToType(dir), doorType){}
 
         static EDoorType RandomDoor()
         {
@@ -34,12 +19,12 @@ namespace Violee
             return ran <= Configer.BoxConfig.DoorPossibility ? EDoorType.Wooden : EDoorType.None;
         }
         
-        public EWallType WallType;
+        public EWallType WallType = wallType;
         public bool HasWall;
-        public Observable<bool> HasFoundWall;
-        public EDoorType DoorType;
+        public Observable<bool> HasFoundWall = new (false);
+        public EDoorType DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType;
         public bool HasDoor => DoorType != EDoorType.None;
-        public Observable<bool> HasFoundDoor;
+        public Observable<bool> HasFoundDoor = new (false);
         public bool Opened;
     }
     

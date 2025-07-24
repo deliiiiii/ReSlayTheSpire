@@ -32,7 +32,7 @@ namespace Violee
             wallsByte = config.Walls;
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
-                WallKList.Add(WallData.Create(wallType, EDoorType.Random));
+                WallKList.Add(new WallData(wallType, EDoorType.Random));
                 if ((wallsByte & (int)wallType) == (int)wallType)
                     WallKList[wallType].HasWall = true;
             }
@@ -43,10 +43,7 @@ namespace Violee
                 {
                     BelongBox = this,
                     Dir = dir,
-                    CostWall = new (int.MaxValue / 2),
-                    Visited = new(false),
                     Pos3D = BoxHelper.Pos2DTo3DPoint(Pos2D, dir),
-                    NextPointsInBox = new List<BoxPointData>()
                 });
             }
             foreach (var dir in BoxHelper.AllBoxDirs)

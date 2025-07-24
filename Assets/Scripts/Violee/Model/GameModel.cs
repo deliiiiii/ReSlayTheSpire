@@ -14,31 +14,31 @@ namespace Violee
     public class GameModel : Singleton<GameModel>
     {
         [ShowInInspector]
-        MyFSM<EGameState> gameFSM = new ();
-        bool isIdle => gameFSM.IsState(EGameState.Idle);
-        bool isPlaying => gameFSM.IsState(EGameState.Playing);
+        MyFSM<EGameState> gameFsm = new ();
+        bool isIdle => gameFsm.IsState(EGameState.Idle);
+        bool isPlaying => gameFsm.IsState(EGameState.Playing);
         protected void Start()
         {
-            Binder.From(gameFSM.GetState(EGameState.Playing)).OnUpdate(dt =>
+            Binder.From(gameFsm.GetState(EGameState.Playing)).OnUpdate(dt =>
             {
                 MapModel.TickPlayerVisit(PlayerModel.Instance.transform.position);
                 PlayerModel.Tick(dt);
             });
-            Binder.From(gameFSM.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);
+            Binder.From(gameFsm.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);
             
             
             MapModel.StartGenerateFunc.Guard += () => isIdle || isPlaying;
             MapModel.DijkstraFunc.Guard += () => isIdle;
-            MapModel.OnBeginGenerate += () => gameFSM.ChangeState(EGameState.GeneratingMap);
-            MapModel.OnEndGenerate += () => gameFSM.ChangeState(EGameState.Idle);
+            MapModel.OnBeginGenerate += () => gameFsm.ChangeState(EGameState.GeneratingMap);
+            MapModel.OnEndGenerate += () => gameFsm.ChangeState(EGameState.Idle);
             MapModel.OnBeginDij += () =>
             {
-                gameFSM.ChangeState(EGameState.GeneratingMap);
+                gameFsm.ChangeState(EGameState.GeneratingMap);
                 return Task.CompletedTask;
             };
             MapModel.OnEndDij += pos3D =>
             {
-                gameFSM.ChangeState(EGameState.Playing);
+                gameFsm.ChangeState(EGameState.Playing);
                 PlayerModel.OnEnterPlaying(pos3D);
             };
             
@@ -48,8 +48,8 @@ namespace Violee
                     MapModel.StartGenerateFunc.TryInvoke();
             });
             
-            gameFSM.ChangeState(EGameState.Idle);
-            Binder.Update(gameFSM.Update);
+            gameFsm.ChangeState(EGameState.Idle);
+            Binder.Update(gameFsm.Update);
         }
     }
 }
