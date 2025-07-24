@@ -66,9 +66,9 @@ namespace Violee
         #region Walls
         [NonSerialized]
         byte wallsByte;
-        public event Action<WallData> OnWallDataChanged;
+        public event Action<WallData>? OnWallDataChanged;
 
-        [NotNull]public readonly MyKeyedCollection<EWallType, WallData> WallKList = new(w => w.WallType);
+        public readonly MyKeyedCollection<EWallType, WallData> WallKList = new(w => w.WallType);
         
         public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
 

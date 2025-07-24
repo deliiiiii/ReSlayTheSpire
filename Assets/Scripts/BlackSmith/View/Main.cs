@@ -1,13 +1,12 @@
-﻿
+﻿using UnityEngine;
 
-namespace BlackSmith
-{
+namespace BlackSmith;
 
-    
+
 public class Main : ViewBase
 {
-    public MainView MainViewIns;
-    public UpgradeView UpgradeViewIns;
+    public required MainView MainViewIns;
+    public required UpgradeView UpgradeViewIns;
     void Awake()
     {
         MainView = MainViewIns;
@@ -15,7 +14,4 @@ public class Main : ViewBase
         MainView.IBL();
         UpgradeView.IBL();
     }
-}
-
-
 }

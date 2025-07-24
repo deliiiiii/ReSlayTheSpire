@@ -2,16 +2,12 @@
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BindDataAct<T> where T : IComparable
+public class BindDataAct<T>(Observable<T> osv)
+    where T : IComparable
 {
-    public BindDataAct(Observable<T> osv)
-    {
-        this.osv = osv;
-    }
-    
-    protected Observable<T> osv;
-    protected UnityAction<T> act;
-    UnityAction<T> latestAct;
+    protected Observable<T> osv = osv;
+    protected UnityAction<T>? act;
+    UnityAction<T>? latestAct;
 
     public BindDataAct<T> To(UnityAction<T> act)
     {
@@ -29,10 +25,10 @@ public class BindDataAct<T> where T : IComparable
         return ret;
     }
 
-    public BindDataActImg<T> ToImg(Image img, Func<float, float> func = null)
+    public BindDataActImg<T> ToImg(Image img, Func<float, float>? func = null)
     {
         BeforeTo();
-        func ??= (v) => v;
+        func ??= v => v;
         var ret = new BindDataActImg<T>(osv, img, func);
         ret.AfterTo();
         return ret;

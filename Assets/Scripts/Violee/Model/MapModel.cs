@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Sirenix.OdinInspector;
 using Sirenix.Utilities;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Violee
@@ -49,7 +47,7 @@ namespace Violee
                     pointData.Visited.Value = true;
                     MyDebug.Log($"Enter Point!!{boxPos2D}:{dir}");
                 }
-            };
+            }
         }
         public static GuardedFunc<Task> StartGenerateFunc;
         public static GuardedFunc<Task> DijkstraFunc;
@@ -240,13 +238,13 @@ namespace Violee
         
         
         #region Event
-        public static event Func<BoxData, Task> OnAddBoxAsync;
-        public static event Action<BoxData> OnRemoveBox;
+        public static event Func<BoxData, Task>? OnAddBoxAsync;
+        public static event Action<BoxData>? OnRemoveBox;
 
-        public static event Action OnBeginGenerate;
-        public static event Action OnEndGenerate;
-        public static event Func<Task> OnBeginDij;
-        public static event Action<Vector3> OnEndDij;
+        public static event Action? OnBeginGenerate;
+        public static event Action? OnEndGenerate;
+        public static event Func<Task>? OnBeginDij;
+        public static event Action<Vector3>? OnEndDij;
 
         #endregion
     }

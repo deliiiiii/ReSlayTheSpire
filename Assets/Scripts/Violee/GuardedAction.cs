@@ -4,19 +4,15 @@ using JetBrains.Annotations;
 
 namespace Violee
 {
-    public class GuardedAction
+    public class GuardedAction(Action action)
     {
-        readonly Action act;
-        public event Func<bool> Guard;
-        public GuardedAction(Action action)
-        {
-            act = action;
-        }
+        public event Func<bool>? Guard;
+
         public void TryInvoke()
         {
             if (CheckGuard())
                 return;
-            act.Invoke();
+            action.Invoke();
         }
         bool CheckGuard()
         {
@@ -32,19 +28,15 @@ namespace Violee
         }
     }
 
-    public class GuardedAction<T1>
+    public class GuardedAction<T1>(Action<T1> action)
     {
-        readonly Action<T1> act;
-        public event Func<bool> Guard;
-        public GuardedAction(Action<T1> action)
-        {
-            act = action;
-        }
+        public event Func<bool>? Guard;
+
         public void TryInvoke(T1 t1)
         {
             if (CheckGuard())
                 return;
-            act.Invoke(t1);
+            action.Invoke(t1);
         }
         bool CheckGuard()
         {
@@ -60,19 +52,15 @@ namespace Violee
         }
     }
 
-    public class GuardedAction<T1, T2>
+    public class GuardedAction<T1, T2>(Action<T1, T2> action)
     {
-        readonly Action<T1, T2> act;
-        public event Func<bool> Guard;
-        public GuardedAction(Action<T1, T2> action)
-        {
-            act = action;
-        }
+        public event Func<bool>? Guard;
+
         public void TryInvoke(T1 t1, T2 t2)
         {
             if (CheckGuard())
                 return;
-            act.Invoke(t1, t2);
+            action.Invoke(t1, t2);
         }
         bool CheckGuard()
         {
@@ -88,16 +76,11 @@ namespace Violee
         }
     }
 
-    public class GuardedFunc<TResult>
+    public class GuardedFunc<TResult>(Func<TResult> func)
     {
-        readonly Func<TResult> func;
-        public event Func<bool> Guard;
-        public GuardedFunc(Func<TResult> func)
-        {
-            this.func = func;
-        }
-        [CanBeNull]
-        public TResult TryInvoke()
+        public event Func<bool>? Guard;
+
+        public TResult? TryInvoke()
         {
             return !CheckGuard() ? default : func.Invoke();
         }
@@ -111,16 +94,11 @@ namespace Violee
         }
     }
 
-    public class GuardedFunc<T1, TResult>
+    public class GuardedFunc<T1, TResult>(Func<T1, TResult> func)
     {
-        readonly Func<T1, TResult> func;
-        public event Func<bool> Guard;
-        public GuardedFunc(Func<T1, TResult> func)
-        {
-            this.func = func;
-        }
-        [CanBeNull]
-        public TResult TryInvoke(T1 t1)
+        public event Func<bool>? Guard;
+
+        public TResult? TryInvoke(T1 t1)
         {
             return !CheckGuard() ? default : func.Invoke(t1);
         }

@@ -15,23 +15,17 @@ namespace BehaviourTree
     public interface INodeBaseEditor<out T> where T : NodeBase
     {
         T NodeBase { get; }
-        [CanBeNull]
-        Port InputParentPort { get; }
-        [CanBeNull]
-        Port InputGuardingPort { get; }
-        [CanBeNull]
-        Port OutputChildPorts { get; }
-        [CanBeNull]
-        Port OutputGuardedPort { get; }
+        Port? InputParentPort { get; }
+        Port? InputGuardingPort { get; }
+        Port? OutputChildPorts { get; }
+        Port? OutputGuardedPort { get; }
 
         public event Action<Type> OnTypeChanged;
-        [CanBeNull]
-        public Edge ConnectChildNodeEditor(INodeBaseEditor<NodeBase> childNodeEditor)
+        public Edge? ConnectChildNodeEditor(INodeBaseEditor<NodeBase> childNodeEditor)
         {
             return OutputChildPorts?.ConnectTo(childNodeEditor.InputParentPort);
         }
-        [CanBeNull]
-        public Edge ConnectGuardNodeEditor(INodeBaseEditor<NodeBase> guardNodeEditor)
+        public Edge? ConnectGuardNodeEditor(INodeBaseEditor<NodeBase> guardNodeEditor)
         {
             return InputGuardingPort?.ConnectTo(guardNodeEditor.OutputGuardedPort);
         }
@@ -44,7 +38,7 @@ namespace BehaviourTree
             NodeBase.Position = GetRect().position;
             NodeBase.Size = GetRect().size;
             NodeBase.ClearChildren();
-            this.ChildEditors()?
+            this.ChildEditors()
                 .OrderBy(editor => editor.GetRect().x)
                 .ForEach(childEditor =>
                 {
@@ -54,7 +48,7 @@ namespace BehaviourTree
                 });
             
             NodeBase.GuardNode = this.GuardingNode();
-            this.GuardingEditor()?.OnRefreshTree();
+            this.GuardingEditor().OnRefreshTree();
             // MyDebug.Log($"Editor : {NodeBase.name} AddGuard {guard?.name ?? "null"}");
             NodeBase.OnRefreshTreeEnd();
         }
@@ -193,7 +187,7 @@ namespace BehaviourTree
             typeField = new DropdownField(selections.Select(x => x.Name).ToList(), NodeBase.GetType().Name);
             typeField.RegisterValueChangedCallback(evt =>
             {
-                OnTypeChanged?.Invoke(selections.First(x => x.Name == evt.newValue));
+                OnTypeChanged.Invoke(selections.First(x => x.Name == evt.newValue));
             });
             extensionContainer.Add(typeField);
         }

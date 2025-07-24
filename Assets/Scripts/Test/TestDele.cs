@@ -1,33 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Test
 {
-    public class TestDele : MonoBehaviour
+    public class IsExternalInit : MonoBehaviour
     {
-        
+        public int TestPro
+        {
+            get;
+            set => field = value;
+        }
+
+        public event Action? EventTest;
 
         void Awake()
         {
-            ClassProducer.CreateClass1().Act?.Invoke();
+            EventTest?.Invoke();
+            EventTest += () => Debug.Log("Test");
+            EventTest.Invoke();
         }
     }
+    
+    public record TestRecord(int i, List<int> l);
+}
 
-    public class Class1
+namespace System.Runtime.CompilerServices
+{
+    internal class IsExternalInit
     {
-        public Action Act;
-    }
-
-    public static class ClassProducer
-    {
-        static readonly Action act1 = () => MyDebug.Log($"Act1");
-        public static Class1 CreateClass1()
-        {
-            var ret = new Class1()
-            {
-                Act = act1,
-            };
-            return ret;
-        }
     }
 }

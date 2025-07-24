@@ -7711,8 +7711,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
-  Height: 1
-  Width: 2
+  Height: 6
+  Width: 6
   StartPos: {x: 0, y: 0}
   StartDir: 1
 --- !u!43 &962145190
