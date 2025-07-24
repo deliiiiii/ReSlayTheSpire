@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -40,12 +39,14 @@ namespace Violee
                 };
                 BoxConfig.BoxConfigList.Add(boxConfig);
             }
-// #if UNITY_EDITOR
-//             EditorUtility.SetDirty(BoxConfig);
-//             AssetDatabase.SaveAssets();
-//             AssetDatabase.Refresh();
-// #endif
+
             BoxConfig.BoxConfigList.Sort((x, y) => x.Walls - y.Walls);
+            
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(BoxConfig);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+#endif
             Debug.Log("LoadConfig Completed");
         }
     }
