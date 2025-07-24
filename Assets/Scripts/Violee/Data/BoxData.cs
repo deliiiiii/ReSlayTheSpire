@@ -63,7 +63,7 @@ namespace Violee
         #region Walls
         [NonSerialized]
         byte wallsByte;
-        public event Action<WallData>? OnWallDataChanged;
+        public event Action<WallData> OnWallDataChanged;
 
         public readonly MyKeyedCollection<EWallType, WallData> WallKList = new(w => w.WallType);
         

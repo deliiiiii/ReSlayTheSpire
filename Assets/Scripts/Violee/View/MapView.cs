@@ -13,10 +13,6 @@ public class MapView : MonoBehaviour
     public Text CostTxtPrefab;
 #pragma warning restore CS8618
     
-    readonly Dictionary<BoxPointData, (BindDataAct<int>, Text)> costTxtDic = new ();
-
-    ObjectPool<Text> costTxtPool = null!;
-
     void Awake()
     {
         costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform);
@@ -25,15 +21,17 @@ public class MapView : MonoBehaviour
             BoxModelManager.OnBeginDij += BindAllCostTxt;
         }
     }
-
-    void DestroyAllCostTxt()
+    
+    static readonly Dictionary<BoxPointData, (BindDataAct<int>, Text)> costTxtDic = new ();
+    static ObjectPool<Text> costTxtPool = null!;
+    static void DestroyAllCostTxt()
     {
         foreach (var pair in costTxtDic.Values)
         {
             costTxtPool.MyDestroy(pair.Item2);
         }
     }
-    async Task BindAllCostTxt()
+    static async Task BindAllCostTxt()
     {
         try
         {
