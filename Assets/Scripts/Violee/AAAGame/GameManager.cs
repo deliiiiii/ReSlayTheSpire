@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Violee.View;
 
 namespace Violee
 {
