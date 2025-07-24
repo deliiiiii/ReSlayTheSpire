@@ -9,15 +9,16 @@ using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
     public bool GlobalOnScene;
+    static T instance;
 
     [NotNull]
     protected static T Instance
     {
         get
         {
-            field ??= FindObjectOfType<T>();
-            field ??= new GameObject().AddComponent<T>(); 
-            return field;
+            instance ??= FindObjectOfType<T>();
+            instance ??= new GameObject().AddComponent<T>(); 
+            return instance;
         }
     }
 
@@ -46,14 +47,16 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 // ReSharper disable once InconsistentNaming
 public class SingletonCS<T> where T : SingletonCS<T>, new()
 {
+    static T instance;
+
     [NotNull]
     public static T Instance
     {
         get
         {
-            field ??= new T();
-            field.OnInit();
-            return field;
+            instance ??= new T();
+            instance.OnInit();
+            return instance;
         }
     }
     protected virtual void OnInit()

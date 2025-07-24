@@ -1,9 +1,15 @@
 ﻿using System;
 using UnityEngine.Events;
 
-public class BindDataEvent(UnityEvent evt)
+public class BindDataEvent
 {
     UnityAction act;
+    readonly UnityEvent evt;
+
+    public BindDataEvent(UnityEvent evt)
+    {
+        this.evt = evt;
+    }
 
     public BindDataEvent To(UnityAction act)
     {

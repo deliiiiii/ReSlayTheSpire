@@ -40,11 +40,11 @@ namespace Violee
                 };
                 BoxConfig.BoxConfigList.Add(boxConfig);
             }
-#if UNITY_EDITOR
-            EditorUtility.SetDirty(BoxConfig);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-#endif
+// #if UNITY_EDITOR
+//             EditorUtility.SetDirty(BoxConfig);
+//             AssetDatabase.SaveAssets();
+//             AssetDatabase.Refresh();
+// #endif
             BoxConfig.BoxConfigList.Sort((x, y) => x.Walls - y.Walls);
             Debug.Log("LoadConfig Completed");
         }
