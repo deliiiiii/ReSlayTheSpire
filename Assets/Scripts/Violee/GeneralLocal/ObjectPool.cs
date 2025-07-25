@@ -9,23 +9,23 @@ namespace Violee
 {
     public class ObjectPool<T> where T : MonoBehaviour
     {
-        public ObjectPool(T tPrefab, Transform transform, int initCount = 36)
+        public ObjectPool(T tPrefab, Transform transform, int initSize = 36)
         {
             this.tPrefab = tPrefab;
-            this.initCount = initCount;
+            this.size = initSize;
             objParent = transform;
-            _ = MyCreateNew(initCount);
+            _ = MyCreateNew(size);
         }
 
         readonly T tPrefab;
         readonly Transform objParent;
-        readonly int initCount;
+        int size;
         readonly Stack<T> availableObject = new();
-        int poolCount => availableObject.Count;
         async Task MyCreateNew(int newCount)
         {
             try
             {
+                size += newCount;
                 for (int i = 0; i < newCount; i++)
                 {
                     if (!Application.isPlaying)
@@ -49,7 +49,7 @@ namespace Violee
             {
                 if (availableObject.Count == 0)
                 {
-                    await MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
+                    await MyCreateNew((int)(size * 0.5f));
                 }
                 var g = availableObject.Pop();
                 g.transform.SetParent(objParent, worldPositionStays: false);
@@ -68,7 +68,7 @@ namespace Violee
             {
                 if (availableObject.Count == 0)
                 {
-                    await MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
+                    await MyCreateNew((int)(size * 0.5f));
                 }
                 var g = availableObject.Pop();
                 g.transform.position = fPos;
@@ -88,7 +88,7 @@ namespace Violee
             {
                 if (availableObject.Count == 0)
                 {
-                    await MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
+                    await MyCreateNew((int)(size * 0.5f));
                 }
                 var g = availableObject.Pop();
                 g.transform.position = fPos;

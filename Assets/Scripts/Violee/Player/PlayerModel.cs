@@ -16,7 +16,7 @@ namespace Violee
 
         public static void OnEnterPlaying(Vector3 pos3D)
         {
-            Instance.transform.position = pos3D;
+            Instance.transform.position = pos3D + Vector3.up * (1.5f * Instance.transform.position.y);
             Instance.gameObject.SetActive(true);
         }
         

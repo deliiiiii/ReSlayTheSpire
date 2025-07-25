@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Sirenix.Utilities;
@@ -7,21 +8,14 @@ using UnityEngine;
 
 namespace Violee;
 
-public class BoxModelManager : Singleton<BoxModelManager>
+internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
 {
-    protected override void Awake()
-    {
-        base.Awake();
-        boxModelPool = new ObjectPool<BoxModel>(BoxPrefab, transform, 42);
-    }
-
     #region Inspector
     [Header("Map Settings")]
     [SerializeField] int height = 4;
     [SerializeField] int width = 6;
     [SerializeField] Vector2Int startPos;
     [SerializeField] EBoxDir startDir = EBoxDir.Up;
-    public BoxModel BoxPrefab = null!;
     #endregion
     
     
@@ -83,7 +77,7 @@ public class BoxModelManager : Singleton<BoxModelManager>
         MyDebug.Log($"Add box {config.Walls} at {pos}");
         boxKList.Add(boxData);
         emptyPosSet.Remove(pos);
-        SpawnBox3D(boxData);
+        await SpawnBox3D(boxData);
         return boxData;
     }
     static void RemoveBox(BoxData boxData)
@@ -101,7 +95,7 @@ public class BoxModelManager : Singleton<BoxModelManager>
         {
             for(int i = 0; i < Width; i++)
             {
-                emptyPosSet.Add(new(i, j));
+                emptyPosSet.Add(new Vector2Int(i, j));
             }
         }
     }
@@ -132,55 +126,63 @@ public class BoxModelManager : Singleton<BoxModelManager>
     }
     static async Task GenerateOneFakeConnection(bool startWithStartLoc)
     {
-        var edgeBoxStack = new Stack<BoxData>();
-        // 每个伪连通块的第一个是空格子
-        var firstLoc = startWithStartLoc ? StartPos : emptyPosSet.First();
-        var firstBox = await AddBoxAsync(firstLoc, BoxHelper.EmptyBoxConfig);
-        edgeBoxStack.Push(firstBox);
-        while (edgeBoxStack.Count > 0)
+        try
         {
-            var curBox = edgeBoxStack.Pop();
-            var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos2D);
-            foreach (var nextPair in nextPairs)
+            var edgeBoxStack = new Stack<BoxData>();
+            // 每个伪连通块的第一个是空格子
+            var firstLoc = startWithStartLoc ? StartPos : emptyPosSet.First();
+            var firstBox = await AddBoxAsync(firstLoc, BoxHelper.EmptyBoxConfig);
+            edgeBoxStack.Push(firstBox);
+            while (edgeBoxStack.Count > 0)
             {
-                // “下一格”
-                var nextPos = nextPair.Item1;
-                var nextGoInDir = nextPair.Item2;
-                var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];
-                if (!InMap(nextPos))
+                var curBox = edgeBoxStack.Pop();
+                var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos2D);
+                foreach (var nextPair in nextPairs)
                 {
-                    curBox.AddSWall(new WallData(curGoOutDir, EDoorType.None));
-                    // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
-                    continue;
-                }
-                if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
-                {
-                    var boxConfig = 
-                        Configer.BoxConfig.BoxConfigList.RandomItemWeighted(
-                            x => !BoxData.HasSWallByByteAndDir(x.Walls, nextGoInDir),
-                            x => x.BasicWeight);
-                    var nextBox = await AddBoxAsync(nextPos, boxConfig);
-                    var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
-                    foreach (var nextNextPair in nextNextPairs)
+                    // “下一格”
+                    var nextPos = nextPair.Item1;
+                    var nextGoInDir = nextPair.Item2;
+                    var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];
+                    if (!InMap(nextPos))
                     {
-                        var nextNextPos = nextNextPair.Item1;
-                        // “下一格”的相邻格的走入方向
-                        var nextNextGoInDir = nextNextPair.Item2;
-                        var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextPair.Item2];
-                        if (InMap(nextNextPos) && HasBox(nextNextPos))
+                        curBox.AddSWall(new WallData(curGoOutDir, EDoorType.None));
+                        // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
+                        continue;
+                    }
+                    if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
+                    {
+                        var boxConfig = 
+                            Configer.BoxConfig.BoxConfigList.RandomItemWeighted(
+                                x => !BoxData.HasSWallByByteAndDir(x.Walls, nextGoInDir),
+                                x => x.BasicWeight);
+                        var nextBox = await AddBoxAsync(nextPos, boxConfig);
+                        var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
+                        foreach (var nextNextPair in nextNextPairs)
                         {
-                            var nextNextBox = boxKList[nextNextPos];
-                            if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
+                            var nextNextPos = nextNextPair.Item1;
+                            // “下一格”的相邻格的走入方向
+                            var nextNextGoInDir = nextNextPair.Item2;
+                            var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextPair.Item2];
+                            if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
-                                nextBox.RemoveSWall(nextGoOutDir);
-                                // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
+                                var nextNextBox = boxKList[nextNextPos];
+                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
+                                {
+                                    nextBox.RemoveSWall(nextGoOutDir);
+                                    // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
+                                }
                             }
                         }
+                        
+                        edgeBoxStack.Push(nextBox);
                     }
-                    
-                    edgeBoxStack.Push(nextBox);
                 }
             }
+        }
+        catch (Exception e)
+        {
+            MyDebug.LogError(e);
+            throw;
         }
     }
     static async Task _Dijkstra()
@@ -248,14 +250,10 @@ public class BoxModelManager : Singleton<BoxModelManager>
             throw;
         }
     }
-
-
-
-    static ObjectPool<BoxModel> boxModelPool = null!;
     static readonly MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
-    static void SpawnBox3D(BoxData fBoxData)
+    static async Task SpawnBox3D(BoxData fBoxData)
     {
-        var boxModel =  boxModelPool.MyInstantiate().Result;
+        var boxModel = await Instance.modelPool.MyInstantiate();
         boxModel.ReadData(fBoxData);
         boxModel3DDic.Add(boxModel);
     }
@@ -263,7 +261,7 @@ public class BoxModelManager : Singleton<BoxModelManager>
     static void DestroyBox(BoxData fBoxData)
     {
         var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
-        boxModelPool.MyDestroy(boxModel3DDic[pos3D]);
+        Instance.modelPool.MyDestroy(boxModel3DDic[pos3D]);
         boxModel3DDic.Remove(pos3D);
     }
     #endregion

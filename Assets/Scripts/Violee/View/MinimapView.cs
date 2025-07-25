@@ -14,10 +14,16 @@ namespace Violee.View
         public required RawImage FullScreenImg;
         public float ChangeSpeed = 1.2f;
         public float MiniSize = 12f;
+
+        [Header("Load")]
+        public required GameObject PnlLoad;
+        
         bool isMinimap => MinimapImg.enabled;
         void Awake()
         {
             Binder.Update(SwitchMap);
+            GameManager.GeneratingMapState.OnEnter(() => PnlLoad.SetActive(true));
+            GameManager.GeneratingMapState.OnExit(() => PnlLoad.SetActive(false));
             ShowMinimap();
         }
 

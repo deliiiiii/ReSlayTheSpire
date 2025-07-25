@@ -16,7 +16,7 @@ namespace Violee
         #endregion
         
         
-        protected override void ReadDataInternal()
+        protected override void OnReadData()
         {
             Door.gameObject.SetActive(false);
             NotDoor.gameObject.SetActive(false);

@@ -4,6 +4,129 @@
     <option name="conversations">
       <list>
         <Conversation>
+          <option name="createTime" value="1753420900755" />
+          <option name="id" value="01984007a9937f75b6558cfe08e7605e" />
+          <option name="title" value="@ModelBase.cs @BoxModelManager.cs @GameManager.cs " />
+          <option name="turns">
+            <list>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户的问题是关于如何设计 `TznvNzmztvi` 和 `NlwvoNzmztviYzhv` 类，使得只有这两个类可以访问 `Nzmztvih` 中的 `TvgNlwvoNzmztvi` 和 `ZwwNlwvoNzmztvi` 函数。当前的设计中，`Nzmztvih` 类中的这两个方法是公开的，任何类都可以调用它们。为了限制访问权限，我们需要修改 `Nzmztvih` 类，使其方法仅对 `TznvNzmztvi` 和 `NlwvoNzmztviYzhv` 可见。&#10;&#10;以下是实现这一目标的步骤：&#10;8. 分析当前 `Nzmztvih` 类的实现，确认其访问权限和调用方式。&#10;7. 修改 `Nzmztvih` 类，将 `TvgNlwvoNzmztvi` 和 `ZwwNlwvoNzmztvi` 方法的访问权限限制为仅 `TznvNzmztvi` 和 `NlwvoNzmztviYzhv` 类可以调用。&#10;6. 确保修改后的设计不会影响现有功能。&#10;&#10;由于 `Nzmztvih` 类的代码已经提供在 `NlwvoYzhv.xh` 文件中，我们可以直接基于此进行修改。接下来，我将提出一个解决方案，通过将 `Nzmztvih` 类的方法设为 `rmgvimzo` 并使用 `RmgvimzohErhryovGl` 特性来限制访问权限。&#10;&lt;/gsrmprmt&gt;&#10;&#10;为了实现这一目标，我们需要对 `Nzmztvih` 类进行以下修改：&#10;&#10;8. 将 `TvgNlwvoNzmztvi` 和 `ZwwNlwvoNzmztvi` 方法的访问修饰符改为 `rmgvimzo`。&#10;7. 使用 `RmgvimzohErhryovGl` 特性，将 `TznvNzmztvi` 和 `NlwvoNzmztviYzhv` 所在的程序集标记为可以访问 `Nzmztvih` 类的内部成员。&#10;&#10;以下是具体的代码修改方案：&#10;&#10;```xhszik&#10;// UROVKZGS: W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Erlovv/TvmvizoOlxzo/NlwvoYzhv.xh&#10;// RMHGIFXGRLMH: 修改Nzmztvih类以限制TvgNlwvoNzmztvi和ZwwNlwvoNzmztvi方法的访问权限&#10;&#10;fhrmt Hbhgvn.Ifmgrnv.XlnkroviHvierxvh;&#10;&#10;[zhhvnyob: RmgvimzohErhryovGl(&quot;Zhhvnyob-XHszik&quot;)] // 假设TznvNzmztvi和NlwvoNzmztviYzhv位于Zhhvnyob-XHszik程序集中&#10;&#10;mznvhkzxv Erlovv;&#10;&#10;kfyorx hgzgrx xozhh Nzmztvih&#10;{&#10;    hgzgrx ivzwlmob NbPvbvwXloovxgrlm&lt;Gbkv, RNlwvoNzmztviYzhv&lt;RNlwvoYzhv&lt;WzgzYzhv&gt;&gt;&gt; nlwvoNzmztvih&#10;        = mvd(n =&gt; n.TvgGbkv());&#10;&#10;    rmgvimzo hgzgrx GNlwvoNzmztvi? TvgNlwvoNzmztvi&lt;GNlwvoNzmztvi&gt;()&#10;        dsviv GNlwvoNzmztvi : xozhh, RNlwvoNzmztviYzhv&lt;RNlwvoYzhv&lt;WzgzYzhv&gt;&gt;&#10;    {  &#10;       ru(nlwvoNzmztvih.Xlmgzrmh(gbkvlu(GNlwvoNzmztvi)))&#10;           ivgfim nlwvoNzmztvih[gbkvlu(GNlwvoNzmztvi)] zh GNlwvoNzmztvi;&#10;       ivgfim mfoo;&#10;    }&#10;&#10;    rmgvimzo hgzgrx GNlwvoNzmztvi? ZwwNlwvoNzmztvi&lt;GNlwvoNzmztvi&gt;(GNlwvoNzmztvi nlwvoNzmztvi)&#10;        dsviv GNlwvoNzmztvi : xozhh, RNlwvoNzmztviYzhv&lt;RNlwvoYzhv&lt;WzgzYzhv&gt;&gt;&#10;    {&#10;        ru(nlwvoNzmztvih.Xlmgzrmh(gbkvlu(GNlwvoNzmztvi)))&#10;            ivgfim nlwvoNzmztvih[gbkvlu(GNlwvoNzmztvi)] zh GNlwvoNzmztvi;&#10;        nlwvoNzmztvih.Zww(nlwvoNzmztvi);&#10;        ivgfim nlwvoNzmztvi;&#10;    }&#10;}&#10;```&#10;&#10;### 修改说明：&#10;8. **访问修饰符修改**：&#10;   - 将 `TvgNlwvoNzmztvi` 和 `ZwwNlwvoNzmztvi` 方法从 `kfyorx` 改为 `rmgvimzo`，限制它们只能在当前程序集内访问。&#10;   &#10;7. **`RmgvimzohErhryovGl` 特性**：&#10;   - 使用 `[zhhvnyob: RmgvimzohErhryovGl(&quot;Zhhvnyob-XHszik&quot;)]` 特性，允许 `TznvNzmztvi` 和 `NlwvoNzmztviYzhv` 所在的程序集（假设为 `Zhhvnyob-XHszik`）访问 `Nzmztvih` 类的内部成员。如果程序集名称不同，请替换为实际的程序集名称。&#10;&#10;6. **验证**：&#10;   - 确保 `TznvNzmztvi` 和 `NlwvoNzmztviYzhv` 类仍然可以正常调用 `TvgNlwvoNzmztvi` 和 `ZwwNlwvoNzmztvi` 方法。&#10;   - 其他类尝试调用这些方法时，编译器会报错，从而实现访问限制。&#10;&#10;### 注意事项：&#10;- 如果 `TznvNzmztvi` 和 `NlwvoNzmztviYzhv` 位于不同的程序集，需要为每个程序集添加 `RmgvimzohErhryovGl` 特性。&#10;- 修改后，建议重新编译项目以确保所有依赖项正常工作。" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="ModelBase.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/GeneralLocal/ModelBase.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="BoxModelManager.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/Manager/BoxModelManager.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="GameManager.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/AAAGame/GameManager.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="01984007a9937f75b6558cfe08e7605e" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/AAAGame/GameManager.cs" value="using System.Threading.Tasks;&#10;using Sirenix.OdinInspector;&#10;using UnityEngine;&#10;using Violee.View;&#10;&#10;namespace Violee&#10;{&#10;    public enum EGameState&#10;    {&#10;        Idle,&#10;        GeneratingMap,&#10;        Playing,&#10;        WatchingMap,&#10;    }&#10;    public class GameManager : Singleton&lt;GameManager&gt;&#10;    {&#10;        [ShowInInspector]&#10;        MyFSM&lt;EGameState&gt; gameFsm = new ();&#10;        bool isIdle =&gt; gameFsm.IsState(EGameState.Idle);&#10;        bool isPlaying =&gt; gameFsm.IsState(EGameState.Playing);&#10;        protected void Start()&#10;        {&#10;            Binder.From(gameFsm.GetState(EGameState.Playing)).OnUpdate(dt =&gt;&#10;            {&#10;                BoxModelManager.TickPlayerVisit(PlayerModel.Instance.transform.position);&#10;                PlayerModel.Tick(dt);&#10;            });&#10;            Binder.From(gameFsm.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);&#10;            &#10;            &#10;            BoxModelManager.StartGenerateFunc.Guard += () =&gt; isIdle || isPlaying;&#10;            BoxModelManager.DijkstraFunc.Guard += () =&gt; isIdle;&#10;            BoxModelManager.OnBeginGenerate += () =&gt; gameFsm.ChangeState(EGameState.GeneratingMap);&#10;            BoxModelManager.OnEndGenerate += () =&gt; gameFsm.ChangeState(EGameState.Idle);&#10;            BoxModelManager.OnBeginDij += () =&gt;&#10;            {&#10;                gameFsm.ChangeState(EGameState.GeneratingMap);&#10;                return Task.CompletedTask;&#10;            };&#10;            BoxModelManager.OnEndDij += pos3D =&gt;&#10;            {&#10;                gameFsm.ChangeState(EGameState.Playing);&#10;                PlayerModel.OnEnterPlaying(pos3D);&#10;            };&#10;            &#10;            Binder.Update(_ =&gt;&#10;            {&#10;                if (Input.GetKeyDown(KeyCode.R))&#10;                    BoxModelManager.StartGenerateFunc.TryInvoke();&#10;            });&#10;            &#10;            gameFsm.ChangeState(EGameState.Idle);&#10;            Binder.Update(gameFsm.Update);&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/GeneralLocal/ModelBase.cs" value="using System;&#10;using System.Collections.Generic;&#10;using System.Diagnostics.CodeAnalysis;&#10;using Sirenix.OdinInspector;&#10;using UnityEngine;&#10;&#10;namespace Violee;&#10;&#10;public static class Managers&#10;{&#10;    static readonly MyKeyedCollection&lt;Type, IModelManagerBase&lt;IModelBase&lt;DataBase&gt;&gt;&gt; modelManagers&#10;        = new(m =&gt; m.GetType());&#10;&#10;    public static TModelManager? GetModelManager&lt;TModelManager&gt;()&#10;        where TModelManager : class, IModelManagerBase&lt;IModelBase&lt;DataBase&gt;&gt;&#10;    {  &#10;       if(modelManagers.Contains(typeof(TModelManager)))&#10;           return modelManagers[typeof(TModelManager)] as TModelManager;&#10;       return null;&#10;    }&#10;&#10;    public static TModelManager? AddModelManager&lt;TModelManager&gt;(TModelManager modelManager)&#10;        where TModelManager : class, IModelManagerBase&lt;IModelBase&lt;DataBase&gt;&gt;&#10;    {&#10;        if(modelManagers.Contains(typeof(TModelManager)))&#10;            return modelManagers[typeof(TModelManager)] as TModelManager;&#10;        modelManagers.Add(modelManager);&#10;        return modelManager;&#10;    }&#10;}&#10;&#10;public abstract class ModelBase&lt;TData&gt; : MonoBehaviour, IModelBase&lt;TData&gt; where TData : DataBase&#10;{&#10;    [SerializeField] [ReadOnly] protected TData data = null!;&#10;    public TData Data =&gt; data;&#10;&#10;    public void ReadData(TData fData)&#10;    {&#10;        data = fData;&#10;        ReadDataInternal();&#10;    }&#10;    protected abstract void ReadDataInternal();&#10;    &#10;}&#10;&#10;public interface IModelBase&lt;out TData&gt; where TData : DataBase&#10;{ &#10;    TData Data { get; }&#10;}&#10;&#10;public interface IModelManagerBase&lt;out TModel&gt; where TModel : IModelBase&lt;DataBase&gt;&#10;{&#10;    TModel ModelPrefab { get; }&#10;}&#10;&#10;[Serializable]&#10;public abstract class ModelManagerBase&lt;TModel, TModelManager&gt; : Singleton&lt;TModelManager&gt;, IModelManagerBase&lt;TModel&gt; &#10;    where TModel : MonoBehaviour, IModelBase&lt;DataBase&gt;&#10;    where TModelManager : Singleton&lt;TModelManager&gt;&#10;{&#10;    [SerializeField] TModel modelPrefab = null!;&#10;    public TModel ModelPrefab =&gt; modelPrefab;&#10;    [field: MaybeNull] protected ObjectPool&lt;TModel&gt; modelPool =&gt; &#10;        field ??= new ObjectPool&lt;TModel&gt;(ModelPrefab, transform, 42);&#10;&#10;    protected override void Awake()&#10;    {&#10;        base.Awake();&#10;        Managers.AddModelManager(this);&#10;    }&#10;}&#10;&#10;[Serializable]&#10;public abstract class DataBase&#10;{&#10;    &#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/Manager/BoxModelManager.cs" value="using System;&#10;using System.Collections.Generic;&#10;using System.Diagnostics.CodeAnalysis;&#10;using System.Linq;&#10;using System.Threading.Tasks;&#10;using Sirenix.Utilities;&#10;using UnityEngine;&#10;&#10;namespace Violee;&#10;&#10;public class BoxModelManager : ModelManagerBase&lt;BoxModel, BoxModelManager&gt;&#10;{&#10;    #region Inspector&#10;    [Header(&quot;Map Settings&quot;)]&#10;    [SerializeField] int height = 4;&#10;    [SerializeField] int width = 6;&#10;    [SerializeField] Vector2Int startPos;&#10;    [SerializeField] EBoxDir startDir = EBoxDir.Up;&#10;    #endregion&#10;    &#10;    &#10;    #region Public Event &amp; Functions&#10;    public static event Action? OnBeginGenerate;&#10;    public static event Action? OnEndGenerate;&#10;    public static event Func&lt;Task&gt;? OnBeginDij;&#10;    public static event Action&lt;Vector3&gt;? OnEndDij;&#10;    public static List&lt;BoxPointData&gt; GetAllPoints()&#10;    {&#10;        return boxKList.SelectMany(x =&gt; x.PointKList).ToList();&#10;    }&#10;    public static void TickPlayerVisit(Vector3 playerPos)&#10;    {&#10;        var x = playerPos.x;&#10;        var z = playerPos.z;&#10;        var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);&#10;        var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);&#10;        if (!HasBox(boxPos2D))&#10;        {&#10;            MyDebug.LogWarning($&quot;Why !HasBox({boxPos3D}) PlayerPos:{playerPos}&quot;);&#10;            return;&#10;        }&#10;&#10;        foreach (var dir in BoxHelper.AllBoxDirs)&#10;        {&#10;            var edgeCenterPos = BoxHelper.Pos2DTo3DEdge(boxPos2D, dir);&#10;            var edgeX = edgeCenterPos.x;&#10;            var edgeZ = edgeCenterPos.z;&#10;            var pointData = boxKList[boxPos2D].PointKList[dir];&#10;            // MyDebug.Log($&quot;dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}&quot;);&#10;            if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) &lt;= BoxHelper.BoxSize * Configer.BoxConfig.WalkInTolerance&#10;                &amp;&amp; !pointData.Visited)&#10;            {&#10;                pointData.Visited.Value = true;&#10;                MyDebug.Log($&quot;Enter Point!!{boxPos2D}:{dir}&quot;);&#10;            }&#10;        }&#10;    }&#10;&#10;    public static readonly GuardedFunc&lt;Task&gt; StartGenerateFunc = new (_StartGenerate);&#10;    public static readonly GuardedFunc&lt;Task&gt; DijkstraFunc = new (_Dijkstra);&#10;    public static float MaxSize =&gt; Mathf.Max(Width, Height) * BoxHelper.BoxSize;&#10;    #endregion&#10;    &#10;    &#10;    #region PosInMap, Box&#10;    static int Height =&gt; Instance.height;&#10;    static int Width =&gt; Instance.width;&#10;    static Vector2Int StartPos =&gt; Instance.startPos;&#10;    static EBoxDir StartDir =&gt; Instance.startDir;&#10;    static readonly MyKeyedCollection&lt;Vector2Int, BoxData&gt; boxKList = new (b =&gt; b.Pos2D);&#10;    static bool InMap(Vector2Int pos) =&gt; pos.x &gt;= 0 &amp;&amp; pos.x &lt; Width &amp;&amp; pos.y &gt;= 0 &amp;&amp; pos.y &lt; Height;&#10;    static bool HasBox(Vector2Int pos) =&gt; boxKList.Contains(pos);&#10;    static async Task&lt;BoxData&gt; AddBoxAsync(Vector2Int pos, BoxConfigSingle config)&#10;    {&#10;        await Configer.SettingsConfig.YieldFrames();&#10;        var boxData = new BoxData(pos, config);&#10;        MyDebug.Log($&quot;Add box {config.Walls} at {pos}&quot;);&#10;        boxKList.Add(boxData);&#10;        emptyPosSet.Remove(pos);&#10;        SpawnBox3D(boxData);&#10;        return boxData;&#10;    }&#10;    static void RemoveBox(BoxData boxData)&#10;    {&#10;        boxKList.Remove(boxData);&#10;        emptyPosSet.Add(boxData.Pos2D);&#10;        DestroyBox(boxData);&#10;    }&#10;    static void RemoveAllBoxes()&#10;    {&#10;        boxKList.ForEach(DestroyBox);&#10;        boxKList.Clear();&#10;        emptyPosSet.Clear();&#10;        for(int j = 0; j &lt; Height; j++)&#10;        {&#10;            for(int i = 0; i &lt; Width; i++)&#10;            {&#10;                emptyPosSet.Add(new Vector2Int(i, j));&#10;            }&#10;        }&#10;    }&#10;    #endregion&#10;&#10;&#10;    #region Generate&#10;    static readonly HashSet&lt;Vector2Int&gt; emptyPosSet = [];&#10;    static async Task _StartGenerate()&#10;    {&#10;        try&#10;        {&#10;            OnBeginGenerate?.Invoke();&#10;            RemoveAllBoxes();&#10;            await GenerateOneFakeConnection(true);&#10;            while (emptyPosSet.Count &gt; 0)&#10;            {&#10;                await GenerateOneFakeConnection(false);&#10;            }&#10;            OnEndGenerate?.Invoke();&#10;            await (DijkstraFunc.TryInvoke() ?? Task.CompletedTask);&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;    static async Task GenerateOneFakeConnection(bool startWithStartLoc)&#10;    {&#10;        var edgeBoxStack = new Stack&lt;BoxData&gt;();&#10;        // 每个伪连通块的第一个是空格子&#10;        var firstLoc = startWithStartLoc ? StartPos : emptyPosSet.First();&#10;        var firstBox = await AddBoxAsync(firstLoc, BoxHelper.EmptyBoxConfig);&#10;        edgeBoxStack.Push(firstBox);&#10;        while (edgeBoxStack.Count &gt; 0)&#10;        {&#10;            var curBox = edgeBoxStack.Pop();&#10;            var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos2D);&#10;            foreach (var nextPair in nextPairs)&#10;            {&#10;                // “下一格”&#10;                var nextPos = nextPair.Item1;&#10;                var nextGoInDir = nextPair.Item2;&#10;                var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];&#10;                if (!InMap(nextPos))&#10;                {&#10;                    curBox.AddSWall(new WallData(curGoOutDir, EDoorType.None));&#10;                    // MyDebug.Log($&quot;ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}&quot;);&#10;                    continue;&#10;                }&#10;                if (!HasBox(nextPos) &amp;&amp; !curBox.HasSWallByDir(curGoOutDir, out _))&#10;                {&#10;                    var boxConfig = &#10;                        Configer.BoxConfig.BoxConfigList.RandomItemWeighted(&#10;                            x =&gt; !BoxData.HasSWallByByteAndDir(x.Walls, nextGoInDir),&#10;                            x =&gt; x.BasicWeight);&#10;                    var nextBox = await AddBoxAsync(nextPos, boxConfig);&#10;                    var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);&#10;                    foreach (var nextNextPair in nextNextPairs)&#10;                    {&#10;                        var nextNextPos = nextNextPair.Item1;&#10;                        // “下一格”的相邻格的走入方向&#10;                        var nextNextGoInDir = nextNextPair.Item2;&#10;                        var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextPair.Item2];&#10;                        if (InMap(nextNextPos) &amp;&amp; HasBox(nextNextPos))&#10;                        {&#10;                            var nextNextBox = boxKList[nextNextPos];&#10;                            if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))&#10;                            {&#10;                                nextBox.RemoveSWall(nextGoOutDir);&#10;                                // MyDebug.Log($&quot;WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}&quot;);&#10;                            }&#10;                        }&#10;                    }&#10;                    &#10;                    edgeBoxStack.Push(nextBox);&#10;                }&#10;            }&#10;        }&#10;    }&#10;    static async Task _Dijkstra()&#10;    {&#10;        try&#10;        {&#10;            MyDebug.Log(&quot;Dijkstra 1&quot;);&#10;            foreach (var boxData in boxKList)&#10;            {&#10;                boxData.ResetCost();&#10;            }&#10;            if (OnBeginDij != null)&#10;            {&#10;                await OnBeginDij.Invoke();&#10;            }&#10;            MyDebug.Log(&quot;Dijkstra 2&quot;);&#10;            var vSet = new HashSet&lt;BoxPointData&gt;();&#10;        &#10;            var pq = new SimplePriorityQueue&lt;BoxPointData, int&gt;();&#10;            var startBox = boxKList[StartPos];&#10;            var startPoint = startBox.PointKList[StartDir];&#10;            startPoint.CostWall.Value = 0;&#10;            pq.Enqueue(startPoint, 0);&#10;            while (pq.Count != 0)&#10;            {&#10;                var curPoint = pq.Dequeue();&#10;                vSet.Add(curPoint);&#10;                var curCost = curPoint.CostWall;&#10;                var curBox = curPoint.BelongBox;&#10;                curPoint.UpdateNextPointCost();&#10;                var nextPos = BoxHelper.NextPos(curBox.Pos2D, curPoint.Dir);&#10;                if (InMap(nextPos))&#10;                {&#10;                    var nextBox = boxKList[nextPos];&#10;                    var oppositeDir = BoxHelper.OppositeDirDic[curPoint.Dir];&#10;                    var nextPoint = nextBox.PointKList[oppositeDir];&#10;                    nextPoint.CostWall.Value = Math.Min(&#10;                        nextPoint.CostWall.Value,&#10;                        curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));&#10;                    if (!vSet.Contains(nextPoint))&#10;                    {&#10;                        if(pq.Contains(nextPoint))&#10;                            pq.UpdatePriority(nextPoint, nextPoint.CostWall);&#10;                        else&#10;                            pq.Enqueue(nextPoint, nextPoint.CostWall);&#10;                    }&#10;                }&#10;                curPoint.NextPointsInBox&#10;                    .Where(nextPoint =&gt; !vSet.Contains(nextPoint))&#10;                    .ForEach(nextPoint =&gt;&#10;                    {&#10;                        if (pq.Contains(nextPoint))&#10;                            pq.UpdatePriority(nextPoint, nextPoint.CostWall);&#10;                        else&#10;                            pq.Enqueue(nextPoint, nextPoint.CostWall);&#10;                    });&#10;                await Configer.SettingsConfig.YieldFrames();&#10;            }&#10;            MyDebug.Log(&quot;Dijkstra finished!&quot;);&#10;            OnEndDij?.Invoke(BoxHelper.Pos2DTo3DPoint(StartPos, StartDir));&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;    static readonly MyKeyedCollection&lt;Vector3, BoxModel&gt; boxModel3DDic = new(b =&gt; b.transform.position);&#10;    static void SpawnBox3D(BoxData fBoxData)&#10;    {&#10;        var boxModel = Instance.modelPool.MyInstantiate().Result;&#10;        boxModel.ReadData(fBoxData);&#10;        boxModel3DDic.Add(boxModel);&#10;    }&#10;        &#10;    static void DestroyBox(BoxData fBoxData)&#10;    {&#10;        var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);&#10;        Instance.modelPool.MyDestroy(boxModel3DDic[pos3D]);&#10;        boxModel3DDic.Remove(pos3D);&#10;    }&#10;    #endregion&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="12473" />
+                <option name="messageId" value="019840088bea7c3a8ec1ae9c2a8b4c5f" />
+                <option name="outputToken" value="890" />
+                <option name="question" value="@NlwvoYzhv.xh @YlcNlwvoNzmztvi.xh @TznvNzmztvi.xh 如何对TznvNzmztvi和NlwvoNzmztviYzhv进行设计，使得只有这两个类可以访问到Nzmztvih里的tvg和zww NlwvoNzmztvi函数？" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="13363" />
+                <option name="variables">
+                  <list>
+                    <FileVariable>
+                      <option name="endOffset" value="13" />
+                      <option name="identifierHash" value="VARIABLE_3b7d4587b499f50b6fceefac3781b2ce03d3f62503fa8e6bec2042d2b6ebf431" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                    </FileVariable>
+                    <FileVariable>
+                      <option name="endOffset" value="33" />
+                      <option name="identifierHash" value="VARIABLE_f2c6ef8508c11ba3ba0ccc63519a7e02a5922c4544e975b2525ba00e0b608a15" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="14" />
+                    </FileVariable>
+                    <FileVariable>
+                      <option name="endOffset" value="49" />
+                      <option name="identifierHash" value="VARIABLE_86211ce1736e41a056c194e453de672247f4feacfdb6eadb1b17b43d64b1b90a" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="34" />
+                    </FileVariable>
+                  </list>
+                </option>
+              </Turn>
+            </list>
+          </option>
+          <option name="updateTime" value="1753420973162" />
+        </Conversation>
+        <Conversation>
           <option name="createTime" value="1753362518578" />
           <option name="id" value="01983c8cd23275e1ac9a489339381cdc" />
           <option name="title" value="BoxModelManager.OnBeginDij += MapView.BindAllCostT" />

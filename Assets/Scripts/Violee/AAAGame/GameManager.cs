@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Violee.View;
@@ -18,8 +19,12 @@ namespace Violee
         MyFSM<EGameState> gameFsm = new ();
         bool isIdle => gameFsm.IsState(EGameState.Idle);
         bool isPlaying => gameFsm.IsState(EGameState.Playing);
+
+        [field: MaybeNull] public static BindDataState GeneratingMapState => 
+            field ??= Binder.From(Instance.gameFsm.GetState(EGameState.GeneratingMap));
         protected void Start()
         {
+            
             Binder.From(gameFsm.GetState(EGameState.Playing)).OnUpdate(dt =>
             {
                 BoxModelManager.TickPlayerVisit(PlayerModel.Instance.transform.position);

@@ -14,7 +14,7 @@ namespace Violee
         [SerializeField] SerializableDictionary<EBoxDir, BoxPointModel> pointDic;
 #pragma warning restore CS8618
         
-        protected override void ReadDataInternal()
+        protected override void OnReadData()
         {
             name = $"Box {data.Pos2D.x} {data.Pos2D.y}";
             
