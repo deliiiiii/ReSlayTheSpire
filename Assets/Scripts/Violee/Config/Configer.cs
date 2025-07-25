@@ -9,8 +9,8 @@ namespace Violee
 {
     public class Configer : Singleton<Configer>
     {
-        public BoxConfig BoxConfigIns;
-        public SettingsConfig SettingsConfigIns;
+        public required BoxConfig BoxConfigIns;
+        public required SettingsConfig SettingsConfigIns;
 
         public static BoxConfig BoxConfig => Instance.BoxConfigIns;
         public static SettingsConfig SettingsConfig => Instance.SettingsConfigIns;

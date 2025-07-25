@@ -1,2 +1,2 @@
 ﻿-langVersion:preview
--nullable:disable
+-nullable:enable

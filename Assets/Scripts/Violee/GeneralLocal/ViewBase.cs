@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Violee;
 
 public abstract class ViewBase<T> : Singleton<ViewBase<T>> where T : Singleton<T>
 {
-    protected T viewedModel;
+    [field: MaybeNull]protected T viewedModel => field ??= Singleton<T>.Instance;
 
     protected override void Awake()
     {
         base.Awake();
-        viewedModel = Singleton<T>.Instance;
         Bind();
     }
 

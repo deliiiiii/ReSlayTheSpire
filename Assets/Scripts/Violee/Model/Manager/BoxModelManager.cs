@@ -26,10 +26,10 @@ public class BoxModelManager : Singleton<BoxModelManager>
     
     
     #region Public Event & Functions
-    public static event Action OnBeginGenerate;
-    public static event Action OnEndGenerate;
-    public static event Func<Task> OnBeginDij;
-    public static event Action<Vector3> OnEndDij;
+    public static event Action? OnBeginGenerate;
+    public static event Action? OnEndGenerate;
+    public static event Func<Task>? OnBeginDij;
+    public static event Action<Vector3>? OnEndDij;
     public static List<BoxPointData> GetAllPoints()
     {
         return boxKList.SelectMany(x => x.PointKList).ToList();

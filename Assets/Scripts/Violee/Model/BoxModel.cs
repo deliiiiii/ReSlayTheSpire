@@ -22,6 +22,7 @@ namespace Violee
             {
                 pointDic[p.Dir].ReadData(p);
             });
+            
             data.OnWallDataChanged += OnWallDataChanged;
             data.WallKList.ForEach(OnWallDataChanged);
             transform.position = BoxHelper.Pos2DTo3DBox(data.Pos2D);

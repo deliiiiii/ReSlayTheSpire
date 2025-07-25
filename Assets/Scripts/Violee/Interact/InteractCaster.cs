@@ -8,6 +8,8 @@ namespace Violee.Interact
         public LayerMask TarLayer;
         public float Radius = 8f;
         public float Angle = 45f;
+
+        readonly Collider[] colliders = new Collider[20];
         void Update()
         {
             DetectTargetsInSector();
@@ -18,8 +20,10 @@ namespace Violee.Interact
             // 获取当前位置和前方方向
             var origin = transform.position;
             var forward = transform.forward;
-            foreach (var col in Physics.OverlapSphere(origin, Radius, TarLayer))
+            var count = Physics.OverlapSphereNonAlloc(origin, Radius, colliders, TarLayer);
+            for (int i = 0; i < count; i++)
             {
+                var col = colliders[i];
                 var targetDir = col.transform.position - origin;
                 var distance = targetDir.magnitude;
 

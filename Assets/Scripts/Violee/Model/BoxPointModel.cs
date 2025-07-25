@@ -6,7 +6,7 @@ namespace Violee
     {
         protected override void ReadDataInternal()
         {
-            // ...
+            Binder.From(data.Visited).To(gameObject.SetActive).Immediate();
         }
     }
 }
