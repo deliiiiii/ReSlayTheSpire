@@ -4,6 +4,455 @@
     <option name="conversations">
       <list>
         <Conversation>
+          <option name="createTime" value="1753432577718" />
+          <option name="id" value="019840b9d6b675588f74ee8bbce496be" />
+          <option name="title" value="评价一下GameManager的职责是否单一，以及GameManager类引用其他类、其他类引用Ga" />
+          <option name="turns">
+            <list>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户的问题是关于`TznvNzmztvi`类的职责单一性和耦合程度。我需要分析以下几点：&#10;8. **职责单一性**：检查`TznvNzmztvi`是否只负责一个核心职责，还是承担了多个不相关的职责。&#10;7. **耦合程度**：&#10;   - `TznvNzmztvi`引用了哪些其他类。&#10;   - 哪些其他类引用了`TznvNzmztvi`。&#10;&#10;根据用户提供的文件列表，我将重点关注`TznvNzmztvi.xh`的内容，同时查看其他相关文件以了解引用关系。&#10;&#10;首先，我将从`TznvNzmztvi.xh`的内容入手，分析其职责和引用关系。由于文件内容已经提供，无需调用工具读取文件。&#10;&lt;/gsrmprmt&gt;&#10;&#10;从`TznvNzmztvi.xh`的内容来看，`TznvNzmztvi`的主要职责是管理游戏状态（`VTznvHgzgv`），包括：&#10;8. 处理游戏状态的切换（如`Rwov`、`TvmvizgrmtNzk`、`Kozbrmt`等）。&#10;7. 监听`YlcNlwvoNzmztvi`的事件（如`LmYvtrmTvmvizgv`、`LmVmwTvmvizgv`等）。&#10;6. 管理玩家输入（如按`I`键重新生成地图）。&#10;5. 通过`YrmwWzgzHgzgv`与其他模块交互。&#10;&#10;### 职责单一性&#10;`TznvNzmztvi`的职责主要集中在游戏状态管理，但同时也涉及了一些输入处理和事件监听。虽然这些功能与游戏状态相关，但可以进一步解耦：&#10;- 输入处理可以单独封装到一个`RmkfgNzmztvi`类中。&#10;- 事件监听可以通过更模块化的方式实现，避免直接依赖`YlcNlwvoNzmztvi`。&#10;&#10;### 耦合程度&#10;#### `TznvNzmztvi`引用其他类&#10;- `YlcNlwvoNzmztvi`：通过事件监听和静态方法调用。&#10;- `KozbviNlwvo`：直接调用其静态方法（如`KozbviNlwvo.LmVmgviKozbrmt`）。&#10;- `Yrmwvi`：用于数据绑定。&#10;&#10;#### 其他类引用`TznvNzmztvi`&#10;- `NrmrnzkErvd.xh`：引用了`TznvNzmztvi.TvmvizgrmtNzkHgzgv`。&#10;- `NzkErvd.xh`：间接依赖`TznvNzmztvi`的状态（通过`YlcNlwvoNzmztvi`的事件）。&#10;&#10;### 改进建议&#10;8. **职责分离**：&#10;   - 将输入处理逻辑（如`Rmkfg.TvgPvbWldm(PvbXlwv.I)`）移到单独的`RmkfgNzmztvi`类。&#10;   - 将事件监听逻辑解耦为更独立的模块，避免直接依赖`YlcNlwvoNzmztvi`。&#10;&#10;7. **降低耦合**：&#10;   - 使用接口或事件总线模式减少`TznvNzmztvi`与其他类的直接依赖。&#10;   - 将`TznvNzmztvi`的状态管理功能进一步模块化，避免直接调用`KozbviNlwvo`等类的静态方法。&#10;&#10;6. **代码结构优化**：&#10;   - 将`TznvNzmztvi`的核心状态管理功能与其他辅助功能分离，确保职责单一。&#10;&#10;如果需要更详细的分析或其他文件的引用关系，可以进一步调用工具查看相关代码。" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="end_line" value="15" />
+                      <option name="filename" value="GameManager.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position>
+                              <option name="character" value="28" />
+                              <option name="line" value="15" />
+                            </Position>
+                          </option>
+                          <option name="start">
+                            <Position>
+                              <option name="character" value="17" />
+                              <option name="line" value="15" />
+                            </Position>
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="start_line" value="15" />
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/AAAGame/GameManager.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="BoxModelManager.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/Manager/BoxModelManager.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="BoxModel.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxModel.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="BoxPointModel.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxPointModel.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="WallModel.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/WallModel.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="MapView.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/View/MapView.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="MinimapView.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/View/MinimapView.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="019840b9d6b675588f74ee8bbce496be" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/AAAGame/GameManager.cs" value="using System.Diagnostics.CodeAnalysis;&#10;using System.Threading.Tasks;&#10;using Sirenix.OdinInspector;&#10;using UnityEngine;&#10;using Violee.View;&#10;&#10;namespace Violee&#10;{&#10;    public enum EGameState&#10;    {&#10;        Idle,&#10;        GeneratingMap,&#10;        Playing,&#10;        WatchingMap,&#10;    }&#10;    public class GameManager : Singleton&lt;GameManager&gt;&#10;    {&#10;        [ShowInInspector]&#10;        MyFSM&lt;EGameState&gt; gameFsm = new ();&#10;        bool isIdle =&gt; gameFsm.IsState(EGameState.Idle);&#10;        bool isPlaying =&gt; gameFsm.IsState(EGameState.Playing);&#10;&#10;        [field: MaybeNull] public static BindDataState GeneratingMapState =&gt; &#10;            field ??= Binder.From(Instance.gameFsm.GetState(EGameState.GeneratingMap));&#10;        protected void Start()&#10;        {&#10;            &#10;            Binder.From(gameFsm.GetState(EGameState.Playing)).OnUpdate(dt =&gt;&#10;            {&#10;                BoxModelManager.TickPlayerVisit(PlayerModel.Instance.transform.position);&#10;                PlayerModel.Tick(dt);&#10;            });&#10;            Binder.From(gameFsm.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);&#10;            &#10;            &#10;            BoxModelManager.StartGenerateFunc.Guard += () =&gt; isIdle || isPlaying;&#10;            BoxModelManager.DijkstraFunc.Guard += () =&gt; isIdle;&#10;            BoxModelManager.OnBeginGenerate += () =&gt; gameFsm.ChangeState(EGameState.GeneratingMap);&#10;            BoxModelManager.OnEndGenerate += () =&gt; gameFsm.ChangeState(EGameState.Idle);&#10;            BoxModelManager.OnBeginDij += () =&gt;&#10;            {&#10;                gameFsm.ChangeState(EGameState.GeneratingMap);&#10;                return Task.CompletedTask;&#10;            };&#10;            BoxModelManager.OnEndDij += pos3D =&gt;&#10;            {&#10;                gameFsm.ChangeState(EGameState.Playing);&#10;                PlayerModel.OnEnterPlaying(pos3D);&#10;            };&#10;            &#10;            Binder.Update(_ =&gt;&#10;            {&#10;                if (Input.GetKeyDown(KeyCode.R))&#10;                    BoxModelManager.StartGenerateFunc.TryInvoke();&#10;            });&#10;            &#10;            gameFsm.ChangeState(EGameState.Idle);&#10;            Binder.Update(gameFsm.Update);&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxModel.cs" value="using System;&#10;using System.Collections.Generic;&#10;using System.Linq;&#10;using Sirenix.OdinInspector;&#10;using Sirenix.Utilities;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public class BoxModel : ModelBase&lt;BoxData&gt;&#10;    {&#10;#pragma warning disable CS8618&#10;        [SerializeField] SerializableDictionary&lt;EWallType, WallModel&gt; wallDic;&#10;        [SerializeField] SerializableDictionary&lt;EBoxDir, BoxPointModel&gt; pointDic;&#10;#pragma warning restore CS8618&#10;        &#10;        protected override void OnReadData()&#10;        {&#10;            name = $&quot;Box {data.Pos2D.x} {data.Pos2D.y}&quot;;&#10;            &#10;            data.PointKList.ForEach(p =&gt;&#10;            {&#10;                pointDic[p.Dir].ReadData(p);&#10;            });&#10;            &#10;            data.OnWallDataChanged += OnWallDataChanged;&#10;            data.WallKList.ForEach(OnWallDataChanged);&#10;            transform.position = BoxHelper.Pos2DTo3DBox(data.Pos2D);&#10;        }&#10;&#10;        void OnWallDataChanged(WallData wallData)&#10;        {&#10;            wallDic[wallData.WallType].ReadData(wallData);&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxPointModel.cs" value="using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public class BoxPointModel : ModelBase&lt;BoxPointData&gt;&#10;    {&#10;        protected override void OnReadData()&#10;        {&#10;            Binder.From(data.Visited).To(gameObject.SetActive).Immediate();&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/Manager/BoxModelManager.cs" value="using System;&#10;using System.Collections.Generic;&#10;using System.Diagnostics.CodeAnalysis;&#10;using System.Linq;&#10;using System.Threading.Tasks;&#10;using Sirenix.Utilities;&#10;using UnityEngine;&#10;&#10;namespace Violee;&#10;&#10;internal class BoxModelManager : ModelManagerBase&lt;BoxModel, BoxModelManager&gt;&#10;{&#10;    #region Inspector&#10;    [Header(&quot;Map Settings&quot;)]&#10;    [SerializeField] int height = 4;&#10;    [SerializeField] int width = 6;&#10;    [SerializeField] Vector2Int startPos;&#10;    [SerializeField] EBoxDir startDir = EBoxDir.Up;&#10;    #endregion&#10;    &#10;    &#10;    #region Public Event &amp; Functions&#10;    public static event Action? OnBeginGenerate;&#10;    public static event Action? OnEndGenerate;&#10;    public static event Func&lt;Task&gt;? OnBeginDij;&#10;    public static event Action&lt;Vector3&gt;? OnEndDij;&#10;    public static List&lt;BoxPointData&gt; GetAllPoints()&#10;    {&#10;        return boxKList.SelectMany(x =&gt; x.PointKList).ToList();&#10;    }&#10;    public static void TickPlayerVisit(Vector3 playerPos)&#10;    {&#10;        var x = playerPos.x;&#10;        var z = playerPos.z;&#10;        var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);&#10;        var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);&#10;        if (!HasBox(boxPos2D))&#10;        {&#10;            MyDebug.LogWarning($&quot;Why !HasBox({boxPos3D}) PlayerPos:{playerPos}&quot;);&#10;            return;&#10;        }&#10;&#10;        foreach (var dir in BoxHelper.AllBoxDirs)&#10;        {&#10;            var edgeCenterPos = BoxHelper.Pos2DTo3DEdge(boxPos2D, dir);&#10;            var edgeX = edgeCenterPos.x;&#10;            var edgeZ = edgeCenterPos.z;&#10;            var pointData = boxKList[boxPos2D].PointKList[dir];&#10;            // MyDebug.Log($&quot;dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}&quot;);&#10;            if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) &lt;= BoxHelper.BoxSize * Configer.BoxConfig.WalkInTolerance&#10;                &amp;&amp; !pointData.Visited)&#10;            {&#10;                pointData.Visited.Value = true;&#10;                MyDebug.Log($&quot;Enter Point!!{boxPos2D}:{dir}&quot;);&#10;            }&#10;        }&#10;    }&#10;&#10;    public static readonly GuardedFunc&lt;Task&gt; StartGenerateFunc = new (_StartGenerate);&#10;    public static readonly GuardedFunc&lt;Task&gt; DijkstraFunc = new (_Dijkstra);&#10;    public static float MaxSize =&gt; Mathf.Max(Width, Height) * BoxHelper.BoxSize;&#10;    #endregion&#10;    &#10;    &#10;    #region PosInMap, Box&#10;    static int Height =&gt; Instance.height;&#10;    static int Width =&gt; Instance.width;&#10;    static Vector2Int StartPos =&gt; Instance.startPos;&#10;    static EBoxDir StartDir =&gt; Instance.startDir;&#10;    static readonly MyKeyedCollection&lt;Vector2Int, BoxData&gt; boxKList = new (b =&gt; b.Pos2D);&#10;    static bool InMap(Vector2Int pos) =&gt; pos.x &gt;= 0 &amp;&amp; pos.x &lt; Width &amp;&amp; pos.y &gt;= 0 &amp;&amp; pos.y &lt; Height;&#10;    static bool HasBox(Vector2Int pos) =&gt; boxKList.Contains(pos);&#10;    static async Task&lt;BoxData&gt; AddBoxAsync(Vector2Int pos, BoxConfigSingle config)&#10;    {&#10;        await Configer.SettingsConfig.YieldFrames();&#10;        var boxData = new BoxData(pos, config);&#10;        MyDebug.Log($&quot;Add box {config.Walls} at {pos}&quot;);&#10;        boxKList.Add(boxData);&#10;        emptyPosSet.Remove(pos);&#10;        await SpawnBox3D(boxData);&#10;        return boxData;&#10;    }&#10;    static void RemoveBox(BoxData boxData)&#10;    {&#10;        boxKList.Remove(boxData);&#10;        emptyPosSet.Add(boxData.Pos2D);&#10;        DestroyBox(boxData);&#10;    }&#10;    static void RemoveAllBoxes()&#10;    {&#10;        boxKList.ForEach(DestroyBox);&#10;        boxKList.Clear();&#10;        emptyPosSet.Clear();&#10;        for(int j = 0; j &lt; Height; j++)&#10;        {&#10;            for(int i = 0; i &lt; Width; i++)&#10;            {&#10;                emptyPosSet.Add(new Vector2Int(i, j));&#10;            }&#10;        }&#10;    }&#10;    #endregion&#10;&#10;&#10;    #region Generate&#10;    static readonly HashSet&lt;Vector2Int&gt; emptyPosSet = [];&#10;    static async Task _StartGenerate()&#10;    {&#10;        try&#10;        {&#10;            OnBeginGenerate?.Invoke();&#10;            RemoveAllBoxes();&#10;            await GenerateOneFakeConnection(true);&#10;            while (emptyPosSet.Count &gt; 0)&#10;            {&#10;                await GenerateOneFakeConnection(false);&#10;            }&#10;            OnEndGenerate?.Invoke();&#10;            await (DijkstraFunc.TryInvoke() ?? Task.CompletedTask);&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;    static async Task GenerateOneFakeConnection(bool startWithStartLoc)&#10;    {&#10;        try&#10;        {&#10;            var edgeBoxStack = new Stack&lt;BoxData&gt;();&#10;            // 每个伪连通块的第一个是空格子&#10;            var firstLoc = startWithStartLoc ? StartPos : emptyPosSet.First();&#10;            var firstBox = await AddBoxAsync(firstLoc, BoxHelper.EmptyBoxConfig);&#10;            edgeBoxStack.Push(firstBox);&#10;            while (edgeBoxStack.Count &gt; 0)&#10;            {&#10;                var curBox = edgeBoxStack.Pop();&#10;                var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos2D);&#10;                foreach (var nextPair in nextPairs)&#10;                {&#10;                    // “下一格”&#10;                    var nextPos = nextPair.Item1;&#10;                    var nextGoInDir = nextPair.Item2;&#10;                    var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];&#10;                    if (!InMap(nextPos))&#10;                    {&#10;                        curBox.AddSWall(new WallData(curGoOutDir, EDoorType.None));&#10;                        // MyDebug.Log($&quot;ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}&quot;);&#10;                        continue;&#10;                    }&#10;                    if (!HasBox(nextPos) &amp;&amp; !curBox.HasSWallByDir(curGoOutDir, out _))&#10;                    {&#10;                        var boxConfig = &#10;                            Configer.BoxConfig.BoxConfigList.RandomItemWeighted(&#10;                                x =&gt; !BoxData.HasSWallByByteAndDir(x.Walls, nextGoInDir),&#10;                                x =&gt; x.BasicWeight);&#10;                        var nextBox = await AddBoxAsync(nextPos, boxConfig);&#10;                        var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);&#10;                        foreach (var nextNextPair in nextNextPairs)&#10;                        {&#10;                            var nextNextPos = nextNextPair.Item1;&#10;                            // “下一格”的相邻格的走入方向&#10;                            var nextNextGoInDir = nextNextPair.Item2;&#10;                            var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextPair.Item2];&#10;                            if (InMap(nextNextPos) &amp;&amp; HasBox(nextNextPos))&#10;                            {&#10;                                var nextNextBox = boxKList[nextNextPos];&#10;                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))&#10;                                {&#10;                                    nextBox.RemoveSWall(nextGoOutDir);&#10;                                    // MyDebug.Log($&quot;WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}&quot;);&#10;                                }&#10;                            }&#10;                        }&#10;                        &#10;                        edgeBoxStack.Push(nextBox);&#10;                    }&#10;                }&#10;            }&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;    static async Task _Dijkstra()&#10;    {&#10;        try&#10;        {&#10;            MyDebug.Log(&quot;Dijkstra 1&quot;);&#10;            foreach (var boxData in boxKList)&#10;            {&#10;                boxData.ResetCost();&#10;            }&#10;            if (OnBeginDij != null)&#10;            {&#10;                await OnBeginDij.Invoke();&#10;            }&#10;            MyDebug.Log(&quot;Dijkstra 2&quot;);&#10;            var vSet = new HashSet&lt;BoxPointData&gt;();&#10;        &#10;            var pq = new SimplePriorityQueue&lt;BoxPointData, int&gt;();&#10;            var startBox = boxKList[StartPos];&#10;            var startPoint = startBox.PointKList[StartDir];&#10;            startPoint.CostWall.Value = 0;&#10;            pq.Enqueue(startPoint, 0);&#10;            while (pq.Count != 0)&#10;            {&#10;                var curPoint = pq.Dequeue();&#10;                vSet.Add(curPoint);&#10;                var curCost = curPoint.CostWall;&#10;                var curBox = curPoint.BelongBox;&#10;                curPoint.UpdateNextPointCost();&#10;                var nextPos = BoxHelper.NextPos(curBox.Pos2D, curPoint.Dir);&#10;                if (InMap(nextPos))&#10;                {&#10;                    var nextBox = boxKList[nextPos];&#10;                    var oppositeDir = BoxHelper.OppositeDirDic[curPoint.Dir];&#10;                    var nextPoint = nextBox.PointKList[oppositeDir];&#10;                    nextPoint.CostWall.Value = Math.Min(&#10;                        nextPoint.CostWall.Value,&#10;                        curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));&#10;                    if (!vSet.Contains(nextPoint))&#10;                    {&#10;                        if(pq.Contains(nextPoint))&#10;                            pq.UpdatePriority(nextPoint, nextPoint.CostWall);&#10;                        else&#10;                            pq.Enqueue(nextPoint, nextPoint.CostWall);&#10;                    }&#10;                }&#10;                curPoint.NextPointsInBox&#10;                    .Where(nextPoint =&gt; !vSet.Contains(nextPoint))&#10;                    .ForEach(nextPoint =&gt;&#10;                    {&#10;                        if (pq.Contains(nextPoint))&#10;                            pq.UpdatePriority(nextPoint, nextPoint.CostWall);&#10;                        else&#10;                            pq.Enqueue(nextPoint, nextPoint.CostWall);&#10;                    });&#10;                await Configer.SettingsConfig.YieldFrames();&#10;            }&#10;            MyDebug.Log(&quot;Dijkstra finished!&quot;);&#10;            OnEndDij?.Invoke(BoxHelper.Pos2DTo3DPoint(StartPos, StartDir));&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;    static readonly MyKeyedCollection&lt;Vector3, BoxModel&gt; boxModel3DDic = new(b =&gt; b.transform.position);&#10;    static async Task SpawnBox3D(BoxData fBoxData)&#10;    {&#10;        var boxModel = await Instance.modelPool.MyInstantiate();&#10;        boxModel.ReadData(fBoxData);&#10;        boxModel3DDic.Add(boxModel);&#10;    }&#10;        &#10;    static void DestroyBox(BoxData fBoxData)&#10;    {&#10;        var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);&#10;        Instance.modelPool.MyDestroy(boxModel3DDic[pos3D]);&#10;        boxModel3DDic.Remove(pos3D);&#10;    }&#10;    #endregion&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/WallModel.cs" value="using Sirenix.OdinInspector;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public class WallModel : ModelBase&lt;WallData&gt;&#10;    {&#10;        #region Inspector&#10;#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。&#10;        [SerializeField] Transform Door;&#10;        [SerializeField] Transform NotDoor;&#10;        [SerializeField] SpriteRenderer WallSprite;&#10;        [SerializeField] GameObject LockedSprite;&#10;        [SerializeField] GameObject UnlockedSprite;&#10;#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。&#10;        #endregion&#10;        &#10;        &#10;        protected override void OnReadData()&#10;        {&#10;            Door.gameObject.SetActive(false);&#10;            NotDoor.gameObject.SetActive(false);&#10;            if (!data.HasWall)&#10;            {&#10;                gameObject.SetActive(false);&#10;                return;&#10;            }&#10;            gameObject.SetActive(true);&#10;            Binder.From(data.HasFoundWall).To(v =&gt; WallSprite.enabled = v).Immediate();&#10;            Binder.From(data.HasFoundDoor).To(_ =&gt;SetDoorSprite()).Immediate();&#10;            switch (data.DoorType)&#10;            {&#10;                case EDoorType.None:&#10;                    NotDoor.gameObject.SetActive(true);&#10;                    break;&#10;                case EDoorType.Wooden:&#10;                    Door.gameObject.SetActive(true);&#10;                    break;&#10;            }&#10;&#10;            SetDoorSprite();&#10;        }&#10;&#10;        // event&#10;        public void FindWallAndDoor()&#10;        {&#10;            data.HasFoundWall.Value = true;&#10;            if(data.HasDoor)&#10;                data.HasFoundDoor.Value = true;&#10;        }&#10;        void SetDoorSprite()&#10;        {&#10;            LockedSprite.SetActive(false);&#10;            UnlockedSprite.SetActive(false);&#10;            if (!data.HasFoundDoor)&#10;            {&#10;                return;&#10;            }&#10;            if (data.Opened)&#10;                UnlockedSprite.SetActive(true);&#10;            else&#10;                LockedSprite.SetActive(true);&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/View/MapView.cs" value="using System;&#10;using System.Collections.Generic;&#10;using System.Diagnostics.CodeAnalysis;&#10;using System.Threading.Tasks;&#10;using UnityEngine;&#10;using UnityEngine.UI;&#10;&#10;namespace Violee.View;&#10;&#10;class MapView : ViewBase&lt;BoxModelManager&gt;&#10;{&#10;#pragma warning disable CS8618&#10;    public Text CostTxtPrefab;&#10;#pragma warning restore CS8618&#10;    &#10;    &#10;&#10;    protected override void Awake()&#10;    {&#10;        base.Awake();&#10;        costTxtPool = new ObjectPool&lt;Text&gt;(CostTxtPrefab, transform, 42);&#10;    }&#10;&#10;    protected override void Bind()&#10;    {&#10;        if (Configer.SettingsConfig.ShowBoxCost)&#10;            BoxModelManager.OnBeginDij += BindAllCostTxt;&#10;    }&#10;&#10;&#10;    static readonly Dictionary&lt;BoxPointData, Text&gt; costTxtDic = new ();&#10;    static ObjectPool&lt;Text&gt; costTxtPool = null!;&#10;    static async Task DestroyAllCostTxt()&#10;    {&#10;        foreach (var text in costTxtDic.Values)&#10;        {&#10;            costTxtPool.MyDestroy(text);&#10;            await Configer.SettingsConfig.YieldFrames(multi : 1 / 16f);&#10;        }&#10;    }&#10;    static async Task BindAllCostTxt()&#10;    {&#10;        try&#10;        {&#10;            await DestroyAllCostTxt();&#10;            foreach (var point in BoxModelManager.GetAllPoints())&#10;            {&#10;                var txt = await costTxtPool.MyInstantiate(point.Pos3D + Vector3.up * 0.1f);&#10;                txt.gameObject.SetActive(true);&#10;                var b = Binder.From(point.CostWall).To(v =&gt;&#10;                {&#10;                    txt.text = v &gt; 1e9 ? &quot;∞&quot; : point.CostWall.ToString();&#10;                });&#10;                b.Immediate();&#10;                costTxtDic.Add(point, txt);&#10;                await Configer.SettingsConfig.YieldFrames(multi : 1 / 8f);&#10;            }&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/View/MinimapView.cs" value="using Cinemachine;&#10;using UnityEngine;&#10;using UnityEngine.UI;&#10;&#10;namespace Violee.View&#10;{&#10;    public class MinimapView : ViewBase&#10;    {&#10;        public required Button ReGenerateBtn;&#10;        public required RenderTexture TarTexture;&#10;        public required CinemachineVirtualCamera MinimapCameraVirtual;&#10;        public required Camera MinimapCamera;&#10;        public required RawImage MinimapImg;&#10;        public required RawImage FullScreenImg;&#10;        public float ChangeSpeed = 1.2f;&#10;        public float MiniSize = 12f;&#10;&#10;        [Header(&quot;Load&quot;)]&#10;        public required GameObject PnlLoad;&#10;        &#10;        bool isMinimap =&gt; MinimapImg.enabled;&#10;        void Awake()&#10;        {&#10;            Binder.Update(SwitchMap);&#10;            GameManager.GeneratingMapState.OnEnter(() =&gt; PnlLoad.SetActive(true));&#10;            GameManager.GeneratingMapState.OnExit(() =&gt; PnlLoad.SetActive(false));&#10;            ShowMinimap();&#10;        }&#10;&#10;        void SwitchMap(float dt)&#10;        {&#10;            ChangeFOV(dt);&#10;            if (!Input.GetKeyDown(KeyCode.Tab))&#10;                return;&#10;            if (isMinimap)&#10;            {&#10;                ShowFullScreenMap();&#10;                return;&#10;            }&#10;            ShowMinimap();&#10;        }&#10;&#10;        void ChangeFOV(float dt)&#10;        {&#10;            var tarSize = isMinimap ? MiniSize : BoxModelManager.MaxSize / 1.616f;&#10;            if (!Mathf.Approximately(MinimapCameraVirtual.m_Lens.OrthographicSize, tarSize))&#10;            {&#10;                MinimapCameraVirtual.m_Lens.OrthographicSize = Mathf.Lerp(MinimapCameraVirtual.m_Lens.OrthographicSize,&#10;                    tarSize,&#10;                    ChangeSpeed * dt);&#10;            }&#10;        }&#10;        void ShowMinimap()&#10;        {&#10;            RefreshTexture(256, 256);&#10;            FullScreenImg.enabled = false;&#10;            MinimapImg.enabled = true;&#10;        }&#10;&#10;        void ShowFullScreenMap()&#10;        {&#10;            // 设置gameObject的 RectTransform长宽&#10;            FullScreenImg.gameObject.GetComponent&lt;RectTransform&gt;().sizeDelta  = new Vector2(Screen.height, Screen.height);&#10;            RefreshTexture(Screen.height, Screen.height);&#10;            FullScreenImg.enabled = true;&#10;            MinimapImg.enabled = false;&#10;        }&#10;        &#10;        void RefreshTexture(int width, int height)&#10;        {&#10;            TarTexture.Release();&#10;            TarTexture.width = width;&#10;            TarTexture.height = height;&#10;            TarTexture.Create();&#10;            MinimapCamera.targetTexture = TarTexture;&#10;            MinimapImg.texture = TarTexture;&#10;            FullScreenImg.texture = TarTexture;&#10;        }&#10;    }&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="14214" />
+                <option name="messageId" value="019840baab1670cfad0ac4b2d8bdccbf" />
+                <option name="outputToken" value="598" />
+                <option name="question" value="评价一下TznvNzmztvi的职责是否单一，以及TznvNzmztvi类引用其他类、其他类引用TznvNzmztvi类的耦合程度&#13;&#10;&#13;&#10;@TznvNzmztvi.xh @YlcNlwvoNzmztvi.xh @YlcNlwvo.xh @YlcKlrmgNlwvo.xh @DzooNlwvo.xh @NzkErvd.xh @NrmrnzkErvd.xh " />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="14812" />
+                <option name="variables">
+                  <list>
+                    <FileVariable>
+                      <option name="endOffset" value="84" />
+                      <option name="identifierHash" value="VARIABLE_d569e071c1fb418564952848d43415ade140334f3ac3cb99b524d03d876887b2" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="69" />
+                    </FileVariable>
+                    <FileVariable>
+                      <option name="endOffset" value="104" />
+                      <option name="identifierHash" value="VARIABLE_ee5efc21170896c6450612922d47dc9b05d59623db0b99db74bff768fa70cd7c" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="85" />
+                    </FileVariable>
+                    <FileVariable>
+                      <option name="endOffset" value="117" />
+                      <option name="identifierHash" value="VARIABLE_cead8e1505002d664a7e32dd0f592a818dcce416c3cdcc7b21c7b789d8412c40" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="105" />
+                    </FileVariable>
+                    <FileVariable>
+                      <option name="endOffset" value="135" />
+                      <option name="identifierHash" value="VARIABLE_ed6b1b1bb50655801895609ea2388d900ccf965e2dd16f024cb2f9a73f76cc94" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="118" />
+                    </FileVariable>
+                    <FileVariable>
+                      <option name="endOffset" value="149" />
+                      <option name="identifierHash" value="VARIABLE_aa9fd1be9888958a610f06a2fd82c08f2d102d734240c777482cc5c2434b49db" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="136" />
+                    </FileVariable>
+                    <FileVariable>
+                      <option name="endOffset" value="161" />
+                      <option name="identifierHash" value="VARIABLE_0928851c19de0d38068bf2c9e329687de78db68d21fad99bb3e1e3f0af53fd60" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="150" />
+                    </FileVariable>
+                    <FileVariable>
+                      <option name="endOffset" value="177" />
+                      <option name="identifierHash" value="VARIABLE_8a7f3a5f1a12e8fb8ee6914efa53db395715f0cd4b6f2e9654b7bbc80be3c02f" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                      <option name="startOffset" value="162" />
+                    </FileVariable>
+                  </list>
+                </option>
+              </Turn>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户的问题是关于如何优化`TznvNzmztvi`类的设计，具体包括三个方面：&#10;8. 事件监听的模块化实现，避免直接依赖`YlcNlwvoNzmztvi`。&#10;7. 使用接口或事件总线模式减少`TznvNzmztvi`与其他类的直接依赖。&#10;6. 将状态管理功能模块化，避免直接调用`KozbviNlwvo`等类的静态方法。&#10;&#10;首先，我需要分析`TznvNzmztvi.xh`的当前实现，重点关注事件监听、依赖关系和状态管理部分。然后，针对每个问题提出具体的优化方案。&#10;&#10;### 问题8：事件监听的模块化实现&#10;当前`TznvNzmztvi`直接监听`YlcNlwvoNzmztvi`的事件（如`LmYvtrmTvmvizgv`、`LmVmwTvmvizgv`等）。这种直接依赖可以通过引入事件总线或中介者模式来解耦。&#10;&#10;### 问题7：减少直接依赖&#10;`TznvNzmztvi`直接调用了`KozbviNlwvo`的静态方法（如`KozbviNlwvo.LmVmgviKozbrmt`）。可以通过接口或依赖注入来解耦。&#10;&#10;### 问题6：状态管理模块化&#10;`TznvNzmztvi`的状态管理功能（如`VTznvHgzgv`）可以进一步模块化，避免直接调用其他类的静态方法。&#10;&#10;接下来，我将为每个问题提供具体的代码优化建议。&#10;&lt;/gsrmprmt&gt;&#10;&#10;### 8. 事件监听的模块化实现&#10;当前`TznvNzmztvi`直接监听`YlcNlwvoNzmztvi`的事件，例如：&#10;```xhszik&#10;YlcNlwvoNzmztvi.LmYvtrmTvmvizgv += () =&gt; tznvUhn.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);&#10;```&#10;这种实现方式导致`TznvNzmztvi`与`YlcNlwvoNzmztvi`紧密耦合。可以通过以下方式解耦：&#10;&#10;#### 方案：引入事件总线&#10;8. 定义一个全局的事件总线类`VevmgYfh`，用于发布和订阅事件。&#10;7. `YlcNlwvoNzmztvi`发布事件时，通过`VevmgYfh`通知订阅者。&#10;6. `TznvNzmztvi`订阅事件时，通过`VevmgYfh`注册回调。&#10;&#10;示例代码：&#10;```xhszik&#10;// 定义事件总线&#10;kfyorx hgzgrx xozhh VevmgYfh&#10;{&#10;    kfyorx hgzgrx vevmg Zxgrlm LmYvtrmTvmvizgv;&#10;    kfyorx hgzgrx vevmg Zxgrlm LmVmwTvmvizgv;&#10;&#10;    kfyorx hgzgrx elrw KfyorhsYvtrmTvmvizgv() =&gt; LmYvtrmTvmvizgv?.Rmelpv();&#10;    kfyorx hgzgrx elrw KfyorhsVmwTvmvizgv() =&gt; LmVmwTvmvizgv?.Rmelpv();&#10;}&#10;&#10;// YlcNlwvoNzmztvi修改为发布事件&#10;VevmgYfh.KfyorhsYvtrmTvmvizgv(); // 替换原来的LmYvtrmTvmvizgv?.Rmelpv();&#10;&#10;// TznvNzmztvi订阅事件&#10;VevmgYfh.LmYvtrmTvmvizgv += () =&gt; tznvUhn.XszmtvHgzgv(VTznvHgzgv.TvmvizgrmtNzk);&#10;```&#10;&#10;### 7. 使用接口或事件总线模式减少直接依赖&#10;当前`TznvNzmztvi`直接调用`KozbviNlwvo`的静态方法，例如：&#10;```xhszik&#10;KozbviNlwvo.LmVmgviKozbrmt(klh6W);&#10;```&#10;可以通过以下方式解耦：&#10;&#10;#### 方案：依赖注入&#10;8. 定义一个接口`RKozbviHgzgvSzmwovi`，包含`LmVmgviKozbrmt`等方法。&#10;7. `KozbviNlwvo`实现该接口。&#10;6. `TznvNzmztvi`通过构造函数或属性注入`RKozbviHgzgvSzmwovi`。&#10;&#10;示例代码：&#10;```xhszik&#10;// 定义接口&#10;kfyorx rmgviuzxv RKozbviHgzgvSzmwovi&#10;{&#10;    elrw LmVmgviKozbrmt(Evxgli6 klh);&#10;    elrw LmVcrgKozbrmt();&#10;    elrw Grxp(uolzg wg);&#10;}&#10;&#10;// KozbviNlwvo实现接口&#10;kfyorx xozhh KozbviNlwvo : Hrmtovglm&lt;KozbviNlwvo&gt;, RKozbviHgzgvSzmwovi&#10;{&#10;    kfyorx elrw LmVmgviKozbrmt(Evxgli6 klh) { /* 实现 */ }&#10;    kfyorx elrw LmVcrgKozbrmt() { /* 实现 */ }&#10;    kfyorx elrw Grxp(uolzg wg) { /* 实现 */ }&#10;}&#10;&#10;// TznvNzmztvi通过接口调用&#10;kfyorx xozhh TznvNzmztvi : Hrmtovglm&lt;TznvNzmztvi&gt;&#10;{&#10;    kirezgv RKozbviHgzgvSzmwovi _kozbviHgzgvSzmwovi;&#10;&#10;    kfyorx TznvNzmztvi(RKozbviHgzgvSzmwovi kozbviHgzgvSzmwovi)&#10;    {&#10;        _kozbviHgzgvSzmwovi = kozbviHgzgvSzmwovi;&#10;    }&#10;&#10;    kilgvxgvw elrw Hgzig()&#10;    {&#10;        _kozbviHgzgvSzmwovi.LmVmgviKozbrmt(klh6W); // 替换原来的KozbviNlwvo.LmVmgviKozbrmt(klh6W);&#10;    }&#10;}&#10;```&#10;&#10;### 6. 状态管理功能模块化&#10;当前`TznvNzmztvi`的状态管理功能集中在`tznvUhn`中，但直接调用了其他类的静态方法。可以通过以下方式模块化：&#10;&#10;#### 方案：状态模式&#10;8. 将每个状态（如`KozbrmtHgzgv`、`TvmvizgrmtNzkHgzgv`）封装为单独的类。&#10;7. 每个状态类负责处理该状态下的逻辑，避免直接调用其他类的静态方法。&#10;&#10;示例代码：&#10;```xhszik&#10;// 定义状态基类&#10;kfyorx zyhgizxg xozhh TznvHgzgv&#10;{&#10;    kfyorx zyhgizxg elrw Vmgvi();&#10;    kfyorx zyhgizxg elrw Fkwzgv(uolzg wg);&#10;    kfyorx zyhgizxg elrw Vcrg();&#10;}&#10;&#10;// 实现具体状态&#10;kfyorx xozhh KozbrmtHgzgv : TznvHgzgv&#10;{&#10;    kirezgv ivzwlmob RKozbviHgzgvSzmwovi _kozbviHgzgvSzmwovi;&#10;&#10;    kfyorx KozbrmtHgzgv(RKozbviHgzgvSzmwovi kozbviHgzgvSzmwovi)&#10;    {&#10;        _kozbviHgzgvSzmwovi = kozbviHgzgvSzmwovi;&#10;    }&#10;&#10;    kfyorx leviirwv elrw Vmgvi() { /* 进入Kozbrmt状态的逻辑 */ }&#10;    kfyorx leviirwv elrw Fkwzgv(uolzg wg) =&gt; _kozbviHgzgvSzmwovi.Grxp(wg);&#10;    kfyorx leviirwv elrw Vcrg() =&gt; _kozbviHgzgvSzmwovi.LmVcrgKozbrmt();&#10;}&#10;&#10;// TznvNzmztvi使用状态模式&#10;kfyorx xozhh TznvNzmztvi : Hrmtovglm&lt;TznvNzmztvi&gt;&#10;{&#10;    kirezgv TznvHgzgv _xfiivmgHgzgv;&#10;&#10;    kfyorx elrw XszmtvHgzgv(TznvHgzgv mvdHgzgv)&#10;    {&#10;        _xfiivmgHgzgv?.Vcrg();&#10;        _xfiivmgHgzgv = mvdHgzgv;&#10;        _xfiivmgHgzgv.Vmgvi();&#10;    }&#10;}&#10;```&#10;&#10;### 总结&#10;8. **事件监听模块化**：通过事件总线解耦`TznvNzmztvi`和`YlcNlwvoNzmztvi`。&#10;7. **减少直接依赖**：通过依赖注入和接口隔离`TznvNzmztvi`与`KozbviNlwvo`的依赖。&#10;6. **状态管理模块化**：使用状态模式将状态逻辑分离到独立的类中。&#10;&#10;这些优化将使代码更易于维护和扩展。如果需要进一步实现这些方案，可以提供具体的代码修改建议。" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="end_line" value="15" />
+                      <option name="filename" value="GameManager.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position>
+                              <option name="character" value="28" />
+                              <option name="line" value="15" />
+                            </Position>
+                          </option>
+                          <option name="start">
+                            <Position>
+                              <option name="character" value="17" />
+                              <option name="line" value="15" />
+                            </Position>
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="start_line" value="15" />
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/AAAGame/GameManager.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="BoxModelManager.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/Manager/BoxModelManager.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="BoxModel.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxModel.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="BoxPointModel.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxPointModel.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="WallModel.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/WallModel.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="MapView.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/View/MapView.cs" />
+                    </CodeReferencesBean>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="filename" value="MinimapView.cs" />
+                      <option name="language" value="C#" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position />
+                          </option>
+                          <option name="start">
+                            <Position />
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/View/MinimapView.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="codeTextInfoBeanMap">
+                  <map>
+                    <entry key="2">
+                      <value>
+                        <CodeTextInfoBean>
+                          <option name="codeTextIndex" value="2" />
+                          <option name="editTaskId" value="019840c557387c72b7346fff8ea9821f" />
+                        </CodeTextInfoBean>
+                      </value>
+                    </entry>
+                    <entry key="3">
+                      <value>
+                        <CodeTextInfoBean>
+                          <option name="codeTextIndex" value="3" />
+                          <option name="editTaskId" value="019840c585537ad686e22d0adafe2f92" />
+                        </CodeTextInfoBean>
+                      </value>
+                    </entry>
+                    <entry key="4">
+                      <value>
+                        <CodeTextInfoBean>
+                          <option name="codeTextIndex" value="4" />
+                          <option name="editTaskId" value="019840c5b5d37857acf2eebb91e80537" />
+                        </CodeTextInfoBean>
+                      </value>
+                    </entry>
+                  </map>
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="019840b9d6b675588f74ee8bbce496be" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/AAAGame/GameManager.cs" value="using System.Diagnostics.CodeAnalysis;&#10;using System.Threading.Tasks;&#10;using Sirenix.OdinInspector;&#10;using UnityEngine;&#10;using Violee.View;&#10;&#10;namespace Violee&#10;{&#10;    public enum EGameState&#10;    {&#10;        Idle,&#10;        GeneratingMap,&#10;        Playing,&#10;        WatchingMap,&#10;    }&#10;    public class GameManager : Singleton&lt;GameManager&gt;&#10;    {&#10;        [ShowInInspector]&#10;        MyFSM&lt;EGameState&gt; gameFsm = new ();&#10;        bool isIdle =&gt; gameFsm.IsState(EGameState.Idle);&#10;        bool isPlaying =&gt; gameFsm.IsState(EGameState.Playing);&#10;&#10;        [field: MaybeNull] public static BindDataState GeneratingMapState =&gt; &#10;            field ??= Binder.From(Instance.gameFsm.GetState(EGameState.GeneratingMap));&#10;        protected void Start()&#10;        {&#10;            &#10;            Binder.From(gameFsm.GetState(EGameState.Playing)).OnUpdate(dt =&gt;&#10;            {&#10;                BoxModelManager.TickPlayerVisit(PlayerModel.Instance.transform.position);&#10;                PlayerModel.Tick(dt);&#10;            });&#10;            Binder.From(gameFsm.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);&#10;            &#10;            &#10;            BoxModelManager.StartGenerateFunc.Guard += () =&gt; isIdle || isPlaying;&#10;            BoxModelManager.DijkstraFunc.Guard += () =&gt; isIdle;&#10;            BoxModelManager.OnBeginGenerate += () =&gt; gameFsm.ChangeState(EGameState.GeneratingMap);&#10;            BoxModelManager.OnEndGenerate += () =&gt; gameFsm.ChangeState(EGameState.Idle);&#10;            BoxModelManager.OnBeginDij += () =&gt;&#10;            {&#10;                gameFsm.ChangeState(EGameState.GeneratingMap);&#10;                return Task.CompletedTask;&#10;            };&#10;            BoxModelManager.OnEndDij += pos3D =&gt;&#10;            {&#10;                gameFsm.ChangeState(EGameState.Playing);&#10;                PlayerModel.OnEnterPlaying(pos3D);&#10;            };&#10;            &#10;            Binder.Update(_ =&gt;&#10;            {&#10;                if (Input.GetKeyDown(KeyCode.R))&#10;                    BoxModelManager.StartGenerateFunc.TryInvoke();&#10;            });&#10;            &#10;            gameFsm.ChangeState(EGameState.Idle);&#10;            Binder.Update(gameFsm.Update);&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxModel.cs" value="using System;&#10;using System.Collections.Generic;&#10;using System.Linq;&#10;using Sirenix.OdinInspector;&#10;using Sirenix.Utilities;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public class BoxModel : ModelBase&lt;BoxData&gt;&#10;    {&#10;#pragma warning disable CS8618&#10;        [SerializeField] SerializableDictionary&lt;EWallType, WallModel&gt; wallDic;&#10;        [SerializeField] SerializableDictionary&lt;EBoxDir, BoxPointModel&gt; pointDic;&#10;#pragma warning restore CS8618&#10;        &#10;        protected override void OnReadData()&#10;        {&#10;            name = $&quot;Box {data.Pos2D.x} {data.Pos2D.y}&quot;;&#10;            &#10;            data.PointKList.ForEach(p =&gt;&#10;            {&#10;                pointDic[p.Dir].ReadData(p);&#10;            });&#10;            &#10;            data.OnWallDataChanged += OnWallDataChanged;&#10;            data.WallKList.ForEach(OnWallDataChanged);&#10;            transform.position = BoxHelper.Pos2DTo3DBox(data.Pos2D);&#10;        }&#10;&#10;        void OnWallDataChanged(WallData wallData)&#10;        {&#10;            wallDic[wallData.WallType].ReadData(wallData);&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/BoxPointModel.cs" value="using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public class BoxPointModel : ModelBase&lt;BoxPointData&gt;&#10;    {&#10;        protected override void OnReadData()&#10;        {&#10;            Binder.From(data.Visited).To(gameObject.SetActive).Immediate();&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/Manager/BoxModelManager.cs" value="using System;&#10;using System.Collections.Generic;&#10;using System.Diagnostics.CodeAnalysis;&#10;using System.Linq;&#10;using System.Threading.Tasks;&#10;using Sirenix.Utilities;&#10;using UnityEngine;&#10;&#10;namespace Violee;&#10;&#10;internal class BoxModelManager : ModelManagerBase&lt;BoxModel, BoxModelManager&gt;&#10;{&#10;    #region Inspector&#10;    [Header(&quot;Map Settings&quot;)]&#10;    [SerializeField] int height = 4;&#10;    [SerializeField] int width = 6;&#10;    [SerializeField] Vector2Int startPos;&#10;    [SerializeField] EBoxDir startDir = EBoxDir.Up;&#10;    #endregion&#10;    &#10;    &#10;    #region Public Event &amp; Functions&#10;    public static event Action? OnBeginGenerate;&#10;    public static event Action? OnEndGenerate;&#10;    public static event Func&lt;Task&gt;? OnBeginDij;&#10;    public static event Action&lt;Vector3&gt;? OnEndDij;&#10;    public static List&lt;BoxPointData&gt; GetAllPoints()&#10;    {&#10;        return boxKList.SelectMany(x =&gt; x.PointKList).ToList();&#10;    }&#10;    public static void TickPlayerVisit(Vector3 playerPos)&#10;    {&#10;        var x = playerPos.x;&#10;        var z = playerPos.z;&#10;        var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);&#10;        var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);&#10;        if (!HasBox(boxPos2D))&#10;        {&#10;            MyDebug.LogWarning($&quot;Why !HasBox({boxPos3D}) PlayerPos:{playerPos}&quot;);&#10;            return;&#10;        }&#10;&#10;        foreach (var dir in BoxHelper.AllBoxDirs)&#10;        {&#10;            var edgeCenterPos = BoxHelper.Pos2DTo3DEdge(boxPos2D, dir);&#10;            var edgeX = edgeCenterPos.x;&#10;            var edgeZ = edgeCenterPos.z;&#10;            var pointData = boxKList[boxPos2D].PointKList[dir];&#10;            // MyDebug.Log($&quot;dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}&quot;);&#10;            if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) &lt;= BoxHelper.BoxSize * Configer.BoxConfig.WalkInTolerance&#10;                &amp;&amp; !pointData.Visited)&#10;            {&#10;                pointData.Visited.Value = true;&#10;                MyDebug.Log($&quot;Enter Point!!{boxPos2D}:{dir}&quot;);&#10;            }&#10;        }&#10;    }&#10;&#10;    public static readonly GuardedFunc&lt;Task&gt; StartGenerateFunc = new (_StartGenerate);&#10;    public static readonly GuardedFunc&lt;Task&gt; DijkstraFunc = new (_Dijkstra);&#10;    public static float MaxSize =&gt; Mathf.Max(Width, Height) * BoxHelper.BoxSize;&#10;    #endregion&#10;    &#10;    &#10;    #region PosInMap, Box&#10;    static int Height =&gt; Instance.height;&#10;    static int Width =&gt; Instance.width;&#10;    static Vector2Int StartPos =&gt; Instance.startPos;&#10;    static EBoxDir StartDir =&gt; Instance.startDir;&#10;    static readonly MyKeyedCollection&lt;Vector2Int, BoxData&gt; boxKList = new (b =&gt; b.Pos2D);&#10;    static bool InMap(Vector2Int pos) =&gt; pos.x &gt;= 0 &amp;&amp; pos.x &lt; Width &amp;&amp; pos.y &gt;= 0 &amp;&amp; pos.y &lt; Height;&#10;    static bool HasBox(Vector2Int pos) =&gt; boxKList.Contains(pos);&#10;    static async Task&lt;BoxData&gt; AddBoxAsync(Vector2Int pos, BoxConfigSingle config)&#10;    {&#10;        await Configer.SettingsConfig.YieldFrames();&#10;        var boxData = new BoxData(pos, config);&#10;        MyDebug.Log($&quot;Add box {config.Walls} at {pos}&quot;);&#10;        boxKList.Add(boxData);&#10;        emptyPosSet.Remove(pos);&#10;        await SpawnBox3D(boxData);&#10;        return boxData;&#10;    }&#10;    static void RemoveBox(BoxData boxData)&#10;    {&#10;        boxKList.Remove(boxData);&#10;        emptyPosSet.Add(boxData.Pos2D);&#10;        DestroyBox(boxData);&#10;    }&#10;    static void RemoveAllBoxes()&#10;    {&#10;        boxKList.ForEach(DestroyBox);&#10;        boxKList.Clear();&#10;        emptyPosSet.Clear();&#10;        for(int j = 0; j &lt; Height; j++)&#10;        {&#10;            for(int i = 0; i &lt; Width; i++)&#10;            {&#10;                emptyPosSet.Add(new Vector2Int(i, j));&#10;            }&#10;        }&#10;    }&#10;    #endregion&#10;&#10;&#10;    #region Generate&#10;    static readonly HashSet&lt;Vector2Int&gt; emptyPosSet = [];&#10;    static async Task _StartGenerate()&#10;    {&#10;        try&#10;        {&#10;            OnBeginGenerate?.Invoke();&#10;            RemoveAllBoxes();&#10;            await GenerateOneFakeConnection(true);&#10;            while (emptyPosSet.Count &gt; 0)&#10;            {&#10;                await GenerateOneFakeConnection(false);&#10;            }&#10;            OnEndGenerate?.Invoke();&#10;            await (DijkstraFunc.TryInvoke() ?? Task.CompletedTask);&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;    static async Task GenerateOneFakeConnection(bool startWithStartLoc)&#10;    {&#10;        try&#10;        {&#10;            var edgeBoxStack = new Stack&lt;BoxData&gt;();&#10;            // 每个伪连通块的第一个是空格子&#10;            var firstLoc = startWithStartLoc ? StartPos : emptyPosSet.First();&#10;            var firstBox = await AddBoxAsync(firstLoc, BoxHelper.EmptyBoxConfig);&#10;            edgeBoxStack.Push(firstBox);&#10;            while (edgeBoxStack.Count &gt; 0)&#10;            {&#10;                var curBox = edgeBoxStack.Pop();&#10;                var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos2D);&#10;                foreach (var nextPair in nextPairs)&#10;                {&#10;                    // “下一格”&#10;                    var nextPos = nextPair.Item1;&#10;                    var nextGoInDir = nextPair.Item2;&#10;                    var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];&#10;                    if (!InMap(nextPos))&#10;                    {&#10;                        curBox.AddSWall(new WallData(curGoOutDir, EDoorType.None));&#10;                        // MyDebug.Log($&quot;ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}&quot;);&#10;                        continue;&#10;                    }&#10;                    if (!HasBox(nextPos) &amp;&amp; !curBox.HasSWallByDir(curGoOutDir, out _))&#10;                    {&#10;                        var boxConfig = &#10;                            Configer.BoxConfig.BoxConfigList.RandomItemWeighted(&#10;                                x =&gt; !BoxData.HasSWallByByteAndDir(x.Walls, nextGoInDir),&#10;                                x =&gt; x.BasicWeight);&#10;                        var nextBox = await AddBoxAsync(nextPos, boxConfig);&#10;                        var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);&#10;                        foreach (var nextNextPair in nextNextPairs)&#10;                        {&#10;                            var nextNextPos = nextNextPair.Item1;&#10;                            // “下一格”的相邻格的走入方向&#10;                            var nextNextGoInDir = nextNextPair.Item2;&#10;                            var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextPair.Item2];&#10;                            if (InMap(nextNextPos) &amp;&amp; HasBox(nextNextPos))&#10;                            {&#10;                                var nextNextBox = boxKList[nextNextPos];&#10;                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))&#10;                                {&#10;                                    nextBox.RemoveSWall(nextGoOutDir);&#10;                                    // MyDebug.Log($&quot;WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}&quot;);&#10;                                }&#10;                            }&#10;                        }&#10;                        &#10;                        edgeBoxStack.Push(nextBox);&#10;                    }&#10;                }&#10;            }&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;    static async Task _Dijkstra()&#10;    {&#10;        try&#10;        {&#10;            MyDebug.Log(&quot;Dijkstra 1&quot;);&#10;            foreach (var boxData in boxKList)&#10;            {&#10;                boxData.ResetCost();&#10;            }&#10;            if (OnBeginDij != null)&#10;            {&#10;                await OnBeginDij.Invoke();&#10;            }&#10;            MyDebug.Log(&quot;Dijkstra 2&quot;);&#10;            var vSet = new HashSet&lt;BoxPointData&gt;();&#10;        &#10;            var pq = new SimplePriorityQueue&lt;BoxPointData, int&gt;();&#10;            var startBox = boxKList[StartPos];&#10;            var startPoint = startBox.PointKList[StartDir];&#10;            startPoint.CostWall.Value = 0;&#10;            pq.Enqueue(startPoint, 0);&#10;            while (pq.Count != 0)&#10;            {&#10;                var curPoint = pq.Dequeue();&#10;                vSet.Add(curPoint);&#10;                var curCost = curPoint.CostWall;&#10;                var curBox = curPoint.BelongBox;&#10;                curPoint.UpdateNextPointCost();&#10;                var nextPos = BoxHelper.NextPos(curBox.Pos2D, curPoint.Dir);&#10;                if (InMap(nextPos))&#10;                {&#10;                    var nextBox = boxKList[nextPos];&#10;                    var oppositeDir = BoxHelper.OppositeDirDic[curPoint.Dir];&#10;                    var nextPoint = nextBox.PointKList[oppositeDir];&#10;                    nextPoint.CostWall.Value = Math.Min(&#10;                        nextPoint.CostWall.Value,&#10;                        curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));&#10;                    if (!vSet.Contains(nextPoint))&#10;                    {&#10;                        if(pq.Contains(nextPoint))&#10;                            pq.UpdatePriority(nextPoint, nextPoint.CostWall);&#10;                        else&#10;                            pq.Enqueue(nextPoint, nextPoint.CostWall);&#10;                    }&#10;                }&#10;                curPoint.NextPointsInBox&#10;                    .Where(nextPoint =&gt; !vSet.Contains(nextPoint))&#10;                    .ForEach(nextPoint =&gt;&#10;                    {&#10;                        if (pq.Contains(nextPoint))&#10;                            pq.UpdatePriority(nextPoint, nextPoint.CostWall);&#10;                        else&#10;                            pq.Enqueue(nextPoint, nextPoint.CostWall);&#10;                    });&#10;                await Configer.SettingsConfig.YieldFrames();&#10;            }&#10;            MyDebug.Log(&quot;Dijkstra finished!&quot;);&#10;            OnEndDij?.Invoke(BoxHelper.Pos2DTo3DPoint(StartPos, StartDir));&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;    static readonly MyKeyedCollection&lt;Vector3, BoxModel&gt; boxModel3DDic = new(b =&gt; b.transform.position);&#10;    static async Task SpawnBox3D(BoxData fBoxData)&#10;    {&#10;        var boxModel = await Instance.modelPool.MyInstantiate();&#10;        boxModel.ReadData(fBoxData);&#10;        boxModel3DDic.Add(boxModel);&#10;    }&#10;        &#10;    static void DestroyBox(BoxData fBoxData)&#10;    {&#10;        var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);&#10;        Instance.modelPool.MyDestroy(boxModel3DDic[pos3D]);&#10;        boxModel3DDic.Remove(pos3D);&#10;    }&#10;    #endregion&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/Model/WallModel.cs" value="using Sirenix.OdinInspector;&#10;using UnityEngine;&#10;&#10;namespace Violee&#10;{&#10;    public class WallModel : ModelBase&lt;WallData&gt;&#10;    {&#10;        #region Inspector&#10;#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。&#10;        [SerializeField] Transform Door;&#10;        [SerializeField] Transform NotDoor;&#10;        [SerializeField] SpriteRenderer WallSprite;&#10;        [SerializeField] GameObject LockedSprite;&#10;        [SerializeField] GameObject UnlockedSprite;&#10;#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。&#10;        #endregion&#10;        &#10;        &#10;        protected override void OnReadData()&#10;        {&#10;            Door.gameObject.SetActive(false);&#10;            NotDoor.gameObject.SetActive(false);&#10;            if (!data.HasWall)&#10;            {&#10;                gameObject.SetActive(false);&#10;                return;&#10;            }&#10;            gameObject.SetActive(true);&#10;            Binder.From(data.HasFoundWall).To(v =&gt; WallSprite.enabled = v).Immediate();&#10;            Binder.From(data.HasFoundDoor).To(_ =&gt;SetDoorSprite()).Immediate();&#10;            switch (data.DoorType)&#10;            {&#10;                case EDoorType.None:&#10;                    NotDoor.gameObject.SetActive(true);&#10;                    break;&#10;                case EDoorType.Wooden:&#10;                    Door.gameObject.SetActive(true);&#10;                    break;&#10;            }&#10;&#10;            SetDoorSprite();&#10;        }&#10;&#10;        // event&#10;        public void FindWallAndDoor()&#10;        {&#10;            data.HasFoundWall.Value = true;&#10;            if(data.HasDoor)&#10;                data.HasFoundDoor.Value = true;&#10;        }&#10;        void SetDoorSprite()&#10;        {&#10;            LockedSprite.SetActive(false);&#10;            UnlockedSprite.SetActive(false);&#10;            if (!data.HasFoundDoor)&#10;            {&#10;                return;&#10;            }&#10;            if (data.Opened)&#10;                UnlockedSprite.SetActive(true);&#10;            else&#10;                LockedSprite.SetActive(true);&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/View/MapView.cs" value="using System;&#10;using System.Collections.Generic;&#10;using System.Diagnostics.CodeAnalysis;&#10;using System.Threading.Tasks;&#10;using UnityEngine;&#10;using UnityEngine.UI;&#10;&#10;namespace Violee.View;&#10;&#10;class MapView : ViewBase&lt;BoxModelManager&gt;&#10;{&#10;#pragma warning disable CS8618&#10;    public Text CostTxtPrefab;&#10;#pragma warning restore CS8618&#10;    &#10;    &#10;&#10;    protected override void Awake()&#10;    {&#10;        base.Awake();&#10;        costTxtPool = new ObjectPool&lt;Text&gt;(CostTxtPrefab, transform, 42);&#10;    }&#10;&#10;    protected override void Bind()&#10;    {&#10;        if (Configer.SettingsConfig.ShowBoxCost)&#10;            BoxModelManager.OnBeginDij += BindAllCostTxt;&#10;    }&#10;&#10;&#10;    static readonly Dictionary&lt;BoxPointData, Text&gt; costTxtDic = new ();&#10;    static ObjectPool&lt;Text&gt; costTxtPool = null!;&#10;    static async Task DestroyAllCostTxt()&#10;    {&#10;        foreach (var text in costTxtDic.Values)&#10;        {&#10;            costTxtPool.MyDestroy(text);&#10;            await Configer.SettingsConfig.YieldFrames(multi : 1 / 16f);&#10;        }&#10;    }&#10;    static async Task BindAllCostTxt()&#10;    {&#10;        try&#10;        {&#10;            await DestroyAllCostTxt();&#10;            foreach (var point in BoxModelManager.GetAllPoints())&#10;            {&#10;                var txt = await costTxtPool.MyInstantiate(point.Pos3D + Vector3.up * 0.1f);&#10;                txt.gameObject.SetActive(true);&#10;                var b = Binder.From(point.CostWall).To(v =&gt;&#10;                {&#10;                    txt.text = v &gt; 1e9 ? &quot;∞&quot; : point.CostWall.ToString();&#10;                });&#10;                b.Immediate();&#10;                costTxtDic.Add(point, txt);&#10;                await Configer.SettingsConfig.YieldFrames(multi : 1 / 8f);&#10;            }&#10;        }&#10;        catch (Exception e)&#10;        {&#10;            MyDebug.LogError(e);&#10;            throw;&#10;        }&#10;    }&#10;}" />
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/Violee/View/MinimapView.cs" value="using Cinemachine;&#10;using UnityEngine;&#10;using UnityEngine.UI;&#10;&#10;namespace Violee.View&#10;{&#10;    public class MinimapView : ViewBase&#10;    {&#10;        public required Button ReGenerateBtn;&#10;        public required RenderTexture TarTexture;&#10;        public required CinemachineVirtualCamera MinimapCameraVirtual;&#10;        public required Camera MinimapCamera;&#10;        public required RawImage MinimapImg;&#10;        public required RawImage FullScreenImg;&#10;        public float ChangeSpeed = 1.2f;&#10;        public float MiniSize = 12f;&#10;&#10;        [Header(&quot;Load&quot;)]&#10;        public required GameObject PnlLoad;&#10;        &#10;        bool isMinimap =&gt; MinimapImg.enabled;&#10;        void Awake()&#10;        {&#10;            Binder.Update(SwitchMap);&#10;            GameManager.GeneratingMapState.OnEnter(() =&gt; PnlLoad.SetActive(true));&#10;            GameManager.GeneratingMapState.OnExit(() =&gt; PnlLoad.SetActive(false));&#10;            ShowMinimap();&#10;        }&#10;&#10;        void SwitchMap(float dt)&#10;        {&#10;            ChangeFOV(dt);&#10;            if (!Input.GetKeyDown(KeyCode.Tab))&#10;                return;&#10;            if (isMinimap)&#10;            {&#10;                ShowFullScreenMap();&#10;                return;&#10;            }&#10;            ShowMinimap();&#10;        }&#10;&#10;        void ChangeFOV(float dt)&#10;        {&#10;            var tarSize = isMinimap ? MiniSize : BoxModelManager.MaxSize / 1.616f;&#10;            if (!Mathf.Approximately(MinimapCameraVirtual.m_Lens.OrthographicSize, tarSize))&#10;            {&#10;                MinimapCameraVirtual.m_Lens.OrthographicSize = Mathf.Lerp(MinimapCameraVirtual.m_Lens.OrthographicSize,&#10;                    tarSize,&#10;                    ChangeSpeed * dt);&#10;            }&#10;        }&#10;        void ShowMinimap()&#10;        {&#10;            RefreshTexture(256, 256);&#10;            FullScreenImg.enabled = false;&#10;            MinimapImg.enabled = true;&#10;        }&#10;&#10;        void ShowFullScreenMap()&#10;        {&#10;            // 设置gameObject的 RectTransform长宽&#10;            FullScreenImg.gameObject.GetComponent&lt;RectTransform&gt;().sizeDelta  = new Vector2(Screen.height, Screen.height);&#10;            RefreshTexture(Screen.height, Screen.height);&#10;            FullScreenImg.enabled = true;&#10;            MinimapImg.enabled = false;&#10;        }&#10;        &#10;        void RefreshTexture(int width, int height)&#10;        {&#10;            TarTexture.Release();&#10;            TarTexture.width = width;&#10;            TarTexture.height = height;&#10;            TarTexture.Create();&#10;            MinimapCamera.targetTexture = TarTexture;&#10;            MinimapImg.texture = TarTexture;&#10;            FullScreenImg.texture = TarTexture;&#10;        }&#10;    }&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="14736" />
+                <option name="messageId" value="019840bdf16a7841951fd92059968eb6" />
+                <option name="outputToken" value="1248" />
+                <option name="question" value="详细说一下：8，事件监听可以通过更模块化的方式实现，避免直接依赖YlcNlwvoNzmztvi；&#13;&#10;7，使用接口或事件总线模式减少TznvNzmztvi与其他类的直接依赖；&#10;6，将TznvNzmztvi的状态管理功能进一步模块化，避免直接调用KozbviNlwvo等类的静态方法。" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="15984" />
+                <option name="variables">
+                  <list />
+                </option>
+              </Turn>
+            </list>
+          </option>
+          <option name="updateTime" value="1753432869404" />
+        </Conversation>
+        <Conversation>
           <option name="createTime" value="1753420900755" />
           <option name="id" value="01984007a9937f75b6558cfe08e7605e" />
           <option name="title" value="@ModelBase.cs @BoxModelManager.cs @GameManager.cs " />
@@ -95,31 +544,7 @@
                 <option name="status" value="SUCCESS" />
                 <option name="totalToken" value="13363" />
                 <option name="variables">
-                  <list>
-                    <FileVariable>
-                      <option name="endOffset" value="13" />
-                      <option name="identifierHash" value="VARIABLE_3b7d4587b499f50b6fceefac3781b2ce03d3f62503fa8e6bec2042d2b6ebf431" />
-                      <option name="selectedVariable">
-                        <Object />
-                      </option>
-                    </FileVariable>
-                    <FileVariable>
-                      <option name="endOffset" value="33" />
-                      <option name="identifierHash" value="VARIABLE_f2c6ef8508c11ba3ba0ccc63519a7e02a5922c4544e975b2525ba00e0b608a15" />
-                      <option name="selectedVariable">
-                        <Object />
-                      </option>
-                      <option name="startOffset" value="14" />
-                    </FileVariable>
-                    <FileVariable>
-                      <option name="endOffset" value="49" />
-                      <option name="identifierHash" value="VARIABLE_86211ce1736e41a056c194e453de672247f4feacfdb6eadb1b17b43d64b1b90a" />
-                      <option name="selectedVariable">
-                        <Object />
-                      </option>
-                      <option name="startOffset" value="34" />
-                    </FileVariable>
-                  </list>
+                  <list />
                 </option>
               </Turn>
             </list>
