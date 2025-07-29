@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ class MapView : ViewBase
     {
         costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform, 42);
         if (Configer.SettingsConfig.ShowBoxCost)
-            BoxModelManager.OnBeginDij += BindAllCostTxt;
+            BoxModelManager.DijkstraStream.OnBeginAsync += BindAllCostTxt;
     }
     static readonly Dictionary<BoxPointData, Text> costTxtDic = new ();
     static ObjectPool<Text> costTxtPool = null!;
@@ -27,12 +28,14 @@ class MapView : ViewBase
             await Configer.SettingsConfig.YieldFrames(multi : 1 / 16f);
         }
     }
-    static async Task BindAllCostTxt()
+    static async Task BindAllCostTxt((MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>) pair)
     {
         try
         {
             await DestroyAllCostTxt();
-            foreach (var point in BoxModelManager.GetAllPoints())
+            var boxKList = pair.Item1;
+            var allPoints = boxKList.SelectMany(x => x.PointKList).ToList();
+            foreach (var point in allPoints)
             {
                 var txt = await costTxtPool.MyInstantiate(point.Pos3D + Vector3.up * 0.1f);
                 txt.gameObject.SetActive(true);

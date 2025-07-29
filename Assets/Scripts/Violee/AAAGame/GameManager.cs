@@ -40,25 +40,23 @@ namespace Violee
             PlayingState.OnExit(playerModel.OnExitPlaying);
             
             
-            BoxModelManager.StartGenerateFunc.Guard += () => isIdle || isPlaying;
-            BoxModelManager.DijkstraFunc.Guard += () => isIdle;
-            BoxModelManager.OnBeginGenerate += () => gameFsm.ChangeState(EGameState.GeneratingMap);
-            BoxModelManager.OnEndGenerate += () => gameFsm.ChangeState(EGameState.Idle);
-            BoxModelManager.OnBeginDij += () =>
-            {
-                gameFsm.ChangeState(EGameState.GeneratingMap);
-                return Task.CompletedTask;
-            };
-            BoxModelManager.OnEndDij += pos3D =>
+            BoxModelManager.GenerateStream.Where(_ => isIdle || isPlaying);
+            BoxModelManager.GenerateStream.OnBegin += _ => gameFsm.ChangeState(EGameState.GeneratingMap);
+            BoxModelManager.GenerateStream.OnEnd += _ => gameFsm.ChangeState(EGameState.Idle);
+            
+            BoxModelManager.DijkstraStream.Where(_ => isIdle);
+            BoxModelManager.DijkstraStream.OnBegin += _ => gameFsm.ChangeState(EGameState.GeneratingMap);
+            BoxModelManager.DijkstraStream.OnEnd += pos3D =>
             {
                 gameFsm.ChangeState(EGameState.Playing);
-                playerModel.OnEnterPlaying(pos3D);
+                // TODO
+                // playerModel.OnEnterPlaying(pos3D);
             };
             
             Binder.Update(_ =>
             {
                 if (Input.GetKeyDown(KeyCode.R))
-                    BoxModelManager.StartGenerateFunc.TryInvoke();
+                    BoxModelManager.GenerateStream.CallTriggerAsync();
             });
             
             gameFsm.ChangeState(EGameState.Idle);

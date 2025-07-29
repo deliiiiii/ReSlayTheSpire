@@ -29,7 +29,8 @@ public class Test : MonoBehaviour
 
     async Task Test22()
     {
-        await s.Delay(2000).TriggerAsync(LogIAsync);
+        s.SetTriggerAsync(LogIAsync);
+        await s.Delay(2000).CallTriggerAsync();
         await Task.Delay(1000);
         MyDebug.Log($"Test22...");
         

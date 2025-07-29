@@ -10,6 +10,15 @@ namespace Violee;
 
 internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
 {
+    protected override void Awake()
+    {
+        base.Awake();
+        GenerateStream.SetTriggerAsync(_StartGenerate);
+        GenerateStream.EndWith(DijkstraStream);
+        DijkstraStream.SetTriggerAsync(_Dijkstra);
+        DijkstraStream.OnEnd += _ => BoxHelper.Pos2DTo3DPoint(StartPos, StartDir);
+    }
+
     #region Inspector
     [Header("Map Settings")]
     [SerializeField] int height = 4;
@@ -20,14 +29,6 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     
     
     #region Public Event & Functions
-    public static event Action? OnBeginGenerate;
-    public static event Action? OnEndGenerate;
-    public static event Func<Task>? OnBeginDij;
-    public static event Action<Vector3>? OnEndDij;
-    public static List<BoxPointData> GetAllPoints()
-    {
-        return boxKList.SelectMany(x => x.PointKList).ToList();
-    }
     public static void TickPlayerVisit(Vector3 playerPos)
     {
         var x = playerPos.x;
@@ -55,9 +56,6 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             }
         }
     }
-
-    public static readonly GuardedFunc<Task> StartGenerateFunc = new (_StartGenerate);
-    public static readonly GuardedFunc<Task> DijkstraFunc = new (_Dijkstra);
     public static float MaxSize => Mathf.Max(Width, Height) * BoxHelper.BoxSize;
     #endregion
     
@@ -70,53 +68,39 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     static readonly MyKeyedCollection<Vector2Int, BoxData> boxKList = new (b => b.Pos2D);
     static bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
     static bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
-    static async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfigSingle config)
-    {
-        await Configer.SettingsConfig.YieldFrames();
-        var boxData = new BoxData(pos, config);
-        MyDebug.Log($"Add box {config.Walls} at {pos}");
-        boxKList.Add(boxData);
-        emptyPosSet.Remove(pos);
-        await SpawnBox3D(boxData);
-        return boxData;
-    }
-    static void RemoveBox(BoxData boxData)
-    {
-        boxKList.Remove(boxData);
-        emptyPosSet.Add(boxData.Pos2D);
-        DestroyBox(boxData);
-    }
-    static void RemoveAllBoxes()
-    {
-        boxKList.ForEach(DestroyBox);
-        boxKList.Clear();
-        emptyPosSet.Clear();
-        for(int j = 0; j < Height; j++)
-        {
-            for(int i = 0; i < Width; i++)
-            {
-                emptyPosSet.Add(new Vector2Int(i, j));
-            }
-        }
-    }
     #endregion
 
 
     #region Generate
-    static readonly HashSet<Vector2Int> emptyPosSet = [];
-    static async Task _StartGenerate()
+    public static readonly Stream<(MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>)> GenerateStream 
+        = new(() => (boxKList, []));
+
+    public static readonly Stream<(MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>)> DijkstraStream = new();
+    static async Task _StartGenerate((MyKeyedCollection<Vector2Int,BoxData> , HashSet<Vector2Int>) pair)
     {
+        var fBoxKList = pair.Item1;
+        var fEmptyPosSet = pair.Item2;
+        void RemoveAllBoxes()
+        {
+            fBoxKList.ForEach(DestroyBox);
+            fBoxKList.Clear();
+            fEmptyPosSet.Clear();
+            for(int j = 0; j < Height; j++)
+            {
+                for(int i = 0; i < Width; i++)
+                {
+                    fEmptyPosSet.Add(new Vector2Int(i, j));
+                }
+            }
+        }
         try
         {
-            OnBeginGenerate?.Invoke();
             RemoveAllBoxes();
-            await GenerateOneFakeConnection(true);
-            while (emptyPosSet.Count > 0)
+            await GenerateOneFakeConnection(true, fEmptyPosSet);
+            while (fEmptyPosSet.Count > 0)
             {
-                await GenerateOneFakeConnection(false);
+                await GenerateOneFakeConnection(false, fEmptyPosSet);
             }
-            OnEndGenerate?.Invoke();
-            await (DijkstraFunc.TryInvoke() ?? Task.CompletedTask);
         }
         catch (Exception e)
         {
@@ -124,13 +108,31 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    static async Task GenerateOneFakeConnection(bool startWithStartLoc)
+    static async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet)
     {
+        async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfigSingle config)
+        {
+            await Configer.SettingsConfig.YieldFrames();
+            var boxData = new BoxData(pos, config);
+            MyDebug.Log($"Add box {config.Walls} at {pos}");
+            boxKList.Add(boxData);
+            fEmptyPosSet.Remove(pos);
+            await SpawnBox3D(boxData);
+            return boxData;
+        }
+        void RemoveBox(BoxData boxData)
+        {
+            boxKList.Remove(boxData);
+            fEmptyPosSet.Add(boxData.Pos2D);
+            DestroyBox(boxData);
+        }
+        
+
         try
         {
             var edgeBoxStack = new Stack<BoxData>();
             // 每个伪连通块的第一个是空格子
-            var firstLoc = startWithStartLoc ? StartPos : emptyPosSet.First();
+            var firstLoc = startWithStartLoc ? StartPos : fEmptyPosSet.First();
             var firstBox = await AddBoxAsync(firstLoc, BoxHelper.EmptyBoxConfig);
             edgeBoxStack.Push(firstBox);
             while (edgeBoxStack.Count > 0)
@@ -185,24 +187,21 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    static async Task _Dijkstra()
+    static async Task _Dijkstra((MyKeyedCollection<Vector2Int,BoxData> , HashSet<Vector2Int>) pair)
     {
         try
         {
+            var fBoxKList = pair.Item1;
             MyDebug.Log("Dijkstra 1");
-            foreach (var boxData in boxKList)
+            foreach (var boxData in fBoxKList)
             {
                 boxData.ResetCost();
-            }
-            if (OnBeginDij != null)
-            {
-                await OnBeginDij.Invoke();
             }
             MyDebug.Log("Dijkstra 2");
             var vSet = new HashSet<BoxPointData>();
         
             var pq = new SimplePriorityQueue<BoxPointData, int>();
-            var startBox = boxKList[StartPos];
+            var startBox = fBoxKList[StartPos];
             var startPoint = startBox.PointKList[StartDir];
             startPoint.CostWall.Value = 0;
             pq.Enqueue(startPoint, 0);
@@ -216,7 +215,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                 var nextPos = BoxHelper.NextPos(curBox.Pos2D, curPoint.Dir);
                 if (InMap(nextPos))
                 {
-                    var nextBox = boxKList[nextPos];
+                    var nextBox = fBoxKList[nextPos];
                     var oppositeDir = BoxHelper.OppositeDirDic[curPoint.Dir];
                     var nextPoint = nextBox.PointKList[oppositeDir];
                     nextPoint.CostWall.Value = Math.Min(
@@ -242,7 +241,6 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                 await Configer.SettingsConfig.YieldFrames();
             }
             MyDebug.Log("Dijkstra finished!");
-            OnEndDij?.Invoke(BoxHelper.Pos2DTo3DPoint(StartPos, StartDir));
         }
         catch (Exception e)
         {

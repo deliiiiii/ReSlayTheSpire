@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Violee;
 
 public abstract class Maybe<T>
 {
-    public sealed class Just(T value) : Maybe<T>
+    sealed class Just(T value) : Maybe<T>
     {
         public T Value { get; } = value;
     }
@@ -32,17 +33,26 @@ public abstract class Maybe<T>
     public static implicit operator Maybe<T>(T value) => Of(value);
 }
 
-public class Stream<T>(Func<T> startFunc)
+public class Stream<T>(Func<T>? startFunc = null)
 {
+    public Func<T> StartFunc { get; set; } = startFunc ?? (() => default!);
     readonly List<(Func<T, Task<Maybe<T>>>, string)> mappers = [];
-    public event Action<T>? OnStart;
+    Func<T, Task>? triggerFuncAsync;
+    public event Action<T>? OnBegin;
+    public event Func<T, Task>? OnBeginAsync;
     public event Action<T>? OnEnd;
-    
+    Stream<T>? endStream;
+
+    bool CheckValidMethod(MethodInfo methodInfo)
+    {
+        return methodInfo.IsStatic || methodInfo.Name.Contains("b__");
+    }
     public Stream<T> Map(Func<T, T> mapper, string logInfo = "")
     {   
-        if (!mapper.Method.IsStatic)
+        // method可以是lambda表达式, lambda表达式函数名包含b__
+        if (!CheckValidMethod(mapper.Method))
         {
-            MyDebug.LogWarning($"{startFunc.Method.Name} .Map {mapper.Method.Name} must be static, " +
+            MyDebug.LogWarning($"{StartFunc.Method.Name} .Map {mapper.Method.Name} must be static, " +
                              $"otherwise that added func is probably not PURE function !!");
             return this;
         }
@@ -52,9 +62,9 @@ public class Stream<T>(Func<T> startFunc)
 
     public Stream<T> Where(Predicate<T> predicate, string logInfo = "")
     {
-        if (!predicate.Method.IsStatic)
+        if (!CheckValidMethod(predicate.Method))
         {
-            MyDebug.LogWarning($"{startFunc.Method.Name} .Where {predicate.Method.Name} must be static, " +
+            MyDebug.LogWarning($"{StartFunc.Method.Name} .Where {predicate.Method.Name} must be static, " +
                                $"otherwise that added func is probably not PURE function !!");
             return this;
         }
@@ -62,55 +72,58 @@ public class Stream<T>(Func<T> startFunc)
         return this;
     }
 
-    public Stream<T> Delay(int miliSeconds)
+    public Stream<T> Delay(int millSeconds)
     {
-        mappers.Add((value => Task.Delay(miliSeconds).ContinueWith(_ => Maybe<T>.Of(value)), $"Delay {miliSeconds}ms"));
+        mappers.Add((value => Task.Delay(millSeconds).ContinueWith(_ => Maybe<T>.Of(value)), $"Delay {millSeconds}ms"));
         return this;
     }
-    
-    public async Task TriggerAsync(Func<T, Task> triggerFuncAsync)
+
+    public Stream<T> SetTrigger(Action<T> triggerFunc)
     {
-        Maybe<T> startValue = startFunc();
+        return SetTriggerAsync(x =>
+        {
+            triggerFunc(x);
+            return Task.CompletedTask;
+        });
+    }
+    public Stream<T> SetTriggerAsync(Func<T, Task> fTriggerFuncAsync)
+    {
+        triggerFuncAsync = fTriggerFuncAsync;
+        return this;
+    }
+
+    public Stream<T> EndWith(Stream<T> fEndStream)
+    {
+        endStream = fEndStream;
+        return this;
+    }
+
+    public async Task CallTriggerAsync()
+    {
+        Maybe<T> startValue = StartFunc();
         if (!startValue.HasValue)
         {
-            MyDebug.LogWarning($"{startFunc.Method.Name} At Start " +
+            MyDebug.LogWarning($"{StartFunc.Method.Name} At Start " +
                                $"has returned null.");
             return;
         }
-        OnStart?.Invoke(startValue);
         foreach (var mapper in mappers)
         {
             startValue = await mapper.Item1(startValue);
             if (startValue.HasValue)
                 continue;
-            MyDebug.LogWarning($"{startFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
+            MyDebug.LogWarning($"{StartFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
                                $"has returned null.");
             return;
         }
-        await triggerFuncAsync(startValue);
+        OnBegin?.Invoke(startValue);
+        await (OnBeginAsync != null ? OnBeginAsync(startValue) : Task.CompletedTask);
+        await (triggerFuncAsync != null ? triggerFuncAsync(startValue) : Task.CompletedTask);
         OnEnd?.Invoke(startValue);
-    }
-    
-    public void Trigger(Action<T> triggerFunc)
-    {
-        Maybe<T> startValue = startFunc();
-        if (!startValue.HasValue)
+        if (endStream != null)
         {
-            MyDebug.LogWarning($"{startFunc.Method.Name} At Start " +
-                               $"has returned null.");
-            return;
+            endStream.StartFunc = () => startValue;
+            endStream?.CallTriggerAsync();
         }
-        OnStart?.Invoke(startValue);
-        foreach (var mapper in mappers)
-        {
-            startValue = Task.FromResult(mapper.Item1(startValue)).Result.Result;
-            if (startValue.HasValue)
-                continue;
-            MyDebug.LogWarning($"{startFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
-                               $"has returned null.");
-            return;
-        }
-        triggerFunc(startValue);
-        OnEnd?.Invoke(startValue);
     }
 }
