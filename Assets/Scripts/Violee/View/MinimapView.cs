@@ -19,13 +19,16 @@ namespace Violee.View
         public required GameObject PnlLoad;
         
         bool isMinimap => MinimapImg.enabled;
-        void Awake()
+        protected override void IBL()
         {
             Binder.Update(SwitchMap);
             GameManager.GeneratingMapState.OnEnter(() => PnlLoad.SetActive(true));
             GameManager.GeneratingMapState.OnExit(() => PnlLoad.SetActive(false));
+
             ShowMinimap();
         }
+
+
 
         void SwitchMap(float dt)
         {

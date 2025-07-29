@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,7 +19,7 @@ namespace Violee
         async void Start()
         {
             if (SettingsConfig.RefreshConfigOnAwake)
-                 await LoadConfig();
+                await LoadConfig();
         }
 
         async Task LoadConfig()

@@ -8,14 +8,9 @@ namespace Violee
     [Serializable]
     public class BoxConfigSingle
     {
-        [HideInInspector]
-        public string Name = string.Empty;
-        [HideInInspector]
-        public byte Walls;
-        [ReadOnly]
-        public required Texture2D Texture2D;
-        // [HideInInspector]
-        // public Sprite Sprite;
+        [HideInInspector] public string Name = string.Empty;
+        [HideInInspector] public byte Walls;
+        [ReadOnly] public required Texture2D Texture2D;
         public int BasicWeight;
     }
 }

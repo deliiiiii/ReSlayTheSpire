@@ -9,9 +9,7 @@ namespace Violee.View;
 
 class MapView : ViewBase<BoxModelManager>
 {
-#pragma warning disable CS8618
-    public Text CostTxtPrefab;
-#pragma warning restore CS8618
+    public Text CostTxtPrefab = null!;
     
     
 

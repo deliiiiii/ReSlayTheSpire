@@ -15,7 +15,8 @@ public class Updater : Singleton<Updater>
     {
         foreach (var bindDataUpdate in UpdateDic.SelectMany(pair => pair.Value))
         {
-            bindDataUpdate.Act(Time.deltaTime);
+            if(bindDataUpdate.GuardSet.All(guard => guard()))
+                bindDataUpdate.Act(Time.deltaTime);
         }
     }
 }

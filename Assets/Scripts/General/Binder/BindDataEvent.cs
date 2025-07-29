@@ -4,6 +4,7 @@ using UnityEngine.Events;
 public class BindDataEvent
 {
     UnityAction act;
+    UnityAction lastAct;
     readonly UnityEvent evt;
 
     public BindDataEvent(UnityEvent evt)
@@ -11,17 +12,19 @@ public class BindDataEvent
         this.evt = evt;
     }
 
-    public BindDataEvent To(UnityAction act)
+    public BindDataEvent To(UnityAction fAct)
     {
-        evt.AddListener(act);
-        this.act = act;
+        evt.RemoveListener(lastAct);
+        lastAct = fAct;
+        evt.AddListener(fAct);
+        act = fAct;
         return this;
     }
     
     // TODO 不允许多个?
-    public BindDataEvent AnotherTo(UnityAction act)
+    public BindDataEvent AnotherTo(UnityAction fAct)
     {
-        evt.AddListener(act);
+        evt.AddListener(fAct);
         return this;
     }
 

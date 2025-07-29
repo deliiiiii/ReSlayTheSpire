@@ -1,14 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 
 public class BindDataUpdate
 {
     public Action<float> Act;
     readonly EUpdatePri priority;
+    public HashSet<Func<bool>> GuardSet = new ();
 
     public BindDataUpdate(Action<float> act, EUpdatePri priority)
     {
         this.Act = act;
         this.priority = priority;
+    }
+    
+    public BindDataUpdate Where(Func<bool> guard)
+    {
+        GuardSet.Add(guard);
+        return this;
     }
 
     public void UnBind()
