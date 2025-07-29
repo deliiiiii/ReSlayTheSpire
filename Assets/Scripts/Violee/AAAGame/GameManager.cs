@@ -46,11 +46,10 @@ namespace Violee
             
             BoxModelManager.DijkstraStream.Where(_ => isIdle);
             BoxModelManager.DijkstraStream.OnBegin += _ => gameFsm.ChangeState(EGameState.GeneratingMap);
-            BoxModelManager.DijkstraStream.OnEnd += pos3D =>
+            BoxModelManager.DijkstraStream.OnEnd += pair =>
             {
                 gameFsm.ChangeState(EGameState.Playing);
-                // TODO
-                // playerModel.OnEnterPlaying(pos3D);
+                playerModel.OnEnterPlaying(pair.Item2);
             };
             
             Binder.Update(_ =>

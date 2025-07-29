@@ -14,7 +14,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     {
         base.Awake();
         GenerateStream.SetTriggerAsync(_StartGenerate);
-        GenerateStream.EndWith(DijkstraStream);
+        GenerateStream.EndWith(DijkstraStream, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir));
         DijkstraStream.SetTriggerAsync(_Dijkstra);
         DijkstraStream.OnEnd += _ => BoxHelper.Pos2DTo3DPoint(StartPos, StartDir);
     }
@@ -75,7 +75,8 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     public static readonly Stream<(MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>)> GenerateStream 
         = new(() => (boxKList, []));
 
-    public static readonly Stream<(MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>)> DijkstraStream = new();
+    public static readonly Stream<((MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>), Vector3)> 
+        DijkstraStream = new();
     static async Task _StartGenerate((MyKeyedCollection<Vector2Int,BoxData> , HashSet<Vector2Int>) pair)
     {
         var fBoxKList = pair.Item1;
@@ -187,11 +188,11 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    static async Task _Dijkstra((MyKeyedCollection<Vector2Int,BoxData> , HashSet<Vector2Int>) pair)
+    static async Task _Dijkstra(((MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>), Vector3) pair)
     {
         try
         {
-            var fBoxKList = pair.Item1;
+            var fBoxKList = pair.Item1.Item1;
             MyDebug.Log("Dijkstra 1");
             foreach (var boxData in fBoxKList)
             {

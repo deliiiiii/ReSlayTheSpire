@@ -33,7 +33,11 @@ public abstract class Maybe<T>
     public static implicit operator Maybe<T>(T value) => Of(value);
 }
 
-public class Stream<T>(Func<T>? startFunc = null)
+public interface IStream
+{
+    Task CallTriggerAsync();
+}
+public class Stream<T>(Func<T>? startFunc = null): IStream
 {
     public Func<T> StartFunc { get; set; } = startFunc ?? (() => default!);
     readonly List<(Func<T, Task<Maybe<T>>>, string)> mappers = [];
@@ -41,7 +45,8 @@ public class Stream<T>(Func<T>? startFunc = null)
     public event Action<T>? OnBegin;
     public event Func<T, Task>? OnBeginAsync;
     public event Action<T>? OnEnd;
-    Stream<T>? endStream;
+    IStream? endStream;
+    Maybe<T> result;
 
     bool CheckValidMethod(MethodInfo methodInfo)
     {
@@ -92,16 +97,17 @@ public class Stream<T>(Func<T>? startFunc = null)
         return this;
     }
 
-    public Stream<T> EndWith(Stream<T> fEndStream)
+    public IStream EndWith<T2>(Stream<(T, T2)> fEndStream, T2 thatAddedStartValue)
     {
         endStream = fEndStream;
+        (endStream as Stream<(T, T2)>)!.StartFunc = () => (result, thatAddedStartValue);
         return this;
     }
 
     public async Task CallTriggerAsync()
     {
-        Maybe<T> startValue = StartFunc();
-        if (!startValue.HasValue)
+        result = StartFunc();
+        if (!result.HasValue)
         {
             MyDebug.LogWarning($"{StartFunc.Method.Name} At Start " +
                                $"has returned null.");
@@ -109,21 +115,17 @@ public class Stream<T>(Func<T>? startFunc = null)
         }
         foreach (var mapper in mappers)
         {
-            startValue = await mapper.Item1(startValue);
-            if (startValue.HasValue)
+            result = await mapper.Item1(result);
+            if (result.HasValue)
                 continue;
             MyDebug.LogWarning($"{StartFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
                                $"has returned null.");
             return;
         }
-        OnBegin?.Invoke(startValue);
-        await (OnBeginAsync != null ? OnBeginAsync(startValue) : Task.CompletedTask);
-        await (triggerFuncAsync != null ? triggerFuncAsync(startValue) : Task.CompletedTask);
-        OnEnd?.Invoke(startValue);
-        if (endStream != null)
-        {
-            endStream.StartFunc = () => startValue;
-            endStream?.CallTriggerAsync();
-        }
+        OnBegin?.Invoke(result);
+        await (OnBeginAsync != null ? OnBeginAsync(result) : Task.CompletedTask);
+        await (triggerFuncAsync != null ? triggerFuncAsync(result) : Task.CompletedTask);
+        OnEnd?.Invoke(result);
+        await (endStream != null ? endStream.CallTriggerAsync() : Task.CompletedTask);
     }
 }
