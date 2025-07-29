@@ -6,4 +6,9 @@ using UnityEngine;
 public abstract class ViewBase : MonoBehaviour
 {
     protected abstract void IBL();
+
+    void Awake()
+    {
+        IBL();
+    }
 }

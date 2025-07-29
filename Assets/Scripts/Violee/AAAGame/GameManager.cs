@@ -16,21 +16,28 @@ namespace Violee
     public class GameManager : Singleton<GameManager>
     {
         [ShowInInspector]
-        MyFSM<EGameState> gameFsm = new ();
-        bool isIdle => gameFsm.IsState(EGameState.Idle);
-        bool isPlaying => gameFsm.IsState(EGameState.Playing);
+        static MyFSM<EGameState> gameFsm = new ();
+        static bool isIdle => gameFsm.IsState(EGameState.Idle);
+        static bool isPlaying => gameFsm.IsState(EGameState.Playing);
 
+        [field: MaybeNull] public static BindDataState IdleState =>
+            field ??= Binder.From(gameFsm.GetState(EGameState.Idle));
         [field: MaybeNull] public static BindDataState GeneratingMapState => 
-            field ??= Binder.From(Instance.gameFsm.GetState(EGameState.GeneratingMap));
+            field ??= Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
+        [field: MaybeNull] public static BindDataState PlayingState =>
+            field ??= Binder.From(gameFsm.GetState(EGameState.Playing));
+        [field: MaybeNull] public static BindDataState WatchingMapState =>
+            field ??= Binder.From(gameFsm.GetState(EGameState.WatchingMap));
+        
+        [field: MaybeNull] PlayerModel playerModel => field ??= PlayerModel.Instance;
         protected void Start()
         {
-            
-            Binder.From(gameFsm.GetState(EGameState.Playing)).OnUpdate(dt =>
+            PlayingState.OnUpdate(dt =>
             {
-                BoxModelManager.TickPlayerVisit(PlayerModel.Instance.transform.position);
-                PlayerModel.Tick(dt);
+                BoxModelManager.TickPlayerVisit(playerModel.transform.position);
+                playerModel.Tick(dt);
             });
-            Binder.From(gameFsm.GetState(EGameState.Playing)).OnExit(PlayerModel.OnExitPlaying);
+            PlayingState.OnExit(playerModel.OnExitPlaying);
             
             
             BoxModelManager.StartGenerateFunc.Guard += () => isIdle || isPlaying;
@@ -45,7 +52,7 @@ namespace Violee
             BoxModelManager.OnEndDij += pos3D =>
             {
                 gameFsm.ChangeState(EGameState.Playing);
-                PlayerModel.OnEnterPlaying(pos3D);
+                playerModel.OnEnterPlaying(pos3D);
             };
             
             Binder.Update(_ =>

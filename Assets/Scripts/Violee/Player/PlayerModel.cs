@@ -14,20 +14,20 @@ namespace Violee
             gameObject.SetActive(false);
         }
 
-        public static void OnEnterPlaying(Vector3 pos3D)
+        public void OnEnterPlaying(Vector3 pos3D)
         {
-            Instance.transform.position = pos3D + Vector3.up * (1.5f * Instance.transform.position.y);
-            Instance.gameObject.SetActive(true);
+            transform.position = pos3D + Vector3.up * (1.5f * transform.position.y);
+            gameObject.SetActive(true);
         }
         
-        public static void OnExitPlaying()
+        public void OnExitPlaying()
         {
-            Instance.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
-        public static void Tick(float dt)
+        public void Tick(float dt)
         {
-            Instance.fpc.Tick();
+            fpc.Tick();
         }
     }
 }

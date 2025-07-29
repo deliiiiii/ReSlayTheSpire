@@ -3437,7 +3437,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fefd3cdd269b41bfaac90113db8152d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalOnScene: 0
   CostTxtPrefab: {fileID: 1559589957}
 --- !u!43 &362610636
 Mesh:
@@ -13921,7 +13920,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9615c019f5de4528a1de873888e8b0a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testComponent: {fileID: 0}
 --- !u!4 &1757223296
 Transform:
   m_ObjectHideFlags: 0

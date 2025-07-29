@@ -6,48 +6,38 @@ using UnityEngine;
 
 namespace Violee;
 
-public abstract class ModelBase<TData> : MonoBehaviour, IModelBase<TData> where TData : DataBase
+public interface IModelBase;
+public abstract class ModelBase<TData> : MonoBehaviour, IModelBase where TData : DataBase
 {
     [SerializeField] [ReadOnly] protected TData data = null!;
-    public TData Data => data;
-
     public void ReadData(TData fData)
     {
         data = fData;
         OnReadData();
     }
     protected abstract void OnReadData();
-    
 }
 
-public interface IModelBase<out TData> where TData : DataBase
-{ 
-    TData Data { get; }
-}
 
-public interface IModelManagerBase<out TModel> where TModel : IModelBase<DataBase>
-{
-    TModel ModelPrefab { get; }
-}
 
 [Serializable]
-abstract class ModelManagerBase<TModel, TModelManager> : Singleton<TModelManager>, IModelManagerBase<TModel> 
-    where TModel : MonoBehaviour, IModelBase<DataBase>
+abstract class ModelManagerBase<TModel, TModelManager> : Singleton<TModelManager>
+    where TModel : MonoBehaviour, IModelBase
     where TModelManager : Singleton<TModelManager>
 {
-    static readonly MyKeyedCollection<Type, IModelManagerBase<IModelBase<DataBase>>> modelManagers
+    static readonly MyKeyedCollection<Type, Singleton<TModelManager>> modelManagers
         = new(m => m.GetType());
 
     protected static T? GetModelManager<T>()
-        where T : class, IModelManagerBase<IModelBase<DataBase>>
+        where T : Singleton<TModelManager>
     {  
         if(modelManagers.Contains(typeof(T)))
             return modelManagers[typeof(T)] as T;
         return null;
     }
 
-    protected static T? AddModelManager<T>(T modelManager)
-        where T : class, IModelManagerBase<IModelBase<DataBase>>
+    static T? AddModelManager<T>(T modelManager)
+        where T : Singleton<TModelManager>
     {
         if(modelManagers.Contains(typeof(T)))
             return modelManagers[typeof(T)] as T;

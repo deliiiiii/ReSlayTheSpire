@@ -7,25 +7,16 @@ using UnityEngine.UI;
 
 namespace Violee.View;
 
-class MapView : ViewBase<BoxModelManager>
+class MapView : ViewBase
 {
     public Text CostTxtPrefab = null!;
     
-    
-
-    protected override void Awake()
+    protected override void IBL()
     {
-        base.Awake();
         costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform, 42);
-    }
-
-    protected override void Bind()
-    {
         if (Configer.SettingsConfig.ShowBoxCost)
             BoxModelManager.OnBeginDij += BindAllCostTxt;
     }
-
-
     static readonly Dictionary<BoxPointData, Text> costTxtDic = new ();
     static ObjectPool<Text> costTxtPool = null!;
     static async Task DestroyAllCostTxt()

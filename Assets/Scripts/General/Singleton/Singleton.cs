@@ -1,6 +1,7 @@
 using UnityEngine;
 using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
+
 //Mono单例
 //需要被继承 xxx : Singleton<xxx>
 //获取单例 xxx.Instance
