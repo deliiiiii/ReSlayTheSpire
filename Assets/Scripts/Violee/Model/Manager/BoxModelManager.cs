@@ -149,11 +149,11 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                         // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
                         continue;
                     }
-                    if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
+                    if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir))
                     {
                         var boxConfig = 
                             Configer.BoxConfig.BoxConfigList.RandomItemWeighted(
-                                x => !BoxData.HasSWallByByteAndDir(x.Walls, nextGoInDir),
+                                x => !BoxHelper.HasSWallByByteAndDir(x.Walls, nextGoInDir),
                                 x => x.BasicWeight);
                         var nextBox = await AddBoxAsync(nextPos, boxConfig);
                         var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
@@ -166,7 +166,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                             if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
                                 var nextNextBox = boxKList[nextNextPos];
-                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
+                                if (nextNextBox.HasSWallByDir(nextNextGoInDir))
                                 {
                                     nextBox.RemoveSWall(nextGoOutDir);
                                     // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");

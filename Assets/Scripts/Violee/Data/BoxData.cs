@@ -22,18 +22,87 @@ namespace Violee
         T1248 = 1 << 4 | 1 << 6,
         T2481 = 1 << 5 | 1 << 7,
     }
-    
+
+    public static class BoxDataExt
+    {
+        public static bool HasSWallByDir(this BoxData self, EBoxDir dir)
+        {
+            return self.WallKList[BoxHelper.WallDirToType(dir)].HasWall;
+        }
+        public static bool HasSWallByDir(this BoxData self, EBoxDir dir, out WallData wallData)
+        {
+            return (wallData = self.WallKList[BoxHelper.WallDirToType(dir)]).HasWall;
+        }
+        
+        public static int CostStraight(this BoxData self, EBoxDir dir)
+        {
+            if (!HasSWallByDir(self, dir, out var wallData))
+                return 0;
+            if(wallData.DoorType == EDoorType.Wooden)
+                return BoxData.DoorCost;
+            return BoxData.WallCost;
+        }
+
+        public static int CostTilt(this BoxData self, EBoxDir from, EBoxDir to)
+        {
+            if (CanGoTiltWallBetween(self, from, to))
+                return 0;
+            var t = (from, to) switch
+            {
+                (EBoxDir.Up, EBoxDir.Right)
+                    or (EBoxDir.Right, EBoxDir.Up)
+                    or (EBoxDir.Down, EBoxDir.Left)
+                    or (EBoxDir.Left, EBoxDir.Down) => EWallType.T1248,
+                (EBoxDir.Up, EBoxDir.Left)
+                    or (EBoxDir.Left, EBoxDir.Up)
+                    or (EBoxDir.Down, EBoxDir.Right)
+                    or (EBoxDir.Right, EBoxDir.Down) => EWallType.T2481,
+                _ => throw new ArgumentException($"from{from} and to{to} must be adjacent directions!"),
+            };
+            if(self.WallKList[t].DoorType == EDoorType.Wooden)
+                return BoxData.DoorCost;
+            return BoxData.WallCost;
+        }
+
+        /// <summary>
+        /// dir1 dir2必须相邻！
+        /// </summary>
+        public static bool CanGoTiltWallBetween(this BoxData self, EBoxDir dir1, EBoxDir dir2)
+        {
+            var bigDir = dir1 > dir2 ? dir1 : dir2;
+            var smallDif = dir1 < dir2 ? dir1 : dir2;
+            var big = (byte)bigDir;
+            var small = (byte)smallDif;
+            // tilt walls
+            var x = self.WallsByte >> 4;
+            var fromDif = small;
+            if (big == 8 && small == 1)
+                fromDif = 8;
+            return (big, small) switch
+            {
+                (4, 1) => (x & 3) != 3
+                          && (x & 12) != 12
+                          && (x & 5) != 5
+                          && (x & 10) != 10,
+                (8, 2) => (x & 9) != 9
+                          && (x & 6) != 6
+                          && (x & 5) != 5
+                          && (x & 10) != 10,
+                _ => x == 0 || x == fromDif || (x | fromDif) != x
+            };
+        }
+    }
     [Serializable]
     public class BoxData : DataBase
     {
         public BoxData(Vector2Int pos, BoxConfigSingle config)
         {
             Pos2D = pos;
-            wallsByte = config.Walls;
+            WallsByte = config.Walls;
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
                 WallKList.Add(new WallData(wallType, EDoorType.Random));
-                if ((wallsByte & (int)wallType) == (int)wallType)
+                if ((WallsByte & (int)wallType) == (int)wallType)
                     WallKList[wallType].HasWall = true;
             }
             PointKList = new MyKeyedCollection<EBoxDir, BoxPointData>(b => b.Dir);
@@ -62,21 +131,14 @@ namespace Violee
         public Vector2Int Pos2D;
         #region Walls
         [NonSerialized]
-        byte wallsByte;
+        public byte WallsByte;
         public event Action<WallData>? OnWallDataChanged;
-
         public readonly MyKeyedCollection<EWallType, WallData> WallKList = new(w => w.WallType);
         
-        public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
-
-        public bool HasSWallByDir(EBoxDir dir, out WallData wallData)
-        {
-            wallData = WallKList[BoxHelper.WallDirToType(dir)];
-            return wallData.HasWall;
-        }
+        
         public void AddSWall(WallData wallData)
         {
-            wallsByte |= (byte)wallData.WallType;
+            WallsByte |= (byte)wallData.WallType;
             wallData.HasWall = true;
             OnWallDataChanged?.Invoke(wallData);
         }
@@ -86,7 +148,7 @@ namespace Violee
         }
         void RemoveSWall(EWallType wallType)
         {
-            wallsByte &= (byte)~wallType;
+            WallsByte &= (byte)~wallType;
             WallKList[wallType].HasWall = false;
             OnWallDataChanged?.Invoke(WallKList[wallType]);
         }
@@ -94,8 +156,9 @@ namespace Violee
         
         
         #region Path
-        const int WallCost = 10;
-        const int DoorCost = 1;
+
+        public const int WallCost = 10;
+        public const int DoorCost = 1;
         public MyKeyedCollection<EBoxDir, BoxPointData> PointKList;
 
         public void ResetCost()
@@ -105,67 +168,6 @@ namespace Violee
                 pointData.CostWall.Value = int.MaxValue / 2;
                 pointData.Visited.Value = false;
             }
-        }
-
-        public int CostStraight(EBoxDir dir)
-        {
-            if (!HasSWallByDir(dir, out var wallData))
-                return 0;
-            if(wallData.DoorType == EDoorType.Wooden)
-                return DoorCost;
-            return WallCost;
-        }
-
-        public int CostTilt(EBoxDir from, EBoxDir to)
-        {
-            if (CanGoTiltWallBetween(from, to))
-                return 0;
-            var t = (from, to) switch
-            {
-                (EBoxDir.Up, EBoxDir.Right)
-                    or (EBoxDir.Right, EBoxDir.Up)
-                    or (EBoxDir.Down, EBoxDir.Left)
-                    or (EBoxDir.Left, EBoxDir.Down) => EWallType.T1248,
-                (EBoxDir.Up, EBoxDir.Left)
-                    or (EBoxDir.Left, EBoxDir.Up)
-                    or (EBoxDir.Down, EBoxDir.Right)
-                    or (EBoxDir.Right, EBoxDir.Down) => EWallType.T2481,
-                _ => throw new ArgumentException($"from{from} and to{to} must be adjacent directions!"),
-            };
-            if(WallKList[t].DoorType == EDoorType.Wooden)
-                return DoorCost;
-            return WallCost;
-        }
-        
-        /// <summary>
-        /// dir1 dir2必须相邻！
-        /// </summary>
-        /// <param name="dir1"></param>
-        /// <param name="dir2"></param>
-        /// <returns></returns>
-        bool CanGoTiltWallBetween(EBoxDir dir1, EBoxDir dir2)
-        {
-            var bigDir = dir1 > dir2 ? dir1 : dir2;
-            var smallDif = dir1 < dir2 ? dir1 : dir2;
-            var big = (byte)bigDir;
-            var small = (byte)smallDif;
-            // tilt walls
-            var x = wallsByte >> 4;
-            var fromDif = small;
-            if (big == 8 && small == 1)
-                fromDif = 8;
-            return (big, small) switch
-            {
-                (4, 1) => (x & 3) != 3
-                          && (x & 12) != 12
-                          && (x & 5) != 5
-                          && (x & 10) != 10,
-                (8, 2) => (x & 9) != 9
-                          && (x & 6) != 6
-                          && (x & 5) != 5
-                          && (x & 10) != 10,
-                _ => x == 0 || x == fromDif || (x | fromDif) != x
-            };
         }
         #endregion
     }

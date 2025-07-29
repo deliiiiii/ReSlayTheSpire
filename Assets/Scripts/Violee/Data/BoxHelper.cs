@@ -91,5 +91,7 @@ namespace Violee
                 _ => throw new ArgumentException($"Invalid direction: {dir}")
             };
         }
+        
+        public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
     }
 }
