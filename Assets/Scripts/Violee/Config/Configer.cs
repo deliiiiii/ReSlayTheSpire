@@ -16,9 +16,10 @@ namespace Violee
         public static BoxConfigList BoxConfigList => Instance.BoxConfigListIns;
         public static MiniItemConfigList MiniItemConfigList => Instance.MiniItemConfigListIns;
         public static SettingsConfig SettingsConfig => Instance.SettingsConfigIns;
-        
+        public static bool Started;
         async void Start()
         {
+            Started = true;
             if (SettingsConfig.RefreshConfigOnAwake)
                 await LoadConfig();
         }

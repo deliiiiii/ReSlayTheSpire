@@ -20,7 +20,7 @@ namespace Violee
         {
             base.Awake();
             fpc = GetComponent<FirstPersonController>();
-            playerData = PlayerData.Create();
+            playerData = new PlayerData();
             gameObject.SetActive(false);
         }
 

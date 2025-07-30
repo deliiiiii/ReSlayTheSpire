@@ -13,29 +13,26 @@ public class PlayerData : DataBase
     [NonSerialized][ShowInInspector]
     List<MiniItemData> miniItems = [];
     public List<char> LetterList = [];
-    [field: MaybeNull] public MiniItemData Stamina 
-        => field ??= miniItems.Find(x => x.Config.Description.Equals(nameof(Stamina)));
-    [field: MaybeNull] public MiniItemData Energy
-        => field ??= miniItems.Find(x => x.Config.Description.Equals(nameof(Energy)));
-    [field: MaybeNull] public MiniItemData Gloves
-        => field ??= miniItems.Find(x => x.Config.Description.Equals(nameof(Gloves)));
-    [field: MaybeNull] public MiniItemData Dice
-        => field ??= miniItems.Find(x => x.Config.Description.Equals(nameof(Dice)));
+    public MiniItemData Stamina = null!;
+    public MiniItemData Energy = null!;
+    public MiniItemData Gloves = null!;
+    public MiniItemData Dice = null!;
     
     // 不直接写构造函数是因为调用了Config er单例，单例在没有运行时是不能FindObjectOfType的
-    private PlayerData(){}
-    public static PlayerData Create()
+    public PlayerData()
     {
-        var ret = new PlayerData();
+        if (!Configer.Started)
+            return;
         foreach (var config in Configer.MiniItemConfigList.MiniItemConfigs)
         {
-            ret.miniItems.Add(new MiniItemData(config));
+            miniItems.Add(new MiniItemData(config));
         }
-        
+        Stamina = miniItems.Find(x => x.Config.Description.Equals(nameof(Stamina)));
+        Energy = miniItems.Find(x => x.Config.Description.Equals(nameof(Energy)));
+        Gloves = miniItems.Find(x => x.Config.Description.Equals(nameof(Gloves)));
+        Dice = miniItems.Find(x => x.Config.Description.Equals(nameof(Dice)));
         // TODO 
-        ret.Stamina.OnRunOut += () => {/* game over */ };
-        
-        return ret;
+        Stamina.OnRunOut += () => {/* game over */ };
     }
 }
 
