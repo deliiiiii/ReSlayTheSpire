@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 public class BindDataUpdate
@@ -30,7 +31,6 @@ public class BindDataUpdate
 public enum EUpdatePri
 {
     Default = -1,
-    MainModel = 0,
-    // P1 = 1,
-    // P2 = 2,
+    Input,
+    Sprite,
 }

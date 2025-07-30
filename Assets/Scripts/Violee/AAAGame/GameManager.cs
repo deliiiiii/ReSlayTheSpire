@@ -22,7 +22,7 @@ namespace Violee
         static bool isPlaying => gameFsm.IsState(EGameState.Playing);
         public static readonly BindDataState GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
         public static readonly BindDataState PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
-        PlayerModel playerModel => field ??= PlayerModel.Instance;
+        [field: MaybeNull] PlayerModel playerModel => field ??= PlayerModel.Instance;
         protected void Start()
         {
             PlayingState.OnUpdate(dt =>
@@ -44,12 +44,6 @@ namespace Violee
                 gameFsm.ChangeState(EGameState.Playing);
                 playerModel.OnEnterPlaying(pair.Item2);
             };
-            
-            Binder.Update(_ =>
-            {
-                if (Input.GetKeyDown(KeyCode.R))
-                    Task.FromResult(BoxModelManager.GenerateStream.CallTriggerAsync());
-            });
             
             gameFsm.ChangeState(EGameState.Idle);
             Binder.Update(gameFsm.Update);

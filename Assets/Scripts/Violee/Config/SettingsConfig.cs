@@ -11,7 +11,9 @@ namespace Violee
         public bool ShowBoxCost = true;
         [MinValue(0)][MaxValue(0.5f)]
         public float BoxCostPosOffset = 0.35f;
-        
+
+        public float PointSpriteFlashTime = 1f;
+        public float PointSpriteAlpha = 166f;
         
         #region Yield Control
         [Header("Yield Control")]

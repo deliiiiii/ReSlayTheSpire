@@ -10,6 +10,19 @@ namespace Violee;
 
 internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
 {
+    protected override void Awake()
+    {
+        base.Awake();
+        Binder.Update(_ =>
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+                Task.FromResult(GenerateStream.CallTriggerAsync());
+            if (Input.GetKeyDown(KeyCode.S))
+                curPoint?.FlashConnectedInverse();
+        }, EUpdatePri.Input);
+        
+    }
+
     #region Inspector
     [Header("Map Settings")]
     [SerializeField] int height = 4;
@@ -17,8 +30,9 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     [SerializeField] Vector2Int startPos;
     [SerializeField] EBoxDir startDir = EBoxDir.Up;
     #endregion
-    
-    
+
+
+    static BoxPointData? curPoint;
     #region Public Event & Functions
     public static void TickPlayerVisit(Vector3 playerPos)
     {
@@ -39,11 +53,14 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             var edgeZ = edgeCenterPos.z;
             var pointData = boxKList[boxPos2D].PointKList[dir];
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
-            if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfig.WalkInTolerance
-                && !pointData.Visited)
+            if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfig.WalkInTolerance)
             {
-                pointData.Visited.Value = true;
-                MyDebug.Log($"Enter Point!!{boxPos2D}:{dir}");
+                curPoint = pointData;
+                if(!curPoint.Visited)
+                {
+                    curPoint.VisitConnected();
+                    MyDebug.Log($"First Enter Point!!{boxPos2D}:{dir}");
+                }
             }
         }
     }
@@ -185,10 +202,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
         try
         {
             var fBoxKList = pair.Item1.BoxKList;
-            foreach (var boxData in fBoxKList)
-            {
-                boxData.ResetCost();
-            }
+            fBoxKList.ForEach(boxData => boxData.ResetBeforeDij());
             var vSet = new HashSet<BoxPointData>();
             var pq = new SimplePriorityQueue<BoxPointData, int>();
             var startBox = fBoxKList[StartPos];
@@ -201,32 +215,40 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                 vSet.Add(curPoint);
                 var curCost = curPoint.CostWall;
                 var curBox = curPoint.BelongBox;
-                curPoint.UpdateNextPointCost();
                 var nextPos = BoxHelper.NextPos(curBox.Pos2D, curPoint.Dir);
                 if (InMap(nextPos))
                 {
                     var nextBox = fBoxKList[nextPos];
                     var oppositeDir = BoxHelper.OppositeDirDic[curPoint.Dir];
                     var nextPoint = nextBox.PointKList[oppositeDir];
+                    var costSWall = curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir);
                     nextPoint.CostWall.Value = Math.Min(
                         nextPoint.CostWall.Value,
-                        curCost.Value + curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir));
+                        curCost.Value + costSWall);
                     if (!vSet.Contains(nextPoint))
                     {
                         if(pq.Contains(nextPoint))
                             pq.UpdatePriority(nextPoint, nextPoint.CostWall);
                         else
                             pq.Enqueue(nextPoint, nextPoint.CostWall);
+                        if(costSWall == 0)
+                            curPoint.Merge(nextPoint);
                     }
                 }
                 curPoint.NextPointsInBox
                     .Where(nextPoint => !vSet.Contains(nextPoint))
                     .ForEach(nextPoint =>
                     {
+                        var costTilt = curBox.CostTilt(curPoint.Dir, nextPoint.Dir);
+                        nextPoint.CostWall.Value = Math.Min(
+                            nextPoint.CostWall.Value,
+                            curPoint.CostWall + costTilt);
                         if (pq.Contains(nextPoint))
                             pq.UpdatePriority(nextPoint, nextPoint.CostWall);
                         else
                             pq.Enqueue(nextPoint, nextPoint.CostWall);
+                        if(costTilt == 0)
+                            curPoint.Merge(nextPoint);
                     });
                 await Configer.SettingsConfig.YieldFrames();
             }

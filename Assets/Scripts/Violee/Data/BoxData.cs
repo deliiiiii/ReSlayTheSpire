@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee
@@ -161,13 +162,9 @@ namespace Violee
         public const int DoorCost = 1;
         public MyKeyedCollection<EBoxDir, BoxPointData> PointKList;
 
-        public void ResetCost()
+        public void ResetBeforeDij()
         {
-            foreach (var pointData in PointKList)
-            {
-                pointData.CostWall.Value = int.MaxValue / 2;
-                pointData.Visited.Value = false;
-            }
+            PointKList.ForEach(pointData => pointData.ResetBeforeDij());
         }
         #endregion
     }
