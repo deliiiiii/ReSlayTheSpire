@@ -37,18 +37,18 @@ public interface IStream
 {
     Task CallTriggerAsync();
 }
-public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsync = null): IStream
+public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsync = null, IStream? endStream = null): IStream
 {
     public Stream(Func<T>? startFunc = null, Action<T>? triggerFunc = null) 
         : this(startFunc, x => { triggerFunc?.Invoke(x); return Task.CompletedTask; }){ }
     
-    Func<T> StartFunc { get; set; } = startFunc ?? (() => default!);
+    readonly Func<T> startFunc = startFunc ?? (() => default!);
     readonly List<(Func<T, Task<Maybe<T>>>, string)> mappers = [];
     Func<T, Task>? triggerFuncAsync = triggerFuncAsync;
     public event Action<T>? OnBegin;
     public event Func<T, Task>? OnBeginAsync;
     public event Action<T>? OnEnd;
-    IStream? endStream;
+    IStream? endStream = endStream;
 
     static bool CheckValidMethod(MethodInfo methodInfo) => methodInfo.IsStatic || methodInfo.Name.Contains("b__");
 
@@ -57,7 +57,7 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
         // method可以是lambda表达式, lambda表达式函数名包含b__
         if (!CheckValidMethod(mapper.Method))
         {
-            MyDebug.LogWarning($"{StartFunc.Method.Name} .Map {mapper.Method.Name} must be static, " +
+            MyDebug.LogWarning($"{startFunc.Method.Name} .Map {mapper.Method.Name} must be static, " +
                              $"otherwise that added func is probably not PURE function !!");
             return this;
         }
@@ -69,7 +69,7 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
     {
         if (!CheckValidMethod(predicate.Method))
         {
-            MyDebug.LogWarning($"{StartFunc.Method.Name} .Where {predicate.Method.Name} must be static, " +
+            MyDebug.LogWarning($"{startFunc.Method.Name} .Where {predicate.Method.Name} must be static, " +
                                $"otherwise that added func is probably not PURE function !!");
             return this;
         }
@@ -105,10 +105,10 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
 
     public async Task CallTriggerAsync()
     {
-        Result = StartFunc();
+        Result = startFunc();
         if (!Result.HasValue)
         {
-            MyDebug.LogWarning($"{StartFunc.Method.Name} At Start " +
+            MyDebug.LogWarning($"{startFunc.Method.Name} At Start " +
                                $"has returned null.");
             return;
         }
@@ -117,7 +117,7 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
             Result = await mapper.Item1(Result);
             if (Result.HasValue)
                 continue;
-            MyDebug.LogWarning($"{StartFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
+            MyDebug.LogWarning($"{startFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
                                $"has returned null.");
             return;
         }

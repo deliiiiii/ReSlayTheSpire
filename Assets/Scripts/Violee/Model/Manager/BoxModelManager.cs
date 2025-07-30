@@ -10,14 +10,6 @@ namespace Violee;
 
 internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
 {
-    protected override void Awake()
-    {
-        base.Awake();
-        GenerateStream.SetTriggerAsync(_StartGenerate);
-        GenerateStream.EndWith(DijkstraStream);
-        DijkstraStream.SetTriggerAsync(_Dijkstra);
-    }
-
     #region Inspector
     [Header("Map Settings")]
     [SerializeField] int height = 4;
@@ -69,18 +61,19 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     static bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
     #endregion
 
-
+    
+    #region Generate
     public class GenerateStreamParam(MyKeyedCollection<Vector2Int, BoxData> boxKList, HashSet<Vector2Int> emptyPosSet)
     {
         public readonly MyKeyedCollection<Vector2Int, BoxData> BoxKList = boxKList;
         public readonly HashSet<Vector2Int> EmptyPosSet = emptyPosSet;
     }
-    #region Generate
-    public static readonly Stream<GenerateStreamParam> GenerateStream 
-        = new(() => new GenerateStreamParam(boxKList, []), _StartGenerate);
-
     public static readonly Stream<(GenerateStreamParam, Vector3)> 
-        DijkstraStream = new(() => (GenerateStream.Result, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)), _Dijkstra);
+        DijkstraStream = new(startFunc: () => (GenerateStream.Result, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)),
+            triggerFuncAsync: _Dijkstra);
+    public static readonly Stream<GenerateStreamParam> GenerateStream 
+        = new(startFunc: () => new GenerateStreamParam(boxKList, []),
+            triggerFuncAsync: _StartGenerate, endStream: DijkstraStream);
     static async Task _StartGenerate(GenerateStreamParam param)
     {
         var fBoxKList = param.BoxKList;
@@ -90,9 +83,9 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             fBoxKList.ForEach(DestroyBox);
             fBoxKList.Clear();
             fEmptyPosSet.Clear();
-            for(int j = 0; j < Height; j++)
+            for(var j = 0; j < Height; j++)
             {
-                for(int i = 0; i < Width; i++)
+                for(var i = 0; i < Width; i++)
                 {
                     fEmptyPosSet.Add(new Vector2Int(i, j));
                 }
@@ -143,12 +136,10 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             {
                 var curBox = edgeBoxStack.Pop();
                 var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos2D);
-                foreach (var nextPair in nextPairs)
+                foreach (var (nextPos, nextGoInDir) in nextPairs)
                 {
                     // “下一格”
-                    var nextPos = nextPair.Item1;
-                    var nextGoInDir = nextPair.Item2;
-                    var curGoOutDir = BoxHelper.OppositeDirDic[nextPair.Item2];
+                    var curGoOutDir = BoxHelper.OppositeDirDic[nextGoInDir];
                     if (!InMap(nextPos))
                     {
                         curBox.AddSWall(new WallData(curGoOutDir, EDoorType.None));
@@ -163,12 +154,10 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                                 x => x.BasicWeight);
                         var nextBox = await AddBoxAsync(nextPos, boxConfig);
                         var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
-                        foreach (var nextNextPair in nextNextPairs)
+                        foreach (var (nextNextPos, nextNextGoInDir) in nextNextPairs)
                         {
-                            var nextNextPos = nextNextPair.Item1;
-                            // “下一格”的相邻格的走入方向
-                            var nextNextGoInDir = nextNextPair.Item2;
-                            var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextPair.Item2];
+                            // nextNextGoInDir:  “下一格”的相邻格的走入方向
+                            var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextGoInDir];
                             if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
                                 var nextNextBox = boxKList[nextNextPos];
@@ -196,14 +185,11 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
         try
         {
             var fBoxKList = pair.Item1.BoxKList;
-            MyDebug.Log("Dijkstra 1");
             foreach (var boxData in fBoxKList)
             {
                 boxData.ResetCost();
             }
-            MyDebug.Log("Dijkstra 2");
             var vSet = new HashSet<BoxPointData>();
-        
             var pq = new SimplePriorityQueue<BoxPointData, int>();
             var startBox = fBoxKList[StartPos];
             var startPoint = startBox.PointKList[StartDir];
