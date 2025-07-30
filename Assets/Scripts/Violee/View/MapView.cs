@@ -28,12 +28,12 @@ class MapView : ViewBase
             await Configer.SettingsConfig.YieldFrames(multi : 1 / 16f);
         }
     }
-    static async Task BindAllCostTxt(((MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>), Vector3) pair)
+    static async Task BindAllCostTxt((BoxModelManager.GenerateStreamParam, Vector3) pair)
     {
         try
         {
             await DestroyAllCostTxt();
-            var boxKList = pair.Item1.Item1;
+            var boxKList = pair.Item1.BoxKList;
             var allPoints = boxKList.SelectMany(x => x.PointKList).ToList();
             foreach (var point in allPoints)
             {

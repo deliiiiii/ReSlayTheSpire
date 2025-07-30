@@ -14,9 +14,8 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     {
         base.Awake();
         GenerateStream.SetTriggerAsync(_StartGenerate);
-        GenerateStream.EndWith(DijkstraStream, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir));
+        GenerateStream.EndWith(DijkstraStream);
         DijkstraStream.SetTriggerAsync(_Dijkstra);
-        DijkstraStream.OnEnd += _ => BoxHelper.Pos2DTo3DPoint(StartPos, StartDir);
     }
 
     #region Inspector
@@ -71,16 +70,21 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     #endregion
 
 
-    #region Generate
-    public static readonly Stream<(MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>)> GenerateStream 
-        = new(() => (boxKList, []));
-
-    public static readonly Stream<((MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>), Vector3)> 
-        DijkstraStream = new();
-    static async Task _StartGenerate((MyKeyedCollection<Vector2Int,BoxData> , HashSet<Vector2Int>) pair)
+    public class GenerateStreamParam(MyKeyedCollection<Vector2Int, BoxData> boxKList, HashSet<Vector2Int> emptyPosSet)
     {
-        var fBoxKList = pair.Item1;
-        var fEmptyPosSet = pair.Item2;
+        public readonly MyKeyedCollection<Vector2Int, BoxData> BoxKList = boxKList;
+        public readonly HashSet<Vector2Int> EmptyPosSet = emptyPosSet;
+    }
+    #region Generate
+    public static readonly Stream<GenerateStreamParam> GenerateStream 
+        = new(() => new GenerateStreamParam(boxKList, []), _StartGenerate);
+
+    public static readonly Stream<(GenerateStreamParam, Vector3)> 
+        DijkstraStream = new(() => (GenerateStream.Result, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)), _Dijkstra);
+    static async Task _StartGenerate(GenerateStreamParam param)
+    {
+        var fBoxKList = param.BoxKList;
+        var fEmptyPosSet = param.EmptyPosSet;
         void RemoveAllBoxes()
         {
             fBoxKList.ForEach(DestroyBox);
@@ -188,11 +192,11 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    static async Task _Dijkstra(((MyKeyedCollection<Vector2Int, BoxData>, HashSet<Vector2Int>), Vector3) pair)
+    static async Task _Dijkstra((GenerateStreamParam, Vector3) pair)
     {
         try
         {
-            var fBoxKList = pair.Item1.Item1;
+            var fBoxKList = pair.Item1.BoxKList;
             MyDebug.Log("Dijkstra 1");
             foreach (var boxData in fBoxKList)
             {

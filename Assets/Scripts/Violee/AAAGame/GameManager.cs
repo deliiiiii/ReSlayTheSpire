@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -21,10 +22,9 @@ namespace Violee
         static bool isPlaying => gameFsm.IsState(EGameState.Playing);
         public static readonly BindDataState GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
         public static readonly BindDataState PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
-        PlayerModel playerModel;
+        PlayerModel playerModel => field ??= PlayerModel.Instance;
         protected void Start()
         {
-            playerModel = PlayerModel.Instance;
             PlayingState.OnUpdate(dt =>
             {
                 BoxModelManager.TickPlayerVisit(playerModel.transform.position);

@@ -37,21 +37,21 @@ public interface IStream
 {
     Task CallTriggerAsync();
 }
-public class Stream<T>(Func<T>? startFunc = null): IStream
+public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsync = null): IStream
 {
-    public Func<T> StartFunc { get; set; } = startFunc ?? (() => default!);
+    public Stream(Func<T>? startFunc = null, Action<T>? triggerFunc = null) 
+        : this(startFunc, x => { triggerFunc?.Invoke(x); return Task.CompletedTask; }){ }
+    
+    Func<T> StartFunc { get; set; } = startFunc ?? (() => default!);
     readonly List<(Func<T, Task<Maybe<T>>>, string)> mappers = [];
-    Func<T, Task>? triggerFuncAsync;
+    Func<T, Task>? triggerFuncAsync = triggerFuncAsync;
     public event Action<T>? OnBegin;
     public event Func<T, Task>? OnBeginAsync;
     public event Action<T>? OnEnd;
     IStream? endStream;
-    Maybe<T> result;
 
-    bool CheckValidMethod(MethodInfo methodInfo)
-    {
-        return methodInfo.IsStatic || methodInfo.Name.Contains("b__");
-    }
+    static bool CheckValidMethod(MethodInfo methodInfo) => methodInfo.IsStatic || methodInfo.Name.Contains("b__");
+
     public Stream<T> Map(Func<T, T> mapper, string logInfo = "")
     {   
         // method可以是lambda表达式, lambda表达式函数名包含b__
@@ -97,17 +97,16 @@ public class Stream<T>(Func<T>? startFunc = null): IStream
         return this;
     }
 
-    public IStream EndWith<T2>(Stream<(T, T2)> fEndStream, T2 thatAddedStartValue)
+    public Stream<T> EndWith(IStream fEndStream)
     {
         endStream = fEndStream;
-        (endStream as Stream<(T, T2)>)!.StartFunc = () => (result, thatAddedStartValue);
         return this;
     }
 
     public async Task CallTriggerAsync()
     {
-        result = StartFunc();
-        if (!result.HasValue)
+        Result = StartFunc();
+        if (!Result.HasValue)
         {
             MyDebug.LogWarning($"{StartFunc.Method.Name} At Start " +
                                $"has returned null.");
@@ -115,17 +114,19 @@ public class Stream<T>(Func<T>? startFunc = null): IStream
         }
         foreach (var mapper in mappers)
         {
-            result = await mapper.Item1(result);
-            if (result.HasValue)
+            Result = await mapper.Item1(Result);
+            if (Result.HasValue)
                 continue;
             MyDebug.LogWarning($"{StartFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
                                $"has returned null.");
             return;
         }
-        OnBegin?.Invoke(result);
-        await (OnBeginAsync != null ? OnBeginAsync(result) : Task.CompletedTask);
-        await (triggerFuncAsync != null ? triggerFuncAsync(result) : Task.CompletedTask);
-        OnEnd?.Invoke(result);
+        OnBegin?.Invoke(Result);
+        await (OnBeginAsync != null ? OnBeginAsync(Result) : Task.CompletedTask);
+        await (triggerFuncAsync != null ? triggerFuncAsync(Result) : Task.CompletedTask);
+        OnEnd?.Invoke(Result);
         await (endStream != null ? endStream.CallTriggerAsync() : Task.CompletedTask);
     }
+
+    public Maybe<T> Result { get; private set; } = Maybe<T>.Nothing.Instance;
 }
