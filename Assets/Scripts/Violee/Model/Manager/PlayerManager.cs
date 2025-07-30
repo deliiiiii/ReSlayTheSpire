@@ -20,13 +20,13 @@ namespace Violee
         {
             base.Awake();
             fpc = GetComponent<FirstPersonController>();
-            playerData = new PlayerData();
             gameObject.SetActive(false);
         }
 
         public void OnEnterPlaying(Vector3 pos3D)
         {
             transform.position = pos3D + Vector3.up * (1.5f * transform.position.y);
+            playerData = new PlayerData();
             gameObject.SetActive(true);
         }
         

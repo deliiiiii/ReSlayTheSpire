@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>PolySharp</id>
-    <version>1.14.0+2a6e35e675b50de59bd2638db833e7d942b06631</version>
+    <version>1.15.0+02753db24d9685e54db06739eb63183d86eb5b62</version>
     <title>PolySharp</title>
     <authors>Sergio Pedri</authors>
     <developmentDependency>true</developmentDependency>
@@ -15,7 +15,7 @@
     <description>PolySharp provides generated, source-only polyfills for C# language features, to easily use all runtime-agnostic features downlevel</description>
     <copyright>Copyright (c) 2023 Sergio Pedri</copyright>
     <tags>dotnet net netcore netstandard csharp library generator polyfill roslyn</tags>
-    <repository type="git" url="https://github.com/Sergio0694/PolySharp/" commit="2a6e35e675b50de59bd2638db833e7d942b06631" />
+    <repository type="git" url="https://github.com/Sergio0694/PolySharp/" branch="refs/heads/rel/1.15.0" commit="02753db24d9685e54db06739eb63183d86eb5b62" />
     <dependencies>
       <group targetFramework=".NETStandard2.0" />
     </dependencies>

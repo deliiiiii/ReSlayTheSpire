@@ -16,16 +16,16 @@ MonoBehaviour:
   - ID: 0
     Sprite: {fileID: 0}
     Description: Stamina
-    InitValue: 30
-  - ID: 1
+    InitValue: 42
+  - ID: 0
     Sprite: {fileID: 0}
     Description: Energy
-    InitValue: 10
-  - ID: 3
+    InitValue: 42
+  - ID: 0
     Sprite: {fileID: 0}
     Description: Gloves
-    InitValue: 0
-  - ID: 4
+    InitValue: 4
+  - ID: 0
     Sprite: {fileID: 0}
     Description: Dice
-    InitValue: 0
+    InitValue: 2

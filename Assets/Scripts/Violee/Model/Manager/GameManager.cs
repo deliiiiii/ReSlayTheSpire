@@ -38,8 +38,8 @@ namespace Violee
             boxModelManager.DijkstraStream.OnBegin += _ => gameFsm.ChangeState(EGameState.GeneratingMap);
             boxModelManager.DijkstraStream.OnEnd += pair =>
             {
-                gameFsm.ChangeState(EGameState.Playing);
                 playerModel.OnEnterPlaying(pair.Item2);
+                gameFsm.ChangeState(EGameState.Playing);
             };
             
             gameFsm.ChangeState(EGameState.Idle);
