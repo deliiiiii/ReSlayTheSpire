@@ -39,13 +39,11 @@ namespace Violee
             foreach (var connectedB in bingChaJi.ConnectedSet)
             {
                 connectedB.PointData.Visited.Value = true;
+                foreach (var wallData in connectedB.PointData.wallSet)
+                {
+                    wallData.Visited.Value = true;
+                }
             }
-
-            foreach (var wallData in wallSet)
-            {
-                wallData.Visited.Value = true;
-            }
-            
         }
         public void FlashConnectedInverse()
         {
