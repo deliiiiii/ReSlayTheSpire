@@ -56,7 +56,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
 
     #region Visit
     static readonly Observable<BoxPointData> playerCurPoint = new(null!, 
-        BoxPointData.FlashConnectedInverse, BoxPointData.FlashConnectedInverse);
+        x => x.FlashConnectedInverse(), x => x.FlashConnectedInverse());
     public void TickPlayerVisit(Vector3 playerPos)
     {
         var x = playerPos.x;
@@ -81,7 +81,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                 playerCurPoint.Value = pointData;
                 if(!playerCurPoint.Value.Visited)
                 {
-                    BoxPointData.VisitConnected(playerCurPoint);
+                    playerCurPoint.Value.VisitConnected();
                     MyDebug.Log($"First Enter Point!!{boxPos2D}:{dir}");
                 }
             }

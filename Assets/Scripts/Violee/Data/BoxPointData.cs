@@ -34,9 +34,9 @@ namespace Violee
         public void Merge(BoxPointData other) => bingChaJi.Merge(other.bingChaJi);
         public void AddWall(WallData wallData) => wallSet.Add(wallData);
 
-        public static void VisitConnected(BoxPointData self)
+        public void VisitConnected()
         {
-            foreach (var connectedB in self.bingChaJi.ConnectedSet)
+            foreach (var connectedB in bingChaJi.ConnectedSet)
             {
                 connectedB.PointData.Visited.Value = true;
                 foreach (var wallData in connectedB.PointData.wallSet)
@@ -46,9 +46,9 @@ namespace Violee
             }
         }
         
-        public static void FlashConnectedInverse(BoxPointData self)
+        public void FlashConnectedInverse()
         {
-            foreach (var connectedB in self.bingChaJi.ConnectedSet)
+            foreach (var connectedB in bingChaJi.ConnectedSet)
             {
                 connectedB.PointData.IsFlash.Value = !connectedB.PointData.IsFlash.Value;
             }
