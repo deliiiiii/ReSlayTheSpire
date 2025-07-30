@@ -8,10 +8,14 @@ using UnityEngine;
 
 namespace Violee;
 
-public class GenerateStreamParam(MyKeyedCollection<Vector2Int, BoxData> boxKList, HashSet<Vector2Int> emptyPosSet)
+public class GenerateStreamParam(
+    MyKeyedCollection<Vector2Int, BoxData> boxKList, 
+    HashSet<Vector2Int> emptyPosSet,
+    HashSet<WallData> edgeWallSet)
 {
     public readonly MyKeyedCollection<Vector2Int, BoxData> BoxKList = boxKList;
     public readonly HashSet<Vector2Int> EmptyPosSet = emptyPosSet;
+    public readonly HashSet<WallData> EdgeWallSet = edgeWallSet;
 }
 
 
@@ -24,9 +28,9 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
         {
             if (Input.GetKeyDown(KeyCode.R))
                 Task.FromResult(GenerateStream.CallTriggerAsync());
-            if (Input.GetKeyDown(KeyCode.S))
-                playerCurPoint?.FlashConnectedInverse();
         }, EUpdatePri.Input);
+
+        DijkstraStream.OnEnd += param2 => VisitEdgeWalls(param2.Item1.EdgeWallSet);
     }
 
     #region Inspector
@@ -38,9 +42,21 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     #endregion
 
 
-    #region Public Event & Functions
+    #region Static Properties
     public static float MaxSize => Mathf.Max(Width, Height) * BoxHelper.BoxSize;
-    static BoxPointData? playerCurPoint;
+    static int Height => Instance.height;
+    static int Width => Instance.width;
+    static Vector2Int StartPos => Instance.startPos;
+    static EBoxDir StartDir => Instance.startDir;
+    static readonly MyKeyedCollection<Vector2Int, BoxData> boxKList = new (b => b.Pos2D);
+    static bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
+    static bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
+    #endregion
+
+
+    #region Visit
+    static readonly Observable<BoxPointData> playerCurPoint = new(null!,
+        x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
     public void TickPlayerVisit(Vector3 playerPos)
     {
         var x = playerPos.x;
@@ -62,44 +78,38 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
             if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfig.WalkInTolerance)
             {
-                playerCurPoint = pointData;
-                if(!playerCurPoint.Visited)
+                playerCurPoint.Value = pointData;
+                if(!playerCurPoint.Value.Visited)
                 {
-                    playerCurPoint.VisitConnected();
+                    playerCurPoint.Value.VisitConnected();
                     MyDebug.Log($"First Enter Point!!{boxPos2D}:{dir}");
                 }
             }
         }
     }
-    
-    [field: MaybeNull] public Stream<GenerateStreamParam> GenerateStream => field ??= 
-        new Stream<GenerateStreamParam>(
-        startFunc: () => new GenerateStreamParam(boxKList, []),
-        triggerFuncAsync: StartGenerate,
-        endStream: DijkstraStream);
-    [field: MaybeNull] public Stream<(GenerateStreamParam, Vector3)> DijkstraStream => field ??= 
-        new Stream<(GenerateStreamParam, Vector3)>(
-        startFunc: () => (GenerateStream.Result, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)),
-        triggerFuncAsync: Dijkstra);
-    #endregion
-    
-    
-    #region PosInMap, Box
-    static int Height => Instance.height;
-    static int Width => Instance.width;
-    static Vector2Int StartPos => Instance.startPos;
-    static EBoxDir StartDir => Instance.startDir;
-    static readonly MyKeyedCollection<Vector2Int, BoxData> boxKList = new (b => b.Pos2D);
-    static bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
-    static bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
-    #endregion
 
+    public void VisitEdgeWalls(HashSet<WallData> edgeWallSet)
+    {
+        edgeWallSet.ForEach(wallData => wallData.Visited.Value = true);
+    }
+    #endregion
+    
     
     #region Generate
+    [field: MaybeNull] public Stream<GenerateStreamParam> GenerateStream => field ??= 
+        new Stream<GenerateStreamParam>(
+            startFunc: () => new GenerateStreamParam(boxKList, [], []),
+            triggerFuncAsync: StartGenerate,
+            endStream: DijkstraStream);
+    [field: MaybeNull] public Stream<(GenerateStreamParam, Vector3)> DijkstraStream => field ??= 
+        new Stream<(GenerateStreamParam, Vector3)>(
+            startFunc: () => (GenerateStream.Result, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)),
+            triggerFuncAsync: Dijkstra);
     async Task StartGenerate(GenerateStreamParam param)
     {
         var fBoxKList = param.BoxKList;
         var fEmptyPosSet = param.EmptyPosSet;
+        var fEdgeWallSet = param.EdgeWallSet;
         void RemoveAllBoxes()
         {
             fBoxKList.ForEach(DestroyBox);
@@ -116,10 +126,10 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
         try
         {
             RemoveAllBoxes();
-            await GenerateOneFakeConnection(true, fEmptyPosSet);
+            await GenerateOneFakeConnection(true, fEmptyPosSet, fEdgeWallSet);
             while (fEmptyPosSet.Count > 0)
             {
-                await GenerateOneFakeConnection(false, fEmptyPosSet);
+                await GenerateOneFakeConnection(false, fEmptyPosSet, fEdgeWallSet);
             }
         }
         catch (Exception e)
@@ -128,7 +138,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet)
+    async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet,HashSet<WallData> edgeWallSet)
     {
         async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfigSingle config)
         {
@@ -164,7 +174,9 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                     var curGoOutDir = BoxHelper.OppositeDirDic[nextGoInDir];
                     if (!InMap(nextPos))
                     {
-                        curBox.AddSWall(new WallData(curGoOutDir, EDoorType.None));
+                        var edgeWall = new WallData(curGoOutDir, EDoorType.None);
+                        edgeWallSet.Add(edgeWall);
+                        curBox.AddSWall(edgeWall);
                         // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
                         continue;
                     }
@@ -248,6 +260,13 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                         }
                     }
                 }
+                curPoint.NextPointsInBox
+                    .ForEach(nextPoint =>
+                    {
+                        curBox.CostTilt(curPoint.Dir, nextPoint.Dir, out var wallData3);
+                        if(wallData3 != null)
+                            curPoint.AddWall(wallData3);
+                    });
                 curPoint.NextPointsInBox
                     .Where(nextPoint => !vSet.Contains(nextPoint))
                     .ForEach(nextPoint =>

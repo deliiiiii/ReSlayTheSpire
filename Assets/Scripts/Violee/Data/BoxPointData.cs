@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Violee
 {
     [Serializable]
-    public class BoxPointData : DataBase
+    public class BoxPointData : DataBase, IComparable
     {
         public EBoxDir Dir;
         public Observable<int> CostWall = new (int.MaxValue / 2);
@@ -59,14 +59,23 @@ namespace Violee
             [ShowInInspector] public int SetCount => Math.Max(con, Find().con);
             BingChaJi f = null!;
             public BoxPointData PointData = null!;
-            public HashSet<BingChaJi> ConnectedSet = null!;
-            int con => ConnectedSet.Count;
+            HashSet<BingChaJi> connectedSet = null!;
+
+            public HashSet<BingChaJi> ConnectedSet
+            {
+                get
+                {
+                    var find = Find();
+                    return con >= find.con ? connectedSet : find.connectedSet;
+                }
+            }
+            int con => connectedSet.Count;
 
             public void Init(BoxPointData pointData)
             {
                 f = this;
                 PointData = pointData;
-                ConnectedSet = [this];
+                connectedSet = [this];
             }
     
             public void Merge(BingChaJi other)
@@ -75,8 +84,8 @@ namespace Violee
                 var otherF = other.Find();
                 if (thisF == otherF)
                     return;
-                ConnectedSet.AddRange(otherF.ConnectedSet);
-                otherF.ConnectedSet = ConnectedSet;
+                thisF.connectedSet.AddRange(otherF.connectedSet);
+                otherF.connectedSet = thisF.connectedSet;
                 // MyDebug.LogWarning(
                 //     $"CurPoint {pointData.BelongBox.Pos2D}.{pointData.Dir} OtherPoint {other.pointData.BelongBox.Pos2D}.{other.pointData.Dir}");
                 // MyDebug.LogWarning($"Merge {thisF.pointData.BelongBox.Pos2D}.{thisF.pointData.Dir} {thisF.Con} , {otherF.pointData.BelongBox.Pos2D}.{otherF.pointData.Dir} {otherF.Con} {GetHashCode() > otherF.GetHashCode()}");
@@ -96,5 +105,11 @@ namespace Violee
             }
         }
 
+        public int CompareTo(object obj)
+        {
+            if (!(obj is BoxPointData other))
+                return 1;
+            return this == other ? 0 : 1;
+        }
     }
 }

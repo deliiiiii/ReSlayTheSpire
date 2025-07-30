@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,33 +7,32 @@ using UnityEngine.Events;
 [Serializable]
 public class Observable<T> where T: IComparable
 {
-    [SerializeField]
-    T value;
+    [SerializeField] [CanBeNull] T value;
+    [CanBeNull]
     public T Value
     {
         get => value;
         set
         {
-            if (Equals(value, this.value))
+            if (value?.CompareTo(this.value) == 0)
             {
                 return;
             }
-            // OnValueChangedBefore?.Invoke(_value);
+            OnValueChangedBefore?.Invoke(this.value);
             this.value = value;
             OnValueChangedAfter?.Invoke(this.value);
         }
     }
-    // public event UnityAction<T> OnValueChangedBefore;
-    public event UnityAction<T> OnValueChangedAfter;
+    [CanBeNull] public event UnityAction<T> OnValueChangedBefore;
+    [CanBeNull] public event UnityAction<T> OnValueChangedAfter;
     public Observable(T initValue)
     {
         value = initValue;
     }
-    // public Observable(T initValue, UnityAction<T> before, UnityAction<T> after)
-    public Observable(T initValue, UnityAction<T> after)
+    public Observable(T initValue, [CanBeNull] UnityAction<T> before = null, [CanBeNull] UnityAction<T> after = null)
     {
         value = initValue;
-        // OnValueChangedBefore += before;
+        OnValueChangedBefore += before;
         OnValueChangedAfter += after;
     }
     public static implicit operator T(Observable<T> v)
@@ -55,7 +55,7 @@ public class Observable<T> where T: IComparable
 
     public override string ToString()
     {
-        return value.ToString();
+        return value?.ToString() ?? $"NULL Observable{typeof(T)}";
     }
 }
 
