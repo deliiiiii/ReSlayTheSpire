@@ -19,19 +19,12 @@ namespace Violee
         static MyFSM<EGameState> gameFsm = new ();
         static bool isIdle => gameFsm.IsState(EGameState.Idle);
         static bool isPlaying => gameFsm.IsState(EGameState.Playing);
-
-        [field: MaybeNull] public static BindDataState IdleState =>
-            field ??= Binder.From(gameFsm.GetState(EGameState.Idle));
-        [field: MaybeNull] public static BindDataState GeneratingMapState => 
-            field ??= Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
-        [field: MaybeNull] public static BindDataState PlayingState =>
-            field ??= Binder.From(gameFsm.GetState(EGameState.Playing));
-        [field: MaybeNull] public static BindDataState WatchingMapState =>
-            field ??= Binder.From(gameFsm.GetState(EGameState.WatchingMap));
-        
-        [field: MaybeNull] PlayerModel playerModel => field ??= PlayerModel.Instance;
+        public static readonly BindDataState GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
+        public static readonly BindDataState PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
+        PlayerModel playerModel;
         protected void Start()
         {
+            playerModel = PlayerModel.Instance;
             PlayingState.OnUpdate(dt =>
             {
                 BoxModelManager.TickPlayerVisit(playerModel.transform.position);
