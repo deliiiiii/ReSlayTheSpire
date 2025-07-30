@@ -3336,7 +3336,7 @@ GameObject:
   - component: {fileID: 343383921}
   - component: {fileID: 343383924}
   m_Layer: 0
-  m_Name: World View
+  m_Name: Map View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3437,6 +3437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fefd3cdd269b41bfaac90113db8152d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GlobalOnScene: 0
   CostTxtPrefab: {fileID: 1559589957}
 --- !u!43 &362610636
 Mesh:
@@ -12855,7 +12856,7 @@ GameObject:
   - component: {fileID: 1536509200}
   - component: {fileID: 1536509204}
   m_Layer: 5
-  m_Name: Minimap View
+  m_Name: Game View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12961,6 +12962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43229b0e0b184818954f3e035f70bf22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GlobalOnScene: 0
   ReGenerateBtn: {fileID: 1610896600}
   TarTexture: {fileID: 8400000, guid: e24242acb65845345af96d3777b08e6e, type: 2}
   MinimapCameraVirtual: {fileID: 91075106}
@@ -18370,9 +18372,9 @@ SceneRoots:
   - {fileID: 370688511}
   - {fileID: 705507995}
   - {fileID: 1901459850}
-  - {fileID: 4918451714722057857}
-  - {fileID: 909429586}
   - {fileID: 1536509203}
+  - {fileID: 909429586}
   - {fileID: 343383920}
+  - {fileID: 4918451714722057857}
   - {fileID: 2083257669}
   - {fileID: 1757223296}

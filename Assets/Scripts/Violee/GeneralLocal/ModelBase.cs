@@ -19,34 +19,11 @@ public abstract class ModelBase<TData> : MonoBehaviour, IModelBase where TData :
 }
 
 
-
 [Serializable]
-abstract class ModelManagerBase<TModel, TModelManager> : Singleton<TModelManager>
+public abstract class ModelManagerBase<TModel, TModelManager> : Singleton<TModelManager>
     where TModel : MonoBehaviour, IModelBase
     where TModelManager : Singleton<TModelManager>
 {
-    static readonly MyKeyedCollection<Type, Singleton<TModelManager>> modelManagers
-        = new(m => m.GetType());
-
-    protected static T? GetModelManager<T>()
-        where T : Singleton<TModelManager>
-    {  
-        if(modelManagers.Contains(typeof(T)))
-            return modelManagers[typeof(T)] as T;
-        return null;
-    }
-
-    static T? AddModelManager<T>(T modelManager)
-        where T : Singleton<TModelManager>
-    {
-        if(modelManagers.Contains(typeof(T)))
-            return modelManagers[typeof(T)] as T;
-        modelManagers.Add(modelManager);
-        return modelManager;
-    }
-    
-    
-    
     [SerializeField] TModel modelPrefab = null!;
     public TModel ModelPrefab => modelPrefab;
     protected ObjectPool<TModel> modelPool = null!;
@@ -54,13 +31,10 @@ abstract class ModelManagerBase<TModel, TModelManager> : Singleton<TModelManager
     protected override void Awake()
     {
         base.Awake();
-        AddModelManager(this);
         modelPool = new ObjectPool<TModel>(ModelPrefab, transform, 42);
     }
 }
 
+
 [Serializable]
-public abstract class DataBase
-{
-    
-}
+public abstract class DataBase;

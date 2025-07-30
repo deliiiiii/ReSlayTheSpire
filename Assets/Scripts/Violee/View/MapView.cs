@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -8,27 +7,26 @@ using UnityEngine.UI;
 
 namespace Violee.View;
 
-class MapView : ViewBase
+class MapView : ViewBase<MapView>
 {
     public Text CostTxtPrefab = null!;
-    
     protected override void IBL()
     {
         costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform, 42);
         if (Configer.SettingsConfig.ShowBoxCost)
-            BoxModelManager.DijkstraStream.OnBeginAsync += BindAllCostTxt;
+            BoxModelManager.Instance.DijkstraStream.OnBeginAsync += BindAllCostTxt;
     }
-    static readonly Dictionary<BoxPointData, Text> costTxtDic = new ();
-    static ObjectPool<Text> costTxtPool = null!;
-    static async Task DestroyAllCostTxt()
+    HashSet<Text> costTxtSet = [];
+    ObjectPool<Text> costTxtPool = null!;
+    async Task DestroyAllCostTxt()
     {
-        foreach (var text in costTxtDic.Values)
+        foreach (var text in costTxtSet)
         {
             costTxtPool.MyDestroy(text);
             await Configer.SettingsConfig.YieldFrames(multi : 1 / 16f);
         }
     }
-    static async Task BindAllCostTxt((BoxModelManager.GenerateStreamParam, Vector3) pair)
+    async Task BindAllCostTxt((GenerateStreamParam, Vector3) pair)
     {
         try
         {
@@ -44,7 +42,7 @@ class MapView : ViewBase
                     txt.text = v > 1e9 ? "∞" : point.CostWall.ToString();
                 });
                 b.Immediate();
-                costTxtDic.Add(point, txt);
+                costTxtSet.Add(txt);
                 await Configer.SettingsConfig.YieldFrames(multi : 1 / 8f);
             }
         }

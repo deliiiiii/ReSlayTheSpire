@@ -35,19 +35,26 @@ namespace Violee
             return (wallData = self.WallKList[BoxHelper.WallDirToType(dir)]).HasWall;
         }
         
-        public static int CostStraight(this BoxData self, EBoxDir dir)
+        public static int CostStraight(this BoxData self, EBoxDir dir, out WallData? wallDataCanNull)
         {
             if (!HasSWallByDir(self, dir, out var wallData))
+            {
+                wallDataCanNull = null;
                 return 0;
+            }
+            wallDataCanNull = wallData;
             if(wallData.DoorType == EDoorType.Wooden)
                 return BoxData.DoorCost;
             return BoxData.WallCost;
         }
 
-        public static int CostTilt(this BoxData self, EBoxDir from, EBoxDir to)
+        public static int CostTilt(this BoxData self, EBoxDir from, EBoxDir to, out WallData? wallDataCanNull)
         {
             if (CanGoTiltWallBetween(self, from, to))
+            {
+                wallDataCanNull = null;
                 return 0;
+            }
             var t = (from, to) switch
             {
                 (EBoxDir.Up, EBoxDir.Right)
@@ -60,6 +67,7 @@ namespace Violee
                     or (EBoxDir.Right, EBoxDir.Down) => EWallType.T2481,
                 _ => throw new ArgumentException($"from{from} and to{to} must be adjacent directions!"),
             };
+            wallDataCanNull = self.WallKList[t];
             if(self.WallKList[t].DoorType == EDoorType.Wooden)
                 return BoxData.DoorCost;
             return BoxData.WallCost;

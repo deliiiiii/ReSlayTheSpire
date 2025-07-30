@@ -4,8 +4,17 @@ using UnityEngine.UI;
 
 namespace Violee.View
 {
-    public class MinimapView : ViewBase
+    public class GameView : ViewBase<GameView>
     {
+        protected override void IBL()
+        {
+            Binder.Update(SwitchMap, EUpdatePri.Input);
+            GameManager.Instance.GeneratingMapState.OnEnter(() => PnlLoad.SetActive(true));
+            GameManager.Instance.GeneratingMapState.OnExit(() => PnlLoad.SetActive(false));
+
+            ShowMinimap();
+        }
+        
         public required Button ReGenerateBtn;
         public required RenderTexture TarTexture;
         public required CinemachineVirtualCamera MinimapCameraVirtual;
@@ -19,17 +28,6 @@ namespace Violee.View
         public required GameObject PnlLoad;
         
         bool isMinimap => MinimapImg.enabled;
-        protected override void IBL()
-        {
-            Binder.Update(SwitchMap, EUpdatePri.Input);
-            GameManager.GeneratingMapState.OnEnter(() => PnlLoad.SetActive(true));
-            GameManager.GeneratingMapState.OnExit(() => PnlLoad.SetActive(false));
-
-            ShowMinimap();
-        }
-
-
-
         void SwitchMap(float dt)
         {
             ChangeFOV(dt);

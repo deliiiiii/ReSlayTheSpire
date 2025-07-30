@@ -10,13 +10,12 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     public bool GlobalOnScene;
     static T instance;
 
-    [NotNull]
     protected static T Instance
     {
         get
         {
             instance ??= FindObjectOfType<T>();
-            instance ??= new GameObject().AddComponent<T>(); 
+            instance ??= new GameObject().AddComponent<T>();
             return instance;
         }
     }
@@ -36,7 +35,6 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
             DontDestroyOnLoad(gameObject);
         }
     }
-    public virtual void OnInit(){}
 }
 
 

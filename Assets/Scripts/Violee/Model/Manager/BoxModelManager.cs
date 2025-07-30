@@ -8,6 +8,13 @@ using UnityEngine;
 
 namespace Violee;
 
+public class GenerateStreamParam(MyKeyedCollection<Vector2Int, BoxData> boxKList, HashSet<Vector2Int> emptyPosSet)
+{
+    public readonly MyKeyedCollection<Vector2Int, BoxData> BoxKList = boxKList;
+    public readonly HashSet<Vector2Int> EmptyPosSet = emptyPosSet;
+}
+
+
 internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
 {
     protected override void Awake()
@@ -18,9 +25,8 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             if (Input.GetKeyDown(KeyCode.R))
                 Task.FromResult(GenerateStream.CallTriggerAsync());
             if (Input.GetKeyDown(KeyCode.S))
-                curPoint?.FlashConnectedInverse();
+                playerCurPoint?.FlashConnectedInverse();
         }, EUpdatePri.Input);
-        
     }
 
     #region Inspector
@@ -32,9 +38,10 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     #endregion
 
 
-    static BoxPointData? curPoint;
     #region Public Event & Functions
-    public static void TickPlayerVisit(Vector3 playerPos)
+    public static float MaxSize => Mathf.Max(Width, Height) * BoxHelper.BoxSize;
+    static BoxPointData? playerCurPoint;
+    public void TickPlayerVisit(Vector3 playerPos)
     {
         var x = playerPos.x;
         var z = playerPos.z;
@@ -55,16 +62,25 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
             if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfig.WalkInTolerance)
             {
-                curPoint = pointData;
-                if(!curPoint.Visited)
+                playerCurPoint = pointData;
+                if(!playerCurPoint.Visited)
                 {
-                    curPoint.VisitConnected();
+                    playerCurPoint.VisitConnected();
                     MyDebug.Log($"First Enter Point!!{boxPos2D}:{dir}");
                 }
             }
         }
     }
-    public static float MaxSize => Mathf.Max(Width, Height) * BoxHelper.BoxSize;
+    
+    [field: MaybeNull] public Stream<GenerateStreamParam> GenerateStream => field ??= 
+        new Stream<GenerateStreamParam>(
+        startFunc: () => new GenerateStreamParam(boxKList, []),
+        triggerFuncAsync: StartGenerate,
+        endStream: DijkstraStream);
+    [field: MaybeNull] public Stream<(GenerateStreamParam, Vector3)> DijkstraStream => field ??= 
+        new Stream<(GenerateStreamParam, Vector3)>(
+        startFunc: () => (GenerateStream.Result, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)),
+        triggerFuncAsync: Dijkstra);
     #endregion
     
     
@@ -80,18 +96,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
 
     
     #region Generate
-    public class GenerateStreamParam(MyKeyedCollection<Vector2Int, BoxData> boxKList, HashSet<Vector2Int> emptyPosSet)
-    {
-        public readonly MyKeyedCollection<Vector2Int, BoxData> BoxKList = boxKList;
-        public readonly HashSet<Vector2Int> EmptyPosSet = emptyPosSet;
-    }
-    public static readonly Stream<(GenerateStreamParam, Vector3)> 
-        DijkstraStream = new(startFunc: () => (GenerateStream.Result, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)),
-            triggerFuncAsync: _Dijkstra);
-    public static readonly Stream<GenerateStreamParam> GenerateStream 
-        = new(startFunc: () => new GenerateStreamParam(boxKList, []),
-            triggerFuncAsync: _StartGenerate, endStream: DijkstraStream);
-    static async Task _StartGenerate(GenerateStreamParam param)
+    async Task StartGenerate(GenerateStreamParam param)
     {
         var fBoxKList = param.BoxKList;
         var fEmptyPosSet = param.EmptyPosSet;
@@ -123,7 +128,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    static async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet)
+    async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet)
     {
         async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfigSingle config)
         {
@@ -197,7 +202,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    static async Task _Dijkstra((GenerateStreamParam, Vector3) pair)
+    async Task Dijkstra((GenerateStreamParam, Vector3) pair)
     {
         try
         {
@@ -215,16 +220,22 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                 vSet.Add(curPoint);
                 var curCost = curPoint.CostWall;
                 var curBox = curPoint.BelongBox;
-                var nextPos = BoxHelper.NextPos(curBox.Pos2D, curPoint.Dir);
+                var curDir = curPoint.Dir;
+                var nextPos = BoxHelper.NextPos(curBox.Pos2D, curDir);
                 if (InMap(nextPos))
                 {
                     var nextBox = fBoxKList[nextPos];
-                    var oppositeDir = BoxHelper.OppositeDirDic[curPoint.Dir];
+                    var oppositeDir = BoxHelper.OppositeDirDic[curDir];
                     var nextPoint = nextBox.PointKList[oppositeDir];
-                    var costSWall = curBox.CostStraight(curPoint.Dir) + nextBox.CostStraight(oppositeDir);
+                    var costSWall = curBox.CostStraight(curDir, out var wallData1) + nextBox.CostStraight(oppositeDir, out var wallData2);
                     nextPoint.CostWall.Value = Math.Min(
                         nextPoint.CostWall.Value,
                         curCost.Value + costSWall);
+                    if (wallData1 != null)
+                        curPoint.AddWall(wallData1);
+                    if (wallData2 != null)
+                        curPoint.AddWall(wallData2);
+                    
                     if (!vSet.Contains(nextPoint))
                     {
                         if(pq.Contains(nextPoint))
@@ -232,17 +243,22 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                         else
                             pq.Enqueue(nextPoint, nextPoint.CostWall);
                         if(costSWall == 0)
+                        {
                             curPoint.Merge(nextPoint);
+                        }
                     }
                 }
                 curPoint.NextPointsInBox
                     .Where(nextPoint => !vSet.Contains(nextPoint))
                     .ForEach(nextPoint =>
                     {
-                        var costTilt = curBox.CostTilt(curPoint.Dir, nextPoint.Dir);
+                        var costTilt = curBox.CostTilt(curPoint.Dir, nextPoint.Dir, out var wallData3);
                         nextPoint.CostWall.Value = Math.Min(
                             nextPoint.CostWall.Value,
                             curPoint.CostWall + costTilt);
+                        if(wallData3 != null)
+                            curPoint.AddWall(wallData3);
+                        
                         if (pq.Contains(nextPoint))
                             pq.UpdatePriority(nextPoint, nextPoint.CostWall);
                         else
@@ -260,18 +276,18 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    static readonly MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
-    static async Task SpawnBox3D(BoxData fBoxData)
+    readonly MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
+    async Task SpawnBox3D(BoxData fBoxData)
     {
-        var boxModel = await Instance.modelPool.MyInstantiate();
+        var boxModel = await modelPool.MyInstantiate();
         boxModel.ReadData(fBoxData);
         boxModel3DDic.Add(boxModel);
     }
         
-    static void DestroyBox(BoxData fBoxData)
+    void DestroyBox(BoxData fBoxData)
     {
         var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
-        Instance.modelPool.MyDestroy(boxModel3DDic[pos3D]);
+        modelPool.MyDestroy(boxModel3DDic[pos3D]);
         boxModel3DDic.Remove(pos3D);
     }
     #endregion

@@ -20,14 +20,20 @@ namespace Violee
         {
             Door.gameObject.SetActive(false);
             NotDoor.gameObject.SetActive(false);
+            LockedSprite.SetActive(false);
+            UnlockedSprite.SetActive(false);
             if (!data.HasWall)
             {
                 gameObject.SetActive(false);
                 return;
             }
             gameObject.SetActive(true);
-            Binder.From(data.HasFoundWall).To(v => WallSprite.enabled = v).Immediate();
-            Binder.From(data.HasFoundDoor).To(_ =>SetDoorSprite()).Immediate();
+            Binder.From(data.Visited).To(v =>
+            {
+                WallSprite.enabled = v;
+                if(v)
+                    SetDoorSprite();
+            }).Immediate();
             switch (data.DoorType)
             {
                 case EDoorType.None:
@@ -37,25 +43,15 @@ namespace Violee
                     Door.gameObject.SetActive(true);
                     break;
             }
-
-            SetDoorSprite();
         }
 
         // event
         public void FindWallAndDoor()
         {
-            data.HasFoundWall.Value = true;
-            if(data.HasDoor)
-                data.HasFoundDoor.Value = true;
+            data.Visited.Value = true;
         }
         void SetDoorSprite()
         {
-            LockedSprite.SetActive(false);
-            UnlockedSprite.SetActive(false);
-            if (!data.HasFoundDoor)
-            {
-                return;
-            }
             if (data.Opened)
                 UnlockedSprite.SetActive(true);
             else
