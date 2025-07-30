@@ -6274,10 +6274,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1536509203}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 211, y: 187}
-  m_SizeDelta: {x: 300, y: 300}
+  m_AnchorMin: {x: 0.011520835, y: 0.015556243}
+  m_AnchorMax: {x: 0.120000005, y: 0.12833282}
+  m_AnchoredPosition: {x: 63.699966, y: 98.7}
+  m_SizeDelta: {x: 74.59993, y: 157.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &726215050
 MonoBehaviour:
@@ -12891,12 +12891,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.561
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -15653,6 +15653,7 @@ MonoBehaviour:
   GlobalOnScene: 0
   BoxConfigListIns: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
   SettingsConfigIns: {fileID: 11400000, guid: a045e28f41ce60340acfb1d0f7d5e9fa, type: 2}
+  MiniItemConfigListIns: {fileID: 0}
 --- !u!4 &1901459850
 Transform:
   m_ObjectHideFlags: 0
