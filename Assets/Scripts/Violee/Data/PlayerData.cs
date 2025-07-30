@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Violee;
 
 [Serializable]
 public class PlayerData : DataBase
 {
-    [NonSerialized]
+    [NonSerialized][ShowInInspector]
     List<MiniItemData> miniItems = [];
     public List<char> LetterList = [];
     [field: MaybeNull] public MiniItemData Stamina 
@@ -20,15 +22,20 @@ public class PlayerData : DataBase
     [field: MaybeNull] public MiniItemData Dice
         => field ??= miniItems.Find(x => x.Config.Description.Equals(nameof(Dice)));
     
-    public PlayerData()
+    // 不直接写构造函数是因为调用了Config er单例，单例在没有运行时是不能FindObjectOfType的
+    private PlayerData(){}
+    public static PlayerData Create()
     {
+        var ret = new PlayerData();
         foreach (var config in Configer.MiniItemConfigList.MiniItemConfigs)
         {
-            miniItems.Add(new MiniItemData(config));
+            ret.miniItems.Add(new MiniItemData(config));
         }
         
         // TODO 
-        Stamina.OnRunOut += () => {/* game over */ };
+        ret.Stamina.OnRunOut += () => {/* game over */ };
+        
+        return ret;
     }
 }
 

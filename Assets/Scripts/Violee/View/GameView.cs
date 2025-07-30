@@ -6,13 +6,27 @@ namespace Violee.View
 {
     public class GameView : ViewBase<GameView>
     {
+        PlayerModel playerModel = null!;
         protected override void IBL()
         {
+            playerModel = PlayerModel.Instance;
+            
             Binder.Update(SwitchMap, EUpdatePri.Input);
-            GameManager.Instance.GeneratingMapState.OnEnter(() => PnlLoad.SetActive(true));
-            GameManager.Instance.GeneratingMapState.OnExit(() => PnlLoad.SetActive(false));
+            GameManager.Instance.GeneratingMapState.OnEnter(() => LoadPnl.SetActive(true));
+            GameManager.Instance.GeneratingMapState.OnExit(() => LoadPnl.SetActive(false));
+            GameManager.Instance.PlayingState.OnEnter(ShowMinimap);
+            
+            GameManager.Instance.PlayingState.OnEnter(() =>
+            {
+                MiniItemPnl.SetActive(true);
+                Binder.From(playerModel.Stamina.Count).ToTxt(StaminaTxt).Immediate();
+                Binder.From(playerModel.Energy.Count).ToTxt(EnergyTxt).Immediate();
+                Binder.From(playerModel.Gloves.Count).ToTxt(GlovesTxt).Immediate();
+                Binder.From(playerModel.Dice.Count).ToTxt(DiceTxt).Immediate();
+            });
+            GameManager.Instance.PlayingState.OnExit(() => MiniItemPnl.SetActive(false));
+            
 
-            ShowMinimap();
         }
         
         public required Button ReGenerateBtn;
@@ -25,7 +39,14 @@ namespace Violee.View
         public float MiniSize = 12f;
 
         [Header("Load")]
-        public required GameObject PnlLoad;
+        public required GameObject LoadPnl;
+
+        [Header("MiniItem")] 
+        public required GameObject MiniItemPnl;
+        public required Text StaminaTxt;
+        public required Text EnergyTxt;
+        public required Text GlovesTxt;
+        public required Text DiceTxt;
         
         bool isMinimap => MinimapImg.enabled;
         void SwitchMap(float dt)

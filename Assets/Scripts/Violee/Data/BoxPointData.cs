@@ -106,11 +106,12 @@ namespace Violee
             }
         }
 
-        [Serializable]
-        class ItemData
-        {
-            public BoxPointData BelongBox;
-        }
+        // TODO
+        // [Serializable]
+        // class ItemData
+        // {
+        //     public BoxPointData BelongBox;
+        // }
         
         public int CompareTo(object obj)
         {

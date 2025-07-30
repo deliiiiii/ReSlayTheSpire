@@ -9,7 +9,7 @@ namespace Violee;
 public interface IModelBase;
 public abstract class ModelBase<TData> : MonoBehaviour, IModelBase where TData : DataBase
 {
-    [SerializeField] [ReadOnly] protected TData data = null!;
+    [ReadOnly] protected TData data = null!;
     public void ReadData(TData fData)
     {
         data = fData;

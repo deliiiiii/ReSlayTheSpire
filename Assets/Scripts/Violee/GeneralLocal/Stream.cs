@@ -105,27 +105,36 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
 
     public async Task CallTriggerAsync()
     {
-        Result = startFunc();
-        if (!Result.HasValue)
+        try
         {
-            MyDebug.LogWarning($"{startFunc.Method.Name} At Start " +
-                               $"has returned null.");
-            return;
+            Result = startFunc();
+            if (!Result.HasValue)
+            {
+                MyDebug.LogWarning($"{startFunc.Method.Name} At Start " +
+                                   $"has returned null.");
+                return;
+            }
+            foreach (var mapper in mappers)
+            {
+                Result = await mapper.Item1(Result);
+                if (Result.HasValue)
+                    continue;
+                MyDebug.LogWarning($"{startFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
+                                   $"has returned null.");
+                return;
+            }
+            OnBegin?.Invoke(Result);
+            await (OnBeginAsync != null ? OnBeginAsync(Result) : Task.CompletedTask);
+            await (triggerFuncAsync != null ? triggerFuncAsync(Result) : Task.CompletedTask);
+            OnEnd?.Invoke(Result);
+            await (endStream != null ? endStream.CallTriggerAsync() : Task.CompletedTask);
         }
-        foreach (var mapper in mappers)
+        catch (Exception e)
         {
-            Result = await mapper.Item1(Result);
-            if (Result.HasValue)
-                continue;
-            MyDebug.LogWarning($"{startFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
-                               $"has returned null.");
-            return;
+            MyDebug.LogError(e);
+            throw;
         }
-        OnBegin?.Invoke(Result);
-        await (OnBeginAsync != null ? OnBeginAsync(Result) : Task.CompletedTask);
-        await (triggerFuncAsync != null ? triggerFuncAsync(Result) : Task.CompletedTask);
-        OnEnd?.Invoke(Result);
-        await (endStream != null ? endStream.CallTriggerAsync() : Task.CompletedTask);
+        
     }
 
     public Maybe<T> Result { get; private set; } = Maybe<T>.Nothing.Instance;

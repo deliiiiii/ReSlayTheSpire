@@ -56,7 +56,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
 
     #region Visit
     static readonly Observable<BoxPointData> playerCurPoint = new(null!, 
-        x => x.FlashConnectedInverse(), x => x.FlashConnectedInverse());
+        x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
     public void TickPlayerVisit(Vector3 playerPos)
     {
         var x = playerPos.x;

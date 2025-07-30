@@ -11,8 +11,8 @@ namespace Violee
     public class Configer : Singleton<Configer>
     {
         public required BoxConfigList BoxConfigListIns;
-        public required SettingsConfig SettingsConfigIns;
         public required MiniItemConfigList MiniItemConfigListIns;
+        public required SettingsConfig SettingsConfigIns;
         public static BoxConfigList BoxConfigList => Instance.BoxConfigListIns;
         public static MiniItemConfigList MiniItemConfigList => Instance.MiniItemConfigListIns;
         public static SettingsConfig SettingsConfig => Instance.SettingsConfigIns;
