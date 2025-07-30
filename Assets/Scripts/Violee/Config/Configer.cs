@@ -10,10 +10,11 @@ namespace Violee
 {
     public class Configer : Singleton<Configer>
     {
-        public required BoxConfig BoxConfigIns;
+        public required BoxConfigList BoxConfigListIns;
         public required SettingsConfig SettingsConfigIns;
-
-        public static BoxConfig BoxConfig => Instance.BoxConfigIns;
+        public required MiniItemConfigList MiniItemConfigListIns;
+        public static BoxConfigList BoxConfigList => Instance.BoxConfigListIns;
+        public static MiniItemConfigList MiniItemConfigList => Instance.MiniItemConfigListIns;
         public static SettingsConfig SettingsConfig => Instance.SettingsConfigIns;
         
         async void Start()
@@ -24,13 +25,13 @@ namespace Violee
 
         async Task LoadConfig()
         {
-            BoxConfig.BoxConfigList = [];
+            BoxConfigList.BoxConfigs = [];
             var textures = await Resourcer.LoadAssetsAsyncByLabel<Texture2D>("BoxFigma");
             foreach (var t in textures)
             {
                 var match = Regex.Match(t.name, @"\d+");
                 var id = match.Success ? byte.Parse(match.Value) : new byte();
-                var boxConfig = new BoxConfigSingle()
+                var boxConfig = new BoxConfig()
                 {
                     Name = t.name,
                     Walls = id,
@@ -38,13 +39,13 @@ namespace Violee
                     // 强制刷新所有权重
                     BasicWeight = 100,
                 };
-                BoxConfig.BoxConfigList.Add(boxConfig);
+                BoxConfigList.BoxConfigs.Add(boxConfig);
             }
 
-            BoxConfig.BoxConfigList.Sort((x, y) => x.Walls - y.Walls);
+            BoxConfigList.BoxConfigs.Sort((x, y) => x.Walls - y.Walls);
             
 #if UNITY_EDITOR
-            EditorUtility.SetDirty(BoxConfig);
+            EditorUtility.SetDirty(BoxConfigList);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 #endif

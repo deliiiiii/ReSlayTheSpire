@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Violee
 {
-    [CreateAssetMenu(fileName = nameof(BoxConfig), menuName = "Violee/" + nameof(BoxConfig))]
-    public class BoxConfig : ScriptableObject
+    [Serializable]
+    public class BoxConfig
     {
-        public float DoorPossibility;
-        public List<BoxConfigSingle> BoxConfigList = [];
-        [MinValue(0.4)][MaxValue(0.5)]
-        public float WalkInTolerance = 0.45f;
+        [HideInInspector] public string Name = string.Empty;
+        [HideInInspector] public byte Walls;
+        [ReadOnly] public required Texture2D Texture2D;
+        public int BasicWeight;
     }
 }

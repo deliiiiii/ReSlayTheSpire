@@ -14,17 +14,20 @@ public class Observable<T> where T: IComparable
         get => value;
         set
         {
-            if (value?.CompareTo(this.value) == 0)
+            var oldV = this.value;
+            if (value?.CompareTo(oldV) == 0)
             {
                 return;
             }
-            OnValueChangedBefore?.Invoke(this.value);
+            OnValueChangedBefore?.Invoke(oldV);
             this.value = value;
             OnValueChangedAfter?.Invoke(this.value);
+            // OnValueChangedFull?.Invoke(oldV, value);
         }
     }
     [CanBeNull] public event UnityAction<T> OnValueChangedBefore;
     [CanBeNull] public event UnityAction<T> OnValueChangedAfter;
+    // [CanBeNull] public event UnityAction<T, T> OnValueChangedFull;
     public Observable(T initValue)
     {
         value = initValue;

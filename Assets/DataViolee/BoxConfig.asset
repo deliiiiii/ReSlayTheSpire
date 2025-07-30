@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoxConfig
   m_EditorClassIdentifier: 
   DoorPossibility: 0.66
-  BoxConfigList:
+  BoxConfigs:
   - Name: Box0
     Walls: 0
     Texture2D: {fileID: 2800000, guid: 67c8e066c4cc26b4ebe5747349dc8af8, type: 3}

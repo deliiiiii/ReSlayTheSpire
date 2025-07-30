@@ -9,7 +9,7 @@ namespace Violee
     {
         static BoxHelper()
         {
-            EmptyBoxConfig = BoxConfigList.First(x => x.Walls == 0);
+            EmptyBoxConfig = BoxConfigs.First(x => x.Walls == 0);
             AllBoxDirs = new List<EBoxDir>();
             var array = Enum.GetValues(typeof(EBoxDir));
             for (int i = 0; i < array.Length; i++)
@@ -39,9 +39,9 @@ namespace Violee
         }
 
         public const float BoxSize = 15;
-        static List<BoxConfigSingle> BoxConfigList => Configer.BoxConfig.BoxConfigList;
+        static List<BoxConfig> BoxConfigs => Configer.BoxConfigList.BoxConfigs;
         static float pointOffset => Configer.SettingsConfig.BoxCostPosOffset;
-        public static readonly BoxConfigSingle EmptyBoxConfig;
+        public static readonly BoxConfig EmptyBoxConfig;
         public static readonly List<EBoxDir> AllBoxDirs;
         public static readonly List<EWallType> AllWallTypes;
         

@@ -104,7 +104,7 @@ namespace Violee
     [Serializable]
     public class BoxData : DataBase
     {
-        public BoxData(Vector2Int pos, BoxConfigSingle config)
+        public BoxData(Vector2Int pos, BoxConfig config)
         {
             Pos2D = pos;
             WallsByte = config.Walls;

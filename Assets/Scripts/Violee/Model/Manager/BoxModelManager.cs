@@ -76,7 +76,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             var edgeZ = edgeCenterPos.z;
             var pointData = boxKList[boxPos2D].PointKList[dir];
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
-            if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfig.WalkInTolerance)
+            if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfigList.WalkInTolerance)
             {
                 playerCurPoint.Value = pointData;
                 if(!playerCurPoint.Value.Visited)
@@ -140,7 +140,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     }
     async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet,HashSet<WallData> edgeWallSet)
     {
-        async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfigSingle config)
+        async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfig config)
         {
             await Configer.SettingsConfig.YieldFrames();
             var boxData = new BoxData(pos, config);
@@ -183,7 +183,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                     if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir))
                     {
                         var boxConfig = 
-                            Configer.BoxConfig.BoxConfigList.RandomItemWeighted(
+                            Configer.BoxConfigList.BoxConfigs.RandomItemWeighted(
                                 x => !BoxHelper.HasSWallByByteAndDir(x.Walls, nextGoInDir),
                                 x => x.BasicWeight);
                         var nextBox = await AddBoxAsync(nextPos, boxConfig);
