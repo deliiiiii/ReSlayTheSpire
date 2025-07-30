@@ -125,14 +125,13 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             await SpawnBox3D(boxData);
             return boxData;
         }
-        void RemoveBox(BoxData boxData)
-        {
-            boxKList.Remove(boxData);
-            fEmptyPosSet.Add(boxData.Pos2D);
-            DestroyBox(boxData);
-        }
+        // void RemoveBox(BoxData boxData)
+        // {
+        //     boxKList.Remove(boxData);
+        //     fEmptyPosSet.Add(boxData.Pos2D);
+        //     DestroyBox(boxData);
+        // }
         
-
         try
         {
             var edgeBoxStack = new Stack<BoxData>();

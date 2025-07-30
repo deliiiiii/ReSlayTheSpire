@@ -48,7 +48,7 @@ namespace Violee
             Binder.Update(_ =>
             {
                 if (Input.GetKeyDown(KeyCode.R))
-                    BoxModelManager.GenerateStream.CallTriggerAsync();
+                    Task.FromResult(BoxModelManager.GenerateStream.CallTriggerAsync());
             });
             
             gameFsm.ChangeState(EGameState.Idle);
