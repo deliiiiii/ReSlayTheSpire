@@ -34,9 +34,9 @@ namespace Violee
         public void Merge(BoxPointData other) => bingChaJi.Merge(other.bingChaJi);
         public void AddWall(WallData wallData) => wallSet.Add(wallData);
 
-        public void VisitConnected()
+        public static void VisitConnected(BoxPointData self)
         {
-            foreach (var connectedB in bingChaJi.ConnectedSet)
+            foreach (var connectedB in self.bingChaJi.ConnectedSet)
             {
                 connectedB.PointData.Visited.Value = true;
                 foreach (var wallData in connectedB.PointData.wallSet)
@@ -45,9 +45,10 @@ namespace Violee
                 }
             }
         }
-        public void FlashConnectedInverse()
+        
+        public static void FlashConnectedInverse(BoxPointData self)
         {
-            foreach (var connectedB in bingChaJi.ConnectedSet)
+            foreach (var connectedB in self.bingChaJi.ConnectedSet)
             {
                 connectedB.PointData.IsFlash.Value = !connectedB.PointData.IsFlash.Value;
             }
@@ -105,6 +106,12 @@ namespace Violee
             }
         }
 
+        [Serializable]
+        class ItemData
+        {
+            public BoxPointData BelongBox;
+        }
+        
         public int CompareTo(object obj)
         {
             if (!(obj is BoxPointData other))

@@ -55,8 +55,8 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
 
 
     #region Visit
-    static readonly Observable<BoxPointData> playerCurPoint = new(null!,
-        x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
+    static readonly Observable<BoxPointData> playerCurPoint = new(null!, 
+        BoxPointData.FlashConnectedInverse, BoxPointData.FlashConnectedInverse);
     public void TickPlayerVisit(Vector3 playerPos)
     {
         var x = playerPos.x;
@@ -81,7 +81,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                 playerCurPoint.Value = pointData;
                 if(!playerCurPoint.Value.Visited)
                 {
-                    playerCurPoint.Value.VisitConnected();
+                    BoxPointData.VisitConnected(playerCurPoint);
                     MyDebug.Log($"First Enter Point!!{boxPos2D}:{dir}");
                 }
             }
@@ -271,18 +271,15 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
                     .Where(nextPoint => !vSet.Contains(nextPoint))
                     .ForEach(nextPoint =>
                     {
-                        var costTilt = curBox.CostTilt(curPoint.Dir, nextPoint.Dir, out var wallData3);
+                        var costTWall = curBox.CostTilt(curPoint.Dir, nextPoint.Dir, out _);
                         nextPoint.CostWall.Value = Math.Min(
                             nextPoint.CostWall.Value,
-                            curPoint.CostWall + costTilt);
-                        if(wallData3 != null)
-                            curPoint.AddWall(wallData3);
-                        
+                            curPoint.CostWall + costTWall);
                         if (pq.Contains(nextPoint))
                             pq.UpdatePriority(nextPoint, nextPoint.CostWall);
                         else
                             pq.Enqueue(nextPoint, nextPoint.CostWall);
-                        if(costTilt == 0)
+                        if(costTWall == 0)
                             curPoint.Merge(nextPoint);
                     });
                 await Configer.SettingsConfig.YieldFrames();
