@@ -7,6 +7,19 @@ using Unit = System.ValueTuple;
 
 namespace Violee.Violee.Test;
 
+
+public class Dele<T>
+{
+    public T Value = default!;
+    // public static implicit operator Dele<T>(T t) => new() { Value = t };
+}
+
+public static class DeleExt
+{
+    public static Dele<T> As<T>(this T t) => new() { Value = t };
+}
+
+
 public static class TestCurryExtensions
 {
     // public static bool GreaterFull<TClass, T>(TClass tClass, Func<TClass, T> func, T val)
@@ -36,7 +49,7 @@ public static class TestCurryExtensions
     // public static Func<T3> Merge<T1, T2, T3>(this Func<T1> t1, Func<T2> t2, Func<(T1, T2), T3> func) 
     //     => () => func((t1(), t2()));
     
-    // 太难用...
+    // 太难用...不对，这不是SelectMany吗。这个还是，Bind！
     // public static Func<T2> FlatMap<T1, T2>(this Func<T1> t, Func<T1, Func<T2>> flatMap) 
     //     => () => flatMap(t())();
     
@@ -84,6 +97,9 @@ public static class TestCurryExtensions
     //     var scanned = new List<int> {1, 2, 3, 4}.ScanLeft(0, (acc, x) => acc + x).ToList();
     //     // 返回 [0, 1, 3, 6, 10]
     // }
+
+
+    
     
     public static Func<Unit> ToFunc(Action action)
         => () => { action(); return default; };
@@ -92,13 +108,13 @@ public static class TestCurryExtensions
     public static Func<T1, T2, Unit> ToFunc<T1, T2>(Action<T1, T2> action)
         => (t1, t2) => { action(t1, t2); return default; };
     
-    public static Func<T2> Bind<T1, T2>(this T1 t1, Func<T1, T2> func) 
-        => () => func(t1);
-    public static Func<T1> Bind<T1>(this T1 t1, Func<T1, T1>? func = null)
-    {
-        func ??= _ => t1;
-        return () => func(t1);
-    }
+    // public static Func<T2> Bind<T1, T2>(this T1 t1, Func<T1, T2> func) 
+    //     => () => func(t1);
+    // public static Func<T1> Bind<T1>(this T1 t1, Func<T1, T1>? func = null)
+    // {
+    //     func ??= _ => t1;
+    //     return () => func(t1);
+    // }
     public static T2 Match<T1, T2>(this T1 t, Func<T1, T2> successFunc, Func<T2> failFunc) 
         => t is T2 ? successFunc(t) : failFunc();
     public static Func<T2> Map<T1, T2>(this Func<T1> t, Func<T1, T2> map) 
@@ -108,8 +124,19 @@ public static class TestCurryExtensions
     public static T2 Reduce<T1, T2>(this Func<T1> t1, T2 t2, Func<(T1, T2), T2> func) 
         => func((t1(), t2));
     
+    // public static IEnumerable<T2> Bind<T1, T2>(IEnumerable<T1> t1, Func<T1, IEnumerable<T2>> bind)
+    // {
+    //     return t1.SelectMany(bind);
+    // }
     
+    public static Dele<T2> Bind<T1, T2>(this Dele<T1> t1, Func<T1, Dele<T2>> bind)
+        => bind(t1.Value);
+    public static Dele<T2> Map<T1, T2>(this Dele<T1> t1, Func<T1, T2> map)
+        => map(t1.Value).As();
 
+    public static Dele<T2> Reduce<T1, T2>(this Dele<T1> t1, T2 t2, Func<(T1, T2), T2> reduce) 
+        => reduce((t1.Value, t2)).As();
+    
     public static (T1, T2) AddTuple<T1, T2>(this T1 t1, T2 t2) 
         => (t1, t2);
 
