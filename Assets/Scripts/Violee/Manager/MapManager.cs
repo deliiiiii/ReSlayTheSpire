@@ -26,25 +26,23 @@ internal class MapManager : SingletonCS<MapManager>
     static readonly ObjectPool<BoxModel> boxPool;
     static MapManager()
     {
-        MyDebug.LogWarning($"MapManager static ctor()");
         mapModel = Configer.MapModel;
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, Instance.go.transform, 42);
+        
+        GenerateStream = Instance.Bind(() => new GenerateStreamParam(boxKList, [], [])) 
+            .ToStreamAsync(StartGenerate);
+        DijkstraStream = Instance.Bind(() => GenerateStream.Result.Value)
+            .WithA(() => BoxHelper.Pos2DTo3DPoint(StartPos, StartDir))
+            .ToStreamAsync(Dijkstra)
+            .OnEnd(param => VisitEdgeWalls(param.Item1.EdgeWallSet));
+        
+        GenerateStream.EndWith(DijkstraStream);
         
         Binder.Update(_ =>
         {
             if (Input.GetKeyDown(KeyCode.R))
                 Task.FromResult(GenerateStream.CallTriggerAsync());
         }, EUpdatePri.Input);
-
-        GenerateStream = Instance.Bind(() => new GenerateStreamParam(boxKList, [], [])) 
-            .ToStreamAsync(StartGenerate);
-        DijkstraStream = Instance.Bind(() => GenerateStream.Result.Value)
-            .WithA(() => BoxHelper.Pos2DTo3DPoint(StartPos, StartDir))
-            .ToStreamAsync(Dijkstra)
-            .OnEnd(param2 => VisitEdgeWalls(param2.Item1.EdgeWallSet));
-        
-        GenerateStream.EndWith(DijkstraStream);
-        
     }
     
     

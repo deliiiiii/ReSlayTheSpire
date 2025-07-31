@@ -11,7 +11,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
     static PlayerData playerData;
     static PlayerManager()
     {
-        MyDebug.LogWarning($"PlayerManager static ctor()");
         playerModel = Configer.PlayerModel;
         playerData = playerModel.PlayerData;
     }

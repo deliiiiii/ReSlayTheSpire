@@ -31,7 +31,6 @@ namespace Violee
         
         public static void Init()
         {
-            MyDebug.LogWarning($"Configer Init()");
             if (SettingsConfig.RefreshConfigOnAwake)
                 Task.FromResult(LoadConfig());
         }

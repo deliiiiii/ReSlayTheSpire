@@ -19,35 +19,33 @@ public class GameManager : Singleton<GameManager>
     public static BindDataState PlayingState = null!;
     protected override void Awake()
     {
-        MyDebug.LogWarning($"GameManager Awake()");
         base.Awake();
         Configer.Init();
         GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
         PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
             
         PlayingState.OnUpdate(dt =>
-        {
-            MapManager.TickPlayerVisit(PlayerManager.GetPos);
-            PlayerManager.Tick(dt);
-        });
-        PlayingState.OnExit(PlayerManager.OnExitPlaying);
-        MyDebug.LogWarning($"GameManager Awake2()");
+            {
+                MapManager.TickPlayerVisit(PlayerManager.GetPos);
+                PlayerManager.Tick(dt);
+            }).OnExit(PlayerManager.OnExitPlaying);
             
-        MapManager.GenerateStream.Where(_ => isIdle || isPlaying);
-        MapManager.GenerateStream.OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap));
-        MapManager.GenerateStream.OnEnd(_ => gameFsm.ChangeState(EGameState.Idle));
+        MapManager.GenerateStream
+            .Where(_ => isIdle || isPlaying)
+            .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap))
+            .OnEnd(_ => gameFsm.ChangeState(EGameState.Idle));
             
-        MapManager.DijkstraStream.Where(_ => isIdle);
-        MapManager.DijkstraStream.OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap));
-        MapManager.DijkstraStream.OnEnd(pair =>
-        {
-            PlayerManager.OnEnterPlaying(pair.Item2);
-            gameFsm.ChangeState(EGameState.Playing);
-        });
+        MapManager.DijkstraStream
+            .Where(_ => isIdle)
+            .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap))
+            .OnEnd(pair =>
+            {
+                PlayerManager.OnEnterPlaying(pair.Item2);
+                gameFsm.ChangeState(EGameState.Playing);
+            });
             
         gameFsm.ChangeState(EGameState.Idle);
         Binder.Update(gameFsm.Update);
-        MyDebug.LogWarning($"GameManager Awake4()");
     }
 
     static bool isIdle => gameFsm.IsState(EGameState.Idle);

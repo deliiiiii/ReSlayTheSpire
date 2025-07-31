@@ -113,11 +113,11 @@ public static class TestCurryExtensions
     
     public static Func<T2> Bind<T1, T2>(this T1 t1, Func<T2> func) 
         => func;
-    public static Func<T1> Bind<T1>(this T1 t1, Func<T1>? func = null)
-    {
-        func ??= () => t1;
-        return () => func();
-    }
+    // public static Func<T1> Bind<T1>(this T1 t1, Func<T1>? func = null)
+    // {
+    //     func ??= () => t1;
+    //     return () => func();
+    // }
     
     // Match可能还得改改
     public static T2 Match<T1, T2>(this T1 t, Func<T1, T2> successFunc, Func<T2> failFunc) 
@@ -151,14 +151,16 @@ public static class TestCurryExtensions
     public static Action<T2> Curry<T1, T2>(this T1 t1, Action<T1, T2> action) 
         => t2 => action(t1, t2);
     
-    public static Stream<T> ToStream<T>(this Func<T> t, Action<T> action)
-    {
-        return new Stream<T>(startFunc: t, triggerFunc:action);
-    }
-    public static Stream<T> ToStreamAsync<T>(this Func<T> t, Func<T, Task> actionAsync)
-    {
-        return new Stream<T>(startFunc: t, triggerFuncAsync: actionAsync);
-    }
+    public static Stream<T> ToStream<T>(this Func<T> t, Action<T> action) 
+        => new(startFunc: t, triggerFunc:action);
+
+    public static Stream<T> ToStreamAsync<T>(this Func<T> t, Func<T, Task> actionAsync) 
+        => new(startFunc: t, triggerFuncAsync: actionAsync);
+    
+    // TODO Stream输入2个 到 输入1个
+    // public static Stream<T1> DeleteA<T1, T2>(this Stream<(T1, T2)> t12)
+    //     => 
+    
 }
 public class TestCurry : Singleton<TestCurry>
 {
