@@ -72,9 +72,11 @@ namespace Violee
             return ret;
         }
         
+        public static Vector3 Point3DOffsetInBox(EBoxDir dir)
+            => new (dirToVec2Dic[dir].x * BoxSize * pointOffset, 0, dirToVec2Dic[dir].y * BoxSize * pointOffset);
         public static Vector3 Pos2DTo3DBox(Vector2 pos2D) => new (pos2D.x * BoxSize, 0, pos2D.y * BoxSize);
         public static Vector3 Pos2DTo3DPoint(Vector2 pos2D, EBoxDir dir) =>
-            Pos2DTo3DBox(pos2D) + new Vector3(dirToVec2Dic[dir].x * BoxSize * pointOffset, 0, dirToVec2Dic[dir].y * BoxSize * pointOffset);
+            Pos2DTo3DBox(pos2D) + Point3DOffsetInBox(dir);
         public static Vector3 Pos2DTo3DEdge(Vector2 pos2D, EBoxDir dir) =>
             Pos2DTo3DBox(pos2D) + new Vector3(dirToVec2Dic[dir].x * BoxSize / 2, 0, dirToVec2Dic[dir].y * BoxSize / 2);
         public static Vector2Int Pos3DTo2D(Vector3 pos3D) => 
@@ -91,7 +93,8 @@ namespace Violee
                 _ => throw new ArgumentException($"Invalid direction: {dir}")
             };
         }
-        
         public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
+        
+        
     }
 }

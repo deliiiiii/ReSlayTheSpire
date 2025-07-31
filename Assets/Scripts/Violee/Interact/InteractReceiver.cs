@@ -6,12 +6,18 @@ namespace Violee.Interact
 {
     public class InteractReceiver : MonoBehaviour
     {
-        public required UnityEvent OnInteract;
+        public event Action? OnEnterInteract;
+        public event Action? OnLeaveInteract;
 
         // event
-        public void Interact()
+        public void EnterInteract()
         {
-            OnInteract.Invoke();
+            OnEnterInteract?.Invoke();
+        }
+
+        public void LeaveInteract()
+        {
+            OnLeaveInteract?.Invoke();
         }
     }
 }

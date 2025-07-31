@@ -56,6 +56,11 @@ public class MiniItemData(MiniItemConfig config) : DataBase
             OnCheckFail?.Invoke(Count.Value);
             return;
         }
+        Use();
+    }
+
+    void Use()
+    {
         Count.Value--;
         OnUse?.Invoke();
         if (Count == 0)

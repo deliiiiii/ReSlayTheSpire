@@ -17,8 +17,11 @@ public class SingletonCS<T> where T : SingletonCS<T>, new()
     {
         get
         {
-            field ??= new T();
-            field.OnInit();
+            if (field == null)
+            {
+                field = new T();
+                field.OnInit();
+            }
             return field;
         }
     } = null!;

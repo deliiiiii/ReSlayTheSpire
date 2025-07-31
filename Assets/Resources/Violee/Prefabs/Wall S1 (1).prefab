@@ -101,7 +101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5442105625157565537
 Transform:
   m_ObjectHideFlags: 0
@@ -381,15 +381,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3577ef57b2f48fd8cf8ff8b65d933e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WallData:
-    WallType: 0
-    HasWall: 0
-    HasFoundWall:
-      value: 0
-    DoorType: 0
-    HasFoundDoor:
-      value: 0
-    Opened: 0
   Door: {fileID: 4690139194113425635}
   NotDoor: {fileID: 3671564070237400239}
   WallSprite: {fileID: 7377898935839987200}

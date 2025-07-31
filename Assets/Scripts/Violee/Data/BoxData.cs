@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Violee
 {
@@ -174,6 +176,14 @@ namespace Violee
         {
             PointKList.ForEach(pointData => pointData.ResetBeforeDij());
         }
+        #endregion
+        
+        
+        #region SceneItem
+        public List<SceneItemData> SceneItemList = [];
+        public HashSet<EBoxDir> OccupyAllDirs 
+            => SceneItemList.SelectMany(x => x.OccupyDirSet).ToHashSet();
+
         #endregion
     }
 }

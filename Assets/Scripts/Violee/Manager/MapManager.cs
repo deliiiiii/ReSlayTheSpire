@@ -31,6 +31,7 @@ internal class MapManager : SingletonCS<MapManager>
         
         GenerateStream = Instance.Bind(() => new GenerateStreamParam(boxKList, [], [])) 
             .ToStreamAsync(StartGenerate);
+        // (t1,t2)
         DijkstraStream = Instance.Bind(() => GenerateStream.Result.Value)
             .WithA(() => BoxHelper.Pos2DTo3DPoint(StartPos, StartDir))
             .ToStreamAsync(Dijkstra)
@@ -43,6 +44,7 @@ internal class MapManager : SingletonCS<MapManager>
             if (Input.GetKeyDown(KeyCode.R))
                 Task.FromResult(GenerateStream.CallTriggerAsync());
         }, EUpdatePri.Input);
+
     }
     
     
@@ -306,4 +308,7 @@ internal class MapManager : SingletonCS<MapManager>
         boxModel3DDic.Remove(pos3D);
     }
     #endregion
+    
+    
+    public static BoxModel FirstBoxModel => boxModel3DDic.First();
 }

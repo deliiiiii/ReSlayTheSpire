@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Violee.Interact
 {
-    public class InteractCaster : MonoBehaviour
+    public class InteractCasterSphere : MonoBehaviour
     {
         public LayerMask TarLayer;
         public float Radius = 8f;
@@ -35,7 +35,7 @@ namespace Violee.Interact
                 if (Physics.Raycast(origin, targetDir, out var hit, distance, TarLayer)
                     && hit.collider.gameObject != col.gameObject)
                     continue;
-                col.gameObject.GetComponent<InteractReceiver>()?.Interact();
+                col.gameObject.GetComponent<InteractReceiver>()?.EnterInteract();
                 Debug.DrawLine(origin, col.transform.position, Color.green, 0.1f);
             }
         }

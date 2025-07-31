@@ -22,6 +22,8 @@ namespace Violee
         [NonSerialized] HashSet<WallData> wallSet = [];
         [NonSerialized][ShowInInspector] BingChaJi bingChaJi = new();
 
+        
+        #region Generate Map
         public void ResetBeforeDij()
         {
             CostWall.Value = int.MaxValue / 2;
@@ -30,10 +32,12 @@ namespace Violee
             wallSet = [];
             bingChaJi.Init(this);
         }
-
-        public void Merge(BoxPointData other) => bingChaJi.Merge(other.bingChaJi);
         public void AddWall(WallData wallData) => wallSet.Add(wallData);
-
+        #endregion
+        
+        
+        #region Connect and BCJ
+        public void Merge(BoxPointData other) => bingChaJi.Merge(other.bingChaJi);
         public void VisitConnected()
         {
             foreach (var connectedB in bingChaJi.ConnectedSet)
@@ -45,7 +49,6 @@ namespace Violee
                 }
             }
         }
-        
         public void FlashConnectedInverse()
         {
             foreach (var connectedB in bingChaJi.ConnectedSet)
@@ -53,7 +56,6 @@ namespace Violee
                 connectedB.PointData.IsFlash.Value = !connectedB.PointData.IsFlash.Value;
             }
         }
-        
         [Serializable]
         class BingChaJi
         {
@@ -105,13 +107,8 @@ namespace Violee
                 return f == this ? f : f = f.Find();
             }
         }
-
-        // TODO
-        // [Serializable]
-        // class ItemData
-        // {
-        //     public BoxPointData BelongBox;
-        // }
+        #endregion
+        
         
         public int CompareTo(object obj)
         {

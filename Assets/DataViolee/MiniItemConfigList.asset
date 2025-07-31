@@ -17,15 +17,15 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     Description: Stamina
     InitValue: 42
-  - ID: 0
+  - ID: 1
     Sprite: {fileID: 0}
     Description: Energy
     InitValue: 42
-  - ID: 0
+  - ID: 2
     Sprite: {fileID: 0}
     Description: Gloves
     InitValue: 4
-  - ID: 0
+  - ID: 3
     Sprite: {fileID: 0}
     Description: Dice
     InitValue: 2

@@ -32,5 +32,34 @@ namespace Violee
         {
             wallDic[wallData.WallType].ReadData(wallData);
         }
+
+        #region SceneItem
+        public void AddSceneItemAtOnePoint(EBoxDir dir, SceneItemConfig sceneItemConfig)
+        {
+            var sceneItemData = sceneItemConfig switch
+            {
+                PurpleSceneItemConfig c => new PurpleSceneItemData(c, c.Count),
+                _ => new SceneItemData(sceneItemConfig),
+            };
+            data.SceneItemList.Add(sceneItemData);
+            
+            var obj = Instantiate(sceneItemConfig.Object);
+            var localPos = obj.transform.localPosition;
+            var dtRot = dir switch
+            {
+                EBoxDir.Up => Quaternion.Euler(0, 0, 0),
+                EBoxDir.Right => Quaternion.Euler(0, 90, 0),
+                EBoxDir.Down => Quaternion.Euler(0, 180, 0),
+                _ => Quaternion.Euler(0, 270, 0),
+            };
+            obj.transform.localPosition = dtRot * localPos;
+            obj.transform.localRotation *= dtRot;
+            obj.transform.parent = pointDic[dir].transform;
+            obj.AddComponent<SceneItemModel>().ReadData(sceneItemData);
+            obj.SetActive(true);
+        }
+        
+
+        #endregion
     }
 }
