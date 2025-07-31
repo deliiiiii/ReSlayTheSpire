@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using UnityEngine;
 using Curryfy;
+using Sirenix.OdinInspector;
 using Unit = System.ValueTuple;
 
 namespace Violee.Violee.Test;
@@ -108,13 +110,13 @@ public static class TestCurryExtensions
     public static Func<T1, T2, Unit> ToFunc<T1, T2>(Action<T1, T2> action)
         => (t1, t2) => { action(t1, t2); return default; };
     
-    // public static Func<T2> Bind<T1, T2>(this T1 t1, Func<T1, T2> func) 
-    //     => () => func(t1);
-    // public static Func<T1> Bind<T1>(this T1 t1, Func<T1, T1>? func = null)
-    // {
-    //     func ??= _ => t1;
-    //     return () => func(t1);
-    // }
+    public static Func<T2> Bind<T1, T2>(this T1 t1, Func<T1, T2> func) 
+        => () => func(t1);
+    public static Func<T1> Bind<T1>(this T1 t1, Func<T1, T1>? func = null)
+    {
+        func ??= _ => t1;
+        return () => func(t1);
+    }
     public static T2 Match<T1, T2>(this T1 t, Func<T1, T2> successFunc, Func<T2> failFunc) 
         => t is T2 ? successFunc(t) : failFunc();
     public static Func<T2> Map<T1, T2>(this Func<T1> t, Func<T1, T2> map) 
@@ -124,10 +126,10 @@ public static class TestCurryExtensions
     public static T2 Reduce<T1, T2>(this Func<T1> t1, T2 t2, Func<(T1, T2), T2> func) 
         => func((t1(), t2));
     
-    // public static IEnumerable<T2> Bind<T1, T2>(IEnumerable<T1> t1, Func<T1, IEnumerable<T2>> bind)
-    // {
-    //     return t1.SelectMany(bind);
-    // }
+    public static IEnumerable<T2> Bind<T1, T2>(IEnumerable<T1> t1, Func<T1, IEnumerable<T2>> bind)
+    {
+        return bind(t1.First());
+    }
     
     public static Dele<T2> Bind<T1, T2>(this Dele<T1> t1, Func<T1, Dele<T2>> bind)
         => bind(t1.Value);
@@ -137,11 +139,11 @@ public static class TestCurryExtensions
     public static Dele<T2> Reduce<T1, T2>(this Dele<T1> t1, T2 t2, Func<(T1, T2), T2> reduce) 
         => reduce((t1.Value, t2)).As();
     
-    public static (T1, T2) AddTuple<T1, T2>(this T1 t1, T2 t2) 
-        => (t1, t2);
-
-    public static T1 NoTuple<T1, T2>(this (T1, T2) t12) 
-        => t12.Item1;
+    // public static (T1, T2) AddTuple<T1, T2>(this T1 t1, T2 t2) 
+    //     => (t1, t2);
+    //
+    // public static T1 NoTuple<T1, T2>(this (T1, T2) t12) 
+    //     => t12.Item1;
 
     public static Action<T2> Curry<T1, T2>(this T1 t1, Action<T1, T2> action) 
         => t2 => action(t1, t2);
@@ -152,7 +154,7 @@ public static class TestCurryExtensions
         return t;
     }
 }
-public class TestCurry : MonoBehaviour
+public class TestCurry : Singleton<TestCurry>
 {
     static bool Equal<TClass, T>(Func<TClass, T> func, T val, TClass t) 
         where T : IComparable<T>
@@ -160,17 +162,14 @@ public class TestCurry : MonoBehaviour
         return func(t).CompareTo(val) == 0;
     }
 
-    void Test()
+    public int TestInt;
+
+    Func<string> b => this.Bind(x => x.TestInt).Map(x => (x * 2).ToString());
+    
+    [Button]
+    public void Test()
     {
-        
-        var add = (int a,int b,int c) => a + b + c;
-        var addCurry = add.Curry();
-        addCurry(1)(2)(3);
-        new TestData() { Age = 24 }
-            .Bind(x => x.Age)
-            .Map(x => x.ToString())
-            .AddTuple(42)
-            .NoTuple();
+        b.Do(x => MyDebug.Log($"raw {x()} length {x().Length}"));
     }
 }
 
