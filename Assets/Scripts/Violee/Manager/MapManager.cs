@@ -19,45 +19,51 @@ public class GenerateStreamParam(
 }
 
 
-internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
+
+internal class MapManager : SingletonCS<MapManager>
 {
-    protected override void Awake()
+    static readonly MapModel mapModel;
+    static readonly ObjectPool<BoxModel> boxPool;
+    static MapManager()
     {
-        base.Awake();
+        MyDebug.LogWarning($"MapManager static ctor()");
+        mapModel = Configer.MapModel;
+        boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, Instance.go.transform, 42);
+        
         Binder.Update(_ =>
         {
             if (Input.GetKeyDown(KeyCode.R))
                 Task.FromResult(GenerateStream.CallTriggerAsync());
         }, EUpdatePri.Input);
 
-        DijkstraStream.OnEnd += param2 => VisitEdgeWalls(param2.Item1.EdgeWallSet);
+        GenerateStream = Instance.Bind(() => new GenerateStreamParam(boxKList, [], [])) 
+            .ToStreamAsync(StartGenerate);
+        DijkstraStream = Instance.Bind(() => GenerateStream.Result.Value)
+            .WithA(() => BoxHelper.Pos2DTo3DPoint(StartPos, StartDir))
+            .ToStreamAsync(Dijkstra)
+            .OnEnd(param2 => VisitEdgeWalls(param2.Item1.EdgeWallSet));
+        
+        GenerateStream.EndWith(DijkstraStream);
+        
     }
-
-    #region Inspector
-    [Header("Map Settings")]
-    [SerializeField] int height = 4;
-    [SerializeField] int width = 6;
-    [SerializeField] Vector2Int startPos;
-    [SerializeField] EBoxDir startDir = EBoxDir.Up;
-    #endregion
-
-
-    #region Static Properties
+    
+    
     public static float MaxSize => Mathf.Max(Width, Height) * BoxHelper.BoxSize;
-    static int Height => Instance.height;
-    static int Width => Instance.width;
-    static Vector2Int StartPos => Instance.startPos;
-    static EBoxDir StartDir => Instance.startDir;
+    
+    static int Height => mapModel.Height;
+    static int Width => mapModel.Width;
+    static Vector2Int StartPos => mapModel.StartPos;
+    static EBoxDir StartDir => mapModel.StartDir;
     static readonly MyKeyedCollection<Vector2Int, BoxData> boxKList = new (b => b.Pos2D);
     static bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
     static bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
-    #endregion
-
+    
+    
 
     #region Visit
     static readonly Observable<BoxPointData> playerCurPoint = new(null!, 
         x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
-    public void TickPlayerVisit(Vector3 playerPos)
+    public static void TickPlayerVisit(Vector3 playerPos)
     {
         var x = playerPos.x;
         var z = playerPos.z;
@@ -88,7 +94,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
         }
     }
 
-    public void VisitEdgeWalls(HashSet<WallData> edgeWallSet)
+    static void VisitEdgeWalls(HashSet<WallData> edgeWallSet)
     {
         edgeWallSet.ForEach(wallData => wallData.Visited.Value = true);
     }
@@ -96,16 +102,11 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
     
     
     #region Generate
-    [field: MaybeNull] public Stream<GenerateStreamParam> GenerateStream => field ??= 
-        new Stream<GenerateStreamParam>(
-            startFunc: () => new GenerateStreamParam(boxKList, [], []),
-            triggerFuncAsync: StartGenerate,
-            endStream: DijkstraStream);
-    [field: MaybeNull] public Stream<(GenerateStreamParam, Vector3)> DijkstraStream => field ??= 
-        new Stream<(GenerateStreamParam, Vector3)>(
-            startFunc: () => (GenerateStream.Result, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)),
-            triggerFuncAsync: Dijkstra);
-    async Task StartGenerate(GenerateStreamParam param)
+
+    public static readonly Stream<GenerateStreamParam> GenerateStream;
+
+    public static readonly Stream<(GenerateStreamParam, Vector3)> DijkstraStream;
+    static async Task StartGenerate(GenerateStreamParam param)
     {
         var fBoxKList = param.BoxKList;
         var fEmptyPosSet = param.EmptyPosSet;
@@ -138,7 +139,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet,HashSet<WallData> edgeWallSet)
+    static async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet,HashSet<WallData> edgeWallSet)
     {
         async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfig config)
         {
@@ -214,7 +215,7 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    async Task Dijkstra((GenerateStreamParam, Vector3) pair)
+    static async Task Dijkstra((GenerateStreamParam, Vector3) pair)
     {
         try
         {
@@ -292,18 +293,18 @@ internal class BoxModelManager : ModelManagerBase<BoxModel, BoxModelManager>
             throw;
         }
     }
-    readonly MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
-    async Task SpawnBox3D(BoxData fBoxData)
+    static readonly MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
+    static async Task SpawnBox3D(BoxData fBoxData)
     {
-        var boxModel = await modelPool.MyInstantiate();
+        var boxModel = await boxPool.MyInstantiate();
         boxModel.ReadData(fBoxData);
         boxModel3DDic.Add(boxModel);
     }
         
-    void DestroyBox(BoxData fBoxData)
+    static void DestroyBox(BoxData fBoxData)
     {
         var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
-        modelPool.MyDestroy(boxModel3DDic[pos3D]);
+        boxPool.MyDestroy(boxModel3DDic[pos3D]);
         boxModel3DDic.Remove(pos3D);
     }
     #endregion

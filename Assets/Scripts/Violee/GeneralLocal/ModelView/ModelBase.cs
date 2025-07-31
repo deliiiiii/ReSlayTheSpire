@@ -20,21 +20,4 @@ public abstract class ModelBase<TData> : MonoBehaviour, IModelBase where TData :
 
 
 [Serializable]
-public abstract class ModelManagerBase<TModel, TModelManager> : Singleton<TModelManager>
-    where TModel : MonoBehaviour, IModelBase
-    where TModelManager : Singleton<TModelManager>
-{
-    [SerializeField] TModel modelPrefab = null!;
-    public TModel ModelPrefab => modelPrefab;
-    protected ObjectPool<TModel> modelPool = null!;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        modelPool = new ObjectPool<TModel>(ModelPrefab, transform, 42);
-    }
-}
-
-
-[Serializable]
 public abstract class DataBase;

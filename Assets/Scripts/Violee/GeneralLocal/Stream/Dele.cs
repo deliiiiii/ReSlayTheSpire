@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using Curryfy;
 using Sirenix.OdinInspector;
 using Unit = System.ValueTuple;
 
-namespace Violee.Violee.Test;
+namespace Violee;
 
 
 public class Dele<T>
@@ -110,13 +111,15 @@ public static class TestCurryExtensions
     public static Func<T1, T2, Unit> ToFunc<T1, T2>(Action<T1, T2> action)
         => (t1, t2) => { action(t1, t2); return default; };
     
-    public static Func<T2> Bind<T1, T2>(this T1 t1, Func<T1, T2> func) 
-        => () => func(t1);
-    public static Func<T1> Bind<T1>(this T1 t1, Func<T1, T1>? func = null)
+    public static Func<T2> Bind<T1, T2>(this T1 t1, Func<T2> func) 
+        => func;
+    public static Func<T1> Bind<T1>(this T1 t1, Func<T1>? func = null)
     {
-        func ??= _ => t1;
-        return () => func(t1);
+        func ??= () => t1;
+        return () => func();
     }
+    
+    // Match可能还得改改
     public static T2 Match<T1, T2>(this T1 t, Func<T1, T2> successFunc, Func<T2> failFunc) 
         => t is T2 ? successFunc(t) : failFunc();
     public static Func<T2> Map<T1, T2>(this Func<T1> t, Func<T1, T2> map) 
@@ -126,10 +129,10 @@ public static class TestCurryExtensions
     public static T2 Reduce<T1, T2>(this Func<T1> t1, T2 t2, Func<(T1, T2), T2> func) 
         => func((t1(), t2));
     
-    public static IEnumerable<T2> Bind<T1, T2>(IEnumerable<T1> t1, Func<T1, IEnumerable<T2>> bind)
-    {
-        return bind(t1.First());
-    }
+    // public static IEnumerable<T2> Bind<T1, T2>(IEnumerable<T1> t1, Func<T1, IEnumerable<T2>> bind)
+    // {
+    //     return bind(t1.First());// 从First拿到Next...
+    // }
     
     public static Dele<T2> Bind<T1, T2>(this Dele<T1> t1, Func<T1, Dele<T2>> bind)
         => bind(t1.Value);
@@ -139,19 +142,22 @@ public static class TestCurryExtensions
     public static Dele<T2> Reduce<T1, T2>(this Dele<T1> t1, T2 t2, Func<(T1, T2), T2> reduce) 
         => reduce((t1.Value, t2)).As();
     
-    // public static (T1, T2) AddTuple<T1, T2>(this T1 t1, T2 t2) 
-    //     => (t1, t2);
-    //
-    // public static T1 NoTuple<T1, T2>(this (T1, T2) t12) 
-    //     => t12.Item1;
+    public static Func<(T1, T2)> WithA<T1, T2>(this Func<T1> t1, Func<T2> t2)
+        => () => (t1(), t2());
+    
+    public static Func<T1> DeleteA<T1, T2>(this Func<(T1, T2)> t12) 
+        => () => t12().Item1;
 
     public static Action<T2> Curry<T1, T2>(this T1 t1, Action<T1, T2> action) 
         => t2 => action(t1, t2);
     
-    public static T Do<T>(this T t, Action<T> action)
+    public static Stream<T> ToStream<T>(this Func<T> t, Action<T> action)
     {
-        action(t);
-        return t;
+        return new Stream<T>(startFunc: t, triggerFunc:action);
+    }
+    public static Stream<T> ToStreamAsync<T>(this Func<T> t, Func<T, Task> actionAsync)
+    {
+        return new Stream<T>(startFunc: t, triggerFuncAsync: actionAsync);
     }
 }
 public class TestCurry : Singleton<TestCurry>
@@ -164,12 +170,12 @@ public class TestCurry : Singleton<TestCurry>
 
     public int TestInt;
 
-    Func<string> b => this.Bind(x => x.TestInt).Map(x => (x * 2).ToString());
+    Func<string> b => this.Bind(() => TestInt).Map(x => (x * 2).ToString());
     
     [Button]
     public void Test()
     {
-        b.Do(x => MyDebug.Log($"raw {x()} length {x().Length}"));
+        b.ToStream(x => MyDebug.Log($"raw {x} length {x.Length}"));
     }
 }
 

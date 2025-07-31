@@ -18,11 +18,11 @@ public class PlayerData : DataBase
     public MiniItemData Gloves = null!;
     public MiniItemData Dice = null!;
     
-    // 不直接写构造函数是因为调用了Config er单例，单例在没有运行时是不能FindObjectOfType的
     public PlayerData()
     {
-        if (!Configer.Started)
-            return;
+        // 单例在没有运行时是不能FindObjectOfType的
+        // if (!Configer.Started)
+        //     return;
         foreach (var config in Configer.MiniItemConfigList.MiniItemConfigs)
         {
             miniItems.Add(new MiniItemData(config));

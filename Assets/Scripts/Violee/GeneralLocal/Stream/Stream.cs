@@ -10,7 +10,7 @@ public abstract class Maybe<T>
 {
     sealed class Just(T value) : Maybe<T>
     {
-        public T Value { get; } = value;
+        public T JustValue { get; } = value;
     }
 
     public sealed class Nothing : Maybe<T>
@@ -26,18 +26,24 @@ public abstract class Maybe<T>
     public static implicit operator T(Maybe<T> maybe) =>
         maybe switch
         {
-            Just just => just.Value,
+            Just just => just.JustValue,
             Nothing _ => Nothing.Instance,
             _ => default!
         };
     public static implicit operator Maybe<T>(T value) => Of(value);
+    public T Value => this switch
+    {
+        Just just => just.JustValue,
+        _ => default!
+    };
 }
 
 public interface IStream
 {
     Task CallTriggerAsync();
 }
-public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsync = null, IStream? endStream = null): IStream
+public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsync = null, IStream? endStream = null): 
+    Dele<T>, IStream
 {
     public Stream(Func<T>? startFunc = null, Action<T>? triggerFunc = null) 
         : this(startFunc, x => { triggerFunc?.Invoke(x); return Task.CompletedTask; }){ }
@@ -45,9 +51,9 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
     readonly Func<T> startFunc = startFunc ?? (() => default!);
     readonly List<(Func<T, Task<Maybe<T>>>, string)> mappers = [];
     Func<T, Task>? triggerFuncAsync = triggerFuncAsync;
-    public event Action<T>? OnBegin;
-    public event Func<T, Task>? OnBeginAsync;
-    public event Action<T>? OnEnd;
+    Action<T>? onBegin;
+    Func<T, Task>? onBeginAsync;
+    Action<T>? onEnd;
     IStream? endStream = endStream;
 
     static bool CheckValidMethod(MethodInfo methodInfo) => methodInfo.IsStatic || methodInfo.Name.Contains("b__");
@@ -123,10 +129,10 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
                                    $"has returned null.");
                 return;
             }
-            OnBegin?.Invoke(Result);
-            await (OnBeginAsync != null ? OnBeginAsync(Result) : Task.CompletedTask);
+            onBegin?.Invoke(Result);
+            await (onBeginAsync != null ? onBeginAsync(Result) : Task.CompletedTask);
             await (triggerFuncAsync != null ? triggerFuncAsync(Result) : Task.CompletedTask);
-            OnEnd?.Invoke(Result);
+            onEnd?.Invoke(Result);
             await (endStream != null ? endStream.CallTriggerAsync() : Task.CompletedTask);
         }
         catch (Exception e)
@@ -136,6 +142,25 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
         }
         
     }
+
+    public Stream<T> OnBegin(Action<T> action)
+    {
+        onBegin += action;
+        return this;
+    }
+
+    public Stream<T> OnBeginAsync(Func<T, Task> func)
+    {
+        onBeginAsync += func;
+        return this;
+    }
+    
+    public Stream<T> OnEnd(Action<T> action)
+    {
+        onEnd += action;
+        return this;
+    }
+    
 
     public Maybe<T> Result { get; private set; } = Maybe<T>.Nothing.Instance;
 }

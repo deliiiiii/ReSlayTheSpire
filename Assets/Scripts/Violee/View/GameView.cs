@@ -6,25 +6,22 @@ namespace Violee.View
 {
     public class GameView : ViewBase<GameView>
     {
-        PlayerModel playerModel = null!;
         protected override void IBL()
         {
-            playerModel = PlayerModel.Instance;
-            
             Binder.Update(SwitchMap, EUpdatePri.Input);
-            GameManager.Instance.GeneratingMapState.OnEnter(() => LoadPnl.SetActive(true));
-            GameManager.Instance.GeneratingMapState.OnExit(() => LoadPnl.SetActive(false));
-            GameManager.Instance.PlayingState.OnEnter(ShowMinimap);
+            GameManager.GeneratingMapState.OnEnter(() => LoadPnl.SetActive(true));
+            GameManager.GeneratingMapState.OnExit(() => LoadPnl.SetActive(false));
+            GameManager.PlayingState.OnEnter(ShowMinimap);
             
-            GameManager.Instance.PlayingState.OnEnter(() =>
+            GameManager.PlayingState.OnEnter(() =>
             {
                 MiniItemPnl.SetActive(true);
-                Binder.From(playerModel.Stamina.Count).ToTxt(StaminaTxt).Immediate();
-                Binder.From(playerModel.Energy.Count).ToTxt(EnergyTxt).Immediate();
-                Binder.From(playerModel.Gloves.Count).ToTxt(GlovesTxt).Immediate();
-                Binder.From(playerModel.Dice.Count).ToTxt(DiceTxt).Immediate();
+                Binder.From(PlayerManager.Stamina.Count).ToTxt(StaminaTxt).Immediate();
+                Binder.From(PlayerManager.Energy.Count).ToTxt(EnergyTxt).Immediate();
+                Binder.From(PlayerManager.Gloves.Count).ToTxt(GlovesTxt).Immediate();
+                Binder.From(PlayerManager.Dice.Count).ToTxt(DiceTxt).Immediate();
             });
-            GameManager.Instance.PlayingState.OnExit(() => MiniItemPnl.SetActive(false));
+            GameManager.PlayingState.OnExit(() => MiniItemPnl.SetActive(false));
             
 
         }
@@ -64,7 +61,7 @@ namespace Violee.View
 
         void ChangeFOV(float dt)
         {
-            var tarSize = isMinimap ? MiniSize : BoxModelManager.MaxSize / 1.616f;
+            var tarSize = isMinimap ? MiniSize : MapManager.MaxSize / 1.616f;
             if (!Mathf.Approximately(MinimapCameraVirtual.m_Lens.OrthographicSize, tarSize))
             {
                 MinimapCameraVirtual.m_Lens.OrthographicSize = Mathf.Lerp(MinimapCameraVirtual.m_Lens.OrthographicSize,

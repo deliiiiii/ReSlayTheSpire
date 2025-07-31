@@ -14,7 +14,7 @@ class MapView : ViewBase<MapView>
     {
         costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform, 42);
         if (Configer.SettingsConfig.ShowBoxCost)
-            BoxModelManager.Instance.DijkstraStream.OnBeginAsync += BindAllCostTxt;
+            MapManager.DijkstraStream.OnBeginAsync(BindAllCostTxt);
     }
     HashSet<Text> costTxtSet = [];
     ObjectPool<Text> costTxtPool = null!;
