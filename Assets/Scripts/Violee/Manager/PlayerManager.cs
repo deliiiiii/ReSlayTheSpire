@@ -12,6 +12,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
     static PlayerManager()
     {
         playerModel = Configer.PlayerModel;
+        playerModel.Fpc.enabled = false;
     }
     public static MiniItemData Stamina => playerData.Stamina;
     public static MiniItemData Energy => playerData.Energy;
@@ -25,11 +26,13 @@ public class PlayerManager : SingletonCS<PlayerManager>
     }
     public static void OnEnterPlaying()
     {
+        playerModel.Fpc.enabled = true;
         playerModel.gameObject.SetActive(true);
     }
         
     public static void OnExitPlaying()
     {
+        playerModel.Fpc.enabled = false;    
         playerModel.gameObject.SetActive(false);
     }
 
@@ -40,16 +43,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
         {
             GetReticleCb.Value!()?.Cb.Invoke();
             OnClickReticle?.Invoke();
-        }
-        if(Input.GetKey(KeyCode.LeftAlt))
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
     }
 
