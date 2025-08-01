@@ -149,30 +149,26 @@ namespace Violee
             }
         }
         
-        public Vector2Int Pos2D;
-        #region Walls
-        public byte WallsByte;
-        public event Action<WallData>? OnAddWallData;
-        public event Action<EWallType>? OnRemoveWallData;
-        #endregion
-        
-        
         #region Field, Method...
+        public Vector2Int Pos2D;
+        public byte WallsByte;
         public const int WallCost = 10;
         public const int DoorCost = 1;
         public void ResetBeforeDij() 
             => PointDataMyDic.ForEach(pointData => pointData.ResetBeforeDij());
         public HashSet<EBoxDir> OccupyAllDirs 
-            => SceneDataList.SelectMany(x => x.OccupyDirSet).ToHashSet();
+            => SceneDataMyList.SelectMany(x => x.OccupyDirSet).ToHashSet();
         #endregion
         
         
         #region List, Dic
         public readonly MyKeyedCollection<EWallType, WallData> WallDataMyDic 
             = new(w => w.WallType);
+        public event Action<WallData>? OnAddWallData;
+        public event Action<EWallType>? OnRemoveWallData;
         public MyKeyedCollection<EBoxDir, BoxPointData> PointDataMyDic 
             = new (b => b.Dir);
-        public MyList<SceneItemData> SceneDataList 
+        public MyList<SceneItemData> SceneDataMyList 
             = new(OnAddSceneItemData, OnRemoveSceneItemData);
         static void OnAddSceneItemData(SceneItemData data)
         {

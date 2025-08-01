@@ -39,7 +39,7 @@ namespace Violee
         {
             var sceneItemData = SceneItemData.ReadConfig(sceneItemConfig, new([dir]));
             sceneItemData.Parent = pointDic[dir].transform;
-            data.SceneDataList.MyAdd(sceneItemData);
+            data.SceneDataMyList.MyAdd(sceneItemData);
         }
         
 
