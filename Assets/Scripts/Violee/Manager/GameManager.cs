@@ -61,14 +61,14 @@ public class GameManager : Singleton<GameManager>
         {
             stateBeforePause = (EGameState)gameFsm.CurState;
             gameFsm.ChangeState(EGameState.Paused);
-            Time.timeScale = 0; // 暂停游戏
+            // Time.timeScale = 0; // 暂停游戏
             Cursor.lockState = CursorLockMode.None; // 解锁鼠标
             Cursor.visible = true; // 显示鼠标
         }
         else if(isPaused && Application.isFocused)
         {
             gameFsm.ChangeState(stateBeforePause);
-            Time.timeScale = 1; // 恢复游戏
+            // Time.timeScale = 1; // 恢复游戏
             Cursor.lockState = CursorLockMode.Locked; // 锁定鼠标
             Cursor.visible = false; // 隐藏鼠标
         }
