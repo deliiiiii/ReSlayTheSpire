@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Violee;
 
-public class GenerateStreamParam(
+public struct GenerateStreamParam(
     MyKeyedCollection<Vector2Int, BoxData> boxKList, 
     HashSet<Vector2Int> emptyPosSet,
     HashSet<WallData> edgeWallSet)
@@ -29,14 +29,13 @@ internal class MapManager : SingletonCS<MapManager>
         mapModel = Configer.MapModel;
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, Instance.go.transform, 42);
         
-        GenerateStream = Instance.Bind(() => new GenerateStreamParam(boxKList, [], [])) 
+        GenerateStream = Instance
+            .Bind(() => new GenerateStreamParam(boxKList, [], [])) 
             .ToStreamAsync(StartGenerate);
-        // (t1,t2)
-        DijkstraStream = Instance.Bind(() => GenerateStream.Result.Value)
-            .WithA(() => BoxHelper.Pos2DTo3DPoint(StartPos, StartDir))
+        DijkstraStream = Instance
+            .Bind(() => (GenerateStream.Result.Value, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)))
             .ToStreamAsync(Dijkstra)
-            .OnEnd(param => VisitEdgeWalls(param.Item1.EdgeWallSet));
-        
+            .OnEnd(param => VisitEdgeWalls(param.Value.EdgeWallSet));
         GenerateStream.EndWith(DijkstraStream);
         
         Binder.Update(_ =>
