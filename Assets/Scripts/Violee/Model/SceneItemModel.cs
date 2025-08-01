@@ -8,7 +8,7 @@ namespace Violee;
 
 public class SceneItemModel : ModelBase<SceneItemData>
 {
-    [ShowInInspector] SceneItemData shownData => data;
+    // [ShowInInspector] SceneItemData shownData => data;
 
     public required GameObject HideAfterRunOut;
     public required GameObject ShowAfterRunOut;

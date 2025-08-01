@@ -32,7 +32,7 @@ class MapView : ViewBase<MapView>
         {
             await DestroyAllCostTxt();
             var boxKList = pair.Item1.BoxKList;
-            var allPoints = boxKList.SelectMany(x => x.PointKList).ToList();
+            var allPoints = boxKList.SelectMany(x => x.PointDataMyDic).ToList();
             foreach (var point in allPoints)
             {
                 var txt = await costTxtPool.MyInstantiate(point.Pos3D + Vector3.up * 0.1f);

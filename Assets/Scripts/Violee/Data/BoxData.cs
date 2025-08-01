@@ -25,16 +25,17 @@ namespace Violee
         T1248 = 1 << 4 | 1 << 6,
         T2481 = 1 << 5 | 1 << 7,
     }
-
     public static class BoxDataExt
     {
-        public static bool HasSWallByDir(this BoxData self, EBoxDir dir)
-        {
-            return self.WallKList[BoxHelper.WallDirToType(dir)].HasWall;
-        }
         public static bool HasSWallByDir(this BoxData self, EBoxDir dir, out WallData wallData)
         {
-            return (wallData = self.WallKList[BoxHelper.WallDirToType(dir)]).HasWall;
+            if (self.WallDataMyDic.TryGetValue(BoxHelper.WallDirToType(dir), out var wallData2))
+            {
+                wallData = wallData2;
+                return true;
+            }
+            wallData = null!;
+            return false;
         }
         
         public static int CostStraight(this BoxData self, EBoxDir dir, out WallData? wallDataCanNull)
@@ -49,7 +50,7 @@ namespace Violee
                 return BoxData.DoorCost;
             return BoxData.WallCost;
         }
-
+        
         public static int CostTilt(this BoxData self, EBoxDir from, EBoxDir to, out WallData? wallDataCanNull)
         {
             if (CanGoTiltWallBetween(self, from, to))
@@ -69,8 +70,8 @@ namespace Violee
                     or (EBoxDir.Right, EBoxDir.Down) => EWallType.T2481,
                 _ => throw new ArgumentException($"from{from} and to{to} must be adjacent directions!"),
             };
-            wallDataCanNull = self.WallKList[t];
-            if(self.WallKList[t].DoorType == EDoorType.Wooden)
+            wallDataCanNull = self.WallDataMyDic[t];
+            if(self.WallDataMyDic[t].DoorType == EDoorType.Wooden)
                 return BoxData.DoorCost;
             return BoxData.WallCost;
         }
@@ -85,7 +86,7 @@ namespace Violee
             var big = (byte)bigDir;
             var small = (byte)smallDif;
             // tilt walls
-            var x = self.WallsByte >> 4;
+            byte x = (byte)(self.WallsByte >> 4);
             var fromDif = small;
             if (big == 8 && small == 1)
                 fromDif = 8;
@@ -109,17 +110,26 @@ namespace Violee
         public BoxData(Vector2Int pos, BoxConfig config)
         {
             Pos2D = pos;
-            WallsByte = config.Walls;
+
+            WallDataMyDic.OnAdd += wallData =>
+            {
+                WallsByte |= (byte)wallData.WallType;
+                OnAddWallData?.Invoke(wallData);
+            };
+            WallDataMyDic.OnRemove += wallType =>
+            {
+                WallsByte &= (byte)~(int)wallType;
+                OnRemoveWallData?.Invoke(wallType);
+            };
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
-                WallKList.Add(new WallData(wallType, EDoorType.Random));
+                WallsByte = config.Walls;
                 if ((WallsByte & (int)wallType) == (int)wallType)
-                    WallKList[wallType].HasWall = true;
+                    WallDataMyDic.MyAdd(new WallData(wallType, EDoorType.Random));
             }
-            PointKList = new MyKeyedCollection<EBoxDir, BoxPointData>(b => b.Dir);
             foreach (var dir in BoxHelper.AllBoxDirs)
             {
-                PointKList.Add(new BoxPointData()
+                PointDataMyDic.MyAdd(new BoxPointData()
                 {
                     BelongBox = this,
                     Dir = dir,
@@ -134,56 +144,58 @@ namespace Violee
                         continue;
                     if (BoxHelper.OppositeDirDic[dir] == dir2)
                         continue;
-                    PointKList[dir].NextPointsInBox.Add(PointKList[dir2]);
+                    PointDataMyDic[dir].NextPointsInBox.Add(PointDataMyDic[dir2]);
                 }
             }
         }
         
         public Vector2Int Pos2D;
         #region Walls
-        [NonSerialized]
         public byte WallsByte;
-        public event Action<WallData>? OnWallDataChanged;
-        public readonly MyKeyedCollection<EWallType, WallData> WallKList = new(w => w.WallType);
-        
-        
-        public void AddSWall(WallData wallData)
-        {
-            WallsByte |= (byte)wallData.WallType;
-            wallData.HasWall = true;
-            OnWallDataChanged?.Invoke(wallData);
-        }
-        public void RemoveSWall(EBoxDir dir)
-        {
-            RemoveSWall(BoxHelper.WallDirToType(dir));
-        }
-        void RemoveSWall(EWallType wallType)
-        {
-            WallsByte &= (byte)~wallType;
-            WallKList[wallType].HasWall = false;
-            OnWallDataChanged?.Invoke(WallKList[wallType]);
-        }
+        public event Action<WallData>? OnAddWallData;
+        public event Action<EWallType>? OnRemoveWallData;
         #endregion
         
         
-        #region Path
-
+        #region Field, Method...
         public const int WallCost = 10;
         public const int DoorCost = 1;
-        public MyKeyedCollection<EBoxDir, BoxPointData> PointKList;
-
-        public void ResetBeforeDij()
-        {
-            PointKList.ForEach(pointData => pointData.ResetBeforeDij());
-        }
+        public void ResetBeforeDij() 
+            => PointDataMyDic.ForEach(pointData => pointData.ResetBeforeDij());
+        public HashSet<EBoxDir> OccupyAllDirs 
+            => SceneDataList.SelectMany(x => x.OccupyDirSet).ToHashSet();
         #endregion
         
         
-        #region SceneItem
-        public List<SceneItemData> SceneItemList = [];
-        public HashSet<EBoxDir> OccupyAllDirs 
-            => SceneItemList.SelectMany(x => x.OccupyDirSet).ToHashSet();
-
+        #region List, Dic
+        public readonly MyKeyedCollection<EWallType, WallData> WallDataMyDic 
+            = new(w => w.WallType);
+        public MyKeyedCollection<EBoxDir, BoxPointData> PointDataMyDic 
+            = new (b => b.Dir);
+        public MyList<SceneItemData> SceneDataList 
+            = new(OnAddSceneItemData, OnRemoveSceneItemData);
+        static void OnAddSceneItemData(SceneItemData data)
+        {
+            var obj = GameObject.Instantiate(data.Obj);
+            var localPos = obj.transform.localPosition;
+            var dtRot = data.OccupyDirSet.First() switch
+            {
+                EBoxDir.Up => Quaternion.Euler(0, 0, 0),
+                EBoxDir.Right => Quaternion.Euler(0, 90, 0),
+                EBoxDir.Down => Quaternion.Euler(0, 180, 0),
+                _ => Quaternion.Euler(0, 270, 0),
+            };
+            obj.transform.localPosition = dtRot * localPos;
+            obj.transform.localRotation *= dtRot;
+            obj.transform.parent = data.Parent;
+            data.ObjIns = obj.GetOrAddComponent<SceneItemModel>();
+            data.ObjIns.ReadData(data);
+            obj.SetActive(true);
+        }
+        static void OnRemoveSceneItemData(SceneItemData data)
+        {
+            GameObject.Destroy(data.ObjIns);
+        }
         #endregion
     }
 }

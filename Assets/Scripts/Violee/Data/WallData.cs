@@ -20,7 +20,7 @@ namespace Violee
         }
         
         public EWallType WallType = wallType;
-        public bool HasWall;
+        public bool HasWallhahaha;
         public Observable<bool> Visited = new (false);
         public EDoorType DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType;
         public bool HasDoor => DoorType != EDoorType.None;

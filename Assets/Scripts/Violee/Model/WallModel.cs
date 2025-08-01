@@ -22,11 +22,6 @@ namespace Violee
             NotDoor.gameObject.SetActive(false);
             LockedSprite.SetActive(false);
             UnlockedSprite.SetActive(false);
-            if (!data.HasWall)
-            {
-                gameObject.SetActive(false);
-                return;
-            }
             gameObject.SetActive(true);
             Binder.From(data.Visited).To(v =>
             {
@@ -43,12 +38,6 @@ namespace Violee
                     Door.gameObject.SetActive(true);
                     break;
             }
-        }
-
-        // event
-        public void FindWallAndDoor()
-        {
-            data.Visited.Value = true;
         }
         void SetDoorSprite()
         {

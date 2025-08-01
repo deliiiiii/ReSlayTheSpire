@@ -20,7 +20,7 @@ namespace Violee
         [NonSerialized] public required BoxData BelongBox;
         [NonSerialized] public Vector3 Pos3D;
         [NonSerialized] HashSet<WallData> wallSet = [];
-        [NonSerialized][ShowInInspector] BingChaJi bingChaJi = new();
+        [NonSerialized] BingChaJi bingChaJi = new();
 
         
         #region Generate Map

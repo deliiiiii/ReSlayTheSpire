@@ -72,7 +72,7 @@ internal class MapManager : SingletonCS<MapManager>
             var edgeCenterPos = BoxHelper.Pos2DTo3DEdge(boxPos2D, dir);
             var edgeX = edgeCenterPos.x;
             var edgeZ = edgeCenterPos.z;
-            var pointData = boxKList[boxPos2D].PointKList[dir];
+            var pointData = boxKList[boxPos2D].PointDataMyDic[dir];
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
             if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfigList.WalkInTolerance)
             {
@@ -100,13 +100,13 @@ internal class MapManager : SingletonCS<MapManager>
     public static readonly Stream<(GenerateStreamParam, Vector3)> DijkstraStream;
     static async Task StartGenerate(GenerateStreamParam param)
     {
-        var fBoxKList = param.BoxKList;
+        var boxDataMyDic = param.BoxKList;
         var fEmptyPosSet = param.EmptyPosSet;
         var fEdgeWallSet = param.EdgeWallSet;
         void RemoveAllBoxes()
         {
-            fBoxKList.ForEach(DestroyBox);
-            fBoxKList.Clear();
+            boxDataMyDic.ForEach(DestroyBox);
+            boxDataMyDic.MyClear();
             fEmptyPosSet.Clear();
             for(var j = 0; j < Height; j++)
             {
@@ -138,7 +138,7 @@ internal class MapManager : SingletonCS<MapManager>
             await Configer.SettingsConfig.YieldFrames();
             var boxData = new BoxData(pos, config);
             MyDebug.Log($"Add box {config.Walls} at {pos}");
-            boxKList.Add(boxData);
+            boxKList.MyAdd(boxData);
             fEmptyPosSet.Remove(pos);
             await SpawnBox3D(boxData);
             return boxData;
@@ -169,11 +169,12 @@ internal class MapManager : SingletonCS<MapManager>
                     {
                         var edgeWall = new WallData(curGoOutDir, EDoorType.None);
                         edgeWallSet.Add(edgeWall);
-                        curBox.AddSWall(edgeWall);
+                        curBox.WallDataMyDic.MyRemove(edgeWall);
+                        curBox.WallDataMyDic.MyAdd(edgeWall);
                         // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
                         continue;
                     }
-                    if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir))
+                    if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
                     {
                         var boxConfig = 
                             Configer.BoxConfigList.BoxConfigs.RandomItemWeighted(
@@ -188,9 +189,10 @@ internal class MapManager : SingletonCS<MapManager>
                             if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
                                 var nextNextBox = boxKList[nextNextPos];
-                                if (nextNextBox.HasSWallByDir(nextNextGoInDir))
+                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
                                 {
-                                    nextBox.RemoveSWall(nextGoOutDir);
+                                    var t = BoxHelper.WallDirToType(nextGoOutDir);
+                                    nextBox.WallDataMyDic.MyRemove(t);
                                     // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
                                 }
                             }
@@ -216,7 +218,7 @@ internal class MapManager : SingletonCS<MapManager>
             var vSet = new HashSet<BoxPointData>();
             var pq = new SimplePriorityQueue<BoxPointData, int>();
             var startBox = fBoxKList[StartPos];
-            var startPoint = startBox.PointKList[StartDir];
+            var startPoint = startBox.PointDataMyDic[StartDir];
             startPoint.CostWall.Value = 0;
             pq.Enqueue(startPoint, 0);
             while (pq.Count != 0)
@@ -231,7 +233,7 @@ internal class MapManager : SingletonCS<MapManager>
                 {
                     var nextBox = fBoxKList[nextPos];
                     var oppositeDir = BoxHelper.OppositeDirDic[curDir];
-                    var nextPoint = nextBox.PointKList[oppositeDir];
+                    var nextPoint = nextBox.PointDataMyDic[oppositeDir];
                     var costSWall = curBox.CostStraight(curDir, out var wallData1) + nextBox.CostStraight(oppositeDir, out var wallData2);
                     nextPoint.CostWall.Value = Math.Min(
                         nextPoint.CostWall.Value,
@@ -256,24 +258,21 @@ internal class MapManager : SingletonCS<MapManager>
                 curPoint.NextPointsInBox
                     .ForEach(nextPoint =>
                     {
-                        curBox.CostTilt(curPoint.Dir, nextPoint.Dir, out var wallData3);
+                        var costTWall = curBox.CostTilt(curPoint.Dir, nextPoint.Dir, out var wallData3);
                         if(wallData3 != null)
                             curPoint.AddWall(wallData3);
-                    });
-                curPoint.NextPointsInBox
-                    .Where(nextPoint => !vSet.Contains(nextPoint))
-                    .ForEach(nextPoint =>
-                    {
-                        var costTWall = curBox.CostTilt(curPoint.Dir, nextPoint.Dir, out _);
-                        nextPoint.CostWall.Value = Math.Min(
-                            nextPoint.CostWall.Value,
-                            curPoint.CostWall + costTWall);
-                        if (pq.Contains(nextPoint))
-                            pq.UpdatePriority(nextPoint, nextPoint.CostWall);
-                        else
-                            pq.Enqueue(nextPoint, nextPoint.CostWall);
-                        if(costTWall == 0)
-                            curPoint.Merge(nextPoint);
+                        if (!vSet.Contains(nextPoint))
+                        {
+                            nextPoint.CostWall.Value = Math.Min(
+                                nextPoint.CostWall.Value,
+                                curPoint.CostWall + costTWall);
+                            if (pq.Contains(nextPoint))
+                                pq.UpdatePriority(nextPoint, nextPoint.CostWall);
+                            else
+                                pq.Enqueue(nextPoint, nextPoint.CostWall);
+                            if(costTWall == 0)
+                                curPoint.Merge(nextPoint);
+                        }
                     });
                 await Configer.SettingsConfig.YieldFrames();
             }
@@ -285,22 +284,22 @@ internal class MapManager : SingletonCS<MapManager>
             throw;
         }
     }
-    static readonly MyKeyedCollection<Vector3, BoxModel> boxModel3DDic = new(b => b.transform.position);
+    static readonly MyKeyedCollection<Vector3, BoxModel> boxModelMyDic = new(b => b.transform.position);
     static async Task SpawnBox3D(BoxData fBoxData)
     {
         var boxModel = await boxPool.MyInstantiate();
         boxModel.ReadData(fBoxData);
-        boxModel3DDic.Add(boxModel);
+        boxModelMyDic.MyAdd(boxModel);
     }
         
     static void DestroyBox(BoxData fBoxData)
     {
         var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
-        boxPool.MyDestroy(boxModel3DDic[pos3D]);
-        boxModel3DDic.Remove(pos3D);
+        boxPool.MyDestroy(boxModelMyDic[pos3D]);
+        boxModelMyDic.MyRemove(pos3D);
     }
     #endregion
     
     
-    public static BoxModel FirstBoxModel => boxModel3DDic.First();
+    public static BoxModel FirstBoxModel => boxModelMyDic.First();
 }

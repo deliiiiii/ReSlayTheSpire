@@ -5,19 +5,29 @@ using UnityEngine;
 
 namespace Violee;
 
-// [Serializable]
+public struct SceneItemC2D(HashSet<EBoxDir> dirSet)
+{
+    public readonly HashSet<EBoxDir> DirSet = dirSet;
+}
+
+[Serializable]
 public class SceneItemData : DataBase
 {
-    public SceneItemData(SceneItemConfig config)
+    [NonSerialized] public Transform Parent = null!;
+    [NonSerialized] public SceneItemModel ObjIns = null!;
+    public SceneItemData(SceneItemConfig config, SceneItemC2D param)
     {
+        Obj = config.Object;
+        OccupyDirSet = param.DirSet;
         if (config.HasCount)
         {
             HasCount = true;
             count = config.Count;
         }
     }
-    
-    public HashSet<EBoxDir> OccupyDirSet = [];
+
+    public GameObject Obj;
+    public HashSet<EBoxDir> OccupyDirSet;
     // protected readonly SceneItemConfig Config;
     public readonly bool HasCount;
     int count;
@@ -50,13 +60,13 @@ public class SceneItemData : DataBase
     
     protected virtual void UseEffect(){}
 
-    public static SceneItemData CreateData<T>(T config) where T : SceneItemConfig
+    public static SceneItemData ReadConfig<T>(T config, SceneItemC2D param) where T : SceneItemConfig
     {
         if (config is PurpleSceneItemConfig purpleConfig)
         {
-            return new PurpleSceneItemData(purpleConfig);
+            return new PurpleSceneItemData(purpleConfig, param);
         }
-        return new SceneItemData(config);
+        return new SceneItemData(config, param);
     }
 }
 
@@ -64,7 +74,8 @@ public class SceneItemData : DataBase
 [Serializable]
 public class PurpleSceneItemData : SceneItemData
 {
-    public PurpleSceneItemData(PurpleSceneItemConfig config) : base(config)
+    public PurpleSceneItemData(PurpleSceneItemConfig config, SceneItemC2D param)
+        : base(config, param)
     {
         Energy = config.Energy;
     }

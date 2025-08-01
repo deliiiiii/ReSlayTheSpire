@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
+﻿using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee
@@ -17,42 +13,33 @@ namespace Violee
         protected override void OnReadData()
         {
             name = $"Box {data.Pos2D.x} {data.Pos2D.y}";
-            
-            data.PointKList.ForEach(p =>
+            transform.position = BoxHelper.Pos2DTo3DBox(data.Pos2D);
+            wallDic.Values.ForEach(g => g.gameObject.SetActive(false));
+            data.PointDataMyDic.ForEach(p =>
             {
                 pointDic[p.Dir].ReadData(p);
             });
-            
-            data.OnWallDataChanged += OnWallDataChanged;
-            data.WallKList.ForEach(OnWallDataChanged);
-            transform.position = BoxHelper.Pos2DTo3DBox(data.Pos2D);
+            data.WallDataMyDic.ForEach(OnAddWallData);
+            data.OnAddWallData += OnAddWallData;
+            data.OnRemoveWallData += OnRemoveWallData;
         }
 
-        void OnWallDataChanged(WallData wallData)
+        public void OnAddWallData(WallData wallData)
         {
             wallDic[wallData.WallType].ReadData(wallData);
+        }
+
+        public void OnRemoveWallData(EWallType wallType)
+        {
+            wallDic[wallType].gameObject.SetActive(false);
         }
 
         #region SceneItem
         public void CreateSceneItemModel(EBoxDir dir, SceneItemConfig sceneItemConfig)
         {
-            var sceneItemData = SceneItemData.CreateData(sceneItemConfig);
-            sceneItemData.OccupyDirSet = [dir];
-            data.SceneItemList.Add(sceneItemData);
-            var obj = Instantiate(sceneItemConfig.Object);
-            var localPos = obj.transform.localPosition;
-            var dtRot = dir switch
-            {
-                EBoxDir.Up => Quaternion.Euler(0, 0, 0),
-                EBoxDir.Right => Quaternion.Euler(0, 90, 0),
-                EBoxDir.Down => Quaternion.Euler(0, 180, 0),
-                _ => Quaternion.Euler(0, 270, 0),
-            };
-            obj.transform.localPosition = dtRot * localPos;
-            obj.transform.localRotation *= dtRot;
-            obj.transform.parent = pointDic[dir].transform;
-            obj.GetOrAddComponent<SceneItemModel>().ReadData(sceneItemData);
-            obj.SetActive(true);
+            var sceneItemData = SceneItemData.ReadConfig(sceneItemConfig, new([dir]));
+            sceneItemData.Parent = pointDic[dir].transform;
+            data.SceneDataList.MyAdd(sceneItemData);
         }
         
 

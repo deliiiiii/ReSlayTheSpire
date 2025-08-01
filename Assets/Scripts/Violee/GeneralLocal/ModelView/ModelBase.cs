@@ -9,7 +9,9 @@ namespace Violee;
 public interface IModelBase;
 public abstract class ModelBase<TData> : MonoBehaviour, IModelBase where TData : DataBase
 {
-    [ReadOnly] protected TData data = null!;
+    [ReadOnly] 
+    // [ShowInInspector]
+    protected TData data = null!;
     public void ReadData(TData fData)
     {
         data = fData;
@@ -17,7 +19,3 @@ public abstract class ModelBase<TData> : MonoBehaviour, IModelBase where TData :
     }
     protected abstract void OnReadData();
 }
-
-
-[Serializable]
-public abstract class DataBase;

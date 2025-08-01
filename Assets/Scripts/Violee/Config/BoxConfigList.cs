@@ -8,8 +8,8 @@ namespace Violee
     public class BoxConfigList : ScriptableObject
     {
         public float DoorPossibility;
-        public List<BoxConfig> BoxConfigs = [];
         [MinValue(0.4)][MaxValue(0.5)]
         public float WalkInTolerance = 0.45f;
+        public List<BoxConfig> BoxConfigs = [];
     }
 }

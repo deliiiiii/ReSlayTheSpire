@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using JetBrains.Annotations;
 
 [Serializable]
 [System.Runtime.InteropServices.ComVisible(false)]
@@ -27,10 +28,15 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
     int keyCount;
     int threshold;
     Func<TItem, TKey> keyMapper;
-
-    public MyKeyedCollection(Func<TItem, TKey> keyMapper) : this()
+    [CanBeNull] public event Action<TItem> OnAdd;
+    [CanBeNull] public event Action<TKey> OnRemove;
+    public MyKeyedCollection(Func<TItem, TKey> keyMapper, 
+        [CanBeNull] Action<TItem> onAdd = null, [CanBeNull] Action<TKey> onRemove = null) 
+        : this()
     {
         this.keyMapper = keyMapper;
+        this.OnAdd = onAdd;
+        this.OnRemove = onRemove;
     }
     protected MyKeyedCollection(): this(null, DefaultThreshold) {}
 
@@ -89,7 +95,7 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
     }
     public bool TryGetValue(TKey key, out TItem item) => Dict.TryGetValue(key, out item);
 
-    private bool ContainsItem(TItem item) {                        
+    bool ContainsItem(TItem item) {                        
         TKey key;
         if( (Dict == null) || ((key = GetKeyForItem(item)) == null)) {
             return Items.Contains(item);
@@ -99,7 +105,18 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
         return exist && EqualityComparer<TItem>.Default.Equals(itemInDict, item);
     }
 
-    public bool Remove(TKey key) {
+    public new void Add(TItem item)
+    {
+        MyDebug.LogError("Please Call MyAdd() instead");
+    }
+
+    public void MyAdd(TItem item)
+    {
+        base.Add(item);
+        OnAdd?.Invoke(item);
+    }
+
+    bool Remove(TKey key) {
         if( key == null) {
             // ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
             throw new ArgumentNullException(nameof(key), "Key cannot be null.");
@@ -121,7 +138,29 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
 
     public new bool Remove(TItem item)
     {
+        MyDebug.Log("Please Call MyRemove() instead");
+        return false;
+    }
+
+    public bool MyRemove(TKey key)
+    {
+        var ret = Remove(key);
+        if (ret)
+            OnRemove?.Invoke(key);
+        return ret;
+    }
+    public bool MyRemove(TItem item)
+    {
         return Remove(GetKeyForItem(item));
+    }
+
+    public new void Clear()
+    {
+        MyDebug.LogError("Please Call MyRemove() instead");
+    }
+    public void MyClear()
+    {
+        base.Clear();
     }
     
     protected IDictionary<TKey,TItem> Dictionary => Dict;
