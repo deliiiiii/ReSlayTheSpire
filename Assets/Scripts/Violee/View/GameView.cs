@@ -21,22 +21,22 @@ namespace Violee.View
                 Binder.From(PlayerManager.Energy.Count).ToTxt(EnergyTxt).Immediate();
                 Binder.From(PlayerManager.Gloves.Count).ToTxt(GlovesTxt).Immediate();
                 Binder.From(PlayerManager.Dice.Count).ToTxt(DiceTxt).Immediate();
-            }).OnExit(() => MiniItemPnl.SetActive(false));
-            
-            GameManager.PausedState
-                .OnEnter(() => PausePnl.SetActive(true))
-                .OnExit(() => PausePnl.SetActive(false));
-
-            Binder.Update(SwitchMap, EUpdatePri.Input);
-            Binder.From(PlayerManager.GetReticleCb).To(v =>
+            }).OnUpdate(_ =>
             {
-                var cb = v();
+                var cb = PlayerManager.ReticleCb;
                 NormalReticle.SetActive(cb == null);
                 FindReticle.SetActive(cb != null);
                 SceneItemInfoPnl.SetActive(cb != null);
                 SceneItemInfoTxt.text = cb?.Des ?? "";
                 SceneItemInfoTxt.color = cb?.Color ?? Color.black;
-            }).Immediate();
+            }).OnExit(() => MiniItemPnl.SetActive(false));
+            
+            GameManager.PausedState
+                .OnEnter(() => PausePnl.SetActive(true))
+                .OnExit(() => PausePnl.SetActive(false));
+            
+
+            Binder.Update(SwitchMap, EUpdatePri.Input);
             Binder.From(ContinueBtn).To(GameManager.ContinueFromPause);
         }
 

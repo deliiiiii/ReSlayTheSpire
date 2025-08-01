@@ -1,38 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Violee;
 
-[Serializable]
-public abstract class SceneItemData : DataBase
+// [Serializable]
+public class SceneItemData : DataBase
 {
-    public readonly SceneItemConfig Config;
+    
+    public SceneItemData(SceneItemConfig config)
+    {
+        if (config.HasCount)
+        {
+            HasCount = true;
+            count = config.Count;
+        }
+    }
+    
     public HashSet<EBoxDir> OccupyDirSet = [];
-    public abstract string GetDes();
-
+    // protected readonly SceneItemConfig Config;
+    public readonly bool HasCount;
+    int count;
+    public event Action? OnRunOut;
+    
+    public virtual string GetDes() => "Simple Item...";
+    public void Use()
+    {
+        if (HasCount)
+        {
+            count--;
+            if (count <= 0)
+            {
+                OnRunOut?.Invoke();
+            }
+        }
+    }
+    public bool CanUse()
+    {
+        if (HasCount)
+            return count >= 0;
+        return true;
+    }
     public Color DesColor() => this switch
     {
         PurpleSceneItemData => Color.magenta,
         _ => Color.black,
     };
-    
-    public SceneItemData(SceneItemConfig config)
-    {
-        Config = config;
-    }
 }
 
+
+[Serializable]
 public class PurpleSceneItemData : SceneItemData
 {
-    public int Count;
-    public int Energy => (Config as PurpleSceneItemConfig)!.Energy;
-
-    public PurpleSceneItemData(PurpleSceneItemConfig config, int count) : base(config)
+    public PurpleSceneItemData(PurpleSceneItemConfig config) : base(config)
     {
-        Count = count;
+        Energy = config.Energy;
     }
 
+    public int Energy;
     public override string GetDes()
     {
         return $"休息一下: +{Energy} 精力";

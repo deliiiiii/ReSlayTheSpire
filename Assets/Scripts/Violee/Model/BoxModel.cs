@@ -34,15 +34,11 @@ namespace Violee
         }
 
         #region SceneItem
-        public void AddSceneItemAtOnePoint(EBoxDir dir, SceneItemConfig sceneItemConfig)
+        public void CreateSceneItemModel(EBoxDir dir, SceneItemConfig sceneItemConfig)
         {
-            var sceneItemData = sceneItemConfig switch
-            {
-                PurpleSceneItemConfig c => new PurpleSceneItemData(c, c.Count),
-                _ => null!,
-            };
+            var sceneItemData = new SceneItemData(sceneItemConfig);
+            sceneItemData.OccupyDirSet = [dir];
             data.SceneItemList.Add(sceneItemData);
-            
             var obj = Instantiate(sceneItemConfig.Object);
             var localPos = obj.transform.localPosition;
             var dtRot = dir switch
@@ -55,7 +51,7 @@ namespace Violee
             obj.transform.localPosition = dtRot * localPos;
             obj.transform.localRotation *= dtRot;
             obj.transform.parent = pointDic[dir].transform;
-            obj.AddComponent<SceneItemModel>().ReadData(sceneItemData);
+            obj.GetOrAddComponent<SceneItemModel>().ReadData(sceneItemData);
             obj.SetActive(true);
         }
         

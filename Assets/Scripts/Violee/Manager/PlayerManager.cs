@@ -12,7 +12,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
     static PlayerManager()
     {
         playerModel = Configer.PlayerModel;
-        playerModel.Fpc.enabled = false;
     }
     public static MiniItemData Stamina => playerData.Stamina;
     public static MiniItemData Energy => playerData.Energy;
@@ -26,13 +25,11 @@ public class PlayerManager : SingletonCS<PlayerManager>
     }
     public static void OnEnterPlaying()
     {
-        playerModel.Fpc.enabled = true;
         playerModel.gameObject.SetActive(true);
     }
         
     public static void OnExitPlaying()
-    {
-        playerModel.Fpc.enabled = false;    
+    {   
         playerModel.gameObject.SetActive(false);
     }
 
@@ -41,8 +38,9 @@ public class PlayerManager : SingletonCS<PlayerManager>
         playerModel.Fpc.Tick();
         if (Input.GetMouseButtonDown(0))
         {
-            GetReticleCb.Value!()?.Cb.Invoke();
-            OnClickReticle?.Invoke();
+            ReticleCb?.Cb.Invoke();
+            if(ReticleCb != null)
+                OnClickReticle?.Invoke();
         }
     }
 
@@ -51,7 +49,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     #region SceneItem
 
-    public static readonly Observable<Func<SceneItemCb?>> GetReticleCb = new(() => null);
+    public static SceneItemCb? ReticleCb = null;
     public static event Action? OnClickReticle;
     public static void AddEnergy(int added)
     {

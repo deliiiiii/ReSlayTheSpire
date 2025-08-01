@@ -17,6 +17,6 @@ public class MapModel : MonoBehaviour
     [Button]
     public void Test()
     {
-        MapManager.FirstBoxModel.AddSceneItemAtOnePoint(D, c);
+        MapManager.FirstBoxModel.CreateSceneItemModel(D, c);
     }
 }

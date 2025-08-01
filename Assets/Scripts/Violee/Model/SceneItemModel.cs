@@ -1,4 +1,5 @@
 ﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using Violee.Interact;
@@ -7,13 +8,26 @@ namespace Violee;
 
 public class SceneItemModel : ModelBase<SceneItemData>
 {
-    InteractReceiver? ir;
+    [ShowInInspector] SceneItemData shownData => data;
+
+    public required GameObject HideAfterRunOut;
+    public required GameObject ShowAfterRunOut;
+    
     protected override void OnReadData()
     {
-        ir ??= gameObject.GetComponentInChildren<InteractReceiver>();
-        ir.OnEnterInteract += () => PlayerManager.GetReticleCb.Value = GetCb;
-        ir.OnExitInteract += () => PlayerManager.GetReticleCb.Value = () => null;
-        PlayerManager.OnClickReticle += () => PlayerManager.GetReticleCb.Value = GetCb;
+        if (data.HasCount)
+        {
+            data.OnRunOut += () =>
+            {
+                HideAfterRunOut.SetActive(false);
+                ShowAfterRunOut.SetActive(true);
+            };
+        }
+        
+        var ir = gameObject.GetComponentInChildren<InteractReceiver>();
+        ir.OnEnterInteract += () => PlayerManager.ReticleCb = GetCb();
+        ir.OnExitInteract += () => PlayerManager.ReticleCb = null;
+        PlayerManager.OnClickReticle += () => PlayerManager.ReticleCb = GetCb();
     }
 
     SceneItemCb? GetCb()
@@ -22,17 +36,23 @@ public class SceneItemModel : ModelBase<SceneItemData>
         {
             Des = data.GetDes(),
             Color = data.DesColor(),
-            Cb = data switch
+            Cb = !data.CanUse() ? null! : data switch
             {
-                PurpleSceneItemData { Count: > 0 } pData => () => 
+                PurpleSceneItemData pData => () => 
                 {
                     PlayerManager.AddEnergy(pData.Energy);
-                    pData.Count--;
+                    pData.Use();
                 },
                 _ => null!,
             }
         };
-        return ret.Cb == null! ? null : ret;
+        if (ret.Cb == null!)
+            return null;
+        ret.Cb += () =>
+        {
+            PlayerManager.ReticleCb = GetCb();
+        };
+        return ret;
     }
 }
 
