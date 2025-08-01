@@ -11,6 +11,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
     static PlayerData playerData => playerModel.PlayerData;
     static PlayerManager()
     {
+        MyDebug.Log($"PlayerManager static ctor");
         playerModel = Configer.PlayerModel;
     }
     public static MiniItemData Stamina => playerData.Stamina;
@@ -36,7 +37,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
         playerModel.Fpc.Tick();
         if (Input.GetMouseButtonDown(0))
         {
-            GetReticleCb.Value!()?.Invoke();
+            GetReticleCb.Value!()?.Cb.Invoke();
             OnClickReticle?.Invoke();
         }
     }
@@ -46,7 +47,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     #region SceneItem
 
-    public static readonly Observable<Func<Action?>> GetReticleCb = new(() => null);
+    public static readonly Observable<Func<SceneItemCb?>> GetReticleCb = new(() => null);
     public static event Action? OnClickReticle;
     public static void AddEnergy(int added)
     {

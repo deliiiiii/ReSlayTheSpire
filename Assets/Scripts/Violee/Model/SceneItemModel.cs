@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using Violee.Interact;
 
@@ -15,16 +16,29 @@ public class SceneItemModel : ModelBase<SceneItemData>
         PlayerManager.OnClickReticle += () => PlayerManager.GetReticleCb.Value = GetCb;
     }
 
-    Action? GetCb()
+    SceneItemCb? GetCb()
     {
-        return data switch
+        var ret = new SceneItemCb
         {
-            PurpleSceneItemData { Count: > 0 } pData => () =>
+            Des = data.GetDes(),
+            Color = data.DesColor(),
+            Cb = data switch
             {
-                PlayerManager.AddEnergy(pData.Energy);
-                pData.Count--;
-            },
-            _ => null,
+                PurpleSceneItemData { Count: > 0 } pData => () => 
+                {
+                    PlayerManager.AddEnergy(pData.Energy);
+                    pData.Count--;
+                },
+                _ => null!,
+            }
         };
+        return ret.Cb == null! ? null : ret;
     }
+}
+
+public class SceneItemCb
+{
+    public required string Des;
+    public required Color Color;
+    public required Action Cb;
 }

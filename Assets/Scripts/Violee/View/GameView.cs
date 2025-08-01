@@ -22,19 +22,26 @@ namespace Violee.View
                 Binder.From(PlayerManager.Dice.Count).ToTxt(DiceTxt).Immediate();
             });
             GameManager.PlayingState.OnExit(() => MiniItemPnl.SetActive(false));
+            GameManager.PausedState.OnEnter(() => PausePnl.SetActive(true));
+            GameManager.PausedState.OnExit(() => PausePnl.SetActive(false));
 
             Binder.From(PlayerManager.GetReticleCb).To(v =>
-                {
-                    NormalReticle.SetActive(v() == null);
-                    FindReticle.SetActive(v() != null);
-                }).Immediate();
+            {
+                var cb = v();
+                NormalReticle.SetActive(cb == null);
+                FindReticle.SetActive(cb != null);
+                SceneItemInfoPnl.SetActive(cb != null);
+                SceneItemInfoTxt.text = cb?.Des ?? "";
+                SceneItemInfoTxt.color = cb?.Color ?? Color.black;
+            }).Immediate();
         }
         
         public required Button ReGenerateBtn;
         
 
-        [Header("Load")]
+        [Header("Load & Pause")]
         public required GameObject LoadPnl;
+        public required GameObject PausePnl;
 
         #region Minimap
         public required RenderTexture TarTexture;
@@ -110,8 +117,11 @@ namespace Violee.View
 
 
         #region SceneItem
+        [Header("SceneItem")]
         public required GameObject NormalReticle;
         public required GameObject FindReticle;
+        public required GameObject SceneItemInfoPnl;
+        public required Text SceneItemInfoTxt;
         #endregion
     }
 }

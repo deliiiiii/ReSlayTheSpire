@@ -39,7 +39,7 @@ namespace Violee
             var sceneItemData = sceneItemConfig switch
             {
                 PurpleSceneItemConfig c => new PurpleSceneItemData(c, c.Count),
-                _ => new SceneItemData(sceneItemConfig),
+                _ => null!,
             };
             data.SceneItemList.Add(sceneItemData);
             
