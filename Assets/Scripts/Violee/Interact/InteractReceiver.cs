@@ -7,7 +7,7 @@ namespace Violee.Interact
     public class InteractReceiver : MonoBehaviour
     {
         public event Action? OnEnterInteract;
-        public event Action? OnLeaveInteract;
+        public event Action? OnExitInteract;
 
         // event
         public void EnterInteract()
@@ -15,9 +15,9 @@ namespace Violee.Interact
             OnEnterInteract?.Invoke();
         }
 
-        public void LeaveInteract()
+        public void ExitInteract()
         {
-            OnLeaveInteract?.Invoke();
+            OnExitInteract?.Invoke();
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public class Observable<T> where T: IComparable
+public class Observable<T>
 {
     [SerializeField] [CanBeNull] T value;
     [CanBeNull]
@@ -15,10 +15,15 @@ public class Observable<T> where T: IComparable
         set
         {
             var oldV = this.value;
-            if (value?.CompareTo(oldV) == 0)
+            if (value is IComparable com)
             {
-                return;
+                if (com.CompareTo(oldV) == 0)
+                {
+                    return;
+                }
             }
+            else if (value != null && value.Equals(oldV))
+                return;
             OnValueChangedBefore?.Invoke(oldV);
             this.value = value;
             OnValueChangedAfter?.Invoke(this.value);

@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BindDataAct<T> where T : IComparable
+public class BindDataAct<T>
 {
     protected Observable<T> osv;
     protected UnityAction<T> act;
@@ -49,36 +49,10 @@ public class BindDataAct<T> where T : IComparable
         latestAct(osv.Value);
         return this;
     }
-
-
-    float startEvery;
-
+    
     public BindDataAct(Observable<T> osv)
     {
         this.osv = osv;
-    }
-
-    public BindDataAct<T> CulminateEvery(float every, int everyMaxCount = 1000)
-    {
-        BeforeTo();
-        var tempAct = act;
-        startEvery = osv;
-        act = (newV) =>
-        {
-            int tempCount = 0;
-            while (true)
-            {
-                if (tempCount >= everyMaxCount)
-                    break;
-                if (osv.Value.CompareTo(startEvery + every) < 0)
-                    break;
-                tempAct(newV);
-                startEvery += every;
-                tempCount++;
-            }
-        };
-        AfterTo();
-        return this;
     }
     
     public BindDataAct<T> UnBind()

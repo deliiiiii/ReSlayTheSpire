@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.UI;
 
-public class BindDataActTxt<T> : BindDataAct<T> where T : IComparable
+public class BindDataActTxt<T> : BindDataAct<T>
 {
     public BindDataActTxt(Observable<T> osv, Text txt) : base(osv)
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.UI;
 
-public class BindDataActImg<T> : BindDataAct<T> where T : IComparable
+public class BindDataActImg<T> : BindDataAct<T>
 {
     public BindDataActImg(Observable<T> osv, Image img, Func<float, float> func) : base(osv)
     {

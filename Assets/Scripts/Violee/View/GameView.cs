@@ -22,11 +22,21 @@ namespace Violee.View
                 Binder.From(PlayerManager.Dice.Count).ToTxt(DiceTxt).Immediate();
             });
             GameManager.PlayingState.OnExit(() => MiniItemPnl.SetActive(false));
-            
 
+            Binder.From(PlayerManager.GetReticleCb).To(v =>
+                {
+                    NormalReticle.SetActive(v() == null);
+                    FindReticle.SetActive(v() != null);
+                }).Immediate();
         }
         
         public required Button ReGenerateBtn;
+        
+
+        [Header("Load")]
+        public required GameObject LoadPnl;
+
+        #region Minimap
         public required RenderTexture TarTexture;
         public required CinemachineVirtualCamera MinimapCameraVirtual;
         public required Camera MinimapCamera;
@@ -34,17 +44,6 @@ namespace Violee.View
         public required RawImage FullScreenImg;
         public float ChangeSpeed = 1.2f;
         public float MiniSize = 12f;
-
-        [Header("Load")]
-        public required GameObject LoadPnl;
-
-        [Header("MiniItem")] 
-        public required GameObject MiniItemPnl;
-        public required Text StaminaTxt;
-        public required Text EnergyTxt;
-        public required Text GlovesTxt;
-        public required Text DiceTxt;
-        
         bool isMinimap => MinimapImg.enabled;
         void SwitchMap(float dt)
         {
@@ -95,5 +94,24 @@ namespace Violee.View
             MinimapImg.texture = TarTexture;
             FullScreenImg.texture = TarTexture;
         }
+        
+
+        #endregion
+        
+        
+        #region MiniItem
+        [Header("MiniItem")] 
+        public required GameObject MiniItemPnl;
+        public required Text StaminaTxt;
+        public required Text EnergyTxt;
+        public required Text GlovesTxt;
+        public required Text DiceTxt;
+        #endregion
+
+
+        #region SceneItem
+        public required GameObject NormalReticle;
+        public required GameObject FindReticle;
+        #endregion
     }
 }

@@ -34,13 +34,20 @@ public class PlayerManager : SingletonCS<PlayerManager>
     public static void Tick(float dt)
     {
         playerModel.Fpc.Tick();
+        if (Input.GetMouseButtonDown(0))
+        {
+            GetReticleCb.Value!()?.Invoke();
+            OnClickReticle?.Invoke();
+        }
     }
 
     public static Vector3 GetPos => playerModel.transform.position;
 
 
     #region SceneItem
-    
+
+    public static readonly Observable<Func<Action?>> GetReticleCb = new(() => null);
+    public static event Action? OnClickReticle;
     public static void AddEnergy(int added)
     {
         playerData.Energy.Count.Value += added;

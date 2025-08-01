@@ -14,6 +14,6 @@ public abstract class SceneItemConfig
 [Serializable]
 public class PurpleSceneItemConfig : SceneItemConfig
 {
-    public readonly int Energy;
-    public readonly int Count = 1;
+    public int Energy;
+    public int Count = 1;
 }
