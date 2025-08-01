@@ -26,7 +26,6 @@ internal class MapManager : SingletonCS<MapManager>
     static readonly ObjectPool<BoxModel> boxPool;
     static MapManager()
     {
-        MyDebug.Log($"MapManager static ctor");
         mapModel = Configer.MapModel;
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, Instance.go.transform, 42);
         

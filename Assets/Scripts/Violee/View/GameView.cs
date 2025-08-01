@@ -34,17 +34,21 @@ namespace Violee.View
                 SceneItemInfoTxt.text = cb?.Des ?? "";
                 SceneItemInfoTxt.color = cb?.Color ?? Color.black;
             }).Immediate();
+
+            canvasScaler = GetComponent<CanvasScaler>();
         }
-        
-        public required Button ReGenerateBtn;
-        
 
         [Header("Load & Pause")]
         public required GameObject LoadPnl;
         public required GameObject PausePnl;
 
         #region Minimap
+
+        [Header("Minimap")]
+        CanvasScaler canvasScaler = null!;
         public required RenderTexture TarTexture;
+
+        public required RectTransform FullScreenMapRect;
         public required CinemachineVirtualCamera MinimapCameraVirtual;
         public required Camera MinimapCamera;
         public required RawImage MinimapImg;
@@ -85,8 +89,9 @@ namespace Violee.View
         void ShowFullScreenMap()
         {
             // 设置gameObject的 RectTransform长宽
-            FullScreenImg.gameObject.GetComponent<RectTransform>().sizeDelta  = new Vector2(Screen.height, Screen.height);
-            RefreshTexture(Screen.height, Screen.height);
+            FullScreenImg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.height, Screen.height);
+            MyDebug.Log("ShowFullScreenMap " + Screen.height);
+            RefreshTexture(Screen.width, Screen.height);
             FullScreenImg.enabled = true;
             MinimapImg.enabled = false;
         }
@@ -94,9 +99,10 @@ namespace Violee.View
         void RefreshTexture(int width, int height)
         {
             TarTexture.Release();
-            TarTexture.width = width;
+            TarTexture.width = height;
             TarTexture.height = height;
             TarTexture.Create();
+            FullScreenMapRect.sizeDelta = new Vector2(height, height);
             MinimapCamera.targetTexture = TarTexture;
             MinimapImg.texture = TarTexture;
             FullScreenImg.texture = TarTexture;

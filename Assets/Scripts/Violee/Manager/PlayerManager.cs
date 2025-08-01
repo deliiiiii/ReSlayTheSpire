@@ -11,19 +11,20 @@ public class PlayerManager : SingletonCS<PlayerManager>
     static PlayerData playerData => playerModel.PlayerData;
     static PlayerManager()
     {
-        MyDebug.Log($"PlayerManager static ctor");
         playerModel = Configer.PlayerModel;
     }
     public static MiniItemData Stamina => playerData.Stamina;
     public static MiniItemData Energy => playerData.Energy;
     public static MiniItemData Gloves => playerData.Gloves;
     public static MiniItemData Dice => playerData.Dice;
-        
 
-    public static void OnEnterPlaying(Vector3 pos3D)
+    public static void OnDijkstraEnd(Vector3 pos3D)
     {
         playerModel.transform.position = pos3D + Vector3.up * (1.5f * playerModel.transform.position.y);
         playerModel.PlayerData = new PlayerData();
+    }
+    public static void OnEnterPlaying()
+    {
         playerModel.gameObject.SetActive(true);
     }
         
@@ -39,6 +40,16 @@ public class PlayerManager : SingletonCS<PlayerManager>
         {
             GetReticleCb.Value!()?.Cb.Invoke();
             OnClickReticle?.Invoke();
+        }
+        if(Input.GetKey(KeyCode.LeftAlt))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
 

@@ -2,29 +2,34 @@
 
 public class BindDataState
 {
-    MyState state;
+    internal MyState state;
     public BindDataState(MyState state)
     {
         this.state = state;
     }
 
-    public BindDataState OnEnter(Action act)
-    {
-        state.OnEnter += act;
-        return this;
-    }
-    
-    public BindDataState OnExit(Action act)
-    {
-        state.OnExit += act;
-        return this;
-    }
-    
-    public BindDataState OnUpdate(Action<float> act)
-    {
-        state.OnUpdate += act;
-        return this;
-    }
+   
     
     //TODO UnBind()
+}
+
+public static class BindDataStateExt
+{
+    public static BindDataState OnEnter(this BindDataState self, Action act)
+    {
+        self.state.OnEnter += act;
+        return self;
+    }
+    
+    public static BindDataState OnExit(this BindDataState self, Action act)
+    {
+        self.state.OnExit += act;
+        return self;
+    }
+    
+    public static BindDataState OnUpdate(this BindDataState self, Action<float> act)
+    {
+        self.state.OnUpdate += act;
+        return self;
+    }
 }
