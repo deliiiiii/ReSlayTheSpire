@@ -8,7 +8,6 @@ namespace Violee;
 // [Serializable]
 public class SceneItemData : DataBase
 {
-    
     public SceneItemData(SceneItemConfig config)
     {
         if (config.HasCount)
@@ -39,7 +38,7 @@ public class SceneItemData : DataBase
     public bool CanUse()
     {
         if (HasCount)
-            return count >= 0;
+            return count > 0;
         return true;
     }
     public Color DesColor() => this switch
@@ -47,6 +46,17 @@ public class SceneItemData : DataBase
         PurpleSceneItemData => Color.magenta,
         _ => Color.black,
     };
+    
+    protected virtual void UseEffect(){}
+
+    public static SceneItemData CreateData<T>(T config) where T : SceneItemConfig
+    {
+        if (config is PurpleSceneItemConfig purpleConfig)
+        {
+            return new PurpleSceneItemData(purpleConfig);
+        }
+        return new SceneItemData(config);
+    }
 }
 
 
@@ -62,5 +72,11 @@ public class PurpleSceneItemData : SceneItemData
     public override string GetDes()
     {
         return $"休息一下: +{Energy} 精力";
+    }
+
+    protected override void UseEffect()
+    {
+        base.UseEffect();
+        PlayerManager.AddEnergy(Energy);
     }
 }

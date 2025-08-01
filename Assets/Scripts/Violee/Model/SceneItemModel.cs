@@ -27,32 +27,23 @@ public class SceneItemModel : ModelBase<SceneItemData>
         var ir = gameObject.GetComponentInChildren<InteractReceiver>();
         ir.OnEnterInteract += () => PlayerManager.ReticleCb = GetCb();
         ir.OnExitInteract += () => PlayerManager.ReticleCb = null;
-        PlayerManager.OnClickReticle += () => PlayerManager.ReticleCb = GetCb();
+        // PlayerManager.OnClickReticle += () => PlayerManager.ReticleCb = GetCb();
     }
 
     SceneItemCb? GetCb()
     {
-        var ret = new SceneItemCb
+        if (!data.CanUse())
+            return null;
+        return new SceneItemCb
         {
             Des = data.GetDes(),
             Color = data.DesColor(),
-            Cb = !data.CanUse() ? null! : data switch
+            Cb = () => 
             {
-                PurpleSceneItemData pData => () => 
-                {
-                    PlayerManager.AddEnergy(pData.Energy);
-                    pData.Use();
-                },
-                _ => null!,
-            }
+                data.Use();
+                PlayerManager.ReticleCb = GetCb();
+            },
         };
-        if (ret.Cb == null!)
-            return null;
-        ret.Cb += () =>
-        {
-            PlayerManager.ReticleCb = GetCb();
-        };
-        return ret;
     }
 }
 
@@ -60,5 +51,5 @@ public class SceneItemCb
 {
     public required string Des;
     public required Color Color;
-    public required Action Cb;
+    public Action? Cb;
 }

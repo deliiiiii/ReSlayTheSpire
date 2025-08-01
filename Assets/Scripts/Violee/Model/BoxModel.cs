@@ -36,7 +36,7 @@ namespace Violee
         #region SceneItem
         public void CreateSceneItemModel(EBoxDir dir, SceneItemConfig sceneItemConfig)
         {
-            var sceneItemData = new SceneItemData(sceneItemConfig);
+            var sceneItemData = SceneItemData.CreateData(sceneItemConfig);
             sceneItemData.OccupyDirSet = [dir];
             data.SceneItemList.Add(sceneItemData);
             var obj = Instantiate(sceneItemConfig.Object);
