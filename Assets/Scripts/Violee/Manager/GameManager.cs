@@ -65,13 +65,14 @@ public class GameManager : Singleton<GameManager>
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-        else if(isPaused && Application.isFocused)
-        {
-            gameFsm.ChangeState(stateBeforePause);
-            Time.timeScale = 1;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+    }
+
+    public static void ContinueFromPause()
+    {
+        gameFsm.ChangeState(stateBeforePause);
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     static bool isIdle => gameFsm.IsState(EGameState.Idle);

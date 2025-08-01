@@ -8,23 +8,26 @@ namespace Violee.View
     {
         protected override void IBL()
         {
-            Binder.Update(SwitchMap, EUpdatePri.Input);
-            GameManager.GeneratingMapState.OnEnter(() => LoadPnl.SetActive(true));
-            GameManager.GeneratingMapState.OnExit(() => LoadPnl.SetActive(false));
-            GameManager.PlayingState.OnEnter(ShowMinimap);
+            
+            GameManager.GeneratingMapState
+                .OnEnter(() => LoadPnl.SetActive(true))
+                .OnExit(() => LoadPnl.SetActive(false));
             
             GameManager.PlayingState.OnEnter(() =>
             {
                 MiniItemPnl.SetActive(true);
+                ShowMinimap();
                 Binder.From(PlayerManager.Stamina.Count).ToTxt(StaminaTxt).Immediate();
                 Binder.From(PlayerManager.Energy.Count).ToTxt(EnergyTxt).Immediate();
                 Binder.From(PlayerManager.Gloves.Count).ToTxt(GlovesTxt).Immediate();
                 Binder.From(PlayerManager.Dice.Count).ToTxt(DiceTxt).Immediate();
-            });
-            GameManager.PlayingState.OnExit(() => MiniItemPnl.SetActive(false));
-            GameManager.PausedState.OnEnter(() => PausePnl.SetActive(true));
-            GameManager.PausedState.OnExit(() => PausePnl.SetActive(false));
+            }).OnExit(() => MiniItemPnl.SetActive(false));
+            
+            GameManager.PausedState
+                .OnEnter(() => PausePnl.SetActive(true))
+                .OnExit(() => PausePnl.SetActive(false));
 
+            Binder.Update(SwitchMap, EUpdatePri.Input);
             Binder.From(PlayerManager.GetReticleCb).To(v =>
             {
                 var cb = v();
@@ -34,18 +37,19 @@ namespace Violee.View
                 SceneItemInfoTxt.text = cb?.Des ?? "";
                 SceneItemInfoTxt.color = cb?.Color ?? Color.black;
             }).Immediate();
-
+            Binder.From(ContinueBtn).To(GameManager.ContinueFromPause);
             canvasScaler = GetComponent<CanvasScaler>();
         }
 
         [Header("Load & Pause")]
         public required GameObject LoadPnl;
         public required GameObject PausePnl;
+        public required GameObject ContinueBtn;
 
         #region Minimap
 
-        [Header("Minimap")]
         CanvasScaler canvasScaler = null!;
+        [Header("Minimap")]
         public required RenderTexture TarTexture;
 
         public required RectTransform FullScreenMapRect;
