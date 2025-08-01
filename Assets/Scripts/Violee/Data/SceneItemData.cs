@@ -34,6 +34,7 @@ public class SceneItemData : DataBase
                 OnRunOut?.Invoke();
             }
         }
+        UseEffect();
     }
     public bool CanUse()
     {
