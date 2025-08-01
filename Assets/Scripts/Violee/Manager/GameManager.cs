@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using System.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Violee;
@@ -8,6 +9,11 @@ public enum EGameState
     Idle,
     GeneratingMap,
     Playing,
+}
+
+public enum EWindowState
+{
+    None,
     Paused,
 }
 
@@ -15,8 +21,12 @@ public class GameManager : Singleton<GameManager>
 {
     [ShowInInspector]
     static readonly MyFSM<EGameState> gameFsm = new ();
+    [ShowInInspector]
+    static readonly MyFSM<EWindowState> windowFsm = new ();
     public static BindDataState GeneratingMapState = null!;
     public static BindDataState PlayingState = null!;
+    
+    public static BindDataState NoneState = null!;
     public static BindDataState PausedState = null!;
     
     protected override void Awake()
@@ -25,20 +35,43 @@ public class GameManager : Singleton<GameManager>
         Configer.Init();
         GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
         PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
-        PausedState = Binder.From(gameFsm.GetState(EGameState.Paused));
         PlayingState.OnUpdate(dt =>
             {
+                if (Input.GetKey(KeyCode.LeftAlt))
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                }
+                else
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                }
                 MapManager.TickPlayerVisit(PlayerManager.GetPos);
                 PlayerManager.Tick(dt);
             })
             .OnEnter(PlayerManager.OnEnterPlaying)
             .OnExit(PlayerManager.OnExitPlaying);
-            
+        
+        NoneState = Binder.From(windowFsm.GetState(EWindowState.None));
+        PausedState = Binder.From(windowFsm.GetState(EWindowState.Paused));
+        NoneState.OnEnter(() =>
+        {
+            Time.timeScale = 1;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }).OnUpdate(_ => CheckGameWindow());
+        PausedState.OnEnter(() =>
+        {
+            Time.timeScale = 0;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        });
+        
         MapManager.GenerateStream
             .Where(_ => isIdle || isPlaying)
             .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap))
             .OnEnd(_ => gameFsm.ChangeState(EGameState.Idle));
-
         MapManager.DijkstraStream
             .Where(_ => isIdle)
             .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap))
@@ -49,44 +82,39 @@ public class GameManager : Singleton<GameManager>
             });
             
         gameFsm.ChangeState(EGameState.Idle);
-        Binder.Update(gameFsm.Update);
-        Binder.Update(_ => CheckGameWindow());
+        windowFsm.ChangeState(EWindowState.None);
+        
+        Binder.Update(dt =>
+        {
+            if (isPaused)
+                return;
+            gameFsm.Update(dt);
+            windowFsm.Update(dt);
+        });
+        Binder.Update(_ =>
+        {
+            if (!isIdle && !isPlaying)
+                return;
+            if (Input.GetKeyDown(KeyCode.R))
+                Task.FromResult(MapManager.GenerateStream.CallTriggerAsync());
+        }, EUpdatePri.Input);
     }
-
-
-    static EGameState stateBeforePause = EGameState.Idle;
+    public static void UnpauseWindow() => windowFsm.ChangeState(EWindowState.None);
+    
     static void CheckGameWindow()
     {
-        if (isPlaying && !Application.isFocused)
+#pragma warning disable CS0162 // 检测到不可到达的代码
+#if UNITY_EDITOR
+        return;
+#endif
+        if (!Application.isFocused || Input.GetKeyDown(KeyCode.Escape))
         {
-            stateBeforePause = (EGameState)gameFsm.CurState;
-            gameFsm.ChangeState(EGameState.Paused);
-            Time.timeScale = 0;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            windowFsm.ChangeState(EWindowState.Paused);
         }
-        if(Input.GetKey(KeyCode.LeftAlt) || isPaused)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+#pragma warning restore CS0162
     }
-
-    public static void ContinueFromPause()
-    {
-        gameFsm.ChangeState(stateBeforePause);
-        Time.timeScale = 1;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
-    static bool isIdle => gameFsm.IsState(EGameState.Idle);
-    static bool isPlaying => gameFsm.IsState(EGameState.Playing);
-    static bool isPaused => gameFsm.IsState(EGameState.Paused);
+    public static bool isIdle => gameFsm.IsState(EGameState.Idle);
+    public static bool isPlaying => gameFsm.IsState(EGameState.Playing);
+    static bool isPaused => windowFsm.IsState(EWindowState.Paused);
         
 }

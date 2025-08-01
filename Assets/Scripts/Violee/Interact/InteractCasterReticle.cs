@@ -11,26 +11,24 @@ public class InteractCasterReticle : MonoBehaviour
     readonly Observable<InteractReceiver?> curReceiver 
         = new(null, x => x?.ExitInteract(), x => x?.EnterInteract());
 
-    // void Awake()
-    // {
-    //     Binder.Update(_ =>
-    //     {
-    //         var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-    //         var newValue = Physics.Raycast(ray, out var hit, BoxHelper.BoxSize, TarLayer) 
-    //             ? hit.collider.gameObject.GetComponent<InteractReceiver>() 
-    //             : null;
-    //         curReceiver.Value = newValue;
-    //         ;
-    //         // MyDebug.Log(curReceiver.Value == null);
-    //     });
-    // }
-
-    void Update()
+    void Awake()
     {
-        var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        var newValue = Physics.Raycast(ray, out var hit, BoxHelper.BoxSize, TarLayer) 
-            ? hit.collider.gameObject.GetComponent<InteractReceiver>() 
-            : null;
-        curReceiver.Value = newValue;
+        GameManager.PlayingState.OnUpdate(_ =>
+        {
+            var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            var newValue = Physics.Raycast(ray, out var hit, BoxHelper.BoxSize, TarLayer) 
+                ? hit.collider.gameObject.GetComponent<InteractReceiver>() 
+                : null;
+            curReceiver.Value = newValue;
+        });
     }
+
+    // void Update()
+    // {
+    //     var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+    //     var newValue = Physics.Raycast(ray, out var hit, BoxHelper.BoxSize, TarLayer) 
+    //         ? hit.collider.gameObject.GetComponent<InteractReceiver>() 
+    //         : null;
+    //     curReceiver.Value = newValue;
+    // }
 }

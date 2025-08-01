@@ -37,13 +37,6 @@ internal class MapManager : SingletonCS<MapManager>
             .ToStreamAsync(Dijkstra)
             .OnEnd(param => VisitEdgeWalls(param.Value.EdgeWallSet));
         GenerateStream.EndWith(DijkstraStream);
-        
-        Binder.Update(_ =>
-        {
-            if (Input.GetKeyDown(KeyCode.R))
-                Task.FromResult(GenerateStream.CallTriggerAsync());
-        }, EUpdatePri.Input);
-
     }
     
     

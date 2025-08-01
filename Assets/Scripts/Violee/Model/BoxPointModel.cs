@@ -24,6 +24,8 @@ namespace Violee
                     sr.color = sr.color.SetAlpha(alpha / 255f);
                 }
             }).Immediate();
+            
+            gameObject.ClearChildren();
         }
     }
 }

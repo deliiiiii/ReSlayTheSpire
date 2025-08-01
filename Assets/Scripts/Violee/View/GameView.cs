@@ -21,7 +21,7 @@ namespace Violee.View
                 Binder.From(PlayerManager.Energy.Count).ToTxt(EnergyTxt).Immediate();
                 Binder.From(PlayerManager.Gloves.Count).ToTxt(GlovesTxt).Immediate();
                 Binder.From(PlayerManager.Dice.Count).ToTxt(DiceTxt).Immediate();
-            }).OnUpdate(_ =>
+            }).OnUpdate(dt =>
             {
                 var cb = PlayerManager.ReticleCb;
                 NormalReticle.SetActive(cb == null);
@@ -29,15 +29,14 @@ namespace Violee.View
                 SceneItemInfoPnl.SetActive(cb != null);
                 SceneItemInfoTxt.text = cb?.Des ?? "";
                 SceneItemInfoTxt.color = cb?.Color ?? Color.black;
+
+                SwitchMap(dt);
             }).OnExit(() => MiniItemPnl.SetActive(false));
             
             GameManager.PausedState
                 .OnEnter(() => PausePnl.SetActive(true))
                 .OnExit(() => PausePnl.SetActive(false));
-            
-
-            Binder.Update(SwitchMap, EUpdatePri.Input);
-            Binder.From(ContinueBtn).To(GameManager.ContinueFromPause);
+            Binder.From(ContinueBtn).To(GameManager.UnpauseWindow);
         }
 
         [Header("Load & Pause")]

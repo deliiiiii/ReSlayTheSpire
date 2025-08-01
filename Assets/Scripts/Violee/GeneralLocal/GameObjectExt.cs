@@ -13,4 +13,13 @@ public static class GameObjectExt
     {
         return self.GetComponent<T>() ?? self.gameObject.AddComponent<T>();
     }
+
+    public static GameObject ClearChildren(this GameObject self)
+    {
+        for(int i = self.transform.childCount - 1; i >= 0; i--)
+        {
+            GameObject.Destroy(self.transform.GetChild(i).gameObject);
+        }
+        return self;
+    }
 }

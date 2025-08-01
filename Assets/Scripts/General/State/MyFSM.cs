@@ -54,9 +54,11 @@ public class MyFSM<T> where T : Enum
             Launch(e);
             return;
         }
-        var newState = GetState(e);
+        var newStateClass = GetState(e);
+        if (newStateClass == curStateClass)
+            return;
         curStateClass.Exit();
-        curStateClass = newState;
+        curStateClass = newStateClass;
         CurState = e;
         curStateClass.Enter();
     }
