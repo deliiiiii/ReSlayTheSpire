@@ -38,7 +38,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
         playerModel.Fpc.Tick();
         if (Input.GetMouseButtonDown(0))
         {
-            ReticleCb?.Cb.Invoke();
+            ReticleCb?.Cb?.Invoke();
             if(ReticleCb != null)
                 OnClickReticle?.Invoke();
         }
