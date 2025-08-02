@@ -18,13 +18,12 @@ public class MyFSM<T> where T : Enum
     }
 
     MyState curStateClass;
-    [NonSerialized]
-    public Enum CurState;
-    [ShowInInspector]string curStateName => CurState?.ToString() ?? "Null";
+    Enum curState;
+    public string CurStateName => curState?.ToString() ?? "Null";
     void Launch(T startState)
     {
         curStateClass = GetState(startState);
-        CurState = startState;
+        curState = startState;
         curStateClass.Enter();
     }
     
@@ -59,11 +58,11 @@ public class MyFSM<T> where T : Enum
             return;
         curStateClass.Exit();
         curStateClass = newStateClass;
-        CurState = e;
+        curState = e;
         curStateClass.Enter();
     }
     
-    public bool IsState(Enum e) => Equals(CurState, e);
-    public bool IsState(Enum e1, Enum e2) => Equals(CurState, e1) || Equals(CurState, e2);
-    public bool IsState(Enum e1, Enum e2, Enum e3) => Equals(CurState, e1) || Equals(CurState, e2) || Equals(CurState, e3);
+    public bool IsState(Enum e) => Equals(curState, e);
+    public bool IsState(Enum e1, Enum e2) => Equals(curState, e1) || Equals(curState, e2);
+    public bool IsState(Enum e1, Enum e2, Enum e3) => Equals(curState, e1) || Equals(curState, e2) || Equals(curState, e3);
 }

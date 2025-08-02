@@ -17,21 +17,21 @@ public enum EWindowState
     Paused,
 }
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : SingletonCS<GameManager>
 {
-    [ShowInInspector]
     static readonly MyFSM<EGameState> gameFsm = new ();
-    [ShowInInspector]
+    public static string GameState => gameFsm.CurStateName;
+    public static readonly BindDataState GeneratingMapState;
+    public static readonly BindDataState PlayingState;
     static readonly MyFSM<EWindowState> windowFsm = new ();
-    public static BindDataState GeneratingMapState = null!;
-    public static BindDataState PlayingState = null!;
-    
-    public static BindDataState NoneState = null!;
-    public static BindDataState PausedState = null!;
-    
-    protected override void Awake()
+    public static string WindowState => windowFsm.CurStateName;
+    public static readonly BindDataState NoneState;
+    public static readonly BindDataState PausedState;
+
+    public static void Init() => Instance.As();
+
+    static GameManager()
     {
-        base.Awake();
         Configer.Init();
         GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
         PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
@@ -99,8 +99,9 @@ public class GameManager : Singleton<GameManager>
                 Task.FromResult(MapManager.GenerateStream.CallTriggerAsync());
         }, EUpdatePri.Input);
     }
-    public static void UnpauseWindow() => windowFsm.ChangeState(EWindowState.None);
     
+    
+    public static void UnpauseWindow() => windowFsm.ChangeState(EWindowState.None);
     static void CheckGameWindow()
     {
 #pragma warning disable CS0162 // 检测到不可到达的代码

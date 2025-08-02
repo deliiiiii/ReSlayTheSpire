@@ -1,11 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Updater : Singleton<Updater>
 {
+    public static event Action AwakeAct;
     readonly SortedDictionary<EUpdatePri, HashSet<BindDataUpdate>> updateDic = new();
     public static SortedDictionary<EUpdatePri, HashSet<BindDataUpdate>> UpdateDic => Instance.updateDic;
+    protected override void Awake()
+    {
+        base.Awake();
+        AwakeAct?.Invoke();
+    }
     void Update()
     {
         var updateDicValues = UpdateDic.Values;

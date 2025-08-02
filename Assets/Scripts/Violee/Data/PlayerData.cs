@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
+using System.Linq;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace Violee;
 
@@ -11,22 +9,17 @@ namespace Violee;
 public class PlayerData : DataBase
 {
     [NonSerialized][ShowInInspector]
-    List<MiniItemData> miniItems = [];
-    public List<char> LetterList = [];
-    public MiniItemData Stamina = null!;
-    public MiniItemData Energy = null!;
-    public MiniItemData Gloves = null!;
-    public MiniItemData Dice = null!;
+    List<MiniItemData> miniItems;
+    public List<char> LetterList;
+    public MiniItemData Stamina;
+    public MiniItemData Energy;
+    public MiniItemData Gloves;
+    public MiniItemData Dice;
     
     public PlayerData()
     {
-        // 单例在没有运行时是不能FindObjectOfType的
-        // if (!Configer.Started)
-        //     return;
-        foreach (var config in Configer.MiniItemConfigList.MiniItemConfigs)
-        {
-            miniItems.Add(new MiniItemData(config));
-        }
+        miniItems = Configer.MiniItemConfigList.MiniItemConfigs.Select(x => new MiniItemData(x)).ToList();
+        LetterList = [];
         Stamina = miniItems.Find(x => x.Config.Description.Equals(nameof(Stamina)));
         Energy = miniItems.Find(x => x.Config.Description.Equals(nameof(Energy)));
         Gloves = miniItems.Find(x => x.Config.Description.Equals(nameof(Gloves)));
@@ -68,13 +61,4 @@ public class MiniItemData(MiniItemConfig config) : DataBase
             OnRunOut?.Invoke();
         }
     }
-}
-
-// public List<ItemCom> ComList = [];
-// public ItemCom? GetCom<T>() => ComList.Find(x => x.GetType() == typeof(T));
-public abstract class ItemCom;
-
-public class ItemStackable : ItemCom
-{
-    public int Count;
 }

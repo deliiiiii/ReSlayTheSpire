@@ -27,7 +27,11 @@ public static class Binder
     {
         return new BindDataState(state);
     }
-    
+
+    public static void Awake(Action act)
+    {
+        Updater.AwakeAct += act;
+    }
     public static BindDataUpdate Update(Action<float> act, EUpdatePri priority = EUpdatePri.Default)
     {
         var ret = new BindDataUpdate(act, priority);

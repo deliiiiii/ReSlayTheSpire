@@ -27,7 +27,6 @@ public class SceneItemModel : ModelBase<SceneItemData>
         var ir = gameObject.GetComponentInChildren<InteractReceiver>();
         ir.OnEnterInteract += () => PlayerManager.ReticleCb = GetCb();
         ir.OnExitInteract += () => PlayerManager.ReticleCb = null;
-        // PlayerManager.OnClickReticle += () => PlayerManager.ReticleCb = GetCb();
     }
 
     SceneItemCb? GetCb()
@@ -36,8 +35,7 @@ public class SceneItemModel : ModelBase<SceneItemData>
             return null;
         return new SceneItemCb
         {
-            Des = Data.GetDes(),
-            Color = Data.DesColor(),
+            Data = Data,
             Cb = () => 
             {
                 Data.Use();
@@ -47,9 +45,8 @@ public class SceneItemModel : ModelBase<SceneItemData>
     }
 }
 
-public class SceneItemCb
+public struct SceneItemCb
 {
-    public required string Des;
-    public required Color Color;
+    public SceneItemData Data;
     public Action? Cb;
 }

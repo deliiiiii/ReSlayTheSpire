@@ -16,7 +16,8 @@ class MapView : ViewBase<MapView>
         if (Configer.SettingsConfig.ShowBoxCost)
             MapManager.DijkstraStream.OnBeginAsync(BindAllCostTxt);
     }
-    HashSet<Text> costTxtSet = [];
+
+    readonly HashSet<Text> costTxtSet = [];
     ObjectPool<Text> costTxtPool = null!;
     async Task DestroyAllCostTxt()
     {
