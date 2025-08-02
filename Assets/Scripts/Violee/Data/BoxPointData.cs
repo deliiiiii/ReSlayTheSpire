@@ -21,7 +21,7 @@ public class BoxPointData : DataBase, IComparable
     [NonSerialized] public required BoxData BelongBox;
     [NonSerialized] public Vector3 Pos3D;
     [NonSerialized] public HashSet<WallData> WallSet = [];
-    [NonSerialized] BingChaJi bingChaJi = new();
+    [NonSerialized] BingChaJi<BoxPointData> bingChaJi = new();
 
         
     #region Generate Map
@@ -41,10 +41,10 @@ public class BoxPointData : DataBase, IComparable
     public void Merge(BoxPointData other) => bingChaJi.Merge(other.bingChaJi);
     public void VisitConnected()
     {
-        foreach (var connectedB in bingChaJi.ConnectedSet)
+        foreach (var connectedPoint in bingChaJi.ConnectedSet)
         {
-            connectedB.PointData.Visited.Value = true;
-            foreach (var wallData in connectedB.PointData.WallSet)
+            connectedPoint.Visited.Value = true;
+            foreach (var wallData in connectedPoint.WallSet)
             {
                 wallData.Visited.Value = true;
             }
@@ -52,9 +52,9 @@ public class BoxPointData : DataBase, IComparable
     }
     public void FlashConnectedInverse()
     {
-        foreach (var connectedB in bingChaJi.ConnectedSet)
+        foreach (var connectedPoint in bingChaJi.ConnectedSet)
         {
-            connectedB.PointData.IsFlash.Value = !connectedB.PointData.IsFlash.Value;
+            connectedPoint.IsFlash.Value = !connectedPoint.IsFlash.Value;
         }
     }
         
@@ -70,14 +70,13 @@ public class BoxPointData : DataBase, IComparable
 }
 
 [Serializable]
-class BingChaJi
+class BingChaJi<T>
 {
     [ShowInInspector] public int SetCount => Math.Max(con, Find().con);
-    BingChaJi f = null!;
-    public BoxPointData PointData = null!;
-    HashSet<BingChaJi> connectedSet = null!;
+    BingChaJi<T> f = null!;
+    HashSet<T> connectedSet = null!;
 
-    public HashSet<BingChaJi> ConnectedSet
+    public HashSet<T> ConnectedSet
     {
         get
         {
@@ -87,14 +86,13 @@ class BingChaJi
     }
     int con => connectedSet.Count;
 
-    public void Init(BoxPointData pointData)
+    public void Init(T belongTo)
     {
         f = this;
-        PointData = pointData;
-        connectedSet = [this];
+        connectedSet = [belongTo];
     }
 
-    public void Merge(BingChaJi other)
+    public void Merge(BingChaJi<T> other)
     {
         var thisF = Find();
         var otherF = other.Find();
@@ -115,7 +113,7 @@ class BingChaJi
         }
     }
 
-    BingChaJi Find()
+    BingChaJi<T> Find()
     {
         return f == this ? f : f = f.Find();
     }

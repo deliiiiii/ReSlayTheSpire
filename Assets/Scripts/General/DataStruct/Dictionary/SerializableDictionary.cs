@@ -95,7 +95,6 @@ public class SerializableDictionary<TKey, TValue> :
             list.RemoveAt(index);
             for (var i = index; i < list.Count; i++)
                 KeyPositions[list[i].Key] = i;
-
             return true;
         }
         else

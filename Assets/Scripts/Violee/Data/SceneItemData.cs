@@ -17,7 +17,6 @@ public struct SceneItemC2D(HashSet<EBoxDir> dirSet)
 public class SceneItemData : DataBase
 {
     [NonSerialized]public readonly HashSet<EBoxDir> OccupyDirSet;
-    [NonSerialized] public SceneItemModel ObjIns = null!;
     public SceneItemData(SceneItemConfig config, SceneItemC2D param)
     {
         Obj = config.Object;
