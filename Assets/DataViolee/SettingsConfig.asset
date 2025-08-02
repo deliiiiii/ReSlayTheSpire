@@ -16,4 +16,5 @@ MonoBehaviour:
   ShowBoxCost: 1
   BoxCostPosOffset: 0.37
   PointSpriteFlashTime: 1
-  YieldCount: 0.22
+  PointSpriteAlpha: 255
+  YieldCount: 0.1
