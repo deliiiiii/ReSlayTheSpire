@@ -32,7 +32,7 @@ public class SceneItemData : DataBase
     int count;
     public event Action? OnRunOut;
     
-    public virtual string GetDes() => "Simple Item...";
+    public virtual string GetInteractDes() => "Simple Item...";
     public void Use()
     {
         if (HasCount)
@@ -75,7 +75,7 @@ public class PurpleSceneItemData(PurpleSceneItemConfig config, SceneItemC2D para
     : SceneItemData(config, param)
 {
     public int Energy = config.Energy;
-    public override string GetDes()
+    public override string GetInteractDes()
     {
         return $"休息一下: +{Energy} 精力";
     }

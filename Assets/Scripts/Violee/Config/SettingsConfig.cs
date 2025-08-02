@@ -14,6 +14,11 @@ namespace Violee
 
         public float PointSpriteFlashTime = 1f;
         public float PointSpriteAlpha = 166f;
+
+        [Tooltip("用这个乘以边长，等于交互范围半径")][SerializeField]
+        [MinValue(0.1f)][MaxValue(1f)]
+        float interactCasterRadius = 0.3f;
+        public float InteractCasterRadius => BoxHelper.BoxSize * interactCasterRadius;
         
         #region Yield Control
         [Header("Yield Control")]

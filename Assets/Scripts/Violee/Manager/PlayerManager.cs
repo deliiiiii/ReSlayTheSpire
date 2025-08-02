@@ -38,8 +38,8 @@ public class PlayerManager : SingletonCS<PlayerManager>
         playerMono.Fpc.Tick();
         if (Input.GetMouseButtonDown(0))
         {
-            ReticleCb?.Cb?.Invoke();
-            if(ReticleCb != null)
+            CurInteractCb?.Cb.Invoke();
+            if(CurInteractCb != null)
                 OnClickReticle?.Invoke();
         }
     }
@@ -49,15 +49,15 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     #region SceneItem
 
-    public static SceneItemCb? ReticleCb = null;
+    public static InteractCb? CurInteractCb = null;
     public static event Action? OnClickReticle;
     public static void AddEnergy(int added)
     {
         playerData.Energy.Count.Value += added;
     }
-    
-    
-    
-
+    public static void UseStamina(int used)
+    {
+        playerData.Stamina.Count.Value -= used;
+    }
     #endregion
 }

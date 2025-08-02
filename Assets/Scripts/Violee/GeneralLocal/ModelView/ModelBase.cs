@@ -10,7 +10,7 @@ public interface IModelBase;
 public abstract class ModelBase<TData> : MonoBehaviour, IModelBase where TData : DataBase
 {
     [ReadOnly] 
-    // [ShowInInspector]
+    [ShowInInspector]
     public TData Data = null!;
     public void ReadData(TData data)
     {

@@ -269,5 +269,5 @@ internal class MapManager : SingletonCS<MapManager>
     #endregion
     
     
-    public static BoxModel FirstBoxModel => boxModelMyDic.First();
+    public static BoxData BoxDataByPos(Vector2Int pos) => boxDataMyDic[pos];
 }

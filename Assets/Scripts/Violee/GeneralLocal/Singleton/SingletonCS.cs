@@ -1,7 +1,8 @@
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Violee;
 
@@ -28,6 +29,16 @@ public class SingletonCS<T> where T : SingletonCS<T>, new()
     void OnInit()
     {
         go = new GameObject($"{typeof(T).Name} (SingletonCS)");
+#if UNITY_EDITOR
+        EditorApplication.playModeStateChanged += s =>
+        {
+            if (s == PlayModeStateChange.ExitingPlayMode && go != null)
+            {
+                Object.DestroyImmediate(go);
+                go = null!;
+            }
+        };
+#endif
     }
 }
 

@@ -12,6 +12,7 @@ public class SceneItemModel : ModelBase<SceneItemData>
 
     public required GameObject HideAfterRunOut;
     public required GameObject ShowAfterRunOut;
+    public required InteractReceiver Ir;
     
     protected override void OnReadData()
     {
@@ -23,30 +24,20 @@ public class SceneItemModel : ModelBase<SceneItemData>
                 ShowAfterRunOut.SetActive(true);
             };
         }
-        
-        var ir = gameObject.GetComponentInChildren<InteractReceiver>();
-        ir.OnEnterInteract += () => PlayerManager.ReticleCb = GetCb();
-        ir.OnExitInteract += () => PlayerManager.ReticleCb = null;
+
+        Ir.InteractCb = GetCb;
     }
 
-    SceneItemCb? GetCb()
+    InteractCb? GetCb()
     {
-        if (!Data.CanUse())
-            return null;
-        return new SceneItemCb
+        return new InteractCb
         {
-            Data = Data,
-            Cb = () => 
-            {
-                Data.Use();
-                PlayerManager.ReticleCb = GetCb();
-            },
+            Condition = Data.CanUse,
+            Cb = Data.Use,
+            Description = Data.GetInteractDes(),
+            Color = Data.DesColor(),
         };
     }
 }
 
-public struct SceneItemCb
-{
-    public SceneItemData Data;
-    public Action? Cb;
-}
+

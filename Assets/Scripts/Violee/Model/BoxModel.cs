@@ -46,7 +46,7 @@ namespace Violee
         
         void OnAddSceneItemData(SceneItemData data)
         {
-            var obj = Instantiate(data.Obj);
+            var obj = Instantiate(data.Obj, transform);
             var model = obj.GetOrAddComponent<SceneItemModel>();
             sceneItemDic.Add(data, model);
             model.ReadData(data);
@@ -58,9 +58,9 @@ namespace Violee
                 EBoxDir.Down => Quaternion.Euler(0, 180, 0),
                 _ => Quaternion.Euler(0, 270, 0),
             };
+            // obj.transform.position += transform.position;
             obj.transform.localPosition = dtRot * obj.transform.localPosition;
             obj.transform.localRotation *= dtRot;
-            obj.transform.parent = pointDic[data.OccupyDirSet.First()].transform;
             obj.SetActive(true);
         }
         void OnRemoveSceneItemData(SceneItemData data)

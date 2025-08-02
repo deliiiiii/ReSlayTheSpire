@@ -23,7 +23,7 @@ namespace Violee
         public EWallType WallType = wallType;
         public Observable<bool> Visited = new (false);
         public EDoorType DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType;
-        public bool Opened;
+        public Observable<bool> Opened = new (false);
     }
     
 }

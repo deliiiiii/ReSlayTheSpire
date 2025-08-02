@@ -22,12 +22,14 @@ class GameView : ViewBase<GameView>
                 Binder.From(PlayerManager.DiceCount).ToTxt(DiceTxt).Immediate();
             }).OnUpdate(dt =>
             {
-                var cb = PlayerManager.ReticleCb;
+                var cb = PlayerManager.CurInteractCb;
+                if (!cb?.Condition() ?? false)
+                    cb = null;
                 NormalReticle.SetActive(cb == null);
                 FindReticle.SetActive(cb != null);
                 SceneItemInfoPnl.SetActive(cb != null);
-                SceneItemInfoTxt.text = cb?.Data.GetDes() ?? "";
-                SceneItemInfoTxt.color = cb?.Data.DesColor() ?? Color.black;
+                SceneItemInfoTxt.text = cb?.Description ?? "";
+                SceneItemInfoTxt.color = cb?.Color ?? Color.black;
 
                 SwitchMap(dt);
             }).OnExit(() => MiniItemPnl.SetActive(false));

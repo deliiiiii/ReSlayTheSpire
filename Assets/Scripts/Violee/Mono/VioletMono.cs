@@ -18,11 +18,12 @@ public class VioletMono : MonoBehaviour
         GameManager.Init();
     }
 
+    public Vector2Int Pos;
     public EBoxDir D;
     SceneItemConfig c => Configer.SceneItemConfigList.SceneItemConfigs[0];
     [Button]
     public void Test()
     {
-        MapManager.FirstBoxModel.Data.CreateSceneItemData(c, new ([D]));
+        MapManager.BoxDataByPos(Pos).CreateSceneItemData(c, new ([D]));
     }
 }

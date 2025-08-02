@@ -1,5 +1,4 @@
-﻿using Sirenix.OdinInspector;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Violee
 {
@@ -7,44 +6,101 @@ namespace Violee
     {
         #region Inspector
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
-        [SerializeField] Transform Door;
-        [SerializeField] Transform NotDoor;
+        [SerializeField] GameObject Door;
+        [SerializeField] GameObject NotDoor;
         [SerializeField] SpriteRenderer WallSprite;
+        [SerializeField] GameObject LockedMesh;
+        [SerializeField] GameObject UnLockedMesh;
         [SerializeField] GameObject LockedSprite;
         [SerializeField] GameObject UnlockedSprite;
+
+        [SerializeField] InteractReceiver DoorInteract;
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
         #endregion
         
         
         protected override void OnReadData()
         {
-            Door.gameObject.SetActive(false);
-            NotDoor.gameObject.SetActive(false);
+            SetAllActive();
+
+            if (Data.DoorType != EDoorType.None)
+            {
+                DoorInteract.InteractCb = GetCb;
+            }
+        }
+
+        InteractCb GetCb()
+        {
+            return new InteractCb
+            {
+                Condition = () => !Data.Opened.Value,
+                Cb = () =>
+                {
+                    PlayerManager.UseStamina(1);
+                    Data.Opened.Value = true;
+                },
+                Description = "打开门：消耗1点体力",
+                Color = Color.blue,
+            };
+        }
+        
+        void SetAllActive()
+        {
+            Door.SetActive(false);
+            NotDoor.SetActive(false);
+            LockedMesh.SetActive(false);
+            UnLockedMesh.SetActive(false);
             LockedSprite.SetActive(false);
             UnlockedSprite.SetActive(false);
             gameObject.SetActive(true);
+            
             Binder.From(Data.Visited).To(v =>
             {
                 WallSprite.enabled = v;
-                if(v)
-                    SetDoorSprite();
+                if (!v)
+                    return;
+                if (Data.Opened)
+                {
+                    UnlockedSprite.SetActive(true);
+                    LockedSprite.SetActive(false);
+                }
+                else
+                {
+                    LockedSprite.SetActive(true);
+                }
+            }).Immediate();
+            Binder.From(Data.Opened).To(b =>
+            {
+                if (b)
+                {
+                    UnLockedMesh.SetActive(true);
+                    LockedMesh.SetActive(false);
+                }
+                else
+                {
+                    LockedMesh.SetActive(true);
+                }
+                if (!Data.Visited)
+                    return;
+                if (b)
+                {
+                    UnlockedSprite.SetActive(true);
+                    LockedSprite.SetActive(false);
+                }
+                else
+                {
+                    LockedSprite.SetActive(true);
+                }
             }).Immediate();
             switch (Data.DoorType)
             {
                 case EDoorType.None:
-                    NotDoor.gameObject.SetActive(true);
+                    NotDoor.SetActive(true);
                     break;
                 case EDoorType.Wooden:
-                    Door.gameObject.SetActive(true);
+                    Door.SetActive(true);
                     break;
             }
-        }
-        void SetDoorSprite()
-        {
-            if (Data.Opened)
-                UnlockedSprite.SetActive(true);
-            else
-                LockedSprite.SetActive(true);
         }
     }
 }
