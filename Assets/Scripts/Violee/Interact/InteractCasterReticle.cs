@@ -16,6 +16,12 @@ public class InteractCasterReticle : MonoBehaviour
         radius = Configer.SettingsConfig.InteractCasterRadius;
         GameManager.PlayingState.OnUpdate(_ =>
         {
+            if (GameManager.IsWatchingUI)
+            {
+                lastIr.Value = null;
+                PlayerManager.CurInteractCb = null;
+                return;
+            }
             var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             if (!Physics.Raycast(ray, out var hit, radius) || 
                 (TarLayer.value & (1 << hit.collider.gameObject.layer)) == 0)

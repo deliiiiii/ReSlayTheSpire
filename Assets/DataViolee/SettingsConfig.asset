@@ -17,4 +17,5 @@ MonoBehaviour:
   BoxCostPosOffset: 0.37
   PointSpriteFlashTime: 1
   PointSpriteAlpha: 255
+  interactCasterRadius: 0.4
   YieldCount: 0.1

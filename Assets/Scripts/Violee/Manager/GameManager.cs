@@ -15,6 +15,7 @@ public enum EWindowState
 {
     None,
     Paused,
+    WatchingUI,
 }
 
 public class GameManager : SingletonCS<GameManager>
@@ -102,6 +103,12 @@ public class GameManager : SingletonCS<GameManager>
     
     
     public static void UnpauseWindow() => windowFsm.ChangeState(EWindowState.None);
+
+    public static void SwitchUIState()
+    {
+        windowFsm.ChangeState(!IsWatchingUI ? EWindowState.WatchingUI : EWindowState.None);
+    }
+    
     static void CheckGameWindow()
     {
 #pragma warning disable CS0162 // 检测到不可到达的代码
@@ -116,6 +123,7 @@ public class GameManager : SingletonCS<GameManager>
     }
     public static bool isIdle => gameFsm.IsState(EGameState.Idle);
     public static bool isPlaying => gameFsm.IsState(EGameState.Playing);
-    static bool isPaused => windowFsm.IsState(EWindowState.Paused);
+    public static bool isPaused => windowFsm.IsState(EWindowState.Paused);
+    public static bool IsWatchingUI => windowFsm.IsState(EWindowState.WatchingUI);
         
 }

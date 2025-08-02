@@ -30,8 +30,19 @@ class GameView : ViewBase<GameView>
                 SceneItemInfoPnl.SetActive(cb != null);
                 SceneItemInfoTxt.text = cb?.Description ?? "";
                 SceneItemInfoTxt.color = cb?.Color ?? Color.black;
+                
+                ChangeFOV(dt);
+                if (Input.GetKeyDown(KeyCode.Tab))
+                {
+                    GameManager.SwitchUIState();
+                    if (isMinimap)
+                    {
+                        ShowFullScreenMap();
+                        return;
+                    }
 
-                SwitchMap(dt);
+                    ShowMinimap();
+                }
             }).OnExit(() => MiniItemPnl.SetActive(false));
         GameManager.PausedState
             .OnEnter(() => PausePnl.SetActive(true))
@@ -55,19 +66,6 @@ class GameView : ViewBase<GameView>
     public float ChangeSpeed = 1.2f;
     public float MiniSize = 12f;
     bool isMinimap => MinimapImg.enabled;
-    void SwitchMap(float dt)
-    {
-        ChangeFOV(dt);
-        if (!Input.GetKeyDown(KeyCode.Tab))
-            return;
-        if (isMinimap)
-        {
-            ShowFullScreenMap();
-            return;
-        }
-        ShowMinimap();
-    }
-
     void ChangeFOV(float dt)
     {
         var tarSize = isMinimap ? MiniSize : MapManager.MaxSize / 1.616f;
