@@ -27,12 +27,12 @@ class MapView : ViewBase<MapView>
             await Configer.SettingsConfig.YieldFrames(multi : 1 / 16f);
         }
     }
-    async Task BindAllCostTxt((GenerateStreamParam, Vector3) pair)
+    async Task BindAllCostTxt(DijStreamParam param)
     {
         try
         {
             await DestroyAllCostTxt();
-            var boxKList = pair.Item1.BoxKList;
+            var boxKList = param.BoxDataMyDic;
             var allPoints = boxKList.SelectMany(x => x.PointDataMyDic).ToList();
             foreach (var point in allPoints)
             {

@@ -56,11 +56,7 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
     internal Func<T, Task>? onBeginAsync;
     internal Action<T>? onEnd;
     internal IStream? endStream = endStream;
-
     
-
-    
-
     public async Task CallTriggerAsync()
     {
         try
@@ -92,12 +88,7 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
             Debug.LogError(e);
             throw;
         }
-        
     }
-
-    
-    
-
     public Maybe<T> Result { get; private set; } = Maybe<T>.Nothing.Instance;
     
 }

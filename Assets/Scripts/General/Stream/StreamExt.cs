@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
+using Unit = System.ValueTuple;
 
 namespace Violee;
 
@@ -113,12 +114,12 @@ public static class Streamer
     // }
     
     
-    // public static Func<Unit> ToFunc(Action action)
-    //     => () => { action(); return default; };
-    // public static Func<T1, Unit> ToFunc<T1>(Action<T1> action)
-    //     => (t1) => { action(t1); return default; };
-    // public static Func<T1, T2, Unit> ToFunc<T1, T2>(Action<T1, T2> action)
-    //     => (t1, t2) => { action(t1, t2); return default; };
+    public static Func<Unit> ToFunc(Action action)
+        => () => { action(); return default; };
+    public static Func<T1, Unit> ToFunc<T1>(Action<T1> action)
+        => (t1) => { action(t1); return default; };
+    public static Func<T1, T2, Unit> ToFunc<T1, T2>(Action<T1, T2> action)
+        => (t1, t2) => { action(t1, t2); return default; };
     
     
     public static Func<T> Bind<T>(Func<T> bind) 
@@ -154,10 +155,11 @@ public static class Streamer
     public static Action<T2> Curry<T1, T2>(this T1 t1, Action<T1, T2> action) 
         => t2 => action(t1, t2);
 
-    
+
+    public static Stream<Unit> ToStream<T>(this T t, Action action)
+        => new(startFunc: () => new Unit(), triggerFunc: _ => action());
     public static Stream<T> ToStream<T>(this Func<T> t, Action<T> action) 
         => new(startFunc: t, triggerFunc:action);
-
     public static Stream<T> ToStreamAsync<T>(this Func<T> t, Func<T, Task> actionAsync) 
         => new(startFunc: t, triggerFuncAsync: actionAsync);
     

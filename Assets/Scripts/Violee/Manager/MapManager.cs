@@ -8,14 +8,12 @@ using UnityEngine;
 
 namespace Violee;
 
-public struct GenerateStreamParam(
-    MyKeyedCollection<Vector2Int, BoxData> boxKList, 
-    HashSet<Vector2Int> emptyPosSet,
-    HashSet<WallData> edgeWallSet)
+public struct DijStreamParam(
+    MyKeyedCollection<Vector2Int, BoxData> b, 
+    Vector3 v)
 {
-    public readonly MyKeyedCollection<Vector2Int, BoxData> BoxKList = boxKList;
-    public readonly HashSet<Vector2Int> EmptyPosSet = emptyPosSet;
-    public readonly HashSet<WallData> EdgeWallSet = edgeWallSet;
+    public readonly MyKeyedCollection<Vector2Int, BoxData> BoxDataMyDic = b;
+    public readonly Vector3 PlayerStartPos = v;
 }
 
 
@@ -29,13 +27,18 @@ internal class MapManager : SingletonCS<MapManager>
         mapModel = Configer.MapModel;
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, Instance.go.transform, 42);
         
-        GenerateStream = Instance
-            .Bind(() => new GenerateStreamParam(boxDataMyDic, [], [])) 
-            .ToStreamAsync(StartGenerate);
+        emptyPosSet =
+        [..
+            Enumerable.Range(0, Width)
+                .SelectMany(i => Enumerable.Range(0, Height)
+                    .Select(j => new Vector2Int(i, j)))
+        ];
+        
+        GenerateStream = Instance.ToStream(StartGenerate);
         DijkstraStream = Instance
-            .Bind(() => (GenerateStream.Result.Value, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)))
+            .Bind(() => new DijStreamParam(boxDataMyDic, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)))
             .ToStreamAsync(Dijkstra)
-            .OnEnd(param => VisitEdgeWalls(param.Value.EdgeWallSet));
+            .OnEnd(_ => VisitEdgeWalls());
         GenerateStream.EndWith(DijkstraStream);
     }
     public static float MaxSize => Mathf.Max(Width, Height) * BoxHelper.BoxSize;
@@ -81,7 +84,7 @@ internal class MapManager : SingletonCS<MapManager>
         }
     }
 
-    static void VisitEdgeWalls(HashSet<WallData> edgeWallSet)
+    static void VisitEdgeWalls()
     {
         edgeWallSet.ForEach(wallData => wallData.Visited.Value = true);
     }
@@ -89,125 +92,85 @@ internal class MapManager : SingletonCS<MapManager>
     
     
     #region Generate
-    public static readonly Stream<GenerateStreamParam> GenerateStream;
-    public static readonly Stream<(GenerateStreamParam, Vector3)> DijkstraStream;
-    static async Task StartGenerate(GenerateStreamParam param)
+
+    static readonly HashSet<Vector2Int> emptyPosSet;
+    static readonly HashSet<WallData> edgeWallSet = [];
+    public static readonly Stream<ValueTuple> GenerateStream;
+    public static readonly Stream<DijStreamParam> DijkstraStream;
+    static void StartGenerate()
     {
-        var boxDataMyDic = param.BoxKList;
-        var fEmptyPosSet = param.EmptyPosSet;
-        var fEdgeWallSet = param.EdgeWallSet;
-        void RemoveAllBoxes()
+        boxDataMyDic.MyClear();
+        GenerateOneFakeConnection(true);
+        while (emptyPosSet.Count > 0)
         {
-            boxDataMyDic.MyClear();
-            fEmptyPosSet.Clear();
-            for(var j = 0; j < Height; j++)
-            {
-                for(var i = 0; i < Width; i++)
-                {
-                    fEmptyPosSet.Add(new Vector2Int(i, j));
-                }
-            }
-        }
-        try
-        {
-            RemoveAllBoxes();
-            await GenerateOneFakeConnection(true, fEmptyPosSet, fEdgeWallSet);
-            while (fEmptyPosSet.Count > 0)
-            {
-                await GenerateOneFakeConnection(false, fEmptyPosSet, fEdgeWallSet);
-            }
-        }
-        catch (Exception e)
-        {
-            MyDebug.LogError(e);
-            throw;
+            GenerateOneFakeConnection(false);
         }
     }
-    static async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet,HashSet<WallData> edgeWallSet)
+    static void GenerateOneFakeConnection(bool startWithStartLoc)
     {
-        BoxData ReadBoxConfig(Vector2Int pos, BoxConfig config)
+        static BoxData ReadBoxConfig(Vector2Int pos, BoxConfig config) 
+            => new(pos, config);
+        var edgeBoxStack = new Stack<BoxData>();
+        // 每个伪连通块的第一个是空格子
+        var firstLoc = startWithStartLoc ? StartPos : emptyPosSet.First();
+        var firstBox = ReadBoxConfig(firstLoc, BoxHelper.EmptyBoxConfig);
+        boxDataMyDic.MyAdd(firstBox);
+        edgeBoxStack.Push(firstBox);
+        while (edgeBoxStack.Count > 0)
         {
-            var boxData = new BoxData(pos, config);
-            // MyDebug.Log($"Add box {config.Walls} at {pos}");
-            boxDataMyDic.MyAdd(boxData);
-            fEmptyPosSet.Remove(pos);
-            return boxData;
-        }
-        // void RemoveBox(BoxData boxData)
-        // {
-        //     boxKList.Remove(boxData);
-        //     fEmptyPosSet.Add(boxData.Pos2D);
-        //     DestroyBox(boxData);
-        // }
-        
-        try
-        {
-            var edgeBoxStack = new Stack<BoxData>();
-            // 每个伪连通块的第一个是空格子
-            var firstLoc = startWithStartLoc ? StartPos : fEmptyPosSet.First();
-            var firstBox = ReadBoxConfig(firstLoc, BoxHelper.EmptyBoxConfig);
-            edgeBoxStack.Push(firstBox);
-            while (edgeBoxStack.Count > 0)
+            var curBox = edgeBoxStack.Pop();
+            var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos2D);
+            foreach (var (nextPos, nextGoInDir) in nextPairs)
             {
-                var curBox = edgeBoxStack.Pop();
-                var nextPairs = BoxHelper.GetNextLocAndGoInDirList(curBox.Pos2D);
-                foreach (var (nextPos, nextGoInDir) in nextPairs)
+                // “下一格”
+                var curGoOutDir = BoxHelper.OppositeDirDic[nextGoInDir];
+                if (!InMap(nextPos))
                 {
-                    // “下一格”
-                    var curGoOutDir = BoxHelper.OppositeDirDic[nextGoInDir];
-                    if (!InMap(nextPos))
+                    var edgeWall = new WallData(curGoOutDir, EDoorType.None);
+                    edgeWallSet.Add(edgeWall);
+                    curBox.WallDataMyDic.MyRemove(edgeWall);
+                    curBox.WallDataMyDic.MyAdd(edgeWall);
+                    // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
+                    continue;
+                }
+                if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
+                {
+                    var boxConfig = 
+                        Configer.BoxConfigList.BoxConfigs.RandomItemWeighted(
+                            x => !BoxHelper.HasSWallByByteAndDir(x.Walls, nextGoInDir),
+                            x => x.BasicWeight);
+                    var nextBox = ReadBoxConfig(nextPos, boxConfig);
+                    boxDataMyDic.MyAdd(nextBox);
+                    var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
+                    foreach (var (nextNextPos, nextNextGoInDir) in nextNextPairs)
                     {
-                        var edgeWall = new WallData(curGoOutDir, EDoorType.None);
-                        edgeWallSet.Add(edgeWall);
-                        curBox.WallDataMyDic.MyRemove(edgeWall);
-                        curBox.WallDataMyDic.MyAdd(edgeWall);
-                        // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
-                        continue;
-                    }
-                    if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
-                    {
-                        var boxConfig = 
-                            Configer.BoxConfigList.BoxConfigs.RandomItemWeighted(
-                                x => !BoxHelper.HasSWallByByteAndDir(x.Walls, nextGoInDir),
-                                x => x.BasicWeight);
-                        var nextBox = ReadBoxConfig(nextPos, boxConfig);
-                        var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
-                        foreach (var (nextNextPos, nextNextGoInDir) in nextNextPairs)
+                        // nextNextGoInDir:  “下一格”的相邻格的走入方向
+                        var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextGoInDir];
+                        if (InMap(nextNextPos) && HasBox(nextNextPos))
                         {
-                            // nextNextGoInDir:  “下一格”的相邻格的走入方向
-                            var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextGoInDir];
-                            if (InMap(nextNextPos) && HasBox(nextNextPos))
+                            var nextNextBox = boxDataMyDic[nextNextPos];
+                            if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
                             {
-                                var nextNextBox = boxDataMyDic[nextNextPos];
-                                if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
-                                {
-                                    var t = BoxHelper.WallDirToType(nextGoOutDir);
-                                    nextBox.WallDataMyDic.MyRemove(t);
-                                    // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
-                                }
+                                var t = BoxHelper.WallDirToType(nextGoOutDir);
+                                nextBox.WallDataMyDic.MyRemove(t);
+                                // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
                             }
                         }
-                        
-                        edgeBoxStack.Push(nextBox);
                     }
+                    
+                    edgeBoxStack.Push(nextBox);
                 }
             }
         }
-        catch (Exception e)
-        {
-            MyDebug.LogError(e);
-            throw;
-        }
     }
-    static async Task Dijkstra((GenerateStreamParam, Vector3) pair)
+    static async Task Dijkstra(DijStreamParam param)
     {
         try
         {
-            var fBoxKList = pair.Item1.BoxKList;
-            fBoxKList.ForEach(boxData => boxData.ResetBeforeDij());
+            boxDataMyDic.ForEach(boxData => boxData.ResetBeforeDij());
             var vSet = new HashSet<BoxPointData>();
             var pq = new SimplePriorityQueue<BoxPointData, int>();
-            var startBox = fBoxKList[StartPos];
+            var startBox = boxDataMyDic[StartPos];
             var startPoint = startBox.PointDataMyDic[StartDir];
             startPoint.CostWall.Value = 0;
             pq.Enqueue(startPoint, 0);
@@ -221,7 +184,7 @@ internal class MapManager : SingletonCS<MapManager>
                 var nextPos = BoxHelper.NextPos(curBox.Pos2D, curDir);
                 if (InMap(nextPos))
                 {
-                    var nextBox = fBoxKList[nextPos];
+                    var nextBox = boxDataMyDic[nextPos];
                     var oppositeDir = BoxHelper.OppositeDirDic[curDir];
                     var nextPoint = nextBox.PointDataMyDic[oppositeDir];
                     var costSWall = curBox.CostStraight(curDir, out var wallData1) + nextBox.CostStraight(oppositeDir, out var wallData2);
@@ -276,7 +239,17 @@ internal class MapManager : SingletonCS<MapManager>
     }
     
     static readonly MyKeyedCollection<Vector2Int, BoxData> boxDataMyDic 
-        = new (b => b.Pos2D, b => Task.FromResult(OnAddBoxData(b)), OnRemoveBoxData);
+        = new (b => b.Pos2D, 
+            val =>
+            {
+                Task.FromResult(OnAddBoxData(val));
+                emptyPosSet!.Remove(val.Pos2D);
+            },
+            key =>
+            {
+                OnRemoveBoxData(key);
+                emptyPosSet!.Add(key);
+            });
     static readonly MyKeyedCollection<Vector3Int, BoxModel> boxModelMyDic 
         = new(b => Vector3Int.RoundToInt(b.transform.position));
 
