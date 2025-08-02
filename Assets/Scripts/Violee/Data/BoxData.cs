@@ -167,13 +167,10 @@ namespace Violee
         public MyList<SceneItemData> SceneDataMyList = [];
         #endregion
         
-        public void CreateSceneItemModel(EBoxDir dir, SceneItemConfig sceneItemConfig)
+        public void CreateSceneItemData(SceneItemConfig sceneItemConfig, SceneItemC2D param)
         {
-            var sceneItemData = SceneItemData.ReadConfig(sceneItemConfig, 
-                new SceneItemC2D([dir], Model.pointDic[dir].transform));
+            var sceneItemData = SceneItemData.ReadConfig(sceneItemConfig, param);
             SceneDataMyList.MyAdd(sceneItemData);
         }
-
-        [NonSerialized] public BoxModel Model;
     }
 }

@@ -8,23 +8,20 @@ namespace Violee;
 /// <summary>
 /// C2D : Config to Data
 /// </summary>
-public struct SceneItemC2D(HashSet<EBoxDir> dirSet, Transform parent)
+public struct SceneItemC2D(HashSet<EBoxDir> dirSet)
 {
     public readonly HashSet<EBoxDir> DirSet = dirSet;
-    public readonly Transform Parent = parent;
 }
 
 [Serializable]
 public class SceneItemData : DataBase
 {
-    [NonSerialized] public readonly Transform Parent;
-    [NonSerialized ]public readonly HashSet<EBoxDir> OccupyDirSet;
+    [NonSerialized]public readonly HashSet<EBoxDir> OccupyDirSet;
     [NonSerialized] public SceneItemModel ObjIns = null!;
     public SceneItemData(SceneItemConfig config, SceneItemC2D param)
     {
         Obj = config.Object;
         OccupyDirSet = param.DirSet;
-        Parent = param.Parent;
         if (config.HasCount)
         {
             HasCount = true;

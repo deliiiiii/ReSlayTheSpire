@@ -3,5 +3,5 @@ using Sirenix.OdinInspector;
 
 namespace Violee;
 
-[Serializable]
-public abstract class DataBase;
+public interface IDataBase;
+public abstract class DataBase : IDataBase;

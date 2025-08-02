@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.CompilerServices;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -11,8 +12,6 @@ namespace Violee
         
         protected override void OnReadData()
         {
-            Data.Model = this;
-            
             name = $"Box {Data.Pos2D.x} {Data.Pos2D.y}";
             transform.position = BoxHelper.Pos2DTo3DBox(Data.Pos2D);
             wallDic.Values.ForEach(g => g.gameObject.SetActive(false));
@@ -36,7 +35,7 @@ namespace Violee
 
         #region SceneItem
         
-        static void OnAddSceneItemData(SceneItemData data)
+        void OnAddSceneItemData(SceneItemData data)
         {
             var obj = Instantiate(data.Obj);
             var localPos = obj.transform.localPosition;
@@ -49,12 +48,12 @@ namespace Violee
             };
             obj.transform.localPosition = dtRot * localPos;
             obj.transform.localRotation *= dtRot;
-            obj.transform.parent = data.Parent;
+            obj.transform.parent = pointDic[data.OccupyDirSet.First()].transform;
             data.ObjIns = obj.GetOrAddComponent<SceneItemModel>();
             data.ObjIns.ReadData(data);
             obj.SetActive(true);
         }
-        static void OnRemoveSceneItemData(SceneItemData data)
+        void OnRemoveSceneItemData(SceneItemData data)
         {
             Destroy(data.ObjIns);
         }
