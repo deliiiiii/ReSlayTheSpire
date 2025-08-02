@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Violee;
 
-public class VioletLauncher : MonoBehaviour
+public class VioletMono : MonoBehaviour
 {
     [ShowInInspector] public string GameState => GameManager.GameState;
     [ShowInInspector] public string WindowState => GameManager.WindowState;

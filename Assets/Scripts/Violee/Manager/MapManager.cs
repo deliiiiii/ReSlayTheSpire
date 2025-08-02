@@ -20,11 +20,11 @@ public struct DijStreamParam(
 
 internal class MapManager : SingletonCS<MapManager>
 {
-    static readonly MapModel mapModel;
+    static readonly MapMono mapMono;
     static readonly ObjectPool<BoxModel> boxPool;
     static MapManager()
     {
-        mapModel = Configer.MapModel;
+        mapMono = Configer.mapMono;
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, Instance.go.transform, 42);
         
         emptyPosSet =
@@ -42,10 +42,10 @@ internal class MapManager : SingletonCS<MapManager>
         GenerateStream.EndWith(DijkstraStream);
     }
     public static float MaxSize => Mathf.Max(Width, Height) * BoxHelper.BoxSize;
-    static int Height => mapModel.Height;
-    static int Width => mapModel.Width;
-    static Vector2Int StartPos => mapModel.StartPos;
-    static EBoxDir StartDir => mapModel.StartDir;
+    static int Height => mapMono.Height;
+    static int Width => mapMono.Width;
+    static Vector2Int StartPos => mapMono.StartPos;
+    static EBoxDir StartDir => mapMono.StartDir;
     static bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
     static bool HasBox(Vector2Int pos) => boxDataMyDic.Contains(pos);
     

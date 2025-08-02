@@ -7,35 +7,35 @@ namespace Violee;
 
 public class PlayerManager : SingletonCS<PlayerManager>
 {
-    static readonly PlayerModel playerModel;
-    static PlayerData playerData => playerModel.PlayerData;
+    static readonly PlayerMono playerMono;
+    static PlayerData playerData => playerMono.PlayerData;
     static PlayerManager()
     {
-        playerModel = Configer.PlayerModel;
+        playerMono = Configer.playerMono;
     }
-    public static MiniItemData Stamina => playerData.Stamina;
-    public static MiniItemData Energy => playerData.Energy;
-    public static MiniItemData Gloves => playerData.Gloves;
-    public static MiniItemData Dice => playerData.Dice;
+    public static Observable<int> StaminaCount => playerData.Stamina.Count;
+    public static Observable<int> EnergyCount => playerData.Energy.Count;
+    public static Observable<int> GlovesCount => playerData.Gloves.Count;
+    public static Observable<int> DiceCount => playerData.Dice.Count;
 
     public static void OnDijkstraEnd(Vector3 pos3D)
     {
-        playerModel.transform.position = pos3D + Vector3.up * (1.5f * playerModel.transform.position.y);
-        playerModel.PlayerData = new PlayerData();
+        playerMono.transform.position = pos3D + Vector3.up * (1.5f * playerMono.transform.position.y);
+        playerMono.PlayerData = new PlayerData();
     }
     public static void OnEnterPlaying()
     {
-        playerModel.gameObject.SetActive(true);
+        playerMono.gameObject.SetActive(true);
     }
         
     public static void OnExitPlaying()
     {   
-        playerModel.gameObject.SetActive(false);
+        playerMono.gameObject.SetActive(false);
     }
 
     public static void Tick(float dt)
     {
-        playerModel.Fpc.Tick();
+        playerMono.Fpc.Tick();
         if (Input.GetMouseButtonDown(0))
         {
             ReticleCb?.Cb?.Invoke();
@@ -44,7 +44,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
         }
     }
 
-    public static Vector3 GetPos => playerModel.transform.position;
+    public static Vector3 GetPos => playerMono.transform.position;
 
 
     #region SceneItem

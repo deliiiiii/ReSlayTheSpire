@@ -11,10 +11,10 @@ namespace Violee
     public class Configer : Singleton<Configer>
     {
         [Header("Singleton's Model")] 
-        public PlayerModel PlayerModelIns = null!;
-        public MapModel MapModelIns = null!;
-        public static PlayerModel PlayerModel => Instance.PlayerModelIns;
-        public static MapModel MapModel => Instance.MapModelIns;
+        public PlayerMono PlayerMonoIns = null!;
+        public MapMono MapMonoIns = null!;
+        public static PlayerMono playerMono => Instance.PlayerMonoIns;
+        public static MapMono mapMono => Instance.MapMonoIns;
 
         [Header("Object Pool")]
         public BoxModel BoxModelIns = null!;

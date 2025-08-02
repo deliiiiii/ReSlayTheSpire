@@ -16,10 +16,10 @@ class GameView : ViewBase<GameView>
             {
                 MiniItemPnl.SetActive(true);
                 ShowMinimap();
-                Binder.From(PlayerManager.Stamina.Count).ToTxt(StaminaTxt).Immediate();
-                Binder.From(PlayerManager.Energy.Count).ToTxt(EnergyTxt).Immediate();
-                Binder.From(PlayerManager.Gloves.Count).ToTxt(GlovesTxt).Immediate();
-                Binder.From(PlayerManager.Dice.Count).ToTxt(DiceTxt).Immediate();
+                Binder.From(PlayerManager.StaminaCount).ToTxt(StaminaTxt).Immediate();
+                Binder.From(PlayerManager.EnergyCount).ToTxt(EnergyTxt).Immediate();
+                Binder.From(PlayerManager.GlovesCount).ToTxt(GlovesTxt).Immediate();
+                Binder.From(PlayerManager.DiceCount).ToTxt(DiceTxt).Immediate();
             }).OnUpdate(dt =>
             {
                 var cb = PlayerManager.ReticleCb;

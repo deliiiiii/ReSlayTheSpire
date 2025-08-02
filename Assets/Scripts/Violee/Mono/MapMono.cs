@@ -2,7 +2,7 @@
 using UnityEngine;
 using Violee;
 
-public class MapModel : MonoBehaviour
+public class MapMono : MonoBehaviour
 {
     [Header("Map Settings")]
     public int Height = 4;
