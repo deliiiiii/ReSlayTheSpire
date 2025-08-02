@@ -11,8 +11,8 @@ namespace Violee
         protected override void OnReadData()
         {
             sr ??= GetComponent<SpriteRenderer>();
-            Binder.From(data.Visited).To(gameObject.SetActive).Immediate();
-            Binder.From(data.IsFlash).To(b =>
+            Binder.From(Data.Visited).To(gameObject.SetActive).Immediate();
+            Binder.From(Data.IsFlash).To(b =>
             {
                 if (b)
                 {

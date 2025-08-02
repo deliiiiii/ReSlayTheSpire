@@ -5,30 +5,33 @@ using UnityEngine;
 
 namespace Violee;
 
-public struct SceneItemC2D(HashSet<EBoxDir> dirSet)
+/// <summary>
+/// C2D : Config to Data
+/// </summary>
+public struct SceneItemC2D(HashSet<EBoxDir> dirSet, Transform parent)
 {
     public readonly HashSet<EBoxDir> DirSet = dirSet;
+    public readonly Transform Parent = parent;
 }
 
 [Serializable]
 public class SceneItemData : DataBase
 {
-    [NonSerialized] public Transform Parent = null!;
+    [NonSerialized] public readonly Transform Parent;
+    [NonSerialized ]public readonly HashSet<EBoxDir> OccupyDirSet;
     [NonSerialized] public SceneItemModel ObjIns = null!;
     public SceneItemData(SceneItemConfig config, SceneItemC2D param)
     {
         Obj = config.Object;
         OccupyDirSet = param.DirSet;
+        Parent = param.Parent;
         if (config.HasCount)
         {
             HasCount = true;
             count = config.Count;
         }
     }
-
     public GameObject Obj;
-    public HashSet<EBoxDir> OccupyDirSet;
-    // protected readonly SceneItemConfig Config;
     public readonly bool HasCount;
     int count;
     public event Action? OnRunOut;
@@ -72,15 +75,10 @@ public class SceneItemData : DataBase
 
 
 [Serializable]
-public class PurpleSceneItemData : SceneItemData
+public class PurpleSceneItemData(PurpleSceneItemConfig config, SceneItemC2D param)
+    : SceneItemData(config, param)
 {
-    public PurpleSceneItemData(PurpleSceneItemConfig config, SceneItemC2D param)
-        : base(config, param)
-    {
-        Energy = config.Energy;
-    }
-
-    public int Energy;
+    public int Energy = config.Energy;
     public override string GetDes()
     {
         return $"休息一下: +{Energy} 精力";

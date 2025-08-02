@@ -5,11 +5,6 @@ using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee;
-
-public struct BoxPointDataNonSerialized
-{
-        
-}
     
 [Serializable]
 public class BoxPointData : DataBase, IComparable
@@ -68,7 +63,7 @@ public class BoxPointData : DataBase, IComparable
         
     public int CompareTo(object obj)
     {
-        if (!(obj is BoxPointData other))
+        if (obj is not BoxPointData other)
             return 1;
         return this == other ? 0 : 1;
     }

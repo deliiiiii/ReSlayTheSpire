@@ -11,10 +11,10 @@ public abstract class ModelBase<TData> : MonoBehaviour, IModelBase where TData :
 {
     [ReadOnly] 
     // [ShowInInspector]
-    protected TData data = null!;
-    public void ReadData(TData fData)
+    public TData Data = null!;
+    public void ReadData(TData data)
     {
-        data = fData;
+        Data = data;
         OnReadData();
     }
     protected abstract void OnReadData();

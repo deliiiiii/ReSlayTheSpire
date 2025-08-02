@@ -15,9 +15,9 @@ public class SceneItemModel : ModelBase<SceneItemData>
     
     protected override void OnReadData()
     {
-        if (data.HasCount)
+        if (Data.HasCount)
         {
-            data.OnRunOut += () =>
+            Data.OnRunOut += () =>
             {
                 HideAfterRunOut.SetActive(false);
                 ShowAfterRunOut.SetActive(true);
@@ -32,15 +32,15 @@ public class SceneItemModel : ModelBase<SceneItemData>
 
     SceneItemCb? GetCb()
     {
-        if (!data.CanUse())
+        if (!Data.CanUse())
             return null;
         return new SceneItemCb
         {
-            Des = data.GetDes(),
-            Color = data.DesColor(),
+            Des = Data.GetDes(),
+            Color = Data.DesColor(),
             Cb = () => 
             {
-                data.Use();
+                Data.Use();
                 PlayerManager.ReticleCb = GetCb();
             },
         };

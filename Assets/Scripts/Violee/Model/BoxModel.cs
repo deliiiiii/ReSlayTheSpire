@@ -1,27 +1,27 @@
-﻿using Sirenix.Utilities;
+﻿using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee
 {
     public class BoxModel : ModelBase<BoxData>
     {
-#pragma warning disable CS8618
-        [SerializeField] SerializableDictionary<EWallType, WallModel> wallDic;
-        [SerializeField] SerializableDictionary<EBoxDir, BoxPointModel> pointDic;
-#pragma warning restore CS8618
+        public required SerializableDictionary<EWallType, WallModel> wallDic;
+        public required SerializableDictionary<EBoxDir, BoxPointModel> pointDic;
         
         protected override void OnReadData()
         {
-            name = $"Box {data.Pos2D.x} {data.Pos2D.y}";
-            transform.position = BoxHelper.Pos2DTo3DBox(data.Pos2D);
+            Data.Model = this;
+            
+            name = $"Box {Data.Pos2D.x} {Data.Pos2D.y}";
+            transform.position = BoxHelper.Pos2DTo3DBox(Data.Pos2D);
             wallDic.Values.ForEach(g => g.gameObject.SetActive(false));
-            data.PointDataMyDic.ForEach(p =>
-            {
-                pointDic[p.Dir].ReadData(p);
-            });
-            data.WallDataMyDic.ForEach(OnAddWallData);
-            data.OnAddWallData += OnAddWallData;
-            data.OnRemoveWallData += OnRemoveWallData;
+            Data.PointDataMyDic.ForEach(p => pointDic[p.Dir].ReadData(p));
+            Data.WallDataMyDic.ForEach(OnAddWallData);
+            Data.WallDataMyDic.OnAdd += OnAddWallData;
+            Data.WallDataMyDic.OnRemove += OnRemoveWallData;
+            Data.SceneDataMyList.OnAdd += OnAddSceneItemData;
+            Data.SceneDataMyList.OnRemove += OnRemoveSceneItemData;
         }
 
         public void OnAddWallData(WallData wallData)
@@ -35,14 +35,29 @@ namespace Violee
         }
 
         #region SceneItem
-        public void CreateSceneItemModel(EBoxDir dir, SceneItemConfig sceneItemConfig)
-        {
-            var sceneItemData = SceneItemData.ReadConfig(sceneItemConfig, new([dir]));
-            sceneItemData.Parent = pointDic[dir].transform;
-            data.SceneDataMyList.MyAdd(sceneItemData);
-        }
         
-
+        static void OnAddSceneItemData(SceneItemData data)
+        {
+            var obj = Instantiate(data.Obj);
+            var localPos = obj.transform.localPosition;
+            var dtRot = data.OccupyDirSet.First() switch
+            {
+                EBoxDir.Up => Quaternion.Euler(0, 0, 0),
+                EBoxDir.Right => Quaternion.Euler(0, 90, 0),
+                EBoxDir.Down => Quaternion.Euler(0, 180, 0),
+                _ => Quaternion.Euler(0, 270, 0),
+            };
+            obj.transform.localPosition = dtRot * localPos;
+            obj.transform.localRotation *= dtRot;
+            obj.transform.parent = data.Parent;
+            data.ObjIns = obj.GetOrAddComponent<SceneItemModel>();
+            data.ObjIns.ReadData(data);
+            obj.SetActive(true);
+        }
+        static void OnRemoveSceneItemData(SceneItemData data)
+        {
+            Destroy(data.ObjIns);
+        }
         #endregion
     }
 }

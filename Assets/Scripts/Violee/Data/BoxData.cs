@@ -114,12 +114,10 @@ namespace Violee
             WallDataMyDic.OnAdd += wallData =>
             {
                 WallsByte |= (byte)wallData.WallType;
-                OnAddWallData?.Invoke(wallData);
             };
             WallDataMyDic.OnRemove += wallType =>
             {
                 WallsByte &= (byte)~(int)wallType;
-                OnRemoveWallData?.Invoke(wallType);
             };
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
@@ -164,34 +162,18 @@ namespace Violee
         #region List, Dic
         public readonly MyKeyedCollection<EWallType, WallData> WallDataMyDic 
             = new(w => w.WallType);
-        public event Action<WallData>? OnAddWallData;
-        public event Action<EWallType>? OnRemoveWallData;
         public MyKeyedCollection<EBoxDir, BoxPointData> PointDataMyDic 
             = new (b => b.Dir);
-        public MyList<SceneItemData> SceneDataMyList 
-            = new(OnAddSceneItemData, OnRemoveSceneItemData);
-        static void OnAddSceneItemData(SceneItemData data)
-        {
-            var obj = GameObject.Instantiate(data.Obj);
-            var localPos = obj.transform.localPosition;
-            var dtRot = data.OccupyDirSet.First() switch
-            {
-                EBoxDir.Up => Quaternion.Euler(0, 0, 0),
-                EBoxDir.Right => Quaternion.Euler(0, 90, 0),
-                EBoxDir.Down => Quaternion.Euler(0, 180, 0),
-                _ => Quaternion.Euler(0, 270, 0),
-            };
-            obj.transform.localPosition = dtRot * localPos;
-            obj.transform.localRotation *= dtRot;
-            obj.transform.parent = data.Parent;
-            data.ObjIns = obj.GetOrAddComponent<SceneItemModel>();
-            data.ObjIns.ReadData(data);
-            obj.SetActive(true);
-        }
-        static void OnRemoveSceneItemData(SceneItemData data)
-        {
-            GameObject.Destroy(data.ObjIns);
-        }
+        public MyList<SceneItemData> SceneDataMyList = [];
         #endregion
+        
+        public void CreateSceneItemModel(EBoxDir dir, SceneItemConfig sceneItemConfig)
+        {
+            var sceneItemData = SceneItemData.ReadConfig(sceneItemConfig, 
+                new SceneItemC2D([dir], Model.pointDic[dir].transform));
+            SceneDataMyList.MyAdd(sceneItemData);
+        }
+
+        [NonSerialized] public BoxModel Model;
     }
 }

@@ -23,13 +23,13 @@ namespace Violee
             LockedSprite.SetActive(false);
             UnlockedSprite.SetActive(false);
             gameObject.SetActive(true);
-            Binder.From(data.Visited).To(v =>
+            Binder.From(Data.Visited).To(v =>
             {
                 WallSprite.enabled = v;
                 if(v)
                     SetDoorSprite();
             }).Immediate();
-            switch (data.DoorType)
+            switch (Data.DoorType)
             {
                 case EDoorType.None:
                     NotDoor.gameObject.SetActive(true);
@@ -41,7 +41,7 @@ namespace Violee
         }
         void SetDoorSprite()
         {
-            if (data.Opened)
+            if (Data.Opened)
                 UnlockedSprite.SetActive(true);
             else
                 LockedSprite.SetActive(true);
