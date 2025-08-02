@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 
 [Serializable]
 [System.Runtime.InteropServices.ComVisible(false)]
@@ -160,6 +161,7 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
     }
     public void MyClear()
     {
+        Items.ForEach(i => OnRemove?.Invoke(GetKeyForItem(i)));
         base.Clear();
     }
     

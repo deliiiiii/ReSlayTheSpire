@@ -38,7 +38,7 @@ namespace Violee
             };
         }
 
-        public const float BoxSize = 15;
+        public const int BoxSize = 15;
         static List<BoxConfig> BoxConfigs => Configer.BoxConfigList.BoxConfigs;
         static float pointOffset => Configer.SettingsConfig.BoxCostPosOffset;
         public static readonly BoxConfig EmptyBoxConfig;
@@ -72,15 +72,17 @@ namespace Violee
             return ret;
         }
         
+        public static Vector3Int Pos2DTo3DBox(Vector2Int pos2D) 
+            => new (pos2D.x * BoxSize, 0, pos2D.y * BoxSize);
+        public static Vector2Int Pos3DTo2D(Vector3 pos3D) 
+            => new ((int)((pos3D.x + BoxSize / 2f) / BoxSize), (int)((pos3D.z + BoxSize / 2f) / BoxSize));
         public static Vector3 Point3DOffsetInBox(EBoxDir dir)
             => new (dirToVec2Dic[dir].x * BoxSize * pointOffset, 0, dirToVec2Dic[dir].y * BoxSize * pointOffset);
-        public static Vector3 Pos2DTo3DBox(Vector2 pos2D) => new (pos2D.x * BoxSize, 0, pos2D.y * BoxSize);
-        public static Vector3 Pos2DTo3DPoint(Vector2 pos2D, EBoxDir dir) =>
-            Pos2DTo3DBox(pos2D) + Point3DOffsetInBox(dir);
-        public static Vector3 Pos2DTo3DEdge(Vector2 pos2D, EBoxDir dir) =>
-            Pos2DTo3DBox(pos2D) + new Vector3(dirToVec2Dic[dir].x * BoxSize / 2, 0, dirToVec2Dic[dir].y * BoxSize / 2);
-        public static Vector2Int Pos3DTo2D(Vector3 pos3D) => 
-            new ((int)((pos3D.x + BoxSize / 2) / BoxSize), (int)((pos3D.z + BoxSize / 2) / BoxSize));
+        public static Vector3 Pos2DTo3DPoint(Vector2Int pos2D, EBoxDir dir)
+            => Pos2DTo3DBox(pos2D) + Point3DOffsetInBox(dir);
+        public static Vector3 Pos2DTo3DEdge(Vector2Int pos2D, EBoxDir dir) 
+            => Pos2DTo3DBox(pos2D) + 
+               new Vector3(dirToVec2Dic[dir].x * BoxSize / 2f, 0, dirToVec2Dic[dir].y * BoxSize / 2f);
         
         public static EWallType WallDirToType(EBoxDir dir)
         {

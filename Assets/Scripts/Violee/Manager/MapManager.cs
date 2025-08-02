@@ -30,7 +30,7 @@ internal class MapManager : SingletonCS<MapManager>
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, Instance.go.transform, 42);
         
         GenerateStream = Instance
-            .Bind(() => new GenerateStreamParam(boxKList, [], [])) 
+            .Bind(() => new GenerateStreamParam(boxDataMyDic, [], [])) 
             .ToStreamAsync(StartGenerate);
         DijkstraStream = Instance
             .Bind(() => (GenerateStream.Result.Value, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)))
@@ -38,20 +38,15 @@ internal class MapManager : SingletonCS<MapManager>
             .OnEnd(param => VisitEdgeWalls(param.Value.EdgeWallSet));
         GenerateStream.EndWith(DijkstraStream);
     }
-    
-    
     public static float MaxSize => Mathf.Max(Width, Height) * BoxHelper.BoxSize;
-    
     static int Height => mapModel.Height;
     static int Width => mapModel.Width;
     static Vector2Int StartPos => mapModel.StartPos;
     static EBoxDir StartDir => mapModel.StartDir;
-    static readonly MyKeyedCollection<Vector2Int, BoxData> boxKList = new (b => b.Pos2D);
     static bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
-    static bool HasBox(Vector2Int pos) => boxKList.Contains(pos);
+    static bool HasBox(Vector2Int pos) => boxDataMyDic.Contains(pos);
     
     
-
     #region Visit
     static readonly Observable<BoxPointData> playerCurPoint = new(null!, 
         x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
@@ -72,7 +67,7 @@ internal class MapManager : SingletonCS<MapManager>
             var edgeCenterPos = BoxHelper.Pos2DTo3DEdge(boxPos2D, dir);
             var edgeX = edgeCenterPos.x;
             var edgeZ = edgeCenterPos.z;
-            var pointData = boxKList[boxPos2D].PointDataMyDic[dir];
+            var pointData = boxDataMyDic[boxPos2D].PointDataMyDic[dir];
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
             if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfigList.WalkInTolerance)
             {
@@ -94,9 +89,7 @@ internal class MapManager : SingletonCS<MapManager>
     
     
     #region Generate
-
     public static readonly Stream<GenerateStreamParam> GenerateStream;
-
     public static readonly Stream<(GenerateStreamParam, Vector3)> DijkstraStream;
     static async Task StartGenerate(GenerateStreamParam param)
     {
@@ -105,7 +98,6 @@ internal class MapManager : SingletonCS<MapManager>
         var fEdgeWallSet = param.EdgeWallSet;
         void RemoveAllBoxes()
         {
-            boxDataMyDic.ForEach(DestroyBox);
             boxDataMyDic.MyClear();
             fEmptyPosSet.Clear();
             for(var j = 0; j < Height; j++)
@@ -133,14 +125,12 @@ internal class MapManager : SingletonCS<MapManager>
     }
     static async Task GenerateOneFakeConnection(bool startWithStartLoc, HashSet<Vector2Int> fEmptyPosSet,HashSet<WallData> edgeWallSet)
     {
-        async Task<BoxData> AddBoxAsync(Vector2Int pos, BoxConfig config)
+        BoxData ReadBoxConfig(Vector2Int pos, BoxConfig config)
         {
-            await Configer.SettingsConfig.YieldFrames();
             var boxData = new BoxData(pos, config);
-            MyDebug.Log($"Add box {config.Walls} at {pos}");
-            boxKList.MyAdd(boxData);
+            // MyDebug.Log($"Add box {config.Walls} at {pos}");
+            boxDataMyDic.MyAdd(boxData);
             fEmptyPosSet.Remove(pos);
-            await SpawnBox3D(boxData);
             return boxData;
         }
         // void RemoveBox(BoxData boxData)
@@ -155,7 +145,7 @@ internal class MapManager : SingletonCS<MapManager>
             var edgeBoxStack = new Stack<BoxData>();
             // 每个伪连通块的第一个是空格子
             var firstLoc = startWithStartLoc ? StartPos : fEmptyPosSet.First();
-            var firstBox = await AddBoxAsync(firstLoc, BoxHelper.EmptyBoxConfig);
+            var firstBox = ReadBoxConfig(firstLoc, BoxHelper.EmptyBoxConfig);
             edgeBoxStack.Push(firstBox);
             while (edgeBoxStack.Count > 0)
             {
@@ -180,7 +170,7 @@ internal class MapManager : SingletonCS<MapManager>
                             Configer.BoxConfigList.BoxConfigs.RandomItemWeighted(
                                 x => !BoxHelper.HasSWallByByteAndDir(x.Walls, nextGoInDir),
                                 x => x.BasicWeight);
-                        var nextBox = await AddBoxAsync(nextPos, boxConfig);
+                        var nextBox = ReadBoxConfig(nextPos, boxConfig);
                         var nextNextPairs = BoxHelper.GetNextLocAndGoInDirList(nextPos);
                         foreach (var (nextNextPos, nextNextGoInDir) in nextNextPairs)
                         {
@@ -188,7 +178,7 @@ internal class MapManager : SingletonCS<MapManager>
                             var nextGoOutDir = BoxHelper.OppositeDirDic[nextNextGoInDir];
                             if (InMap(nextNextPos) && HasBox(nextNextPos))
                             {
-                                var nextNextBox = boxKList[nextNextPos];
+                                var nextNextBox = boxDataMyDic[nextNextPos];
                                 if (nextNextBox.HasSWallByDir(nextNextGoInDir, out _))
                                 {
                                     var t = BoxHelper.WallDirToType(nextGoOutDir);
@@ -284,17 +274,22 @@ internal class MapManager : SingletonCS<MapManager>
             throw;
         }
     }
-    static readonly MyKeyedCollection<Vector3, BoxModel> boxModelMyDic = new(b => b.transform.position);
-    static async Task SpawnBox3D(BoxData fBoxData)
+    
+    static readonly MyKeyedCollection<Vector2Int, BoxData> boxDataMyDic 
+        = new (b => b.Pos2D, b => Task.FromResult(OnAddBoxData(b)), OnRemoveBoxData);
+    static readonly MyKeyedCollection<Vector3Int, BoxModel> boxModelMyDic 
+        = new(b => Vector3Int.RoundToInt(b.transform.position));
+
+    static async Task OnAddBoxData(BoxData boxData)
     {
+        await Configer.SettingsConfig.YieldFrames();
         var boxModel = await boxPool.MyInstantiate();
-        boxModel.ReadData(fBoxData);
+        boxModel.ReadData(boxData);
         boxModelMyDic.MyAdd(boxModel);
     }
-        
-    static void DestroyBox(BoxData fBoxData)
+    static void OnRemoveBoxData(Vector2Int key)
     {
-        var pos3D = BoxHelper.Pos2DTo3DBox(fBoxData.Pos2D);
+        var pos3D = BoxHelper.Pos2DTo3DBox(key);
         boxPool.MyDestroy(boxModelMyDic[pos3D]);
         boxModelMyDic.MyRemove(pos3D);
     }
