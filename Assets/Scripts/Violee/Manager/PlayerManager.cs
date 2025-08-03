@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -33,14 +34,12 @@ public class PlayerManager : SingletonCS<PlayerManager>
         playerMono.gameObject.SetActive(false);
     }
 
-    public static void Tick(float dt)
+    public static void Tick(bool hasWindowed)
     {
-        playerMono.Fpc.Tick();
-        if (Input.GetMouseButtonDown(0))
+        playerMono.Fpc.enabled = !hasWindowed;
+        if (InteractStream != null && Input.GetMouseButtonDown(0) && !hasWindowed)
         {
-            CurInteractCb?.Cb.Invoke();
-            if(CurInteractCb != null)
-                OnClickReticle?.Invoke();
+            _ = InteractStream.CallTriggerAsync();
         }
     }
 
@@ -49,7 +48,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     #region SceneItem
 
-    public static InteractCb? CurInteractCb = null;
-    public static event Action? OnClickReticle;
+    public static Stream<InteractInfo>? InteractStream = null;
     #endregion
 }

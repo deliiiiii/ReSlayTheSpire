@@ -15,7 +15,7 @@ public class Dele<T>
 
 public static class DeleExt
 {
-    public static Dele<T> As<T>(this T t) => new() { Value = t };
+    public static Dele<T> WrapToDele<T>(this T t) => new() { Value = t };
 }
 
 
@@ -141,10 +141,10 @@ public static class Streamer
     public static Dele<T2> Bind<T1, T2>(this Dele<T1> t1, Func<T1, Dele<T2>> bind)
         => bind(t1.Value);
     public static Dele<T2> Map<T1, T2>(this Dele<T1> t1, Func<T1, T2> map)
-        => map(t1.Value).As();
+        => map(t1.Value).WrapToDele();
 
     public static Dele<T> Reduce<T>(this Dele<T> t1, T seed, Func<T, T, T> reduce) 
-        => reduce(t1.Value, seed).As();
+        => reduce(t1.Value, seed).WrapToDele();
     
     public static Func<(T1, T2)> WithA<T1, T2>(this Func<T1> t1, Func<T2> t2)
         => () => (t1(), t2());
@@ -228,6 +228,11 @@ public static class Streamer
     public static Stream<T> OnEnd<T>(this Stream<T> self, Action<T> action)
     {
         self.onEnd += action;
+        return self;
+    }
+    public static Stream<T> OnEndAsync<T>(this Stream<T> self, Func<T, Task> func)
+    {
+        self.onEndAsync += func;
         return self;
     }
 }

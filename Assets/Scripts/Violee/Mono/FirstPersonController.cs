@@ -175,7 +175,7 @@ public class FirstPersonController : MonoBehaviour
 
     float camRotation;
 
-    public void Tick()
+    public void Update()
     {
         #region Camera
 

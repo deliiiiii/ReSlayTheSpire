@@ -9,7 +9,6 @@ namespace Violee;
 public class VioletMono : MonoBehaviour
 {
     [ShowInInspector] public string GameState => GameManager.GameState;
-    [ShowInInspector] public string WindowState => GameManager.WindowState;
     void Awake()
     {
 #if UNITY_EDITOR

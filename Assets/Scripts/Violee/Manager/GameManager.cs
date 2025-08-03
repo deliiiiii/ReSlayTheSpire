@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -11,12 +13,36 @@ public enum EGameState
     Playing,
 }
 
-public enum EWindowState
+public enum EWindowType
 {
-    None,
-    Paused,
-    WatchingUI,
+    WaitingSceneItem,
+    NormalUI,
+    GamePause,
 }
+
+[Serializable]
+public class WindowInfo
+{
+    public EWindowType WindowType;
+    public string Des = string.Empty;
+    public Action<WindowInfo>? OnAddEvent;
+    public Action<WindowInfo>? OnRemoveEvent;
+}
+
+public static class WindowInfoExt
+{
+    public static WindowInfo OnAdd(this WindowInfo info, Action<WindowInfo> action)
+    {
+        info.OnAddEvent += action;
+        return info;
+    }
+    public static WindowInfo OnRemove(this WindowInfo info, Action<WindowInfo> action)
+    {
+        info.OnRemoveEvent += action;
+        return info;
+    }
+}
+
 
 public class GameManager : SingletonCS<GameManager>
 {
@@ -24,12 +50,12 @@ public class GameManager : SingletonCS<GameManager>
     public static string GameState => gameFsm.CurStateName;
     public static readonly BindDataState GeneratingMapState;
     public static readonly BindDataState PlayingState;
-    static readonly MyFSM<EWindowState> windowFsm = new ();
-    public static string WindowState => windowFsm.CurStateName;
-    public static readonly BindDataState NoneState;
-    public static readonly BindDataState PausedState;
+    [ShowInInspector]
+    public static readonly MyList<WindowInfo> WindowList 
+        = new ([], x => x.OnAddEvent?.Invoke(x), x => x.OnRemoveEvent?.Invoke(x));
+    public static readonly WindowInfo PauseWindow;
 
-    public static void Init() => Instance.As();
+    public static void Init() => Instance.WrapToDele();
 
     static GameManager()
     {
@@ -38,7 +64,7 @@ public class GameManager : SingletonCS<GameManager>
         PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
         PlayingState.OnUpdate(dt =>
             {
-                if (Input.GetKey(KeyCode.LeftAlt))
+                if (Input.GetKey(KeyCode.LeftAlt) || HasWindow)
                 {
                     Cursor.lockState = CursorLockMode.None;
                     Cursor.visible = true;
@@ -49,33 +75,35 @@ public class GameManager : SingletonCS<GameManager>
                     Cursor.visible = false;
                 }
                 MapManager.TickPlayerVisit(PlayerManager.GetPos);
-                PlayerManager.Tick(dt);
+                PlayerManager.Tick(HasWindow);
             })
             .OnEnter(PlayerManager.OnEnterPlaying)
             .OnExit(PlayerManager.OnExitPlaying);
         
-        NoneState = Binder.From(windowFsm.GetState(EWindowState.None));
-        PausedState = Binder.From(windowFsm.GetState(EWindowState.Paused));
-        NoneState.OnEnter(() =>
+        PauseWindow = new WindowInfo()
         {
-            Time.timeScale = 1;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }).OnUpdate(_ => CheckGameWindow());
-        PausedState.OnEnter(() =>
-        {
-            Time.timeScale = 0;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        });
+            WindowType = EWindowType.GamePause,
+            Des = "游戏窗口失去焦点 or 按下了暂停键。",
+            OnAddEvent = _ =>
+            {
+                Time.timeScale = 0;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            },
+            OnRemoveEvent = _ =>
+            {
+                Time.timeScale = 1;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        };
         
         MapManager.GenerateStream
-            .Where(_ => isIdle || isPlaying)
+            .Where(_ => IsIdle || IsPlaying)
             .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap))
-            .OnBegin(_ => windowFsm.ChangeState(EWindowState.None))
             .OnEnd(_ => gameFsm.ChangeState(EGameState.Idle));
         MapManager.DijkstraStream
-            .Where(_ => isIdle)
+            .Where(_ => IsIdle)
             .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap))
             .OnEnd(param =>
             {
@@ -84,50 +112,47 @@ public class GameManager : SingletonCS<GameManager>
             });
             
         gameFsm.ChangeState(EGameState.Idle);
-        windowFsm.ChangeState(EWindowState.None);
-        
         Binder.Update(dt =>
         {
-            if (isPaused)
-                return;
             gameFsm.Update(dt);
-            windowFsm.Update(dt);
+            CheckGameWindow();
         });
         Binder.Update(_ =>
         {
-            if (!isIdle && !isPlaying)
+            if (!IsIdle && !IsPlaying)
                 return;
             if (Input.GetKeyDown(KeyCode.R))
             {
                 Task.FromResult(MapManager.GenerateStream.CallTriggerAsync());
             }
-                
         }, EUpdatePri.Input);
     }
     
     
-    public static void UnpauseWindow() => windowFsm.ChangeState(EWindowState.None);
-
-    public static void SwitchUIState()
-    {
-        windowFsm.ChangeState(!IsWatchingUI ? EWindowState.WatchingUI : EWindowState.None);
-    }
-    
+    public static void UnPauseWindow()
+     => WindowList.MyRemove(PauseWindow);
     static void CheckGameWindow()
     {
-#pragma warning disable CS0162 // 检测到不可到达的代码
-#if UNITY_EDITOR
-        return;
-#endif
-        if (!Application.isFocused || Input.GetKeyDown(KeyCode.Escape))
+        if (!Application.isFocused)
         {
-            windowFsm.ChangeState(EWindowState.Paused);
+            if(!HasPaused)
+                WindowList.MyAdd(PauseWindow);
         }
-#pragma warning restore CS0162
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(!HasPaused)
+                WindowList.MyAdd(PauseWindow);
+            else
+            {
+                WindowList.MyRemove(PauseWindow);
+            }
+        }
     }
-    public static bool isIdle => gameFsm.IsState(EGameState.Idle);
-    public static bool isPlaying => gameFsm.IsState(EGameState.Playing);
-    public static bool isPaused => windowFsm.IsState(EWindowState.Paused);
-    public static bool IsWatchingUI => windowFsm.IsState(EWindowState.WatchingUI);
-        
+
+    
+    public static bool IsIdle => gameFsm.IsState(EGameState.Idle);
+    public static bool IsPlaying => gameFsm.IsState(EGameState.Playing);
+    public static bool HasWindow => WindowList.Any();
+    public static bool HasPaused => WindowList.Contains(PauseWindow);
 }

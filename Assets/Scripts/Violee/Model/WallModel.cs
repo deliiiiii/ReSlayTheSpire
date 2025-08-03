@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Violee
 {
@@ -25,26 +26,26 @@ namespace Violee
 
             if (Data.DoorType != EDoorType.None)
             {
-                DoorInteract.InteractCb = GetCb;
+                DoorInteract.GetInteractInfo = GetCb;
             }
         }
 
-        InteractCb? GetCb()
+        InteractInfo? GetCb()
         {
             if (Data.Opened.Value)
                 return null;
             if (PlayerManager.StaminaCount.Value <= 0)
             {
-                return new InteractCb
+                return new InteractInfo
                 {
-                    Cb = () => {},
+                    Act = () => {},
                     Description = "体力不足，无法打开门",
                     Color = Color.red,
                 };
             }
-            return new InteractCb
+            return new InteractInfo
             {
-                Cb = () =>
+                Act = () =>
                 {
                     PlayerManager.StaminaCount.Value -= 1;
                     Data.Opened.Value = true;

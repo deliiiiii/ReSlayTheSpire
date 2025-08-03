@@ -55,6 +55,7 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
     internal Action<T>? onBegin;
     internal Func<T, Task>? onBeginAsync;
     internal Action<T>? onEnd;
+    internal Func<T, Task>? onEndAsync;
     internal IStream? endStream = endStream;
     
     public async Task CallTriggerAsync()
@@ -81,6 +82,7 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
             await (onBeginAsync != null ? onBeginAsync(Result) : Task.CompletedTask);
             await (triggerFuncAsync != null ? triggerFuncAsync(Result) : Task.CompletedTask);
             onEnd?.Invoke(Result);
+            await (onEndAsync != null ? onEndAsync(Result) : Task.CompletedTask);
             await (endStream != null ? endStream.CallTriggerAsync() : Task.CompletedTask);
         }
         catch (Exception e)

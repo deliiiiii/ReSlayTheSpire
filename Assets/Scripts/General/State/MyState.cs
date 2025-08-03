@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 
 public class MyState
 {
@@ -13,8 +14,10 @@ public class MyState
     public void Update(float dt)
     {
         OnUpdate?.Invoke(dt);
+        OnLateUpdate?.Invoke(dt);
     }
-    public event Action<float> OnUpdate;
-    public event Action OnEnter;
-    public event Action OnExit;
+    [CanBeNull] public event Action<float> OnUpdate;
+    [CanBeNull] public event Action<float> OnLateUpdate;
+    [CanBeNull] public event Action OnEnter;
+    [CanBeNull] public event Action OnExit;
 }

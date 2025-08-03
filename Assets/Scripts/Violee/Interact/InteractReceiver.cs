@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,7 +7,7 @@ namespace Violee;
 
 public class InteractReceiver : MonoBehaviour
 {
-    public Func<InteractCb?> InteractCb = () => null;
+    public Func<InteractInfo?> GetInteractInfo = () => null;
     Outline outline = null!;
     void Awake()
     {
@@ -20,7 +21,7 @@ public class InteractReceiver : MonoBehaviour
 
     public void SetOutline(bool shown)
     {
-        SetOutline(shown, InteractCb()?.Color ?? Color.white);
+        SetOutline(shown, GetInteractInfo()?.Color ?? Color.white);
     }
     void SetOutline(bool shown, Color color)
     {
@@ -29,9 +30,15 @@ public class InteractReceiver : MonoBehaviour
     }
 }
 
-public class InteractCb
+public class InteractInfo
 {
-    public required Action Cb;
+    public required Action Act;
     public required string Description;
     public required Color Color;
+
+    public bool IsSleep;
+    public float SleepTime;
+    
+    public bool IsMoveSth;
+    public float MoveTime;
 }

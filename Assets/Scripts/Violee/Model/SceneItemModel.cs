@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -25,18 +26,21 @@ public class SceneItemModel : ModelBase<SceneItemData>
             };
         }
 
-        Ir.InteractCb = GetCb;
+        Ir.GetInteractInfo = GetCb;
     }
 
-    InteractCb? GetCb()
+    InteractInfo? GetCb()
     {
         if (!Data.CanUse())
             return null;
-        return new InteractCb
+        return new InteractInfo
         {
-            Cb = Data.Use,
+            Act = Data.Use,
             Description = Data.GetInteractDes(), 
             Color = Data.DesColor(),
+            
+            IsSleep = Data is PurpleSceneItemData,
+            SleepTime = Data is PurpleSceneItemData ? 2.89f : 0f,
         };
     }
 }

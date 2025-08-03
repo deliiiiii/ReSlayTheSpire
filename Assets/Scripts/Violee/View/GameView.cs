@@ -1,4 +1,7 @@
-﻿using Cinemachine;
+﻿using System;
+using System.Threading.Tasks;
+using Cinemachine;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,8 +9,28 @@ namespace Violee.View;
 
 class GameView : ViewBase<GameView>
 {
+    static readonly WindowInfo fullMapWindow = new ()
+    {
+        WindowType = EWindowType.NormalUI,
+        Des = "全屏地图"
+    };
+    static readonly WindowInfo sleepWindow = new ()
+    {
+        WindowType = EWindowType.WaitingSceneItem,
+        Des = "休息..."
+    };
     protected override void IBL()
     {
+        fullMapWindow
+            .OnAdd(_ =>
+            {
+                NormalReticle.SetActive(false);
+                FindReticle.SetActive(false);
+                SceneItemInfoPnl.SetActive(false);
+                ShowFullScreenMap();
+            })
+            .OnRemove(_ => ShowMinimap());
+        
         GameManager.GeneratingMapState
             .OnEnter(() => LoadPnl.SetActive(true))
             .OnExit(() => LoadPnl.SetActive(false));
@@ -15,37 +38,49 @@ class GameView : ViewBase<GameView>
             .OnEnter(() =>
             {
                 MiniItemPnl.SetActive(true);
-                ShowMinimap();
+                
+                GameManager.WindowList.MyRemove(fullMapWindow);
+                
                 Binder.From(PlayerManager.StaminaCount).ToTxt(StaminaTxt).Immediate();
                 Binder.From(PlayerManager.EnergyCount).ToTxt(EnergyTxt).Immediate();
                 Binder.From(PlayerManager.GlovesCount).ToTxt(GlovesTxt).Immediate();
                 Binder.From(PlayerManager.DiceCount).ToTxt(DiceTxt).Immediate();
-            }).OnUpdate(dt =>
+            })
+            .OnLateUpdate(dt =>
             {
-                var cb = PlayerManager.CurInteractCb;
+                var cb = PlayerManager.InteractStream?.Value;
+                PlayerManager.InteractStream?.OnEndAsync(GetUICb);
                 NormalReticle.SetActive(cb == null);
                 FindReticle.SetActive(cb != null);
                 SceneItemInfoPnl.SetActive(cb != null);
                 SceneItemInfoTxt.text = cb?.Description ?? "";
                 SceneItemInfoTxt.color = cb?.Color ?? Color.black;
-                
+
                 ChangeFOV(dt);
+                
                 if (Input.GetKeyDown(KeyCode.Tab))
                 {
-                    GameManager.SwitchUIState();
-                    if (isMinimap)
-                    {
-                        ShowFullScreenMap();
-                        return;
-                    }
-
-                    ShowMinimap();
+                    if (isMinimap && !GameManager.HasWindow)
+                        GameManager.WindowList.MyAdd(fullMapWindow);
+                    else if(!isMinimap)
+                        GameManager.WindowList.MyRemove(fullMapWindow);
                 }
-            }).OnExit(() => MiniItemPnl.SetActive(false));
-        GameManager.PausedState
-            .OnEnter(() => PausePnl.SetActive(true))
-            .OnExit(() => PausePnl.SetActive(false));
-        Binder.From(ContinueBtn).To(GameManager.UnpauseWindow);
+            })
+            .OnExit(() => MiniItemPnl.SetActive(false));
+
+        GameManager.PauseWindow
+            .OnAdd(_ =>
+            {
+                NormalReticle.SetActive(false);
+                FindReticle.SetActive(false);
+                SceneItemInfoPnl.SetActive(false);
+                PausePnl.SetActive(true);
+            })
+            .OnRemove(_ =>
+            {
+                PausePnl.SetActive(false);
+            });
+        Binder.From(ContinueBtn).To(GameManager.UnPauseWindow);
     }
 
     [Header("Load & Pause")]
@@ -123,5 +158,57 @@ class GameView : ViewBase<GameView>
     public required GameObject FindReticle;
     public required GameObject SceneItemInfoPnl;
     public required Text SceneItemInfoTxt;
+
+    public required GameObject SleepPnl;
+    async Task GetUICb(InteractInfo cb)
+    {
+        if (cb.IsSleep)
+        {
+            await FadeImageAlpha(SleepPnl, cb.SleepTime);
+        }
+    }
+
+    static async Task FadeImageAlpha(GameObject go, float duration)
+    {
+        try
+        {
+            GameManager.WindowList.MyAdd(sleepWindow);
+            go.SetActive(true);
+            var img = go.GetComponent<Image>();
+            var initAlpha = 0f;
+            var half = duration * 0.5f;
+    
+            // Fade in
+            for (float t = 0; t < half; t += Time.deltaTime)
+            {
+                var norm = t / half;
+                var eased = Mathf.SmoothStep(0f, 1f, norm);
+                var c = img.color;
+                c.a = Mathf.Lerp(initAlpha, 1f, eased);
+                img.color = c;
+                await Task.Yield();
+            }
+            img.color.SetAlpha(1);
+            // Fade out
+            for (float t = 0; t < half; t += Time.deltaTime)
+            {
+                var norm = t / half;
+                var eased = Mathf.SmoothStep(0f, 1f, norm);
+                var c = img.color;
+                c.a = Mathf.Lerp(1f, initAlpha, eased);
+                img.color = c;
+                await Task.Yield();
+            }
+            img.color.SetAlpha(initAlpha);
+            go.SetActive(false);
+            GameManager.WindowList.MyRemove(sleepWindow);
+        }
+        catch (Exception e)
+        {
+            MyDebug.LogError(e);
+            throw;
+        }
+        
+    }
     #endregion
 }
