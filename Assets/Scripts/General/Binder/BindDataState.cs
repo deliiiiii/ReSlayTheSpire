@@ -32,9 +32,4 @@ public static class BindDataStateExt
         self.state.OnUpdate += act;
         return self;
     }
-    public static BindDataState OnLateUpdate(this BindDataState self, Action<float> act)
-    {
-        self.state.OnLateUpdate += act;
-        return self;
-    }
 }

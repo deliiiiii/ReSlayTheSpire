@@ -55,7 +55,8 @@ public class GameManager : SingletonCS<GameManager>
         = new ([], x => x.OnAddEvent?.Invoke(x), x => x.OnRemoveEvent?.Invoke(x));
     public static readonly WindowInfo PauseWindow;
 
-    public static void Init() => Instance.WrapToDele();
+    bool init;
+    public static void Init() => Instance.init = !Instance.init;
 
     static GameManager()
     {

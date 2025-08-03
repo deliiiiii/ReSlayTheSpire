@@ -46,10 +46,11 @@ class GameView : ViewBase<GameView>
                 Binder.From(PlayerManager.GlovesCount).ToTxt(GlovesTxt).Immediate();
                 Binder.From(PlayerManager.DiceCount).ToTxt(DiceTxt).Immediate();
             })
-            .OnLateUpdate(dt =>
+            .OnUpdate(dt =>
             {
-                var cb = PlayerManager.InteractStream?.Value;
-                PlayerManager.InteractStream?.OnEndAsync(GetUICb);
+                var cb = PlayerManager.InteractStream.StartValue;
+                PlayerManager.InteractStream.RemoveOnEndAsync(GetUICb);
+                PlayerManager.InteractStream.OnEndAsync(GetUICb);
                 NormalReticle.SetActive(cb == null);
                 FindReticle.SetActive(cb != null);
                 SceneItemInfoPnl.SetActive(cb != null);
@@ -62,7 +63,7 @@ class GameView : ViewBase<GameView>
                 {
                     if (isMinimap && !GameManager.HasWindow)
                         GameManager.WindowList.MyAdd(fullMapWindow);
-                    else if(!isMinimap)
+                    else if(!isMinimap && !GameManager.HasPaused)
                         GameManager.WindowList.MyRemove(fullMapWindow);
                 }
             })
@@ -160,8 +161,10 @@ class GameView : ViewBase<GameView>
     public required Text SceneItemInfoTxt;
 
     public required GameObject SleepPnl;
-    async Task GetUICb(InteractInfo cb)
+    async Task GetUICb(InteractInfo? cb)
     {
+        if (cb == null)
+            return;
         if (cb.IsSleep)
         {
             await FadeImageAlpha(SleepPnl, cb.SleepTime);

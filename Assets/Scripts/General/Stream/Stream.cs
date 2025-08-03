@@ -48,7 +48,7 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
 {
     public Stream(Func<T>? startFunc = null, Action<T>? triggerFunc = null) 
         : this(startFunc, x => { triggerFunc?.Invoke(x); return Task.CompletedTask; }){ }
-    
+
     internal readonly Func<T> startFunc = startFunc ?? (() => default!);
     internal readonly List<(Func<T, Task<Maybe<T>>>, string)> mappers = [];
     internal Func<T, Task>? triggerFuncAsync = triggerFuncAsync;
@@ -91,6 +91,8 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
             throw;
         }
     }
+    
+    public T StartValue => startFunc();
     public Maybe<T> Result { get; private set; } = Maybe<T>.Nothing.Instance;
     
 }

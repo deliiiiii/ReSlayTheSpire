@@ -37,7 +37,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
     public static void Tick(bool hasWindowed)
     {
         playerMono.Fpc.enabled = !hasWindowed;
-        if (InteractStream != null && Input.GetMouseButtonDown(0) && !hasWindowed)
+        if (Input.GetMouseButtonDown(0) && !hasWindowed)
         {
             _ = InteractStream.CallTriggerAsync();
         }
@@ -48,6 +48,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     #region SceneItem
 
-    public static Stream<InteractInfo>? InteractStream = null;
+    public static Stream<InteractInfo?> InteractStream;
     #endregion
 }

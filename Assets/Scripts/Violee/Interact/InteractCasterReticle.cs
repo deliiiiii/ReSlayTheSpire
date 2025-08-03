@@ -14,6 +14,7 @@ public class InteractCasterReticle : MonoBehaviour
     void Awake()
     {
         radius = Configer.SettingsConfig.InteractCasterRadius;
+        PlayerManager.InteractStream = this.Bind(GetCb).ToStream(i => i?.Act());
         GameManager.PlayingState.OnUpdate(_ =>
         {
             var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
@@ -22,7 +23,6 @@ public class InteractCasterReticle : MonoBehaviour
                 (TarLayer.value & (1 << hit.collider.gameObject.layer)) == 0)
             {
                 lastIr.Value = null;
-                PlayerManager.InteractStream = null;
                 return;
             }
 
@@ -30,14 +30,13 @@ public class InteractCasterReticle : MonoBehaviour
             if (ir == null || ir.GetInteractInfo() == null)
             {
                 lastIr.Value = null;
-                PlayerManager.InteractStream = null;
                 return;
             }
             lastIr.Value = ir;
-            PlayerManager.InteractStream = this.Bind(() => lastIr.Value.GetInteractInfo()!).ToStream(i => i.Act());
         });
     }
 
+    InteractInfo? GetCb() => lastIr.Value?.GetInteractInfo();
     // void Update()
     // {
     //     var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
