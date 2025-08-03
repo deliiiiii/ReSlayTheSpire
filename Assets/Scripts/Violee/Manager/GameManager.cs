@@ -72,6 +72,7 @@ public class GameManager : SingletonCS<GameManager>
         MapManager.GenerateStream
             .Where(_ => isIdle || isPlaying)
             .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap))
+            .OnBegin(_ => windowFsm.ChangeState(EWindowState.None))
             .OnEnd(_ => gameFsm.ChangeState(EGameState.Idle));
         MapManager.DijkstraStream
             .Where(_ => isIdle)
@@ -97,7 +98,10 @@ public class GameManager : SingletonCS<GameManager>
             if (!isIdle && !isPlaying)
                 return;
             if (Input.GetKeyDown(KeyCode.R))
+            {
                 Task.FromResult(MapManager.GenerateStream.CallTriggerAsync());
+            }
+                
         }, EUpdatePri.Input);
     }
     
