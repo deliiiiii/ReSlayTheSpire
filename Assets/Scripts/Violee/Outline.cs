@@ -16,7 +16,6 @@ namespace Violee;
 
 public class Outline : MonoBehaviour {
   private static HashSet<Mesh> registeredMeshes = new HashSet<Mesh>();
-  public Func<Color>? GetColor = null;
   public enum Mode {
     OutlineAll,
     OutlineVisible,
@@ -34,14 +33,7 @@ public class Outline : MonoBehaviour {
   }
 
   public Color OutlineColor {
-    get
-    {
-      if (GetColor != null)
-      {
-        outlineColor = GetColor();
-      }
-      return outlineColor;
-    }
+    get => outlineColor;
     set {
       outlineColor = value;
       needsUpdate = true;

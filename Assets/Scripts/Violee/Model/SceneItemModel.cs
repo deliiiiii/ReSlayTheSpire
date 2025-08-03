@@ -35,7 +35,7 @@ public class SceneItemModel : ModelBase<SceneItemData>
         return new InteractCb
         {
             Cb = Data.Use,
-            Description = Data.GetInteractDes(),
+            Description = Data.GetInteractDes(), 
             Color = Data.DesColor(),
         };
     }

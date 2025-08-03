@@ -16,12 +16,17 @@ public class InteractReceiver : MonoBehaviour
         outline.OutlineMode = Outline.Mode.OutlineAll;
         outline.OutlineWidth = 10f;
         SetOutline(false);
-        outline.GetColor = () => InteractCb()?.Color ?? Color.white;
     }
-    
-    
+
     public void SetOutline(bool shown)
-        => outline.enabled = shown;
+    {
+        SetOutline(shown, InteractCb()?.Color ?? Color.white);
+    }
+    void SetOutline(bool shown, Color color)
+    {
+        outline.enabled = shown;
+        outline.OutlineColor = color;
+    }
 }
 
 public class InteractCb
