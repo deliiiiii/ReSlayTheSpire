@@ -106,9 +106,11 @@ namespace Violee
             {
                 case EDoorType.None:
                     NotDoor.SetActive(true);
+                    WallSprite.sortingOrder = 25;
                     break;
                 case EDoorType.Wooden:
                     Door.SetActive(true);
+                    WallSprite.sortingOrder = 5;
                     break;
             }
         }
