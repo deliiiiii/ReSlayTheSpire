@@ -14,7 +14,7 @@ public class InteractCasterReticle : MonoBehaviour
     void Awake()
     {
         radius = Configer.SettingsConfig.InteractCasterRadius;
-        PlayerManager.InteractStream = this.Bind(GetCb).ToStream(i => i?.Act());
+        PlayerManager.InteractStream = this.Bind(() => lastIr.Value?.GetInteractInfo()).ToStream(i => i?.Act());
         GameManager.PlayingState.OnUpdate(_ =>
         {
             var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
@@ -35,8 +35,6 @@ public class InteractCasterReticle : MonoBehaviour
             lastIr.Value = ir;
         });
     }
-
-    InteractInfo? GetCb() => lastIr.Value?.GetInteractInfo();
     // void Update()
     // {
     //     var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));

@@ -93,6 +93,6 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
     }
     
     public T StartValue => startFunc();
-    public Maybe<T> Result { get; private set; } = Maybe<T>.Nothing.Instance;
+    Maybe<T> Result { get; set; } = Maybe<T>.Nothing.Instance;
     
 }
