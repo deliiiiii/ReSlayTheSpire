@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class BoxPointData : DataBase, IComparable
     [NonSerialized] public List<BoxPointData> NextPointsInBox = [];
     [NonSerialized] public required BoxData BelongBox;
     [NonSerialized] public Vector3 Pos3D;
-    [NonSerialized] public HashSet<WallData> WallSet = [];
+    [NonSerialized] public HashSet<(BoxPointData, WallData)> NextPointAndWallSet = [];
     [NonSerialized] BingChaJi<BoxPointData> bingChaJi = new();
 
         
@@ -30,10 +31,10 @@ public class BoxPointData : DataBase, IComparable
         CostWall.Value = int.MaxValue / 2;
         Visited.Value = false;
 
-        WallSet = [];
+        NextPointAndWallSet = [];
         bingChaJi.Init(this);
     }
-    public void AddWall(WallData wallData) => WallSet.Add(wallData);
+    public void AddWallAndNextPoint((BoxPointData, WallData) pair) => NextPointAndWallSet.Add(pair);
     #endregion
         
         
@@ -44,9 +45,9 @@ public class BoxPointData : DataBase, IComparable
         foreach (var connectedPoint in bingChaJi.ConnectedSet)
         {
             connectedPoint.Visited.Value = true;
-            foreach (var wallData in connectedPoint.WallSet)
+            foreach (var pair in connectedPoint.NextPointAndWallSet)
             {
-                wallData.Visited.Value = true;
+                pair.Item2.Visited.Value = true;
             }
         }
     }
@@ -57,7 +58,10 @@ public class BoxPointData : DataBase, IComparable
             connectedPoint.IsFlash.Value = !connectedPoint.IsFlash.Value;
         }
     }
-        
+
+    public IEnumerable<WallData> InvalidWalls() =>
+        NextPointAndWallSet.Where(pair => 
+                pair.Item1.CostWall - CostWall >= BoxData.WallCost).Select(x => x.Item2);
     #endregion
         
         

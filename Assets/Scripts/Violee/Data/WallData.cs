@@ -13,7 +13,8 @@ namespace Violee
     {
         public WallData(EBoxDir dir, EDoorType doorType) 
             : this(BoxHelper.WallDirToType(dir), doorType){}
-
+        
+        [NonSerialized] public required BoxData BelongBox;
         static EDoorType RandomDoor()
         {
             var ran = UnityEngine.Random.value;

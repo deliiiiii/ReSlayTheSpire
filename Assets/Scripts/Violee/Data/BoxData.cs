@@ -123,7 +123,7 @@ namespace Violee
             {
                 WallsByte = config.Walls;
                 if ((WallsByte & (int)wallType) == (int)wallType)
-                    WallDataMyDic.MyAdd(new WallData(wallType, EDoorType.Random));
+                    WallDataMyDic.MyAdd(new WallData(wallType, EDoorType.Random){BelongBox = this});
             }
             foreach (var dir in BoxHelper.AllBoxDirs)
             {
@@ -154,8 +154,8 @@ namespace Violee
         public const int DoorCost = 1;
         public void ResetBeforeDij() 
             => PointDataMyDic.ForEach(pointData => pointData.ResetBeforeDij());
-        public HashSet<EBoxDir> OccupyAllDirs 
-            => SceneDataMyList.SelectMany(x => x.OccupyDirSet).ToHashSet();
+        public IEnumerable<EBoxDir> OccupiedDirs
+            => SceneDataMyList.SelectMany(x => x.OccupyDirSet);
         #endregion
         
         

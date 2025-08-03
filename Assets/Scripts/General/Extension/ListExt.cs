@@ -23,17 +23,17 @@ public static class ListExt
         return 0;
     }
 
-    public static T RandomItem<T>(this List<T> list)
+    public static T RandomItem<T>(this List<T> list, [CanBeNull] Func<T, bool> filter = null, [CanBeNull] Func<T, int> weightFunc = null)
     {
-        return (list?.Count ?? 0) == 0 ? default : list[UnityEngine.Random.Range(0, list.Count)];
+        filter ??= _ => true;
+        if (weightFunc != null)
+            return RandomItemWeighted(list, filter, weightFunc);
+        var fList = list.Where(filter).ToList();
+        return fList.Count == 0 ? default : fList[UnityEngine.Random.Range(0, fList.Count)];
     }
-    public static T RandomItem<T>(this List<T> list, Func<T, bool> filter)
+    static T RandomItemWeighted<T>(this List<T> list, [CanBeNull] Func<T, bool> filter, Func<T, int> weightFunc)
     {
-        return (list?.Count ?? 0) == 0 ? default : list.Where(filter).ToList().RandomItem();
-    }
-    
-    public static T RandomItemWeighted<T>(this List<T> list, Func<T, bool> filter, Func<T, int> weightFunc)
-    {
+        filter ??= _ => true;
         if ((list?.Count ?? 0) == 0)
             return default;
 
