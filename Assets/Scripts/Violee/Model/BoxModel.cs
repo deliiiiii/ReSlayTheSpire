@@ -58,7 +58,6 @@ namespace Violee
                 EBoxDir.Down => Quaternion.Euler(0, 180, 0),
                 _ => Quaternion.Euler(0, 270, 0),
             };
-            // obj.transform.position += transform.position;
             obj.transform.localPosition = dtRot * obj.transform.localPosition;
             obj.transform.localRotation *= dtRot;
             obj.SetActive(true);

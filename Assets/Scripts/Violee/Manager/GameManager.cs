@@ -50,7 +50,6 @@ public class GameManager : SingletonCS<GameManager>
     public static string GameState => gameFsm.CurStateName;
     public static readonly BindDataState GeneratingMapState;
     public static readonly BindDataState PlayingState;
-    [ShowInInspector]
     public static readonly MyList<WindowInfo> WindowList 
         = new ([], x => x.OnAddEvent?.Invoke(x), x => x.OnRemoveEvent?.Invoke(x));
     public static readonly WindowInfo PauseWindow;

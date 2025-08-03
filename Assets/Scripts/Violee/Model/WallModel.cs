@@ -23,16 +23,12 @@ namespace Violee
         protected override void OnReadData()
         {
             SetAllActive();
-
-            if (Data.DoorType != EDoorType.None)
-            {
-                DoorInteract.GetInteractInfo = GetCb;
-            }
+            DoorInteract.GetInteractInfo = GetCb;
         }
 
         InteractInfo? GetCb()
         {
-            if (Data.Opened.Value)
+            if (Data.DoorType == EDoorType.None || Data.Opened.Value)
                 return null;
             if (PlayerManager.StaminaCount.Value <= 0)
             {

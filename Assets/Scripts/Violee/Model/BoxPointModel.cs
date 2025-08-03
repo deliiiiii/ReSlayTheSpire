@@ -4,13 +4,12 @@ namespace Violee
 {
     public class BoxPointModel : ModelBase<BoxPointData>
     {
-        SpriteRenderer? sr;
         static float flashTime => Configer.SettingsConfig.PointSpriteFlashTime;
         static float alpha => Configer.SettingsConfig.PointSpriteAlpha;
-        BindDataUpdate? bFlash;
         protected override void OnReadData()
         {
-            sr ??= GetComponent<SpriteRenderer>();
+            BindDataUpdate? bFlash = null;
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
             Binder.From(Data.Visited).To(gameObject.SetActive).Immediate();
             Binder.From(Data.IsFlash).To(b =>
             {

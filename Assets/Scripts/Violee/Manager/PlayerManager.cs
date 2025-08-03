@@ -21,7 +21,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     public static void OnDijkstraEnd(Vector3 pos3D)
     {
-        playerMono.transform.position = pos3D + Vector3.up * (1.5f * playerMono.transform.position.y);
+        playerMono.transform.position = pos3D + Vector3.up * (1.5f * playerMono.transform.localScale.y);
         playerMono.PlayerData = new PlayerData();
     }
     public static void OnEnterPlaying()

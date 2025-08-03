@@ -35,12 +35,4 @@ public class InteractCasterReticle : MonoBehaviour
             lastIr.Value = ir;
         });
     }
-    // void Update()
-    // {
-    //     var ray = Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-    //     var newValue = Physics.Raycast(ray, out var hit, BoxHelper.BoxSize, TarLayer) 
-    //         ? hit.collider.gameObject.GetComponent<InteractReceiver>() 
-    //         : null;
-    //     curReceiver.Value = newValue;
-    // }
 }

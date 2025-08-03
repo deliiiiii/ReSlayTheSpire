@@ -86,8 +86,8 @@ internal class MapManager : SingletonCS<MapManager>
     
     #region Generate
 
-    static HashSet<Vector2Int> emptyPosSet;
-    static HashSet<WallData> edgeWallSet;
+    static HashSet<Vector2Int> emptyPosSet = [];
+    static HashSet<WallData> edgeWallSet = [];
     public static readonly Stream<ValueTuple> GenerateStream;
     public static readonly Stream<DijStreamParam> DijkstraStream;
     static void StartGenerate()
@@ -246,7 +246,7 @@ internal class MapManager : SingletonCS<MapManager>
             val =>
             {
                 Task.FromResult(OnAddBoxData(val));
-                emptyPosSet!.Remove(val.Pos2D);
+                emptyPosSet.Remove(val.Pos2D);
                 
                 var nextPairs = BoxHelper.GetNextLocAndGoInDirList(val.Pos2D);
                 foreach (var (nextPos, nextGoInDir) in nextPairs)
@@ -255,7 +255,7 @@ internal class MapManager : SingletonCS<MapManager>
                     var goOutDir = BoxHelper.OppositeDirDic[nextGoInDir];
                     if (InMap(nextPos) && HasBox(nextPos))
                     {
-                        var nextBox = boxDataMyDic[nextPos];
+                        var nextBox = boxDataMyDic![nextPos];
                         if (nextBox.HasSWallByDir(nextGoInDir, out _))
                         {
                             var t = BoxHelper.WallDirToType(goOutDir);
@@ -268,7 +268,7 @@ internal class MapManager : SingletonCS<MapManager>
             key =>
             {
                 OnRemoveBoxData(key);
-                emptyPosSet!.Add(key);
+                emptyPosSet.Add(key);
             });
     static readonly MyKeyedCollection<Vector3Int, BoxModel> boxModelMyDic 
         = new(b => Vector3Int.RoundToInt(b.transform.position));
