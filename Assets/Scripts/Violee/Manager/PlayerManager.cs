@@ -51,13 +51,5 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     public static InteractCb? CurInteractCb = null;
     public static event Action? OnClickReticle;
-    public static void AddEnergy(int added)
-    {
-        playerData.Energy.Count.Value += added;
-    }
-    public static void UseStamina(int used)
-    {
-        playerData.Stamina.Count.Value -= used;
-    }
     #endregion
 }

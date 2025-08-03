@@ -30,9 +30,10 @@ public class SceneItemModel : ModelBase<SceneItemData>
 
     InteractCb? GetCb()
     {
+        if (!Data.CanUse())
+            return null;
         return new InteractCb
         {
-            Condition = Data.CanUse,
             Cb = Data.Use,
             Description = Data.GetInteractDes(),
             Color = Data.DesColor(),

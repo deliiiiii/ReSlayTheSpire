@@ -26,7 +26,6 @@ public class InteractReceiver : MonoBehaviour
 
 public class InteractCb
 {
-    public required Func<bool> Condition;
     public required Action Cb;
     public required string Description;
     public required Color Color;

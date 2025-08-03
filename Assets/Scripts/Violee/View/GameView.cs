@@ -23,8 +23,6 @@ class GameView : ViewBase<GameView>
             }).OnUpdate(dt =>
             {
                 var cb = PlayerManager.CurInteractCb;
-                if (!cb?.Condition() ?? false)
-                    cb = null;
                 NormalReticle.SetActive(cb == null);
                 FindReticle.SetActive(cb != null);
                 SceneItemInfoPnl.SetActive(cb != null);

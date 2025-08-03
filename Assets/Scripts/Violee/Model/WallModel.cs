@@ -29,14 +29,24 @@ namespace Violee
             }
         }
 
-        InteractCb GetCb()
+        InteractCb? GetCb()
         {
+            if (Data.Opened.Value)
+                return null;
+            if (PlayerManager.StaminaCount.Value <= 0)
+            {
+                return new InteractCb
+                {
+                    Cb = () => {},
+                    Description = "体力不足，无法打开门",
+                    Color = Color.red,
+                };
+            }
             return new InteractCb
             {
-                Condition = () => !Data.Opened.Value,
                 Cb = () =>
                 {
-                    PlayerManager.UseStamina(1);
+                    PlayerManager.StaminaCount.Value -= 1;
                     Data.Opened.Value = true;
                 },
                 Description = "打开门：消耗1点体力",

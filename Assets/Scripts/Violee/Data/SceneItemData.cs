@@ -83,6 +83,6 @@ public class PurpleSceneItemData(PurpleSceneItemConfig config, SceneItemC2D para
     protected override void UseEffect()
     {
         base.UseEffect();
-        PlayerManager.AddEnergy(Energy);
+        PlayerManager.EnergyCount.Value += Energy;
     }
 }
