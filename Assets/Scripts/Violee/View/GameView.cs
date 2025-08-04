@@ -201,6 +201,7 @@ class GameView : ViewBase<GameView>
                     DrawPnl.SetActive(false);
                     ShowMinimap();
                 });
+                go.GetComponentInChildren<Text>().text = config.DrawDes;
             }
         }
     }

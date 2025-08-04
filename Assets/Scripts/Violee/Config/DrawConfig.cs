@@ -13,7 +13,7 @@ public enum EDrawType
 public class DrawConfig
 {
     public EDrawType DrawType;
-    public string Des = string.Empty;
+    public string DrawDes = string.Empty;
     public Sprite Sprite = null!;
     
     public List<DrawAtPoint> DrawPoints = [];

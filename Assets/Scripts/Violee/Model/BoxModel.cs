@@ -11,7 +11,7 @@ namespace Violee
         public required SerializableDictionary<EWallType, WallModel> wallDic;
         public required SerializableDictionary<EBoxDir, BoxPointModel> pointDic;
         
-        [NonSerialized] readonly SerializableDictionary<SceneItemData, SceneItemModel> sceneItemDic = [];
+        [NonSerialized] readonly SerializableDictionary<SceneItemData, SceneItemModel> sceneItemModelDic = [];
         
         protected override void OnReadData()
         {
@@ -20,8 +20,8 @@ namespace Violee
             
             wallDic.Values.ForEach(g => g.gameObject.SetActive(false));
             Data.PointDataMyDic.ForEach(p => pointDic[p.Dir].ReadData(p));
-            sceneItemDic.Values.ForEach(s => Destroy(s.gameObject));
-            sceneItemDic.Clear();
+            sceneItemModelDic.Values.ForEach(s => Destroy(s.gameObject));
+            sceneItemModelDic.Clear();
             
             Data.WallDataMyDic.ForEach(OnAddWallData);
             Data.WallDataMyDic.OnAdd += OnAddWallData;
@@ -44,14 +44,15 @@ namespace Violee
 
         #region SceneItem
         
-        void OnAddSceneItemData(SceneItemData data)
+        void OnAddSceneItemData(SceneItemData fdata)
         {
-            var obj = Instantiate(data.Obj, transform);
+            var obj = Instantiate(fdata.Obj, transform);
+            var data = fdata.DeepCopy();
             var model = obj.GetOrAddComponent<SceneItemModel>();
-            sceneItemDic.Add(data, model);
+            sceneItemModelDic.Add(data, model);
             model.ReadData(data);
             
-            var dtRot = data.OccupyDirSet.First() switch
+            var dtRot = fdata.OccupyDirSet.First() switch
             {
                 EBoxDir.Up => Quaternion.Euler(0, 0, 0),
                 EBoxDir.Right => Quaternion.Euler(0, 90, 0),
@@ -64,8 +65,8 @@ namespace Violee
         }
         void OnRemoveSceneItemData(SceneItemData data)
         {
-            Destroy(sceneItemDic[data].gameObject);
-            sceneItemDic.Remove(data);
+            Destroy(sceneItemModelDic[data].gameObject);
+            sceneItemModelDic.Remove(data);
         }
         #endregion
     }

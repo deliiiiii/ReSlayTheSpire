@@ -17,8 +17,33 @@ public struct SceneItemC2D(HashSet<EBoxDir> dirSet)
 [Serializable]
 public class SceneItemData : DataBase
 {
-    public HashSet<EBoxDir> OccupyDirSet = [];
+    public SceneItemData DeepCopy()
+    {
+        if (this is PurpleSceneItemData p)
+        {
+            return new PurpleSceneItemData
+            {
+                OccupyDirSet = [..OccupyDirSet],
+                StaminaCost = StaminaCost,
+                DesPre = DesPre,
+                HasCount = HasCount,
+                Count = Count,
+                OnRunOut = OnRunOut,
+                Energy = p.Energy
+            };
+        }
+        return new SceneItemData
+        {
+            OccupyDirSet = [..OccupyDirSet],
+            StaminaCost = StaminaCost,
+            DesPre = DesPre,
+            HasCount = HasCount,
+            Count = Count,
+            OnRunOut = OnRunOut
+        };
+    }
     public GameObject Obj = null!;
+    public HashSet<EBoxDir> OccupyDirSet = [];
     public int StaminaCost;
     public string DesPre = string.Empty;
     public bool HasCount;
