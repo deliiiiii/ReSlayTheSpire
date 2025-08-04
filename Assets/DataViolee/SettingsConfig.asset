@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: SettingsConfig
   m_EditorClassIdentifier: 
   RefreshConfigOnAwake: 0
+  QuickKey: 1
   ShowBoxCost: 1
   BoxCostPosOffset: 0.37
   PointSpriteFlashTime: 1

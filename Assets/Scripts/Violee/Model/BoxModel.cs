@@ -10,8 +10,7 @@ namespace Violee
     {
         public required SerializableDictionary<EWallType, WallModel> wallDic;
         public required SerializableDictionary<EBoxDir, BoxPointModel> pointDic;
-        
-        [NonSerialized] readonly SerializableDictionary<SceneItemData, SceneItemModel> sceneItemModelDic = [];
+        public Transform SceneItemParent = null!;
         
         protected override void OnReadData()
         {
@@ -20,13 +19,12 @@ namespace Violee
             
             wallDic.Values.ForEach(g => g.gameObject.SetActive(false));
             Data.PointDataMyDic.ForEach(p => pointDic[p.Dir].ReadData(p));
-            sceneItemModelDic.Values.ForEach(s => Destroy(s.gameObject));
-            sceneItemModelDic.Clear();
             
             Data.WallDataMyDic.ForEach(OnAddWallData);
             Data.WallDataMyDic.OnAdd += OnAddWallData;
             Data.WallDataMyDic.OnRemove += OnRemoveWallData;
-            
+
+            SceneItemParent.ClearChildren();
             Data.SceneDataMyList.ForEach(OnAddSceneItemData);
             Data.SceneDataMyList.OnAdd += OnAddSceneItemData;
             Data.SceneDataMyList.OnRemove += OnRemoveSceneItemData;
@@ -46,10 +44,9 @@ namespace Violee
         
         void OnAddSceneItemData(SceneItemData fdata)
         {
-            var obj = Instantiate(fdata.Obj, transform);
-            var data = fdata.DeepCopy();
+            var obj = Instantiate(fdata.Obj, SceneItemParent);
             var model = obj.GetOrAddComponent<SceneItemModel>();
-            sceneItemModelDic.Add(data, model);
+            var data = model.Data;
             model.ReadData(data);
             
             var dtRot = fdata.OccupyDirSet.First() switch
@@ -65,8 +62,7 @@ namespace Violee
         }
         void OnRemoveSceneItemData(SceneItemData data)
         {
-            Destroy(sceneItemModelDic[data].gameObject);
-            sceneItemModelDic.Remove(data);
+            Destroy(data.Obj);
         }
         #endregion
     }

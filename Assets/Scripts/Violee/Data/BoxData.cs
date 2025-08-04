@@ -164,7 +164,7 @@ namespace Violee
             = new(w => w.WallType);
         public MyKeyedCollection<EBoxDir, BoxPointData> PointDataMyDic 
             = new (b => b.Dir);
-        public MyList<SceneItemData> SceneDataMyList = [];
+        public readonly MyList<SceneItemData> SceneDataMyList = [];
         #endregion
     }
 }

@@ -122,6 +122,7 @@ public class GameManager : SingletonCS<GameManager>
         });
         Binder.Update(_ =>
         {
+            Time.timeScale = Configer.SettingsConfig.QuickKey && Input.GetKey(KeyCode.Q) ? 10f : 1f;
             if (!IsIdle && !IsPlaying)
                 return;
             if (Input.GetKeyDown(KeyCode.R))
