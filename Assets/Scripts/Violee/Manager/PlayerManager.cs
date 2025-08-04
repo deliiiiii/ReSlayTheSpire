@@ -19,7 +19,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
     public static Observable<int> GlovesCount => playerData.Gloves.Count;
     public static Observable<int> DiceCount => playerData.Dice.Count;
 
-    public static void OnDijkstraEnd(Vector3 pos3D)
+    public static void OnDijkstraBegin(Vector3 pos3D)
     {
         playerMono.transform.position = pos3D + Vector3.up * (1.5f * playerMono.transform.localScale.y);
         playerMono.PlayerData = new PlayerData();
