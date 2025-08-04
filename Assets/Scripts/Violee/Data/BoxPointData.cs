@@ -59,9 +59,16 @@ public class BoxPointData : DataBase, IComparable
         }
     }
 
-    public IEnumerable<WallData> InvalidWalls() =>
-        NextPointAndWallSet.Where(pair => 
-                pair.Item1.CostWall - CostWall >= BoxData.WallCost).Select(x => x.Item2);
+    public IEnumerable<WallData> InvalidWalls() 
+        => NextPointAndWallSet
+            .Where(pair => pair.Item1.CostWall - CostWall >= BoxData.WallCost)
+            .Select(x => x.Item2);
+
+    public IEnumerable<BoxPointData> AtWallGetInsidePoints(WallData wallData) 
+        => NextPointAndWallSet
+            .Where(pair => pair.Item2 == wallData)
+            .SelectMany(x => x.Item1.bingChaJi.ConnectedSet);
+
     #endregion
         
         

@@ -14,12 +14,20 @@ public static class GameObjectExt
         return self.GetComponent<T>() ?? self.gameObject.AddComponent<T>();
     }
 
-    public static GameObject ClearChildren(this GameObject self)
+    // public static GameObject ClearChildren(this GameObject self)
+    // {
+    //     for(int i = self.transform.childCount - 1; i >= 0; i--)
+    //     {
+    //         GameObject.Destroy(self.transform.GetChild(i).gameObject);
+    //     }
+    //     return self;
+    // }
+
+    public static void DisableAllChildren(this Transform self)
     {
-        for(int i = self.transform.childCount - 1; i >= 0; i--)
+        for(int i = self.childCount - 1; i >= 0; i--)
         {
-            GameObject.Destroy(self.transform.GetChild(i).gameObject);
+            self.GetChild(i).gameObject.SetActive(false);
         }
-        return self;
     }
 }

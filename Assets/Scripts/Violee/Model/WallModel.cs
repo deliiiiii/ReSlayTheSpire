@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Violee
@@ -48,6 +50,17 @@ namespace Violee
                 },
                 Description = "打开门：消耗1点体力",
                 Color = Color.blue,
+                
+                IsOpenDoor = true,
+                WallData = Data,
+                GetDrawConfigs = () =>
+                {
+                    // var ret = new List<DrawConfig>();
+                    // for (int i = 0; i < 3; i++)
+                    //     ret.Add(Configer.DrawConfigList.DrawConfigs.RandomItem());
+                    // return ret;
+                    return Configer.DrawConfigList.DrawConfigs.Take(3).ToList();
+                },
             };
         }
         

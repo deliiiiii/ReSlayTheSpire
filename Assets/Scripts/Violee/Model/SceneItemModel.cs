@@ -12,7 +12,8 @@ public class SceneItemModel : ModelBase<SceneItemData>
     public required GameObject HideAfterRunOut;
     public required GameObject ShowAfterRunOut;
     public required InteractReceiver Ir;
-    
+
+    [SerializeReference] public SceneItemData Data2;
     protected override void OnReadData()
     {
         if (Data.HasCount)
@@ -38,7 +39,7 @@ public class SceneItemModel : ModelBase<SceneItemData>
             Color = Data.DesColor(),
             
             IsSleep = Data is PurpleSceneItemData,
-            SleepTime = Data is PurpleSceneItemData ? 2.89f : 0f,
+            SleepTime = 2.89f,
         };
     }
 }

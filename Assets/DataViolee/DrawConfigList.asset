@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49ec36b325a43af8940002d5ce10591, type: 3}
+  m_Name: DrawConfigList
+  m_EditorClassIdentifier: 
+  DrawConfigs:
+  - DrawType: 0
+    Des: SofaTest
+    Sprite: {fileID: 21300000, guid: 7dca49d892d2a544ba35571c9a61c643, type: 3}
+    DrawPoints:
+    - SceneItemConfig: {fileID: 11400000, guid: abe62d7dbca604a488e27f0b9ab93dd3, type: 2}
+      Possibility: 1
+    - SceneItemConfig: {fileID: 0}
+      Possibility: 1
+  - DrawType: 0
+    Des: SofaTest
+    Sprite: {fileID: 21300000, guid: 7dca49d892d2a544ba35571c9a61c643, type: 3}
+    DrawPoints:
+    - SceneItemConfig: {fileID: 11400000, guid: abe62d7dbca604a488e27f0b9ab93dd3, type: 2}
+      Possibility: 1
+  - DrawType: 0
+    Des: SofaTest
+    Sprite: {fileID: 21300000, guid: 7dca49d892d2a544ba35571c9a61c643, type: 3}
+    DrawPoints:
+    - SceneItemConfig: {fileID: 11400000, guid: abe62d7dbca604a488e27f0b9ab93dd3, type: 2}
+      Possibility: 1

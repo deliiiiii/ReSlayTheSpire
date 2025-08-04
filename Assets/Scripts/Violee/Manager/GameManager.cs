@@ -25,18 +25,18 @@ public class WindowInfo
 {
     public EWindowType WindowType;
     public string Des = string.Empty;
-    public Action<WindowInfo>? OnAddEvent;
-    public Action<WindowInfo>? OnRemoveEvent;
+    public Action? OnAddEvent;
+    public Action? OnRemoveEvent;
 }
 
 public static class WindowInfoExt
 {
-    public static WindowInfo OnAdd(this WindowInfo info, Action<WindowInfo> action)
+    public static WindowInfo OnAdd(this WindowInfo info, Action action)
     {
         info.OnAddEvent += action;
         return info;
     }
-    public static WindowInfo OnRemove(this WindowInfo info, Action<WindowInfo> action)
+    public static WindowInfo OnRemove(this WindowInfo info, Action action)
     {
         info.OnRemoveEvent += action;
         return info;
@@ -51,7 +51,7 @@ public class GameManager : SingletonCS<GameManager>
     public static readonly BindDataState GeneratingMapState;
     public static readonly BindDataState PlayingState;
     public static readonly MyList<WindowInfo> WindowList 
-        = new ([], x => x.OnAddEvent?.Invoke(x), x => x.OnRemoveEvent?.Invoke(x));
+        = new ([], x => x.OnAddEvent?.Invoke(), x => x.OnRemoveEvent?.Invoke());
     public static readonly WindowInfo PauseWindow;
 
     bool init;
@@ -84,13 +84,13 @@ public class GameManager : SingletonCS<GameManager>
         {
             WindowType = EWindowType.GamePause,
             Des = "游戏窗口失去焦点 or 按下了暂停键。",
-            OnAddEvent = _ =>
+            OnAddEvent = () =>
             {
                 Time.timeScale = 0;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             },
-            OnRemoveEvent = _ =>
+            OnRemoveEvent = () =>
             {
                 Time.timeScale = 1;
                 Cursor.lockState = CursorLockMode.Locked;

@@ -166,11 +166,5 @@ namespace Violee
             = new (b => b.Dir);
         public MyList<SceneItemData> SceneDataMyList = [];
         #endregion
-        
-        public void CreateSceneItemData(SceneItemConfig sceneItemConfig, SceneItemC2D param)
-        {
-            var sceneItemData = SceneItemData.ReadConfig(sceneItemConfig, param);
-            SceneDataMyList.MyAdd(sceneItemData);
-        }
     }
 }

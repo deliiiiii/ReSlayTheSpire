@@ -19,17 +19,27 @@ class GameView : ViewBase<GameView>
         WindowType = EWindowType.WaitingSceneItem,
         Des = "休息..."
     };
+    static readonly WindowInfo drawWindow = new ()
+    {
+        WindowType = EWindowType.NormalUI,
+        Des = "选择房间装修中"
+    };
     protected override void IBL()
     {
         fullMapWindow
-            .OnAdd(_ =>
+            .OnAdd(() =>
             {
                 NormalReticle.SetActive(false);
                 FindReticle.SetActive(false);
                 SceneItemInfoPnl.SetActive(false);
                 ShowFullScreenMap();
             })
-            .OnRemove(_ => ShowMinimap());
+            .OnRemove(ShowMinimap);
+        drawWindow
+            .OnRemove(() =>
+            {
+                DrawPnl.SetActive(false);
+            });
         
         GameManager.GeneratingMapState
             .OnEnter(() => LoadPnl.SetActive(true))
@@ -40,6 +50,7 @@ class GameView : ViewBase<GameView>
                 MiniItemPnl.SetActive(true);
                 
                 GameManager.WindowList.MyRemove(fullMapWindow);
+                GameManager.WindowList.MyRemove(drawWindow);
                 
                 Binder.From(PlayerManager.StaminaCount).ToTxt(StaminaTxt).Immediate();
                 Binder.From(PlayerManager.EnergyCount).ToTxt(EnergyTxt).Immediate();
@@ -59,25 +70,25 @@ class GameView : ViewBase<GameView>
 
                 ChangeFOV(dt);
                 
-                if (Input.GetKeyDown(KeyCode.Tab))
+                if (Input.GetKeyDown(KeyCode.Tab) && !GameManager.HasPaused)
                 {
-                    if (isMinimap && !GameManager.HasWindow)
+                    if (isMinimap)
                         GameManager.WindowList.MyAdd(fullMapWindow);
-                    else if(!isMinimap && !GameManager.HasPaused)
+                    else if(!isMinimap)
                         GameManager.WindowList.MyRemove(fullMapWindow);
                 }
             })
             .OnExit(() => MiniItemPnl.SetActive(false));
 
         GameManager.PauseWindow
-            .OnAdd(_ =>
+            .OnAdd(() =>
             {
                 NormalReticle.SetActive(false);
                 FindReticle.SetActive(false);
                 SceneItemInfoPnl.SetActive(false);
                 PausePnl.SetActive(true);
             })
-            .OnRemove(_ =>
+            .OnRemove(() =>
             {
                 PausePnl.SetActive(false);
             });
@@ -119,8 +130,7 @@ class GameView : ViewBase<GameView>
 
     void ShowFullScreenMap()
     {
-        // 设置gameObject的 RectTransform长宽
-        FullScreenImg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.height, Screen.height);
+        
         // MyDebug.Log("ShowFullScreenMap " + Screen.height);
         RefreshTexture(Screen.width, Screen.height);
         FullScreenImg.enabled = true;
@@ -133,7 +143,6 @@ class GameView : ViewBase<GameView>
         TarTexture.width = height;
         TarTexture.height = height;
         TarTexture.Create();
-        FullScreenImg.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(height, height);
         MinimapCamera.targetTexture = TarTexture;
         MinimapImg.texture = TarTexture;
         FullScreenImg.texture = TarTexture;
@@ -161,6 +170,8 @@ class GameView : ViewBase<GameView>
     public required Text SceneItemInfoTxt;
 
     public required GameObject SleepPnl;
+    public required GameObject DrawPnl;
+    public required Transform DrawBtnContent;
     async Task GetUICb(InteractInfo? cb)
     {
         if (cb == null)
@@ -168,6 +179,29 @@ class GameView : ViewBase<GameView>
         if (cb.IsSleep)
         {
             await FadeImageAlpha(SleepPnl, cb.SleepTime);
+        }
+        else if (cb.IsOpenDoor)
+        {
+            GameManager.WindowList.MyAdd(drawWindow);
+            DrawPnl.SetActive(true);
+            ShowFullScreenMap();
+            DrawBtnContent.DisableAllChildren();
+            var configs = cb.GetDrawConfigs();
+            for (int i = 0; i < configs.Count; i++)
+            {
+                var config = configs[i];
+                var go = DrawBtnContent.GetChild(i).gameObject;
+                go.SetActive(true);
+                go.GetComponent<Image>().sprite = config.Sprite;
+                go.GetComponent<Button>().onClick.RemoveAllListeners();
+                go.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    MapManager.DrawAtWall(cb.WallData, config);
+                    GameManager.WindowList.MyRemove(drawWindow);
+                    DrawPnl.SetActive(false);
+                    ShowMinimap();
+                });
+            }
         }
     }
 

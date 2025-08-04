@@ -82,6 +82,22 @@ internal class MapManager : SingletonCS<MapManager>
         edgeWallSet.ForEach(wallData => wallData.Visited.Value = true);
     }
     #endregion
+
+    #region DrawSceneItems
+
+    public static void DrawAtWall(WallData wallData, DrawConfig config)
+    {
+        playerCurPoint.Value?.AtWallGetInsidePoints(wallData).ForEach(p =>
+        {
+            p.BelongBox.SceneDataMyList.MyRemoveAll(x => x.OccupyDirSet.Contains(p.Dir));
+            var ranConfig = config.DrawPoints.RandomItem(weightFunc: d => d.Possibility)?.SceneItemConfig;
+            if (ranConfig == null)
+                return;
+            p.BelongBox.SceneDataMyList.MyAdd(SceneItemData.ReadConfig(ranConfig, new([p.Dir])));
+        });
+    }
+
+    #endregion
     
     
     #region Generate

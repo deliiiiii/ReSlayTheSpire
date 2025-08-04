@@ -23,14 +23,16 @@ namespace Violee
         
         [Header("Config")] 
         public required BoxConfigList BoxConfigListIns;
+
+        public required DrawConfigList DrawConfigListIns;
         public required MiniItemConfigList MiniItemConfigListIns;
         public required SettingsConfig SettingsConfigIns;
-        public required SceneItemConfigList SceneItemConfigListIns;
         
         public static BoxConfigList BoxConfigList => Instance.BoxConfigListIns;
+        public static DrawConfigList DrawConfigList => Instance.DrawConfigListIns;
+        
         public static MiniItemConfigList MiniItemConfigList => Instance.MiniItemConfigListIns;
         public static SettingsConfig SettingsConfig => Instance.SettingsConfigIns;
-        public static SceneItemConfigList SceneItemConfigList => Instance.SceneItemConfigListIns;
         
         public static void Init()
         {

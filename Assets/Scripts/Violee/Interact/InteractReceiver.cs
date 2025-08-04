@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
@@ -39,6 +40,7 @@ public class InteractInfo
     public bool IsSleep;
     public float SleepTime;
     
-    public bool IsMoveSth;
-    public float MoveTime;
+    public bool IsOpenDoor;
+    public WallData WallData = null!;
+    public Func<List<DrawConfig>> GetDrawConfigs = () => [];
 }

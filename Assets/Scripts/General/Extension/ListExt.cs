@@ -48,14 +48,14 @@ public static class ListExt
 
         for (var i = 0; i < filteredList.Count; i++)
         {
-            curWeight += weights[i];
             if (curWeight >= randomValue)
             {
                 return filteredList[i];
             }
+            curWeight += weights[i];
         }
 
-        return default;
+        return filteredList[^1];
     }
 
     [NotNull]

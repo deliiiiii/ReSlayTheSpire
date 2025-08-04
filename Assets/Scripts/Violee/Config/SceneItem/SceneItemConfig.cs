@@ -6,9 +6,8 @@ namespace Violee;
 
 
 [Serializable]
-public abstract class SceneItemConfig
+public abstract class SceneItemConfig : ScriptableObject
 {
-    public required string Name;
     public required GameObject Object;
 
     #region HasCount
@@ -16,11 +15,4 @@ public abstract class SceneItemConfig
     [Header("HasCount")]
     [ShowIf(nameof(HasCount))] public int Count;
     #endregion
-}
-
-[Serializable]
-public class PurpleSceneItemConfig : SceneItemConfig
-{
-    [Header("Purple")]
-    public int Energy;
 }

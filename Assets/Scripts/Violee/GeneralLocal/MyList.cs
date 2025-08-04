@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Sirenix.Utilities;
 
 namespace Violee;
 
@@ -38,6 +40,18 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
     {
         base.Remove(item);
         OnRemove?.Invoke(item);
+    }
+
+    public new int RemoveAll(Predicate<T> match)
+    {
+        MyDebug.LogError("Please Call MyRemoveAll() instead");
+        return 0;
+    }
+
+    public void MyRemoveAll(Predicate<T> match)
+    {
+        var allRemoved = this.Where(x => match(x));
+        allRemoved.ForEach(MyRemove);
     }
     
     public void MyClear()

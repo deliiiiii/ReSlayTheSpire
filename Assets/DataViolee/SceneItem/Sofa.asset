@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82223565adc147fabf1791037a011992, type: 3}
-  m_Name: SceneItemConfigList
+  m_Script: {fileID: 11500000, guid: 02bc811dddc247e2b4b954280a2343e3, type: 3}
+  m_Name: Sofa
   m_EditorClassIdentifier: 
-  SceneItemConfigs:
-  - {fileID: 11400000, guid: abe62d7dbca604a488e27f0b9ab93dd3, type: 2}
+  Object: {fileID: 10658068440183081, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
+  HasCount: 1
+  Count: 1
+  Energy: 10
