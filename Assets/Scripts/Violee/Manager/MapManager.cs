@@ -93,7 +93,7 @@ internal class MapManager : SingletonCS<MapManager>
             var ranModel = config.DrawPoints.RandomItem(weightFunc: d => d.Possibility)?.SceneItemModel;
             if (ranModel == null)
                 return;
-            p.BelongBox.SceneDataMyList.MyAdd(SceneItemData.ReadConfig(ranModel.Config, new([p.Dir])));
+            p.BelongBox.SceneDataMyList.MyAdd(ranModel.Data.ReadSth(new([p.Dir])));
         });
     }
 

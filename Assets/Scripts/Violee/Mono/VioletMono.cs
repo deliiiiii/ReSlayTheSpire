@@ -23,6 +23,6 @@ public class VioletMono : MonoBehaviour
     [Button]
     public void Test()
     {
-        MapManager.BoxDataByPos(Pos).SceneDataMyList.Add(new SceneItemData(SceneItemModel.Config, new([D])));
+        MapManager.BoxDataByPos(Pos).SceneDataMyList.Add(SceneItemModel.Data.ReadSth(new([D])));
     }
 }

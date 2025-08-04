@@ -48,11 +48,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data:
-    Obj: {fileID: 0}
+    rid: 6059727542167535616
   HideAfterRunOut: {fileID: 3247837281952955383}
   ShowAfterRunOut: {fileID: 4525382237460474740}
   Ir: {fileID: 6087658489099615833}
-  Config: {fileID: 11400000, guid: abe62d7dbca604a488e27f0b9ab93dd3, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6059727542167535616
+      type: {class: PurpleSceneItemData, ns: Violee, asm: Violee}
+      data:
+        Obj: {fileID: 10658068440183081}
+        StaminaCost: 2
+        DesPre: "\u5728\u6C99\u53D1\u4F11\u606F\uFF1A"
+        HasCount: 1
+        Count: 1
+        Energy: 1
 --- !u!1 &3247837281952955383
 GameObject:
   m_ObjectHideFlags: 0

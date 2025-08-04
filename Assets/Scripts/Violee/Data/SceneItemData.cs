@@ -17,21 +17,13 @@ public struct SceneItemC2D(HashSet<EBoxDir> dirSet)
 [Serializable]
 public class SceneItemData : DataBase
 {
-    [NonSerialized]public readonly HashSet<EBoxDir> OccupyDirSet;
-    public SceneItemData(SceneItemConfig config, SceneItemC2D param)
-    {
-        OccupyDirSet = param.DirSet;
-        Obj = config.Object;
-        StaminaCost = config.StaminaCost;
-        DesPre = config.DesPre;
-        HasCount = config.HasCount;
-        count = config.Count;
-    }
-    public GameObject Obj;
+    public HashSet<EBoxDir> OccupyDirSet = [];
+    public GameObject Obj = null!;
     public int StaminaCost;
-    public string DesPre;
-    public readonly bool HasCount;
-    int count;
+    public string DesPre = string.Empty;
+    public bool HasCount;
+    [ShowIf(nameof(HasCount))]
+    public int Count;
     public event Action? OnRunOut;
 
     public virtual string GetInteractDes()
@@ -46,8 +38,8 @@ public class SceneItemData : DataBase
     {
         if (HasCount)
         {
-            count--;
-            if (count <= 0)
+            Count--;
+            if (Count <= 0)
             {
                 OnRunOut?.Invoke();
             }
@@ -57,7 +49,7 @@ public class SceneItemData : DataBase
     public bool CanUse()
     {
         if (HasCount)
-            return count > 0;
+            return Count > 0;
         return true;
     }
     public Color DesColor() => this switch
@@ -68,22 +60,19 @@ public class SceneItemData : DataBase
     
     protected virtual void UseEffect(){}
 
-    public static SceneItemData ReadConfig<T>(T config, SceneItemC2D param) where T : SceneItemConfig
+    public SceneItemData ReadSth(SceneItemC2D param)
     {
-        if (config is PurpleSceneItemConfig purpleConfig)
-        {
-            return new PurpleSceneItemData(purpleConfig, param);
-        }
-        return new SceneItemData(config, param);
+        OccupyDirSet = param.DirSet;
+        return this;
     }
 }
 
 
 [Serializable]
-public class PurpleSceneItemData(PurpleSceneItemConfig config, SceneItemC2D param)
-    : SceneItemData(config, param)
+public class PurpleSceneItemData : SceneItemData
 {
-    public int Energy = config.Energy;
+    [Header("Purple")]
+    public int Energy;
     public override string GetInteractDes()
     {
         var sb = new StringBuilder(base.GetInteractDes());
