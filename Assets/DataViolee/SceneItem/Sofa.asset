@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Sofa
   m_EditorClassIdentifier: 
   Object: {fileID: 10658068440183081, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
+  DesPre: "\u5728\u6C99\u53D1\u4F11\u606F: "
+  StaminaCost: 2
   HasCount: 1
   Count: 1
-  Energy: 10
+  StaminaCost: 2
+  Energy: 1

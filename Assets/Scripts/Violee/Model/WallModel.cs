@@ -32,12 +32,12 @@ namespace Violee
         {
             if (Data.DoorType == EDoorType.None || Data.Opened.Value)
                 return null;
-            if (PlayerManager.StaminaCount.Value <= 0)
+            if (PlayerManager.EnergyCount.Value <= 0)
             {
                 return new InteractInfo
                 {
                     Act = () => {},
-                    Description = "体力不足，无法打开门",
+                    Description = "精力不足，无法打开门",
                     Color = Color.red,
                 };
             }
@@ -45,22 +45,15 @@ namespace Violee
             {
                 Act = () =>
                 {
-                    PlayerManager.StaminaCount.Value -= 1;
+                    PlayerManager.EnergyCount.Value -= 1;
                     Data.Opened.Value = true;
                 },
-                Description = "打开门：消耗1点体力",
-                Color = Color.blue,
+                Description = "打开门：消耗1点精力",
+                Color = Color.magenta,
                 
                 IsOpenDoor = true,
                 WallData = Data,
-                GetDrawConfigs = () =>
-                {
-                    // var ret = new List<DrawConfig>();
-                    // for (int i = 0; i < 3; i++)
-                    //     ret.Add(Configer.DrawConfigList.DrawConfigs.RandomItem());
-                    // return ret;
-                    return Configer.DrawConfigList.DrawConfigs.Take(3).ToList();
-                },
+                GetDrawConfigs = () => Configer.DrawConfigList.DrawConfigs.Take(3).ToList(),
             };
         }
         

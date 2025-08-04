@@ -19,10 +19,10 @@ public class VioletMono : MonoBehaviour
 
     public Vector2Int Pos;
     public EBoxDir D;
-    public SceneItemModel SceneItemModel;
+    public SceneItemModel SceneItemModel = null!;
     [Button]
     public void Test()
     {
-        MapManager.BoxDataByPos(Pos).SceneDataMyList.Add(SceneItemModel.Data);
+        MapManager.BoxDataByPos(Pos).SceneDataMyList.Add(new SceneItemData(SceneItemModel.Config, new([D])));
     }
 }

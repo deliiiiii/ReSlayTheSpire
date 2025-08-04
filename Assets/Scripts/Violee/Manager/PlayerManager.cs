@@ -48,6 +48,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     #region SceneItem
 
-    public static Stream<InteractInfo?> InteractStream;
+    public static Stream<InteractInfo?> InteractStream = null!;
     #endregion
 }

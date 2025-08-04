@@ -4986,6 +4986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Pos: {x: 0, y: 0}
   D: 1
+  SceneItemModel: {fileID: 0}
 --- !u!114 &265992612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5005,7 +5006,6 @@ MonoBehaviour:
   BoxConfigListIns: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
   DrawConfigListIns: {fileID: 11400000, guid: 3888367dd6035454faf83931fc9ccae4, type: 2}
   MiniItemConfigListIns: {fileID: 11400000, guid: f741dc65404c88346a0c86db1b7886c6, type: 2}
-  SceneItemConfigListIns: {fileID: 11400000, guid: 2ac03f0e9d9b2dd43970ec981eb9d9e0, type: 2}
   SettingsConfigIns: {fileID: 11400000, guid: a045e28f41ce60340acfb1d0f7d5e9fa, type: 2}
 --- !u!1 &269445332
 GameObject:
@@ -6601,7 +6601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &311952529
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25866,11 +25866,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4918451715183663751}
   - {fileID: 726215049}
   - {fileID: 1525419159}
   - {fileID: 4918451716143532588}
   - {fileID: 478125259}
-  - {fileID: 4918451715183663751}
   - {fileID: 311952529}
   - {fileID: 269445333}
   - {fileID: 1234293316}

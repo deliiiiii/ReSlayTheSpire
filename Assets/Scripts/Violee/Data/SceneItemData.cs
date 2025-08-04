@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -19,20 +20,28 @@ public class SceneItemData : DataBase
     [NonSerialized]public readonly HashSet<EBoxDir> OccupyDirSet;
     public SceneItemData(SceneItemConfig config, SceneItemC2D param)
     {
-        Obj = config.Object;
         OccupyDirSet = param.DirSet;
-        if (config.HasCount)
-        {
-            HasCount = true;
-            count = config.Count;
-        }
+        Obj = config.Object;
+        StaminaCost = config.StaminaCost;
+        DesPre = config.DesPre;
+        HasCount = config.HasCount;
+        count = config.Count;
     }
     public GameObject Obj;
+    public int StaminaCost;
+    public string DesPre;
     public readonly bool HasCount;
     int count;
     public event Action? OnRunOut;
-    
-    public virtual string GetInteractDes() => "Simple Item...";
+
+    public virtual string GetInteractDes()
+    {
+        var sb = new StringBuilder();
+        sb.Append(DesPre);
+        if (StaminaCost > 0)
+            sb.Append($"消耗{StaminaCost}点体力,\n");
+        return sb.ToString();
+    }
     public void Use()
     {
         if (HasCount)
@@ -53,8 +62,8 @@ public class SceneItemData : DataBase
     }
     public Color DesColor() => this switch
     {
-        PurpleSceneItemData => Color.magenta,
-        _ => Color.black,
+        {StaminaCost : > 0} => Color.blue,
+        _ => Color.white,
     };
     
     protected virtual void UseEffect(){}
@@ -77,12 +86,15 @@ public class PurpleSceneItemData(PurpleSceneItemConfig config, SceneItemC2D para
     public int Energy = config.Energy;
     public override string GetInteractDes()
     {
-        return $"休息一下: +{Energy} 精力";
+        var sb = new StringBuilder(base.GetInteractDes());
+        sb.Append($"恢复{Energy}点精力");
+        return sb.ToString();
     }
 
     protected override void UseEffect()
     {
         base.UseEffect();
+        PlayerManager.StaminaCount.Value -= StaminaCost;
         PlayerManager.EnergyCount.Value += Energy;
     }
 }
