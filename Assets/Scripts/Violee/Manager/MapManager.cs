@@ -90,10 +90,10 @@ internal class MapManager : SingletonCS<MapManager>
         playerCurPoint.Value?.AtWallGetInsidePoints(wallData).ForEach(p =>
         {
             p.BelongBox.SceneDataMyList.MyRemoveAll(x => x.OccupyDirSet.Contains(p.Dir));
-            var ranConfig = config.DrawPoints.RandomItem(weightFunc: d => d.Possibility)?.SceneItemConfig;
-            if (ranConfig == null)
+            var ranModel = config.DrawPoints.RandomItem(weightFunc: d => d.Possibility)?.SceneItemModel;
+            if (ranModel == null)
                 return;
-            p.BelongBox.SceneDataMyList.MyAdd(SceneItemData.ReadConfig(ranConfig, new([p.Dir])));
+            p.BelongBox.SceneDataMyList.MyAdd(SceneItemData.ReadConfig(ranModel.Config, new([p.Dir])));
         });
     }
 

@@ -23,6 +23,6 @@ public class DrawConfig
 public class DrawAtPoint
 {
     [SerializeReference]
-    public SceneItemConfig? SceneItemConfig;
+    public SceneItemModel? SceneItemModel;
     public int Possibility;
 }

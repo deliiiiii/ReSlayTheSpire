@@ -13,7 +13,7 @@ public class SceneItemModel : ModelBase<SceneItemData>
     public required GameObject ShowAfterRunOut;
     public required InteractReceiver Ir;
 
-    [SerializeReference] public SceneItemData Data2;
+    [SerializeReference] public SceneItemConfig Config;
     protected override void OnReadData()
     {
         if (Data.HasCount)

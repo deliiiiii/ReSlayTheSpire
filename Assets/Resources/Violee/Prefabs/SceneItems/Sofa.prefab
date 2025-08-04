@@ -52,6 +52,7 @@ MonoBehaviour:
   HideAfterRunOut: {fileID: 3247837281952955383}
   ShowAfterRunOut: {fileID: 4525382237460474740}
   Ir: {fileID: 6087658489099615833}
+  Config: {fileID: 11400000, guid: abe62d7dbca604a488e27f0b9ab93dd3, type: 2}
 --- !u!1 &3247837281952955383
 GameObject:
   m_ObjectHideFlags: 0
