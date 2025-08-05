@@ -9,7 +9,7 @@ namespace Violee;
 public class InteractReceiver : MonoBehaviour
 {
     public Func<InteractInfo?> GetInteractInfo = () => null;
-    Outline outline = null!;
+    Outline? outline;
     void Awake()
     {
         if(gameObject.layer != LayerMask.NameToLayer(nameof(InteractReceiver)))
@@ -26,6 +26,8 @@ public class InteractReceiver : MonoBehaviour
     }
     void SetOutline(bool shown, Color color)
     {
+        if (outline == null)
+            return;
         outline.enabled = shown;
         outline.OutlineColor = color;
     }

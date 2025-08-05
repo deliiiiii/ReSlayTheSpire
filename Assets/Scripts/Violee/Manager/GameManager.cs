@@ -25,7 +25,9 @@ public class WindowInfo
 {
     public EWindowType WindowType;
     public string Des = string.Empty;
+    [NonSerialized]
     public Action? OnAddEvent;
+    [NonSerialized]
     public Action? OnRemoveEvent;
 }
 
@@ -62,7 +64,9 @@ public class GameManager : SingletonCS<GameManager>
         Configer.Init();
         GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
         PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
-        PlayingState.OnUpdate(dt =>
+        PlayingState
+            .OnEnter(PlayerManager.OnEnterPlaying)
+            .OnUpdate(dt =>
             {
                 if (Input.GetKey(KeyCode.LeftAlt) || HasWindow)
                 {
@@ -77,7 +81,6 @@ public class GameManager : SingletonCS<GameManager>
                 MapManager.TickPlayerVisit(PlayerManager.GetPos);
                 PlayerManager.Tick(HasWindow);
             })
-            .OnEnter(PlayerManager.OnEnterPlaying)
             .OnExit(PlayerManager.OnExitPlaying);
         
         PauseWindow = new WindowInfo()

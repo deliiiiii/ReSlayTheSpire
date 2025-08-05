@@ -35,11 +35,12 @@ class GameView : ViewBase<GameView>
                 ShowFullScreenMap();
             })
             .OnRemove(ShowMinimap);
+        sleepWindow
+            .OnAdd(() => SleepPnl.SetActive(true))
+            .OnRemove(() => SleepPnl.SetActive(false));
         drawWindow
-            .OnRemove(() =>
-            {
-                DrawPnl.SetActive(false);
-            });
+            .OnAdd(() => DrawPnl.SetActive(true))
+            .OnRemove(() => DrawPnl.SetActive(false));
         
         GameManager.GeneratingMapState
             .OnEnter(() => LoadPnl.SetActive(true))
@@ -59,9 +60,9 @@ class GameView : ViewBase<GameView>
             })
             .OnUpdate(dt =>
             {
-                var cb = PlayerManager.InteractStream.StartValue;
-                PlayerManager.InteractStream.RemoveOnEndAsync(GetUICb);
-                PlayerManager.InteractStream.OnEndAsync(GetUICb);
+                var cb = PlayerManager.InteractStream?.StartValue;
+                PlayerManager.InteractStream?.RemoveOnEndAsync(GetUICb);
+                PlayerManager.InteractStream?.OnEndAsync(GetUICb);
                 NormalReticle.SetActive(cb == null);
                 FindReticle.SetActive(cb != null);
                 SceneItemInfoPnl.SetActive(cb != null);
@@ -178,13 +179,12 @@ class GameView : ViewBase<GameView>
             return;
         if (cb.IsSleep)
         {
-            await FadeImageAlpha(SleepPnl, cb.SleepTime);
+            await FadeImageAlpha(cb.SleepTime);
         }
         else if (cb.IsOpenDoor)
         {
             GameManager.WindowList.MyAdd(drawWindow);
-            DrawPnl.SetActive(true);
-            ShowFullScreenMap();
+            GameManager.WindowList.MyAdd(fullMapWindow);
             DrawBtnContent.DisableAllChildren();
             var configs = cb.GetDrawConfigs();
             for (int i = 0; i < configs.Count; i++)
@@ -198,21 +198,19 @@ class GameView : ViewBase<GameView>
                 {
                     MapManager.DrawAtWall(cb.WallData, config);
                     GameManager.WindowList.MyRemove(drawWindow);
-                    DrawPnl.SetActive(false);
-                    ShowMinimap();
+                    GameManager.WindowList.MyRemove(fullMapWindow);
                 });
                 go.GetComponentInChildren<Text>().text = config.DrawDes;
             }
         }
     }
 
-    static async Task FadeImageAlpha(GameObject go, float duration)
+    async Task FadeImageAlpha(float duration)
     {
         try
         {
             GameManager.WindowList.MyAdd(sleepWindow);
-            go.SetActive(true);
-            var img = go.GetComponent<Image>();
+            var img = SleepPnl.GetComponent<Image>();
             var initAlpha = 0f;
             var half = duration * 0.5f;
     
@@ -238,7 +236,6 @@ class GameView : ViewBase<GameView>
                 await Task.Yield();
             }
             img.color.SetAlpha(initAlpha);
-            go.SetActive(false);
             GameManager.WindowList.MyRemove(sleepWindow);
         }
         catch (Exception e)

@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using System.Collections.Generic;
+using Sirenix.OdinInspector;
 #if UNITY_EDITOR
 using Sirenix.Utilities.Editor;
 #endif
@@ -9,6 +10,7 @@ namespace Violee;
 public class VioletMono : MonoBehaviour
 {
     [ShowInInspector] public string GameState => GameManager.GameState;
+    [ShowInInspector] public List<WindowInfo> WindowList => GameManager.WindowList;
     void Awake()
     {
 #if UNITY_EDITOR

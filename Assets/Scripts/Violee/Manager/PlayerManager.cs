@@ -39,7 +39,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
         playerMono.Fpc.enabled = !hasWindowed;
         if (Input.GetMouseButtonDown(0) && !hasWindowed)
         {
-            _ = InteractStream.CallTriggerAsync();
+            _ = InteractStream?.CallTriggerAsync();
         }
     }
 
@@ -48,6 +48,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     #region SceneItem
 
-    public static Stream<InteractInfo?> InteractStream = null!;
+    public static Stream<InteractInfo?>? InteractStream = null!;
     #endregion
 }
