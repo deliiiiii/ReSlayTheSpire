@@ -87,13 +87,18 @@ internal class MapManager : SingletonCS<MapManager>
 
     public static void DrawAtWall(WallData wallData, DrawConfig config)
     {
-        playerCurPoint.Value?.AtWallGetInsidePoints(wallData).ForEach(p =>
+        var points = playerCurPoint.Value.AtWallGetInsidePoints(wallData).ToList();
+        config.ToDrawModels.ForEach(model =>
         {
-            p.BelongBox.SceneDataMyList.MyRemoveAll(x => x.OccupyDirSet.Contains(p.Dir));
-            var ranModel = config.DrawPoints.RandomItem(weightFunc: d => d.Possibility)?.SceneItemModel;
-            if (ranModel == null)
+            var p = points.RandomItem();
+            if (p == null)
+            {
+                MyDebug.Log("No Enough Points...");
                 return;
-            p.BelongBox.SceneDataMyList.MyAdd(ranModel.Data.ReadSth(new([p.Dir])));
+            }
+            points.Remove(p);
+            p.BelongBox.SceneDataMyList.MyRemoveAll(x => x.OccupyDirSet.Contains(p.Dir));
+            p.BelongBox.SceneDataMyList.MyAdd(model.Data.ReadSth(new([p.Dir])));
         });
     }
 

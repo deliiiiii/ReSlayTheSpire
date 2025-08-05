@@ -13,23 +13,18 @@ MonoBehaviour:
   m_Name: DrawConfigList
   m_EditorClassIdentifier: 
   DrawConfigs:
-  - DrawType: 0
-    DrawDes: SofaTest1
+  - DrawDes: Add 1 Sofa
     Sprite: {fileID: 21300000, guid: 7dca49d892d2a544ba35571c9a61c643, type: 3}
-    DrawPoints:
-    - SceneItemModel: {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
-      Possibility: 1
-    - SceneItemModel: {fileID: 0}
-      Possibility: 1
-  - DrawType: 0
-    DrawDes: SofaTest222
+    ToDrawModels:
+    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
+  - DrawDes: Add 2 Sofas
     Sprite: {fileID: 21300000, guid: 7dca49d892d2a544ba35571c9a61c643, type: 3}
-    DrawPoints:
-    - SceneItemModel: {fileID: 0}
-      Possibility: 1
-  - DrawType: 0
-    DrawDes: SofaTest333
+    ToDrawModels:
+    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
+    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
+  - DrawDes: Add 3 Sofas
     Sprite: {fileID: 21300000, guid: 7dca49d892d2a544ba35571c9a61c643, type: 3}
-    DrawPoints:
-    - SceneItemModel: {fileID: 0}
-      Possibility: 1
+    ToDrawModels:
+    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
+    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
+    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
