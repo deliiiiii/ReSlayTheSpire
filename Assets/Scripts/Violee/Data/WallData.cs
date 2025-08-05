@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Violee
 {
@@ -9,6 +10,7 @@ namespace Violee
         Wooden,
     }
     [Serializable]
+    [method: JsonConstructor]
     public class WallData(EWallType wallType, EDoorType doorType) : DataBase
     {
         public WallData(EBoxDir dir, EDoorType doorType) 

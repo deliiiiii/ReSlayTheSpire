@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Violee;
 
@@ -311,4 +312,10 @@ internal class MapManager : SingletonCS<MapManager>
     
     
     public static BoxData BoxDataByPos(Vector2Int pos) => boxDataMyDic[pos];
+
+    public static void AddTest(BoxData boxData)
+    {
+        boxDataMyDic.MyRemove(boxData.Pos2D);
+        boxDataMyDic.MyAdd(boxData);
+    }
 }

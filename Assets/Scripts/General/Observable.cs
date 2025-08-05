@@ -1,5 +1,6 @@
 using System;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -33,6 +34,7 @@ public class Observable<T>
     [CanBeNull] public event UnityAction<T> OnValueChangedBefore;
     [CanBeNull] public event UnityAction<T> OnValueChangedAfter;
     // [CanBeNull] public event UnityAction<T, T> OnValueChangedFull;
+    [JsonConstructor]
     public Observable(T initValue)
     {
         value = initValue;

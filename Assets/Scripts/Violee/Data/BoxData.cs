@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using Sirenix.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -111,14 +112,11 @@ namespace Violee
         {
             Pos2D = pos;
 
-            WallDataMyDic.OnAdd += wallData =>
-            {
-                WallsByte |= (byte)wallData.WallType;
-            };
-            WallDataMyDic.OnRemove += wallType =>
-            {
-                WallsByte &= (byte)~(int)wallType;
-            };
+            WallDataMyDic = new(w => w.WallType, 
+                onAdd: wallData => WallsByte |= (byte)wallData.WallType,
+                onRemove: wallType => WallsByte |= (byte)wallType);
+            PointDataMyDic = new (b => b.Dir);
+            SceneDataMyList = [];
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
                 WallsByte = config.Walls;
@@ -160,11 +158,10 @@ namespace Violee
         
         
         #region List, Dic
-        public readonly MyKeyedCollection<EWallType, WallData> WallDataMyDic 
-            = new(w => w.WallType);
-        public MyKeyedCollection<EBoxDir, BoxPointData> PointDataMyDic 
-            = new (b => b.Dir);
-        public readonly MyList<SceneItemData> SceneDataMyList = [];
+        public readonly MyKeyedCollection<EWallType, WallData> WallDataMyDic;
+        public readonly MyKeyedCollection<EBoxDir, BoxPointData> PointDataMyDic;
+        public readonly MyList<SceneItemData> SceneDataMyList;
+
         #endregion
     }
 }

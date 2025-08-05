@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using Sirenix.Utilities;
 
 [Serializable]
@@ -31,16 +32,23 @@ public class MyKeyedCollection<TKey,TItem>: Collection<TItem>
     Func<TItem, TKey> keyMapper;
     [CanBeNull] public event Action<TItem> OnAdd;
     [CanBeNull] public event Action<TKey> OnRemove;
+
+    [JsonConstructor]
+    public MyKeyedCollection(List<TItem> items) : base(items) {}
+    
+    
+    public MyKeyedCollection(Func<TItem, TKey> keyMapper) : this(keyMapper, null, null){}
+    
     public MyKeyedCollection(Func<TItem, TKey> keyMapper, 
-        [CanBeNull] Action<TItem> onAdd = null, [CanBeNull] Action<TKey> onRemove = null) 
-        : this()
+        [CanBeNull] Action<TItem> onAdd, [CanBeNull] Action<TKey> onRemove) 
+        : this(null, DefaultThreshold)
     {
         this.keyMapper = keyMapper;
         this.OnAdd = onAdd;
         this.OnRemove = onRemove;
     }
-    protected MyKeyedCollection(): this(null, DefaultThreshold) {}
-
+    // [JsonConstructor]
+    // protected MyKeyedCollection(): this(null, DefaultThreshold) {}
 
     protected MyKeyedCollection(IEqualityComparer<TKey> comparer, int dictionaryCreationThreshold = DefaultThreshold) {
         comparer ??= EqualityComparer<TKey>.Default;
