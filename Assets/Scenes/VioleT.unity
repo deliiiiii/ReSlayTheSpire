@@ -5001,7 +5001,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
   PlayerMonoIns: {fileID: 4918451716113458210}
-  MapMonoIns: {fileID: 934591958}
   BoxModelIns: {fileID: 3255050546787837995, guid: d1e1e796887664d4b900a3c7069e5b3c, type: 3}
   BoxConfigListIns: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
   DrawConfigListIns: {fileID: 11400000, guid: 3888367dd6035454faf83931fc9ccae4, type: 2}
@@ -16539,54 +16538,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &934591956
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 934591957}
-  - component: {fileID: 934591958}
-  m_Layer: 0
-  m_Name: MapMono
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &934591957
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 934591956}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &934591958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 934591956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 651d82db5bc14a8584c31979239a9c5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Height: 7
-  Width: 6
-  StartPos: {x: 0, y: 0}
-  StartDir: 1
 --- !u!43 &954741136
 Mesh:
   m_ObjectHideFlags: 0
@@ -34648,7 +34599,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 265992610}
   - {fileID: 4918451716113458206}
-  - {fileID: 934591957}
   - {fileID: 1560496643}
   - {fileID: 2083257669}
   - {fileID: 884399058}

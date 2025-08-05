@@ -12,9 +12,7 @@ namespace Violee
     {
         [Header("Singleton's Model")] 
         public PlayerMono PlayerMonoIns = null!;
-        public MapMono MapMonoIns = null!;
         public static PlayerMono playerMono => Instance.PlayerMonoIns;
-        public static MapMono mapMono => Instance.MapMonoIns;
 
         [Header("Object Pool")]
         public BoxModel BoxModelIns = null!;
