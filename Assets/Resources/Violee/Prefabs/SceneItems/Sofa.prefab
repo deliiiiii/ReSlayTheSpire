@@ -58,7 +58,7 @@ MonoBehaviour:
     - rid: 6059727542167535616
       type: {class: PurpleSceneItemData, ns: Violee, asm: Violee}
       data:
-        Obj: {fileID: 10658068440183081}
+        Model: {fileID: 4583635587203084175}
         StaminaCost: 2
         DesPre: "\u5728\u6C99\u53D1\u4F11\u606F\uFF1A"
         HasCount: 1

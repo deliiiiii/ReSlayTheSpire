@@ -1,24 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Violee;
 
-/// <summary>
-/// C2D : Config to Data
-/// </summary>
-public struct SceneItemC2D(HashSet<EBoxDir> dirSet)
-{
-    public readonly HashSet<EBoxDir> DirSet = dirSet;
-}
 
 [Serializable]
 public class SceneItemData : DataBase
 {
-    public GameObject Obj = null!;
-    public HashSet<EBoxDir> OccupyDirSet = [];
+    public SceneItemModel Model = null!;
+    [ShowInInspector] public HashSet<EBoxDir> OccupyDirSet = [];
     public int StaminaCost;
     public string DesPre = string.Empty;
     public bool HasCount;
@@ -60,10 +54,32 @@ public class SceneItemData : DataBase
     
     protected virtual void UseEffect(){}
 
-    public SceneItemData ReadSth(SceneItemC2D param)
+    public static SceneItemData CreateData(SceneItemData data, HashSet<EBoxDir> dirSet)
     {
-        OccupyDirSet = param.DirSet;
-        return this;
+        if (data is PurpleSceneItemData pData)
+        {
+            return new PurpleSceneItemData()
+            {
+                Model = data.Model,
+                OccupyDirSet = [..dirSet],
+                StaminaCost = data.StaminaCost,
+                DesPre = data.DesPre,
+                HasCount = data.HasCount,
+                Count = data.Count,
+                OnRunOut = data.OnRunOut,
+                Energy = pData.Energy,
+            };
+        }
+        return new SceneItemData()
+        {
+            Model = data.Model,
+            OccupyDirSet = [..dirSet],
+            StaminaCost = data.StaminaCost,
+            DesPre = data.DesPre,
+            HasCount = data.HasCount,
+            Count = data.Count,
+            OnRunOut = data.OnRunOut,
+        };
     }
 }
 

@@ -87,7 +87,8 @@ internal class MapManager : SingletonCS<MapManager>
 
     public static void DrawAtWall(WallData wallData, DrawConfig config)
     {
-        var points = playerCurPoint.Value.AtWallGetInsidePoints(wallData).ToList();
+        var points = playerCurPoint.Value.AtWallGetInsidePoints(wallData)
+            .Where(p => !p.BelongBox.OccupiedDirs.Contains(p.Dir)).ToList();
         config.ToDrawModels.ForEach(model =>
         {
             var p = points.RandomItem();
@@ -97,8 +98,7 @@ internal class MapManager : SingletonCS<MapManager>
                 return;
             }
             points.Remove(p);
-            p.BelongBox.SceneDataMyList.MyRemoveAll(x => x.OccupyDirSet.Contains(p.Dir));
-            p.BelongBox.SceneDataMyList.MyAdd(model.Data.ReadSth(new([p.Dir])));
+            p.BelongBox.SceneDataMyList.MyAdd(SceneItemData.CreateData(model.Data, [p.Dir]));
         });
     }
 

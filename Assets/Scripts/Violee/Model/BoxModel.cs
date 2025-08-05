@@ -44,10 +44,8 @@ namespace Violee
         
         void OnAddSceneItemData(SceneItemData fdata)
         {
-            var obj = Instantiate(fdata.Obj, SceneItemParent);
-            var model = obj.GetOrAddComponent<SceneItemModel>();
-            var data = model.Data;
-            model.ReadData(data);
+            var model = Instantiate(fdata.Model, SceneItemParent);
+            model.ReadData(fdata);
             
             var dtRot = fdata.OccupyDirSet.First() switch
             {
@@ -56,13 +54,13 @@ namespace Violee
                 EBoxDir.Down => Quaternion.Euler(0, 180, 0),
                 _ => Quaternion.Euler(0, 270, 0),
             };
-            obj.transform.localPosition = dtRot * obj.transform.localPosition;
-            obj.transform.localRotation *= dtRot;
-            obj.SetActive(true);
+            model.transform.localPosition = dtRot * model.transform.localPosition;
+            model.transform.localRotation *= dtRot;
+            model.gameObject.SetActive(true);
         }
         void OnRemoveSceneItemData(SceneItemData data)
         {
-            Destroy(data.Obj);
+            Destroy(data.Model);
         }
         #endregion
     }
