@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 public static class JsonIO
 {
@@ -17,7 +18,12 @@ public static class JsonIO
             Directory.CreateDirectory(pathShort);
         }
         // string str = JsonUtility.ToJson(curEntity, true);
-        string str = JsonConvert.SerializeObject(curEntity, Formatting.Indented);
+        var settings = new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented,
+            // 不序列化属性
+        };
+        string str = JsonConvert.SerializeObject(curEntity, settings);
         File.WriteAllText(path, str);
     }
     public static T Read<T>(string f_pathPre, string f_name)

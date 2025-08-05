@@ -101,9 +101,8 @@ internal class MapManager : SingletonCS<MapManager>
     #region Visit
     static readonly Observable<BoxPointData> playerCurPoint = new(null!, 
         x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
-    public static void TickPlayerVisit(Vector3 playerPos)
+    public static void TickPlayerVisit(GenerateParam param, Vector3 playerPos)
     {
-        var param = DijkstraStream.Result.Value;
         var boxDataDic = param.BoxDataDic;
         var x = playerPos.x;
         var z = playerPos.z;

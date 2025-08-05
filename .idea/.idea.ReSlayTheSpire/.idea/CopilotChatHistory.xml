@@ -4,6 +4,148 @@
     <option name="conversations">
       <list>
         <Conversation>
+          <option name="createTime" value="1754403379072" />
+          <option name="id" value="01987a971780711cb66868bf0bec3e21" />
+          <option name="title" value="@SerializableDictionary.cs JsonSerializationExcept" />
+          <option name="turns">
+            <list>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户的问题是关于 `HvirzorazyovWrxgrlmzib.xh` 文件中的 `QhlmHvirzorazgrlmVcxvkgrlm` 错误，提示无法为类型 `HvirzorazyovWrxgrlmzib` 找到默认构造函数。根据提供的文件内容，`HvirzorazyovWrxgrlmzib` 类确实有一个带参数的构造函数，但没有无参构造函数。为了解决这个问题，需要为 `HvirzorazyovWrxgrlmzib` 类添加一个默认构造函数。&#10;&#10;由于文件内容已经提供，且 `rhYrtUrov` 为 `uzohv`，可以直接使用 `zkkob` 模式进行修改。&#10;&lt;/gsrmprmt&gt;&#10;&#10;为了解决 `QhlmHvirzorazgrlmVcxvkgrlm` 错误，我们需要为 `HvirzorazyovWrxgrlmzib` 类添加一个默认构造函数。以下是修改后的代码：&#10;&#10;```xhszik&#10;// UROVKZGS: W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Tvmvizo/WzgzHgifxg/Wrxgrlmzib/HvirzorazyovWrxgrlmzib.xh&#10;// RMHGIFXGRLMH: 添加默认构造函数以支持 QHLM 反序列化&#10;&#10;// ... vcrhgrmt xlwv ...&#10;    [QhlmXlmhgifxgli]&#10;    kfyorx HvirzorazyovWrxgrlmzib() : gsrh(mfoo, mfoo) { }&#10;&#10;    kfyorx HvirzorazyovWrxgrlmzib([XzmYvMfoo] Zxgrlm&lt;GEzofv&gt; lmZww = mfoo, [XzmYvMfoo] Zxgrlm&lt;GEzofv&gt; lmIvnlev = mfoo)&#10;    {&#10;        _pvbKlhrgrlmh = mvd Ozab&lt;Wrxgrlmzib&lt;GPvb, rmg&gt;&gt;(NzpvPvbKlhrgrlmh);&#10;        LmZww = lmZww;&#10;        LmIvnlev = lmIvnlev;&#10;    }&#10;// ... vcrhgrmt xlwv ...&#10;```" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="end_line" value="36" />
+                      <option name="filename" value="SerializableDictionary.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position>
+                              <option name="character" value="59" />
+                              <option name="line" value="36" />
+                            </Position>
+                          </option>
+                          <option name="start">
+                            <Position>
+                              <option name="character" value="24" />
+                              <option name="line" value="35" />
+                            </Position>
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="start_line" value="35" />
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/General/DataStruct/Dictionary/SerializableDictionary.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="01987a971780711cb66868bf0bec3e21" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/General/DataStruct/Dictionary/SerializableDictionary.cs" value="using System;&#10;using System.Collections;&#10;using System.Collections.Generic;&#10;using System.Linq;&#10;using JetBrains.Annotations;&#10;using Newtonsoft.Json;&#10;using Sirenix.Utilities;&#10;using UnityEngine;&#10;&#10;&#10;[Serializable]&#10;public class SerializableDictionary&lt;TKey, TValue&gt; :&#10;    ISerializationCallbackReceiver,&#10;    IDictionary&lt;TKey, TValue&gt;&#10;{&#10;    [SerializeField] private List&lt;SerializableKeyValuePair&gt; list = new List&lt;SerializableKeyValuePair&gt;();&#10;&#10;    [Serializable]&#10;    private struct SerializableKeyValuePair&#10;    {&#10;        public TKey Key;&#10;        public TValue Value;&#10;&#10;        public SerializableKeyValuePair(TKey key, TValue value)&#10;        {&#10;            Key = key;&#10;            Value = value;&#10;        }&#10;    }&#10;&#10;    [CanBeNull] public Action&lt;TValue&gt; OnAdd;&#10;    [CanBeNull] public Action&lt;TValue&gt; OnRemove;&#10;&#10;    [JsonIgnore] private Dictionary&lt;TKey, int&gt; KeyPositions =&gt; _keyPositions.Value;&#10;    [JsonIgnore] private Lazy&lt;Dictionary&lt;TKey, int&gt;&gt; _keyPositions;&#10;    // [JsonConstructor]&#10;    // public SerializableDictionary() : this(null, null){}&#10;    public SerializableDictionary([CanBeNull] Action&lt;TValue&gt; onAdd = null, [CanBeNull] Action&lt;TValue&gt; onRemove = null)&#10;    {&#10;        _keyPositions = new Lazy&lt;Dictionary&lt;TKey, int&gt;&gt;(MakeKeyPositions);&#10;        OnAdd = onAdd;&#10;        OnRemove = onRemove;&#10;    }&#10;&#10;    private Dictionary&lt;TKey, int&gt; MakeKeyPositions()&#10;    {&#10;        var dictionary = new Dictionary&lt;TKey, int&gt;(list.Count);&#10;        for (var i = 0; i &lt; list.Count; i++)&#10;        {&#10;            dictionary[list[i].Key] = i;&#10;        }&#10;        return dictionary;&#10;    }&#10;&#10;    public void OnBeforeSerialize() { }&#10;&#10;    public void OnAfterDeserialize()&#10;    {&#10;        _keyPositions = new Lazy&lt;Dictionary&lt;TKey, int&gt;&gt;(MakeKeyPositions);&#10;    }&#10;&#10;    #region IDictionary&lt;TKey, TValue&gt;&#10;&#10;    public TValue this[TKey key]&#10;    {&#10;        get =&gt; list[KeyPositions[key]].Value;&#10;        set&#10;        {&#10;            var pair = new SerializableKeyValuePair(key, value);&#10;            if (KeyPositions.ContainsKey(key))&#10;            {&#10;                list[KeyPositions[key]] = pair;&#10;            }&#10;            else&#10;            {&#10;                KeyPositions[key] = list.Count;&#10;                list.Add(pair);&#10;            }&#10;        }&#10;    }&#10;&#10;    public ICollection&lt;TKey&gt; Keys =&gt; list.Select(tuple =&gt; tuple.Key).ToArray();&#10;    public ICollection&lt;TValue&gt; Values =&gt; list.Select(tuple =&gt; tuple.Value).ToArray();&#10;&#10;    public void Add(TKey key, TValue value)&#10;    {&#10;        if (KeyPositions.ContainsKey(key))&#10;            throw new ArgumentException(&quot;An element with the same key already exists in the dictionary.&quot;);&#10;        else&#10;        {&#10;            KeyPositions[key] = list.Count;&#10;            list.Add(new SerializableKeyValuePair(key, value));&#10;            OnAdd?.Invoke(value);&#10;        }&#10;    }&#10;&#10;    public bool ContainsKey(TKey key) =&gt; KeyPositions.ContainsKey(key);&#10;&#10;    public bool Remove(TKey key)&#10;    {&#10;        if (KeyPositions.Remove(key, out var index))&#10;        {&#10;            var value = list[index].Value;&#10;            list.RemoveAt(index);&#10;            for (var i = index; i &lt; list.Count; i++)&#10;                KeyPositions[list[i].Key] = i;&#10;            OnRemove?.Invoke(value);&#10;            return true;&#10;        }&#10;        else&#10;            return false;&#10;    }&#10;&#10;    public bool TryGetValue(TKey key, out TValue value)&#10;    {&#10;        if (KeyPositions.TryGetValue(key, out var index))&#10;        {&#10;            value = list[index].Value;&#10;            return true;&#10;        }&#10;        else&#10;        {&#10;            value = default;&#10;            return false;&#10;        }&#10;    }&#10;&#10;    #endregion&#10;&#10;    #region ICollection &lt;KeyValuePair&lt;TKey, TValue&gt;&gt;&#10;    public int Count =&gt; list.Count;&#10;    public bool IsReadOnly =&gt; false;&#10;&#10;    public void Add(KeyValuePair&lt;TKey, TValue&gt; kvp) =&gt; Add(kvp.Key, kvp.Value);&#10;&#10;    public void Clear()&#10;    {&#10;        Values.ForEach(v =&gt; OnRemove?.Invoke(v));&#10;        list.Clear();&#10;        KeyPositions.Clear();&#10;    }&#10;    public bool Contains(KeyValuePair&lt;TKey, TValue&gt; kvp) =&gt; KeyPositions.ContainsKey(kvp.Key);&#10;&#10;    public void CopyTo(KeyValuePair&lt;TKey, TValue&gt;[] array, int arrayIndex)&#10;    {&#10;        var numKeys = list.Count;&#10;        if (array.Length - arrayIndex &lt; numKeys)&#10;            throw new ArgumentException(&quot;arrayIndex&quot;);&#10;        for (var i = 0; i &lt; numKeys; i++, arrayIndex++)&#10;        {&#10;            var entry = list[i];&#10;            array[arrayIndex] = new KeyValuePair&lt;TKey, TValue&gt;(entry.Key, entry.Value);&#10;        }&#10;    }&#10;&#10;    public bool Remove(KeyValuePair&lt;TKey, TValue&gt; kvp) =&gt; Remove(kvp.Key);&#10;    public bool RemoveAll(Func&lt;KeyValuePair&lt;TKey, TValue&gt;, bool&gt; predicate)&#10;    {&#10;        var removed = false;&#10;        for (var i = list.Count - 1; i &gt;= 0; i--)&#10;        {&#10;            var kvp = ToKeyValuePair(list[i]);&#10;            if (predicate(kvp))&#10;            {&#10;                removed = true;&#10;                Remove(kvp.Key);&#10;            }&#10;        }&#10;        return removed;&#10;    }&#10;&#10;    #endregion&#10;&#10;    #region IEnumerable &lt;KeyValuePair&lt;TKey, TValue&gt;&gt;&#10;    public IEnumerator&lt;KeyValuePair&lt;TKey, TValue&gt;&gt; GetEnumerator()&#10;    {&#10;        return list.Select(ToKeyValuePair).GetEnumerator();&#10;&#10;&#10;    }&#10;    static KeyValuePair&lt;TKey, TValue&gt; ToKeyValuePair(SerializableKeyValuePair skvp)&#10;    {&#10;        return new KeyValuePair&lt;TKey, TValue&gt;(skvp.Key, skvp.Value);&#10;    }&#10;&#10;    IEnumerator IEnumerable.GetEnumerator() =&gt; GetEnumerator();&#10;&#10;    #endregion&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="10056" />
+                <option name="messageId" value="01987a9722a573038d15cdfc199194ef" />
+                <option name="outputToken" value="293" />
+                <option name="question" value="@HvirzorazyovWrxgrlmzib.xh QhlmHvirzorazgrlmVcxvkgrlm: Fmzyov gl urmw z wvuzfog xlmhgifxgli gl fhv uli gbkv HvirzorazyovWrxgrlmzib`7[Erlovv.VDzooGbkv,Erlovv.VYlcWri]. Kzgs 'G7518', ormv 7, klhrgrlm 89.&#10;Mvdglmhlug.Qhlm.Hvirzorazgrlm.QhlmHvirzoraviRmgvimzoIvzwvi.XivzgvMvdWrxgrlmzib (Mvdglmhlug.Qhlm.QhlmIvzwvi ivzwvi, Mvdglmhlug.Qhlm.Hvirzorazgrlm.QhlmWrxgrlmzibXlmgizxg xlmgizxg, Hbhgvn.Yllovzm&amp; xivzgvwUilnMlmWvuzfogXivzgli) (zg &lt;238xu7z855485w7708z321x665w50v0y&gt;:9)" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="10349" />
+                <option name="variables">
+                  <list>
+                    <FileVariable>
+                      <option name="endOffset" value="26" />
+                      <option name="identifierHash" value="VARIABLE_69ffd557684a90d50ee958eed48f3a8518464f7876d9681c03b5858fbc113e01" />
+                      <option name="selectedVariable">
+                        <Object />
+                      </option>
+                    </FileVariable>
+                  </list>
+                </option>
+              </Turn>
+            </list>
+          </option>
+          <option name="updateTime" value="1754403387973" />
+        </Conversation>
+        <Conversation>
+          <option name="createTime" value="1754400625901" />
+          <option name="id" value="01987a6d14ed7ec4a9a0803e2c7ca229" />
+          <option name="title" value="public SerializableDictionary([CanBeNull] Action&lt;T" />
+          <option name="turns">
+            <list>
+              <Turn>
+                <option name="agent" value="" />
+                <option name="answer" value="&lt;gsrmprmt&gt;&#10;用户的问题是关于`HvirzorazyovWrxgrlmzib`类的构造函数中传入的`LmZww`和`LmIvnlev`委托不能被序列化的问题。根据提供的文件内容，`LmZww`和`LmIvnlev`是`Zxgrlm&lt;GEzofv&gt;`类型的委托，而委托在Fmrgb的序列化系统中默认是不支持的。&#10;&#10;为了解决这个问题，我们需要确保这些委托不会被序列化，或者找到一种替代方式来实现类似的功能。以下是可能的解决方案：&#10;8. 使用`[MlmHvirzoravw]`属性标记这些委托字段，避免它们被序列化。&#10;7. 在反序列化后手动重新绑定这些委托。&#10;&#10;由于`LmZww`和`LmIvnlev`是公共字段，我们可以通过添加`[MlmHvirzoravw]`属性来避免序列化问题。同时，需要确保在反序列化后能够重新绑定这些委托。&#10;&#10;接下来，我将修改代码，添加`[MlmHvirzoravw]`属性并确保逻辑正确。&#10;&lt;/gsrmprmt&gt;&#10;&#10;为了解决`LmZww`和`LmIvnlev`委托不能被序列化的问题，我们可以使用`[MlmHvirzoravw]`属性标记这些字段。以下是修改后的代码：&#10;&#10;```xhszik&#10;// UROVKZGS: W:/F/IvHozbGsvHkriv/Zhhvgh/Hxirkgh/Tvmvizo/WzgzHgifxg/Wrxgrlmzib/HvirzorazyovWrxgrlmzib.xh&#10;// RMHGIFXGRLMH: 为LmZww和LmIvnlev添加[MlmHvirzoravw]属性以避免序列化问题&#10;&#10;// ... vcrhgrmt xlwv ...&#10;[MlmHvirzoravw]&#10;[XzmYvMfoo] kfyorx Zxgrlm&lt;GEzofv&gt; LmZww;&#10;[MlmHvirzoravw]&#10;[XzmYvMfoo] kfyorx Zxgrlm&lt;GEzofv&gt; LmIvnlev;&#10;// ... vcrhgrmt xlwv ...&#10;```&#10;&#10;这样修改后，`LmZww`和`LmIvnlev`将不会被序列化，从而避免了序列化错误。同时，您需要在反序列化后手动重新绑定这些委托（如果需要）。" />
+                <option name="chatMode" value="ASK" />
+                <option name="chatResource" value="user" />
+                <option name="codeReferences">
+                  <list>
+                    <CodeReferencesBean>
+                      <option name="content" value="" />
+                      <option name="end_line" value="37" />
+                      <option name="filename" value="SerializableDictionary.cs" />
+                      <option name="language" value="csharp" />
+                      <option name="range">
+                        <CommitRange>
+                          <option name="dontDisplayRange" value="true" />
+                          <option name="dontSelectByRange" value="true" />
+                          <option name="end">
+                            <Position>
+                              <option name="character" value="118" />
+                              <option name="line" value="37" />
+                            </Position>
+                          </option>
+                          <option name="start">
+                            <Position>
+                              <option name="character" value="4" />
+                              <option name="line" value="37" />
+                            </Position>
+                          </option>
+                        </CommitRange>
+                      </option>
+                      <option name="start_line" value="37" />
+                      <option name="type" value="full_file" />
+                      <option name="url" value="file:///D:/U/ReSlayTheSpire/Assets/Scripts/General/DataStruct/Dictionary/SerializableDictionary.cs" />
+                    </CodeReferencesBean>
+                  </list>
+                </option>
+                <option name="command" value="normal" />
+                <option name="conversationId" value="01987a6d14ed7ec4a9a0803e2c7ca229" />
+                <option name="historyDocumentMap">
+                  <map>
+                    <entry key="file:///D:/U/ReSlayTheSpire/Assets/Scripts/General/DataStruct/Dictionary/SerializableDictionary.cs" value="using System;&#10;using System.Collections;&#10;using System.Collections.Generic;&#10;using System.Linq;&#10;using JetBrains.Annotations;&#10;using Newtonsoft.Json;&#10;using Sirenix.Utilities;&#10;using UnityEngine;&#10;&#10;&#10;[Serializable]&#10;public class SerializableDictionary&lt;TKey, TValue&gt; :&#10;    ISerializationCallbackReceiver,&#10;    IDictionary&lt;TKey, TValue&gt;&#10;{&#10;    [SerializeField] private List&lt;SerializableKeyValuePair&gt; list = new List&lt;SerializableKeyValuePair&gt;();&#10;&#10;    [Serializable]&#10;    private struct SerializableKeyValuePair&#10;    {&#10;        public TKey Key;&#10;        public TValue Value;&#10;&#10;        public SerializableKeyValuePair(TKey key, TValue value)&#10;        {&#10;            Key = key;&#10;            Value = value;&#10;        }&#10;    }&#10;&#10;    [CanBeNull] public Action&lt;TValue&gt; OnAdd;&#10;    [CanBeNull] public Action&lt;TValue&gt; OnRemove;&#10;&#10;    private Dictionary&lt;TKey, int&gt; KeyPositions =&gt; _keyPositions.Value;&#10;    private Lazy&lt;Dictionary&lt;TKey, int&gt;&gt; _keyPositions;&#10;    [JsonConstructor]&#10;    public SerializableDictionary() : this(null, null){}&#10;    public SerializableDictionary([CanBeNull] Action&lt;TValue&gt; onAdd = null, [CanBeNull] Action&lt;TValue&gt; onRemove = null)&#10;    {&#10;        _keyPositions = new Lazy&lt;Dictionary&lt;TKey, int&gt;&gt;(MakeKeyPositions);&#10;        OnAdd = onAdd;&#10;        OnRemove = onRemove;&#10;    }&#10;&#10;    private Dictionary&lt;TKey, int&gt; MakeKeyPositions()&#10;    {&#10;        var dictionary = new Dictionary&lt;TKey, int&gt;(list.Count);&#10;        for (var i = 0; i &lt; list.Count; i++)&#10;        {&#10;            dictionary[list[i].Key] = i;&#10;        }&#10;        return dictionary;&#10;    }&#10;&#10;    public void OnBeforeSerialize() { }&#10;&#10;    public void OnAfterDeserialize()&#10;    {&#10;        _keyPositions = new Lazy&lt;Dictionary&lt;TKey, int&gt;&gt;(MakeKeyPositions);&#10;    }&#10;&#10;    #region IDictionary&lt;TKey, TValue&gt;&#10;&#10;    public TValue this[TKey key]&#10;    {&#10;        get =&gt; list[KeyPositions[key]].Value;&#10;        set&#10;        {&#10;            var pair = new SerializableKeyValuePair(key, value);&#10;            if (KeyPositions.ContainsKey(key))&#10;            {&#10;                list[KeyPositions[key]] = pair;&#10;            }&#10;            else&#10;            {&#10;                KeyPositions[key] = list.Count;&#10;                list.Add(pair);&#10;            }&#10;        }&#10;    }&#10;&#10;    public ICollection&lt;TKey&gt; Keys =&gt; list.Select(tuple =&gt; tuple.Key).ToArray();&#10;    public ICollection&lt;TValue&gt; Values =&gt; list.Select(tuple =&gt; tuple.Value).ToArray();&#10;&#10;    public void Add(TKey key, TValue value)&#10;    {&#10;        if (KeyPositions.ContainsKey(key))&#10;            throw new ArgumentException(&quot;An element with the same key already exists in the dictionary.&quot;);&#10;        else&#10;        {&#10;            KeyPositions[key] = list.Count;&#10;            list.Add(new SerializableKeyValuePair(key, value));&#10;            OnAdd?.Invoke(value);&#10;        }&#10;    }&#10;&#10;    public bool ContainsKey(TKey key) =&gt; KeyPositions.ContainsKey(key);&#10;&#10;    public bool Remove(TKey key)&#10;    {&#10;        if (KeyPositions.Remove(key, out var index))&#10;        {&#10;            var value = list[index].Value;&#10;            list.RemoveAt(index);&#10;            for (var i = index; i &lt; list.Count; i++)&#10;                KeyPositions[list[i].Key] = i;&#10;            OnRemove?.Invoke(value);&#10;            return true;&#10;        }&#10;        else&#10;            return false;&#10;    }&#10;&#10;    public bool TryGetValue(TKey key, out TValue value)&#10;    {&#10;        if (KeyPositions.TryGetValue(key, out var index))&#10;        {&#10;            value = list[index].Value;&#10;            return true;&#10;        }&#10;        else&#10;        {&#10;            value = default;&#10;            return false;&#10;        }&#10;    }&#10;&#10;    #endregion&#10;&#10;    #region ICollection &lt;KeyValuePair&lt;TKey, TValue&gt;&gt;&#10;    public int Count =&gt; list.Count;&#10;    public bool IsReadOnly =&gt; false;&#10;&#10;    public void Add(KeyValuePair&lt;TKey, TValue&gt; kvp) =&gt; Add(kvp.Key, kvp.Value);&#10;&#10;    public void Clear()&#10;    {&#10;        Values.ForEach(v =&gt; OnRemove?.Invoke(v));&#10;        list.Clear();&#10;        KeyPositions.Clear();&#10;    }&#10;    public bool Contains(KeyValuePair&lt;TKey, TValue&gt; kvp) =&gt; KeyPositions.ContainsKey(kvp.Key);&#10;&#10;    public void CopyTo(KeyValuePair&lt;TKey, TValue&gt;[] array, int arrayIndex)&#10;    {&#10;        var numKeys = list.Count;&#10;        if (array.Length - arrayIndex &lt; numKeys)&#10;            throw new ArgumentException(&quot;arrayIndex&quot;);&#10;        for (var i = 0; i &lt; numKeys; i++, arrayIndex++)&#10;        {&#10;            var entry = list[i];&#10;            array[arrayIndex] = new KeyValuePair&lt;TKey, TValue&gt;(entry.Key, entry.Value);&#10;        }&#10;    }&#10;&#10;    public bool Remove(KeyValuePair&lt;TKey, TValue&gt; kvp) =&gt; Remove(kvp.Key);&#10;    public bool RemoveAll(Func&lt;KeyValuePair&lt;TKey, TValue&gt;, bool&gt; predicate)&#10;    {&#10;        var removed = false;&#10;        for (var i = list.Count - 1; i &gt;= 0; i--)&#10;        {&#10;            var kvp = ToKeyValuePair(list[i]);&#10;            if (predicate(kvp))&#10;            {&#10;                removed = true;&#10;                Remove(kvp.Key);&#10;            }&#10;        }&#10;        return removed;&#10;    }&#10;&#10;    #endregion&#10;&#10;    #region IEnumerable &lt;KeyValuePair&lt;TKey, TValue&gt;&gt;&#10;    public IEnumerator&lt;KeyValuePair&lt;TKey, TValue&gt;&gt; GetEnumerator()&#10;    {&#10;        return list.Select(ToKeyValuePair).GetEnumerator();&#10;&#10;&#10;    }&#10;    static KeyValuePair&lt;TKey, TValue&gt; ToKeyValuePair(SerializableKeyValuePair skvp)&#10;    {&#10;        return new KeyValuePair&lt;TKey, TValue&gt;(skvp.Key, skvp.Value);&#10;    }&#10;&#10;    IEnumerator IEnumerable.GetEnumerator() =&gt; GetEnumerator();&#10;&#10;    #endregion&#10;}" />
+                  </map>
+                </option>
+                <option name="inputToken" value="9973" />
+                <option name="messageId" value="01987a6d4c6a7acd8ba3136ffa8a0312" />
+                <option name="outputToken" value="378" />
+                <option name="question" value="kfyorx HvirzorazyovWrxgrlmzib([XzmYvMfoo] Zxgrlm&lt;GEzofv&gt; lmZww = mfoo, [XzmYvMfoo] Zxgrlm&lt;GEzofv&gt; lmIvnlev = mfoo)的构造函数内传入这个LmZww不能被序列化怎么解决" />
+                <option name="rating" value="UNRATED" />
+                <option name="referenceBeans">
+                  <list />
+                </option>
+                <option name="status" value="SUCCESS" />
+                <option name="totalToken" value="10351" />
+                <option name="variables">
+                  <list />
+                </option>
+              </Turn>
+            </list>
+          </option>
+          <option name="updateTime" value="1754400646603" />
+        </Conversation>
+        <Conversation>
           <option name="createTime" value="1754388211830" />
           <option name="id" value="019879afa87676b7872c18e6838b0b33" />
           <option name="title" value="JsonSerializationException: Unable to find a const" />

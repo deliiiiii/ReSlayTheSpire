@@ -28,8 +28,7 @@ public abstract class Maybe<T>
         maybe switch
         {
             Just just => just.JustValue,
-            Nothing _ => Nothing.Instance,
-            _ => default!
+            _ => default!,
         };
     public static implicit operator Maybe<T>(T value) => Of(value);
     public T Value => this switch
@@ -62,8 +61,8 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
     {
         try
         {
-            Result = startFunc();
-            if (!Result.HasValue)
+            result = startFunc();
+            if (!result.HasValue)
             {
                 Debug.LogWarning($"{startFunc.Method.Name} At Start " +
                                  $"has returned null.");
@@ -71,18 +70,18 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
             }
             foreach (var mapper in mappers)
             {
-                Result = await mapper.Item1(Result);
-                if (Result.HasValue)
+                result = await mapper.Item1(result);
+                if (result.HasValue)
                     continue;
                 Debug.LogWarning($"{startFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
                                  $"has returned null.");
                 return;
             }
-            onBegin?.Invoke(Result);
-            await (onBeginAsync != null ? onBeginAsync(Result) : Task.CompletedTask);
-            await (triggerFuncAsync != null ? triggerFuncAsync(Result) : Task.CompletedTask);
-            onEnd?.Invoke(Result);
-            await (onEndAsync != null ? onEndAsync(Result) : Task.CompletedTask);
+            onBegin?.Invoke(result);
+            await (onBeginAsync != null ? onBeginAsync(result) : Task.CompletedTask);
+            await (triggerFuncAsync != null ? triggerFuncAsync(result) : Task.CompletedTask);
+            onEnd?.Invoke(result);
+            await (onEndAsync != null ? onEndAsync(result) : Task.CompletedTask);
             await (endStream != null ? endStream.CallTriggerAsync() : Task.CompletedTask);
         }
         catch (Exception e)
@@ -93,6 +92,6 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
     }
     
     public T StartValue => startFunc();
-    public Maybe<T> Result { get; set; } = Maybe<T>.Nothing.Instance;
+    internal Maybe<T> result { get; set; } = Maybe<T>.Nothing.Instance;
     
 }

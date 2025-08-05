@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Violee
 {
-    public enum EBoxDir : byte
+    public enum EBoxDir
     {
         Up = 1,
         Right = 2,
@@ -17,7 +18,7 @@ namespace Violee
         Left = 8
     }
 
-    public enum EWallType : byte
+    public enum EWallType
     {
         S1 = 1 << 0,
         S2 = 1 << 1,
@@ -108,13 +109,22 @@ namespace Violee
     [Serializable]
     public class BoxData : DataBase
     {
+        [JsonConstructor]
+        public BoxData()
+        {
+            WallDataMyDic = [];
+            WallDataMyDic.OnAdd += wallData => WallsByte |= (byte)wallData.WallType;
+            WallDataMyDic.OnRemove += wallData => WallsByte |= (byte)wallData.WallType;
+            PointDataMyDic = [];
+            SceneDataMyList = [];
+        }
         public BoxData(Vector2Int pos, BoxConfig config)
         {
             Pos2D = pos;
 
-            WallDataMyDic = new(
-                onAdd: wallData => WallsByte |= (byte)wallData.WallType,
-                onRemove: wallData => WallsByte |= (byte)wallData.WallType);
+            WallDataMyDic = [];
+            WallDataMyDic.OnAdd += wallData => WallsByte |= (byte)wallData.WallType;
+            WallDataMyDic.OnRemove += wallData => WallsByte |= (byte)wallData.WallType;
             PointDataMyDic = [];
             SceneDataMyList = [];
             foreach (var wallType in BoxHelper.AllWallTypes)
@@ -152,15 +162,16 @@ namespace Violee
         public const int DoorCost = 1;
         public void ResetBeforeDij() 
             => PointDataMyDic.Values.ForEach(pointData => pointData.ResetBeforeDij());
-        public IEnumerable<EBoxDir> OccupiedDirs
+        [JsonIgnore] public IEnumerable<EBoxDir> OccupiedDirs
             => SceneDataMyList.SelectMany(x => x.OccupyDirSet);
         #endregion
         
         
         #region List, Dic
-        public readonly SerializableDictionary<EWallType, WallData> WallDataMyDic;
-        public readonly SerializableDictionary<EBoxDir, BoxPointData> PointDataMyDic;
-        public readonly MyList<SceneItemData> SceneDataMyList;
+        [ShowInInspector] public readonly MyDictionary<EWallType, WallData> WallDataMyDic;
+        
+        [ShowInInspector] public readonly Dictionary<EBoxDir, BoxPointData> PointDataMyDic;
+        [ShowInInspector] public readonly MyList<SceneItemData> SceneDataMyList;
 
         #endregion
     }

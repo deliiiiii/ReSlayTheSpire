@@ -1,13 +1,13 @@
 {
   "Pos2D": {
-    "x": 2,
+    "x": 1,
     "y": 0,
-    "magnitude": 2.0,
-    "sqrMagnitude": 4
+    "magnitude": 1.0,
+    "sqrMagnitude": 1
   },
-  "WallsByte": 244,
-  "WallDataMyDic": [
-    {
+  "WallsByte": 84,
+  "WallDataMyDic": {
+    "T1248": {
       "WallType": 80,
       "Visited": {
         "Value": true
@@ -17,7 +17,7 @@
         "Value": false
       }
     },
-    {
+    "S4": {
       "WallType": 4,
       "Visited": {
         "Value": true
@@ -26,21 +26,23 @@
       "Opened": {
         "Value": false
       }
-    },
-    {
-      "WallType": 160,
+    }
+  },
+  "PointDataMyDic": {
+    "Up": {
+      "Dir": 1,
+      "CostWall": {
+        "Value": 0
+      },
       "Visited": {
         "Value": true
       },
-      "DoorType": 2,
-      "Opened": {
-        "Value": false
+      "IsFlash": {
+        "Value": true
       }
-    }
-  ],
-  "PointDataMyDic": [
-    {
-      "Dir": 1,
+    },
+    "Right": {
+      "Dir": 2,
       "CostWall": {
         "Value": 1
       },
@@ -51,19 +53,7 @@
         "Value": false
       }
     },
-    {
-      "Dir": 2,
-      "CostWall": {
-        "Value": 2
-      },
-      "Visited": {
-        "Value": false
-      },
-      "IsFlash": {
-        "Value": false
-      }
-    },
-    {
+    "Down": {
       "Dir": 4,
       "CostWall": {
         "Value": 1
@@ -75,7 +65,7 @@
         "Value": false
       }
     },
-    {
+    "Left": {
       "Dir": 8,
       "CostWall": {
         "Value": 0
@@ -87,21 +77,6 @@
         "Value": true
       }
     }
-  ],
-  "SceneDataMyList": [
-    {
-      "Energy": 1,
-      "OccupyDirSet": [
-        4
-      ],
-      "ID": 0,
-      "StaminaCost": 2,
-      "DesPre": "在沙发休息：",
-      "HasCount": true,
-      "Count": 1
-    }
-  ],
-  "OccupiedDirs": [
-    4
-  ]
+  },
+  "SceneDataMyList": []
 }

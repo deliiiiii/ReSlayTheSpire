@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using Sirenix.Utilities;
 using UnityEngine;
 
 
 [Serializable]
 public class SerializableDictionary<TKey, TValue> :
-    ISerializationCallbackReceiver,
     IDictionary<TKey, TValue>
 {
     [SerializeField] private List<SerializableKeyValuePair> list = new List<SerializableKeyValuePair>();
@@ -17,7 +17,9 @@ public class SerializableDictionary<TKey, TValue> :
     [Serializable]
     private struct SerializableKeyValuePair
     {
+        [SerializeField]
         public TKey Key;
+        [SerializeField]
         public TValue Value;
 
         public SerializableKeyValuePair(TKey key, TValue value)
@@ -30,8 +32,10 @@ public class SerializableDictionary<TKey, TValue> :
     [CanBeNull] public Action<TValue> OnAdd;
     [CanBeNull] public Action<TValue> OnRemove;
 
-    private Dictionary<TKey, int> KeyPositions => _keyPositions.Value;
-    private Lazy<Dictionary<TKey, int>> _keyPositions;
+    [JsonIgnore] private Dictionary<TKey, int> KeyPositions => _keyPositions.Value;
+    [JsonIgnore] private Lazy<Dictionary<TKey, int>> _keyPositions;
+    [JsonConstructor]
+    public SerializableDictionary(){_keyPositions = new Lazy<Dictionary<TKey, int>>(MakeKeyPositions);}
     public SerializableDictionary([CanBeNull] Action<TValue> onAdd = null, [CanBeNull] Action<TValue> onRemove = null)
     {
         _keyPositions = new Lazy<Dictionary<TKey, int>>(MakeKeyPositions);
@@ -49,12 +53,12 @@ public class SerializableDictionary<TKey, TValue> :
         return dictionary;
     }
 
-    public void OnBeforeSerialize() { }
-
-    public void OnAfterDeserialize()
-    {
-        _keyPositions = new Lazy<Dictionary<TKey, int>>(MakeKeyPositions);
-    }
+    // public void OnBeforeSerialize() { }
+    //
+    // public void OnAfterDeserialize()
+    // {
+    //     _keyPositions = new Lazy<Dictionary<TKey, int>>(MakeKeyPositions);
+    // }
 
     #region IDictionary<TKey, TValue>
 

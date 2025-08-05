@@ -225,24 +225,34 @@ public static class Streamer
         self.onEndAsync -= func;
         return self;
     }
+    
+    public static Stream<T> Continue<T>(this Stream<T> self, Action<T> end)
+    {
+        var ret = new Stream<T>(startFunc: () => self.result, triggerFunc: end);
+        self.endStream = ret;
+        return ret;
+    }
     public static Stream<T> ContinueAsync<T>(this Stream<T> self, Func<T, Task> endAsync)
     {
-        var ret = new Stream<T>(startFunc: () => self.Result, triggerFuncAsync: endAsync);
+        var ret = new Stream<T>(startFunc: () => self.result, triggerFuncAsync: endAsync);
         self.endStream = ret;
         return ret;
     }
     
     public static Stream<T2> ContinueAsync<T, T2>(this Stream<T> self, Func<T, T2> selector, Func<T2, Task> endAsync)
     {
-        var ret = new Stream<T2>(startFunc: () => selector(self.Result), triggerFuncAsync: endAsync);
+        var ret = new Stream<T2>(startFunc: () => selector(self.result), triggerFuncAsync: endAsync);
         self.endStream = ret;
         return ret;
     }
-}
 
-class TestData
-{
-    public string Name = string.Empty;
-    public int Age;
-    public bool IsGender;
+    public static T2 SelectResult<T, T2>(this Stream<T> self, Func<T, T2>? selector)
+    {
+        return selector(self.result);
+    }
+    
+    public static T SelectResult<T>(this Stream<T> self, Func<T, T>? selector = null)
+    {
+        return self.result;
+    }
 }

@@ -19,7 +19,7 @@ public class VioletMono : MonoBehaviour
         GameManager.Init();
     }
 
-    public Vector2Int Pos;
+    public Vector2Int CreateSceneItemPos;
     public EBoxDir D;
     public SceneItemModel SceneItemModel = null!;
 
@@ -29,28 +29,53 @@ public class VioletMono : MonoBehaviour
     public Vector2Int SavedBoxPos;
     public BoxData SavedBoxData;
     public BoxData LoadedBoxData;
+
+
+    SerializableDictionary<Vector2Int, BoxData> dic 
+        => MapManager.DijkstraStream.SelectResult().BoxDataDic;
+    [Button]
+    public void Test()
+    {
+        var curData = SceneItemModel.Data.CreateNew([D]);
+        dic[CreateSceneItemPos].SceneDataMyList.MyAdd(curData);
+    }
     
-    // [Button]
-    // public void Test()
+    [Button]
+    public void Save()
+    {
+        SavedBoxData = dic[SavedBoxPos];
+        Saver.Save("DataViolee", "SavedBoxData", SavedBoxData);
+    }
+    
+    [Button]
+    public void Load()
+    {
+        LoadedBoxData = Saver.Load<BoxData>("DataViolee", "SavedBoxData");
+        // dic.Remove(LoadedBoxData.Pos2D);
+        // dic.Add(LoadedBoxData.Pos2D, LoadedBoxData);
+    }
+
+    // [ShowInInspector] SerializableDictionary<EWallType, EBoxDir> testDic = new SerializableDictionary<EWallType, EBoxDir>()
     // {
-    //     var CurData = SceneItemModel.Data.CreateNew([D]);
-    //     MapManager.BoxDataByPos(Pos).SceneDataMyList.MyAdd(CurData);
+    //     { EWallType.S1, EBoxDir.Up },
+    //     { EWallType.S2, EBoxDir.Down },
+    // };
+    //
+    // [ShowInInspector] Dictionary<EWallType, EBoxDir> testDic2;
+    //
+    // [Button]
+    // public void Save2()
+    // {
+    //     Saver.Save("DataViolee", "SavedTestDic", testDic);
     // }
     //
     // [Button]
-    // public void Save()
+    // public void Load2()
     // {
-    //     SavedBoxData = MapManager.BoxDataByPos(SavedBoxPos);
-    //     Saver.Save("DataViolee", "SavedBoxData", SavedBoxData);
+    //     testDic = Saver.Load<SerializableDictionary<EWallType, EBoxDir>>("DataViolee", "SavedTestDic");
+    //     testDic2 = Saver.Load<Dictionary<EWallType, EBoxDir>>("DataViolee", "SavedTestDic");
     // }
-    //
-    // [Button]
-    // public void Load()
-    // {
-    //     LoadedBoxData = Saver.Load<BoxData>("DataViolee", "SavedBoxData");
-    //     MapManager.AddTest(LoadedBoxData);
-    // }
-    
+
 
     // [Button]
     // public void Save()

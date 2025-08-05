@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Sirenix.Utilities;
 
 namespace Violee;
@@ -9,6 +10,8 @@ namespace Violee;
 public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? onRemove = null)
     : List<T>(ie)
 {
+    [JsonConstructor]
+    public MyList() : this(new List<T>(), null, null) { }
     public event Action<T>? OnAdd = onAdd;
     public event Action<T>? OnRemove = onRemove;
     
