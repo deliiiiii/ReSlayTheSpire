@@ -98,7 +98,7 @@ internal class MapManager : SingletonCS<MapManager>
                 return;
             }
             points.Remove(p);
-            p.BelongBox.SceneDataMyList.MyAdd(SceneItemData.CreateData(model.Data, [p.Dir]));
+            p.BelongBox.SceneDataMyList.MyAdd(model.Data.CreateNew([p.Dir]));
         });
     }
 

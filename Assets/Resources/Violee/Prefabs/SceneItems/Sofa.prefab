@@ -25,16 +25,16 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10658068440183081}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.9520567, z: -0, w: 0.3059217}
-  m_LocalPosition: {x: -0.962, y: 1.76, z: 6.138}
-  m_LocalScale: {x: 1.03, y: 1.03, z: 1.03}
+  m_LocalRotation: {x: -0, y: -0.9163479, z: -0, w: 0.400383}
+  m_LocalPosition: {x: 0.555, y: 2.6399999, z: 10.3949995}
+  m_LocalScale: {x: 1.5449998, y: 1.545, z: 1.5449998}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7021426868692294115}
   - {fileID: 820993486401878300}
   - {fileID: 4041109162614943299}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -144.373, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -132.796, z: 0}
 --- !u!114 &4583635587203084175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,7 +58,7 @@ MonoBehaviour:
     - rid: 6059727542167535616
       type: {class: PurpleSceneItemData, ns: Violee, asm: Violee}
       data:
-        Model: {fileID: 4583635587203084175}
+        OriginModel: {fileID: 4583635587203084175}
         StaminaCost: 2
         DesPre: "\u5728\u6C99\u53D1\u4F11\u606F\uFF1A"
         HasCount: 1

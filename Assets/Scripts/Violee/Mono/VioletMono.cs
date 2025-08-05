@@ -25,6 +25,6 @@ public class VioletMono : MonoBehaviour
     [Button]
     public void Test()
     {
-        MapManager.BoxDataByPos(Pos).SceneDataMyList.Add(SceneItemData.CreateData(SceneItemModel.Data, [D]));
+        MapManager.BoxDataByPos(Pos).SceneDataMyList.Add(SceneItemModel.Data.CreateNew([D]));
     }
 }

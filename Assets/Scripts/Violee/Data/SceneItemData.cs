@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -11,7 +10,8 @@ namespace Violee;
 [Serializable]
 public class SceneItemData : DataBase
 {
-    public SceneItemModel Model = null!;
+    [NonSerialized] public SceneItemModel InsModel = null!;
+    [SerializeReference] public SceneItemModel OriginModel = null!;
     [ShowInInspector] public HashSet<EBoxDir> OccupyDirSet = [];
     public int StaminaCost;
     public string DesPre = string.Empty;
@@ -54,32 +54,15 @@ public class SceneItemData : DataBase
     
     protected virtual void UseEffect(){}
 
-    public static SceneItemData CreateData(SceneItemData data, HashSet<EBoxDir> dirSet)
+    public SceneItemData CreateNew(HashSet<EBoxDir> dirSet)
     {
-        if (data is PurpleSceneItemData pData)
-        {
-            return new PurpleSceneItemData()
-            {
-                Model = data.Model,
-                OccupyDirSet = [..dirSet],
-                StaminaCost = data.StaminaCost,
-                DesPre = data.DesPre,
-                HasCount = data.HasCount,
-                Count = data.Count,
-                OnRunOut = data.OnRunOut,
-                Energy = pData.Energy,
-            };
-        }
-        return new SceneItemData()
-        {
-            Model = data.Model,
-            OccupyDirSet = [..dirSet],
-            StaminaCost = data.StaminaCost,
-            DesPre = data.DesPre,
-            HasCount = data.HasCount,
-            Count = data.Count,
-            OnRunOut = data.OnRunOut,
-        };
+        var newModel = GameObject.Instantiate(OriginModel);
+        var newData = newModel.Data;
+        newData.OriginModel = OriginModel;
+        newData.InsModel = newModel;
+        newData.OccupyDirSet = dirSet;
+        // cb = () => GameObject.DestroyImmediate(newModel);
+        return newData;
     }
 }
 
