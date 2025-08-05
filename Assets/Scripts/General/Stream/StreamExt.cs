@@ -198,12 +198,6 @@ public static class Streamer
         self.triggerFuncAsync = fTriggerFuncAsync;
         return self;
     }
-
-    public static Stream<T> EndWith<T>(this Stream<T> self, IStream fEndStream)
-    {
-        self.endStream = fEndStream;
-        return self;
-    }
     public static Stream<T> OnBegin<T>(this Stream<T> self, Action<T> action)
     {
         self.onBegin += action;
@@ -230,6 +224,19 @@ public static class Streamer
     {
         self.onEndAsync -= func;
         return self;
+    }
+    public static Stream<T> ContinueAsync<T>(this Stream<T> self, Func<T, Task> endAsync)
+    {
+        var ret = new Stream<T>(startFunc: () => self.Result, triggerFuncAsync: endAsync);
+        self.endStream = ret;
+        return ret;
+    }
+    
+    public static Stream<T2> ContinueAsync<T, T2>(this Stream<T> self, Func<T, T2> selector, Func<T2, Task> endAsync)
+    {
+        var ret = new Stream<T2>(startFunc: () => selector(self.Result), triggerFuncAsync: endAsync);
+        self.endStream = ret;
+        return ret;
     }
 }
 

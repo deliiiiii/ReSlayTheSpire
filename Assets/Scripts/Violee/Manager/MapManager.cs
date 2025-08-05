@@ -10,51 +10,106 @@ using UnityEngine.UIElements;
 
 namespace Violee;
 
-public struct DijStreamParam(
-    SerializableDictionary<Vector2Int, BoxData> b, 
-    Vector3 v)
-{
-    public readonly SerializableDictionary<Vector2Int, BoxData> BoxDataDic = b;
-    public readonly Vector3 PlayerStartPos = v;
-}
 
+public class GenerateParam
+{
+    readonly ObjectPool<BoxModel> boxPool;
+    readonly BoxConfigList boxConfigList;
+    public int Height => boxConfigList.Height;
+    public int Width => boxConfigList.Width;
+    public Vector2Int StartPos => boxConfigList.StartPos;
+    public EBoxDir StartDir => boxConfigList.StartDir;
+    public bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
+    public bool HasBox(Vector2Int pos) => BoxDataDic.ContainsKey(pos);
+    
+    
+    public readonly SerializableDictionary<Vector2Int, BoxData> BoxDataDic;
+    public HashSet<Vector2Int> EmptyPosSet = [];
+    public HashSet<WallData> EdgeWallSet = [];
+    public readonly Vector3 PlayerStartPos;
+    readonly SerializableDictionary<Vector3Int, BoxModel> boxModelDic = [];
+
+    async Task OnAddBoxData(BoxData boxData)
+    {
+        await Configer.SettingsConfig.YieldFrames();
+        var boxModel = await boxPool.MyInstantiate();
+        boxModel.ReadData(boxData);
+        var pos3D = BoxHelper.Pos2DTo3DBox(boxData.Pos2D);
+        boxModelDic.Add(pos3D, boxModel);
+    }
+    void OnRemoveBoxData(BoxData boxData)
+    {
+        var pos3D = BoxHelper.Pos2DTo3DBox(boxData.Pos2D);
+        boxPool.MyDestroy(boxModelDic[pos3D]);
+        boxModelDic.Remove(pos3D);
+    }
+    public GenerateParam(SerializableDictionary<Vector2Int, BoxData> boxDataDic, GameObject go)
+    {
+        boxConfigList = Configer.BoxConfigList;
+        boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, go.transform, 42);
+        BoxDataDic = boxDataDic;
+        BoxDataDic.OnAdd += boxData =>
+            {
+                Task.FromResult(OnAddBoxData(boxData));
+                EmptyPosSet.Remove(boxData.Pos2D);
+
+                var nextPairs = BoxHelper.GetNextLocAndGoInDirList(boxData.Pos2D);
+                foreach (var (nextPos, nextGoInDir) in nextPairs)
+                {
+                    // nextGoInDir: 相邻格的走入方向
+                    var goOutDir = BoxHelper.OppositeDirDic[nextGoInDir];
+                    if (InMap(nextPos) && HasBox(nextPos))
+                    {
+                        var nextBox = BoxDataDic![nextPos];
+                        if (nextBox.HasSWallByDir(nextGoInDir, out _))
+                        {
+                            var t = BoxHelper.WallDirToType(goOutDir);
+                            boxData.WallDataMyDic.Remove(t);
+                            // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
+                        }
+                    }
+                }
+            };
+        BoxDataDic.OnRemove += boxData =>
+            {
+                OnRemoveBoxData(boxData);
+                EmptyPosSet.Add(boxData.Pos2D);
+            };
+        PlayerStartPos = BoxHelper.Pos2DTo3DPoint(StartPos, StartDir);
+    }
+}
 
 
 internal class MapManager : SingletonCS<MapManager>
 {
-    static readonly BoxConfigList boxConfigList;
-    static readonly ObjectPool<BoxModel> boxPool;
+    static readonly GenerateParam onlyParammmm = new([], Instance.go);
+    public static readonly Stream<GenerateParam> GenerateStream;
+    public static readonly Stream<GenerateParam> DijkstraStream;
     static MapManager()
     {
-        boxConfigList = Configer.BoxConfigList;
-        boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, Instance.go.transform, 42);
-        
-        GenerateStream = Instance.ToStream(StartGenerate);
-        DijkstraStream = Instance
-            .Bind(() => new DijStreamParam(boxDataDic, BoxHelper.Pos2DTo3DPoint(StartPos, StartDir)))
-            .ToStreamAsync(Dijkstra)
-            .OnEnd(_ => VisitEdgeWalls());
-        GenerateStream.EndWith(DijkstraStream);
+        GenerateStream = Instance
+            .Bind(() => onlyParammmm)
+            .ToStream(param =>
+            {
+                InitCollections(param);
+                GenerateMain(param);
+            });
+        DijkstraStream = GenerateStream
+            .ContinueAsync(Dijkstra)
+            .OnEnd(param => VisitEdgeWalls(param.EdgeWallSet));
     }
-    public static float MaxSize => Mathf.Max(Width, Height) * BoxHelper.BoxSize;
-    static int Height => boxConfigList.Height;
-    static int Width => boxConfigList.Width;
-    static Vector2Int StartPos => boxConfigList.StartPos;
-    static EBoxDir StartDir => boxConfigList.StartDir;
-    static bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
-    static bool HasBox(Vector2Int pos) => boxDataDic.ContainsKey(pos);
-    
-    
     #region Visit
     static readonly Observable<BoxPointData> playerCurPoint = new(null!, 
         x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
     public static void TickPlayerVisit(Vector3 playerPos)
     {
+        var param = DijkstraStream.Result.Value;
+        var boxDataDic = param.BoxDataDic;
         var x = playerPos.x;
         var z = playerPos.z;
         var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);
         var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);
-        if (!HasBox(boxPos2D))
+        if (!param.HasBox(boxPos2D))
         {
             MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
             return;
@@ -79,14 +134,14 @@ internal class MapManager : SingletonCS<MapManager>
         }
     }
 
-    static void VisitEdgeWalls()
+    static void VisitEdgeWalls(HashSet<WallData> edgeWallSet)
     {
         edgeWallSet.ForEach(wallData => wallData.Visited.Value = true);
     }
     #endregion
-
+    
+    
     #region DrawSceneItems
-
     public static void DrawAtWall(WallData wallData, DrawConfig config)
     {
         var points = playerCurPoint.Value.AtWallGetInsidePoints(wallData)
@@ -103,44 +158,41 @@ internal class MapManager : SingletonCS<MapManager>
             p.BelongBox.SceneDataMyList.MyAdd(model.Data.CreateNew([p.Dir]));
         });
     }
-
     #endregion
     
     
     #region Generate
-
-    static HashSet<Vector2Int> emptyPosSet = [];
-    static HashSet<WallData> edgeWallSet = [];
-    public static readonly Stream<ValueTuple> GenerateStream;
-    public static readonly Stream<DijStreamParam> DijkstraStream;
-    static void StartGenerate()
+    static void InitCollections(GenerateParam param)
     {
-        boxDataDic.Clear();
-        emptyPosSet =
+        param.BoxDataDic.Clear();
+        param.EmptyPosSet =
         [..
-            Enumerable.Range(0, Width)
-                .SelectMany(i => Enumerable.Range(0, Height)
+            Enumerable.Range(0, param.Width)
+                .SelectMany(i => Enumerable.Range(0, param.Height)
                     .Select(j => new Vector2Int(i, j)))
         ];
-        edgeWallSet = [];
-        GenerateOneFakeConnection(true);
-        while (emptyPosSet.Count > 0)
+        param.EdgeWallSet = [];
+    }
+    static void GenerateMain(GenerateParam param)
+    {
+        GenerateOneFakeConnection(true, param);
+        while (param.EmptyPosSet.Count > 0)
         {
-            GenerateOneFakeConnection(false);
+            GenerateOneFakeConnection(false, param);
         }
     }
-    static void GenerateOneFakeConnection(bool startWithStartLoc)
+    static void GenerateOneFakeConnection(bool startWithStartLoc, GenerateParam param)
     {
         static BoxData ReadBoxConfig(Vector2Int pos, BoxConfig config) 
             => new(pos, config);
         var edgeBoxStack = new Stack<BoxData>();
         // 起始位置是空格子
-        var firstLoc = startWithStartLoc ? StartPos : emptyPosSet.First();
+        var firstLoc = startWithStartLoc ? param.StartPos : param.EmptyPosSet.First();
         var firstConfig = startWithStartLoc 
             ? BoxHelper.EmptyBoxConfig
             : Configer.BoxConfigList.BoxConfigs.RandomItem(weightFunc: x => x.BasicWeight);
         var firstBox = ReadBoxConfig(firstLoc, firstConfig);
-        boxDataDic.Add(firstLoc, firstBox);
+        param.BoxDataDic.Add(firstLoc, firstBox);
         edgeBoxStack.Push(firstBox);
         while (edgeBoxStack.Count > 0)
         {
@@ -150,10 +202,10 @@ internal class MapManager : SingletonCS<MapManager>
             {
                 // “下一格”
                 var curGoOutDir = BoxHelper.OppositeDirDic[nextGoInDir];
-                if (!InMap(nextPos))
+                if (!param.InMap(nextPos))
                 {
                     var edgeWall = new WallData(curGoOutDir, EDoorType.None){BelongBox = curBox};
-                    edgeWallSet.Add(edgeWall);
+                    param.EdgeWallSet.Add(edgeWall);
                     curBox.WallDataMyDic.Remove(edgeWall.WallType);
                     curBox.WallDataMyDic.Add(edgeWall.WallType, edgeWall);
                     // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
@@ -164,23 +216,24 @@ internal class MapManager : SingletonCS<MapManager>
                         x => !BoxHelper.HasSWallByByteAndDir(x.Walls, nextGoInDir),
                         x => x.BasicWeight);
                 var nextBox = ReadBoxConfig(nextPos, boxConfig);
-                if (!HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
+                if (!param.HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
                 {
-                    boxDataDic.Add(nextPos, nextBox);
+                    param.BoxDataDic.Add(nextPos, nextBox);
                     edgeBoxStack.Push(nextBox);
                 }
             }
         }
     }
-    static async Task Dijkstra(DijStreamParam param)
+    static async Task Dijkstra(GenerateParam param)
     {
         try
         {
+            var boxDataDic = param.BoxDataDic;
             boxDataDic.Values.ForEach(boxData => boxData.ResetBeforeDij());
             var vSet = new HashSet<BoxPointData>();
             var pq = new SimplePriorityQueue<BoxPointData, int>();
-            var startBox = boxDataDic[StartPos];
-            var startPoint = startBox.PointDataMyDic[StartDir];
+            var startBox = boxDataDic[param.StartPos];
+            var startPoint = startBox.PointDataMyDic[param.StartDir];
             startPoint.CostWall.Value = 0;
             pq.Enqueue(startPoint, 0);
             while (pq.Count != 0)
@@ -191,7 +244,7 @@ internal class MapManager : SingletonCS<MapManager>
                 var curBox = curPoint.BelongBox;
                 var curDir = curPoint.Dir;
                 var nextPos = BoxHelper.NextPos(curBox.Pos2D, curDir);
-                if (InMap(nextPos))
+                if (param.InMap(nextPos))
                 {
                     var nextBox = boxDataDic[nextPos];
                     var oppositeDir = BoxHelper.OppositeDirDic[curDir];
@@ -239,7 +292,7 @@ internal class MapManager : SingletonCS<MapManager>
                 await Configer.SettingsConfig.YieldFrames();
             }
             MyDebug.Log("Dijkstra finished!");
-            if (!CheckConnective())
+            if (!CheckConnective(boxDataDic))
                 await Dijkstra(param);
         }
         catch (Exception e)
@@ -249,7 +302,7 @@ internal class MapManager : SingletonCS<MapManager>
         }
     }
 
-    static bool CheckConnective()
+    static bool CheckConnective(SerializableDictionary<Vector2Int,BoxData> boxDataDic)
     {
         var invalidWallData = boxDataDic.Values
             .SelectMany(b => b.PointDataMyDic.Values.SelectMany(p => p.InvalidWalls()))
@@ -263,61 +316,14 @@ internal class MapManager : SingletonCS<MapManager>
         MyDebug.Log($"ReplaceWall At {boxData.Pos2D}.{invalidWallData.WallType}");
         return false;
     }
-    
-    static readonly SerializableDictionary<Vector2Int, BoxData> boxDataDic 
-        = new (
-            boxData =>
-            {
-                Task.FromResult(OnAddBoxData(boxData));
-                emptyPosSet.Remove(boxData.Pos2D);
-                
-                var nextPairs = BoxHelper.GetNextLocAndGoInDirList(boxData.Pos2D);
-                foreach (var (nextPos, nextGoInDir) in nextPairs)
-                {
-                    // nextGoInDir: 相邻格的走入方向
-                    var goOutDir = BoxHelper.OppositeDirDic[nextGoInDir];
-                    if (InMap(nextPos) && HasBox(nextPos))
-                    {
-                        var nextBox = boxDataDic![nextPos];
-                        if (nextBox.HasSWallByDir(nextGoInDir, out _))
-                        {
-                            var t = BoxHelper.WallDirToType(goOutDir);
-                            boxData.WallDataMyDic.Remove(t);
-                            // MyDebug.Log($"WallRepeat, RemoveWall {nextBox.Pos}:{nextGoOutDir}");
-                        }
-                    }
-                }
-            },
-            boxData =>
-            {
-                OnRemoveBoxData(boxData);
-                emptyPosSet.Add(boxData.Pos2D);
-            });
-
-    [JsonIgnore] static readonly SerializableDictionary<Vector3Int, BoxModel> boxModelDic = [];
-
-    static async Task OnAddBoxData(BoxData boxData)
-    {
-        await Configer.SettingsConfig.YieldFrames();
-        var boxModel = await boxPool.MyInstantiate();
-        boxModel.ReadData(boxData);
-        var pos3D = BoxHelper.Pos2DTo3DBox(boxData.Pos2D);
-        boxModelDic.Add(pos3D, boxModel);
-    }
-    static void OnRemoveBoxData(BoxData boxData)
-    {
-        var pos3D = BoxHelper.Pos2DTo3DBox(boxData.Pos2D);
-        boxPool.MyDestroy(boxModelDic[pos3D]);
-        boxModelDic.Remove(pos3D);
-    }
     #endregion
     
     
-    public static BoxData BoxDataByPos(Vector2Int pos) => boxDataDic[pos];
-
-    public static void AddTest(BoxData boxData)
-    {
-        boxDataDic.Remove(boxData.Pos2D);
-        boxDataDic.Add(boxData.Pos2D, boxData);
-    }
+    // public static BoxData BoxDataByPos(Vector2Int pos) => boxDataDic[pos];
+    //
+    // public static void AddTest(BoxData boxData)
+    // {
+    //     boxDataDic.Remove(boxData.Pos2D);
+    //     boxDataDic.Add(boxData.Pos2D, boxData);
+    // }
 }

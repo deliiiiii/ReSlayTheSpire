@@ -104,16 +104,9 @@ public class GameManager : SingletonCS<GameManager>
         MapManager.GenerateStream
             .Where(_ => IsIdle || IsPlaying)
             .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap))
-            .OnEnd(_ => gameFsm.ChangeState(EGameState.Idle));
-        MapManager.DijkstraStream
-            .Where(_ => IsIdle)
-            .OnBegin(param =>
+            .OnEnd(param =>
             {
-                PlayerManager.OnDijkstraBegin(param.PlayerStartPos);
-                gameFsm.ChangeState(EGameState.GeneratingMap);
-            })
-            .OnEnd(_ =>
-            {
+                PlayerManager.OnDijkstraEnd(param.PlayerStartPos);
                 gameFsm.ChangeState(EGameState.Playing);
             });
             

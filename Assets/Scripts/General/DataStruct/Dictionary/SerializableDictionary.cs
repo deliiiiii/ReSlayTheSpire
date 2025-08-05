@@ -6,11 +6,9 @@ using JetBrains.Annotations;
 using Sirenix.Utilities;
 using UnityEngine;
 
-public class SerializableDictionary { }
 
 [Serializable]
 public class SerializableDictionary<TKey, TValue> :
-    SerializableDictionary,
     ISerializationCallbackReceiver,
     IDictionary<TKey, TValue>
 {

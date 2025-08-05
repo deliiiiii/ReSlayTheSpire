@@ -43,7 +43,7 @@ public interface IStream
 {
     Task CallTriggerAsync();
 }
-public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsync = null, IStream? endStream = null): 
+public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsync = null): 
     Dele<T>, IStream
 {
     public Stream(Func<T>? startFunc = null, Action<T>? triggerFunc = null) 
@@ -56,7 +56,7 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
     internal Func<T, Task>? onBeginAsync;
     internal Action<T>? onEnd;
     internal Func<T, Task>? onEndAsync;
-    internal IStream? endStream = endStream;
+    internal IStream? endStream;
     
     public async Task CallTriggerAsync()
     {
@@ -93,6 +93,6 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
     }
     
     public T StartValue => startFunc();
-    Maybe<T> Result { get; set; } = Maybe<T>.Nothing.Instance;
+    public Maybe<T> Result { get; set; } = Maybe<T>.Nothing.Instance;
     
 }

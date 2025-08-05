@@ -30,26 +30,26 @@ public class VioletMono : MonoBehaviour
     public BoxData SavedBoxData;
     public BoxData LoadedBoxData;
     
-    [Button]
-    public void Test()
-    {
-        var CurData = SceneItemModel.Data.CreateNew([D]);
-        MapManager.BoxDataByPos(Pos).SceneDataMyList.MyAdd(CurData);
-    }
-    
-    [Button]
-    public void Save()
-    {
-        SavedBoxData = MapManager.BoxDataByPos(SavedBoxPos);
-        Saver.Save("DataViolee", "SavedBoxData", SavedBoxData);
-    }
-    
-    [Button]
-    public void Load()
-    {
-        LoadedBoxData = Saver.Load<BoxData>("DataViolee", "SavedBoxData");
-        MapManager.AddTest(LoadedBoxData);
-    }
+    // [Button]
+    // public void Test()
+    // {
+    //     var CurData = SceneItemModel.Data.CreateNew([D]);
+    //     MapManager.BoxDataByPos(Pos).SceneDataMyList.MyAdd(CurData);
+    // }
+    //
+    // [Button]
+    // public void Save()
+    // {
+    //     SavedBoxData = MapManager.BoxDataByPos(SavedBoxPos);
+    //     Saver.Save("DataViolee", "SavedBoxData", SavedBoxData);
+    // }
+    //
+    // [Button]
+    // public void Load()
+    // {
+    //     LoadedBoxData = Saver.Load<BoxData>("DataViolee", "SavedBoxData");
+    //     MapManager.AddTest(LoadedBoxData);
+    // }
     
 
     // [Button]

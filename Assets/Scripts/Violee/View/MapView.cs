@@ -27,7 +27,7 @@ class MapView : ViewBase<MapView>
             await Configer.SettingsConfig.YieldFrames(multi : 1 / 16f);
         }
     }
-    async Task BindAllCostTxt(DijStreamParam param)
+    async Task BindAllCostTxt(GenerateParam param)
     {
         try
         {
