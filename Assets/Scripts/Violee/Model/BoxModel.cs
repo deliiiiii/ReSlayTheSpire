@@ -44,6 +44,8 @@ namespace Violee
         
         void OnAddSceneItemData(SceneItemData fdata)
         {
+            if (fdata.InsModel == null)
+                fdata.InsModel = Instantiate(fdata.OriginModel);
             var model = fdata.InsModel;
             model.ReadData(fdata);
             var dtRot = fdata.OccupyDirSet.First() switch

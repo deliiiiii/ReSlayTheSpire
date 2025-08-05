@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,9 +12,10 @@ namespace Violee;
 [Serializable]
 public class SceneItemData : DataBase
 {
-    [NonSerialized] public SceneItemModel InsModel = null!;
-    [SerializeReference] public SceneItemModel OriginModel = null!;
+    [NonSerialized][JsonIgnore] public SceneItemModel InsModel = null!;
+    [JsonIgnore] public SceneItemModel OriginModel => Configer.SceneItemModelList.SceneItemModels.First(x => x.Data.ID == ID);
     [ShowInInspector] public HashSet<EBoxDir> OccupyDirSet = [];
+    public int ID;
     public int StaminaCost;
     public string DesPre = string.Empty;
     public bool HasCount;
@@ -58,10 +61,8 @@ public class SceneItemData : DataBase
     {
         var newModel = GameObject.Instantiate(OriginModel);
         var newData = newModel.Data;
-        newData.OriginModel = OriginModel;
         newData.InsModel = newModel;
         newData.OccupyDirSet = dirSet;
-        // cb = () => GameObject.DestroyImmediate(newModel);
         return newData;
     }
 }

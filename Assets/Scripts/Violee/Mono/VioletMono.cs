@@ -22,9 +22,27 @@ public class VioletMono : MonoBehaviour
     public Vector2Int Pos;
     public EBoxDir D;
     public SceneItemModel SceneItemModel = null!;
+
+    // public SceneItemData SavedData;
+    public SceneItemData CurData = null!;
+    
     [Button]
     public void Test()
     {
-        MapManager.BoxDataByPos(Pos).SceneDataMyList.Add(SceneItemModel.Data.CreateNew([D]));
+        CurData = SceneItemModel.Data.CreateNew([D]);
+        MapManager.BoxDataByPos(Pos).SceneDataMyList.MyAdd(CurData);
     }
+
+    // [Button]
+    // public void Save()
+    // {
+    //     Saver.Save("DataViolee", "SavedData", CurData);
+    // }
+    //
+    // [Button]
+    // public void Load()
+    // {
+    //     SavedData = Saver.Load<SceneItemData>("DataViolee", "SavedData");
+    //     MapManager.BoxDataByPos(Pos).SceneDataMyList.MyAdd(SavedData);
+    // }
 }

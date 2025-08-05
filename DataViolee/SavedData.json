@@ -1,0 +1,11 @@
+{
+  "Energy": 1,
+  "OccupyDirSet": [
+    4
+  ],
+  "ID": 0,
+  "StaminaCost": 2,
+  "DesPre": "在沙发休息：",
+  "HasCount": true,
+  "Count": 1
+}

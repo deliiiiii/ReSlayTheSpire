@@ -9,9 +9,9 @@ namespace Violee;
 
 public class SceneItemModel : ModelBase<SceneItemData>
 {
-    public required GameObject HideAfterRunOut;
-    public required GameObject ShowAfterRunOut;
-    public required InteractReceiver Ir;
+    [SerializeReference] public required GameObject HideAfterRunOut;
+    [SerializeReference] public required GameObject ShowAfterRunOut;
+    [SerializeReference] public required InteractReceiver Ir;
 
     protected override void OnReadData()
     {

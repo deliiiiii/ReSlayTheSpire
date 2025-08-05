@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6050010443265411923}
   - component: {fileID: 4583635587203084175}
   m_Layer: 7
-  m_Name: Sofa
+  m_Name: 0 Sofa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,7 +58,7 @@ MonoBehaviour:
     - rid: 6059727542167535616
       type: {class: PurpleSceneItemData, ns: Violee, asm: Violee}
       data:
-        OriginModel: {fileID: 4583635587203084175}
+        ID: 0
         StaminaCost: 2
         DesPre: "\u5728\u6C99\u53D1\u4F11\u606F\uFF1A"
         HasCount: 1
