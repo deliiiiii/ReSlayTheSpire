@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
+using Sirenix.Utilities;
 using UnityEngine;
 
 public class SerializableDictionary { }
@@ -27,11 +29,16 @@ public class SerializableDictionary<TKey, TValue> :
         }
     }
 
+    [CanBeNull] public Action<TValue> OnAdd;
+    [CanBeNull] public Action<TValue> OnRemove;
+
     private Dictionary<TKey, int> KeyPositions => _keyPositions.Value;
     private Lazy<Dictionary<TKey, int>> _keyPositions;
-    public SerializableDictionary()
+    public SerializableDictionary([CanBeNull] Action<TValue> onAdd = null, [CanBeNull] Action<TValue> onRemove = null)
     {
         _keyPositions = new Lazy<Dictionary<TKey, int>>(MakeKeyPositions);
+        OnAdd = onAdd;
+        OnRemove = onRemove;
     }
 
     private Dictionary<TKey, int> MakeKeyPositions()
@@ -82,6 +89,7 @@ public class SerializableDictionary<TKey, TValue> :
         {
             KeyPositions[key] = list.Count;
             list.Add(new SerializableKeyValuePair(key, value));
+            OnAdd?.Invoke(value);
         }
     }
 
@@ -89,12 +97,13 @@ public class SerializableDictionary<TKey, TValue> :
 
     public bool Remove(TKey key)
     {
-        if (KeyPositions.TryGetValue(key, out var index))
+        if (KeyPositions.Remove(key, out var index))
         {
-            KeyPositions.Remove(key);
+            var value = list[index].Value;
             list.RemoveAt(index);
             for (var i = index; i < list.Count; i++)
                 KeyPositions[list[i].Key] = i;
+            OnRemove?.Invoke(value);
             return true;
         }
         else
@@ -125,6 +134,7 @@ public class SerializableDictionary<TKey, TValue> :
 
     public void Clear()
     {
+        Values.ForEach(v => OnRemove?.Invoke(v));
         list.Clear();
         KeyPositions.Clear();
     }

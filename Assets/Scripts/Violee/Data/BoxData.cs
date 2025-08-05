@@ -112,20 +112,20 @@ namespace Violee
         {
             Pos2D = pos;
 
-            WallDataMyDic = new(w => w.WallType, 
+            WallDataMyDic = new(
                 onAdd: wallData => WallsByte |= (byte)wallData.WallType,
-                onRemove: wallType => WallsByte |= (byte)wallType);
-            PointDataMyDic = new (b => b.Dir);
+                onRemove: wallData => WallsByte |= (byte)wallData.WallType);
+            PointDataMyDic = [];
             SceneDataMyList = [];
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
                 WallsByte = config.Walls;
                 if ((WallsByte & (int)wallType) == (int)wallType)
-                    WallDataMyDic.MyAdd(new WallData(wallType, EDoorType.Random){BelongBox = this});
+                    WallDataMyDic.Add(wallType, new WallData(wallType, EDoorType.Random){BelongBox = this});
             }
             foreach (var dir in BoxHelper.AllBoxDirs)
             {
-                PointDataMyDic.MyAdd(new BoxPointData()
+                PointDataMyDic.Add(dir, new BoxPointData()
                 {
                     BelongBox = this,
                     Dir = dir,
@@ -151,15 +151,15 @@ namespace Violee
         public const int WallCost = 10;
         public const int DoorCost = 1;
         public void ResetBeforeDij() 
-            => PointDataMyDic.ForEach(pointData => pointData.ResetBeforeDij());
+            => PointDataMyDic.Values.ForEach(pointData => pointData.ResetBeforeDij());
         public IEnumerable<EBoxDir> OccupiedDirs
             => SceneDataMyList.SelectMany(x => x.OccupyDirSet);
         #endregion
         
         
         #region List, Dic
-        public readonly MyKeyedCollection<EWallType, WallData> WallDataMyDic;
-        public readonly MyKeyedCollection<EBoxDir, BoxPointData> PointDataMyDic;
+        public readonly SerializableDictionary<EWallType, WallData> WallDataMyDic;
+        public readonly SerializableDictionary<EBoxDir, BoxPointData> PointDataMyDic;
         public readonly MyList<SceneItemData> SceneDataMyList;
 
         #endregion

@@ -15,12 +15,13 @@ namespace Violee
         protected override void OnReadData()
         {
             name = $"Box {Data.Pos2D.x} {Data.Pos2D.y}";
+            
             transform.position = BoxHelper.Pos2DTo3DBox(Data.Pos2D);
             
             wallDic.Values.ForEach(g => g.gameObject.SetActive(false));
-            Data.PointDataMyDic.ForEach(p => pointDic[p.Dir].ReadData(p));
+            Data.PointDataMyDic.ForEach(pair => pointDic[pair.Key].ReadData(pair.Value));
             
-            Data.WallDataMyDic.ForEach(OnAddWallData);
+            Data.WallDataMyDic.Values.ForEach(OnAddWallData);
             Data.WallDataMyDic.OnAdd += OnAddWallData;
             Data.WallDataMyDic.OnRemove += OnRemoveWallData;
 
@@ -35,9 +36,9 @@ namespace Violee
             wallDic[wallData.WallType].ReadData(wallData);
         }
 
-        public void OnRemoveWallData(EWallType wallType)
+        public void OnRemoveWallData(WallData wallData)
         {
-            wallDic[wallType].gameObject.SetActive(false);
+            wallDic[wallData.WallType].gameObject.SetActive(false);
         }
 
         #region SceneItem
