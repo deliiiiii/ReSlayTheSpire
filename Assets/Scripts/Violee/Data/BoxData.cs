@@ -110,29 +110,13 @@ namespace Violee
     public class BoxData : DataBase
     {
         [JsonConstructor]
-        public BoxData()
+        BoxData(int xxx = 0)
         {
             WallDataMyDic = [];
             WallDataMyDic.OnAdd += wallData => WallsByte |= (byte)wallData.WallType;
             WallDataMyDic.OnRemove += wallData => WallsByte |= (byte)wallData.WallType;
             PointDataMyDic = [];
             SceneDataMyList = [];
-        }
-        public BoxData(Vector2Int pos, BoxConfig config)
-        {
-            Pos2D = pos;
-
-            WallDataMyDic = [];
-            WallDataMyDic.OnAdd += wallData => WallsByte |= (byte)wallData.WallType;
-            WallDataMyDic.OnRemove += wallData => WallsByte |= (byte)wallData.WallType;
-            PointDataMyDic = [];
-            SceneDataMyList = [];
-            foreach (var wallType in BoxHelper.AllWallTypes)
-            {
-                WallsByte = config.Walls;
-                if ((WallsByte & (int)wallType) == (int)wallType)
-                    WallDataMyDic.Add(wallType, new WallData(wallType, EDoorType.Random){BelongBox = this});
-            }
             foreach (var dir in BoxHelper.AllBoxDirs)
             {
                 PointDataMyDic.Add(dir, new BoxPointData()
@@ -152,6 +136,16 @@ namespace Violee
                         continue;
                     PointDataMyDic[dir].NextPointsInBox.Add(PointDataMyDic[dir2]);
                 }
+            }
+        }
+        public BoxData(Vector2Int pos, BoxConfig config) : this()
+        {
+            Pos2D = pos;
+            foreach (var wallType in BoxHelper.AllWallTypes)
+            {
+                WallsByte = config.Walls;
+                if ((WallsByte & (int)wallType) == (int)wallType)
+                    WallDataMyDic.Add(wallType, new WallData(wallType, EDoorType.Random){BelongBox = this});
             }
         }
         

@@ -9,7 +9,6 @@ namespace Violee
     {
         static BoxHelper()
         {
-            EmptyBoxConfig = BoxConfigs.First(x => x.Walls == 0);
             AllBoxDirs = new List<EBoxDir>();
             var array = Enum.GetValues(typeof(EBoxDir));
             for (int i = 0; i < array.Length; i++)
@@ -39,9 +38,8 @@ namespace Violee
         }
 
         public const int BoxSize = 15;
-        static List<BoxConfig> BoxConfigs => Configer.BoxConfigList.BoxConfigs;
-        static float pointOffset => Configer.SettingsConfig.BoxCostPosOffset;
-        public static readonly BoxConfig EmptyBoxConfig;
+        static float GetPointOffset() => Configer.SettingsConfig.BoxCostPosOffset;
+
         public static readonly List<EBoxDir> AllBoxDirs;
         public static readonly List<EWallType> AllWallTypes;
         
@@ -77,7 +75,7 @@ namespace Violee
         public static Vector2Int Pos3DTo2D(Vector3 pos3D) 
             => new ((int)((pos3D.x + BoxSize / 2f) / BoxSize), (int)((pos3D.z + BoxSize / 2f) / BoxSize));
         public static Vector3 Point3DOffsetInBox(EBoxDir dir)
-            => new (dirToVec2Dic[dir].x * BoxSize * pointOffset, 0, dirToVec2Dic[dir].y * BoxSize * pointOffset);
+            => new (dirToVec2Dic[dir].x * BoxSize * GetPointOffset(), 0, dirToVec2Dic[dir].y * BoxSize * GetPointOffset());
         public static Vector3 Pos2DTo3DPoint(Vector2Int pos2D, EBoxDir dir)
             => Pos2DTo3DBox(pos2D) + Point3DOffsetInBox(dir);
         public static Vector3 Pos2DTo3DEdge(Vector2Int pos2D, EBoxDir dir) 

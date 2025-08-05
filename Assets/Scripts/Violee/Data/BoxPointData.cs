@@ -21,8 +21,8 @@ public class BoxPointData : DataBase, IComparable
     [NonSerialized] public List<BoxPointData> NextPointsInBox = [];
     [NonSerialized] public required BoxData BelongBox;
     [NonSerialized] public Vector3 Pos3D;
-    [NonSerialized] public HashSet<(BoxPointData, WallData)> NextPointAndWallSet = [];
-    [NonSerialized] BingChaJi<BoxPointData> bingChaJi = new();
+    [SerializeReference] public HashSet<(BoxPointData, WallData)> NextPointAndWallSet = [];
+    [SerializeReference] BingChaJi<BoxPointData> bingChaJi = new();
 
         
     #region Generate Map
@@ -84,8 +84,8 @@ public class BoxPointData : DataBase, IComparable
 class BingChaJi<T>
 {
     [ShowInInspector] public int SetCount => Math.Max(con, Find().con);
-    BingChaJi<T> f = null!;
-    HashSet<T> connectedSet = null!;
+    [SerializeField] BingChaJi<T> f = null!;
+    HashSet<T> connectedSet = [];
 
     public HashSet<T> ConnectedSet
     {

@@ -23,4 +23,13 @@ public class MyDictionary<TKey, TValue> : Dictionary<TKey, TValue>
         }
         return false;
     }
+    
+    public new void Clear()
+    {
+        foreach (var value in Values)
+        {
+            OnRemove?.Invoke(value);
+        }
+        base.Clear();
+    }
 }

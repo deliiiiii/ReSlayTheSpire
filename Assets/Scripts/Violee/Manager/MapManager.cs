@@ -23,11 +23,11 @@ public class GenerateParam
     public bool HasBox(Vector2Int pos) => BoxDataDic.ContainsKey(pos);
     
     
-    public readonly SerializableDictionary<Vector2Int, BoxData> BoxDataDic;
+    public readonly MyDictionary<Vector2Int, BoxData> BoxDataDic;
     public HashSet<Vector2Int> EmptyPosSet = [];
     public HashSet<WallData> EdgeWallSet = [];
     public readonly Vector3 PlayerStartPos;
-    readonly SerializableDictionary<Vector3Int, BoxModel> boxModelDic = [];
+    readonly Dictionary<Vector3Int, BoxModel> boxModelDic = [];
 
     async Task OnAddBoxData(BoxData boxData)
     {
@@ -43,7 +43,7 @@ public class GenerateParam
         boxPool.MyDestroy(boxModelDic[pos3D]);
         boxModelDic.Remove(pos3D);
     }
-    public GenerateParam(SerializableDictionary<Vector2Int, BoxData> boxDataDic, GameObject go)
+    public GenerateParam(MyDictionary<Vector2Int, BoxData> boxDataDic, GameObject go)
     {
         boxConfigList = Configer.BoxConfigList;
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, go.transform, 42);
@@ -60,7 +60,7 @@ public class GenerateParam
                     var goOutDir = BoxHelper.OppositeDirDic[nextGoInDir];
                     if (InMap(nextPos) && HasBox(nextPos))
                     {
-                        var nextBox = BoxDataDic![nextPos];
+                        var nextBox = BoxDataDic[nextPos];
                         if (nextBox.HasSWallByDir(nextGoInDir, out _))
                         {
                             var t = BoxHelper.WallDirToType(goOutDir);
@@ -143,8 +143,8 @@ internal class MapManager : SingletonCS<MapManager>
     #region DrawSceneItems
     public static void DrawAtWall(WallData wallData, DrawConfig config)
     {
-        var points = playerCurPoint.Value.AtWallGetInsidePoints(wallData)
-            .Where(p => !p.BelongBox.OccupiedDirs.Contains(p.Dir)).ToList();
+        var points = playerCurPoint.Value?.AtWallGetInsidePoints(wallData)
+            .Where(p => !p.BelongBox.OccupiedDirs.Contains(p.Dir)).ToList() ?? [];
         config.ToDrawModels.ForEach(model =>
         {
             var p = points.RandomItem();
@@ -188,7 +188,7 @@ internal class MapManager : SingletonCS<MapManager>
         // 起始位置是空格子
         var firstLoc = startWithStartLoc ? param.StartPos : param.EmptyPosSet.First();
         var firstConfig = startWithStartLoc 
-            ? BoxHelper.EmptyBoxConfig
+            ? Configer.BoxConfigList.BoxConfigs.First(x => x.Walls == 0)
             : Configer.BoxConfigList.BoxConfigs.RandomItem(weightFunc: x => x.BasicWeight);
         var firstBox = ReadBoxConfig(firstLoc, firstConfig);
         param.BoxDataDic.Add(firstLoc, firstBox);
@@ -301,7 +301,7 @@ internal class MapManager : SingletonCS<MapManager>
         }
     }
 
-    static bool CheckConnective(SerializableDictionary<Vector2Int,BoxData> boxDataDic)
+    static bool CheckConnective(MyDictionary<Vector2Int,BoxData> boxDataDic)
     {
         var invalidWallData = boxDataDic.Values
             .SelectMany(b => b.PointDataMyDic.Values.SelectMany(p => p.InvalidWalls()))
@@ -316,13 +316,4 @@ internal class MapManager : SingletonCS<MapManager>
         return false;
     }
     #endregion
-    
-    
-    // public static BoxData BoxDataByPos(Vector2Int pos) => boxDataDic[pos];
-    //
-    // public static void AddTest(BoxData boxData)
-    // {
-    //     boxDataDic.Remove(boxData.Pos2D);
-    //     boxDataDic.Add(boxData.Pos2D, boxData);
-    // }
 }

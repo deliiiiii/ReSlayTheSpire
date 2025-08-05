@@ -18,7 +18,6 @@ namespace Violee
         public BoxModel BoxModelIns = null!;
         public static BoxModel BoxModel => Instance.BoxModelIns;
         
-        
         [Header("Config")] 
         public required BoxConfigList BoxConfigListIns;
         public required DrawConfigList DrawConfigListIns;

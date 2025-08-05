@@ -31,7 +31,7 @@ public class VioletMono : MonoBehaviour
     public BoxData LoadedBoxData;
 
 
-    SerializableDictionary<Vector2Int, BoxData> dic 
+    MyDictionary<Vector2Int, BoxData> dic 
         => MapManager.DijkstraStream.SelectResult().BoxDataDic;
     [Button]
     public void Test()
@@ -51,42 +51,7 @@ public class VioletMono : MonoBehaviour
     public void Load()
     {
         LoadedBoxData = Saver.Load<BoxData>("DataViolee", "SavedBoxData");
-        // dic.Remove(LoadedBoxData.Pos2D);
-        // dic.Add(LoadedBoxData.Pos2D, LoadedBoxData);
+        dic.Remove(LoadedBoxData.Pos2D);
+        dic.Add(LoadedBoxData.Pos2D, LoadedBoxData);
     }
-
-    // [ShowInInspector] SerializableDictionary<EWallType, EBoxDir> testDic = new SerializableDictionary<EWallType, EBoxDir>()
-    // {
-    //     { EWallType.S1, EBoxDir.Up },
-    //     { EWallType.S2, EBoxDir.Down },
-    // };
-    //
-    // [ShowInInspector] Dictionary<EWallType, EBoxDir> testDic2;
-    //
-    // [Button]
-    // public void Save2()
-    // {
-    //     Saver.Save("DataViolee", "SavedTestDic", testDic);
-    // }
-    //
-    // [Button]
-    // public void Load2()
-    // {
-    //     testDic = Saver.Load<SerializableDictionary<EWallType, EBoxDir>>("DataViolee", "SavedTestDic");
-    //     testDic2 = Saver.Load<Dictionary<EWallType, EBoxDir>>("DataViolee", "SavedTestDic");
-    // }
-
-
-    // [Button]
-    // public void Save()
-    // {
-    //     Saver.Save("DataViolee", "SavedData", CurData);
-    // }
-    //
-    // [Button]
-    // public void Load()
-    // {
-    //     SavedData = Saver.Load<SceneItemData>("DataViolee", "SavedData");
-    //     MapManager.BoxDataByPos(Pos).SceneDataMyList.MyAdd(SavedData);
-    // }
 }

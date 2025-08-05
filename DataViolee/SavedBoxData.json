@@ -1,24 +1,24 @@
 {
   "Pos2D": {
-    "x": 1,
+    "x": 0,
     "y": 0,
-    "magnitude": 1.0,
-    "sqrMagnitude": 1
+    "magnitude": 0.0,
+    "sqrMagnitude": 0
   },
-  "WallsByte": 84,
+  "WallsByte": 12,
   "WallDataMyDic": {
-    "T1248": {
-      "WallType": 80,
+    "S4": {
+      "WallType": 4,
       "Visited": {
         "Value": true
       },
-      "DoorType": 2,
+      "DoorType": 1,
       "Opened": {
         "Value": false
       }
     },
-    "S4": {
-      "WallType": 4,
+    "S8": {
+      "WallType": 8,
       "Visited": {
         "Value": true
       },
@@ -39,31 +39,34 @@
       },
       "IsFlash": {
         "Value": true
-      }
+      },
+      "NextPointAndWallSet": []
     },
     "Right": {
       "Dir": 2,
       "CostWall": {
-        "Value": 1
+        "Value": 0
       },
       "Visited": {
-        "Value": false
+        "Value": true
       },
       "IsFlash": {
-        "Value": false
-      }
+        "Value": true
+      },
+      "NextPointAndWallSet": []
     },
     "Down": {
       "Dir": 4,
       "CostWall": {
-        "Value": 1
+        "Value": 0
       },
       "Visited": {
-        "Value": false
+        "Value": true
       },
       "IsFlash": {
-        "Value": false
-      }
+        "Value": true
+      },
+      "NextPointAndWallSet": []
     },
     "Left": {
       "Dir": 8,
@@ -75,7 +78,8 @@
       },
       "IsFlash": {
         "Value": true
-      }
+      },
+      "NextPointAndWallSet": []
     }
   },
   "SceneDataMyList": []
