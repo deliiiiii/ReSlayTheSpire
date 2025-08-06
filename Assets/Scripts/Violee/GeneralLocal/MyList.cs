@@ -61,7 +61,7 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
     {
         foreach (var item in this)
             OnRemove?.Invoke(item);
-        Clear();
+        base.Clear();
     }
 
     public MyList(Action<T>? onAdd = null, Action<T>? onRemove = null) : this([], onAdd, onRemove)

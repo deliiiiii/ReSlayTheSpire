@@ -50,4 +50,7 @@ public class InteractInfo
     public bool IsOpenDoor;
     public WallData WallData = null!;
     public Func<List<DrawConfig>> GetDrawConfigs = () => [];
+    
+    public bool HasCamera;
+    // public string Description;
 }

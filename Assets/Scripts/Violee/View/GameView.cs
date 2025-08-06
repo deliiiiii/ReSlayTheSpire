@@ -41,6 +41,13 @@ class GameView : ViewBase<GameView>
         drawWindow
             .OnAdd(() => DrawPnl.SetActive(true))
             .OnRemove(() => DrawPnl.SetActive(false));
+        GameManager.WatchingClockWindow
+            .OnAdd(() => CameraMono.SceneItemVirtualCamera.gameObject.SetActive(true))
+            .OnRemove(() =>
+            {
+                CameraMono.SceneItemVirtualCamera.gameObject.SetActive(false);
+                ExitWatchingItemBtn.gameObject.SetActive(false);
+            });
         
         PlayerManager.DoInteractStream.OnEndAsync(GetUICb);
         
@@ -51,9 +58,7 @@ class GameView : ViewBase<GameView>
             .OnEnter(() =>
             {
                 MiniItemPnl.SetActive(true);
-                
-                GameManager.WindowList.MyRemove(fullMapWindow);
-                GameManager.WindowList.MyRemove(drawWindow);
+                ShowMinimap();
                 
                 Binder.From(PlayerManager.StaminaCount).ToTxt(StaminaTxt).Immediate();
                 Binder.From(PlayerManager.EnergyCount).ToTxt(EnergyTxt).Immediate();
@@ -93,7 +98,22 @@ class GameView : ViewBase<GameView>
             {
                 PausePnl.SetActive(false);
             });
-        Binder.From(ContinueBtn).To(GameManager.UnPauseWindow);
+        Binder.From(ContinueBtn).To(() => GameManager.WindowList.MyRemove(GameManager.PauseWindow));
+        Binder.From(ExitWatchingItemBtn).To(async () =>
+        {
+            try
+            {
+                ExitWatchingItemBtn.gameObject.SetActive(false);
+                CameraMono.SceneItemVirtualCamera.gameObject.SetActive(false);
+                await Task.Delay(CameraMono.PlayerEase);
+                GameManager.WindowList.MyRemove(GameManager.WatchingClockWindow);
+            }
+            catch (Exception e)
+            {
+                MyDebug.LogError(e);
+                throw;
+            }
+        });
     }
 
     [Header("Load & Pause")]
@@ -175,6 +195,8 @@ class GameView : ViewBase<GameView>
     public required GameObject SleepPnl;
     public required GameObject DrawPnl;
     public required Transform DrawBtnContent;
+
+    public required Button ExitWatchingItemBtn;
     async Task GetUICb(InteractInfo? cb)
     {
         if (cb == null)
@@ -204,6 +226,12 @@ class GameView : ViewBase<GameView>
                 });
                 go.GetComponentInChildren<Text>().text = config.DrawDes;
             }
+        }
+        else if (cb.HasCamera)
+        {
+            GameManager.WindowList.MyAdd(GameManager.WatchingClockWindow);
+            await Task.Delay(CameraMono.SceneItemEase);
+            ExitWatchingItemBtn.gameObject.SetActive(true);
         }
     }
 

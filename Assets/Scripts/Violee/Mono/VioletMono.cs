@@ -22,15 +22,6 @@ public class VioletMono : MonoBehaviour
     public Vector2Int CreateSceneItemPos;
     public EBoxDir D;
     public SceneItemModel SceneItemModel = null!;
-
-    // public SceneItemData SavedData;
-    // public SceneItemData CurData = null!;
-
-    // public Vector2Int SavedBoxPos;
-    // public BoxData SavedBoxData;
-    // public BoxData LoadedBoxData;
-
-
     MyDictionary<Vector2Int, BoxData> dic 
         => MapManager.DijkstraStream.SelectResult().BoxDataDic;
     [Button]
@@ -40,6 +31,14 @@ public class VioletMono : MonoBehaviour
         dic[CreateSceneItemPos].SceneDataMyList.MyAdd(curData);
     }
     
+    
+    
+    
+    // public SceneItemData SavedData;
+    // public SceneItemData CurData = null!;
+    // public Vector2Int SavedBoxPos;
+    // public BoxData SavedBoxData;
+    // public BoxData LoadedBoxData;
     // [Button]
     // public void Save()
     // {

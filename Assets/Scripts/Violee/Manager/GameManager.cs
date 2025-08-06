@@ -55,6 +55,7 @@ public class GameManager : SingletonCS<GameManager>
     public static readonly MyList<WindowInfo> WindowList 
         = new ([], x => x.OnAddEvent?.Invoke(), x => x.OnRemoveEvent?.Invoke());
     public static readonly WindowInfo PauseWindow;
+    public static readonly WindowInfo WatchingClockWindow;
 
     bool init;
     public static void Init() => Instance.init = !Instance.init;
@@ -65,7 +66,11 @@ public class GameManager : SingletonCS<GameManager>
         GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
         PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
         PlayingState
-            .OnEnter(PlayerManager.OnEnterPlaying)
+            .OnEnter(() =>
+            {
+                PlayerManager.OnEnterPlaying();
+                WindowList.MyClear();
+            })
             .OnUpdate(dt =>
             {
                 if (Input.GetKey(KeyCode.LeftAlt) || HasWindow)
@@ -100,6 +105,13 @@ public class GameManager : SingletonCS<GameManager>
                 Cursor.visible = false;
             }
         };
+        WatchingClockWindow = new WindowInfo()
+        {
+            WindowType = EWindowType.WaitingSceneItem,
+            Des = "看时间...",
+        };
+        
+        
         MapManager.GenerateStream
             .Where(_ => IsIdle || IsPlaying)
             .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap));
@@ -127,10 +139,7 @@ public class GameManager : SingletonCS<GameManager>
             }
         }, EUpdatePri.Input);
     }
-
-
-    public static void UnPauseWindow()
-     => WindowList.MyRemove(PauseWindow);
+    
     static void CheckGameWindow()
     {
         if (Configer.SettingsConfig.DisablePause)
