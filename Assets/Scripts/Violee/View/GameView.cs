@@ -42,6 +42,8 @@ class GameView : ViewBase<GameView>
             .OnAdd(() => DrawPnl.SetActive(true))
             .OnRemove(() => DrawPnl.SetActive(false));
         
+        PlayerManager.DoInteractStream.OnEndAsync(GetUICb);
+        
         GameManager.GeneratingMapState
             .OnEnter(() => LoadPnl.SetActive(true))
             .OnExit(() => LoadPnl.SetActive(false));
@@ -60,9 +62,7 @@ class GameView : ViewBase<GameView>
             })
             .OnUpdate(dt =>
             {
-                var cb = PlayerManager.GetInteractStream?.SelectResult();
-                PlayerManager.GetInteractStream?.RemoveOnEndAsync(GetUICb);
-                PlayerManager.GetInteractStream?.OnEndAsync(GetUICb);
+                var cb = PlayerManager.InteractInfo;
                 NormalReticle.SetActive(cb == null);
                 FindReticle.SetActive(cb != null);
                 SceneItemInfoPnl.SetActive(cb != null);

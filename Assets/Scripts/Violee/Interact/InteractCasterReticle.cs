@@ -9,14 +9,11 @@ public class InteractCasterReticle : MonoBehaviour
     public LayerMask TarLayer;
 
     float radius;
-    readonly Observable<InteractReceiver?> lastIr 
+    readonly Observable<InteractReceiver?> lastIr
         = new(null, x => x?.DisableOutline(), x => x?.EnableOutline());
     void Awake()
     {
         radius = Configer.SettingsConfig.InteractCasterRadius;
-        PlayerManager.GetInteractStream = Streamer
-            .Bind(ValueTuple.Create)
-            .SetTrigger(_  => lastIr.Value?.GetInteractInfo());
         GameManager.PlayingState
             .OnUpdate(_ =>
             {
@@ -26,6 +23,7 @@ public class InteractCasterReticle : MonoBehaviour
                     (TarLayer.value & (1 << hit.collider.gameObject.layer)) == 0)
                 {
                     lastIr.Value = null;
+                    PlayerManager.InteractInfo = null;
                     return;
                 }
 
@@ -33,10 +31,11 @@ public class InteractCasterReticle : MonoBehaviour
                 if (ir == null || ir.GetInteractInfo() == null)
                 {
                     lastIr.Value = null;
+                    PlayerManager.InteractInfo = null;
                     return;
                 }
                 lastIr.Value = ir;
-                PlayerManager.GetInteractStream.CallTriggerAsync();
+                PlayerManager.InteractInfo = lastIr.Value?.GetInteractInfo();
             });
     }
 }

@@ -200,6 +200,10 @@ public static class Streamer
     {
         return selector(self.result);
     }
+    public static Func<TOut> BindResult<T, TOut>(this Stream<T, TOut> self)
+    {
+        return () => self.result;
+    }
     public static Func<TOut2> BindResult<T, TOut, TOut2>(this Stream<T, TOut> self, Func<TOut, TOut2> selector)
     {
         return () => selector(self.result);
