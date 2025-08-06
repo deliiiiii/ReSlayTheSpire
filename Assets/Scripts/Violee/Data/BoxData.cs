@@ -117,6 +117,10 @@ namespace Violee
             WallDataMyDic.OnRemove += wallData => WallsByte |= (byte)wallData.WallType;
             PointDataMyDic = [];
             SceneDataMyList = [];
+        }
+        public BoxData(Vector2Int pos, BoxConfig config) : this()
+        {
+            Pos2D = pos;
             foreach (var dir in BoxHelper.AllBoxDirs)
             {
                 PointDataMyDic.Add(dir, new BoxPointData()
@@ -137,10 +141,6 @@ namespace Violee
                     PointDataMyDic[dir].NextPointsInBox.Add(PointDataMyDic[dir2]);
                 }
             }
-        }
-        public BoxData(Vector2Int pos, BoxConfig config) : this()
-        {
-            Pos2D = pos;
             foreach (var wallType in BoxHelper.AllWallTypes)
             {
                 WallsByte = config.Walls;
