@@ -118,7 +118,7 @@ namespace Violee
             PointDataMyDic = [];
             SceneDataMyList = [];
         }
-        public BoxData(Vector2Int pos, BoxConfig config) : this()
+        public BoxData(Vector2Int pos, BoxConfig config) : this(6)
         {
             Pos2D = pos;
             foreach (var dir in BoxHelper.AllBoxDirs)
@@ -156,8 +156,10 @@ namespace Violee
         public const int DoorCost = 1;
         public void ResetBeforeDij() 
             => PointDataMyDic.Values.ForEach(pointData => pointData.ResetBeforeDij());
-        [JsonIgnore] public IEnumerable<EBoxDir> OccupiedDirs
-            => SceneDataMyList.SelectMany(x => x.OccupyDirSet);
+        [JsonIgnore] public IEnumerable<EBoxDir> OccupiedFloors
+            => SceneDataMyList.SelectMany(x => x.OccupyFloorSet);
+        [JsonIgnore] public IEnumerable<EBoxDir> OccupiedAirs
+            => SceneDataMyList.SelectMany(x => x.OccupyAirSet);
         #endregion
         
         

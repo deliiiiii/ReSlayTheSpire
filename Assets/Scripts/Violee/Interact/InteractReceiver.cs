@@ -6,6 +6,9 @@ using UnityEngine.Events;
 
 namespace Violee;
 
+[RequireComponent(typeof(MeshCollider))]
+[RequireComponent(typeof(Outline))]
+    
 public class InteractReceiver : MonoBehaviour
 {
     public Func<InteractInfo?> GetInteractInfo = () => null;

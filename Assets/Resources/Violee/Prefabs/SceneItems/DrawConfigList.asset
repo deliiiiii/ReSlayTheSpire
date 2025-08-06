@@ -13,18 +13,27 @@ MonoBehaviour:
   m_Name: DrawConfigList
   m_EditorClassIdentifier: 
   DrawConfigs:
-  - DrawDes: Add 1 Sofa
+  - DrawDes: Add 1 Clock
+    Sprite: {fileID: 21300000, guid: eec19781926cd2248b7c9abfde8db555, type: 3}
+    ToDrawModels:
+    - {fileID: 9041858577879756941, guid: 5b903c588e30fca4ead573faf5f51b68, type: 3}
+  - DrawDes: Add 2 Clocks
+    Sprite: {fileID: 21300000, guid: eec19781926cd2248b7c9abfde8db555, type: 3}
+    ToDrawModels:
+    - {fileID: 9041858577879756941, guid: 5b903c588e30fca4ead573faf5f51b68, type: 3}
+    - {fileID: 9041858577879756941, guid: 5b903c588e30fca4ead573faf5f51b68, type: 3}
+  - DrawDes: Add 3 Sofas
     Sprite: {fileID: 21300000, guid: 7dca49d892d2a544ba35571c9a61c643, type: 3}
     ToDrawModels:
+    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
+    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
     - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
   - DrawDes: Add 2 Sofas
     Sprite: {fileID: 21300000, guid: 7dca49d892d2a544ba35571c9a61c643, type: 3}
     ToDrawModels:
     - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
     - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
-  - DrawDes: Add 3 Sofas
+  - DrawDes: Add 1 Sofa
     Sprite: {fileID: 21300000, guid: 7dca49d892d2a544ba35571c9a61c643, type: 3}
     ToDrawModels:
-    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
-    - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
     - {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}

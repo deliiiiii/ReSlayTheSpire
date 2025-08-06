@@ -14,7 +14,9 @@ public class SceneItemData : DataBase
 {
     [NonSerialized][JsonIgnore] public SceneItemModel InsModel = null!;
     [JsonIgnore] public SceneItemModel OriginModel => Configer.SceneItemModelList.SceneItemModels.First(x => x.Data.ID == ID);
-    [ShowInInspector] public HashSet<EBoxDir> OccupyDirSet = [];
+    [ShowInInspector] public HashSet<EBoxDir> OccupyFloorSet = [];
+    [ShowInInspector] public HashSet<EBoxDir> OccupyAirSet = [];
+    public bool IsAir;
     public int ID;
     public int StaminaCost;
     public string DesPre = string.Empty;
@@ -28,7 +30,7 @@ public class SceneItemData : DataBase
         var sb = new StringBuilder();
         sb.Append(DesPre);
         if (StaminaCost > 0)
-            sb.Append($"消耗{StaminaCost}点体力,\n");
+            sb.Append($":消耗{StaminaCost}点体力,\n");
         return sb.ToString();
     }
     public void Use()
@@ -54,15 +56,21 @@ public class SceneItemData : DataBase
         {StaminaCost : > 0} => Color.blue,
         _ => Color.white,
     };
-    
-    protected virtual void UseEffect(){}
+
+    protected virtual void UseEffect()
+    {
+        PlayerManager.StaminaCount.Value -= StaminaCost;
+    }
 
     public SceneItemData CreateNew(HashSet<EBoxDir> dirSet)
     {
         var newModel = GameObject.Instantiate(OriginModel);
         var newData = newModel.Data;
         newData.InsModel = newModel;
-        newData.OccupyDirSet = dirSet;
+        if(IsAir)
+            newData.OccupyAirSet = dirSet;
+        else
+            newData.OccupyFloorSet = dirSet;
         return newData;
     }
 }
@@ -83,7 +91,6 @@ public class PurpleSceneItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        PlayerManager.StaminaCount.Value -= StaminaCost;
         PlayerManager.EnergyCount.Value += Energy;
     }
 }

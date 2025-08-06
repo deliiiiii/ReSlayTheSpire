@@ -32,4 +32,9 @@ public static class BindDataStateExt
         self.state.OnUpdate += act;
         return self;
     }
+    public static BindDataState RemoveUpdate(this BindDataState self, Action<float> act)
+    {
+        self.state.OnUpdate -= act;
+        return self;
+    }
 }

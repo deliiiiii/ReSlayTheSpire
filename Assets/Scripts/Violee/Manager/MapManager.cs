@@ -169,11 +169,12 @@ internal class MapManager : SingletonCS<MapManager>
 
     public static void DrawAtWall(WallData wallData, DrawConfig config)
     {
-        var points = PlayerCurPointStream.SelectResult().Value?.AtWallGetInsidePoints(wallData)
-            .Where(p => !p.BelongBox.OccupiedDirs.Contains(p.Dir)).ToList() ?? [];
+        var points = PlayerCurPointStream.SelectResult().Value?.AtWallGetInsidePoints(wallData).ToList() ?? [];
         config.ToDrawModels.ForEach(model =>
         {
-            var p = points.RandomItem();
+            var p = points.RandomItem(p => model.Data.IsAir 
+                ? !p.BelongBox.OccupiedAirs.Contains(p.Dir) && p.HasSWall()
+                : !p.BelongBox.OccupiedFloors.Contains(p.Dir));
             if (p == null)
             {
                 MyDebug.Log("No Enough Points...");

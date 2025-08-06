@@ -70,7 +70,13 @@ public class BoxPointData : DataBase, IComparable
             .SelectMany(x => x.Item1.bingChaJi.ConnectedSet);
 
     #endregion
-        
+
+
+    public bool HasSWall()
+    {
+        return BelongBox.HasSWallByDir(Dir, out _) || 
+               NextPointAndWallSet.Any(pair => pair.Item2.WallType == BoxHelper.WallDirToType(BoxHelper.OppositeDirDic[Dir]));
+    }
         
     public int CompareTo(object obj)
     {

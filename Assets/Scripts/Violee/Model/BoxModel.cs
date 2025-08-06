@@ -49,7 +49,8 @@ namespace Violee
                 fdata.InsModel = Instantiate(fdata.OriginModel);
             var model = fdata.InsModel;
             model.ReadData(fdata);
-            var dtRot = fdata.OccupyDirSet.First() switch
+            var dir = fdata.IsAir ? fdata.OccupyAirSet.First() : fdata.OccupyFloorSet.First();
+            var dtRot = dir switch
             {
                 EBoxDir.Up => Quaternion.Euler(0, 0, 0),
                 EBoxDir.Right => Quaternion.Euler(0, 90, 0),

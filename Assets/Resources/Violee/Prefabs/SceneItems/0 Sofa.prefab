@@ -60,7 +60,7 @@ MonoBehaviour:
       data:
         ID: 0
         StaminaCost: 2
-        DesPre: "\u5728\u6C99\u53D1\u4F11\u606F\uFF1A"
+        DesPre: "\u5728\u6C99\u53D1\u4F11\u606F"
         HasCount: 1
         Count: 1
         Energy: 1

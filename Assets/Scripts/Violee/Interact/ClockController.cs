@@ -6,19 +6,25 @@ using Violee;
 
 public class ClockController : MonoBehaviour
 {
-    public Transform hourHand;
-    public Transform minuteHand;
-    public Transform secondHand;
+    public required Transform hourHand;
+    public required Transform minuteHand;
+    public required Transform secondHand;
 
-
-    void Awake()
+    Action<float>? act;
+    void OnEnable()
     {
-        GameManager.PlayingState.OnUpdate(dt =>
+        act ??= _ =>
         {
-            if (GameManager.HasPaused)
+            if (GameManager.HasPaused && gameObject.activeSelf)
                 return;
             Tick();
-        });
+        };
+        GameManager.PlayingState.OnUpdate(act);
+    }
+
+    void OnDisable()
+    {
+        GameManager.PlayingState.RemoveUpdate(act);
     }
 
     public void Tick()
