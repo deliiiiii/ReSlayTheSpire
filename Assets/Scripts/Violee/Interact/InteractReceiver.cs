@@ -16,20 +16,22 @@ public class InteractReceiver : MonoBehaviour
             MyDebug.LogError($"{name} should be on layer {nameof(InteractReceiver)}");
         outline = gameObject.GetOrAddComponent<Outline>();
         outline.OutlineMode = Outline.Mode.OutlineAll;
-        outline.OutlineWidth = 10f;
-        SetOutline(false);
+        outline.OutlineWidth = 10f; 
+        DisableOutline();
     }
 
-    public void SetOutline(bool shown)
-    {
-        SetOutline(shown, GetInteractInfo()?.Color ?? Color.white);
-    }
-    void SetOutline(bool shown, Color color)
+    public void DisableOutline()
     {
         if (outline == null)
             return;
-        outline.enabled = shown;
-        outline.OutlineColor = color;
+        outline.enabled = false;
+    }
+    public void EnableOutline()
+    {
+        if (outline == null)
+            return;
+        outline.enabled = true;
+        outline.OutlineColor = GetInteractInfo()?.Color ?? Color.white;
     }
 }
 

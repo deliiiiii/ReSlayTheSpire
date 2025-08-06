@@ -26,9 +26,9 @@ public class VioletMono : MonoBehaviour
     // public SceneItemData SavedData;
     // public SceneItemData CurData = null!;
 
-    public Vector2Int SavedBoxPos;
-    public BoxData SavedBoxData;
-    public BoxData LoadedBoxData;
+    // public Vector2Int SavedBoxPos;
+    // public BoxData SavedBoxData;
+    // public BoxData LoadedBoxData;
 
 
     MyDictionary<Vector2Int, BoxData> dic 
@@ -40,18 +40,18 @@ public class VioletMono : MonoBehaviour
         dic[CreateSceneItemPos].SceneDataMyList.MyAdd(curData);
     }
     
-    [Button]
-    public void Save()
-    {
-        SavedBoxData = dic[SavedBoxPos];
-        Saver.Save("DataViolee", "SavedBoxData", SavedBoxData);
-    }
-    
-    [Button]
-    public void Load()
-    {
-        LoadedBoxData = Saver.Load<BoxData>("DataViolee", "SavedBoxData");
-        dic.Remove(LoadedBoxData.Pos2D);
-        dic.Add(LoadedBoxData.Pos2D, LoadedBoxData);
-    }
+    // [Button]
+    // public void Save()
+    // {
+    //     SavedBoxData = dic[SavedBoxPos];
+    //     Saver.Save("DataViolee", "SavedBoxData", SavedBoxData);
+    // }
+    //
+    // [Button]
+    // public void Load()
+    // {
+    //     LoadedBoxData = Saver.Load<BoxData>("DataViolee", "SavedBoxData");
+    //     dic.Remove(LoadedBoxData.Pos2D);
+    //     dic.Add(LoadedBoxData.Pos2D, LoadedBoxData);
+    // }
 }

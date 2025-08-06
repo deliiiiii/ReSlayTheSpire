@@ -45,6 +45,7 @@ public interface IStream
 public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsync = null): 
     Dele<T>, IStream
 {
+    public Stream(Func<T>? startFunc) : this(startFunc, null){}
     public Stream(Func<T>? startFunc = null, Action<T>? triggerFunc = null) 
         : this(startFunc, x => { triggerFunc?.Invoke(x); return Task.CompletedTask; }){ }
 

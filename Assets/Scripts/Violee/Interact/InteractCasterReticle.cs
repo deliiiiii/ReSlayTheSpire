@@ -10,13 +10,13 @@ public class InteractCasterReticle : MonoBehaviour
 
     float radius;
     readonly Observable<InteractReceiver?> lastIr 
-        = new(null, x => x?.SetOutline(false), x => x?.SetOutline(true));
+        = new(null, x => x?.DisableOutline(), x => x?.EnableOutline());
     void Awake()
     {
         radius = Configer.SettingsConfig.InteractCasterRadius;
-        PlayerManager.InteractStream = this
+        PlayerManager.InteractStream = Streamer
             .Bind(() => lastIr.Value?.GetInteractInfo())
-            .ToStream(i => i?.Act());
+            .SetTrigger(i => i?.Act());
         GameManager.PlayingState
             .OnUpdate(_ =>
             {

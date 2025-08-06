@@ -109,10 +109,11 @@ public static class Streamer
         => (t1) => { action(t1); return default; };
     public static Func<T1, T2, Unit> ToFunc<T1, T2>(Action<T1, T2> action)
         => (t1, t2) => { action(t1, t2); return default; };
-    
-    
-    public static Func<T> Bind<T>(Func<T> bind) 
+
+
+    public static Func<T> Bind<T>(Func<T> bind)
         => bind;
+    
     public static Func<T2> Bind<T1, T2>(this T1 t1, Func<T2> bind) 
         => bind;
     
@@ -135,22 +136,20 @@ public static class Streamer
     // public static Dele<T> Reduce<T>(this Dele<T> t1, T seed, Func<T, T, T> reduce) 
     //     => reduce(t1.Value, seed).WrapToDele();
     
-    public static Func<(T1, T2)> WithA<T1, T2>(this Func<T1> t1, Func<T2> t2)
-        => () => (t1(), t2());
-    
-    public static Func<T1> DeleteA<T1, T2>(this Func<(T1, T2)> t12) 
-        => () => t12().Item1;
-    
-    public static Action<T2> Curry<T1, T2>(this T1 t1, Action<T1, T2> action) 
-        => t2 => action(t1, t2);
+    // public static Func<(T1, T2)> WithA<T1, T2>(this Func<T1> t1, Func<T2> t2)
+    //     => () => (t1(), t2());
+    //
+    // public static Func<T1> DeleteA<T1, T2>(this Func<(T1, T2)> t12) 
+    //     => () => t12().Item1;
+    //
+    // public static Action<T2> Curry<T1, T2>(this T1 t1, Action<T1, T2> action) 
+    //     => t2 => action(t1, t2);
 
 
-    public static Stream<Unit> ToStream<T>(this T t, Action action)
-        => new(startFunc: () => new Unit(), triggerFunc: _ => action());
-    public static Stream<T> ToStream<T>(this Func<T> t, Action<T> action) 
-        => new(startFunc: t, triggerFunc:action);
-    public static Stream<T> ToStreamAsync<T>(this Func<T> t, Func<T, Task> actionAsync) 
-        => new(startFunc: t, triggerFuncAsync: actionAsync);
+    // public static Stream<Unit> ToStream<T>(this T t, Action action)
+    //     => new(startFunc: () => new Unit(), triggerFunc: _ => action());
+    // public static Stream<T> ToStreamAsync<T>(this Func<T> t, Func<T, Task> actionAsync) 
+    //     => new(startFunc: t, triggerFuncAsync: actionAsync);
     
     
     static bool CheckValidMethod(MethodInfo methodInfo) => methodInfo.IsStatic || methodInfo.Name.Contains("b__");
@@ -185,7 +184,7 @@ public static class Streamer
         return self;
     }
 
-    public static Stream<T> SetTrigger<T>(this Stream<T> self, Action<T> triggerFunc)
+    public static Stream<T> SetTrigger<T>(this Func<T> self, Action<T> triggerFunc)
     {
         return SetTriggerAsync(self, x =>
         {
@@ -193,10 +192,11 @@ public static class Streamer
             return Task.CompletedTask;
         });
     }
-    public static Stream<T> SetTriggerAsync<T>(this Stream<T> self, Func<T, Task> fTriggerFuncAsync)
+    public static Stream<T> SetTriggerAsync<T>(this Func<T> self, Func<T, Task> fTriggerFuncAsync)
     {
-        self.triggerFuncAsync = fTriggerFuncAsync;
-        return self;
+        var stream = new Stream<T>(startFunc: self, triggerFuncAsync: fTriggerFuncAsync);
+        // stream.endStream = stream;
+        return stream;
     }
     public static Stream<T> OnBegin<T>(this Stream<T> self, Action<T> action)
     {
@@ -226,33 +226,28 @@ public static class Streamer
         return self;
     }
     
-    public static Stream<T> Continue<T>(this Stream<T> self, Action<T> end)
+    public static T SelectResult<T>(this Stream<T> self, Func<T, T>? selector = null)
     {
-        var ret = new Stream<T>(startFunc: () => self.result, triggerFunc: end);
-        self.endStream = ret;
-        return ret;
+        if(selector == null) 
+            return self.result;
+        return selector(self.result);
     }
+    public static T2 SelectResult<T, T2>(this Stream<T> self, Func<T, T2> func)
+    {
+        return func(self.result);
+    }
+    
+    
     public static Stream<T> ContinueAsync<T>(this Stream<T> self, Func<T, Task> endAsync)
     {
         var ret = new Stream<T>(startFunc: () => self.result, triggerFuncAsync: endAsync);
         self.endStream = ret;
         return ret;
     }
-    
     public static Stream<T2> ContinueAsync<T, T2>(this Stream<T> self, Func<T, T2> selector, Func<T2, Task> endAsync)
     {
         var ret = new Stream<T2>(startFunc: () => selector(self.result), triggerFuncAsync: endAsync);
         self.endStream = ret;
         return ret;
-    }
-
-    public static T2 SelectResult<T, T2>(this Stream<T> self, Func<T, T2>? selector)
-    {
-        return selector(self.result);
-    }
-    
-    public static T SelectResult<T>(this Stream<T> self, Func<T, T>? selector = null)
-    {
-        return self.result;
     }
 }

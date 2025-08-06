@@ -13,17 +13,24 @@ namespace Violee;
 
 public class GenerateParam
 {
+    readonly MapData mapData;
     readonly ObjectPool<BoxModel> boxPool;
     readonly BoxConfigList boxConfigList;
     public int Height => boxConfigList.Height;
     public int Width => boxConfigList.Width;
     public Vector2Int StartPos => boxConfigList.StartPos;
     public EBoxDir StartDir => boxConfigList.StartDir;
+    public MyDictionary<Vector2Int, BoxData> BoxDataDic => mapData.BoxDataDic;
+    public DateTime DateTime
+    {
+        get => mapData.DateTime;
+        set => mapData.DateTime = value;
+    }
+
     public bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
     public bool HasBox(Vector2Int pos) => BoxDataDic.ContainsKey(pos);
+
     
-    
-    public readonly MyDictionary<Vector2Int, BoxData> BoxDataDic;
     public HashSet<Vector2Int> EmptyPosSet = [];
     public HashSet<WallData> EdgeWallSet = [];
     public readonly Vector3 PlayerStartPos;
@@ -43,11 +50,13 @@ public class GenerateParam
         boxPool.MyDestroy(boxModelDic[pos3D]);
         boxModelDic.Remove(pos3D);
     }
-    public GenerateParam(MyDictionary<Vector2Int, BoxData> boxDataDic, GameObject go)
+    public GenerateParam(MapData mapData, GameObject go)
     {
+        this.mapData = mapData;
+        
         boxConfigList = Configer.BoxConfigList;
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, go.transform, 42);
-        BoxDataDic = boxDataDic;
+        
         BoxDataDic.OnAdd += boxData =>
             {
                 Task.FromResult(OnAddBoxData(boxData));
@@ -82,27 +91,34 @@ public class GenerateParam
 
 internal class MapManager : SingletonCS<MapManager>
 {
-    static readonly GenerateParam onlyParammmm = new([], Instance.go);
+    static readonly GenerateParam onlyParammmm = new(new MapData(), Instance.go);
     public static readonly Stream<GenerateParam> GenerateStream;
     public static readonly Stream<GenerateParam> DijkstraStream;
     static MapManager()
     {
-        GenerateStream = Instance
+        GenerateStream = Streamer
             .Bind(() => onlyParammmm)
-            .ToStream(param =>
+            .SetTrigger(param =>
             {
                 InitCollections(param);
                 GenerateMain(param);
             });
         DijkstraStream = GenerateStream
             .ContinueAsync(Dijkstra)
-            .OnEnd(param => VisitEdgeWalls(param.EdgeWallSet));
+            .OnEnd(param =>
+            {
+                VisitEdgeWalls(param.EdgeWallSet);
+                param.DateTime = new DateTime(2025, 8, 14, 8, 0, 0);
+            });
     }
+    
+    
     #region Visit
     static readonly Observable<BoxPointData> playerCurPoint = new(null!, 
         x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
-    public static void TickPlayerVisit(GenerateParam param, Vector3 playerPos)
+    public static void TickPlayerVisit(Vector3 playerPos)
     {
+        var param = DijkstraStream.SelectResult();
         var boxDataDic = param.BoxDataDic;
         var x = playerPos.x;
         var z = playerPos.z;
@@ -140,7 +156,9 @@ internal class MapManager : SingletonCS<MapManager>
     #endregion
     
     
-    #region DrawSceneItems
+    #region SceneItems
+    public static DateTime GetCurTime() => DijkstraStream.SelectResult(x => x.DateTime);
+
     public static void DrawAtWall(WallData wallData, DrawConfig config)
     {
         var points = playerCurPoint.Value?.AtWallGetInsidePoints(wallData)

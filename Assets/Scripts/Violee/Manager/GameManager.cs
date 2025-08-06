@@ -78,7 +78,7 @@ public class GameManager : SingletonCS<GameManager>
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
                 }
-                MapManager.TickPlayerVisit(MapManager.DijkstraStream.SelectResult(), PlayerManager.GetPos);
+                MapManager.TickPlayerVisit(PlayerManager.GetPos);
                 PlayerManager.Tick(HasWindow);
             })
             .OnExit(PlayerManager.OnExitPlaying);
@@ -100,10 +100,10 @@ public class GameManager : SingletonCS<GameManager>
                 Cursor.visible = false;
             }
         };
-        
         MapManager.GenerateStream
             .Where(_ => IsIdle || IsPlaying)
-            .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap))
+            .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap));
+        MapManager.DijkstraStream
             .OnEnd(param =>
             {
                 PlayerManager.OnDijkstraEnd(param.PlayerStartPos);
@@ -127,8 +127,8 @@ public class GameManager : SingletonCS<GameManager>
             }
         }, EUpdatePri.Input);
     }
-    
-    
+
+
     public static void UnPauseWindow()
      => WindowList.MyRemove(PauseWindow);
     static void CheckGameWindow()
