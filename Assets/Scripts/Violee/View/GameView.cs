@@ -60,9 +60,9 @@ class GameView : ViewBase<GameView>
             })
             .OnUpdate(dt =>
             {
-                var cb = PlayerManager.InteractStream?.StartValue;
-                PlayerManager.InteractStream?.RemoveOnEndAsync(GetUICb);
-                PlayerManager.InteractStream?.OnEndAsync(GetUICb);
+                var cb = PlayerManager.GetInteractStream?.SelectResult();
+                PlayerManager.GetInteractStream?.RemoveOnEndAsync(GetUICb);
+                PlayerManager.GetInteractStream?.OnEndAsync(GetUICb);
                 NormalReticle.SetActive(cb == null);
                 FindReticle.SetActive(cb != null);
                 SceneItemInfoPnl.SetActive(cb != null);

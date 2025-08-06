@@ -91,17 +91,19 @@ public class GenerateParam
 
 internal class MapManager : SingletonCS<MapManager>
 {
-    static readonly GenerateParam onlyParammmm = new(new MapData(), Instance.go);
-    public static readonly Stream<GenerateParam> GenerateStream;
-    public static readonly Stream<GenerateParam> DijkstraStream;
+    public static readonly Stream<ValueTuple, GenerateParam> GenerateStream;
+    public static readonly Stream<GenerateParam, GenerateParam> DijkstraStream;
+    public static readonly Stream<(GenerateParam, Vector3), Observable<BoxPointData>> PlayerCurPointStream;
     static MapManager()
     {
         GenerateStream = Streamer
-            .Bind(() => onlyParammmm)
-            .SetTrigger(param =>
+            .Bind(ValueTuple.Create)
+            .SetTrigger(_ =>
             {
+                var param = new GenerateParam(new MapData(), Instance.go);
                 InitCollections(param);
                 GenerateMain(param);
+                return param;
             });
         DijkstraStream = GenerateStream
             .ContinueAsync(Dijkstra)
@@ -110,24 +112,27 @@ internal class MapManager : SingletonCS<MapManager>
                 VisitEdgeWalls(param.EdgeWallSet);
                 param.DateTime = new DateTime(2025, 8, 14, 8, 0, 0);
             });
+        PlayerCurPointStream = DijkstraStream
+            .BindResult(p => (p, PlayerManager.GetPos()))
+            .SetTrigger(TickPlayerVisit);
     }
     
     
     #region Visit
-    static readonly Observable<BoxPointData> playerCurPoint = new(null!, 
-        x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
-    public static void TickPlayerVisit(Vector3 playerPos)
+    public static Observable<BoxPointData> TickPlayerVisit((GenerateParam, Vector3) pair)
     {
-        var param = DijkstraStream.SelectResult();
-        var boxDataDic = param.BoxDataDic;
+        Observable<BoxPointData> ret = new (null!, 
+            x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
+        var boxDataDic = pair.Item1.BoxDataDic;
+        var playerPos = pair.Item2;
         var x = playerPos.x;
         var z = playerPos.z;
         var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);
         var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);
-        if (!param.HasBox(boxPos2D))
+        if (!pair.Item1.HasBox(boxPos2D))
         {
             MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
-            return;
+            return ret;
         }
 
         foreach (var dir in BoxHelper.AllBoxDirs)
@@ -139,14 +144,16 @@ internal class MapManager : SingletonCS<MapManager>
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
             if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfigList.WalkInTolerance)
             {
-                playerCurPoint.Value = pointData;
-                if(!playerCurPoint.Value.Visited)
+                ret.Value = pointData;
+                if(!ret.Value.Visited)
                 {
-                    playerCurPoint.Value.VisitConnected();
+                    ret.Value.VisitConnected();
                     MyDebug.Log($"First Enter Point!!{boxPos2D}:{dir}");
                 }
             }
         }
+
+        return ret;
     }
 
     static void VisitEdgeWalls(HashSet<WallData> edgeWallSet)
@@ -161,7 +168,7 @@ internal class MapManager : SingletonCS<MapManager>
 
     public static void DrawAtWall(WallData wallData, DrawConfig config)
     {
-        var points = playerCurPoint.Value?.AtWallGetInsidePoints(wallData)
+        var points = PlayerCurPointStream.SelectResult().Value?.AtWallGetInsidePoints(wallData)
             .Where(p => !p.BelongBox.OccupiedDirs.Contains(p.Dir)).ToList() ?? [];
         config.ToDrawModels.ForEach(model =>
         {
@@ -241,7 +248,7 @@ internal class MapManager : SingletonCS<MapManager>
             }
         }
     }
-    static async Task Dijkstra(GenerateParam param)
+    static async Task<GenerateParam> Dijkstra(GenerateParam param)
     {
         try
         {
@@ -311,6 +318,7 @@ internal class MapManager : SingletonCS<MapManager>
             MyDebug.Log("Dijkstra finished!");
             if (!CheckConnective(boxDataDic))
                 await Dijkstra(param);
+            return param;
         }
         catch (Exception e)
         {

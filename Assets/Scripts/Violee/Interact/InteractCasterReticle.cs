@@ -14,9 +14,9 @@ public class InteractCasterReticle : MonoBehaviour
     void Awake()
     {
         radius = Configer.SettingsConfig.InteractCasterRadius;
-        PlayerManager.InteractStream = Streamer
-            .Bind(() => lastIr.Value?.GetInteractInfo())
-            .SetTrigger(i => i?.Act());
+        PlayerManager.GetInteractStream = Streamer
+            .Bind(ValueTuple.Create)
+            .SetTrigger(_  => lastIr.Value?.GetInteractInfo());
         GameManager.PlayingState
             .OnUpdate(_ =>
             {
@@ -36,6 +36,7 @@ public class InteractCasterReticle : MonoBehaviour
                     return;
                 }
                 lastIr.Value = ir;
+                PlayerManager.GetInteractStream.CallTriggerAsync();
             });
     }
 }

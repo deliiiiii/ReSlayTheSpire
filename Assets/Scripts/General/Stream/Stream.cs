@@ -42,28 +42,27 @@ public interface IStream
 {
     Task CallTriggerAsync();
 }
-public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsync = null): 
+public class Stream<T, TOut>(Func<T> startFunc, Func<T, Task<TOut>> triggerFuncAsync): 
     Dele<T>, IStream
 {
-    public Stream(Func<T>? startFunc) : this(startFunc, null){}
-    public Stream(Func<T>? startFunc = null, Action<T>? triggerFunc = null) 
-        : this(startFunc, x => { triggerFunc?.Invoke(x); return Task.CompletedTask; }){ }
+    // public Stream(Func<T> startFunc, Func<T, TOut> triggerFunc) 
+    //     : this(startFunc, x => Task.FromResult(triggerFunc(x))){ }
 
-    internal readonly Func<T> startFunc = startFunc ?? (() => default!);
+    internal readonly Func<T> startFunc = startFunc;
     internal readonly List<(Func<T, Task<Maybe<T>>>, string)> mappers = [];
-    internal Func<T, Task>? triggerFuncAsync = triggerFuncAsync;
+    internal Func<T, Task<TOut>> triggerFuncAsync = triggerFuncAsync;
     internal Action<T>? onBegin;
     internal Func<T, Task>? onBeginAsync;
-    internal Action<T>? onEnd;
-    internal Func<T, Task>? onEndAsync;
-    internal IStream? endStream;
+    internal Action<TOut>? onEnd;
+    internal Func<TOut, Task>? onEndAsync;
+    internal List<IStream> endStreams = [];
     
     public async Task CallTriggerAsync()
     {
         try
         {
-            result = startFunc();
-            if (!result.HasValue)
+            Maybe<T> sta = startFunc();
+            if (!sta.HasValue)
             {
                 Debug.LogWarning($"{startFunc.Method.Name} At Start " +
                                  $"has returned null.");
@@ -71,19 +70,22 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
             }
             foreach (var mapper in mappers)
             {
-                result = await mapper.Item1(result);
-                if (result.HasValue)
+                sta = await mapper.Item1(sta);
+                if (sta.HasValue)
                     continue;
                 Debug.LogWarning($"{startFunc.Method.Name} .Map {mapper.Item1.Method.Name} " +
                                  $"has returned null.");
                 return;
             }
-            onBegin?.Invoke(result);
-            await (onBeginAsync != null ? onBeginAsync(result) : Task.CompletedTask);
-            await (triggerFuncAsync != null ? triggerFuncAsync(result) : Task.CompletedTask);
+            onBegin?.Invoke(sta);
+            await (onBeginAsync != null ? onBeginAsync(sta) : Task.CompletedTask);
+            result = await triggerFuncAsync(sta);
             onEnd?.Invoke(result);
             await (onEndAsync != null ? onEndAsync(result) : Task.CompletedTask);
-            await (endStream != null ? endStream.CallTriggerAsync() : Task.CompletedTask);
+            foreach (var endStream in endStreams)
+            {
+                _ = endStream.CallTriggerAsync();
+            }
         }
         catch (Exception e)
         {
@@ -91,8 +93,6 @@ public class Stream<T>(Func<T>? startFunc = null, Func<T, Task>? triggerFuncAsyn
             throw;
         }
     }
-    
-    public T StartValue => startFunc();
-    internal Maybe<T> result { get; set; } = Maybe<T>.Nothing.Instance;
+    internal Maybe<TOut> result { get; set; } = Maybe<TOut>.Nothing.Instance;
     
 }
