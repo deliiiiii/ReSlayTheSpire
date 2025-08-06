@@ -118,12 +118,12 @@ internal class MapManager : SingletonCS<MapManager>
             .SetTrigger(TickPlayerVisit);
     }
     
-    
+    static readonly Observable<BoxPointData> playerCurPoint = new (null!, 
+        x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
     #region Visit
     public static Observable<BoxPointData> TickPlayerVisit((GenerateParam, Vector3) pair)
     {
-        Observable<BoxPointData> ret = new (null!, 
-            x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
+        
         var boxDataDic = pair.Item1.BoxDataDic;
         var playerPos = pair.Item2;
         var x = playerPos.x;
@@ -133,7 +133,7 @@ internal class MapManager : SingletonCS<MapManager>
         if (!pair.Item1.HasBox(boxPos2D))
         {
             MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
-            return ret;
+            return playerCurPoint;
         }
 
         foreach (var dir in BoxHelper.AllBoxDirs)
@@ -145,16 +145,16 @@ internal class MapManager : SingletonCS<MapManager>
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
             if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfigList.WalkInTolerance)
             {
-                ret.Value = pointData;
-                if(!ret.Value.Visited)
+                playerCurPoint.Value = pointData;
+                if(!playerCurPoint.Value.Visited)
                 {
-                    ret.Value.VisitConnected();
+                    playerCurPoint.Value.VisitConnected();
                     MyDebug.Log($"First Enter Point!!{boxPos2D}:{dir}");
                 }
             }
         }
 
-        return ret;
+        return playerCurPoint;
     }
 
     static void VisitEdgeWalls(HashSet<WallData> edgeWallSet)

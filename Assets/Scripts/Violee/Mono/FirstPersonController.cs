@@ -13,8 +13,10 @@ public class FirstPersonController : MonoBehaviour
 
     #region Camera Movement Variables
 
-    public Camera playerCamera;
-    public Vector3 CameraOffset = new (0, 2, 0);
+    // public Camera playerCamera;
+    // public Vector3 CameraOffset = new (0, 2, 0);
+    Transform cameraTransform;
+    Transform miniTransform;
 
     public float fov = 60f;
     public bool invertCamera;
@@ -124,9 +126,11 @@ public class FirstPersonController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        cameraTransform = transform.GetChild(0);
+        miniTransform = transform.GetChild(1);
 
         // Set internal variables
-        playerCamera.fieldOfView = fov;
+        // playerCamera.fieldOfView = fov;
         originalScale = transform.localScale;
         jointOriginalPos = joint.localPosition;
 
@@ -177,13 +181,12 @@ public class FirstPersonController : MonoBehaviour
 
     public void Update()
     {
-        #region Camera
+        // #region Camera
 
         // Control camera movement
         if(cameraCanMove)
         {
             yaw = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivity;
-
             if (!invertCamera)
             {
                 pitch -= mouseSensitivity * Input.GetAxis("Mouse Y");
@@ -195,103 +198,105 @@ public class FirstPersonController : MonoBehaviour
             }
             // Clamp pitch between lookAngle
             pitch = Mathf.Clamp(pitch, -maxLookAngle, maxLookAngle);
-
-            // transform.localEulerAngles = new Vector3(0, yaw, 0);
-            // playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+            cameraTransform.localEulerAngles = new Vector3(pitch, 0, 0);
             transform.localEulerAngles = new Vector3(0, yaw, 0);
-            playerCamera.transform.eulerAngles = new Vector3(pitch, yaw, 0);
-            playerCamera.transform.position = transform.position + transform.TransformDirection(CameraOffset);
+            miniTransform.transform.rotation = Quaternion.Euler(90, 0, 0);
+            
+            // playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+            // transform.localEulerAngles = new Vector3(0, yaw, 0);
+            // playerCamera.transform.eulerAngles = new Vector3(pitch, yaw, 0);
+            // playerCamera.transform.position = transform.position + transform.TransformDirection(CameraOffset);
         }
+        //
+        // #region Camera Zoom
+        //
+        // if (enableZoom)
+        // {
+        //     // Changes isZoomed when key is pressed
+        //     // Behavior for toggle zoom
+        //     if(Input.GetKeyDown(zoomKey) && !holdToZoom && !isSprinting)
+        //     {
+        //         isZoomed = !isZoomed;
+        //     }
+        //
+        //     // Changes isZoomed when key is pressed
+        //     // Behavior for hold to zoom
+        //     if(holdToZoom && !isSprinting)
+        //     {
+        //         if(Input.GetKeyDown(zoomKey))
+        //         {
+        //             isZoomed = true;
+        //         }
+        //         else if(Input.GetKeyUp(zoomKey))
+        //         {
+        //             isZoomed = false;
+        //         }
+        //     }
+        //
+        //     // Lerp camera.fieldOfView to allow for a smooth transition
+        //     if(isZoomed)
+        //     {
+        //         playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, zoomFOV, zoomStepTime * Time.deltaTime);
+        //     }
+        //     else if(!isZoomed && !isSprinting)
+        //     {
+        //         playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, fov, zoomStepTime * Time.deltaTime);
+        //     }
+        // }
+        //
+        // #endregion
+        // #endregion
 
-        #region Camera Zoom
-
-        if (enableZoom)
-        {
-            // Changes isZoomed when key is pressed
-            // Behavior for toggle zoom
-            if(Input.GetKeyDown(zoomKey) && !holdToZoom && !isSprinting)
-            {
-                isZoomed = !isZoomed;
-            }
-
-            // Changes isZoomed when key is pressed
-            // Behavior for hold to zoom
-            if(holdToZoom && !isSprinting)
-            {
-                if(Input.GetKeyDown(zoomKey))
-                {
-                    isZoomed = true;
-                }
-                else if(Input.GetKeyUp(zoomKey))
-                {
-                    isZoomed = false;
-                }
-            }
-
-            // Lerp camera.fieldOfView to allow for a smooth transition
-            if(isZoomed)
-            {
-                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, zoomFOV, zoomStepTime * Time.deltaTime);
-            }
-            else if(!isZoomed && !isSprinting)
-            {
-                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, fov, zoomStepTime * Time.deltaTime);
-            }
-        }
-
-        #endregion
-        #endregion
-
-        #region Sprint
-
-        if(enableSprint)
-        {
-            if(isSprinting)
-            {
-                isZoomed = false;
-                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.deltaTime);
-
-                // Drain sprint remaining while sprinting
-                if(!unlimitedSprint)
-                {
-                    sprintRemaining -= 1 * Time.deltaTime;
-                    if (sprintRemaining <= 0)
-                    {
-                        isSprinting = false;
-                        isSprintCooldown = true;
-                    }
-                }
-            }
-            else
-            {
-                // Regain sprint while not sprinting
-                sprintRemaining = Mathf.Clamp(sprintRemaining += 1 * Time.deltaTime, 0, sprintDuration);
-            }
-
-            // Handles sprint cooldown 
-            // When sprint remaining == 0 stops sprint ability until hitting cooldown
-            if(isSprintCooldown)
-            {
-                sprintCooldown -= 1 * Time.deltaTime;
-                if (sprintCooldown <= 0)
-                {
-                    isSprintCooldown = false;
-                }
-            }
-            else
-            {
-                sprintCooldown = sprintCooldownReset;
-            }
-
-            // Handles sprintBar 
-            if(useSprintBar && !unlimitedSprint)
-            {
-                float sprintRemainingPercent = sprintRemaining / sprintDuration;
-                sprintBar.transform.localScale = new Vector3(sprintRemainingPercent, 1f, 1f);
-            }
-        }
-
-        #endregion
+        // #region Sprint
+        //
+        // if(enableSprint)
+        // {
+        //     if(isSprinting)
+        //     {
+        //         isZoomed = false;
+        //         playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.deltaTime);
+        //
+        //         // Drain sprint remaining while sprinting
+        //         if(!unlimitedSprint)
+        //         {
+        //             sprintRemaining -= 1 * Time.deltaTime;
+        //             if (sprintRemaining <= 0)
+        //             {
+        //                 isSprinting = false;
+        //                 isSprintCooldown = true;
+        //             }
+        //         }
+        //     }
+        //     else
+        //     {
+        //         // Regain sprint while not sprinting
+        //         sprintRemaining = Mathf.Clamp(sprintRemaining += 1 * Time.deltaTime, 0, sprintDuration);
+        //     }
+        //
+        //     // Handles sprint cooldown 
+        //     // When sprint remaining == 0 stops sprint ability until hitting cooldown
+        //     if(isSprintCooldown)
+        //     {
+        //         sprintCooldown -= 1 * Time.deltaTime;
+        //         if (sprintCooldown <= 0)
+        //         {
+        //             isSprintCooldown = false;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         sprintCooldown = sprintCooldownReset;
+        //     }
+        //
+        //     // Handles sprintBar 
+        //     if(useSprintBar && !unlimitedSprint)
+        //     {
+        //         float sprintRemainingPercent = sprintRemaining / sprintDuration;
+        //         sprintBar.transform.localScale = new Vector3(sprintRemainingPercent, 1f, 1f);
+        //     }
+        // }
+        //
+        // #endregion
 
         #region Jump
 
@@ -516,42 +521,43 @@ public class FirstPersonController : MonoBehaviour
     public override void OnInspectorGUI()
     {
         SerFPC.Update();
-        #region Camera Setup
-
-        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-        GUILayout.Label("Camera Setup", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 13 }, GUILayout.ExpandWidth(true));
-        EditorGUILayout.Space();
-
-        fpc.playerCamera = (Camera)EditorGUILayout.ObjectField(new GUIContent("Camera", "Camera attached to the controller."), fpc.playerCamera, typeof(Camera), true);
-        fpc.fov = EditorGUILayout.Slider(new GUIContent("Field of View", "The camera’s view angle. Changes the player camera directly."), fpc.fov, fpc.zoomFOV, 179f);
-        fpc.cameraCanMove = EditorGUILayout.ToggleLeft(new GUIContent("Enable Camera Rotation", "Determines if the camera is allowed to move."), fpc.cameraCanMove);
-
-        GUI.enabled = fpc.cameraCanMove;
-        fpc.invertCamera = EditorGUILayout.ToggleLeft(new GUIContent("Invert Camera Rotation", "Inverts the up and down movement of the camera."), fpc.invertCamera);
-        fpc.mouseSensitivity = EditorGUILayout.Slider(new GUIContent("Look Sensitivity", "Determines how sensitive the mouse movement is."), fpc.mouseSensitivity, .1f, 10f);
-        fpc.maxLookAngle = EditorGUILayout.Slider(new GUIContent("Max Look Angle", "Determines the max and min angle the player camera is able to look."), fpc.maxLookAngle, 40, 90);
-        GUI.enabled = true;
-
-        fpc.lockCursor = EditorGUILayout.ToggleLeft(new GUIContent("Lock and Hide Cursor", "Turns off the cursor visibility and locks it to the middle of the screen."), fpc.lockCursor);
-
-        EditorGUILayout.Space();
-
-        #region Camera Zoom Setup
-
-        GUILayout.Label("Zoom", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 13 }, GUILayout.ExpandWidth(true));
-
-        fpc.enableZoom = EditorGUILayout.ToggleLeft(new GUIContent("Enable Zoom", "Determines if the player is able to zoom in while playing."), fpc.enableZoom);
-
-        GUI.enabled = fpc.enableZoom;
-        fpc.holdToZoom = EditorGUILayout.ToggleLeft(new GUIContent("Hold to Zoom", "Requires the player to hold the zoom key instead if pressing to zoom and unzoom."), fpc.holdToZoom);
-        fpc.zoomKey = (KeyCode)EditorGUILayout.EnumPopup(new GUIContent("Zoom Key", "Determines what key is used to zoom."), fpc.zoomKey);
-        fpc.zoomFOV = EditorGUILayout.Slider(new GUIContent("Zoom FOV", "Determines the field of view the camera zooms to."), fpc.zoomFOV, .1f, fpc.fov);
-        fpc.zoomStepTime = EditorGUILayout.Slider(new GUIContent("Step Time", "Determines how fast the FOV transitions while zooming in."), fpc.zoomStepTime, .1f, 10f);
-        GUI.enabled = true;
-
-        #endregion
-
-        #endregion
+        // #region Camera Setup
+        //
+        // EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        // GUILayout.Label("Camera Setup", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 13 }, GUILayout.ExpandWidth(true));
+        // EditorGUILayout.Space();
+        //
+        // fpc.playerCamera = (Camera)EditorGUILayout.ObjectField(new GUIContent("Camera", "Camera attached to the controller."), fpc.playerCamera, typeof(Camera), true);
+        // fpc.fov = EditorGUILayout.Slider(new GUIContent("Field of View", "The camera’s view angle. Changes the player camera directly."), fpc.fov, fpc.zoomFOV, 179f);
+        // fpc.cameraCanMove = EditorGUILayout.ToggleLeft(new GUIContent("Enable Camera Rotation", "Determines if the camera is allowed to move."), fpc.cameraCanMove);
+        //
+        // GUI.enabled = fpc.cameraCanMove;
+        // fpc.invertCamera = EditorGUILayout.ToggleLeft(new GUIContent("Invert Camera Rotation", "Inverts the up and down movement of the camera."), fpc.invertCamera);
+        // fpc.mouseSensitivity = EditorGUILayout.Slider(new GUIContent("Look Sensitivity", "Determines how sensitive the mouse movement is."), fpc.mouseSensitivity, .1f, 10f);
+        // fpc.maxLookAngle = EditorGUILayout.Slider(new GUIContent("Max Look Angle", "Determines the max and min angle the player camera is able to look."), fpc.maxLookAngle, 40, 90);
+        // GUI.enabled = true;
+        //
+        // fpc.lockCursor = EditorGUILayout.ToggleLeft(new GUIContent("Lock and Hide Cursor", "Turns off the cursor visibility and locks it to the middle of the screen."), fpc.lockCursor);
+        //
+        // EditorGUILayout.Space();
+        //
+        // #region Camera Zoom Setup
+        //
+        // GUILayout.Label("Zoom", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 13 }, GUILayout.ExpandWidth(true));
+        //
+        // fpc.enableZoom = EditorGUILayout.ToggleLeft(new GUIContent("Enable Zoom", "Determines if the player is able to zoom in while playing."), fpc.enableZoom);
+        //
+        // GUI.enabled = fpc.enableZoom;
+        // fpc.holdToZoom = EditorGUILayout.ToggleLeft(new GUIContent("Hold to Zoom", "Requires the player to hold the zoom key instead if pressing to zoom and unzoom."), fpc.holdToZoom);
+        // fpc.zoomKey = (KeyCode)EditorGUILayout.EnumPopup(new GUIContent("Zoom Key", "Determines what key is used to zoom."), fpc.zoomKey);
+        // fpc.zoomFOV = EditorGUILayout.Slider(new GUIContent("Zoom FOV", "Determines the field of view the camera zooms to."), fpc.zoomFOV, .1f, fpc.fov);
+        // fpc.zoomStepTime = EditorGUILayout.Slider(new GUIContent("Step Time", "Determines how fast the FOV transitions while zooming in."), fpc.zoomStepTime, .1f, 10f);
+        // GUI.enabled = true;
+        //
+        // #endregion
+        //
+        // #endregion
+        
 
         #region Movement Setup
 

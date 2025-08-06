@@ -133,6 +133,8 @@ public class GameManager : SingletonCS<GameManager>
      => WindowList.MyRemove(PauseWindow);
     static void CheckGameWindow()
     {
+        if (Configer.SettingsConfig.DisablePause)
+            return;
         if (!Application.isFocused)
         {
             if(!HasPaused)

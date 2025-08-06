@@ -10,6 +10,7 @@ namespace Violee
         public bool RefreshConfigOnAwake;
         public bool QuickKey;
         public bool ShowBoxCost = true;
+        public bool DisablePause = true;
         [MinValue(0)][MaxValue(0.5f)]
         public float BoxCostPosOffset = 0.35f;
 
