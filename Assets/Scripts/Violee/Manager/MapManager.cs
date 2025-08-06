@@ -94,14 +94,14 @@ internal class MapManager : SingletonCS<MapManager>
     public static readonly Stream<ValueTuple, GenerateParam> GenerateStream;
     public static readonly Stream<GenerateParam, GenerateParam> DijkstraStream;
     public static readonly Stream<(GenerateParam, Vector3), Observable<BoxPointData>> PlayerCurPointStream;
-    static readonly MapData mapdata = new MapData();
+    static readonly GenerateParam generateParam = new GenerateParam(new MapData(), Instance.go);
     static MapManager()
     {
         GenerateStream = Streamer
             .Bind(ValueTuple.Create)
             .SetTrigger(_ =>
             {
-                var param = new GenerateParam(mapdata, Instance.go);
+                var param = generateParam;
                 InitCollections(param);
                 GenerateMain(param);
                 return param;
