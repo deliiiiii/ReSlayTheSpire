@@ -128,7 +128,7 @@ public class GameManager : SingletonCS<GameManager>
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
                 }
-                _ = MapManager.PlayerCurPointStream.CallTriggerAsync();
+                MapManager.TickPlayerVisit(PlayerManager.GetPos());
                 PlayerManager.Tick(HasWindow);
             })
             .OnExit(PlayerManager.OnExitPlaying);

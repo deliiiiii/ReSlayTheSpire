@@ -93,7 +93,6 @@ internal class MapManager : SingletonCS<MapManager>
 {
     public static readonly Stream<ValueTuple, GenerateParam> GenerateStream;
     public static readonly Stream<GenerateParam, GenerateParam> DijkstraStream;
-    public static readonly Stream<(GenerateParam, Vector3), Observable<BoxPointData>> PlayerCurPointStream;
     static readonly GenerateParam generateParam = new (new MapData(), Instance.go);
     static MapManager()
     {
@@ -113,26 +112,23 @@ internal class MapManager : SingletonCS<MapManager>
                 VisitEdgeWalls(param.EdgeWallSet);
                 param.DateTime = new DateTime(2025, 8, 14, 8, 0, 0);
             });
-        PlayerCurPointStream = DijkstraStream
-            .BindResult(p => (p, PlayerManager.GetPos()))
-            .SetTrigger(TickPlayerVisit);
     }
     
-    static readonly Observable<BoxPointData> playerCurPoint = new (null!);
+    public static BoxPointData PlayerCurPoint;
+    public static bool IsWithRecordPlayer;
     #region Visit
-    public static Observable<BoxPointData> TickPlayerVisit((GenerateParam, Vector3) pair)
+    public static void TickPlayerVisit(Vector3 playerPos)
     {
-        
-        var boxDataDic = pair.Item1.BoxDataDic;
-        var playerPos = pair.Item2;
+        var param = DijkstraStream.SelectResult();
+        var boxDataDic = param.BoxDataDic;
         var x = playerPos.x;
         var z = playerPos.z;
         var boxPos2D = BoxHelper.Pos3DTo2D(playerPos);
         var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);
-        if (!pair.Item1.HasBox(boxPos2D))
+        if (!param.HasBox(boxPos2D))
         {
             MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
-            return playerCurPoint;
+            return;
         }
 
         foreach (var dir in BoxHelper.AllBoxDirs)
@@ -144,15 +140,16 @@ internal class MapManager : SingletonCS<MapManager>
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
             if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfigList.WalkInTolerance)
             {
-                playerCurPoint.Value = pointData;
-                if(!playerCurPoint.Value.Visited)
+                PlayerCurPoint = pointData;
+                if(!PlayerCurPoint.Visited)
                 {
-                    playerCurPoint.Value.VisitConnected();
+                    PlayerCurPoint.VisitConnected();
                     MyDebug.Log($"First Enter Point!!{boxPos2D}:{dir}");
                 }
             }
         }
-        return playerCurPoint;
+        
+        IsWithRecordPlayer = BuffManager.ContainsBuff(EBuffType.PlayRecord) && PlayerCurPoint.ConnectedHasRecordPlayer();
     }
 
     static void VisitEdgeWalls(HashSet<WallData> edgeWallSet)

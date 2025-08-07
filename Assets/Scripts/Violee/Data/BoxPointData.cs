@@ -83,10 +83,13 @@ public class BoxPointData : DataBase, IComparable
             .Item1?.bingChaJi.ConnectedSet ?? [];
         return ret;
     }
-    
-        // => 
-        // => NextPointAndWallSet.FirstOrDefault(pair => pair.Item2 == wallData).Item1?.bingChaJi.ConnectedSet ?? [];
 
+    public bool ConnectedHasRecordPlayer()
+    {
+        return bingChaJi.ConnectedSet
+            .Any(p => p.BelongBox.SceneDataMyList
+                .Any(s => s is RecordPlayerItemData && s.OccupyFloorSet.Contains(p.Dir)));
+    }
     #endregion
 
 

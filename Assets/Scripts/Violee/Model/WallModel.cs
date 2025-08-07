@@ -33,24 +33,23 @@ namespace Violee
         {
             if (Data.DoorType == EDoorType.None || Data.Opened.Value)
                 return InteractInfo.CreateUnActive();
+            var energyCost = MapManager.IsWithRecordPlayer ? 0 : 1;
             if (PlayerManager.EnergyCount.Value <= 0)
             {
-                return InteractInfo.CreateInvalid("精力不足，无法打开门");
+                return InteractInfo.CreateInvalid($"精力不足{energyCost}，无法打开门");
             }
             return new DoorInteractInfo
             {
                 CanUse = true,
                 Act = () =>
                 {
-                    PlayerManager.EnergyCount.Value -= 1;
+                    PlayerManager.EnergyCount.Value -= energyCost;
                     Data.Opened.Value = true;
                 },
-                Description = "打开门：消耗1点精力",
+                Description = $"打开门：消耗{energyCost}点精力, 并绘制门后连通区域的装饰。",
                 Color = Color.magenta,
                 
-                InsidePointDataList = MapManager.PlayerCurPointStream
-                    .SelectResult().Value?.AtWallGetInsidePoints(Data)
-                    .ToList() ?? [],
+                InsidePointDataList = MapManager.PlayerCurPoint.AtWallGetInsidePoints(Data).ToList(),
                 WallData = Data,
                 // GetDrawConfigs = () => Configer.DrawConfigList.DrawConfigs.Take(3).ToList(),
                 GetDrawConfigs = () =>
