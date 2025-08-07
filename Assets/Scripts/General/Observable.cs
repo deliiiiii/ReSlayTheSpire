@@ -9,6 +9,15 @@ using UnityEngine.Events;
 public class Observable<T>
 {
     [SerializeField] [CanBeNull] T value;
+
+    [Button]
+    public void AddOne()
+    {
+        if (value is int or float or double)
+        {
+            Value = (dynamic)value + 1;
+        }
+    }
     [CanBeNull]
     public T Value
     {

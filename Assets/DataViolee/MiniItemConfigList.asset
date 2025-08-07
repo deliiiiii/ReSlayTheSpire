@@ -16,7 +16,7 @@ MonoBehaviour:
   - ID: 0
     Sprite: {fileID: 0}
     Description: Stamina
-    InitValue: 3
+    InitValue: 10
   - ID: 1
     Sprite: {fileID: 0}
     Description: Energy

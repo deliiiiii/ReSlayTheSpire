@@ -5562,6 +5562,22 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Text
+      value: "\u7CBE\u529B"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.b
+      value: 0.90588236
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6232786233554677192, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Name
       value: EnergyTxt
@@ -5698,6 +5714,26 @@ PrefabInstance:
     - target: {fileID: 1730971081983500263, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_FontData.m_Alignment
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Text
+      value: Violee
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.r
+      value: 0.8666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 6232786233554677192, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Name
@@ -25891,6 +25927,22 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Text
+      value: "\u7075\u611F"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9490196
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6232786233554677192, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Name
       value: CreativityTxt
@@ -34328,6 +34380,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 311952529}
     m_Modifications:
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Text
+      value: "\u4F53\u529B"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.1254902
+      objectReference: {fileID: 0}
+    - target: {fileID: 5396181629552442699, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6232786233554677192, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Name
       value: StaminaTxt
