@@ -28,12 +28,12 @@ public class Observable<T>
             OnValueChangedBefore?.Invoke(oldV);
             this.value = value;
             OnValueChangedAfter?.Invoke(this.value);
-            // OnValueChangedFull?.Invoke(oldV, value);
+            OnValueChangedFull?.Invoke(oldV, value);
         }
     }
     [CanBeNull] public event UnityAction<T> OnValueChangedBefore;
     [CanBeNull] public event UnityAction<T> OnValueChangedAfter;
-    // [CanBeNull] public event UnityAction<T, T> OnValueChangedFull;
+    [CanBeNull] public event UnityAction<T, T> OnValueChangedFull;
     [JsonConstructor]
     public Observable(T initValue)
     {

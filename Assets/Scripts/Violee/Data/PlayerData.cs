@@ -11,7 +11,6 @@ public class PlayerData : DataBase
     [NonSerialized][ShowInInspector]
     List<MiniItemData> miniItems;
     public List<char> LetterList;
-    public List<BuffData> BuffList = [];
     public MiniItemData Stamina;
     public MiniItemData Energy;
     public MiniItemData Gloves;
@@ -28,12 +27,6 @@ public class PlayerData : DataBase
         // TODO 
         Stamina.OnRunOut += () => {/* game over */ };
     }
-
-    public void AddBuff(BuffData buff)
-    {
-        BuffList.Add(buff);
-    }
-    public static BuffData TestBuff => new() {BuffEffect = () => MyDebug.Log("Test Buff Effect")};
 }
 
 
@@ -68,10 +61,4 @@ public class MiniItemData(MiniItemConfig config) : DataBase
             OnRunOut?.Invoke();
         }
     }
-}
-
-[Serializable]
-public class BuffData : DataBase
-{
-    public required Action BuffEffect;
 }
