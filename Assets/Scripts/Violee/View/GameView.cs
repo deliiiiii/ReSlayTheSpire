@@ -12,26 +12,49 @@ class GameView : ViewBase<GameView>
 {
     static readonly WindowInfo fullMapWindow = new ()
     {
-        WindowType = EWindowType.NormalUI,
+        // WindowType = EWindowType.NormalUI,
         Des = "全屏地图"
     };
     static readonly WindowInfo sleepWindow = new ()
     {
-        WindowType = EWindowType.WaitingSceneItem,
+        // WindowType = EWindowType.WaitingSceneItem,
         Des = "休息..."
     };
     public static readonly WindowInfo DrawWindow = new ()
     {
-        WindowType = EWindowType.NormalUI,
+        // WindowType = EWindowType.NormalUI,
         Des = "选择房间装修中"
     };
     protected override void IBL()
     {
-        GameManager.WindowList.OnAdd += _ =>
+        GameManager.WindowList.OnAdd += w =>
         {
             NormalReticle.SetActive(false);
             FindReticle.SetActive(false);
             SceneItemInfoPnl.SetActive(false);
+            if (w is BuffWindowInfo buffWindow)
+            {
+                var windowIns = Instantiate(BuffWindowPrefab, OverlapWindowTransform);
+                buffWindow.BuffWindowIns = windowIns.gameObject;
+                windowIns.CloseButton.onClick.AddListener(() =>
+                {
+                    GameManager.WindowList.MyRemove(buffWindow);
+                });
+                windowIns.DesTxt.text = buffWindow.Des;
+                windowIns.gameObject.SetActive(true);
+            }
+            else if (w is MusicWindowInfo musicWindow)
+            {
+
+            }
+        };
+
+        GameManager.WindowList.OnRemove += w =>
+        {
+            if (w is BuffWindowInfo buffWindow)
+            {
+                Destroy(buffWindow.BuffWindowIns);
+            }
         };
         
         fullMapWindow
@@ -217,6 +240,12 @@ class GameView : ViewBase<GameView>
 
     public required Button ExitWatchingItemBtn;
     
+    #region OverlapWindow
+    [Header("OverlapWindow")]
+    public required Transform OverlapWindowTransform;
+    public required BuffWindow BuffWindowPrefab;
+    public required GameObject BGMWindow;
+    #endregion
     
     
     Action showDrawConfigsAct = () => { };

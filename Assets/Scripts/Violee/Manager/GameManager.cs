@@ -13,22 +13,32 @@ public enum EGameState
     Playing,
 }
 
-public enum EWindowType
-{
-    WaitingSceneItem,
-    NormalUI,
-    GamePause,
-}
+// public enum EWindowType
+// {
+//     WaitingSceneItem,
+//     NormalUI,
+//     GamePause,
+// }
 
 [Serializable]
 public class WindowInfo
 {
-    public EWindowType WindowType;
-    public string Des = string.Empty;
+    public required string Des;
     [NonSerialized]
     public Action? OnAddEvent;
     [NonSerialized]
     public Action? OnRemoveEvent;
+}
+
+public class BuffWindowInfo : WindowInfo
+{
+    public GameObject? BuffWindowIns;
+}
+
+
+public class MusicWindowInfo : WindowInfo
+{
+    
 }
 
 public static class WindowInfoExt
@@ -48,18 +58,52 @@ public static class WindowInfoExt
 
 public class GameManager : SingletonCS<GameManager>
 {
+    bool init;
+    public static void Init() => Instance.init = !Instance.init;
+    
+    
     static readonly MyFSM<EGameState> gameFsm = new ();
     public static string GameState => gameFsm.CurStateName;
     public static readonly BindDataState GeneratingMapState;
     public static readonly BindDataState PlayingState;
-    public static readonly MyList<WindowInfo> WindowList 
+    
+    
+    public static readonly MyList<WindowInfo> WindowList
         = new ([], x => x.OnAddEvent?.Invoke(), x => x.OnRemoveEvent?.Invoke());
-    public static readonly WindowInfo PauseWindow;
-    public static readonly WindowInfo WatchingClockWindow;
+    public static readonly WindowInfo PauseWindow = new ()
+    {
+        // WindowType = EWindowType.GamePause,
+        Des = "游戏窗口失去焦点 or 按下了暂停键。",
+        OnAddEvent = () =>
+        {
+            Time.timeScale = 0;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        },
+        OnRemoveEvent = () =>
+        {
+            Time.timeScale = 1;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    };
+    public static readonly WindowInfo WatchingClockWindow = new ()
+    {
+        // WindowType = EWindowType.WaitingSceneItem,
+        Des = "看时间...",
+    };
+    
 
-    bool init;
-    public static void Init() => Instance.init = !Instance.init;
+    public static void CreateAndAddBuffWindow(string des)
+    {
+        var ret = new BuffWindowInfo()
+        {
+            Des = des
+        };
+        WindowList.MyAdd(ret);
+    }
 
+    
     static GameManager()
     {
         Configer.Init();
@@ -88,28 +132,6 @@ public class GameManager : SingletonCS<GameManager>
             })
             .OnExit(PlayerManager.OnExitPlaying);
         
-        PauseWindow = new WindowInfo()
-        {
-            WindowType = EWindowType.GamePause,
-            Des = "游戏窗口失去焦点 or 按下了暂停键。",
-            OnAddEvent = () =>
-            {
-                Time.timeScale = 0;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            },
-            OnRemoveEvent = () =>
-            {
-                Time.timeScale = 1;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-        };
-        WatchingClockWindow = new WindowInfo()
-        {
-            WindowType = EWindowType.WaitingSceneItem,
-            Des = "看时间...",
-        };
         
         
         MapManager.GenerateStream
@@ -121,7 +143,7 @@ public class GameManager : SingletonCS<GameManager>
                 PlayerManager.OnDijkstraEnd(param.PlayerStartPos);
                 gameFsm.ChangeState(EGameState.Playing);
             });
-            
+        
         gameFsm.ChangeState(EGameState.Idle);
         Binder.Update(dt =>
         {
