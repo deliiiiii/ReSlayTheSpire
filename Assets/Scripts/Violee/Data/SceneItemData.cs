@@ -12,6 +12,19 @@ namespace Violee;
 [Serializable]
 public class SceneItemData : DataBase
 {
+    public SceneItemData CreateNew(HashSet<EBoxDir> dirSet)
+    {
+        var newModel = GameObject.Instantiate(OriginModel);
+        var newData = newModel.Data;
+        newData.InsModel = newModel;
+        if(IsAir)
+            newData.OccupyAirSet = dirSet;
+        else
+            newData.OccupyFloorSet = dirSet;
+        return newData;
+    }
+    
+    
     [NonSerialized][JsonIgnore] public SceneItemModel InsModel = null!;
     [JsonIgnore] public SceneItemModel OriginModel => Configer.SceneItemModelList.SceneItemModels.First(x => x.Data.ID == ID);
     [ShowInInspector] public HashSet<EBoxDir> OccupyFloorSet = [];
@@ -25,9 +38,10 @@ public class SceneItemData : DataBase
     
     [Header("HasCount")]
     public bool HasCount;
+
     [ShowIf(nameof(HasCount))] public int Count;
-    [SerializeReference][ShowIf(nameof(HasCount))] public GameObject? HideAfterRunOut;
-    [SerializeReference][ShowIf(nameof(HasCount))] public GameObject? ShowAfterRunOut;
+    [SerializeReference][ShowIf(nameof(HasCount))] public List<GameObject> HideAfterUseList = [];
+    [SerializeReference][ShowIf(nameof(HasCount))] public List<GameObject> ShowAfterUseList = [];
     
     [Header("IsSleep")]
     public bool IsSleep;
@@ -37,28 +51,12 @@ public class SceneItemData : DataBase
     [SerializeField] InteractHasCamera? iCamera;
     public bool HasCamera => iCamera != null;
     
-    public event Action? OnRunOut;
-
-    public virtual string GetInteractDes()
+    public virtual void CheckData()
     {
-        var sb = new StringBuilder();
-        sb.Append(DesPre);
-        if (StaminaCost > 0)
-            sb.Append($":消耗{StaminaCost}点体力,\n");
-        return sb.ToString();
-    }
-    public void Use()
-    {
-        if (HasCount)
-        {
-            Count--;
-            if (Count <= 0)
-            {
-                OnRunOut?.Invoke();
-            }
-        }
-        UseEffect();
-        OnUseEnd();
+        if (HideAfterUseList.Count < Count)
+            LogErrorWith("HideAfterUseList.Count < Count");
+        if (ShowAfterUseList.Count < Count)
+            LogErrorWith("ShowAfterUseList.Count < Count");
     }
     public bool CanUse()
     {
@@ -66,18 +64,26 @@ public class SceneItemData : DataBase
             return Count > 0;
         return true;
     }
-    public Color DesColor() => this switch
+    public void Use()
     {
-        {StaminaCost : > 0} => Color.blue,
-        _ => Color.white,
-    };
-
+        if (HasCount)
+        {
+            Count--;
+            HideAfterUseList[Count].SetActive(false);
+            ShowAfterUseList[Count].SetActive(true);
+            // if (Count <= 0)
+            // {
+            //     OnRunOut?.Invoke();
+            // }
+        }
+        UseEffect();
+        OnUseEnd();
+    }
     protected virtual void UseEffect()
     {
         PlayerManager.StaminaCount.Value -= StaminaCost;
     }
-
-    void OnUseEnd()
+    protected virtual void OnUseEnd()
     {
         if (HasCamera)
         {
@@ -90,21 +96,27 @@ public class SceneItemData : DataBase
                     iCamera.CameraTransform.localPosition.z * transform.lossyScale.z);
         }
     }
-
-    public SceneItemData CreateNew(HashSet<EBoxDir> dirSet)
+    public virtual string GetInteractDes()
     {
-        var newModel = GameObject.Instantiate(OriginModel);
-        var newData = newModel.Data;
-        newData.InsModel = newModel;
-        if(IsAir)
-            newData.OccupyAirSet = dirSet;
-        else
-            newData.OccupyFloorSet = dirSet;
-        return newData;
+        var sb = new StringBuilder();
+        sb.Append(DesPre);
+        if (StaminaCost > 0)
+            sb.Append($":消耗{StaminaCost}点体力,\n");
+        return sb.ToString();
+    }
+    public Color DesColor() => this switch
+    {
+        {StaminaCost : > 0} => Color.blue,
+        _ => Color.white,
+    };
+    void LogErrorWith(string str)
+    {
+        MyDebug.LogError($"{InsModel}.Data Has An Error: {str}");
     }
 }
 
 
+// 1 Sofa,
 [Serializable]
 public class PurpleSceneItemData : SceneItemData
 {
@@ -121,5 +133,26 @@ public class PurpleSceneItemData : SceneItemData
     {
         base.UseEffect();
         PlayerManager.EnergyCount.Value += Energy;
+    }
+}
+
+// 2 BookShelf,
+[Serializable]
+public class BookShelfItemData : SceneItemData
+{
+    [Header("BookShelf")]
+    public int EnergyCost;
+    public int Creativity;
+    public override string GetInteractDes()
+    {
+        var sb = new StringBuilder(base.GetInteractDes());
+        sb.Append($"和{EnergyCost}点精力,从书中吸收{Creativity}点灵感。");
+        return sb.ToString();
+    }
+    protected override void UseEffect()
+    {
+        base.UseEffect();
+        PlayerManager.EnergyCount.Value -= EnergyCost;
+        PlayerManager.CreativityCount.Value += Creativity;
     }
 }

@@ -15,8 +15,11 @@ public class InteractReceiver : MonoBehaviour
     Outline? outline;
     void Awake()
     {
-        if(gameObject.layer != LayerMask.NameToLayer(nameof(InteractReceiver)))
+        if (gameObject.layer != LayerMask.NameToLayer(nameof(InteractReceiver)))
+        {
             MyDebug.LogError($"{name} should be on layer {nameof(InteractReceiver)}");
+            gameObject.layer = LayerMask.NameToLayer(nameof(InteractReceiver));
+        }
         outline = gameObject.GetOrAddComponent<Outline>();
         outline.OutlineMode = Outline.Mode.OutlineAll;
         outline.OutlineWidth = 10f; 

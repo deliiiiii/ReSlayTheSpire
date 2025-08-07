@@ -528,8 +528,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8013102061495788245}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -3.6797984, y: 4.887, z: 7.375}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: -3.6797984, y: 5.72, z: 7.3750005}
   m_LocalScale: {x: 4.25, y: 4.25, z: 4.25}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -570,7 +570,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data:
     rid: 746788441188990976
-  Ir: {fileID: 6008600515237456465}
+  IrList:
+  - {fileID: 6008600515237456465}
   references:
     version: 2
     RefIds:
@@ -583,8 +584,8 @@ MonoBehaviour:
         DesPre: "\u770B\u4E00\u773C\u65F6\u95F4"
         HasCount: 0
         Count: 0
-        HideAfterRunOut: {fileID: 0}
-        ShowAfterRunOut: {fileID: 0}
+        HideAfterUseList: []
+        ShowAfterUseList: []
         IsSleep: 0
         SleepTime: 2.89
         iCamera: {fileID: 4871198392309765689}
