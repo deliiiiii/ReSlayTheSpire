@@ -6,13 +6,12 @@ public class InteractCasterReticle : MonoBehaviour
 {
     public LayerMask TarLayer;
 
-    float radius;
     readonly Observable<InteractReceiver?> lastIr
         = new(null, x => x?.DisableOutline(), x => x?.EnableOutline());
     void Awake()
     {
         var playerCamera = CameraMono.PlayerCamera;
-        radius = Configer.SettingsConfig.InteractCasterRadius;
+        var radius = Configer.SettingsConfig.InteractCasterRadius;
         GameManager.PlayingState
             .OnUpdate(_ =>
             {

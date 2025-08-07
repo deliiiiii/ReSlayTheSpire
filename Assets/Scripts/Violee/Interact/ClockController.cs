@@ -32,7 +32,7 @@ public class ClockController : MonoBehaviour
     {
         act ??= _ =>
         {
-            if (GameManager.HasPaused && gameObject.activeSelf)
+            if (GameManager.HasPaused)
                 return;
             Tick();
         };
