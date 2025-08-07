@@ -15,7 +15,6 @@ public class BoxPointData : DataBase, IComparable
     // public Observable<int> CostStep;
     public Observable<bool> Visited = new (false);
     public Observable<bool> IsFlash = new (false);
-        
 
         
     [NonSerialized] public List<BoxPointData> NextPointsInBox = [];

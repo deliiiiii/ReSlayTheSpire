@@ -9,7 +9,8 @@ public class PlayerMono : Singleton<PlayerMono>
     public PlayerData PlayerData = null!;
     [HideInInspector]
     public FirstPersonController Fpc = null!;
-    void Awake()
+
+    protected override void Awake()
     {
         Fpc = GetComponent<FirstPersonController>();
         gameObject.SetActive(false);

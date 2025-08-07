@@ -33,7 +33,8 @@ namespace Violee
         {
             if (Data.DoorType == EDoorType.None || Data.Opened.Value)
                 return InteractInfo.CreateUnActive();
-            var energyCost = MapManager.IsWithRecordPlayer ? 0 : 1;
+            // TODO BuffedValue...
+            var energyCost = PlayerManager.IsWithRecordPlayer ? 0 : 1;
             if (PlayerManager.EnergyCount.Value <= 0)
             {
                 return InteractInfo.CreateInvalid($"精力不足{energyCost}，无法打开门");
@@ -49,7 +50,8 @@ namespace Violee
                 Description = $"打开门：消耗{energyCost}点精力, 并绘制门后连通区域的装饰。",
                 Color = Color.magenta,
                 
-                InsidePointDataList = MapManager.PlayerCurPoint.AtWallGetInsidePoints(Data).ToList(),
+                InsidePointDataList = PlayerManager.PlayerCurPoint.Value?
+                    .AtWallGetInsidePoints(Data).ToList() ?? [],
                 WallData = Data,
                 // GetDrawConfigs = () => Configer.DrawConfigList.DrawConfigs.Take(3).ToList(),
                 GetDrawConfigs = () =>

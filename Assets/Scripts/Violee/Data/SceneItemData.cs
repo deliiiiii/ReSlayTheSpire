@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
@@ -189,6 +190,9 @@ public class BookShelfItemData : SceneItemData
 public class RecordPlayerItemData : SceneItemData
 {
     public string BuffDes = "和唱片机在同一个连通区域时，开启房门时不再消耗精力。";
+
+    [field: AllowNull, MaybeNull]
+    AudioSource audioSource => field ??= InsModel.GetComponent<AudioSource>();
     public override string GetInteractDes()
     {
         var sb = new StringBuilder(base.GetInteractDes());
@@ -199,6 +203,15 @@ public class RecordPlayerItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
+        audioSource.clip = AudioMono.BGMRecordPlayer.RandomItem();
+        // audioSource.mute = true;
+        audioSource.loop = true;
+        audioSource.Play();
         BuffManager.AddConBuff(EBuffType.PlayRecord, () => BuffDes);
+    }
+
+    public AudioClip GetClip()
+    {
+        return audioSource.clip;
     }
 }

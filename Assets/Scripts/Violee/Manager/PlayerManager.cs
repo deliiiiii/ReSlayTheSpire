@@ -10,11 +10,29 @@ public class PlayerManager : SingletonCS<PlayerManager>
     static PlayerManager()
     {
         playerMono = Configer.playerMono;
+
+        OnPlayerEnter += p =>
+        {
+            if (!(p?.Visited ?? true))
+            {
+                p.VisitConnected();
+                // MyDebug.Log($"First Enter Point!!{p.BelongBox.Pos2D}:{p.Dir}");
+            }
+
+            IsWithRecordPlayer = BuffManager.ContainsBuff(EBuffType.PlayRecord)
+                                 && (p?.ConnectedHasRecordPlayer() ?? false);
+        };
     }
     public static Observable<int> StaminaCount => playerData.Stamina.Count;
     public static Observable<int> EnergyCount => playerData.Energy.Count;
     public static Observable<int> CreativityCount => playerData.Creativity.Count;
     public static Observable<int> VioleeCount => playerData.Violee.Count;
+    
+    public static event Action<BoxPointData>? OnPlayerEnter;
+    public static event Action<BoxPointData>? OnPlayerExit;
+    public static readonly Observable<BoxPointData> PlayerCurPoint 
+        = new(null!, p => OnPlayerExit?.Invoke(p), p => OnPlayerEnter?.Invoke(p));
+    public static bool IsWithRecordPlayer;
 
     public static void OnDijkstraEnd(Vector3 pos3D)
     {

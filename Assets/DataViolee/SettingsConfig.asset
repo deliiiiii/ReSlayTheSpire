@@ -21,4 +21,4 @@ MonoBehaviour:
   PointSpriteFlashTime: 1
   PointSpriteAlpha: 255
   interactCasterRadius: 0.3
-  YieldCount: 0.001
+  YieldCount: 0.1

@@ -114,6 +114,7 @@ public class GameManager : SingletonCS<GameManager>
             .OnEnter(() =>
             {
                 PlayerManager.OnEnterPlaying();
+                BuffManager.OnEnterPlaying();
                 WindowList.MyClear();
             })
             .OnUpdate(dt =>
@@ -128,12 +129,12 @@ public class GameManager : SingletonCS<GameManager>
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
                 }
-                MapManager.TickPlayerVisit(PlayerManager.GetPos());
+                PlayerManager.PlayerCurPoint.Value = MapManager.GetPlayerVisit(PlayerManager.GetPos())!;
+                if(HasPaused)
+                    MapManager.Tick(dt);
                 PlayerManager.Tick(HasWindow);
             })
             .OnExit(PlayerManager.OnExitPlaying);
-        
-        
         
         MapManager.GenerateStream
             .Where(_ => IsIdle || IsPlaying)
@@ -144,6 +145,11 @@ public class GameManager : SingletonCS<GameManager>
                 PlayerManager.OnDijkstraEnd(param.PlayerStartPos);
                 gameFsm.ChangeState(EGameState.Playing);
             });
+        BuffManager.OnAddWindowBuff += winBuff =>
+        {
+            var ret = CreateAndAddBuffWindow($"{winBuff.GetDes()}");
+            ret.OnRemove(() => winBuff.BuffEffect());
+        };
         
         gameFsm.ChangeState(EGameState.Idle);
         Binder.Update(dt =>

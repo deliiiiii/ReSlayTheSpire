@@ -3625,9 +3625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f25f9f1e4ad451da3a2d4fc47e14745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CreateSceneItemPos: {x: 0, y: 0}
-  D: 1
-  SceneItemModel: {fileID: 4583635587203084175, guid: 6b6d33302a63bb644aab4e712c1a372f, type: 3}
+  GlobalOnScene: 0
 --- !u!114 &265992612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19398,6 +19396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2ea7d9411b4dc8a7d55151d3ce09d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GlobalOnScene: 0
   Fpc: {fileID: 0}
 --- !u!114 &1168962161
 MonoBehaviour:
@@ -19426,6 +19425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d90ba6530d9bfda47abb4610956b2f44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GlobalOnScene: 0
   fov: 60
   invertCamera: 0
   cameraCanMove: 1
@@ -31370,6 +31370,55 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1847888674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1847888675}
+  - component: {fileID: 1847888676}
+  m_Layer: 0
+  m_Name: AudioMono
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1847888675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847888674}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1847888676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847888674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf384e7fb474d1087dada4f1aba2bcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalOnScene: 0
+  BGMKisekiIns: {fileID: 8300000, guid: 7bd86c3fa1578ff468a67921d0edc1fb, type: 3}
+  BGMRecordPlayerIns:
+  - {fileID: 8300000, guid: 7bd86c3fa1578ff468a67921d0edc1fb, type: 3}
+  BGMVioletLineIns: {fileID: 8300000, guid: 7bd86c3fa1578ff468a67921d0edc1fb, type: 3}
 --- !u!1 &1848948352
 GameObject:
   m_ObjectHideFlags: 0
@@ -35790,6 +35839,7 @@ SceneRoots:
   - {fileID: 265992610}
   - {fileID: 1694277285}
   - {fileID: 1168962157}
+  - {fileID: 1847888675}
   - {fileID: 1560496643}
   - {fileID: 2083257669}
   - {fileID: 884399058}

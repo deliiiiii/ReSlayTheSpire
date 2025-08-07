@@ -113,11 +113,16 @@ internal class MapManager : SingletonCS<MapManager>
                 param.DateTime = new DateTime(2025, 8, 14, 8, 0, 0);
             });
     }
+
+    public static void Tick(float dt)
+    {
+        generateParam.DateTime = generateParam.DateTime.AddSeconds(dt * Configer.SettingsConfig.TimeSpeed);
+    }
     
-    public static BoxPointData PlayerCurPoint;
-    public static bool IsWithRecordPlayer;
+    
+    
     #region Visit
-    public static void TickPlayerVisit(Vector3 playerPos)
+    public static BoxPointData? GetPlayerVisit(Vector3 playerPos)
     {
         var param = DijkstraStream.SelectResult();
         var boxDataDic = param.BoxDataDic;
@@ -128,7 +133,7 @@ internal class MapManager : SingletonCS<MapManager>
         if (!param.HasBox(boxPos2D))
         {
             MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
-            return;
+            return null;
         }
 
         foreach (var dir in BoxHelper.AllBoxDirs)
@@ -140,16 +145,11 @@ internal class MapManager : SingletonCS<MapManager>
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
             if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfigList.WalkInTolerance)
             {
-                PlayerCurPoint = pointData;
-                if(!PlayerCurPoint.Visited)
-                {
-                    PlayerCurPoint.VisitConnected();
-                    MyDebug.Log($"First Enter Point!!{boxPos2D}:{dir}");
-                }
+                return pointData;
             }
         }
-        
-        IsWithRecordPlayer = BuffManager.ContainsBuff(EBuffType.PlayRecord) && PlayerCurPoint.ConnectedHasRecordPlayer();
+
+        return null;
     }
 
     static void VisitEdgeWalls(HashSet<WallData> edgeWallSet)

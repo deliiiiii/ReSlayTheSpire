@@ -15,25 +15,21 @@ public class BuffManager : SingletonCS<BuffManager>
             MyDebug.Log($"Add Buff {b.GetDes()}");
             if (b is WindowBuffData winB)
             {
-                var ret = GameManager.CreateAndAddBuffWindow($"{b.GetDes()}");
-                ret.OnRemove(() => winB.BuffEffect());
+                OnAddWindowBuff?.Invoke(winB);
             }
             else if (b is ConsistentBuffData conB)
             {
                 OnAddConBuff?.Invoke(conB);
             }
         };
-        
-        // buffList.OnClear += () =>
-
-
-        GameManager.PlayingState.OnEnter(() =>
-        {
-            OnClearAllBuff?.Invoke();
-            buffList.MyClear();
-        });
     }
-    
+
+    public static void OnEnterPlaying()
+    {
+        // buffList.OnClear += () =>
+        OnClearAllBuff?.Invoke();
+        buffList.MyClear();
+    }
 
     public static void WindowWatchingOClock(int hour)
     {
@@ -59,6 +55,7 @@ public class BuffManager : SingletonCS<BuffManager>
         buffList.MyAdd(added);
     }
 
+    public static event Action<WindowBuffData>? OnAddWindowBuff;
     public static event Action<ConsistentBuffData>? OnAddConBuff;
     public static event Action? OnClearAllBuff;
     public static bool ContainsBuff(EBuffType buffType) 

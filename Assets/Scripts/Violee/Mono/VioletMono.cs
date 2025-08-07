@@ -11,7 +11,8 @@ public class VioletMono : Singleton<PlayerMono>
 {
     [ShowInInspector] public string GameState => GameManager.GameState;
     [ShowInInspector] public List<WindowInfo> WindowList => GameManager.WindowList;
-    void Awake()
+
+    protected override void Awake()
     {
 #if UNITY_EDITOR
         Binder.Update(_ => GUIHelper.RequestRepaint());
@@ -19,17 +20,17 @@ public class VioletMono : Singleton<PlayerMono>
         GameManager.Init();
     }
 
-    public Vector2Int CreateSceneItemPos;
-    public EBoxDir D;
-    public SceneItemModel SceneItemModel = null!;
-    MyDictionary<Vector2Int, BoxData> dic 
-        => MapManager.DijkstraStream.SelectResult().BoxDataDic;
-    [Button]
-    public void Test()
-    {
-        var curData = SceneItemModel.Data.CreateNew([D]);
-        dic[CreateSceneItemPos].SceneDataMyList.MyAdd(curData);
-    }
+    // public Vector2Int CreateSceneItemPos;
+    // public EBoxDir D;
+    // public SceneItemModel SceneItemModel = null!;
+    // MyDictionary<Vector2Int, BoxData> dic 
+    //     => MapManager.DijkstraStream.SelectResult().BoxDataDic;
+    // [Button]
+    // public void Test()
+    // {
+    //     var curData = SceneItemModel.Data.CreateNew([D]);
+    //     dic[CreateSceneItemPos].SceneDataMyList.MyAdd(curData);
+    // }
     
     
     
