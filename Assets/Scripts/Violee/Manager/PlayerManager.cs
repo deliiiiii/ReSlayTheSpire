@@ -37,7 +37,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
     public static void Tick(bool hasWindowed)
     {
         playerMono.Fpc.enabled = !hasWindowed;
-        if (InteractInfo.Value != null && Input.GetMouseButtonDown(0) && !hasWindowed)
+        if ((InteractInfo.Value?.CanUse ?? false) && Input.GetMouseButtonDown(0) && !hasWindowed)
         {
             InteractInfo.Value.Act();
             OnClickInteract?.Invoke(InteractInfo.Value);

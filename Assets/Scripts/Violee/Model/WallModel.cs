@@ -29,24 +29,17 @@ namespace Violee
             DoorInteract.GetInteractInfo = GetCb;
         }
 
-        DoorInteractInfo? GetCb()
+        InteractInfo GetCb()
         {
             if (Data.DoorType == EDoorType.None || Data.Opened.Value)
-                return null;
+                return InteractInfo.CreateUnActive();
             if (PlayerManager.EnergyCount.Value <= 0)
             {
-                return new DoorInteractInfo
-                {
-                    Act = () => { },
-                    Description = "精力不足，无法打开门",
-                    Color = Color.red,
-                    InsidePointDataList = [],
-                    WallData = null!,
-                    GetDrawConfigs = () => [],
-                };
+                return InteractInfo.CreateInvalid("精力不足，无法打开门");
             }
             return new DoorInteractInfo
             {
+                CanUse = true,
                 Act = () =>
                 {
                     PlayerManager.EnergyCount.Value -= 1;

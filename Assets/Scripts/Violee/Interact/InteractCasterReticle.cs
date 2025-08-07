@@ -31,7 +31,7 @@ public class InteractCasterReticle : MonoBehaviour
                 }
 
                 var ir = hit.collider.gameObject.GetComponent<InteractReceiver>();
-                if (ir == null || ir.GetInteractInfo() == null)
+                if (ir == null || !ir.GetInteractInfo().Active)
                 {
                     lastIr.Value = null;
                     PlayerManager.InteractInfo.Value = null;

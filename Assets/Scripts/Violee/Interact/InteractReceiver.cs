@@ -11,7 +11,7 @@ namespace Violee;
     
 public class InteractReceiver : MonoBehaviour
 {
-    public Func<InteractInfo?> GetInteractInfo = () => null;
+    public Func<InteractInfo> GetInteractInfo = InteractInfo.CreateUnActive;
     Outline? outline;
     void Awake()
     {
@@ -37,15 +37,39 @@ public class InteractReceiver : MonoBehaviour
         if (outline == null)
             return;
         outline.enabled = true;
-        outline.OutlineColor = GetInteractInfo()?.Color ?? Color.white;
+        outline.OutlineColor = GetInteractInfo().Color;
     }
 }
 
 public class InteractInfo
 {
-    public required Action Act;
+    public bool Active = true;
+    public bool CanUse = true;
     public required string Description;
     public required Color Color;
+    public required Action Act;
+
+    public static InteractInfo CreateUnActive()
+    {
+        return new InteractInfo
+        {
+            Active = false,
+            Description = null!,
+            Color = Color.black,
+            Act = null!,
+        };
+    }
+    public static InteractInfo CreateInvalid(string description)
+    {
+        return new InteractInfo
+        {
+            Active = true,
+            CanUse = false,
+            Description = description,
+            Color = Color.red,
+            Act = null!,
+        };
+    }
 }
 
 public class SceneItemInteractInfo : InteractInfo
@@ -55,7 +79,7 @@ public class SceneItemInteractInfo : InteractInfo
 
 public class DoorInteractInfo : InteractInfo
 {
-    public required List<BoxPointData> InsidePointDataList = [];
+    public required List<BoxPointData> InsidePointDataList;
     public required WallData WallData;
     public required Func<List<DrawConfig>> GetDrawConfigs;
 }

@@ -14,12 +14,17 @@ public class SceneItemModel : ModelBase<SceneItemData>
         IrList.ForEach(i => i.GetInteractInfo = GetCb);
     }
 
-    SceneItemInteractInfo? GetCb()
+    InteractInfo GetCb()
     {
-        if (!Data.CanUse())
-            return null;
+        if (!Data.IsActive())
+            return InteractInfo.CreateUnActive();
+        if (!Data.CanUse(out var failReason))
+        {
+            return InteractInfo.CreateInvalid(failReason);
+        }
         var ret = new SceneItemInteractInfo
         {
+            CanUse = true,
             Act = Data.Use,
             Description = Data.GetInteractDes(), 
             Color = Data.DesColor(),

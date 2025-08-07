@@ -58,12 +58,24 @@ public class SceneItemData : DataBase
         if (ShowAfterUseList.Count < Count)
             LogErrorWith("ShowAfterUseList.Count < Count");
     }
-    public bool CanUse()
+    public bool IsActive()
     {
-        if (HasCount)
-            return Count > 0;
+        if (HasCount && Count <= 0)
+            return false;
         return true;
     }
+
+    public virtual bool CanUse(out string failReason)
+    {
+        failReason = string.Empty;
+        if (PlayerManager.StaminaCount.Value < StaminaCost)
+        {
+            failReason = $"体力不足{StaminaCost}, 无法查看";
+            return false;
+        }
+        return true;
+    }
+    
     public void Use()
     {
         if (HasCount)
@@ -143,6 +155,21 @@ public class BookShelfItemData : SceneItemData
     [Header("BookShelf")]
     public int EnergyCost;
     public int Creativity;
+
+    public override bool CanUse(out string failReason)
+    {
+        if (!base.CanUse(out failReason))
+            return false;
+        failReason = string.Empty;
+        if (PlayerManager.EnergyCount.Value < EnergyCost)
+        {
+            failReason = $"精力不足{EnergyCost}, 无法阅读";
+            return false;
+        }
+
+        return true;
+    }
+
     public override string GetInteractDes()
     {
         var sb = new StringBuilder(base.GetInteractDes());
