@@ -16,10 +16,11 @@ class MapView : ViewBase<MapView>
         if (Configer.SettingsConfig.ShowBoxCost)
             MapManager.DijkstraStream.OnBeginAsync(BindAllCostTxt);
 
-
+        InteractInfo? i = null;
         GameView.DrawWindow
             .OnAdd(() =>
             {
+                i = PlayerManager.InteractInfo.Value;
                 PlayerManager.InteractInfo.Value?.InsidePointDataList.ForEach(x =>
                 {
                     x.Visit();
@@ -28,7 +29,8 @@ class MapView : ViewBase<MapView>
             })
             .OnRemove(() =>
             {
-                    PlayerManager.InteractInfo.Value?.InsidePointDataList.ForEach(x => x.Flash(false));
+                MyDebug.Log($"iii {i == PlayerManager.InteractInfo.Value}");
+                PlayerManager.InteractInfo.Value?.InsidePointDataList.ForEach(x => x.Flash(false));
             });
     }
 

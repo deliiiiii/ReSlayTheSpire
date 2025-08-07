@@ -167,10 +167,10 @@ internal class MapManager : SingletonCS<MapManager>
 
     public static void DrawAtWall(List<BoxPointData> insidePoints, WallData wallData, DrawConfig config)
     {
-        MyDebug.Log("Start Draw");
+        List<BoxPointData> tempPoints = [..insidePoints];
         config.ToDrawModels.ForEach(model =>
         {
-            var p = insidePoints.RandomItem(p => model.Data.IsAir 
+            var p = tempPoints.RandomItem(p => model.Data.IsAir 
                 ? !p.BelongBox.OccupiedAirs.Contains(p.Dir) && p.HasSWall()
                 : !p.BelongBox.OccupiedFloors.Contains(p.Dir));
             if (p == null)
@@ -178,7 +178,7 @@ internal class MapManager : SingletonCS<MapManager>
                 MyDebug.LogWarning("No Enough Points...");
                 return;
             }
-            insidePoints.Remove(p);
+            tempPoints.Remove(p);
             p.BelongBox.SceneDataMyList.MyAdd(model.Data.CreateNew([p.Dir]));
         });
     }

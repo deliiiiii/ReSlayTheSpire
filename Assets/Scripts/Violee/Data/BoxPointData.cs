@@ -74,8 +74,10 @@ public class BoxPointData : DataBase, IComparable
             .Where(pair => pair.Item1.CostWall - CostWall >= BoxData.WallCost)
             .Select(x => x.Item2);
 
-    public IEnumerable<BoxPointData> AtWallGetInsidePoints(WallData wallData) 
-        => NextPointAndWallSet.First(pair => pair.Item2 == wallData).Item1.bingChaJi.ConnectedSet;
+    // 用Default是因为玩家可能站在很远的地方。。。
+    public IEnumerable<BoxPointData> AtWallGetInsidePoints(WallData wallData)
+        => NextPointAndWallSet.First(pair => pair.Item2 == wallData).Item1?.bingChaJi.ConnectedSet ?? [];
+        // => NextPointAndWallSet.FirstOrDefault(pair => pair.Item2 == wallData).Item1?.bingChaJi.ConnectedSet ?? [];
 
     #endregion
 
