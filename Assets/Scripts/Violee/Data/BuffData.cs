@@ -1,16 +1,26 @@
 ﻿using System;
 using Violee;
 
-public enum EBuffEffectType
-{
-    EffectOnCloseWindow,
-    Consistent,
-}
 
 [Serializable]
 public class BuffData : DataBase
 {
-    public required string Des;
+    public required Func<string> GetDes;
+}
+
+[Serializable]
+public class WindowBuffData : BuffData
+{
     public required Action BuffEffect;
-    public required EBuffEffectType EffectType;
+}
+
+[Serializable]
+public class ConsistentBuffData : BuffData
+{
+    public EBuffType BuffType;
+}
+
+public enum EBuffType
+{
+    PlayRecord,
 }

@@ -23,7 +23,7 @@ public class ClockController : MonoBehaviour
                 && newTime.Hour != oldTime.Hour
                )
             {
-                BuffManager.AddBuff(BuffManager.WatchingOClock(newTime.Hour));
+                BuffManager.WindowWatchingOClock(newTime.Hour);
             }
         };
     }

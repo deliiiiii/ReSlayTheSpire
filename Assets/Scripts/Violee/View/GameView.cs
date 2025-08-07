@@ -132,6 +132,19 @@ class GameView : ViewBase<GameView>
                 }
             })
             .OnExit(() => MiniItemPnl.SetActive(false));
+
+        BuffManager.OnAddConBuff += conBuff =>
+        {
+            var conBuffIns = Instantiate(ConsistentBuffPrefab, ConsistentBuffPnl.transform);
+            conBuffIns.Image.sprite = Configer.ConBuffConfigList.BuffConfigDic[conBuff.BuffType].Sprite;
+            conBuffIns.DetailTxt.text = conBuff.GetDes();
+            conBuffIns.gameObject.SetActive(true);
+        };
+
+        BuffManager.OnClearAllBuff += () =>
+        {
+            ConsistentBuffPnl.ClearChildren();
+        };
         
         Binder.From(ContinueBtn).To(() => GameManager.WindowList.MyRemove(GameManager.PauseWindow));
         Binder.From(ExitWatchingItemBtn).To(async () =>
@@ -223,6 +236,12 @@ class GameView : ViewBase<GameView>
     public required Text EnergyTxt;
     public required Text CreativityTxt;
     public required Text VioleeTxt;
+    #endregion
+
+    #region ConsistentBuff
+    [Header("ConsistentBuff")] 
+    public required GameObject ConsistentBuffPnl;
+    public required ConsistentBuffIcon ConsistentBuffPrefab;
     #endregion
 
 

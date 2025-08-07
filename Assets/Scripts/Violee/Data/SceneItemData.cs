@@ -183,3 +183,22 @@ public class BookShelfItemData : SceneItemData
         PlayerManager.CreativityCount.Value += Creativity;
     }
 }
+
+//3 RecordPlayer
+[Serializable]
+public class RecordPlayerItemData : SceneItemData
+{
+    public string BuffDes = "和唱片机在同一个连通区域时，开启房门时不再消耗精力。";
+    public override string GetInteractDes()
+    {
+        var sb = new StringBuilder(base.GetInteractDes());
+        sb.Append(BuffDes);
+        return sb.ToString();
+    }
+
+    protected override void UseEffect()
+    {
+        base.UseEffect();
+        BuffManager.AddConBuff(EBuffType.PlayRecord, () => BuffDes);
+    }
+}

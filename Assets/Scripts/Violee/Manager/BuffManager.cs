@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Violee;
 
@@ -10,32 +12,55 @@ public class BuffManager : SingletonCS<BuffManager>
     {
         buffList.OnAdd += b =>
         {
-            MyDebug.Log($"Add Buff {b.Des}");
-            var ret = GameManager.CreateAndAddBuffWindow($"{b.Des}");
-            if (b.EffectType == EBuffEffectType.EffectOnCloseWindow)
+            MyDebug.Log($"Add Buff {b.GetDes()}");
+            if (b is WindowBuffData winB)
             {
-                ret.OnRemove(() => b.BuffEffect());
+                var ret = GameManager.CreateAndAddBuffWindow($"{b.GetDes()}");
+                ret.OnRemove(() => winB.BuffEffect());
+            }
+            else if (b is ConsistentBuffData conB)
+            {
+                OnAddConBuff?.Invoke(conB);
             }
         };
+        
+        // buffList.OnClear += () =>
+
+
+        GameManager.PlayingState.OnEnter(() =>
+        {
+            OnClearAllBuff?.Invoke();
+            buffList.MyClear();
+        });
     }
     
 
-    public static BuffData WatchingOClock(int hour)
+    public static void WindowWatchingOClock(int hour)
     {
-        int added = hour % 2 == 0 ? 2 : 1;
-        return new BuffData
+        int energy = hour % 2 == 0 ? 2 : 1;
+        var added = new WindowBuffData
         {
-            Des = $"叮! 时间到了{hour}点整...!\n鉴于你凝思了许久，精力+{added}点。",
+            GetDes = () => $"叮! 时间到了{hour}点整...!\n鉴于你凝思了许久，精力+{energy}点。",
             BuffEffect = () =>
             {
-                PlayerManager.EnergyCount.Value += added;
+                PlayerManager.EnergyCount.Value += energy;
             },
-            EffectType = EBuffEffectType.EffectOnCloseWindow,
         };
+        buffList.MyAdd(added);
     }
 
-    public static void AddBuff(BuffData buff)
+    public static void AddConBuff(EBuffType buffType, Func<string> getDes)
     {
-        buffList.MyAdd(buff);
+        var added = new ConsistentBuffData()
+        {
+            GetDes = getDes,
+            BuffType = buffType,
+        };
+        buffList.MyAdd(added);
     }
+
+    public static event Action<ConsistentBuffData>? OnAddConBuff;
+    public static event Action? OnClearAllBuff;
+    public static bool ContainsBuff(EBuffType buffType) 
+        => buffList.Any(b => b is ConsistentBuffData conB && conB.BuffType == buffType);
 }
