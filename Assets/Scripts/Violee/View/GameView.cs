@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cinemachine;
 using Sirenix.OdinInspector;
@@ -64,15 +65,19 @@ class GameView : ViewBase<GameView>
                 Binder.From(PlayerManager.EnergyCount).ToTxt(EnergyTxt).Immediate();
                 Binder.From(PlayerManager.GlovesCount).ToTxt(GlovesTxt).Immediate();
                 Binder.From(PlayerManager.DiceCount).ToTxt(DiceTxt).Immediate();
+                Binder.From(PlayerManager.DiceCount).To(v =>
+                {
+                    RedrawBtn.interactable = v > 0;
+                }).Immediate();
             })
             .OnUpdate(dt =>
             {
-                var cb = PlayerManager.InteractInfo;
-                NormalReticle.SetActive(cb == null);
-                FindReticle.SetActive(cb != null);
-                SceneItemInfoPnl.SetActive(cb != null);
-                SceneItemInfoTxt.text = cb?.Description ?? "";
-                SceneItemInfoTxt.color = cb?.Color ?? Color.black;
+                curInteractInfo = PlayerManager.InteractInfo;
+                NormalReticle.SetActive(curInteractInfo == null);
+                FindReticle.SetActive(curInteractInfo != null);
+                SceneItemInfoPnl.SetActive(curInteractInfo != null);
+                SceneItemInfoTxt.text = curInteractInfo?.Description ?? "";
+                SceneItemInfoTxt.color = curInteractInfo?.Color ?? Color.black;
 
                 ChangeFOV(dt);
                 
@@ -113,6 +118,12 @@ class GameView : ViewBase<GameView>
                 MyDebug.LogError(e);
                 throw;
             }
+        });
+        
+        Binder.From(RedrawBtn).To(() =>
+        {
+            PlayerManager.DiceCount.Value--;
+            ShowDrawConfigs();
         });
     }
 
@@ -194,40 +205,49 @@ class GameView : ViewBase<GameView>
 
     public required GameObject SleepPnl;
     public required GameObject DrawPnl;
+    public required Button RedrawBtn;
     public required Transform DrawBtnContent;
 
     public required Button ExitWatchingItemBtn;
-    async Task GetUICb(InteractInfo? cb)
+    
+    InteractInfo? curInteractInfo;
+    void ShowDrawConfigs()
     {
-        if (cb == null)
+        if (curInteractInfo == null)
             return;
-        if (cb.IsSleep)
+        var configs = curInteractInfo.GetDrawConfigs() ?? [];
+        for (int i = 0; i < configs.Count; i++)
         {
-            await FadeImageAlpha(cb.SleepTime);
+            var config = configs[i];
+            var go = DrawBtnContent.GetChild(i).gameObject;
+            go.SetActive(true);
+            go.GetComponent<Image>().sprite = config.Sprite;
+            go.GetComponent<Button>().onClick.RemoveAllListeners();
+            go.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                MapManager.DrawAtWall(curInteractInfo.WallData, config);
+                GameManager.WindowList.MyRemove(drawWindow);
+                GameManager.WindowList.MyRemove(fullMapWindow);
+            });
+            go.GetComponentInChildren<Text>().text = config.DrawDes;
         }
-        else if (cb.IsOpenDoor)
+    }
+    async Task GetUICb(ValueTuple _)
+    {
+        if (curInteractInfo == null)
+            return;
+        if (curInteractInfo.IsSleep)
+        {
+            await FadeImageAlpha(curInteractInfo.SleepTime);
+        }
+        else if (curInteractInfo.IsOpenDoor)
         {
             GameManager.WindowList.MyAdd(drawWindow);
             GameManager.WindowList.MyAdd(fullMapWindow);
             DrawBtnContent.DisableAllChildren();
-            var configs = cb.GetDrawConfigs();
-            for (int i = 0; i < configs.Count; i++)
-            {
-                var config = configs[i];
-                var go = DrawBtnContent.GetChild(i).gameObject;
-                go.SetActive(true);
-                go.GetComponent<Image>().sprite = config.Sprite;
-                go.GetComponent<Button>().onClick.RemoveAllListeners();
-                go.GetComponent<Button>().onClick.AddListener(() =>
-                {
-                    MapManager.DrawAtWall(cb.WallData, config);
-                    GameManager.WindowList.MyRemove(drawWindow);
-                    GameManager.WindowList.MyRemove(fullMapWindow);
-                });
-                go.GetComponentInChildren<Text>().text = config.DrawDes;
-            }
+            ShowDrawConfigs();
         }
-        else if (cb.HasCamera)
+        else if (curInteractInfo.HasCamera)
         {
             GameManager.WindowList.MyAdd(GameManager.WatchingClockWindow);
             await Task.Delay(CameraMono.SceneItemEase);

@@ -18,7 +18,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
             .SetTrigger(i =>
             {
                 i?.Act();
-                return i;
             });
     }
     public static Observable<int> StaminaCount => playerData.Stamina.Count;
@@ -56,7 +55,7 @@ public class PlayerManager : SingletonCS<PlayerManager>
     #region SceneItem
 
     public static InteractInfo? InteractInfo;
-    public static readonly Stream<InteractInfo?, InteractInfo?> DoInteractStream;
+    public static readonly Stream<InteractInfo?, ValueTuple> DoInteractStream;
 
     #endregion
 }
