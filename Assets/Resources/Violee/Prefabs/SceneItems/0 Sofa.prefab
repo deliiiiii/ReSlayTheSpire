@@ -66,6 +66,7 @@ MonoBehaviour:
         ShowAfterRunOut: {fileID: 4525382237460474740}
         IsSleep: 1
         SleepTime: 2.89
+        iCamera: {fileID: 0}
         Energy: 1
 --- !u!1 &3247837281952955383
 GameObject:
