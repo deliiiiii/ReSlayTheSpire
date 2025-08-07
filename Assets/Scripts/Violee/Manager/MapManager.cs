@@ -94,7 +94,7 @@ internal class MapManager : SingletonCS<MapManager>
     public static readonly Stream<ValueTuple, GenerateParam> GenerateStream;
     public static readonly Stream<GenerateParam, GenerateParam> DijkstraStream;
     public static readonly Stream<(GenerateParam, Vector3), Observable<BoxPointData>> PlayerCurPointStream;
-    static readonly GenerateParam generateParam = new GenerateParam(new MapData(), Instance.go);
+    static readonly GenerateParam generateParam = new (new MapData(), Instance.go);
     static MapManager()
     {
         GenerateStream = Streamer
@@ -118,8 +118,7 @@ internal class MapManager : SingletonCS<MapManager>
             .SetTrigger(TickPlayerVisit);
     }
     
-    static readonly Observable<BoxPointData> playerCurPoint = new (null!, 
-        x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse());
+    static readonly Observable<BoxPointData> playerCurPoint = new (null!);
     #region Visit
     public static Observable<BoxPointData> TickPlayerVisit((GenerateParam, Vector3) pair)
     {
@@ -166,13 +165,12 @@ internal class MapManager : SingletonCS<MapManager>
     #region SceneItems
     public static DateTime GetCurTime() => DijkstraStream.SelectResult(x => x.DateTime);
 
-    public static void DrawAtWall(BoxPointData pointData, WallData wallData, DrawConfig config)
+    public static void DrawAtWall(List<BoxPointData> insidePoints, WallData wallData, DrawConfig config)
     {
         MyDebug.Log("Start Draw");
-        var points = pointData.AtWallGetInsidePoints(wallData).ToList() ?? [];
         config.ToDrawModels.ForEach(model =>
         {
-            var p = points.RandomItem(p => model.Data.IsAir 
+            var p = insidePoints.RandomItem(p => model.Data.IsAir 
                 ? !p.BelongBox.OccupiedAirs.Contains(p.Dir) && p.HasSWall()
                 : !p.BelongBox.OccupiedFloors.Contains(p.Dir));
             if (p == null)
@@ -180,7 +178,7 @@ internal class MapManager : SingletonCS<MapManager>
                 MyDebug.LogWarning("No Enough Points...");
                 return;
             }
-            points.Remove(p);
+            insidePoints.Remove(p);
             p.BelongBox.SceneDataMyList.MyAdd(model.Data.CreateNew([p.Dir]));
         });
     }

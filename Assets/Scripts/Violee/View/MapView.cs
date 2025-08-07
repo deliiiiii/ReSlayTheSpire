@@ -15,6 +15,21 @@ class MapView : ViewBase<MapView>
         costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform, 42);
         if (Configer.SettingsConfig.ShowBoxCost)
             MapManager.DijkstraStream.OnBeginAsync(BindAllCostTxt);
+
+
+        GameView.DrawWindow
+            .OnAdd(() =>
+            {
+                PlayerManager.InteractInfo.Value?.InsidePointDataList.ForEach(x =>
+                {
+                    x.Visit();
+                    x.Flash(true);
+                });
+            })
+            .OnRemove(() =>
+            {
+                    PlayerManager.InteractInfo.Value?.InsidePointDataList.ForEach(x => x.Flash(false));
+            });
     }
 
     readonly HashSet<Text> costTxtSet = [];

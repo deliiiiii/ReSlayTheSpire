@@ -44,19 +44,29 @@ public class BoxPointData : DataBase, IComparable
     {
         foreach (var connectedPoint in bingChaJi.ConnectedSet)
         {
-            connectedPoint.Visited.Value = true;
-            foreach (var pair in connectedPoint.NextPointAndWallSet)
-            {
-                pair.Item2.Visited.Value = true;
-            }
+            connectedPoint.Visit();
         }
     }
-    public void FlashConnectedInverse()
+    public void Visit()
     {
-        foreach (var connectedPoint in bingChaJi.ConnectedSet)
+        Visited.Value = true;
+        foreach (var pair in NextPointAndWallSet)
         {
-            connectedPoint.IsFlash.Value = !connectedPoint.IsFlash.Value;
+            pair.Item2.Visited.Value = true;
         }
+    }
+    
+    // public void FlashConnected(bool enable)
+    // {
+    //     foreach (var connectedPoint in bingChaJi.ConnectedSet)
+    //     {
+    //         connectedPoint.IsFlash.Value = enable;
+    //     }
+    // }
+    // x => x?.FlashConnectedInverse(), x => x?.FlashConnectedInverse()
+    public void Flash(bool enable)
+    {
+        IsFlash.Value = enable;
     }
 
     public IEnumerable<WallData> InvalidWalls() 
@@ -65,9 +75,7 @@ public class BoxPointData : DataBase, IComparable
             .Select(x => x.Item2);
 
     public IEnumerable<BoxPointData> AtWallGetInsidePoints(WallData wallData) 
-        => NextPointAndWallSet
-            .Where(pair => pair.Item2 == wallData)
-            .SelectMany(x => x.Item1.bingChaJi.ConnectedSet);
+        => NextPointAndWallSet.First(pair => pair.Item2 == wallData).Item1.bingChaJi.ConnectedSet;
 
     #endregion
 

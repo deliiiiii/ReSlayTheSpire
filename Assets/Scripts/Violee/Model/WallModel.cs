@@ -53,7 +53,9 @@ namespace Violee
                 Color = Color.magenta,
                 
                 IsOpenDoor = true,
-                PointData = MapManager.PlayerCurPointStream.SelectResult(),
+                InsidePointDataList = MapManager.PlayerCurPointStream
+                    .SelectResult().Value?.AtWallGetInsidePoints(Data)
+                    .ToList() ?? [],
                 WallData = Data,
                 // GetDrawConfigs = () => Configer.DrawConfigList.DrawConfigs.Take(3).ToList(),
                 GetDrawConfigs = () =>

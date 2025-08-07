@@ -20,7 +20,7 @@ class GameView : ViewBase<GameView>
         WindowType = EWindowType.WaitingSceneItem,
         Des = "休息..."
     };
-    static readonly WindowInfo drawWindow = new ()
+    public static readonly WindowInfo DrawWindow = new ()
     {
         WindowType = EWindowType.NormalUI,
         Des = "选择房间装修中"
@@ -40,7 +40,7 @@ class GameView : ViewBase<GameView>
         sleepWindow
             .OnAdd(() => SleepPnl.SetActive(true))
             .OnRemove(() => SleepPnl.SetActive(false));
-        drawWindow
+        DrawWindow
             .OnAdd(() => DrawPnl.SetActive(true))
             .OnRemove(() => DrawPnl.SetActive(false));
         GameManager.PauseWindow
@@ -228,7 +228,7 @@ class GameView : ViewBase<GameView>
         }
         else if (info.IsOpenDoor)
         {
-            GameManager.WindowList.MyAdd(drawWindow);
+            GameManager.WindowList.MyAdd(DrawWindow);
             GameManager.WindowList.MyAdd(fullMapWindow);
             DrawBtnContent.DisableAllChildren();
             showDrawConfigsAct = () =>
@@ -243,8 +243,8 @@ class GameView : ViewBase<GameView>
                     go.GetComponent<Button>().onClick.RemoveAllListeners();
                     go.GetComponent<Button>().onClick.AddListener(() =>
                     {
-                        MapManager.DrawAtWall(info.PointData, info.WallData, config);
-                        GameManager.WindowList.MyRemove(drawWindow);
+                        MapManager.DrawAtWall(info.InsidePointDataList, info.WallData, config);
+                        GameManager.WindowList.MyRemove(DrawWindow);
                         GameManager.WindowList.MyRemove(fullMapWindow);
                     });
                     go.GetComponentInChildren<Text>().text = config.DrawDes;
