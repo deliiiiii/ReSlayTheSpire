@@ -10,14 +10,18 @@ public class ConsistentBuffIcon : MonoBehaviour, IPointerEnterHandler, IPointerE
     public required Image Image;
     public required Text DetailTxt;
     public required GameObject DetailPnl;
+    [HideInInspector]
+    public GameObject? DetailPnlShown;
 
+    public event Action? OnPointerEnterEvt;
     public void OnPointerEnter(PointerEventData eventData)
     {
-        DetailPnl.SetActive(true);
+        OnPointerEnterEvt?.Invoke();
+        DetailPnlShown?.SetActive(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        DetailPnl.SetActive(false);
+        DetailPnlShown?.SetActive(false);
     }
 }

@@ -135,15 +135,24 @@ class GameView : ViewBase<GameView>
 
         BuffManager.OnAddConBuff += conBuff =>
         {
-            var conBuffIns = Instantiate(ConsistentBuffPrefab, ConsistentBuffPnl.transform);
+            var conBuffIns = Instantiate(ConsistentBuffPrefab, ConsistentBuffIconPnl.transform);
             conBuffIns.Image.sprite = Configer.ConBuffConfigList.BuffConfigDic[conBuff.BuffType].Sprite;
             conBuffIns.DetailTxt.text = conBuff.GetDes();
+            conBuffIns.DetailPnlShown = Instantiate(conBuffIns.DetailPnl, ConsistentBuffDetailPnl);
+            conBuffIns.OnPointerEnterEvt += () =>
+            {
+                conBuffIns.DetailPnlShown.transform.position = conBuffIns.DetailPnl.transform.position;
+                conBuffIns.DetailPnlShown.transform.SetAsLastSibling();
+                conBuffIns.DetailPnlShown.GetComponent<RectTransform>().sizeDelta
+                    = conBuffIns.DetailPnlShown.GetComponent<RectTransform>().sizeDelta;
+            };
             conBuffIns.gameObject.SetActive(true);
         };
 
         BuffManager.OnClearAllBuff += () =>
         {
-            ConsistentBuffPnl.ClearChildren();
+            ConsistentBuffIconPnl.ClearChildren();
+            ConsistentBuffDetailPnl.ClearChildren();
         };
         
         Binder.From(ContinueBtn).To(() => GameManager.WindowList.MyRemove(GameManager.PauseWindow));
@@ -240,7 +249,8 @@ class GameView : ViewBase<GameView>
 
     #region ConsistentBuff
     [Header("ConsistentBuff")] 
-    public required GameObject ConsistentBuffPnl;
+    public required Transform ConsistentBuffIconPnl;
+    public required Transform ConsistentBuffDetailPnl;
     public required ConsistentBuffIcon ConsistentBuffPrefab;
     #endregion
 
