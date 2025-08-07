@@ -177,7 +177,7 @@ internal class MapManager : SingletonCS<MapManager>
                 : !p.BelongBox.OccupiedFloors.Contains(p.Dir));
             if (p == null)
             {
-                MyDebug.Log("No Enough Points...");
+                MyDebug.LogWarning("No Enough Points...");
                 return;
             }
             points.Remove(p);

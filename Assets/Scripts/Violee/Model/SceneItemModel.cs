@@ -53,7 +53,11 @@ public class SceneItemModel : ModelBase<SceneItemData>
                 CameraMono.SceneItemVirtualCamera.Follow = transform;
                 // CameraMono.SceneItemVirtualCamera.Follow.localPosition = iCamera.transform.position - transform.position;
                 CameraMono.SceneItemVirtualCamera.LookAt = transform;
-                CameraMono.SceneItemVirtualCamera.GetComponent<CinemachineCameraOffset>().m_Offset = iCamera.CameraTransform.position - transform.position;
+                CameraMono.SceneItemVirtualCamera.GetComponent<CinemachineCameraOffset>().m_Offset =
+                    // iCamera.CameraTransform.position - transform.position;
+                    new Vector3(iCamera.CameraTransform.localPosition.x * transform.lossyScale.x,
+                                iCamera.CameraTransform.localPosition.y * transform.lossyScale.y,
+                                iCamera.CameraTransform.localPosition.z * transform.lossyScale.z);
             };
         }
 

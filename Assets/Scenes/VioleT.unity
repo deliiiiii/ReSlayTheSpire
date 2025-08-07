@@ -3648,7 +3648,7 @@ MonoBehaviour:
   GlobalOnScene: 0
   PlayerMonoIns: {fileID: 1168962160}
   BoxModelIns: {fileID: 3255050546787837995, guid: d1e1e796887664d4b900a3c7069e5b3c, type: 3}
-  BoxConfigListIns: {fileID: 11400000, guid: 3f305a07538ed9444a2c588b659bd40e, type: 2}
+  BoxConfigListIns: {fileID: 11400000, guid: e901b445fff30234d86a6d167b4c71e7, type: 2}
   DrawConfigListIns: {fileID: 11400000, guid: 3888367dd6035454faf83931fc9ccae4, type: 2}
   MiniItemConfigListIns: {fileID: 11400000, guid: f741dc65404c88346a0c86db1b7886c6, type: 2}
   SceneItemModelListIns: {fileID: 11400000, guid: 2ac03f0e9d9b2dd43970ec981eb9d9e0, type: 2}
@@ -7891,7 +7891,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 159914011}
   m_Follow: {fileID: 159914011}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 75
     OrthographicSize: 18.00006
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -29091,7 +29091,7 @@ GameObject:
   - component: {fileID: 1787098252}
   - component: {fileID: 1787098255}
   - component: {fileID: 1787098254}
-  - component: {fileID: 1787098253}
+  - component: {fileID: 1787098256}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -29114,28 +29114,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 549992074}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1787098253
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1787098251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 0, z: 5}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
-  m_AngularDampingMode: 0
-  m_PitchDamping: 0
-  m_YawDamping: 0
-  m_RollDamping: 0
-  m_AngularDamping: 0
 --- !u!114 &1787098254
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -29175,6 +29153,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1787098256
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787098251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6043bde05a7fc4cba197d06915c1e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Damping: {x: 0.1, y: 0.5, z: 0.3}
+  ShoulderOffset: {x: 0, y: 0, z: 0}
+  VerticalArmLength: 0
+  CameraSide: 0.224
+  CameraDistance: 0
+  CameraCollisionFilter:
+    serializedVersion: 2
+    m_Bits: 0
+  IgnoreTag: 
+  CameraRadius: 0.2
+  DampingIntoCollision: 0
+  DampingFromCollision: 2
 --- !u!43 &1792056225
 Mesh:
   m_ObjectHideFlags: 0

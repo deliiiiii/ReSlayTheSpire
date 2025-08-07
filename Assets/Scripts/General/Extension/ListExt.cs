@@ -43,16 +43,17 @@ public static class ListExt
 
         var weights = filteredList.Select(weightFunc).ToList();
         var totalWeight = weights.Sum();
-        var randomValue = UnityEngine.Random.Range(0, totalWeight);
+        var randomValue = UnityEngine.Random.Range(0, totalWeight) + 1;
         var curWeight = 0;
 
         for (var i = 0; i < filteredList.Count; i++)
         {
+            curWeight += weights[i];
             if (curWeight >= randomValue)
             {
                 return filteredList[i];
             }
-            curWeight += weights[i];
+            
         }
 
         return filteredList[^1];
