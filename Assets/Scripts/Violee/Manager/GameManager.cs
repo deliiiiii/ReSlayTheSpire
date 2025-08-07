@@ -94,13 +94,14 @@ public class GameManager : SingletonCS<GameManager>
     };
     
 
-    public static void CreateAndAddBuffWindow(string des)
+    public static BuffWindowInfo CreateAndAddBuffWindow(string des)
     {
         var ret = new BuffWindowInfo()
         {
-            Des = des
+            Des = des,
         };
         WindowList.MyAdd(ret);
+        return ret;
     }
 
     

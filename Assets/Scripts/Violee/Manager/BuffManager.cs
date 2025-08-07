@@ -4,7 +4,21 @@ namespace Violee;
 
 public class BuffManager : SingletonCS<BuffManager>
 {
-    static readonly List<BuffData> buffList = [];
+    static readonly MyList<BuffData> buffList = [];
+
+    static BuffManager()
+    {
+        buffList.OnAdd += b =>
+        {
+            MyDebug.Log($"Add Buff {b.Des}");
+            var ret = GameManager.CreateAndAddBuffWindow($"{b.Des}");
+            if (b.EffectType == EBuffEffectType.EffectOnCloseWindow)
+            {
+                ret.OnRemove(() => b.BuffEffect());
+            }
+        };
+    }
+    
 
     public static BuffData WatchingOClock(int hour)
     {
@@ -16,13 +30,12 @@ public class BuffManager : SingletonCS<BuffManager>
             {
                 PlayerManager.EnergyCount.Value += added;
             },
+            EffectType = EBuffEffectType.EffectOnCloseWindow,
         };
     }
 
     public static void AddBuff(BuffData buff)
     {
-        MyDebug.Log($"Add Buff {buff.Des}");
-        buffList.Add(buff);
-        GameManager.CreateAndAddBuffWindow($"{buff.Des}");
+        buffList.MyAdd(buff);
     }
 }
