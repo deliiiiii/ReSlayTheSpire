@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Violee;
 
-public class PlayerMono : MonoBehaviour
+public class PlayerMono : Singleton<PlayerMono>
 {
     [NonSerialized][ShowInInspector]
     public PlayerData PlayerData = null!;

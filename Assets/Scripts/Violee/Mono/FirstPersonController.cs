@@ -7,7 +7,7 @@ using UnityEngine.UI;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 #endif
 
-public class FirstPersonController : MonoBehaviour
+public class FirstPersonController : Singleton<FirstPersonController>
 {
     Rigidbody rb;
 
@@ -123,7 +123,7 @@ public class FirstPersonController : MonoBehaviour
 
     #endregion
 
-    void Awake()
+    protected override void Awake()
     {
         rb = GetComponent<Rigidbody>();
         cameraTransform = transform.GetChild(0);

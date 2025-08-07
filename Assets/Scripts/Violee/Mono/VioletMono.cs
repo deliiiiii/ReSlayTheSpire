@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Violee;
 
-public class VioletMono : MonoBehaviour
+public class VioletMono : Singleton<PlayerMono>
 {
     [ShowInInspector] public string GameState => GameManager.GameState;
     [ShowInInspector] public List<WindowInfo> WindowList => GameManager.WindowList;
