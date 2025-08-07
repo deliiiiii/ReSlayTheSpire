@@ -27,14 +27,15 @@ class GameView : ViewBase<GameView>
     };
     protected override void IBL()
     {
+        GameManager.WindowList.OnAdd += _ =>
+        {
+            NormalReticle.SetActive(false);
+            FindReticle.SetActive(false);
+            SceneItemInfoPnl.SetActive(false);
+        };
+        
         fullMapWindow
-            .OnAdd(() =>
-            {
-                NormalReticle.SetActive(false);
-                FindReticle.SetActive(false);
-                SceneItemInfoPnl.SetActive(false);
-                ShowFullScreenMap();
-            })
+            .OnAdd(ShowFullScreenMap)
             .OnRemove(ShowMinimap);
         sleepWindow
             .OnAdd(() => SleepPnl.SetActive(true))
@@ -42,6 +43,12 @@ class GameView : ViewBase<GameView>
         drawWindow
             .OnAdd(() => DrawPnl.SetActive(true))
             .OnRemove(() => DrawPnl.SetActive(false));
+        GameManager.PauseWindow
+            .OnAdd(() => PausePnl.SetActive(true))
+            .OnRemove(() =>
+            {
+                PausePnl.SetActive(false);
+            });
         GameManager.WatchingClockWindow
             .OnAdd(() => CameraMono.SceneItemVirtualCamera.gameObject.SetActive(true))
             .OnRemove(() =>
@@ -49,8 +56,27 @@ class GameView : ViewBase<GameView>
                 CameraMono.SceneItemVirtualCamera.gameObject.SetActive(false);
                 ExitWatchingItemBtn.gameObject.SetActive(false);
             });
-        
-        PlayerManager.DoInteractStream.OnEndAsync(GetUICb);
+
+        Binder.From(PlayerManager.InteractInfo).To(info =>
+        {
+            NormalReticle.SetActive(info == null);
+            FindReticle.SetActive(info != null);
+            SceneItemInfoPnl.SetActive(info != null);
+            SceneItemInfoTxt.text = info?.Description ?? "";
+            SceneItemInfoTxt.color = info?.Color ?? Color.black;
+        }).Immediate();
+        PlayerManager.OnClickInteract += info =>
+        {
+            try
+            {
+                _ = GetUICb(info);
+            }
+            catch (Exception e)
+            {
+                MyDebug.LogError(e);
+                throw;
+            }
+        };
         
         GameManager.GeneratingMapState
             .OnEnter(() => LoadPnl.SetActive(true))
@@ -72,13 +98,6 @@ class GameView : ViewBase<GameView>
             })
             .OnUpdate(dt =>
             {
-                curInteractInfo = PlayerManager.InteractInfo;
-                NormalReticle.SetActive(curInteractInfo == null);
-                FindReticle.SetActive(curInteractInfo != null);
-                SceneItemInfoPnl.SetActive(curInteractInfo != null);
-                SceneItemInfoTxt.text = curInteractInfo?.Description ?? "";
-                SceneItemInfoTxt.color = curInteractInfo?.Color ?? Color.black;
-
                 ChangeFOV(dt);
                 
                 if (Input.GetKeyDown(KeyCode.Tab) && !GameManager.HasPaused)
@@ -90,19 +109,7 @@ class GameView : ViewBase<GameView>
                 }
             })
             .OnExit(() => MiniItemPnl.SetActive(false));
-
-        GameManager.PauseWindow
-            .OnAdd(() =>
-            {
-                NormalReticle.SetActive(false);
-                FindReticle.SetActive(false);
-                SceneItemInfoPnl.SetActive(false);
-                PausePnl.SetActive(true);
-            })
-            .OnRemove(() =>
-            {
-                PausePnl.SetActive(false);
-            });
+        
         Binder.From(ContinueBtn).To(() => GameManager.WindowList.MyRemove(GameManager.PauseWindow));
         Binder.From(ExitWatchingItemBtn).To(async () =>
         {
@@ -123,7 +130,7 @@ class GameView : ViewBase<GameView>
         Binder.From(RedrawBtn).To(() =>
         {
             PlayerManager.DiceCount.Value--;
-            ShowDrawConfigs();
+            showDrawConfigsAct();
         });
     }
 
@@ -210,44 +217,42 @@ class GameView : ViewBase<GameView>
 
     public required Button ExitWatchingItemBtn;
     
-    InteractInfo? curInteractInfo;
-    void ShowDrawConfigs()
+    
+    
+    Action showDrawConfigsAct = () => { };
+    async Task GetUICb(InteractInfo info)
     {
-        if (curInteractInfo == null)
-            return;
-        var configs = curInteractInfo.GetDrawConfigs() ?? [];
-        for (int i = 0; i < configs.Count; i++)
+        if (info.IsSleep)
         {
-            var config = configs[i];
-            var go = DrawBtnContent.GetChild(i).gameObject;
-            go.SetActive(true);
-            go.GetComponent<Image>().sprite = config.Sprite;
-            go.GetComponent<Button>().onClick.RemoveAllListeners();
-            go.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                MapManager.DrawAtWall(curInteractInfo.WallData, config);
-                GameManager.WindowList.MyRemove(drawWindow);
-                GameManager.WindowList.MyRemove(fullMapWindow);
-            });
-            go.GetComponentInChildren<Text>().text = config.DrawDes;
+            await FadeImageAlpha(info.SleepTime);
         }
-    }
-    async Task GetUICb(ValueTuple _)
-    {
-        if (curInteractInfo == null)
-            return;
-        if (curInteractInfo.IsSleep)
-        {
-            await FadeImageAlpha(curInteractInfo.SleepTime);
-        }
-        else if (curInteractInfo.IsOpenDoor)
+        else if (info.IsOpenDoor)
         {
             GameManager.WindowList.MyAdd(drawWindow);
             GameManager.WindowList.MyAdd(fullMapWindow);
             DrawBtnContent.DisableAllChildren();
-            ShowDrawConfigs();
+            showDrawConfigsAct = () =>
+            {
+                var configs = info.GetDrawConfigs() ?? [];
+                for (int i = 0; i < configs.Count; i++)
+                {
+                    var config = configs[i];
+                    var go = DrawBtnContent.GetChild(i).gameObject;
+                    go.SetActive(true);
+                    go.GetComponent<Image>().sprite = config.Sprite;
+                    go.GetComponent<Button>().onClick.RemoveAllListeners();
+                    go.GetComponent<Button>().onClick.AddListener(() =>
+                    {
+                        MapManager.DrawAtWall(info.PointData, info.WallData, config);
+                        GameManager.WindowList.MyRemove(drawWindow);
+                        GameManager.WindowList.MyRemove(fullMapWindow);
+                    });
+                    go.GetComponentInChildren<Text>().text = config.DrawDes;
+                }
+            };
+            showDrawConfigsAct();
         }
-        else if (curInteractInfo.HasCamera)
+        else if (info.HasCamera)
         {
             GameManager.WindowList.MyAdd(GameManager.WatchingClockWindow);
             await Task.Delay(CameraMono.SceneItemEase);

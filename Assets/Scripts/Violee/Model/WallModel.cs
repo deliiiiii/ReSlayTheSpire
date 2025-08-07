@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee
@@ -52,8 +53,27 @@ namespace Violee
                 Color = Color.magenta,
                 
                 IsOpenDoor = true,
+                PointData = MapManager.PlayerCurPointStream.SelectResult(),
                 WallData = Data,
-                GetDrawConfigs = () => Configer.DrawConfigList.DrawConfigs.Take(3).ToList(),
+                // GetDrawConfigs = () => Configer.DrawConfigList.DrawConfigs.Take(3).ToList(),
+                GetDrawConfigs = () =>
+                {
+                    List<DrawConfig> ret = [];
+                    List<DrawConfig> pool = [..Configer.DrawConfigList.DrawConfigs];
+                    DrawConfig defaultConfig = pool[0];
+                    Enumerable.Range(0, 3).ForEach(i =>
+                    {
+                        if(pool.Count == 0)
+                        {
+                            ret.Add(defaultConfig);
+                            return;
+                        }
+                        var added = pool.RandomItem();
+                        pool.Remove(added);
+                        ret.Add(added);
+                    });
+                    return ret;
+                }
             };
         }
         

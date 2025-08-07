@@ -17,12 +17,16 @@ public class InteractCasterReticle : MonoBehaviour
             .OnUpdate(_ =>
             {
                 var ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-                if (GameManager.HasWindow ||
-                    !Physics.Raycast(ray, out var hit, radius) || 
+                if (GameManager.HasWindow)
+                {
+                    lastIr.Value = null;
+                    return;
+                }
+                if (!Physics.Raycast(ray, out var hit, radius) || 
                     (TarLayer.value & (1 << hit.collider.gameObject.layer)) == 0)
                 {
                     lastIr.Value = null;
-                    PlayerManager.InteractInfo = null;
+                    PlayerManager.InteractInfo.Value = null;
                     return;
                 }
 
@@ -30,11 +34,11 @@ public class InteractCasterReticle : MonoBehaviour
                 if (ir == null || ir.GetInteractInfo() == null)
                 {
                     lastIr.Value = null;
-                    PlayerManager.InteractInfo = null;
+                    PlayerManager.InteractInfo.Value = null;
                     return;
                 }
                 lastIr.Value = ir;
-                PlayerManager.InteractInfo = lastIr.Value?.GetInteractInfo();
+                PlayerManager.InteractInfo.Value = lastIr.Value?.GetInteractInfo();
             });
     }
 }

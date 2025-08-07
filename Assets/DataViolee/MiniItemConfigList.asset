@@ -28,4 +28,4 @@ MonoBehaviour:
   - ID: 3
     Sprite: {fileID: 0}
     Description: Dice
-    InitValue: 2
+    InitValue: 20

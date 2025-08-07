@@ -13,12 +13,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
     static PlayerManager()
     {
         playerMono = Configer.playerMono;
-        DoInteractStream = Streamer
-            .Bind(() => InteractInfo)
-            .SetTrigger(i =>
-            {
-                i?.Act();
-            });
     }
     public static Observable<int> StaminaCount => playerData.Stamina.Count;
     public static Observable<int> EnergyCount => playerData.Energy.Count;
@@ -43,9 +37,10 @@ public class PlayerManager : SingletonCS<PlayerManager>
     public static void Tick(bool hasWindowed)
     {
         playerMono.Fpc.enabled = !hasWindowed;
-        if (Input.GetMouseButtonDown(0) && !hasWindowed)
+        if (InteractInfo.Value != null && Input.GetMouseButtonDown(0) && !hasWindowed)
         {
-            _ = DoInteractStream.CallTriggerAsync();
+            InteractInfo.Value.Act();
+            OnClickInteract?.Invoke(InteractInfo.Value);
         }
     }
 
@@ -54,8 +49,8 @@ public class PlayerManager : SingletonCS<PlayerManager>
 
     #region SceneItem
 
-    public static InteractInfo? InteractInfo;
-    public static readonly Stream<InteractInfo?, ValueTuple> DoInteractStream;
+    public static readonly Observable<InteractInfo?> InteractInfo = new(null);
+    public static event Action<InteractInfo>? OnClickInteract;
 
     #endregion
 }

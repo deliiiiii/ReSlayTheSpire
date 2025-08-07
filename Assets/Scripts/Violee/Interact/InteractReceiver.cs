@@ -48,6 +48,7 @@ public class InteractInfo
     public float SleepTime;
     
     public bool IsOpenDoor;
+    public BoxPointData PointData = null!;
     public WallData WallData = null!;
     public Func<List<DrawConfig>> GetDrawConfigs = () => [];
     

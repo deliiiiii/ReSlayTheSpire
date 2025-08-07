@@ -153,7 +153,6 @@ internal class MapManager : SingletonCS<MapManager>
                 }
             }
         }
-
         return playerCurPoint;
     }
 
@@ -167,9 +166,10 @@ internal class MapManager : SingletonCS<MapManager>
     #region SceneItems
     public static DateTime GetCurTime() => DijkstraStream.SelectResult(x => x.DateTime);
 
-    public static void DrawAtWall(WallData wallData, DrawConfig config)
+    public static void DrawAtWall(BoxPointData pointData, WallData wallData, DrawConfig config)
     {
-        var points = PlayerCurPointStream.SelectResult().Value?.AtWallGetInsidePoints(wallData).ToList() ?? [];
+        MyDebug.Log("Start Draw");
+        var points = pointData.AtWallGetInsidePoints(wallData).ToList() ?? [];
         config.ToDrawModels.ForEach(model =>
         {
             var p = points.RandomItem(p => model.Data.IsAir 
