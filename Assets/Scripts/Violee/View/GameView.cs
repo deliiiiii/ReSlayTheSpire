@@ -112,12 +112,12 @@ class GameView : ViewBase<GameView>
                 
                 Binder.From(PlayerManager.StaminaCount).ToTxt(StaminaTxt).Immediate();
                 Binder.From(PlayerManager.EnergyCount).ToTxt(EnergyTxt).Immediate();
-                Binder.From(PlayerManager.GlovesCount).ToTxt(GlovesTxt).Immediate();
-                Binder.From(PlayerManager.DiceCount).ToTxt(DiceTxt).Immediate();
-                Binder.From(PlayerManager.DiceCount).To(v =>
+                Binder.From(PlayerManager.CreativityCount).ToTxt(CreativityTxt).Immediate();
+                Binder.From(PlayerManager.CreativityCount).To(v =>
                 {
                     RedrawBtn.interactable = v > 0;
                 }).Immediate();
+                Binder.From(PlayerManager.VioleeCount).ToTxt(VioleeTxt).Immediate();
             })
             .OnUpdate(dt =>
             {
@@ -152,7 +152,7 @@ class GameView : ViewBase<GameView>
         
         Binder.From(RedrawBtn).To(() =>
         {
-            PlayerManager.DiceCount.Value--;
+            PlayerManager.CreativityCount.Value--;
             showDrawConfigsAct();
         });
     }
@@ -221,8 +221,8 @@ class GameView : ViewBase<GameView>
     public required GameObject MiniItemPnl;
     public required Text StaminaTxt;
     public required Text EnergyTxt;
-    public required Text GlovesTxt;
-    public required Text DiceTxt;
+    public required Text CreativityTxt;
+    public required Text VioleeTxt;
     #endregion
 
 

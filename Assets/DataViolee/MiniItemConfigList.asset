@@ -23,9 +23,9 @@ MonoBehaviour:
     InitValue: 42
   - ID: 2
     Sprite: {fileID: 0}
-    Description: Gloves
-    InitValue: 4
+    Description: Creativity
+    InitValue: 20
   - ID: 3
     Sprite: {fileID: 0}
-    Description: Dice
-    InitValue: 20
+    Description: Violee
+    InitValue: 0

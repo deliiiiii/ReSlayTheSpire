@@ -4417,7 +4417,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &311952529
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4430,10 +4430,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 386564531}
-  - {fileID: 1574067586}
-  - {fileID: 372808338}
   - {fileID: 1410939455}
+  - {fileID: 372808338}
+  - {fileID: 1574067586}
+  - {fileID: 386564531}
   m_Father: {fileID: 1536509203}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -5681,15 +5681,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1730971081983500263, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Color.b
-      value: 0.063920975
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1730971081983500263, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Color.g
-      value: 0
+      value: 0.8666667
       objectReference: {fileID: 0}
     - target: {fileID: 1730971081983500263, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.8666667
       objectReference: {fileID: 0}
     - target: {fileID: 1730971081983500263, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_FontData.m_MinSize
@@ -5701,7 +5701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6232786233554677192, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Name
-      value: DiceTxt
+      value: VioleeTxt
       objectReference: {fileID: 0}
     - target: {fileID: 7261269213603540983, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Pivot.x
@@ -25405,8 +25405,8 @@ MonoBehaviour:
   MiniItemPnl: {fileID: 311952528}
   StaminaTxt: {fileID: 1410939456}
   EnergyTxt: {fileID: 372808339}
-  GlovesTxt: {fileID: 1574067587}
-  DiceTxt: {fileID: 386564532}
+  CreativityTxt: {fileID: 1574067587}
+  VioleeTxt: {fileID: 386564532}
   NormalReticle: {fileID: 4918451716143532589}
   FindReticle: {fileID: 478125258}
   SceneItemInfoPnl: {fileID: 269445332}
@@ -25865,11 +25865,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1730971081983500263, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1730971081983500263, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.9504018
       objectReference: {fileID: 0}
     - target: {fileID: 1730971081983500263, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Color.r
@@ -25877,7 +25877,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6232786233554677192, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Name
-      value: GlovesTxt
+      value: CreativityTxt
       objectReference: {fileID: 0}
     - target: {fileID: 7261269213603540983, guid: 5d4cef1cf2dcec842aff36ddec4581b7, type: 3}
       propertyPath: m_Pivot.x

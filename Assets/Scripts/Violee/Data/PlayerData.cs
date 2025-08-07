@@ -13,8 +13,8 @@ public class PlayerData : DataBase
     public List<char> LetterList;
     public MiniItemData Stamina;
     public MiniItemData Energy;
-    public MiniItemData Gloves;
-    public MiniItemData Dice;
+    public MiniItemData Creativity;
+    public MiniItemData Violee;
     
     public PlayerData()
     {
@@ -22,8 +22,8 @@ public class PlayerData : DataBase
         LetterList = [];
         Stamina = miniItems.Find(x => x.Config.Description.Equals(nameof(Stamina)));
         Energy = miniItems.Find(x => x.Config.Description.Equals(nameof(Energy)));
-        Gloves = miniItems.Find(x => x.Config.Description.Equals(nameof(Gloves)));
-        Dice = miniItems.Find(x => x.Config.Description.Equals(nameof(Dice)));
+        Creativity = miniItems.Find(x => x.Config.Description.Equals(nameof(Creativity)));
+        Violee = miniItems.Find(x => x.Config.Description.Equals(nameof(Violee)));
         // TODO 
         Stamina.OnRunOut += () => {/* game over */ };
     }

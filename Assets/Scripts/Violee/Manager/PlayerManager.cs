@@ -16,8 +16,8 @@ public class PlayerManager : SingletonCS<PlayerManager>
     }
     public static Observable<int> StaminaCount => playerData.Stamina.Count;
     public static Observable<int> EnergyCount => playerData.Energy.Count;
-    public static Observable<int> GlovesCount => playerData.Gloves.Count;
-    public static Observable<int> DiceCount => playerData.Dice.Count;
+    public static Observable<int> CreativityCount => playerData.Creativity.Count;
+    public static Observable<int> VioleeCount => playerData.Violee.Count;
 
     public static void OnDijkstraEnd(Vector3 pos3D)
     {
