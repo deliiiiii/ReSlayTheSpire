@@ -130,7 +130,7 @@ public class GameManager : SingletonCS<GameManager>
                     Cursor.visible = false;
                 }
                 PlayerManager.PlayerCurPoint.Value = MapManager.GetPlayerVisit(PlayerManager.GetPos())!;
-                if(HasPaused)
+                if(!HasPaused)
                     MapManager.Tick(dt);
                 PlayerManager.Tick(HasWindow);
             })
