@@ -222,18 +222,25 @@ class GameView : ViewBase<GameView>
     Action showDrawConfigsAct = () => { };
     async Task GetUICb(InteractInfo info)
     {
-        if (info.IsSleep)
+        if (info is SceneItemInteractInfo itemInfo)
         {
-            await FadeImageAlpha(info.SleepTime);
+            if(itemInfo.SceneItemData.IsSleep)
+                await FadeImageAlpha(itemInfo.SceneItemData.SleepTime);
+            if (itemInfo.SceneItemData.HasCamera)
+            {
+                GameManager.WindowList.MyAdd(GameManager.WatchingClockWindow);
+                await Task.Delay(CameraMono.SceneItemEase);
+                ExitWatchingItemBtn.gameObject.SetActive(true);
+            }
         }
-        else if (info.IsOpenDoor)
+        else if (info is DoorInteractInfo doorInfo)
         {
             GameManager.WindowList.MyAdd(DrawWindow);
             GameManager.WindowList.MyAdd(fullMapWindow);
             DrawBtnContent.DisableAllChildren();
             showDrawConfigsAct = () =>
             {
-                var configs = info.GetDrawConfigs() ?? [];
+                var configs = doorInfo.GetDrawConfigs() ?? [];
                 for (int i = 0; i < configs.Count; i++)
                 {
                     var config = configs[i];
@@ -243,7 +250,7 @@ class GameView : ViewBase<GameView>
                     go.GetComponent<Button>().onClick.RemoveAllListeners();
                     go.GetComponent<Button>().onClick.AddListener(() =>
                     {
-                        MapManager.DrawAtWall(info.InsidePointDataList, info.WallData, config);
+                        MapManager.DrawAtWall(doorInfo.InsidePointDataList, doorInfo.WallData, config);
                         GameManager.WindowList.MyRemove(DrawWindow);
                         GameManager.WindowList.MyRemove(fullMapWindow);
                     });
@@ -251,12 +258,6 @@ class GameView : ViewBase<GameView>
                 }
             };
             showDrawConfigsAct();
-        }
-        else if (info.HasCamera)
-        {
-            GameManager.WindowList.MyAdd(GameManager.WatchingClockWindow);
-            await Task.Delay(CameraMono.SceneItemEase);
-            ExitWatchingItemBtn.gameObject.SetActive(true);
         }
     }
 

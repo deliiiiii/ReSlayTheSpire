@@ -74,9 +74,17 @@ public class BoxPointData : DataBase, IComparable
             .Where(pair => pair.Item1.CostWall - CostWall >= BoxData.WallCost)
             .Select(x => x.Item2);
 
-    // 用Default是因为玩家可能站在很远的地方。。。
+    // 玩家可能站在很远的地方。。。所以先SelectMany拿到这个房间所有的点
     public IEnumerable<BoxPointData> AtWallGetInsidePoints(WallData wallData)
-        => NextPointAndWallSet.First(pair => pair.Item2 == wallData).Item1?.bingChaJi.ConnectedSet ?? [];
+    {
+        var ret = BelongBox.PointDataMyDic.Values
+            .SelectMany(nextP => nextP.NextPointAndWallSet)
+            .FirstOrDefault(pair => pair.Item2 == wallData)
+            .Item1?.bingChaJi.ConnectedSet ?? [];
+        return ret;
+    }
+    
+        // => 
         // => NextPointAndWallSet.FirstOrDefault(pair => pair.Item2 == wallData).Item1?.bingChaJi.ConnectedSet ?? [];
 
     #endregion

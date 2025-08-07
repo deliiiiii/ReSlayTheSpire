@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Violee.Interact;
+namespace Violee;
 
 public class InteractCasterReticle : MonoBehaviour
 {

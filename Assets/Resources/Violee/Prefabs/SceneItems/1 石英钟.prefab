@@ -570,8 +570,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data:
     rid: 746788441188990976
-  HideAfterRunOut: {fileID: 0}
-  ShowAfterRunOut: {fileID: 0}
   Ir: {fileID: 6008600515237456465}
   references:
     version: 2
@@ -585,6 +583,11 @@ MonoBehaviour:
         DesPre: "\u770B\u4E00\u773C\u65F6\u95F4"
         HasCount: 0
         Count: 0
+        HideAfterRunOut: {fileID: 0}
+        ShowAfterRunOut: {fileID: 0}
+        IsSleep: 0
+        SleepTime: 2.89
+        iCamera: {fileID: 4871198392309765689}
 --- !u!114 &4871198392309765689
 MonoBehaviour:
   m_ObjectHideFlags: 0

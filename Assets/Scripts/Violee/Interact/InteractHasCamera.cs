@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Violee.Violee.Interact;
+namespace Violee;
 
 public class InteractHasCamera : MonoBehaviour
 {

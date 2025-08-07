@@ -43,15 +43,16 @@ public class InteractInfo
     public required Action Act;
     public required string Description;
     public required Color Color;
+}
 
-    public bool IsSleep;
-    public float SleepTime;
-    
-    public bool IsOpenDoor;
-    public List<BoxPointData> InsidePointDataList = [];
-    public WallData WallData = null!;
-    public Func<List<DrawConfig>> GetDrawConfigs = () => [];
-    
-    public bool HasCamera;
-    // public string Description;
+public class SceneItemInteractInfo : InteractInfo
+{
+    public required SceneItemData SceneItemData;
+}
+
+public class DoorInteractInfo : InteractInfo
+{
+    public required List<BoxPointData> InsidePointDataList = [];
+    public required WallData WallData;
+    public required Func<List<DrawConfig>> GetDrawConfigs;
 }

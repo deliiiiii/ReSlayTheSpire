@@ -16,13 +16,27 @@ public class SceneItemData : DataBase
     [JsonIgnore] public SceneItemModel OriginModel => Configer.SceneItemModelList.SceneItemModels.First(x => x.Data.ID == ID);
     [ShowInInspector] public HashSet<EBoxDir> OccupyFloorSet = [];
     [ShowInInspector] public HashSet<EBoxDir> OccupyAirSet = [];
+    // 暂时所有道具都只占一个格子
+    // public int OccupyCount = 1;
     public bool IsAir;
     public int ID;
     public int StaminaCost;
     public string DesPre = string.Empty;
+    
+    [Header("HasCount")]
     public bool HasCount;
-    [ShowIf(nameof(HasCount))]
-    public int Count;
+    [ShowIf(nameof(HasCount))] public int Count;
+    [SerializeReference][ShowIf(nameof(HasCount))] public GameObject? HideAfterRunOut;
+    [SerializeReference][ShowIf(nameof(HasCount))] public GameObject? ShowAfterRunOut;
+    
+    [Header("IsSleep")]
+    public bool IsSleep;
+    [ShowIf(nameof(IsSleep))] public float SleepTime = 2.89f;
+    
+    [Header("Camera")]
+    [SerializeField] InteractHasCamera? iCamera;
+    public bool HasCamera => iCamera != null;
+    
     public event Action? OnRunOut;
 
     public virtual string GetInteractDes()
@@ -44,6 +58,7 @@ public class SceneItemData : DataBase
             }
         }
         UseEffect();
+        OnUseEnd();
     }
     public bool CanUse()
     {
@@ -60,6 +75,20 @@ public class SceneItemData : DataBase
     protected virtual void UseEffect()
     {
         PlayerManager.StaminaCount.Value -= StaminaCost;
+    }
+
+    void OnUseEnd()
+    {
+        if (HasCamera)
+        {
+            var transform = InsModel.transform;
+            CameraMono.SceneItemVirtualCamera.Follow = transform;
+            CameraMono.SceneItemVirtualCamera.LookAt = transform;
+            CameraMono.SceneItemVirtualCamera.GetComponent<CinemachineCameraOffset>().m_Offset =
+                new Vector3(iCamera!.CameraTransform.localPosition.x * transform.lossyScale.x,
+                    iCamera.CameraTransform.localPosition.y * transform.lossyScale.y,
+                    iCamera.CameraTransform.localPosition.z * transform.lossyScale.z);
+        }
     }
 
     public SceneItemData CreateNew(HashSet<EBoxDir> dirSet)
