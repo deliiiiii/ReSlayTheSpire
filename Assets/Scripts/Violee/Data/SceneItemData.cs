@@ -74,7 +74,7 @@ public class SceneItemData : DataBase
         return true;
     }
 
-    public virtual bool CanUse(out string failReason)
+    public bool CanUse(out string failReason)
     {
         failReason = string.Empty;
         if (MiniItemMono.StaminaCount.Value < StaminaCost)
@@ -82,6 +82,12 @@ public class SceneItemData : DataBase
             failReason = $"体力不足{StaminaCost}, 无法查看";
             return false;
         }
+        return CanUseInternal(out failReason);
+    }
+    
+    protected virtual bool CanUseInternal(out string failReason)
+    {
+        failReason = string.Empty;
         return true;
     }
     
@@ -117,17 +123,23 @@ public class SceneItemData : DataBase
                     iCamera.CameraTransform.localPosition.z * transform.lossyScale.z);
         }
     }
-    public virtual string GetInteractDes()
+    public string GetInteractDes()
     {
         var sb = new StringBuilder();
-        sb.Append(DesPre);
+        sb.Append($"{DesPre}:");
         if (StaminaCost > 0)
-            sb.Append($":消耗{StaminaCost}点体力,\n");
+            sb.Append($"消耗{StaminaCost}点体力,\n");
+        sb.Append(GetInteractDesInternal());
         return sb.ToString();
+    }
+    protected virtual string GetInteractDesInternal()
+    {
+        return string.Empty;
     }
     public Color DesColor() => this switch
     {
         {StaminaCost : > 0} => Color.blue,
+        FoodItemData => Color.cyan,
         _ => Color.white,
     };
     void LogErrorWith(string str)
@@ -143,11 +155,10 @@ public class PurpleSceneItemData : SceneItemData
 {
     [Header("Purple")]
     public int Energy;
-    public override string GetInteractDes()
+
+    protected override string GetInteractDesInternal()
     {
-        var sb = new StringBuilder(base.GetInteractDes());
-        sb.Append($"恢复{Energy}点精力");
-        return sb.ToString();
+        return $"恢复{Energy}点精力";
     }
 
     protected override void UseEffect()
@@ -165,25 +176,20 @@ public class BookShelfItemData : SceneItemData
     public int EnergyCost;
     public int Creativity;
 
-    public override bool CanUse(out string failReason)
+    protected override bool CanUseInternal(out string failReason)
     {
-        if (!base.CanUse(out failReason))
-            return false;
         failReason = string.Empty;
         if (MiniItemMono.EnergyCount.Value < EnergyCost)
         {
             failReason = $"精力不足{EnergyCost}, 无法阅读";
             return false;
         }
-
         return true;
     }
 
-    public override string GetInteractDes()
+    protected override string GetInteractDesInternal()
     {
-        var sb = new StringBuilder(base.GetInteractDes());
-        sb.Append($"和{EnergyCost}点精力,从书中吸收{Creativity}点灵感。");
-        return sb.ToString();
+        return $"和{EnergyCost}点精力,从书中吸收{Creativity}点灵感。";
     }
     protected override void UseEffect()
     {
@@ -201,11 +207,9 @@ public class RecordPlayerItemData : SceneItemData
 
     [field: AllowNull, MaybeNull]
     AudioSource audioSource => InsModel.GetComponent<AudioSource>();
-    public override string GetInteractDes()
+    protected override string GetInteractDesInternal()
     {
-        var sb = new StringBuilder(base.GetInteractDes());
-        sb.Append(BuffDes);
-        return sb.ToString();
+        return BuffDes;
     }
 
     protected override void UseEffect()
@@ -213,5 +217,46 @@ public class RecordPlayerItemData : SceneItemData
         base.UseEffect();
         AudioMono.PlayLoop(audioSource, AudioMono.BGMRecordPlayer.RandomItem());
         BuffManager.AddConBuff(EBuffType.PlayRecord, () => BuffDes);
+    }
+}
+
+// 4 Lamp, 5 SmallLamp, 10 AC
+[Serializable]
+public class ElectricItemData : SceneItemData
+{
+    public int ElectricityCost;
+
+    protected override bool CanUseInternal(out string failReason)
+    {
+        failReason = string.Empty;
+        // TODO 电力系统
+        return true;
+    }
+
+    protected override string GetInteractDesInternal()
+    {
+        return $"打开消耗{ElectricityCost}点电力";
+    }
+
+    protected override void UseEffect()
+    {
+        base.UseEffect();
+        // TODO 电力系统
+    }
+}
+
+[Serializable]
+public class FoodItemData : SceneItemData
+{
+    public int StaminaGain;
+    protected override string GetInteractDesInternal()
+    {
+        return $"恢复{StaminaGain}点体力";
+    }
+
+    protected override void UseEffect()
+    {
+        base.UseEffect();
+        MiniItemMono.StaminaCount.Value += StaminaGain;
     }
 }
