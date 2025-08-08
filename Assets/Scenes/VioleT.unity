@@ -36953,11 +36953,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9006729561354335457, guid: 016ead69311db5047b538955e74d0c67, type: 3}
       propertyPath: m_FontData.m_MinSize
-      value: 16
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: 9006729561354335457, guid: 016ead69311db5047b538955e74d0c67, type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 16
+      value: 26
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

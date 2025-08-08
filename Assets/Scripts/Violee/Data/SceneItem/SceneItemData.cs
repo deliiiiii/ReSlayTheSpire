@@ -156,7 +156,7 @@ public class SceneItemData : DataBase
 }
 
 
-// 1 Sofa,
+// 0 Sofa,
 [Serializable]
 public class PurpleSceneItemData : SceneItemData
 {
@@ -172,6 +172,21 @@ public class PurpleSceneItemData : SceneItemData
     {
         base.UseEffect();
         MainItemMono.EnergyCount.Value += Energy;
+    }
+}
+
+public class ClockItemData : SceneItemData
+{
+    [Header("Clock")] public bool Watched;
+    protected override bool CanUseInternal(out string failReason)
+    {
+        failReason = string.Empty;
+        if (Watched)
+        {
+            failReason = "这个时钟已经被凝视了许久";
+            return false;
+        }
+        return true;
     }
 }
 

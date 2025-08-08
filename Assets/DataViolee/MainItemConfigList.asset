@@ -18,10 +18,10 @@ MonoBehaviour:
     InitValue: 10
   - Sprite: {fileID: 0}
     Description: Energy
-    InitValue: 4
+    InitValue: 10
   - Sprite: {fileID: 0}
     Description: Creativity
-    InitValue: 20
+    InitValue: 10
   - Sprite: {fileID: 0}
     Description: Violee
     InitValue: 0
