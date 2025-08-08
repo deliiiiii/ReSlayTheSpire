@@ -904,7 +904,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &72741722
 AudioListener:
   m_ObjectHideFlags: 0
@@ -18530,11 +18530,11 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 515590892}
   - {fileID: 980642307}
   - {fileID: 340956687}
   - {fileID: 1958290444}
   - {fileID: 1331836230}
   - {fileID: 964031052}
   - {fileID: 140612714}
-  - {fileID: 515590892}
   - {fileID: 186314766630408341}

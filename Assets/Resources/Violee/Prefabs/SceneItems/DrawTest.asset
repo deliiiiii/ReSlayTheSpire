@@ -13,18 +13,6 @@ MonoBehaviour:
   m_Name: DrawTest
   m_EditorClassIdentifier: 
   DrawConfigs:
-  - DrawDes: 3
-    Sprite: {fileID: 0}
-    ToDrawModels:
-    - {fileID: 2035840915431417207, guid: cd929ec3b6ba15047b1be2f502f0b000, type: 3}
-  - DrawDes: 4
-    Sprite: {fileID: 0}
-    ToDrawModels:
-    - {fileID: 421955680217720637, guid: cdaf66f63173d1b4c816e03128740b2c, type: 3}
-  - DrawDes: 5
-    Sprite: {fileID: 0}
-    ToDrawModels:
-    - {fileID: 2663367891045794257, guid: b69b96fa940137a4a8eb7859ef5e14fb, type: 3}
   - DrawDes: 0
     Sprite: {fileID: 0}
     ToDrawModels:
@@ -37,3 +25,31 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     ToDrawModels:
     - {fileID: 8151254302739763842, guid: ef9b392421af3644e93a2ecaf765834b, type: 3}
+  - DrawDes: 3
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 2035840915431417207, guid: cd929ec3b6ba15047b1be2f502f0b000, type: 3}
+  - DrawDes: 4
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 421955680217720637, guid: cdaf66f63173d1b4c816e03128740b2c, type: 3}
+  - DrawDes: 5
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 2663367891045794257, guid: b69b96fa940137a4a8eb7859ef5e14fb, type: 3}
+  - DrawDes: 6
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 1961720712683584349, guid: 51868a6990831c342a096343425ef0e1, type: 3}
+  - DrawDes: 7
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 616563387378865544, guid: 330c4bd657ed7f9408406b4dd73a845b, type: 3}
+  - DrawDes: 8
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 200836427785094215, guid: 53fc17312d38d5a4b80d55e3cd2c6817, type: 3}
+  - DrawDes: 9
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 8283341455724098720, guid: 104818a384fd4d448978638d7955a831, type: 3}

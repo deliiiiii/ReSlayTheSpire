@@ -1,0 +1,16 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 03.04.2017 17:43:12
+
+newmtl Atlas_2
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.8000 0.8000 0.8000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka C:\Users\CGTrader\Desktop\New folder (2)\Easily+Interiors_fbx\Easily Interiors Assets\Textures\Atlas_2.tif
+	map_Kd C:\Users\CGTrader\Desktop\New folder (2)\Easily+Interiors_fbx\Easily Interiors Assets\Textures\Atlas_2.tif
