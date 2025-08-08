@@ -35,7 +35,7 @@ namespace Violee
                 return InteractInfo.CreateUnActive();
             // TODO BuffedValue...
             var energyCost = PlayerManager.IsWithRecordPlayer ? 0 : 1;
-            if (MiniItemMono.EnergyCount.Value <= 0)
+            if (MiniItemMono.EnergyCount.Value < energyCost)
             {
                 return InteractInfo.CreateInvalid($"精力不足{energyCost}，无法打开门");
             }

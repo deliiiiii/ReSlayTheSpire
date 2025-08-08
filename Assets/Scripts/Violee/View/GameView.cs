@@ -155,7 +155,7 @@ class GameView : ViewBase<GameView>
             ConsistentBuffDetailPnl.ClearChildren();
         };
 
-        AudioMono.OnPlayLoop += clip =>
+        AudioMono.OnUnPauseLoop += clip =>
         {
             MusicWindow.BGMTxt.text = clip.name;
             MusicWindow.gameObject.SetActive(false);

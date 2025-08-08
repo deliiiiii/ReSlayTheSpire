@@ -24,6 +24,7 @@ public class MusicWindow : MonoBehaviour
 
     void OnEnable()
     {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
         seq?.Kill();
         seq = DOTween.Sequence();
         var width = rect.rect.width;
