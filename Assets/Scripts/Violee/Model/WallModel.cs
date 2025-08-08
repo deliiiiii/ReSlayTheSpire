@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Violee
 {
-    public class WallModel : ModelBase<WallData>
+    public class WallModel : ModelBase<WallData>, IHasInteractReceiver
     {
         #region Inspector
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
@@ -29,7 +29,7 @@ namespace Violee
             DoorInteract.GetInteractInfo = GetCb;
         }
 
-        InteractInfo GetCb()
+        public InteractInfo GetCb()
         {
             if (Data.DoorType == EDoorType.None || Data.Opened.Value)
                 return InteractInfo.CreateUnActive();

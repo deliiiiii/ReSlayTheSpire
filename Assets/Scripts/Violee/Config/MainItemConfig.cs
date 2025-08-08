@@ -4,9 +4,8 @@ using UnityEngine;
 namespace Violee;
 
 [Serializable]
-public class MiniItemConfig
+public class MainItemConfig
 {
-    public int ID;
     public required Sprite Sprite;
     public required string Description;
     public int InitValue;

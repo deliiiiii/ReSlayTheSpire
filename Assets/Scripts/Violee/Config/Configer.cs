@@ -23,14 +23,14 @@ namespace Violee
 
         public required ConBuffConfigList ConBuffConfigListIns;
         public required DrawConfigList DrawConfigListIns;
-        public required MiniItemConfigList MiniItemConfigListIns;
+        public required MainItemConfigList MainItemConfigListIns;
         public required SceneItemModelList SceneItemModelListIns;
         public required SettingsConfig SettingsConfigIns;
         
         public static BoxConfigList BoxConfigList => Instance.BoxConfigListIns;
         public static ConBuffConfigList ConBuffConfigList => Instance.ConBuffConfigListIns;
         public static DrawConfigList DrawConfigList => Instance.DrawConfigListIns;
-        public static MiniItemConfigList MiniItemConfigList => Instance.MiniItemConfigListIns;
+        public static MainItemConfigList mainItemConfigList => Instance.MainItemConfigListIns;
         public static SceneItemModelList SceneItemModelList => Instance.SceneItemModelListIns;
         public static SettingsConfig SettingsConfig => Instance.SettingsConfigIns;
         

@@ -6,6 +6,11 @@ using UnityEngine.Events;
 
 namespace Violee;
 
+public interface IHasInteractReceiver
+{
+    public InteractInfo GetCb();
+}
+
 [RequireComponent(typeof(MeshCollider))]
 [RequireComponent(typeof(Outline))]
     

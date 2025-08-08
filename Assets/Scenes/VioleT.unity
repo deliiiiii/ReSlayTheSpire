@@ -3896,7 +3896,7 @@ MonoBehaviour:
   BoxConfigListIns: {fileID: 11400000, guid: e901b445fff30234d86a6d167b4c71e7, type: 2}
   ConBuffConfigListIns: {fileID: 11400000, guid: b78cf0def07ac4a44b04780d5c81992c, type: 2}
   DrawConfigListIns: {fileID: 11400000, guid: 79524568ffaa3f04db0d2d95f9d4b37e, type: 2}
-  MiniItemConfigListIns: {fileID: 11400000, guid: f741dc65404c88346a0c86db1b7886c6, type: 2}
+  MainItemConfigListIns: {fileID: 11400000, guid: f741dc65404c88346a0c86db1b7886c6, type: 2}
   SceneItemModelListIns: {fileID: 11400000, guid: 2ac03f0e9d9b2dd43970ec981eb9d9e0, type: 2}
   SettingsConfigIns: {fileID: 11400000, guid: a045e28f41ce60340acfb1d0f7d5e9fa, type: 2}
 --- !u!1 &269445332
@@ -13131,7 +13131,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5599340466771819531, guid: d1e1e796887664d4b900a3c7069e5b3c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5671287734975293951, guid: d1e1e796887664d4b900a3c7069e5b3c, type: 3}
       propertyPath: m_Mesh

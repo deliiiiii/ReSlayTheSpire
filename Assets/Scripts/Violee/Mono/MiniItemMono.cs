@@ -9,16 +9,16 @@ namespace Violee;
 public class MiniItemMono : Singleton<MiniItemMono>
 {
     [ShowInInspector]
-    MiniItemData miniItemData = null!;
+    MainItemData mainItemData = null!;
     
-    public static Observable<int> StaminaCount => Instance.miniItemData.Stamina.Count;
-    public static Observable<int> EnergyCount => Instance.miniItemData.Energy.Count;
-    public static Observable<int> CreativityCount => Instance.miniItemData.Creativity.Count;
-    public static Observable<int> VioleeCount => Instance.miniItemData.Violee.Count;
+    public static Observable<int> StaminaCount => Instance.mainItemData.Stamina.Count;
+    public static Observable<int> EnergyCount => Instance.mainItemData.Energy.Count;
+    public static Observable<int> CreativityCount => Instance.mainItemData.Creativity.Count;
+    public static Observable<int> VioleeCount => Instance.mainItemData.Violee.Count;
 
     public static void OnDijkstraEnd()
     {
-        Instance.miniItemData = new MiniItemData();
+        Instance.mainItemData = new MainItemData();
     }
 }
 

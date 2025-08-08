@@ -10,22 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb5a066dd3d84ecfbc372beea32600d7, type: 3}
-  m_Name: MiniItemConfigList
+  m_Name: MainItemConfigList
   m_EditorClassIdentifier: 
-  MiniItemConfigs:
-  - ID: 0
-    Sprite: {fileID: 0}
+  MainItemConfigs:
+  - Sprite: {fileID: 0}
     Description: Stamina
     InitValue: 10
-  - ID: 1
-    Sprite: {fileID: 0}
+  - Sprite: {fileID: 0}
     Description: Energy
     InitValue: 4
-  - ID: 2
-    Sprite: {fileID: 0}
+  - Sprite: {fileID: 0}
     Description: Creativity
     InitValue: 20
-  - ID: 3
-    Sprite: {fileID: 0}
+  - Sprite: {fileID: 0}
     Description: Violee
     InitValue: 0

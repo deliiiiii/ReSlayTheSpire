@@ -9,7 +9,6 @@ using UnityEngine;
 
 namespace Violee;
 
-
 [Serializable]
 public class SceneItemData : DataBase
 {
@@ -42,10 +41,16 @@ public class SceneItemData : DataBase
     
     [Header("HasCount")]
     public bool HasCount;
-
     [ShowIf(nameof(HasCount))] public int Count;
-    [SerializeReference][ShowIf(nameof(HasCount))] public List<GameObject> HideAfterUseList = [];
-    [SerializeReference][ShowIf(nameof(HasCount))] public List<GameObject> ShowAfterUseList = [];
+    [ShowIf(nameof(HasCount))] public List<GameObject> HideAfterUseList = [];
+    [ShowIf(nameof(HasCount))] public List<GameObject> ShowAfterUseList = [];
+
+    [Header("HasSpreadPos")]
+    public bool HasSpreadPos;
+    [ShowIf(nameof(HasSpreadPos))] public float SpreadPossibility = 0.2f;
+    [ShowIf(nameof(HasSpreadPos))] public int SpreadMaxCount = 1;
+    [ShowIf(nameof(HasSpreadPos))]
+    public SerializableDictionary<Transform, List<SceneMiniItemData>> SpreadObjectDic = [];
     
     [Header("IsSleep")]
     public bool IsSleep;
@@ -203,6 +208,7 @@ public class BookShelfItemData : SceneItemData
 [Serializable]
 public class RecordPlayerItemData : SceneItemData
 {
+    [Header("RecordPlayer")]
     public string BuffDes = "和唱片机在同一个连通区域时，开启房门时不再消耗精力。";
 
     [field: AllowNull, MaybeNull]
@@ -224,6 +230,7 @@ public class RecordPlayerItemData : SceneItemData
 [Serializable]
 public class ElectricItemData : SceneItemData
 {
+    [Header("Electric")]
     public int ElectricityCost;
 
     protected override bool CanUseInternal(out string failReason)
@@ -248,6 +255,7 @@ public class ElectricItemData : SceneItemData
 [Serializable]
 public class FoodItemData : SceneItemData
 {
+    [Header("Food")]
     public int StaminaGain;
     protected override string GetInteractDesInternal()
     {

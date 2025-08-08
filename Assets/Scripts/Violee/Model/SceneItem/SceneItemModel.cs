@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace Violee;
 
-public class SceneItemModel : ModelBase<SceneItemData>
+
+public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
 {
     [SerializeReference] public required List<InteractReceiver> IrList;
     
@@ -13,8 +14,8 @@ public class SceneItemModel : ModelBase<SceneItemData>
         Data.CheckData();
         IrList.ForEach(i => i.GetInteractInfo = GetCb);
     }
-
-    InteractInfo GetCb()
+    
+    public InteractInfo GetCb()
     {
         if (!Data.IsActive())
             return InteractInfo.CreateUnActive();

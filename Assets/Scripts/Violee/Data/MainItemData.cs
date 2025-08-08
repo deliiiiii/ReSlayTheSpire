@@ -4,20 +4,20 @@ using System.Linq;
 using Violee;
 
 [Serializable]
-public class MiniItemData : DataBase
+public class MainItemData : DataBase
 {
-    public List<MiniItemDataSingle> MiniItems;
+    public List<MainItemDataSingle> MiniItems;
     
     public List<char> LetterList;
     
-    [NonSerialized] public MiniItemDataSingle Stamina;
-    [NonSerialized] public MiniItemDataSingle Energy;
-    [NonSerialized] public MiniItemDataSingle Creativity;
-    [NonSerialized] public MiniItemDataSingle Violee;
+    [NonSerialized] public MainItemDataSingle Stamina;
+    [NonSerialized] public MainItemDataSingle Energy;
+    [NonSerialized] public MainItemDataSingle Creativity;
+    [NonSerialized] public MainItemDataSingle Violee;
     
-    public MiniItemData(int xxx = 0)
+    public MainItemData(int xxx = 0)
     {
-        MiniItems = Configer.MiniItemConfigList.MiniItemConfigs.Select(x => new MiniItemDataSingle(x)).ToList();
+        MiniItems = Configer.mainItemConfigList.MainItemConfigs.Select(x => new MainItemDataSingle(x)).ToList();
         LetterList = [];
         Stamina = MiniItems.Find(x => x.Config.Description.Equals(nameof(Stamina)));
         Energy = MiniItems.Find(x => x.Config.Description.Equals(nameof(Energy)));
@@ -30,9 +30,9 @@ public class MiniItemData : DataBase
 
 
 [Serializable]
-public class MiniItemDataSingle(MiniItemConfig config) : DataBase
+public class MainItemDataSingle(MainItemConfig config) : DataBase
 {
-    public MiniItemConfig Config = config;
+    public MainItemConfig Config = config;
     public Observable<int> Count = new(config.InitValue);
     
     public event Func<bool>? CheckUse;
