@@ -53,6 +53,9 @@ public class SceneItemData : DataBase
     
     [Header("Camera")]
     [SerializeField] InteractHasCamera? iCamera;
+    
+    [Header("Light")]
+    [SerializeField] InteractHasLight? iLight;
     public bool HasCamera => iCamera != null;
     
     public virtual void CheckData()

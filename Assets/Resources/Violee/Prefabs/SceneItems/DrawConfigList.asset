@@ -45,3 +45,7 @@ MonoBehaviour:
     Sprite: {fileID: -2135585597343286014, guid: f7d22aec427151b4bb5c6766dc39b6d5, type: 3}
     ToDrawModels:
     - {fileID: 717733274186925396, guid: fab7007edd37c104a947d1ffbc9a0b83, type: 3}
+  - DrawDes: Add Lamp
+    Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    ToDrawModels:
+    - {fileID: 4781290904067698946, guid: e61028de45e73304d92ab222e107b930, type: 3}

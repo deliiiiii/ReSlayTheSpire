@@ -35,7 +35,10 @@ public class AudioMono : Singleton<AudioMono>
             go.transform.SetParent(transform);
             seSource.Add(go.AddComponent<AudioSource>());
         } 
+        
+        PlayLoop(titleBGMSource, BGMKisekiIns);
     }
+    
 
 
     public static void PlayLoop(AudioSource audioSource, AudioClip clip, bool mute = false, bool loop = true)
