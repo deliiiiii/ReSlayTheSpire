@@ -6273,7 +6273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BackImg: {fileID: 390323817}
   BGMTxt: {fileID: 1534792212}
-  DelayOnShown: 2
+  DelayOnShown: 4
 --- !u!43 &391773196
 Mesh:
   m_ObjectHideFlags: 0
@@ -19732,7 +19732,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
-  Fpc: {fileID: 0}
 --- !u!114 &1168962161
 MonoBehaviour:
   m_ObjectHideFlags: 0
