@@ -88,3 +88,8 @@ public class DoorInteractInfo : InteractInfo
     public required WallData WallData;
     public required Func<List<DrawConfig>> GetDrawConfigs;
 }
+
+public class SceneMiniItemInteractInfo : InteractInfo
+{
+    public required SceneMiniItemData SceneMiniItemData;
+}

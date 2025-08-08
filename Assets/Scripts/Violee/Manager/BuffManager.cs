@@ -40,7 +40,7 @@ public class BuffManager : SingletonCS<BuffManager>
             BuffEffect = () =>
             {
                 // TODO 消除耦合
-                MiniItemMono.EnergyCount.Value += energy;
+                MainItemMono.EnergyCount.Value += energy;
             },
         };
         buffList.MyAdd(added);

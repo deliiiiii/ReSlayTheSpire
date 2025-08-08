@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Violee;
 
-public class MiniItemMono : Singleton<MiniItemMono>
+public class MainItemMono : Singleton<MainItemMono>
 {
     [ShowInInspector]
     MainItemData mainItemData = null!;

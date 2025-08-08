@@ -134,7 +134,7 @@ public class GameManager : SingletonCS<GameManager>
             .OnEnd(param =>
             {
                 PlayerMono.OnDijkstraEnd(param.PlayerStartPos);
-                MiniItemMono.OnDijkstraEnd();
+                MainItemMono.OnDijkstraEnd();
                 gameFsm.ChangeState(EGameState.Playing);
             });
         BuffManager.OnAddWindowBuff += winBuff =>

@@ -3,10 +3,23 @@
 namespace Violee;
 
 [RequireComponent(typeof(InteractReceiver))]
-public class SceneMiniItemModel : ModelBase<SceneMiniItemData>
+public class SceneMiniItemModel : ModelBase<SceneMiniItemData>, IHasInteractReceiver
 {
     protected override void OnReadData()
     {
-        
+        Data.CheckData();
+        var ir = GetComponent<InteractReceiver>();
+        ir.GetInteractInfo = GetCb;
+    }
+
+    public InteractInfo GetCb()
+    {
+        return new SceneMiniItemInteractInfo
+        {
+            SceneMiniItemData = Data,
+            Description = Data.GetInteractDes(),
+            Color = Data.InteractColor,
+            Act = Data.PickUp
+        };
     }
 }

@@ -106,14 +106,14 @@ class GameView : ViewBase<GameView>
                 MiniItemPnl.SetActive(true);
                 ShowMinimap();
                 
-                Binder.From(MiniItemMono.StaminaCount).ToTxt(StaminaTxt).Immediate();
-                Binder.From(MiniItemMono.EnergyCount).ToTxt(EnergyTxt).Immediate();
-                Binder.From(MiniItemMono.CreativityCount).ToTxt(CreativityTxt).Immediate();
-                Binder.From(MiniItemMono.CreativityCount).To(v =>
+                Binder.From(MainItemMono.StaminaCount).ToTxt(StaminaTxt).Immediate();
+                Binder.From(MainItemMono.EnergyCount).ToTxt(EnergyTxt).Immediate();
+                Binder.From(MainItemMono.CreativityCount).ToTxt(CreativityTxt).Immediate();
+                Binder.From(MainItemMono.CreativityCount).To(v =>
                 {
                     RedrawBtn.interactable = v > 0;
                 }).Immediate();
-                Binder.From(MiniItemMono.VioleeCount).ToTxt(VioleeTxt).Immediate();
+                Binder.From(MainItemMono.VioleeCount).ToTxt(VioleeTxt).Immediate();
             })
             .OnUpdate(dt =>
             {
@@ -177,7 +177,7 @@ class GameView : ViewBase<GameView>
         
         Binder.From(RedrawBtn).To(() =>
         {
-            MiniItemMono.CreativityCount.Value--;
+            MainItemMono.CreativityCount.Value--;
             showDrawConfigsAct();
         });
     }

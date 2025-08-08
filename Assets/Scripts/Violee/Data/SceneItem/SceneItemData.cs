@@ -47,11 +47,13 @@ public class SceneItemData : DataBase
 
     [Header("HasSpreadPos")]
     public bool HasSpreadPos;
-    [ShowIf(nameof(HasSpreadPos))] public float SpreadPossibility = 0.2f;
+    [ShowIf(nameof(HasSpreadPos))][Range(0, 1)]
+    public float SpreadPossibility = 0.2f;
     [ShowIf(nameof(HasSpreadPos))] public int SpreadMaxCount = 1;
-    [ShowIf(nameof(HasSpreadPos))]
-    public SerializableDictionary<Transform, List<SceneMiniItemData>> SpreadObjectDic = [];
-    
+    [ShowIf(nameof(HasSpreadPos))] [SerializeField]
+    public SerializableDictionary<Transform, List<SceneMiniItemModel>> SpreadObjectDic = [];
+
+    public MyList<SceneMiniItemModel> HasSpreadObjList = [];
     [Header("IsSleep")]
     public bool IsSleep;
     [ShowIf(nameof(IsSleep))] public float SleepTime = 2.89f;
@@ -82,7 +84,7 @@ public class SceneItemData : DataBase
     public bool CanUse(out string failReason)
     {
         failReason = string.Empty;
-        if (MiniItemMono.StaminaCount.Value < StaminaCost)
+        if (MainItemMono.StaminaCount.Value < StaminaCost)
         {
             failReason = $"体力不足{StaminaCost}, 无法查看";
             return false;
@@ -113,7 +115,7 @@ public class SceneItemData : DataBase
     }
     protected virtual void UseEffect()
     {
-        MiniItemMono.StaminaCount.Value -= StaminaCost;
+        MainItemMono.StaminaCount.Value -= StaminaCost;
     }
     protected virtual void OnUseEnd()
     {
@@ -169,7 +171,7 @@ public class PurpleSceneItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        MiniItemMono.EnergyCount.Value += Energy;
+        MainItemMono.EnergyCount.Value += Energy;
     }
 }
 
@@ -184,7 +186,7 @@ public class BookShelfItemData : SceneItemData
     protected override bool CanUseInternal(out string failReason)
     {
         failReason = string.Empty;
-        if (MiniItemMono.EnergyCount.Value < EnergyCost)
+        if (MainItemMono.EnergyCount.Value < EnergyCost)
         {
             failReason = $"精力不足{EnergyCost}, 无法阅读";
             return false;
@@ -199,8 +201,8 @@ public class BookShelfItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        MiniItemMono.EnergyCount.Value -= EnergyCost;
-        MiniItemMono.CreativityCount.Value += Creativity;
+        MainItemMono.EnergyCount.Value -= EnergyCost;
+        MainItemMono.CreativityCount.Value += Creativity;
     }
 }
 
@@ -210,8 +212,7 @@ public class RecordPlayerItemData : SceneItemData
 {
     [Header("RecordPlayer")]
     public string BuffDes = "和唱片机在同一个连通区域时，开启房门时不再消耗精力。";
-
-    [field: AllowNull, MaybeNull]
+    
     AudioSource audioSource => InsModel.GetComponent<AudioSource>();
     protected override string GetInteractDesInternal()
     {
@@ -231,24 +232,29 @@ public class RecordPlayerItemData : SceneItemData
 public class ElectricItemData : SceneItemData
 {
     [Header("Electric")]
-    public int ElectricityCost;
+    public int CreativityCost;
 
     protected override bool CanUseInternal(out string failReason)
     {
         failReason = string.Empty;
-        // TODO 电力系统
+        if(MainItemMono.CreativityCount.Value < CreativityCost)
+        {
+            failReason = $"灵感不足{CreativityCost}, 无法使用";
+            return false;
+        }
         return true;
     }
 
     protected override string GetInteractDesInternal()
     {
-        return $"打开消耗{ElectricityCost}点电力";
+        return $"消耗{CreativityCost}点灵感。";
     }
 
     protected override void UseEffect()
     {
         base.UseEffect();
-        // TODO 电力系统
+        MainItemMono.CreativityCount.Value -= CreativityCost;
+        // TODO buff
     }
 }
 
@@ -265,6 +271,6 @@ public class FoodItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        MiniItemMono.StaminaCount.Value += StaminaGain;
+        MainItemMono.StaminaCount.Value += StaminaGain;
     }
 }
