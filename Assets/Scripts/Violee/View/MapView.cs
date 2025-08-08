@@ -20,7 +20,7 @@ class MapView : ViewBase<MapView>
         GameView.DrawWindow
             .OnAdd(() =>
             {
-                var doorInteractInfo = PlayerManager.InteractInfo.Value as DoorInteractInfo;
+                var doorInteractInfo = PlayerMono.InteractInfo.Value as DoorInteractInfo;
                 doorInteractInfo?.InsidePointDataList.ForEach(x =>
                 {
                     x.Visit();
@@ -29,7 +29,7 @@ class MapView : ViewBase<MapView>
             })
             .OnRemove(() =>
             {
-                var doorInteractInfo = PlayerManager.InteractInfo.Value as DoorInteractInfo;
+                var doorInteractInfo = PlayerMono.InteractInfo.Value as DoorInteractInfo;
                 doorInteractInfo?.InsidePointDataList.ForEach(x => x.Flash(false));
             });
     }

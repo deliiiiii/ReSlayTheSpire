@@ -76,7 +76,7 @@ class GameView : ViewBase<GameView>
                 ExitWatchingItemBtn.gameObject.SetActive(false);
             });
 
-        Binder.From(PlayerManager.InteractInfo).To(info =>
+        Binder.From(PlayerMono.InteractInfo).To(info =>
         {
             NormalReticle.SetActive(info == null);
             FindReticle.SetActive(info != null);
@@ -84,7 +84,7 @@ class GameView : ViewBase<GameView>
             SceneItemInfoTxt.text = info?.Description ?? "";
             SceneItemInfoTxt.color = info?.Color ?? Color.black;
         }).Immediate();
-        PlayerManager.OnClickInteract += info =>
+        PlayerMono.OnClickInteract += info =>
         {
             try
             {
@@ -346,6 +346,8 @@ class GameView : ViewBase<GameView>
             // Fade out
             for (float t = 0; t < half; t += Time.deltaTime)
             {
+                if (img == null)
+                    return;
                 var norm = t / half;
                 var eased = Mathf.SmoothStep(0f, 1f, norm);
                 var c = img.color;

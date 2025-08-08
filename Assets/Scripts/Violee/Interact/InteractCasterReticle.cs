@@ -25,7 +25,7 @@ public class InteractCasterReticle : MonoBehaviour
                     (TarLayer.value & (1 << hit.collider.gameObject.layer)) == 0)
                 {
                     lastIr.Value = null;
-                    PlayerManager.InteractInfo.Value = null;
+                    PlayerMono.InteractInfo.Value = null;
                     return;
                 }
 
@@ -33,11 +33,11 @@ public class InteractCasterReticle : MonoBehaviour
                 if (ir == null || !ir.GetInteractInfo().Active)
                 {
                     lastIr.Value = null;
-                    PlayerManager.InteractInfo.Value = null;
+                    PlayerMono.InteractInfo.Value = null;
                     return;
                 }
                 lastIr.Value = ir;
-                PlayerManager.InteractInfo.Value = lastIr.Value?.GetInteractInfo();
+                PlayerMono.InteractInfo.Value = lastIr.Value?.GetInteractInfo();
             });
     }
 }

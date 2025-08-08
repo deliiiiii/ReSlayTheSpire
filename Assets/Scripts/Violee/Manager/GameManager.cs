@@ -48,13 +48,12 @@ public static class WindowInfoExt
 public class GameManager : SingletonCS<GameManager>
 {
     bool init;
-    public static void Init() => Instance.init = !Instance.init;
     
     
     static readonly MyFSM<EGameState> gameFsm = new ();
     public static string GameState => gameFsm.CurStateName;
-    public static readonly BindDataState GeneratingMapState;
-    public static readonly BindDataState PlayingState;
+    public static BindDataState GeneratingMapState = null!;
+    public static BindDataState PlayingState = null!;
     
     
     public static readonly MyList<WindowInfo> WindowList
@@ -93,8 +92,8 @@ public class GameManager : SingletonCS<GameManager>
         return ret;
     }
 
-    
-    static GameManager()
+
+    public static void Init()
     {
         Configer.Init();
         GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
@@ -102,7 +101,7 @@ public class GameManager : SingletonCS<GameManager>
         PlayingState
             .OnEnter(() =>
             {
-                PlayerManager.OnEnterPlaying();
+                PlayerMono.OnEnterPlaying();
                 BuffManager.OnEnterPlaying();
                 WindowList.MyClear();
             })
@@ -118,12 +117,12 @@ public class GameManager : SingletonCS<GameManager>
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
                 }
-                PlayerManager.PlayerCurPoint.Value = MapManager.GetPlayerVisit(PlayerManager.GetPos())!;
+                PlayerMono.PlayerCurPoint.Value = MapManager.GetPlayerVisit(PlayerMono.GetPos())!;
                 if(!HasPaused)
                     MapManager.Tick(dt);
-                PlayerManager.Tick(HasWindow);
+                PlayerMono.Tick(HasWindow);
             })
-            .OnExit(PlayerManager.OnExitPlaying);
+            .OnExit(PlayerMono.OnExitPlaying);
         
         MapManager.GenerateStream
             .Where(_ => IsIdle || IsPlaying)
@@ -131,7 +130,7 @@ public class GameManager : SingletonCS<GameManager>
         MapManager.DijkstraStream
             .OnEnd(param =>
             {
-                PlayerManager.OnDijkstraEnd(param.PlayerStartPos);
+                PlayerMono.OnDijkstraEnd(param.PlayerStartPos);
                 MiniItemMono.OnDijkstraEnd();
                 gameFsm.ChangeState(EGameState.Playing);
             });
