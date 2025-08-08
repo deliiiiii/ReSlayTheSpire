@@ -19,7 +19,7 @@ public class Observable<T>
         }
     }
     [CanBeNull]
-    public T Value
+    public T? Value
     {
         get => value;
         set

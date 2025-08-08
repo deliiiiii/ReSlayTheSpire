@@ -122,7 +122,7 @@ internal class MapManager : SingletonCS<MapManager>
     
     
     #region Visit
-    public static BoxPointData? GetPlayerVisit(Vector3 playerPos)
+    public static void GetPlayerVisit(Vector3 playerPos, ref BoxPointData? curPoint)
     {
         var param = DijkstraStream.SelectResult();
         var boxDataDic = param.BoxDataDic;
@@ -132,8 +132,8 @@ internal class MapManager : SingletonCS<MapManager>
         var boxPos3D = BoxHelper.Pos2DTo3DBox(boxPos2D);
         if (!param.HasBox(boxPos2D))
         {
-            MyDebug.LogWarning($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
-            return null;
+            MyDebug.LogError($"Why !HasBox({boxPos3D}) PlayerPos:{playerPos}");
+            return;
         }
 
         foreach (var dir in BoxHelper.AllBoxDirs)
@@ -145,11 +145,10 @@ internal class MapManager : SingletonCS<MapManager>
             // MyDebug.Log($"dir:{dir} x:{x} edgeX:{edgeX} z:{z} edgeZ:{edgeZ}");
             if (Math.Abs(x - edgeX) + Math.Abs(z - edgeZ) <= BoxHelper.BoxSize * Configer.BoxConfigList.WalkInTolerance)
             {
-                return pointData;
+                curPoint = pointData;
+                return;
             }
         }
-
-        return null;
     }
 
     static void VisitEdgeWalls(HashSet<WallData> edgeWallSet)

@@ -117,7 +117,10 @@ public class GameManager : SingletonCS<GameManager>
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
                 }
-                PlayerMono.PlayerCurPoint.Value = MapManager.GetPlayerVisit(PlayerMono.GetPos())!;
+
+                var curPoint = PlayerMono.PlayerCurPoint.Value;
+                MapManager.GetPlayerVisit(PlayerMono.GetPos(), ref curPoint);
+                PlayerMono.PlayerCurPoint.Value = curPoint;
                 if(!HasPaused)
                     MapManager.Tick(dt);
                 PlayerMono.Tick(HasWindow);
