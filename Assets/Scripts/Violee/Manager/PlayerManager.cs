@@ -6,7 +6,6 @@ namespace Violee;
 public class PlayerManager : SingletonCS<PlayerManager>
 {
     static readonly PlayerMono playerMono;
-    static PlayerData playerData => playerMono.PlayerData;
     static PlayerManager()
     {
         playerMono = Configer.playerMono;
@@ -23,10 +22,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
                                  && (p?.ConnectedHasRecordPlayer() ?? false);
         };
     }
-    public static Observable<int> StaminaCount => playerData.Stamina.Count;
-    public static Observable<int> EnergyCount => playerData.Energy.Count;
-    public static Observable<int> CreativityCount => playerData.Creativity.Count;
-    public static Observable<int> VioleeCount => playerData.Violee.Count;
     
     public static event Action<BoxPointData>? OnPlayerEnter;
     public static event Action<BoxPointData>? OnPlayerExit;
@@ -37,7 +32,6 @@ public class PlayerManager : SingletonCS<PlayerManager>
     public static void OnDijkstraEnd(Vector3 pos3D)
     {
         playerMono.transform.position = pos3D + Vector3.up * (1.5f * playerMono.transform.localScale.y);
-        playerMono.PlayerData = new PlayerData();
     }
     public static void OnEnterPlaying()
     {

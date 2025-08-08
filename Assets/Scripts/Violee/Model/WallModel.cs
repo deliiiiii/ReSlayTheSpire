@@ -35,7 +35,7 @@ namespace Violee
                 return InteractInfo.CreateUnActive();
             // TODO BuffedValue...
             var energyCost = PlayerManager.IsWithRecordPlayer ? 0 : 1;
-            if (PlayerManager.EnergyCount.Value <= 0)
+            if (MiniItemMono.EnergyCount.Value <= 0)
             {
                 return InteractInfo.CreateInvalid($"精力不足{energyCost}，无法打开门");
             }
@@ -44,7 +44,7 @@ namespace Violee
                 CanUse = true,
                 Act = () =>
                 {
-                    PlayerManager.EnergyCount.Value -= energyCost;
+                    MiniItemMono.EnergyCount.Value -= energyCost;
                     Data.Opened.Value = true;
                 },
                 Description = $"打开门：消耗{energyCost}点精力, 并绘制门后连通区域的装饰。",

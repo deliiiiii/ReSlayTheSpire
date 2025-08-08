@@ -39,7 +39,8 @@ public class BuffManager : SingletonCS<BuffManager>
             GetDes = () => $"叮! 时间到了{hour}点整...!\n鉴于你凝思了许久，精力+{energy}点。",
             BuffEffect = () =>
             {
-                PlayerManager.EnergyCount.Value += energy;
+                // TODO 消除耦合
+                MiniItemMono.EnergyCount.Value += energy;
             },
         };
         buffList.MyAdd(added);

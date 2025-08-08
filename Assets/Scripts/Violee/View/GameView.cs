@@ -110,14 +110,14 @@ class GameView : ViewBase<GameView>
                 MiniItemPnl.SetActive(true);
                 ShowMinimap();
                 
-                Binder.From(PlayerManager.StaminaCount).ToTxt(StaminaTxt).Immediate();
-                Binder.From(PlayerManager.EnergyCount).ToTxt(EnergyTxt).Immediate();
-                Binder.From(PlayerManager.CreativityCount).ToTxt(CreativityTxt).Immediate();
-                Binder.From(PlayerManager.CreativityCount).To(v =>
+                Binder.From(MiniItemMono.StaminaCount).ToTxt(StaminaTxt).Immediate();
+                Binder.From(MiniItemMono.EnergyCount).ToTxt(EnergyTxt).Immediate();
+                Binder.From(MiniItemMono.CreativityCount).ToTxt(CreativityTxt).Immediate();
+                Binder.From(MiniItemMono.CreativityCount).To(v =>
                 {
                     RedrawBtn.interactable = v > 0;
                 }).Immediate();
-                Binder.From(PlayerManager.VioleeCount).ToTxt(VioleeTxt).Immediate();
+                Binder.From(MiniItemMono.VioleeCount).ToTxt(VioleeTxt).Immediate();
             })
             .OnUpdate(dt =>
             {
@@ -154,6 +154,13 @@ class GameView : ViewBase<GameView>
             ConsistentBuffIconPnl.ClearChildren();
             ConsistentBuffDetailPnl.ClearChildren();
         };
+
+        AudioMono.OnPlayLoop += clip =>
+        {
+            MusicWindow.BGMTxt.text = clip.name;
+            MusicWindow.gameObject.SetActive(false);
+            MusicWindow.gameObject.SetActive(true);
+        };
         
         Binder.From(ContinueBtn).To(() => GameManager.WindowList.MyRemove(GameManager.PauseWindow));
         Binder.From(ExitWatchingItemBtn).To(async () =>
@@ -174,7 +181,7 @@ class GameView : ViewBase<GameView>
         
         Binder.From(RedrawBtn).To(() =>
         {
-            PlayerManager.CreativityCount.Value--;
+            MiniItemMono.CreativityCount.Value--;
             showDrawConfigsAct();
         });
     }
@@ -269,11 +276,12 @@ class GameView : ViewBase<GameView>
 
     public required Button ExitWatchingItemBtn;
     
+    
     #region OverlapWindow
     [Header("OverlapWindow")]
     public required Transform OverlapWindowTransform;
     public required BuffWindow BuffWindowPrefab;
-    public required GameObject BGMWindow;
+    public required MusicWindow MusicWindow;
     #endregion
     
     

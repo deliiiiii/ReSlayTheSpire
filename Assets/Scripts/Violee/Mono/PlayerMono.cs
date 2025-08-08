@@ -5,8 +5,6 @@ using Violee;
 
 public class PlayerMono : Singleton<PlayerMono>
 {
-    [NonSerialized][ShowInInspector]
-    public PlayerData PlayerData = null!;
     [HideInInspector]
     public FirstPersonController Fpc = null!;
 

@@ -69,7 +69,7 @@ public class SceneItemData : DataBase
     public virtual bool CanUse(out string failReason)
     {
         failReason = string.Empty;
-        if (PlayerManager.StaminaCount.Value < StaminaCost)
+        if (MiniItemMono.StaminaCount.Value < StaminaCost)
         {
             failReason = $"体力不足{StaminaCost}, 无法查看";
             return false;
@@ -94,7 +94,7 @@ public class SceneItemData : DataBase
     }
     protected virtual void UseEffect()
     {
-        PlayerManager.StaminaCount.Value -= StaminaCost;
+        MiniItemMono.StaminaCount.Value -= StaminaCost;
     }
     protected virtual void OnUseEnd()
     {
@@ -145,7 +145,7 @@ public class PurpleSceneItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        PlayerManager.EnergyCount.Value += Energy;
+        MiniItemMono.EnergyCount.Value += Energy;
     }
 }
 
@@ -162,7 +162,7 @@ public class BookShelfItemData : SceneItemData
         if (!base.CanUse(out failReason))
             return false;
         failReason = string.Empty;
-        if (PlayerManager.EnergyCount.Value < EnergyCost)
+        if (MiniItemMono.EnergyCount.Value < EnergyCost)
         {
             failReason = $"精力不足{EnergyCost}, 无法阅读";
             return false;
@@ -180,8 +180,8 @@ public class BookShelfItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        PlayerManager.EnergyCount.Value -= EnergyCost;
-        PlayerManager.CreativityCount.Value += Creativity;
+        MiniItemMono.EnergyCount.Value -= EnergyCost;
+        MiniItemMono.CreativityCount.Value += Creativity;
     }
 }
 
@@ -190,9 +190,6 @@ public class BookShelfItemData : SceneItemData
 public class RecordPlayerItemData : SceneItemData
 {
     public string BuffDes = "和唱片机在同一个连通区域时，开启房门时不再消耗精力。";
-
-    [field: AllowNull, MaybeNull]
-    AudioSource audioSource => field ??= InsModel.GetComponent<AudioSource>();
     public override string GetInteractDes()
     {
         var sb = new StringBuilder(base.GetInteractDes());
@@ -203,15 +200,6 @@ public class RecordPlayerItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        audioSource.clip = AudioMono.BGMRecordPlayer.RandomItem();
-        // audioSource.mute = true;
-        audioSource.loop = true;
-        audioSource.Play();
         BuffManager.AddConBuff(EBuffType.PlayRecord, () => BuffDes);
-    }
-
-    public AudioClip GetClip()
-    {
-        return audioSource.clip;
     }
 }

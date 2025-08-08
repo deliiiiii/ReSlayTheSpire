@@ -256,7 +256,7 @@
 //     }
 //
 //     private void CreateDictionary() {
-//         // TODO comparer
+//         // comparer not implemented
 //         Dict = new SerializableDictionary<TKey,TItem>();
 //         foreach (TItem item in Items) {
 //             TKey key = GetKeyForItem(item);
