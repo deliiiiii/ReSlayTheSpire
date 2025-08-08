@@ -37,6 +37,9 @@ public class SceneItemData : DataBase
     public int StaminaCost;
     public string DesPre = string.Empty;
     
+    [Header("MinimapIcon")]
+    public required Sprite MinimapIcon;
+    
     [Header("HasCount")]
     public bool HasCount;
 
@@ -58,6 +61,8 @@ public class SceneItemData : DataBase
             LogErrorWith("HideAfterUseList.Count < Count");
         if (ShowAfterUseList.Count < Count)
             LogErrorWith("ShowAfterUseList.Count < Count");
+        // if(MinimapIcon == null)
+        //     LogErrorWith("MinimapIcon is null");
     }
     public bool IsActive()
     {
@@ -190,6 +195,9 @@ public class BookShelfItemData : SceneItemData
 public class RecordPlayerItemData : SceneItemData
 {
     public string BuffDes = "和唱片机在同一个连通区域时，开启房门时不再消耗精力。";
+
+    [field: AllowNull, MaybeNull]
+    AudioSource audioSource => InsModel.GetComponent<AudioSource>();
     public override string GetInteractDes()
     {
         var sb = new StringBuilder(base.GetInteractDes());
@@ -200,6 +208,7 @@ public class RecordPlayerItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
+        AudioMono.PlayLoop(audioSource, AudioMono.BGMRecordPlayer.RandomItem());
         BuffManager.AddConBuff(EBuffType.PlayRecord, () => BuffDes);
     }
 }

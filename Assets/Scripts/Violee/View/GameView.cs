@@ -43,10 +43,6 @@ class GameView : ViewBase<GameView>
                 windowIns.DesTxt.text = buffWindow.Des;
                 windowIns.gameObject.SetActive(true);
             }
-            else if (w is MusicWindowInfo musicWindow)
-            {
-
-            }
         };
 
         GameManager.WindowList.OnRemove += w =>

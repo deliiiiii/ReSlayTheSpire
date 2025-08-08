@@ -13,13 +13,6 @@ public enum EGameState
     Playing,
 }
 
-// public enum EWindowType
-// {
-//     WaitingSceneItem,
-//     NormalUI,
-//     GamePause,
-// }
-
 [Serializable]
 public class WindowInfo
 {
@@ -30,16 +23,12 @@ public class WindowInfo
     public Action? OnRemoveEvent;
 }
 
+[Serializable]
 public class BuffWindowInfo : WindowInfo
 {
     public GameObject? BuffWindowIns;
 }
 
-
-public class MusicWindowInfo : WindowInfo
-{
-    
-}
 
 public static class WindowInfoExt
 {
@@ -143,6 +132,7 @@ public class GameManager : SingletonCS<GameManager>
             .OnEnd(param =>
             {
                 PlayerManager.OnDijkstraEnd(param.PlayerStartPos);
+                MiniItemMono.OnDijkstraEnd();
                 gameFsm.ChangeState(EGameState.Playing);
             });
         BuffManager.OnAddWindowBuff += winBuff =>

@@ -16,13 +16,9 @@ public class MiniItemMono : Singleton<MiniItemMono>
     public static Observable<int> CreativityCount => Instance.miniItemData.Creativity.Count;
     public static Observable<int> VioleeCount => Instance.miniItemData.Violee.Count;
 
-    protected override void Awake()
+    public static void OnDijkstraEnd()
     {
-        base.Awake();
-        GameManager.GeneratingMapState.OnExit(() =>
-        {
-            miniItemData = new MiniItemData();
-        });
+        Instance.miniItemData = new MiniItemData();
     }
 }
 
