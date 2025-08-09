@@ -70,34 +70,6 @@ public class BuffManager : SingletonCS<BuffManager>
     public static bool IsWithRecordPlayer => ContainsConBuff(EConBuffType.PlayRecord);
     public static bool IsWithLamp => ContainsConBuff(EConBuffType.Lamp);
     public static bool IsWithSmallLamp => ContainsConBuff(EConBuffType.SmallLamp);
+    public static bool IsWithCooler => ContainsConBuff(EConBuffType.Cooler);
 }
 
-[Serializable]
-public class Buffed<T>
-{
-    [SerializeField]
-    T value;
-    [NonSerialized] Func<T, T>? buffFunc;
-    public T Value 
-        => buffFunc == null ? value : buffFunc(value);
-
-    public Buffed(T initValue, Func<T, T>? buffFunc = null)
-    {
-        value = initValue;
-    }
-    
-    public void SetBuff(Func<T, T> func)
-    {
-        buffFunc = func;
-    }
-
-    public static implicit operator T(Buffed<T> buffed)
-    {
-        return buffed.Value;
-    }
-    
-    public override string ToString()
-    {
-        return Value?.ToString() ?? $"NULL Buffed{typeof(T)}";
-    }
-}

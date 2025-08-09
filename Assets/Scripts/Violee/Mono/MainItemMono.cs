@@ -55,7 +55,10 @@ public class MainItemMono : Singleton<MainItemMono>
     #region Stamina
     public static void CostStamina(int cost)
     {
-        Instance.mainItemData.Stamina.Count -= cost;
+        var trueCost = cost;
+        if (BuffManager.IsWithCooler)
+            trueCost -= 1;
+        Instance.mainItemData.Stamina.Count -= trueCost;
     }
     public static int CheckStaminaCost(int cost)
     {

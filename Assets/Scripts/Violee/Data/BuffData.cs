@@ -29,4 +29,5 @@ public enum EConBuffType
     PlayRecord,
     Lamp,
     SmallLamp,
+    Cooler,
 }

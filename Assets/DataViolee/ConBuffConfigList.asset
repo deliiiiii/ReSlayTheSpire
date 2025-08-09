@@ -23,3 +23,6 @@ MonoBehaviour:
     - Key: 2
       Value:
         Sprite: {fileID: 21300000, guid: f4a63bb25786fa844b4f3a837a4d95be, type: 3}
+    - Key: 3
+      Value:
+        Sprite: {fileID: 21300000, guid: 31f4fd9932fa7634abde73b463943454, type: 3}
