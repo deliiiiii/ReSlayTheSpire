@@ -64,7 +64,8 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
                 continue;
             spreadCount++;
             var modelIns = Instantiate(objList.RandomItem(), trans);
-            modelIns.ReadData(modelIns.Data);
+            // Awake时自动调用了
+            // modelIns.ReadData(modelIns.Data);
             Data.HasSpreadObjList.MyAdd(modelIns);
             if(spreadCount >= Data.SpreadMaxCount)
                 break;

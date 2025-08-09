@@ -236,6 +236,7 @@ public class RecordPlayerItemData : SceneItemData, IHasConBuff
     public string BuffDes = "和唱片机在同一个连通区域时，开启房门时消耗精力-1点。";
     
     AudioSource audioSource => InsModel.GetComponent<AudioSource>();
+    AudioClip? curClip;
     protected override string GetInteractDesInternal()
     {
         return BuffDes;
@@ -244,7 +245,13 @@ public class RecordPlayerItemData : SceneItemData, IHasConBuff
     protected override void UseEffect()
     {
         base.UseEffect();
-        AudioMono.PlayLoop(audioSource, AudioMono.BGMRecordPlayer.RandomItem());
+        PlayOne();
+    }
+
+    public void PlayOne()
+    {
+        curClip = AudioMono.BGMRecordPlayer.RandomItem(x => x != curClip);
+        AudioMono.PlayLoop(audioSource, curClip);
     }
 
     public EConBuffType conBuffType => EConBuffType.PlayRecord;

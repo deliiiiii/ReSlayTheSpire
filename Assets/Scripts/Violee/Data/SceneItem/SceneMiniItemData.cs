@@ -63,3 +63,19 @@ public class SceneMiniItemDataFood : SceneMiniItemData
         MainItemMono.StaminaCount.Value += StaminaGain;
     }
 }
+
+[Serializable]
+public class SceneMiniItemRecordPlayer : SceneMiniItemData
+{
+    public required SceneItemModel SceneItemModel;
+    protected override string GetInteractDesInternal()
+    {
+        return $"切下一首歌。";
+    }
+
+    protected override void PickUpInternal()
+    {
+        var data = SceneItemModel.Data as RecordPlayerItemData;
+        data?.PlayOne();
+    }
+}

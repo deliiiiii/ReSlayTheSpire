@@ -24,17 +24,16 @@ public class MusicWindow : MonoBehaviour
 
     void OnEnable()
     {
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
         seq?.Kill();
         seq = DOTween.Sequence();
         var width = rect.rect.width;
         rect.anchoredPosition = new Vector2(-width, tarPos.y);
-
-        seq.Append(rect.DOMoveX(0, 0.5f)
-            .SetEase(Ease.OutBack));
-        
+        seq.AppendCallback(() => LayoutRebuilder.ForceRebuildLayoutImmediate(rect));
+        seq.Append(rect.DOMoveX(tarPos.x, 0.5f)
+            .SetEase(Ease.OutSine));
         seq.AppendInterval(DelayOnShown);
         seq.AppendCallback(() => gameObject.SetActive(false));
+        // LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
     }
     
 }
