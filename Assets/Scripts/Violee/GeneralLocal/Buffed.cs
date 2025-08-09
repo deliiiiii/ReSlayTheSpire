@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public abstract class Buffed<T>
+public class Buffed<T>
 {
     [SerializeField]
     T value;
@@ -10,6 +10,10 @@ public abstract class Buffed<T>
     public T Value 
         => buffFunc == null ? value : buffFunc(value);
 
+    public Buffed()
+    {
+        value = default!;
+    }
     public Buffed(T initValue, Func<T, T>? buffFunc = null)
     {
         value = initValue;

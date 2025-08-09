@@ -13,7 +13,7 @@ public class SceneMiniItemModel : ModelBase<SceneMiniItemData>, IHasInteractRece
 
     protected override void OnReadData()
     {
-        Data.CheckData();
+        Data.BindBuff();
         var ir = GetComponent<InteractReceiver>();
         ir.GetInteractInfo = GetCb;
     }

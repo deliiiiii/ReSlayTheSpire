@@ -17,10 +17,10 @@ public abstract class SceneMiniItemData : DataBase
         sb.Append(GetInteractDesInternal());
         return sb.ToString();
     }
-
+ 
     protected abstract string GetInteractDesInternal();
 
-    public virtual void CheckData()
+    public virtual void BindBuff()
     {
         
     }
@@ -38,11 +38,12 @@ public class SceneMiniItemDataBook : SceneMiniItemData
 {
     public BuffedInt CreativityGain = new(0);
 
-    SceneMiniItemDataBook()
+    public override void BindBuff()
     {
+        base.BindBuff();
         CreativityGain.SetBuff(MainItemMono.CheckCreativityGain);
     }
-    
+
     protected override string GetInteractDesInternal()
     {
         return $"看本小书，获得{CreativityGain}点灵感";
@@ -55,14 +56,15 @@ public class SceneMiniItemDataBook : SceneMiniItemData
 }
 
 [Serializable]
-public class SceneMiniItemDataFood : SceneMiniItemData
+public class SceneMiniItemDataFood2 : SceneMiniItemData
 {
     public BuffedInt StaminaGain = new(0);
-
-    SceneMiniItemDataFood()
+    public override void BindBuff()
     {
+        base.BindBuff();
         StaminaGain.SetBuff(MainItemMono.CheckStaminaGain);
     }
+
     protected override string GetInteractDesInternal()
     {
         return $"获得{StaminaGain}点体力";

@@ -21,8 +21,7 @@ public class ConsistentBuffData : BuffData
 {
     public EConBuffType ConBuffType;
     public bool HasCount;
-    [SerializeReference] [ShowIf(nameof(HasCount))]
-    public ObservableInt Count = new(0);
+    [ShowIf(nameof(HasCount))] public ObservableInt Count = new(0);
 }
 
 public enum EConBuffType

@@ -20,14 +20,10 @@ public class SceneItemData : DataBase
             newData.OccupyAirSet = dirSet;
         else
             newData.OccupyFloorSet = dirSet;
+
+        newData.BindBuff();
         return newData;
     }
-
-    protected SceneItemData()
-    {
-        StaminaCost.SetBuff(MainItemMono.CheckStaminaCost);
-    }
-    
     
     [NonSerialized][JsonIgnore] public SceneItemModel InsModel = null!;
     [JsonIgnore] public SceneItemModel OriginModel => Configer.SceneItemModelList.SceneItemModels.First(x => x.Data.ID == ID);
@@ -58,7 +54,7 @@ public class SceneItemData : DataBase
     
     [Header("HasConBuff")]
     public bool HasConBuff;
-    [ShowIf(nameof(HasConBuff))] [SerializeReference] [ReadOnly] public ObservableBool ConBuffActivated = new(false, after: _ => PlayerMono.RefreshCurPointBuff());
+    [ShowIf(nameof(HasConBuff))] [ReadOnly] public ObservableBool ConBuffActivated = new(false);
     [ShowIf(nameof(HasConBuff))] [SerializeReference] public ConsistentBuffData ConBuffData = null!;
     
     [Header("IsSleep")]
@@ -71,6 +67,12 @@ public class SceneItemData : DataBase
     [Header("Light")]
     [SerializeField] InteractHasLight? iLight;
     public bool HasCamera => iCamera != null;
+
+    protected virtual void BindBuff()
+    {
+        StaminaCost.SetBuff(MainItemMono.CheckStaminaCost);
+        ConBuffActivated.OnValueChangedAfter += _ => PlayerMono.RefreshCurPointBuff();
+    }
     
     public virtual void CheckData()
     {
@@ -177,10 +179,12 @@ public class PurpleSceneItemData : SceneItemData
     [Header("Purple")]
     public BuffedInt Energy = new(1);
 
-    PurpleSceneItemData()
+    protected override void BindBuff()
     {
+        base.BindBuff();
         Energy.SetBuff(MainItemMono.CheckEnergyGain);
     }
+
     protected override string GetInteractDesInternal()
     {
         return $"恢复{Energy}点精力";
@@ -217,8 +221,9 @@ public class BookShelfItemData : SceneItemData
     public BuffedInt EnergyCost = new(0);
     public BuffedInt Creativity = new(0);
 
-    BookShelfItemData()
+    protected override void BindBuff()
     {
+        base.BindBuff();
         EnergyCost.SetBuff(MainItemMono.CheckEnergyCost);
         Creativity.SetBuff(MainItemMono.CheckCreativityGain);
     }
@@ -272,9 +277,10 @@ public class ElectricItemData : SceneItemData
 {
     [Header("Electric")]
     public BuffedInt CreativityCost = new(0);
-
-    ElectricItemData()
+    
+    protected override void BindBuff()
     {
+        base.BindBuff();
         CreativityCost.SetBuff(MainItemMono.CheckCreativityCost);
     }
 
@@ -307,10 +313,12 @@ public class FoodItemData : SceneItemData
     [Header("Food")]
     public BuffedInt StaminaGain = new(0);
     
-    FoodItemData()
+    protected override void BindBuff()
     {
+        base.BindBuff();
         StaminaGain.SetBuff(MainItemMono.CheckStaminaGain);
     }
+    
     protected override string GetInteractDesInternal()
     {
         return $"恢复{StaminaGain}点体力";
