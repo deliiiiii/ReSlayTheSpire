@@ -34,7 +34,7 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
     
     public InteractInfo GetCb()
     {
-        if (!Data.IsActive())
+        if (!Data.IsActive)
             return InteractInfo.CreateUnActive();
         if (!Data.CanUse(out var failReason))
         {

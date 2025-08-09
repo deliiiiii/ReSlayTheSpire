@@ -56,7 +56,7 @@ public class SceneMiniItemDataBook : SceneMiniItemData
 }
 
 [Serializable]
-public class SceneMiniItemDataFood2 : SceneMiniItemData
+public class SceneMiniItemDataFood : SceneMiniItemData
 {
     public BuffedInt StaminaGain = new(0);
     public override void BindBuff()

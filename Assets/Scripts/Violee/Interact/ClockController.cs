@@ -25,6 +25,7 @@ public class ClockController : MonoBehaviour
                     { SceneItemData: ClockItemData { Watched: false } clockItemData }
                 && clockItemData == data
                 && newTime.Hour != oldTime.Hour
+                && newTime.Hour == 10
                )
             {
                 BuffManager.AddWinBuffClock(newTime.Hour);

@@ -38,12 +38,6 @@ public class SceneItemData : DataBase
     
     [Header("MinimapIcon")]
     public required Sprite MinimapIcon;
-    
-    [Header("HasCount")]
-    public bool HasCount;
-    [ShowIf(nameof(HasCount))] public int Count;
-    [ShowIf(nameof(HasCount))] public List<GameObject> HideAfterUseList = [];
-    [ShowIf(nameof(HasCount))] public List<GameObject> ShowAfterUseList = [];
 
     [Header("HasSpreadPos")]
     public bool HasSpreadPos;
@@ -52,20 +46,29 @@ public class SceneItemData : DataBase
     [ShowIf(nameof(HasSpreadPos))] [SerializeField] public SerializableDictionary<Transform, List<SceneMiniItemModel>> SpreadObjectDic = [];
     [ShowIf(nameof(HasSpreadPos))] public MyList<SceneMiniItemModel> HasSpreadObjList = [];
     
+    public bool IsActive;
+    [Header("HasCount")]
+    [ShowIf(nameof(IsActive))] public bool HasCount;
+    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasCount))] public int Count;
+    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasCount))] public List<GameObject> HideAfterUseList = [];
+    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasCount))] public List<GameObject> ShowAfterUseList = [];
+    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasCount))] public string RunOutDes = string.Empty;
+
+    
     [Header("HasConBuff")]
     public bool HasConBuff;
-    [ShowIf(nameof(HasConBuff))] [ReadOnly] public ObservableBool ConBuffActivated = new(false);
-    [ShowIf(nameof(HasConBuff))] [SerializeReference] public ConsistentBuffData ConBuffData = null!;
+    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasConBuff))] [ReadOnly] public ObservableBool ConBuffActivated = new(false);
+    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasConBuff))] [SerializeReference] public ConsistentBuffData ConBuffData = null!;
     
     [Header("IsSleep")]
-    public bool IsSleep;
-    [ShowIf(nameof(IsSleep))] public float SleepTime = 2.89f;
+    [ShowIf(nameof(IsActive))]public bool IsSleep;
+    [ShowIf(nameof(IsActive))][ShowIf(nameof(IsSleep))] public float SleepTime = 2.89f;
     
     [Header("Camera")]
-    [SerializeField] InteractHasCamera? iCamera;
+    [ShowIf(nameof(IsActive))][SerializeField] InteractHasCamera? iCamera;
     
     [Header("Light")]
-    [SerializeField] InteractHasLight? iLight;
+    [ShowIf(nameof(IsActive))][SerializeField] InteractHasLight? iLight;
     public bool HasCamera => iCamera != null;
 
     protected virtual void BindBuff()
@@ -83,16 +86,15 @@ public class SceneItemData : DataBase
         // if(MinimapIcon == null)
         //     LogErrorWith("MinimapIcon is null");
     }
-    public bool IsActive()
-    {
-        if (HasCount && Count <= 0)
-            return false;
-        return true;
-    }
 
     public bool CanUse(out string failReason)
     {
         failReason = string.Empty;
+        if (HasCount && Count <= 0)
+        {
+            failReason = RunOutDes;
+            return false;
+        }
         if (MainItemMono.StaminaCount < StaminaCost)
         {
             failReason = $"体力不足{StaminaCost}, 无法查看";
@@ -162,7 +164,7 @@ public class SceneItemData : DataBase
     public Color DesColor() => this switch
     {
         {StaminaCost.Value : > 0} => Color.blue,
-        FoodItemData => Color.cyan,
+        // FoodItemData => Color.cyan, 
         _ => Color.white,
     };
     void LogErrorWith(string str)
@@ -262,6 +264,7 @@ public class RecordPlayerItemData : SceneItemData
     {
         base.UseEffect();
         PlayOne();
+        IsActive = false;
     }
 
     public void PlayOne()
@@ -304,29 +307,30 @@ public class ElectricItemData : SceneItemData
     {
         base.UseEffect();
         MainItemMono.CostCreativity(CreativityCost);
+        IsActive = false;
     }
 }
-
-[Serializable]
-public class FoodItemData : SceneItemData
-{
-    [Header("Food")]
-    public BuffedInt StaminaGain = new(0);
-    
-    protected override void BindBuff()
-    {
-        base.BindBuff();
-        StaminaGain.SetBuff(MainItemMono.CheckStaminaGain);
-    }
-    
-    protected override string GetInteractDesInternal()
-    {
-        return $"恢复{StaminaGain}点体力";
-    }
-
-    protected override void UseEffect()
-    {
-        base.UseEffect();
-        MainItemMono.GainStamina(StaminaGain);
-    }
-}
+//
+// [Serializable]
+// public class FoodItemData : SceneItemData
+// {
+//     [Header("Food")]
+//     public BuffedInt StaminaGain = new(0);
+//     
+//     protected override void BindBuff()
+//     {
+//         base.BindBuff();
+//         StaminaGain.SetBuff(MainItemMono.CheckStaminaGain);
+//     }
+//     
+//     protected override string GetInteractDesInternal()
+//     {
+//         return $"恢复{StaminaGain}点体力";
+//     }
+//
+//     protected override void UseEffect()
+//     {
+//         base.UseEffect();
+//         MainItemMono.GainStamina(StaminaGain);
+//     }
+// }
