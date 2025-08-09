@@ -36,7 +36,7 @@ public abstract class SceneMiniItemData : DataBase
 [Serializable]
 public class SceneMiniItemDataBook : SceneMiniItemData
 {
-    public Buffed<int> CreativityGain = new(0);
+    public BuffedInt CreativityGain = new(0);
 
     SceneMiniItemDataBook()
     {
@@ -57,7 +57,7 @@ public class SceneMiniItemDataBook : SceneMiniItemData
 [Serializable]
 public class SceneMiniItemDataFood : SceneMiniItemData
 {
-    public Buffed<int> StaminaGain = new(0);
+    public BuffedInt StaminaGain = new(0);
 
     SceneMiniItemDataFood()
     {

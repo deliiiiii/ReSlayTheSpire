@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public class Buffed<T>
+public abstract class Buffed<T>
 {
     [SerializeField]
     T value;
@@ -30,3 +30,8 @@ public class Buffed<T>
         return Value?.ToString() ?? $"NULL Buffed{typeof(T)}";
     }
 }
+
+[Serializable]
+public class BuffedInt(int initValue, Func<int, int>? buffFunc = null) : Buffed<int>(initValue, buffFunc);
+[Serializable]
+public class BuffedFloat(float initValue, Func<float, float>? buffFunc = null) : Buffed<float>(initValue, buffFunc);

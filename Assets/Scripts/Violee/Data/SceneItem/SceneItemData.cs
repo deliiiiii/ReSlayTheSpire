@@ -37,7 +37,7 @@ public class SceneItemData : DataBase
     // public int OccupyCount = 1;
     public bool IsAir;
     public int ID;
-    public Buffed<int> StaminaCost = new(1);
+    public BuffedInt StaminaCost = new(1);
     public string DesPre = string.Empty;
     
     [Header("MinimapIcon")]
@@ -58,7 +58,7 @@ public class SceneItemData : DataBase
     
     [Header("HasConBuff")]
     public bool HasConBuff;
-    [ShowIf(nameof(HasConBuff))] [ReadOnly] public Observable<bool> ConBuffActivated = new(false, after: _ => PlayerMono.RefreshCurPointBuff());
+    [ShowIf(nameof(HasConBuff))] [SerializeReference] [ReadOnly] public ObservableBool ConBuffActivated = new(false, after: _ => PlayerMono.RefreshCurPointBuff());
     [ShowIf(nameof(HasConBuff))] [SerializeReference] public ConsistentBuffData ConBuffData = null!;
     
     [Header("IsSleep")]
@@ -175,7 +175,7 @@ public class SceneItemData : DataBase
 public class PurpleSceneItemData : SceneItemData
 {
     [Header("Purple")]
-    public Buffed<int> Energy = new(1);
+    public BuffedInt Energy = new(1);
 
     PurpleSceneItemData()
     {
@@ -214,8 +214,8 @@ public class ClockItemData : SceneItemData
 public class BookShelfItemData : SceneItemData
 {
     [Header("BookShelf")]
-    public Buffed<int> EnergyCost = new(0);
-    public Buffed<int> Creativity = new(0);
+    public BuffedInt EnergyCost = new(0);
+    public BuffedInt Creativity = new(0);
 
     BookShelfItemData()
     {
@@ -271,7 +271,7 @@ public class RecordPlayerItemData : SceneItemData
 public class ElectricItemData : SceneItemData
 {
     [Header("Electric")]
-    public Buffed<int> CreativityCost = new(0);
+    public BuffedInt CreativityCost = new(0);
 
     ElectricItemData()
     {
@@ -305,7 +305,7 @@ public class ElectricItemData : SceneItemData
 public class FoodItemData : SceneItemData
 {
     [Header("Food")]
-    public Buffed<int> StaminaGain = new(0);
+    public BuffedInt StaminaGain = new(0);
     
     FoodItemData()
     {
