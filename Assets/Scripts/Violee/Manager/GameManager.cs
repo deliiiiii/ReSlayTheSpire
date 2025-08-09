@@ -20,7 +20,16 @@ public class WindowInfo
     [NonSerialized]
     public Action? OnAddEvent;
     [NonSerialized]
+    public Action<WindowInfo>? OnAddEventWithArg;
+    [NonSerialized]
     public Action? OnRemoveEvent;
+}
+
+[Serializable]
+public class VioleTWindowInfo : WindowInfo
+{
+    public string Word = string.Empty;
+    public Action<string>? OnScramble;
 }
 
 [Serializable]
@@ -57,7 +66,11 @@ public class GameManager : SingletonCS<GameManager>
     
     
     public static readonly MyList<WindowInfo> WindowList
-        = new ([], x => x.OnAddEvent?.Invoke(), x => x.OnRemoveEvent?.Invoke());
+        = new ([], x =>
+        {
+            x.OnAddEvent?.Invoke();
+            x.OnAddEventWithArg?.Invoke(x);
+        }, x => x.OnRemoveEvent?.Invoke());
     public static readonly WindowInfo PauseWindow = new ()
     {
         // WindowType = EWindowType.GamePause,

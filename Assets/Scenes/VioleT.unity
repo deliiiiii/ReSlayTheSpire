@@ -9854,7 +9854,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.x
@@ -9862,7 +9862,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_SizeDelta.x
@@ -9902,11 +9902,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 492
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -70.967964
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9920,9 +9920,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2069810545670902364, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
+      propertyPath: m_Text
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4422726851511943285, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_Name
-      value: WordImage (3)
+      value: ScrambleIcon (3)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13448,7 +13452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.x
@@ -13456,7 +13460,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_SizeDelta.x
@@ -13496,11 +13500,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 204
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -70.967964
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -13514,9 +13518,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2069810545670902364, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
+      propertyPath: m_Text
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4422726851511943285, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_Name
-      value: WordImage (1)
+      value: ScrambleIcon (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14742,7 +14750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.x
@@ -14750,7 +14758,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_SizeDelta.x
@@ -14790,11 +14798,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 636
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -70.967964
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -14808,9 +14816,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2069810545670902364, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
+      propertyPath: m_Text
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4422726851511943285, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_Name
-      value: WordImage (4)
+      value: ScrambleIcon (4)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22816,6 +22828,7 @@ GameObject:
   - component: {fileID: 1254936796}
   - component: {fileID: 1254936797}
   - component: {fileID: 1254936798}
+  - component: {fileID: 1254936799}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -22846,7 +22859,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0.00010681152}
-  m_SizeDelta: {x: 189.76001, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1254936797
 MonoBehaviour:
@@ -22888,6 +22901,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!114 &1254936799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254936795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd7598dc5f544725aa0a211f3923791c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalOnScene: 0
+  ScrambleIconParent: {fileID: 1254936796}
 --- !u!43 &1268267004
 Mesh:
   m_ObjectHideFlags: 0
@@ -30243,7 +30270,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.x
@@ -30251,7 +30278,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_SizeDelta.x
@@ -30291,11 +30318,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 348
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -70.967964
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -30309,9 +30336,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2069810545670902364, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
+      propertyPath: m_Text
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4422726851511943285, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_Name
-      value: WordImage (2)
+      value: ScrambleIcon (2)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -30345,7 +30376,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.x
@@ -30353,7 +30384,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_SizeDelta.x
@@ -30393,11 +30424,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 780
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -70.967964
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -30411,9 +30442,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2069810545670902364, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
+      propertyPath: m_Text
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4422726851511943285, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_Name
-      value: WordImage (5)
+      value: ScrambleIcon (5)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36795,7 +36830,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2082233249
 RectTransform:
   m_ObjectHideFlags: 0
@@ -38447,7 +38482,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.x
@@ -38455,7 +38490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_SizeDelta.x
@@ -38495,11 +38530,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 60
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -70.967964
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 451806344585937601, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -38513,9 +38548,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2069810545670902364, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
+      propertyPath: m_Text
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4422726851511943285, guid: 9807987a2fd31c741a7cac3fd1c73dc6, type: 3}
       propertyPath: m_Name
-      value: WordImage
+      value: ScrambleIcon
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

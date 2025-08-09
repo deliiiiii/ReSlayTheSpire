@@ -12,23 +12,19 @@ class GameView : ViewBase<GameView>
 {
     static readonly WindowInfo fullMapWindow = new ()
     {
-        // WindowType = EWindowType.NormalUI,
         Des = "全屏地图"
     };
     static readonly WindowInfo sleepWindow = new ()
     {
-        // WindowType = EWindowType.WaitingSceneItem,
         Des = "休息..."
     };
     public static readonly WindowInfo DrawWindow = new ()
     {
-        // WindowType = EWindowType.NormalUI,
         Des = "选择房间装修中"
     };
-    public static readonly WindowInfo VioleTWindow = new ()
+    public static readonly VioleTWindowInfo VioleTWindow = new ()
     {
-        // WindowType = EWindowType.NormalUI,
-        Des = "VioleT"
+        Des = "VioleT",
     };
     
     protected override void IBL()
@@ -200,7 +196,11 @@ class GameView : ViewBase<GameView>
                 throw;
             }
         });
-        Binder.From(VioleTBtn).To(() => GameManager.WindowList.MyAdd(VioleTWindow));
+        Binder.From(VioleTBtn).To(() =>
+        {
+            VioleTWindow.Word = VioleTTxt.text;
+            GameManager.WindowList.MyAdd(VioleTWindow);
+        });
         Binder.From(VioleTPnlBtn).To(() => GameManager.WindowList.MyRemove(VioleTWindow));
     }
 
