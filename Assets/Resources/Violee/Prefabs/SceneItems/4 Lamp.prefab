@@ -101,12 +101,20 @@ PrefabInstance:
       value: Violee Violee.ElectricItemData
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788510524768259]
+      value: Violee ConsistentBuffData
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788484985126912].ID
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788486813057029].ID
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788510524768259].Des
+      value: "\u6240\u5728\u8FDE\u901A\u5757\u7684\u6240\u6709\u7075\u611F\u6D88\u8017-1"
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788484985126912].Count
@@ -122,6 +130,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788486813057029].IsAir
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788510524768259].Count
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
@@ -169,6 +181,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788510524768259].HasCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788484985126912].SleepTime
       value: 2.89
       objectReference: {fileID: 0}
@@ -193,6 +209,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788486813057029].ConBuffData
+      value: 746788510524768259
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788486813057029].ConBuffType
       value: 1
       objectReference: {fileID: 0}
@@ -203,6 +223,18 @@ PrefabInstance:
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788486813057029].StaminaCost
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788510524768259].ConBuffType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788510524768259].Count.value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788486813057029].ConBuffCount
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788486813057029].HasSpreadPos
@@ -217,6 +249,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788486813057029].ConBuffHasCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788486813057029].ElectricityCost
       value: 2
       objectReference: {fileID: 0}
@@ -226,6 +262,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788486813057029].SpreadPossibility
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788486813057029].StaminaCost.value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788486813057029].CreativityCost.value
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788486813057029].ConBuffActivated.value
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}

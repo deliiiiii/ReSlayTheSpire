@@ -138,7 +138,7 @@ public class GameManager : SingletonCS<GameManager>
             });
         BuffManager.OnAddWindowBuff += winBuff =>
         {
-            var ret = CreateAndAddBuffWindow($"{winBuff.GetDes()}");
+            var ret = CreateAndAddBuffWindow($"{winBuff.Des}");
             ret.OnRemove(() => winBuff.BuffEffect());
         };
         

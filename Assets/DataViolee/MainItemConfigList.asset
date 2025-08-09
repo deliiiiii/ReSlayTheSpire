@@ -21,7 +21,7 @@ MonoBehaviour:
     InitValue: 10
   - Sprite: {fileID: 0}
     Description: Creativity
-    InitValue: 10
+    InitValue: 20
   - Sprite: {fileID: 0}
     Description: Violee
     InitValue: 0

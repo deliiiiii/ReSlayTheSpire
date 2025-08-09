@@ -23,6 +23,11 @@ public class SceneItemData : DataBase
             newData.OccupyFloorSet = dirSet;
         return newData;
     }
+
+    protected SceneItemData()
+    {
+        StaminaCost.SetBuff(MainItemMono.CheckStaminaCost);
+    }
     
     
     [NonSerialized][JsonIgnore] public SceneItemModel InsModel = null!;
@@ -33,7 +38,7 @@ public class SceneItemData : DataBase
     // public int OccupyCount = 1;
     public bool IsAir;
     public int ID;
-    public int StaminaCost;
+    public Buffed<int> StaminaCost = new(1);
     public string DesPre = string.Empty;
     
     [Header("MinimapIcon")]
@@ -54,9 +59,8 @@ public class SceneItemData : DataBase
     
     [Header("HasConBuff")]
     public bool HasConBuff;
-    [ShowIf(nameof(HasConBuff))] public EConBuffType ConBuffType;
-    [ShowIf(nameof(HasConBuff))] public string ConDes = string.Empty;
-    [ShowIf(nameof(HasConBuff))] [ReadOnly] public bool ConBuffActivated;
+    [ShowIf(nameof(HasConBuff))] [ReadOnly] public Observable<bool> ConBuffActivated = new(false, after: _ => PlayerMono.RefreshCurPointBuff());
+    [ShowIf(nameof(HasConBuff))] [SerializeReference] public ConsistentBuffData ConBuffData = null!;
     
     [Header("IsSleep")]
     public bool IsSleep;
@@ -88,7 +92,7 @@ public class SceneItemData : DataBase
     public bool CanUse(out string failReason)
     {
         failReason = string.Empty;
-        if (MainItemMono.StaminaCount.Value < StaminaCost)
+        if (MainItemMono.StaminaCount < StaminaCost)
         {
             failReason = $"体力不足{StaminaCost}, 无法查看";
             return false;
@@ -119,7 +123,7 @@ public class SceneItemData : DataBase
     }
     protected virtual void UseEffect()
     {
-        MainItemMono.StaminaCount.Value -= StaminaCost;
+        MainItemMono.CostStamina(StaminaCost);
     }
     protected virtual void OnUseEnd()
     {
@@ -136,8 +140,7 @@ public class SceneItemData : DataBase
 
         if (HasConBuff)
         {
-            ConBuffActivated = true;
-            PlayerMono.RefreshCurPointBuff();
+            ConBuffActivated.Value = true;
         }
     }
     public string GetInteractDes()
@@ -148,7 +151,7 @@ public class SceneItemData : DataBase
             sb.Append($"消耗{StaminaCost}点体力,\n");
         sb.Append(GetInteractDesInternal());
         if (HasConBuff)
-            sb.Append($"\n{ConDes}。");
+            sb.Append($"\n{ConBuffData.Des}。");
         return sb.ToString();
     }
     protected virtual string GetInteractDesInternal()
@@ -157,7 +160,7 @@ public class SceneItemData : DataBase
     }
     public Color DesColor() => this switch
     {
-        {StaminaCost : > 0} => Color.blue,
+        {StaminaCost.Value : > 0} => Color.blue,
         FoodItemData => Color.cyan,
         _ => Color.white,
     };
@@ -173,8 +176,12 @@ public class SceneItemData : DataBase
 public class PurpleSceneItemData : SceneItemData
 {
     [Header("Purple")]
-    public int Energy;
+    public Buffed<int> Energy = new(1);
 
+    PurpleSceneItemData()
+    {
+        Energy.SetBuff(MainItemMono.CheckEnergyGain);
+    }
     protected override string GetInteractDesInternal()
     {
         return $"恢复{Energy}点精力";
@@ -183,7 +190,7 @@ public class PurpleSceneItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        MainItemMono.EnergyCount.Value += Energy;
+        MainItemMono.GainEnergy(Energy);
     }
 }
 
@@ -208,13 +215,19 @@ public class ClockItemData : SceneItemData
 public class BookShelfItemData : SceneItemData
 {
     [Header("BookShelf")]
-    public int EnergyCost;
-    public int Creativity;
+    public Buffed<int> EnergyCost = new(0);
+    public Buffed<int> Creativity = new(0);
+
+    BookShelfItemData()
+    {
+        EnergyCost.SetBuff(MainItemMono.CheckEnergyCost);
+        Creativity.SetBuff(MainItemMono.CheckCreativityGain);
+    }
 
     protected override bool CanUseInternal(out string failReason)
     {
         failReason = string.Empty;
-        if (MainItemMono.EnergyCount.Value < EnergyCost)
+        if (MainItemMono.EnergyCount < EnergyCost)
         {
             failReason = $"精力不足{EnergyCost}, 无法阅读";
             return false;
@@ -229,8 +242,8 @@ public class BookShelfItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        MainItemMono.EnergyCount.Value -= EnergyCost;
-        MainItemMono.CreativityCount.Value += Creativity;
+        MainItemMono.CostEnergy(EnergyCost);
+        MainItemMono.GainCreativity(Creativity);
     }
 }
 
@@ -259,15 +272,19 @@ public class RecordPlayerItemData : SceneItemData
 public class ElectricItemData : SceneItemData
 {
     [Header("Electric")]
-    public int CreativityCost;
-    int trueCost => MainItemMono.CheckCreativityCost(CreativityCost);
+    public Buffed<int> CreativityCost = new(0);
+
+    ElectricItemData()
+    {
+        CreativityCost.SetBuff(MainItemMono.CheckCreativityCost);
+    }
 
     protected override bool CanUseInternal(out string failReason)
     {
         failReason = string.Empty;
-        if(MainItemMono.CreativityCount.Value < trueCost)
+        if(MainItemMono.CreativityCount < CreativityCost)
         {
-            failReason = $"灵感不足{trueCost}, 无法使用";
+            failReason = $"灵感不足{CreativityCost}, 无法使用";
             return false;
         }
         return true;
@@ -275,13 +292,13 @@ public class ElectricItemData : SceneItemData
 
     protected override string GetInteractDesInternal()
     {
-        return $"消耗{trueCost}点灵感。";
+        return $"消耗{CreativityCost}点灵感。";
     }
 
     protected override void UseEffect()
     {
         base.UseEffect();
-        MainItemMono.CreativityCount.Value -= trueCost;
+        MainItemMono.CostCreativity(CreativityCost);
     }
 }
 
@@ -289,7 +306,12 @@ public class ElectricItemData : SceneItemData
 public class FoodItemData : SceneItemData
 {
     [Header("Food")]
-    public int StaminaGain;
+    public Buffed<int> StaminaGain = new(0);
+    
+    FoodItemData()
+    {
+        StaminaGain.SetBuff(MainItemMono.CheckStaminaGain);
+    }
     protected override string GetInteractDesInternal()
     {
         return $"恢复{StaminaGain}点体力";
@@ -298,6 +320,6 @@ public class FoodItemData : SceneItemData
     protected override void UseEffect()
     {
         base.UseEffect();
-        MainItemMono.StaminaCount.Value += StaminaGain;
+        MainItemMono.GainStamina(StaminaGain);
     }
 }

@@ -24,7 +24,7 @@ public class MainItemData : DataBase
         Creativity = MiniItems.Find(x => x.Config.Description.Equals(nameof(Creativity)));
         Violee = MiniItems.Find(x => x.Config.Description.Equals(nameof(Violee)));
         // TODO 
-        Stamina.OnRunOut += () => {/* game over */ };
+        Stamina.OnRunOut += () => {/* game over */  };
     }
 }
 
@@ -33,30 +33,14 @@ public class MainItemData : DataBase
 public class MainItemDataSingle(MainItemConfig config) : DataBase
 {
     public MainItemConfig Config = config;
-    public Observable<int> Count = new(config.InitValue);
+    public int Count = config.InitValue;
     
-    public event Func<bool>? CheckUse;
-    public event Action<int>? OnCheckFail;
-    public event Action? OnUse;
     public event Action? OnRunOut;
-
-    public void TryUse()
-    {
-        if (CheckUse != null && !CheckUse())
-        {
-            OnCheckFail?.Invoke(Count.Value);
-            return;
-        }
-        Use();
-    }
 
     void Use()
     {
-        Count.Value--;
-        OnUse?.Invoke();
-        if (Count == 0)
-        {
+        Count--;
+        if(Count <= 0)
             OnRunOut?.Invoke();
-        }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -9,13 +10,15 @@ using UnityEngine.Events;
 public class Observable<T>
 {
     [SerializeField] [CanBeNull] T value;
+    bool forceEverySet;
+    bool enableRepeatEvent;
 
     [Button]
     public void AddOne()
     {
         if (value is int or float or double)
         {
-            Value = (dynamic)value + 1;
+            Value = (dynamic)Value + 1;
         }
     }
     [CanBeNull]
@@ -27,32 +30,73 @@ public class Observable<T>
             var oldV = this.value;
             if (value is IComparable com)
             {
-                if (com.CompareTo(oldV) == 0)
+                if (com.CompareTo(oldV) == 0 && !forceEverySet)
                 {
                     return;
                 }
             }
             else if (value != null && value.Equals(oldV))
                 return;
-            OnValueChangedBefore?.Invoke(oldV);
+            onValueChangedBefore?.Invoke(oldV);
             this.value = value;
-            OnValueChangedAfter?.Invoke(this.value);
-            OnValueChangedFull?.Invoke(oldV, value);
+            onValueChangedAfter?.Invoke(this.value);
+            onValueChangedFull?.Invoke(oldV, value);
         }
     }
-    [CanBeNull] public event UnityAction<T> OnValueChangedBefore;
-    [CanBeNull] public event UnityAction<T> OnValueChangedAfter;
-    [CanBeNull] public event UnityAction<T, T> OnValueChangedFull;
+    [CanBeNull] UnityAction<T> onValueChangedBefore;
+    [CanBeNull] public event UnityAction<T> OnValueChangedBefore
+    {
+        add
+        {
+            if (!enableRepeatEvent || (!onValueChangedBefore?.GetInvocationList().Contains(value) ?? true))
+            {
+                onValueChangedBefore += value;
+            }
+        }
+        remove => onValueChangedBefore -= value;
+    }
+    
+    [CanBeNull] UnityAction<T> onValueChangedAfter;
+    [CanBeNull] public event UnityAction<T> OnValueChangedAfter
+    {
+        add
+        {
+            if (!enableRepeatEvent || (!onValueChangedAfter?.GetInvocationList().Contains(value) ?? true))
+            {
+                onValueChangedAfter += value;
+            }
+        }
+        remove => onValueChangedAfter -= value;
+    }
+    [CanBeNull] UnityAction<T, T> onValueChangedFull;
+    [CanBeNull] public event UnityAction<T, T> OnValueChangedFull
+    {
+        add
+        {
+            if (!enableRepeatEvent || (!onValueChangedFull?.GetInvocationList().Contains(value) ?? true))
+            {
+                onValueChangedFull += value;
+            }
+        }
+        remove => onValueChangedFull -= value;
+    }
     [JsonConstructor]
     public Observable(T initValue)
     {
         value = initValue;
     }
-    public Observable(T initValue, [CanBeNull] UnityAction<T> before = null, [CanBeNull] UnityAction<T> after = null)
+    public Observable(T initValue, 
+        [CanBeNull] UnityAction<T> before = null, 
+        [CanBeNull] UnityAction<T> after = null,
+        bool forceEverySet = false,
+        bool enableRepeatEvent = false
+        )
     {
         value = initValue;
-        OnValueChangedBefore += before;
-        OnValueChangedAfter += after;
+        onValueChangedBefore += before;
+        onValueChangedAfter += after;
+        this.forceEverySet = forceEverySet;
+        this.enableRepeatEvent = enableRepeatEvent;
     }
     public static implicit operator T(Observable<T> v)
     {
@@ -67,14 +111,14 @@ public class Observable<T>
             float f => f,
             double d => (float)d,
             char c => c,
-            _ => (dynamic)v.value
+            _ => (dynamic)v.Value
         };
     }
 
 
     public override string ToString()
     {
-        return value?.ToString() ?? $"NULL Observable{typeof(T)}";
+        return Value?.ToString() ?? $"NULL Observable{typeof(T)}";
     }
 }
 

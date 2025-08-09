@@ -76,8 +76,7 @@ class GameView : ViewBase<GameView>
                 ExitWatchingItemBtn.gameObject.SetActive(false);
             });
 
-        Binder.From(PlayerMono.InteractInfo).To(info =>
-        {
+        Binder.From(PlayerMono.InteractInfo).To(info => {
             NormalReticle.SetActive(info == null);
             FindReticle.SetActive(info != null);
             SceneItemInfoPnl.SetActive(info != null);
@@ -105,18 +104,15 @@ class GameView : ViewBase<GameView>
             {
                 MiniItemPnl.SetActive(true);
                 ShowMinimap();
-                
-                Binder.From(MainItemMono.StaminaCount).ToTxt(StaminaTxt).Immediate();
-                Binder.From(MainItemMono.EnergyCount).ToTxt(EnergyTxt).Immediate();
-                Binder.From(MainItemMono.CreativityCount).ToTxt(CreativityTxt).Immediate();
-                Binder.From(MainItemMono.CreativityCount).To(v =>
-                {
-                    RedrawBtn.interactable = v >= MainItemMono.CheckCreativityCost(1);
-                }).Immediate();
-                Binder.From(MainItemMono.VioleeCount).ToTxt(VioleeTxt).Immediate();
             })
             .OnUpdate(dt =>
             {
+                StaminaTxt.text = MainItemMono.StaminaCount.ToString();
+                EnergyTxt.text = MainItemMono.EnergyCount.ToString();
+                CreativityTxt.text = MainItemMono.CreativityCount.ToString();
+                VioleeTxt.text = MainItemMono.VioleeCount.ToString();
+                RedrawBtn.interactable = MainItemMono.CreativityCount >= MainItemMono.CheckCreativityCost(1);
+                
                 ChangeFOV(dt);
                 
                 if (Input.GetKeyDown(KeyCode.Tab) && !GameManager.HasPaused)
@@ -128,7 +124,7 @@ class GameView : ViewBase<GameView>
                 }
             })
             .OnExit(() => MiniItemPnl.SetActive(false));
-
+        
 
         var conBuffInsDic = new Dictionary<BuffData, GameObject>();
         BuffManager.OnAddConBuff += conBuff =>
@@ -136,7 +132,7 @@ class GameView : ViewBase<GameView>
             // MyDebug.Log("GameView OnAddConBuff " + conBuff.ConBuffType);
             var conBuffIns = Instantiate(ConsistentBuffPrefab, ConsistentBuffIconPnl.transform);
             conBuffIns.Image.sprite = Configer.ConBuffConfigList.BuffConfigDic[conBuff.ConBuffType].Sprite;
-            conBuffIns.DetailTxt.text = conBuff.GetDes();
+            conBuffIns.DetailTxt.text = conBuff.Des;
             conBuffIns.DetailPnlShown = Instantiate(conBuffIns.DetailPnl, ConsistentBuffDetailPnl);
             conBuffIns.OnPointerEnterEvt += () =>
             {
@@ -162,6 +158,11 @@ class GameView : ViewBase<GameView>
             MusicWindow.gameObject.SetActive(true);
         };
         
+        Binder.From(RedrawBtn).To(() =>
+        {
+            MainItemMono.CostCreativity(MainItemMono.CheckCreativityCost(1));
+            showDrawConfigsAct();
+        });
         Binder.From(ContinueBtn).To(() => GameManager.WindowList.MyRemove(GameManager.PauseWindow));
         Binder.From(ExitWatchingItemBtn).To(async () =>
         {
@@ -177,13 +178,6 @@ class GameView : ViewBase<GameView>
                 MyDebug.LogError(e);
                 throw;
             }
-        });
-        
-        Binder.From(RedrawBtn).To(() =>
-        {
-            MainItemMono.CreativityCount.Value -= MainItemMono.CheckCreativityCost(1);
-            RedrawBtn.interactable = MainItemMono.CreativityCount >= MainItemMono.CheckCreativityCost(1);
-            showDrawConfigsAct();
         });
     }
 

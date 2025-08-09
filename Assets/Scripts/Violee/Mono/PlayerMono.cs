@@ -27,7 +27,7 @@ public class PlayerMono : Singleton<PlayerMono>
         
         
     }
-
+    
     public static void RefreshCurPointBuff()
     {
         BuffManager.RefreshConBuffs(PlayerCurPoint.Value?.ConnectedPointItems() ?? []);

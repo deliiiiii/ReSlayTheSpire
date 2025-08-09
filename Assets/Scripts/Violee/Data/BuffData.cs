@@ -1,11 +1,12 @@
 ﻿using System;
+using Sirenix.OdinInspector;
 using Violee;
 
 
 [Serializable]
 public class BuffData : DataBase
 {
-    public required Func<string> GetDes;
+    public required string Des;
 }
 
 [Serializable]
@@ -18,10 +19,14 @@ public class WindowBuffData : BuffData
 public class ConsistentBuffData : BuffData
 {
     public EConBuffType ConBuffType;
+    public bool HasCount;
+    [ShowIf(nameof(HasCount))]
+    public Observable<int> Count = new(0);
 }
 
 public enum EConBuffType
 {
     PlayRecord,
     Lamp,
+    SmallLamp,
 }

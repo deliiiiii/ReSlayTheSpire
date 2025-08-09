@@ -162,4 +162,5 @@ MonoBehaviour:
       type: {class: SceneMiniItemDataBook, ns: Violee, asm: Violee}
       data:
         InteractColor: {r: 0, g: 0.91391253, b: 1, a: 1}
-        CreativityGain: 1
+        CreativityGain:
+          value: 1

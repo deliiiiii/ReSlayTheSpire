@@ -36,8 +36,13 @@ public abstract class SceneMiniItemData : DataBase
 [Serializable]
 public class SceneMiniItemDataBook : SceneMiniItemData
 {
-    public int CreativityGain;
+    public Buffed<int> CreativityGain = new(0);
 
+    SceneMiniItemDataBook()
+    {
+        CreativityGain.SetBuff(MainItemMono.CheckCreativityGain);
+    }
+    
     protected override string GetInteractDesInternal()
     {
         return $"看本小书，获得{CreativityGain}点灵感";
@@ -45,14 +50,19 @@ public class SceneMiniItemDataBook : SceneMiniItemData
 
     protected override void PickUpInternal()
     {
-        MainItemMono.CreativityCount.Value += CreativityGain;
+        MainItemMono.GainCreativity(CreativityGain);
     }
 }
 
 [Serializable]
 public class SceneMiniItemDataFood : SceneMiniItemData
 {
-    public int StaminaGain;
+    public Buffed<int> StaminaGain = new(0);
+
+    SceneMiniItemDataFood()
+    {
+        StaminaGain.SetBuff(MainItemMono.CheckStaminaGain);
+    }
     protected override string GetInteractDesInternal()
     {
         return $"获得{StaminaGain}点体力";
@@ -60,7 +70,7 @@ public class SceneMiniItemDataFood : SceneMiniItemData
 
     protected override void PickUpInternal()
     {
-        MainItemMono.StaminaCount.Value += StaminaGain;
+        MainItemMono.GainStamina(StaminaGain);
     }
 }
 

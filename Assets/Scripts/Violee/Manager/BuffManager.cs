@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace Violee;
 
@@ -23,24 +25,22 @@ public class BuffManager : SingletonCS<BuffManager>
         int energy = hour % 2 == 0 ? 2 : 1;
         var added = new WindowBuffData
         {
-            GetDes = () => $"叮! 时间到了{hour}点整...!\n鉴于你凝思了许久，精力+{energy}点。",
+            Des = $"叮! 时间到了{hour}点整...!\n鉴于你凝思了许久，精力+{energy}点。",
             BuffEffect = () =>
             {
                 // TODO 消除耦合
-                MainItemMono.EnergyCount.Value += energy;
+                MainItemMono.GainEnergy(energy);
             },
         };
         winBuffList.MyAdd(added);
     }
-
-    public static void AddConBuff(EConBuffType conBuffType, Func<string> getDes)
+    
+    public static void TryUseSmallLamp()
     {
-        var added = new ConsistentBuffData()
-        {
-            GetDes = getDes,
-            ConBuffType = conBuffType,
-        };
-        conBuffList.MyAdd(added);
+        var smallLamp = conBuffList.Find(b => b.ConBuffType == EConBuffType.SmallLamp);
+        if (smallLamp == null)
+            return;
+        smallLamp.Count.Value--;
     }
 
     public static event Action<WindowBuffData>? OnAddWindowBuff;
@@ -51,16 +51,53 @@ public class BuffManager : SingletonCS<BuffManager>
     static bool ContainsConBuff(EConBuffType conBuffType) 
         => conBuffList.Any(b => b.ConBuffType == conBuffType);
 
+    static readonly UnityAction<int> refreshBuffActInt = _ => PlayerMono.RefreshCurPointBuff();
+    
     public static void RefreshConBuffs(IEnumerable<SceneItemData> items)
     {
         conBuffList.MyClear();
+        
         items.ForEach(i =>
         {
             if(!i.HasConBuff || !i.ConBuffActivated)
                 return;
-            AddConBuff(i.ConBuffType, () => i.ConDes);
+            if (i.ConBuffData.HasCount && i.ConBuffData.Count <= 0)
+                return;
+            i.ConBuffData.Count.OnValueChangedAfter += refreshBuffActInt;
+            conBuffList.MyAdd(i.ConBuffData);
         });
     }
     public static bool IsWithRecordPlayer => ContainsConBuff(EConBuffType.PlayRecord);
     public static bool IsWithLamp => ContainsConBuff(EConBuffType.Lamp);
+    public static bool IsWithSmallLamp => ContainsConBuff(EConBuffType.SmallLamp);
+}
+
+[Serializable]
+public class Buffed<T>
+{
+    [SerializeField]
+    T value;
+    [NonSerialized] Func<T, T>? buffFunc;
+    public T Value 
+        => buffFunc == null ? value : buffFunc(value);
+
+    public Buffed(T initValue, Func<T, T>? buffFunc = null)
+    {
+        value = initValue;
+    }
+    
+    public void SetBuff(Func<T, T> func)
+    {
+        buffFunc = func;
+    }
+
+    public static implicit operator T(Buffed<T> buffed)
+    {
+        return buffed.Value;
+    }
+    
+    public override string ToString()
+    {
+        return Value?.ToString() ?? $"NULL Buffed{typeof(T)}";
+    }
 }

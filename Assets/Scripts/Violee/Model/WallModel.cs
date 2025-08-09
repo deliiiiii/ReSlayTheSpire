@@ -37,7 +37,7 @@ namespace Violee
             var energyCost = 1;
             if (BuffManager.IsWithRecordPlayer)
                 energyCost -= 1;
-            if (MainItemMono.EnergyCount.Value < energyCost)
+            if (MainItemMono.EnergyCount < energyCost)
             {
                 return InteractInfo.CreateInvalid($"精力不足{energyCost}，无法打开门");
             }
@@ -46,7 +46,7 @@ namespace Violee
                 CanUse = true,
                 Act = () =>
                 {
-                    MainItemMono.EnergyCount.Value -= energyCost;
+                    MainItemMono.CostEnergy(energyCost);
                     Data.Opened.Value = true;
                 },
                 Description = $"打开门：消耗{energyCost}点精力, 并绘制门后连通区域的装饰。",
