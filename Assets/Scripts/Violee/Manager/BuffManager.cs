@@ -71,5 +71,6 @@ public class BuffManager : SingletonCS<BuffManager>
     public static bool IsWithLamp => ContainsConBuff(EConBuffType.Lamp);
     public static bool IsWithSmallLamp => ContainsConBuff(EConBuffType.SmallLamp);
     public static bool IsWithCooler => ContainsConBuff(EConBuffType.Cooler);
+    public static bool IsWithFridge => ContainsConBuff(EConBuffType.Fridge);
 }
 

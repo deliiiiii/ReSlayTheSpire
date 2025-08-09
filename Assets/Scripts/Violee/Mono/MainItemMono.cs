@@ -72,6 +72,8 @@ public class MainItemMono : Singleton<MainItemMono>
     public static int CheckStaminaGain(int gain)
     {
         var trueGain = gain;
+        if (BuffManager.IsWithFridge)
+            trueGain += 2;
         return trueGain;
     }
     #endregion

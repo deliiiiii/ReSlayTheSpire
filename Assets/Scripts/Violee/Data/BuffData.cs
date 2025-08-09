@@ -30,4 +30,5 @@ public enum EConBuffType
     Lamp,
     SmallLamp,
     Cooler,
+    Fridge,
 }
