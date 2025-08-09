@@ -13,18 +13,21 @@ public class ClockController : MonoBehaviour
     Action<float>? act;
     readonly Observable<DateTime> curTime = new(default);
 
+    SceneItemData data = null!;
+
     void Awake()
     {
+        data = GetComponent<SceneItemModel>().Data;
         curTime.OnValueChangedFull += (oldTime, newTime) =>
         {
             if (GameManager.WindowList.Contains(GameManager.WatchingClockWindow)
                 && PlayerMono.InteractInfo.Value is SceneItemInteractInfo 
                     { SceneItemData: ClockItemData { Watched: false } clockItemData }
-                && clockItemData == GetComponent<SceneItemModel>().Data
+                && clockItemData == data
                 && newTime.Hour != oldTime.Hour
                )
             {
-                BuffManager.WindowWatchingOClock(newTime.Hour);
+                BuffManager.AddWinBuffClock(newTime.Hour);
                 clockItemData.Watched = true;
             }
         };

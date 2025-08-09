@@ -83,11 +83,15 @@ public class BoxPointData : DataBase, IComparable
         return ret;
     }
 
-    public bool ConnectedHasRecordPlayer()
+    public IEnumerable<SceneItemData> ConnectedPointItems()
     {
-        return bingChaJi.ConnectedSet
-            .Any(p => p.BelongBox.SceneDataMyList
-                .Any(s => s is RecordPlayerItemData && s.OccupyFloorSet.Contains(p.Dir)));
+        // return bingChaJi.ConnectedSet
+        //     .Any(p => p.BelongBox.SceneItemDataMyList
+        //         .Any(s => s is RecordPlayerItemData && s.OccupyFloorSet.Contains(p.Dir)));
+
+        return bingChaJi.ConnectedSet.SelectMany(
+            p => p.BelongBox.SceneItemDataMyList
+                .Where(s => s.OccupyFloorSet.Contains(p.Dir) || s.OccupyAirSet.Contains(p.Dir)));
     }
     #endregion
 

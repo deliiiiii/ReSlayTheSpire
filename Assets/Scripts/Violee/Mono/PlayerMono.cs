@@ -20,9 +20,7 @@ public class PlayerMono : Singleton<PlayerMono>
                 p.VisitConnected();
                 // MyDebug.Log($"First Enter Point!!{p.BelongBox.Pos2D}:{p.Dir}");
             }
-
-            IsWithRecordPlayer = BuffManager.ContainsBuff(EBuffType.PlayRecord)
-                                 && (p?.ConnectedHasRecordPlayer() ?? false);
+            BuffManager.RefreshConBuffs(p.ConnectedPointItems());
         };
     }
     
@@ -30,8 +28,6 @@ public class PlayerMono : Singleton<PlayerMono>
     public static event Action<BoxPointData>? OnPlayerExit;
     public static readonly Observable<BoxPointData> PlayerCurPoint 
         = new(null!, p => OnPlayerExit?.Invoke(p), p => OnPlayerEnter?.Invoke(p));
-    public static bool IsWithRecordPlayer;
-
     
     static Transform staTransform => Instance.transform;
     static GameObject staGameObject => Instance.gameObject;

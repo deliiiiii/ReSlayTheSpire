@@ -102,7 +102,6 @@ public class GameManager : SingletonCS<GameManager>
             .OnEnter(() =>
             {
                 PlayerMono.OnEnterPlaying();
-                BuffManager.OnEnterPlaying();
                 WindowList.MyClear();
             })
             .OnUpdate(dt =>

@@ -14,6 +14,7 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
     public MyList() : this(new List<T>(), null, null) { }
     public event Action<T>? OnAdd = onAdd;
     public event Action<T>? OnRemove = onRemove;
+    public event Action? OnClear;
     
     /// Please Call MyAdd() instead
     public new void Add(T item)
@@ -62,6 +63,7 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
         foreach (var item in this)
             OnRemove?.Invoke(item);
         base.Clear();
+        OnClear?.Invoke();
     }
 
     public MyList(Action<T>? onAdd = null, Action<T>? onRemove = null) : this([], onAdd, onRemove)

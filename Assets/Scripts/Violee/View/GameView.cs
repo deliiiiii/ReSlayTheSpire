@@ -129,10 +129,13 @@ class GameView : ViewBase<GameView>
             })
             .OnExit(() => MiniItemPnl.SetActive(false));
 
+
+        var conBuffInsDic = new Dictionary<BuffData, GameObject>();
         BuffManager.OnAddConBuff += conBuff =>
         {
+            MyDebug.Log("GameView OnAddConBuff " + conBuff.ConBuffType);
             var conBuffIns = Instantiate(ConsistentBuffPrefab, ConsistentBuffIconPnl.transform);
-            conBuffIns.Image.sprite = Configer.ConBuffConfigList.BuffConfigDic[conBuff.BuffType].Sprite;
+            conBuffIns.Image.sprite = Configer.ConBuffConfigList.BuffConfigDic[conBuff.ConBuffType].Sprite;
             conBuffIns.DetailTxt.text = conBuff.GetDes();
             conBuffIns.DetailPnlShown = Instantiate(conBuffIns.DetailPnl, ConsistentBuffDetailPnl);
             conBuffIns.OnPointerEnterEvt += () =>
@@ -143,12 +146,13 @@ class GameView : ViewBase<GameView>
                     = conBuffIns.DetailPnlShown.GetComponent<RectTransform>().sizeDelta;
             };
             conBuffIns.gameObject.SetActive(true);
+            conBuffInsDic.Add(conBuff, conBuffIns.gameObject);
         };
 
-        BuffManager.OnClearAllBuff += () =>
+        BuffManager.OnRemoveConBuff += conBuff =>
         {
-            ConsistentBuffIconPnl.ClearChildren();
-            ConsistentBuffDetailPnl.ClearChildren();
+            Destroy(conBuffInsDic[conBuff]);
+            conBuffInsDic.Remove(conBuff);
         };
 
         AudioMono.OnUnPauseLoop += clip =>

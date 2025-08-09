@@ -26,9 +26,9 @@ namespace Violee
             Data.WallDataMyDic.OnRemove += OnRemoveWallData;
 
             SceneItemParent.ClearChildren();
-            Data.SceneDataMyList.ForEach(OnAddSceneItemData);
-            Data.SceneDataMyList.OnAdd += OnAddSceneItemData;
-            Data.SceneDataMyList.OnRemove += OnRemoveSceneItemData;
+            Data.SceneItemDataMyList.ForEach(OnAddSceneItemItemData);
+            Data.SceneItemDataMyList.OnAdd += OnAddSceneItemItemData;
+            Data.SceneItemDataMyList.OnRemove += OnRemoveSceneItemItemData;
         }
 
         public void OnAddWallData(WallData wallData)
@@ -43,7 +43,7 @@ namespace Violee
 
         #region SceneItem
         
-        void OnAddSceneItemData(SceneItemData fdata)
+        void OnAddSceneItemItemData(SceneItemData fdata)
         {
             if (fdata.InsModel == null)
                 fdata.InsModel = Instantiate(fdata.OriginModel);
@@ -63,7 +63,7 @@ namespace Violee
             model.transform.parent = SceneItemParent;
             model.gameObject.SetActive(true);
         }
-        void OnRemoveSceneItemData(SceneItemData data)
+        void OnRemoveSceneItemItemData(SceneItemData data)
         {
             Destroy(data.InsModel);
         }

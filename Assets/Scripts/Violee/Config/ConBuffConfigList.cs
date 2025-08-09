@@ -5,5 +5,5 @@ namespace Violee;
 [CreateAssetMenu(fileName = nameof(ConBuffConfigList), menuName = "Violee/" + nameof(ConBuffConfigList))]
 public class ConBuffConfigList : ScriptableObject
 {
-    public SerializableDictionary<EBuffType, ConBuffConfig> BuffConfigDic = [];
+    public SerializableDictionary<EConBuffType, ConBuffConfig> BuffConfigDic = [];
 }

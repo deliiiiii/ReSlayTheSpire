@@ -17,10 +17,10 @@ public class WindowBuffData : BuffData
 [Serializable]
 public class ConsistentBuffData : BuffData
 {
-    public EBuffType BuffType;
+    public EConBuffType ConBuffType;
 }
 
-public enum EBuffType
+public enum EConBuffType
 {
     PlayRecord,
 }

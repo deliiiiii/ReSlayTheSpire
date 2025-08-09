@@ -116,7 +116,7 @@ namespace Violee
             WallDataMyDic.OnAdd += wallData => WallsByte |= (byte)wallData.WallType;
             WallDataMyDic.OnRemove += wallData => WallsByte |= (byte)wallData.WallType;
             PointDataMyDic = [];
-            SceneDataMyList = [];
+            SceneItemDataMyList = [];
         }
         public BoxData(Vector2Int pos, BoxConfig config) : this(6)
         {
@@ -157,9 +157,9 @@ namespace Violee
         public void ResetBeforeDij() 
             => PointDataMyDic.Values.ForEach(pointData => pointData.ResetBeforeDij());
         [JsonIgnore] public IEnumerable<EBoxDir> OccupiedFloors
-            => SceneDataMyList.SelectMany(x => x.OccupyFloorSet);
+            => SceneItemDataMyList.SelectMany(x => x.OccupyFloorSet);
         [JsonIgnore] public IEnumerable<EBoxDir> OccupiedAirs
-            => SceneDataMyList.SelectMany(x => x.OccupyAirSet);
+            => SceneItemDataMyList.SelectMany(x => x.OccupyAirSet);
         #endregion
         
         
@@ -167,7 +167,7 @@ namespace Violee
         [ShowInInspector] public readonly MyDictionary<EWallType, WallData> WallDataMyDic;
         
         [ShowInInspector] public readonly Dictionary<EBoxDir, BoxPointData> PointDataMyDic;
-        [ShowInInspector] public readonly MyList<SceneItemData> SceneDataMyList;
+        [ShowInInspector] public readonly MyList<SceneItemData> SceneItemDataMyList;
 
         #endregion
     }

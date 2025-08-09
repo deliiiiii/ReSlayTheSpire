@@ -175,7 +175,7 @@ internal class MapManager : SingletonCS<MapManager>
                 return;
             }
             tempPoints.Remove(p);
-            p.BelongBox.SceneDataMyList.MyAdd(model.Data.CreateNew([p.Dir]));
+            p.BelongBox.SceneItemDataMyList.MyAdd(model.Data.CreateNew([p.Dir]));
         });
     }
     #endregion

@@ -175,6 +175,7 @@ public class PurpleSceneItemData : SceneItemData
     }
 }
 
+[Serializable]
 public class ClockItemData : SceneItemData
 {
     [Header("Clock")] public bool Watched;
@@ -223,7 +224,7 @@ public class BookShelfItemData : SceneItemData
 
 //3 RecordPlayer
 [Serializable]
-public class RecordPlayerItemData : SceneItemData
+public class RecordPlayerItemData : SceneItemData, IHasConBuff
 {
     [Header("RecordPlayer")]
     public string BuffDes = "和唱片机在同一个连通区域时，开启房门时不再消耗精力。";
@@ -238,8 +239,12 @@ public class RecordPlayerItemData : SceneItemData
     {
         base.UseEffect();
         AudioMono.PlayLoop(audioSource, AudioMono.BGMRecordPlayer.RandomItem());
-        BuffManager.AddConBuff(EBuffType.PlayRecord, () => BuffDes);
+        Activated = true;
     }
+
+    public EConBuffType conBuffType => EConBuffType.PlayRecord;
+    public string GetDes() => BuffDes;
+    public bool Activated { get; set; }
 }
 
 // 4 Lamp, 5 SmallLamp, 10 AC

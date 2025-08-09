@@ -1,37 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.Utilities;
 
 namespace Violee;
 
 public class BuffManager : SingletonCS<BuffManager>
 {
-    static readonly MyList<BuffData> buffList = [];
+    static readonly MyList<WindowBuffData> winBuffList = [];
+    static readonly MyList<ConsistentBuffData> conBuffList = [];
 
     static BuffManager()
     {
-        buffList.OnAdd += b =>
-        {
-            MyDebug.Log($"Add Buff {b.GetDes()}");
-            if (b is WindowBuffData winB)
-            {
-                OnAddWindowBuff?.Invoke(winB);
-            }
-            else if (b is ConsistentBuffData conB)
-            {
-                OnAddConBuff?.Invoke(conB);
-            }
-        };
+        winBuffList.OnAdd += b => OnAddWindowBuff?.Invoke(b);
+        conBuffList.OnAdd += b => OnAddConBuff?.Invoke(b);
+        conBuffList.OnRemove += b => OnRemoveConBuff?.Invoke(b);
     }
 
-    public static void OnEnterPlaying()
-    {
-        // buffList.OnClear += () =>
-        OnClearAllBuff?.Invoke();
-        buffList.MyClear();
-    }
 
-    public static void WindowWatchingOClock(int hour)
+    public static void AddWinBuffClock(int hour)
     {
         int energy = hour % 2 == 0 ? 2 : 1;
         var added = new WindowBuffData
@@ -43,22 +30,43 @@ public class BuffManager : SingletonCS<BuffManager>
                 MainItemMono.EnergyCount.Value += energy;
             },
         };
-        buffList.MyAdd(added);
+        winBuffList.MyAdd(added);
     }
 
-    public static void AddConBuff(EBuffType buffType, Func<string> getDes)
+    public static void AddConBuff(EConBuffType conBuffType, Func<string> getDes)
     {
         var added = new ConsistentBuffData()
         {
             GetDes = getDes,
-            BuffType = buffType,
+            ConBuffType = conBuffType,
         };
-        buffList.MyAdd(added);
+        conBuffList.MyAdd(added);
     }
 
     public static event Action<WindowBuffData>? OnAddWindowBuff;
     public static event Action<ConsistentBuffData>? OnAddConBuff;
-    public static event Action? OnClearAllBuff;
-    public static bool ContainsBuff(EBuffType buffType) 
-        => buffList.Any(b => b is ConsistentBuffData conB && conB.BuffType == buffType);
+    public static event Action<ConsistentBuffData>? OnRemoveConBuff;
+    
+    
+    static bool ContainsConBuff(EConBuffType conBuffType) 
+        => conBuffList.Any(b => b.ConBuffType == conBuffType);
+
+    public static void RefreshConBuffs(IEnumerable<SceneItemData> items)
+    {
+        conBuffList.MyClear();
+        items.ForEach(i =>
+        {
+            if(i is not IHasConBuff { Activated: true} iHasConBuff)
+                return;
+            AddConBuff(iHasConBuff.conBuffType, iHasConBuff.GetDes);
+        });
+    }
+    public static bool IsWithRecordPlayer => ContainsConBuff(EConBuffType.PlayRecord);
+}
+
+public interface IHasConBuff
+{
+    public EConBuffType conBuffType { get; }
+    public string GetDes();
+    public bool Activated { get; }
 }
