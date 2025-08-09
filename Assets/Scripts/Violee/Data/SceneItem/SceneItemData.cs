@@ -269,9 +269,9 @@ public class ElectricItemData : SceneItemData
     protected override bool CanUseInternal(out string failReason)
     {
         failReason = string.Empty;
-        if(MainItemMono.CreativityCount.Value < CreativityCost)
+        if(MainItemMono.CheckCreativityCost(CreativityCost, out var trueCost))
         {
-            failReason = $"灵感不足{CreativityCost}, 无法使用";
+            failReason = $"灵感不足{trueCost}, 无法使用";
             return false;
         }
         return true;

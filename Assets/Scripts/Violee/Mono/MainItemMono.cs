@@ -20,5 +20,11 @@ public class MainItemMono : Singleton<MainItemMono>
     {
         Instance.mainItemData = new MainItemData();
     }
+
+    public static bool CheckCreativityCost(int initCost, out int trueCost)
+    {
+        trueCost = initCost;
+        return CreativityCount >= initCost;
+    }
 }
 

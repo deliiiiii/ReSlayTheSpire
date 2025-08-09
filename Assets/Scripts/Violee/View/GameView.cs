@@ -111,7 +111,7 @@ class GameView : ViewBase<GameView>
                 Binder.From(MainItemMono.CreativityCount).ToTxt(CreativityTxt).Immediate();
                 Binder.From(MainItemMono.CreativityCount).To(v =>
                 {
-                    RedrawBtn.interactable = v > 0;
+                    RedrawBtn.interactable = MainItemMono.CheckCreativityCost(1, out var trueCost);
                 }).Immediate();
                 Binder.From(MainItemMono.VioleeCount).ToTxt(VioleeTxt).Immediate();
             })
@@ -181,7 +181,9 @@ class GameView : ViewBase<GameView>
         
         Binder.From(RedrawBtn).To(() =>
         {
-            MainItemMono.CreativityCount.Value--;
+            MainItemMono.CheckCreativityCost(1, out var trueCost);
+            MainItemMono.CreativityCount.Value -= trueCost;
+            RedrawBtn.interactable = MainItemMono.CheckCreativityCost(1, out _);
             showDrawConfigsAct();
         });
     }
