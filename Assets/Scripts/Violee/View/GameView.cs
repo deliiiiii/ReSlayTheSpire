@@ -174,7 +174,11 @@ class GameView : ViewBase<GameView>
             MusicWindow.gameObject.SetActive(false);
             MusicWindow.gameObject.SetActive(true);
         };
-        
+
+        Binder.From(MinimapBtn).To(() =>
+        {
+            GameManager.WindowList.MyAdd(fullMapWindow);
+        });
         Binder.From(RedrawBtn).To(() =>
         {
             MainItemMono.CostCreativity(MainItemMono.CheckCreativityCost(1));
@@ -213,6 +217,7 @@ class GameView : ViewBase<GameView>
     public required Camera MinimapCamera;
     public required RawImage MinimapImg;
     public required RawImage FullScreenImg;
+    public required Button MinimapBtn; 
     public float ChangeSpeed = 1.2f;
     public float MiniSize = 12f;
     bool isMinimap => MinimapImg.enabled;
