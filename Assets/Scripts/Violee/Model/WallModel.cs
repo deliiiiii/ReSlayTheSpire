@@ -34,7 +34,9 @@ namespace Violee
             if (Data.DoorType == EDoorType.None || Data.Opened.Value)
                 return InteractInfo.CreateUnActive();
             // TODO BuffedValue...
-            var energyCost = BuffManager.IsWithRecordPlayer ? 0 : 1;
+            var energyCost = 1;
+            if (BuffManager.IsWithRecordPlayer)
+                energyCost -= 1;
             if (MainItemMono.EnergyCount.Value < energyCost)
             {
                 return InteractInfo.CreateInvalid($"精力不足{energyCost}，无法打开门");

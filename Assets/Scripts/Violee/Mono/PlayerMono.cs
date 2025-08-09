@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Violee;
@@ -15,14 +16,23 @@ public class PlayerMono : Singleton<PlayerMono>
 
         OnPlayerEnter += p =>
         {
-            if (!(p?.Visited ?? true))
+            if (!p.Visited)
             {
                 p.VisitConnected();
                 // MyDebug.Log($"First Enter Point!!{p.BelongBox.Pos2D}:{p.Dir}");
             }
-            BuffManager.RefreshConBuffs(p.ConnectedPointItems());
+
+            RefreshCurPointBuff();
         };
+        
+        
     }
+
+    public static void RefreshCurPointBuff()
+    {
+        BuffManager.RefreshConBuffs(PlayerCurPoint.Value?.ConnectedPointItems() ?? []);
+    }
+    
     
     public static event Action<BoxPointData>? OnPlayerEnter;
     public static event Action<BoxPointData>? OnPlayerExit;

@@ -133,7 +133,7 @@ class GameView : ViewBase<GameView>
         var conBuffInsDic = new Dictionary<BuffData, GameObject>();
         BuffManager.OnAddConBuff += conBuff =>
         {
-            MyDebug.Log("GameView OnAddConBuff " + conBuff.ConBuffType);
+            // MyDebug.Log("GameView OnAddConBuff " + conBuff.ConBuffType);
             var conBuffIns = Instantiate(ConsistentBuffPrefab, ConsistentBuffIconPnl.transform);
             conBuffIns.Image.sprite = Configer.ConBuffConfigList.BuffConfigDic[conBuff.ConBuffType].Sprite;
             conBuffIns.DetailTxt.text = conBuff.GetDes();

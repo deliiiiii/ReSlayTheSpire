@@ -40,7 +40,7 @@ public class SceneMiniItemDataBook : SceneMiniItemData
 
     protected override string GetInteractDesInternal()
     {
-        return $"获得{CreativityGain}点灵感";
+        return $"看本小书，获得{CreativityGain}点灵感";
     }
 
     protected override void PickUpInternal()

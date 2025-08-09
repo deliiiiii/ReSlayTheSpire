@@ -129,6 +129,12 @@ public class SceneItemData : DataBase
                     iCamera.CameraTransform.localPosition.y * transform.lossyScale.y,
                     iCamera.CameraTransform.localPosition.z * transform.lossyScale.z);
         }
+
+        if (this is IHasConBuff iHasConBuff)
+        {
+            iHasConBuff.Activated = true;
+            PlayerMono.RefreshCurPointBuff();
+        }
     }
     public string GetInteractDes()
     {
@@ -227,7 +233,7 @@ public class BookShelfItemData : SceneItemData
 public class RecordPlayerItemData : SceneItemData, IHasConBuff
 {
     [Header("RecordPlayer")]
-    public string BuffDes = "和唱片机在同一个连通区域时，开启房门时不再消耗精力。";
+    public string BuffDes = "和唱片机在同一个连通区域时，开启房门时消耗精力-1点。";
     
     AudioSource audioSource => InsModel.GetComponent<AudioSource>();
     protected override string GetInteractDesInternal()
@@ -239,7 +245,6 @@ public class RecordPlayerItemData : SceneItemData, IHasConBuff
     {
         base.UseEffect();
         AudioMono.PlayLoop(audioSource, AudioMono.BGMRecordPlayer.RandomItem());
-        Activated = true;
     }
 
     public EConBuffType conBuffType => EConBuffType.PlayRecord;

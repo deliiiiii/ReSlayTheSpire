@@ -68,5 +68,5 @@ public interface IHasConBuff
 {
     public EConBuffType conBuffType { get; }
     public string GetDes();
-    public bool Activated { get; }
+    public bool Activated { get; set; }
 }
