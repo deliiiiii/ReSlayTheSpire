@@ -25,6 +25,12 @@ class GameView : ViewBase<GameView>
         // WindowType = EWindowType.NormalUI,
         Des = "选择房间装修中"
     };
+    public static readonly WindowInfo VioleTWindow = new ()
+    {
+        // WindowType = EWindowType.NormalUI,
+        Des = "VioleT"
+    };
+    
     protected override void IBL()
     {
         GameManager.WindowList.OnAdd += w =>
@@ -62,6 +68,17 @@ class GameView : ViewBase<GameView>
         DrawWindow
             .OnAdd(() => DrawPnl.SetActive(true))
             .OnRemove(() => DrawPnl.SetActive(false));
+        VioleTWindow
+            .OnAdd(() =>
+            {
+                VioleTBtn.interactable = false;
+                VioleTPnl.SetActive(true);
+            })
+            .OnRemove(() =>
+            {
+                VioleTBtn.interactable = true;
+                VioleTPnl.SetActive(false);
+            });
         GameManager.PauseWindow
             .OnAdd(() => PausePnl.SetActive(true))
             .OnRemove(() =>
@@ -110,7 +127,7 @@ class GameView : ViewBase<GameView>
                 StaminaTxt.text = MainItemMono.StaminaCount.ToString();
                 EnergyTxt.text = MainItemMono.EnergyCount.ToString();
                 CreativityTxt.text = MainItemMono.CreativityCount.ToString();
-                VioleeTxt.text = MainItemMono.VioleeCount.ToString();
+                // VioleeTxt.text = MainItemMono.VioleeCount.ToString();
                 RedrawBtn.interactable = MainItemMono.CreativityCount >= MainItemMono.CheckCreativityCost(1);
                 
                 ChangeFOV(dt);
@@ -150,7 +167,7 @@ class GameView : ViewBase<GameView>
             Destroy(conBuffInsDic[conBuff]);
             conBuffInsDic.Remove(conBuff);
         };
-
+        MainItemMono.OnGainVioleT += cList => VioleTTxt.text = string.Join("", cList);
         AudioMono.OnUnPauseLoop += clip =>
         {
             MusicWindow.BGMTxt.text = clip.name;
@@ -179,6 +196,8 @@ class GameView : ViewBase<GameView>
                 throw;
             }
         });
+        Binder.From(VioleTBtn).To(() => GameManager.WindowList.MyAdd(VioleTWindow));
+        Binder.From(VioleTPnlBtn).To(() => GameManager.WindowList.MyRemove(VioleTWindow));
     }
 
     [Header("Load & Pause")]
@@ -246,7 +265,11 @@ class GameView : ViewBase<GameView>
     public required Text StaminaTxt;
     public required Text EnergyTxt;
     public required Text CreativityTxt;
-    public required Text VioleeTxt;
+    // public required Text VioleeTxt;
+    public required GameObject VioleTPnl;
+    public required Button VioleTBtn;
+    public required Text VioleTTxt;
+    public required Button VioleTPnlBtn;
     #endregion
 
     #region ConsistentBuff

@@ -14,11 +14,12 @@ public class MainItemMono : Singleton<MainItemMono>
     public static int StaminaCount => Instance.mainItemData.Stamina.Count;
     public static int EnergyCount => Instance.mainItemData.Energy.Count;
     public static int CreativityCount => Instance.mainItemData.Creativity.Count;
-    public static int VioleeCount => Instance.mainItemData.Violee.Count;
+    // public static int VioleeCount => Instance.mainItemData.Violee.Count;
 
     public static void OnDijkstraEnd()
     {
         Instance.mainItemData = new MainItemData();
+        OnGainVioleT?.Invoke([]);
     }
 
     
@@ -101,5 +102,19 @@ public class MainItemMono : Singleton<MainItemMono>
         return trueGain;
     }
     #endregion
+
+    public static event Action<List<char>>? OnGainVioleT;
+    public static void GainVioleT()
+    {
+        if (Instance.mainItemData.LetterList.Count == 6)
+        {
+            MyDebug.Log("<UNK>");
+            return;
+        }
+        List<char> violeT = ['V', 'i', 'o', 'l', 'e', 'T'];
+        var c = violeT.RandomItem(c => !Instance.mainItemData.LetterList.Contains(c));
+        Instance.mainItemData.LetterList.Add(c);
+        OnGainVioleT?.Invoke(Instance.mainItemData.LetterList);
+    }
 }
 

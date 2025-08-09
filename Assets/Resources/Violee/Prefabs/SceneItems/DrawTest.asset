@@ -69,3 +69,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     ToDrawModels:
     - {fileID: 1510157720301975787, guid: f4756762bcc44df418029695dd988c6d, type: 3}
+  - DrawDes: 14
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 2238235364395328710, guid: 52391c677e75e504291f6a63aac71711, type: 3}

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee;
@@ -310,27 +311,109 @@ public class ElectricItemData : SceneItemData
         IsActive = false;
     }
 }
-//
-// [Serializable]
-// public class FoodItemData : SceneItemData
-// {
-//     [Header("Food")]
-//     public BuffedInt StaminaGain = new(0);
-//     
-//     protected override void BindBuff()
-//     {
-//         base.BindBuff();
-//         StaminaGain.SetBuff(MainItemMono.CheckStaminaGain);
-//     }
-//     
-//     protected override string GetInteractDesInternal()
-//     {
-//         return $"恢复{StaminaGain}点体力";
-//     }
-//
-//     protected override void UseEffect()
-//     {
-//         base.UseEffect();
-//         MainItemMono.GainStamina(StaminaGain);
-//     }
-// }
+
+public enum ECatchType
+{
+    Stamina,
+    Energy,
+    Creativity,
+}
+
+// 14 
+[Serializable]
+public class DreamCatcherItemData : SceneItemData
+{
+    [Header("DreamCatcher")]
+    [Range(0f, 1f)]
+    public float StaminaCosProbability;
+    float d1 => 1 - StaminaCosProbability;
+    [MinValue(0f)][MaxValue(nameof(d1))]
+    public float EnergyProbability;
+    [ShowInInspector] public float CreativityProbability => 1f - StaminaCosProbability - EnergyProbability;
+    
+    [ReadOnly] public ECatchType CurCatchType;
+    public SerializableDictionary<ECatchType, GameObject> CatchGoDic = [];
+    public SerializableDictionary<ECatchType, int> CatchCostDic = [];
+
+
+    Func<int> GetStaminaCost = null!;
+    Func<int> GetEnergyCost = null!;
+    Func<int> GetCreativityCost = null!;
+    protected override void BindBuff()
+    {
+        base.BindBuff();
+        Dictionary<ECatchType, int> gos = new()
+        {
+            {ECatchType.Stamina, (int)(StaminaCosProbability * 100)},
+            {ECatchType.Energy, (int)((StaminaCosProbability + EnergyProbability) * 100)},
+            {ECatchType.Creativity, 100}
+        };
+        GetStaminaCost = () => MainItemMono.CheckStaminaCost(CatchCostDic[ECatchType.Stamina]);
+        GetEnergyCost = () => MainItemMono.CheckEnergyCost(CatchCostDic[ECatchType.Energy]);
+        GetCreativityCost = () => MainItemMono.CheckCreativityCost(CatchCostDic[ECatchType.Creativity]);
+        CurCatchType = gos.ToList().RandomItem(weightFunc: pair => pair.Value).Key;
+        CatchGoDic.ForEach(pair =>
+        {
+            pair.Value.SetActive(pair.Key == CurCatchType);
+        });
+        
+    }
+
+    protected override bool CanUseInternal(out string failReason)
+    {
+        failReason = string.Empty;
+        Func<bool> catchCost = CurCatchType switch
+        {
+            ECatchType.Stamina => () =>
+                MainItemMono.StaminaCount >= GetStaminaCost(),
+            ECatchType.Energy => () =>
+                MainItemMono.EnergyCount >= GetEnergyCost(),
+            _ => () => MainItemMono.CreativityCount >= GetCreativityCost(),
+        };
+        if (!catchCost())
+        {
+            failReason = CurCatchType switch
+            {
+                ECatchType.Stamina => $"这个捕梦网需要消耗{GetStaminaCost()}点体力",
+                ECatchType.Energy => $"这个捕梦网需要消耗{GetEnergyCost()}点精力",
+                _ => $"这个捕梦网需要消耗{GetCreativityCost()}点灵感",
+            };
+            return false;
+        }
+        return true;
+    }
+
+    protected override string GetInteractDesInternal()
+    {
+        var s1 = CurCatchType switch
+        {
+            ECatchType.Stamina => $"再消耗{GetStaminaCost()}点体力",
+            ECatchType.Energy => $"消耗{GetEnergyCost()}点精力",
+            _ => $"消耗{GetCreativityCost()}点灵感",
+        };
+        s1 += "，转化为1个VioleT";
+        return s1;
+    }
+
+    protected override void UseEffect()
+    {
+        base.UseEffect();
+        Action result = CurCatchType switch
+        {
+            ECatchType.Stamina => () =>
+            {
+                MainItemMono.CostStamina(GetStaminaCost());
+            },
+            ECatchType.Energy => () =>
+            {
+                MainItemMono.CostEnergy(GetEnergyCost());
+            },
+            _ => () =>
+            {
+                MainItemMono.CostCreativity(GetCreativityCost());
+            },
+        };
+        result += MainItemMono.GainVioleT;
+        result();
+    }
+}

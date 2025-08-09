@@ -15,13 +15,13 @@ MonoBehaviour:
   MainItemConfigs:
   - Sprite: {fileID: 0}
     Description: Stamina
-    InitValue: 100
+    InitValue: 10
   - Sprite: {fileID: 0}
     Description: Energy
-    InitValue: 100
+    InitValue: 5
   - Sprite: {fileID: 0}
     Description: Creativity
-    InitValue: 200
+    InitValue: 10
   - Sprite: {fileID: 0}
     Description: Violee
     InitValue: 0
