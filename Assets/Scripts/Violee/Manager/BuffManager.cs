@@ -56,17 +56,11 @@ public class BuffManager : SingletonCS<BuffManager>
         conBuffList.MyClear();
         items.ForEach(i =>
         {
-            if(i is not IHasConBuff { Activated: true} iHasConBuff)
+            if(!i.HasConBuff || !i.ConBuffActivated)
                 return;
-            AddConBuff(iHasConBuff.conBuffType, iHasConBuff.GetDes);
+            AddConBuff(i.ConBuffType, () => i.ConDes);
         });
     }
     public static bool IsWithRecordPlayer => ContainsConBuff(EConBuffType.PlayRecord);
-}
-
-public interface IHasConBuff
-{
-    public EConBuffType conBuffType { get; }
-    public string GetDes();
-    public bool Activated { get; set; }
+    public static bool IsWithLamp => ContainsConBuff(EConBuffType.Lamp);
 }

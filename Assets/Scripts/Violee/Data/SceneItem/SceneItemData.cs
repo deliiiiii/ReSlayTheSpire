@@ -47,13 +47,17 @@ public class SceneItemData : DataBase
 
     [Header("HasSpreadPos")]
     public bool HasSpreadPos;
-    [ShowIf(nameof(HasSpreadPos))][Range(0, 1)]
-    public float SpreadPossibility = 0.2f;
+    [ShowIf(nameof(HasSpreadPos))][Range(0, 1)] public float SpreadPossibility = 0.2f;
     [ShowIf(nameof(HasSpreadPos))] public int SpreadMaxCount = 1;
-    [ShowIf(nameof(HasSpreadPos))] [SerializeField]
-    public SerializableDictionary<Transform, List<SceneMiniItemModel>> SpreadObjectDic = [];
-
-    public MyList<SceneMiniItemModel> HasSpreadObjList = [];
+    [ShowIf(nameof(HasSpreadPos))] [SerializeField] public SerializableDictionary<Transform, List<SceneMiniItemModel>> SpreadObjectDic = [];
+    [ShowIf(nameof(HasSpreadPos))] public MyList<SceneMiniItemModel> HasSpreadObjList = [];
+    
+    [Header("HasConBuff")]
+    public bool HasConBuff;
+    [ShowIf(nameof(HasConBuff))] public EConBuffType ConBuffType;
+    [ShowIf(nameof(HasConBuff))] public string ConDes = string.Empty;
+    [ShowIf(nameof(HasConBuff))] [ReadOnly] public bool ConBuffActivated;
+    
     [Header("IsSleep")]
     public bool IsSleep;
     [ShowIf(nameof(IsSleep))] public float SleepTime = 2.89f;
@@ -130,9 +134,9 @@ public class SceneItemData : DataBase
                     iCamera.CameraTransform.localPosition.z * transform.lossyScale.z);
         }
 
-        if (this is IHasConBuff iHasConBuff)
+        if (HasConBuff)
         {
-            iHasConBuff.Activated = true;
+            ConBuffActivated = true;
             PlayerMono.RefreshCurPointBuff();
         }
     }
@@ -143,6 +147,8 @@ public class SceneItemData : DataBase
         if (StaminaCost > 0)
             sb.Append($"消耗{StaminaCost}点体力,\n");
         sb.Append(GetInteractDesInternal());
+        if (HasConBuff)
+            sb.Append($"\n{ConDes}。");
         return sb.ToString();
     }
     protected virtual string GetInteractDesInternal()
@@ -230,17 +236,10 @@ public class BookShelfItemData : SceneItemData
 
 //3 RecordPlayer
 [Serializable]
-public class RecordPlayerItemData : SceneItemData, IHasConBuff
+public class RecordPlayerItemData : SceneItemData
 {
-    [Header("RecordPlayer")]
-    public string BuffDes = "和唱片机在同一个连通区域时，开启房门时消耗精力-1点。";
-    
     AudioSource audioSource => InsModel.GetComponent<AudioSource>();
     AudioClip? curClip;
-    protected override string GetInteractDesInternal()
-    {
-        return BuffDes;
-    }
 
     protected override void UseEffect()
     {
@@ -253,10 +252,6 @@ public class RecordPlayerItemData : SceneItemData, IHasConBuff
         curClip = AudioMono.BGMRecordPlayer.RandomItem(x => x != curClip);
         AudioMono.PlayLoop(audioSource, curClip);
     }
-
-    public EConBuffType conBuffType => EConBuffType.PlayRecord;
-    public string GetDes() => BuffDes;
-    public bool Activated { get; set; }
 }
 
 // 4 Lamp, 5 SmallLamp, 10 AC
@@ -265,11 +260,12 @@ public class ElectricItemData : SceneItemData
 {
     [Header("Electric")]
     public int CreativityCost;
+    int trueCost => MainItemMono.CheckCreativityCost(CreativityCost);
 
     protected override bool CanUseInternal(out string failReason)
     {
         failReason = string.Empty;
-        if(MainItemMono.CheckCreativityCost(CreativityCost, out var trueCost))
+        if(MainItemMono.CreativityCount.Value < trueCost)
         {
             failReason = $"灵感不足{trueCost}, 无法使用";
             return false;
@@ -279,14 +275,13 @@ public class ElectricItemData : SceneItemData
 
     protected override string GetInteractDesInternal()
     {
-        return $"消耗{CreativityCost}点灵感。";
+        return $"消耗{trueCost}点灵感。";
     }
 
     protected override void UseEffect()
     {
         base.UseEffect();
-        MainItemMono.CreativityCount.Value -= CreativityCost;
-        // TODO buff
+        MainItemMono.CreativityCount.Value -= trueCost;
     }
 }
 

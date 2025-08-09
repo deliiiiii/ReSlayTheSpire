@@ -21,10 +21,12 @@ public class MainItemMono : Singleton<MainItemMono>
         Instance.mainItemData = new MainItemData();
     }
 
-    public static bool CheckCreativityCost(int initCost, out int trueCost)
+    public static int CheckCreativityCost(int initCost)
     {
-        trueCost = initCost;
-        return CreativityCount >= initCost;
+        var trueCost = initCost;
+        if(BuffManager.IsWithLamp)
+            trueCost -= 1;
+        return trueCost;
     }
 }
 

@@ -23,4 +23,5 @@ public class ConsistentBuffData : BuffData
 public enum EConBuffType
 {
     PlayRecord,
+    Lamp,
 }
