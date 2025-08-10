@@ -49,12 +49,12 @@ MonoBehaviour:
     ToDrawModels:
     - {fileID: 1961720712683584349, guid: 51868a6990831c342a096343425ef0e1, type: 3}
   - DrawTitle: "+1\u4E66\u684C"
-    DrawDes: "\u53EF\u6C72\u53D6\u4E24\u6B21\u7075\u611F"
+    DrawDes: "\u53EF\u6062\u590D\u4E24\u6B21\u7CBE\u529B"
     Sprite: {fileID: 0}
     ToDrawModels:
     - {fileID: 616563387378865544, guid: 330c4bd657ed7f9408406b4dd73a845b, type: 3}
   - DrawTitle: "+1\u9AD8\u4E66\u684C"
-    DrawDes: "\u4E0A\u9762\u53EF\u80FD\u6709\u4E00\u4E9B\u968F\u673A\u7684\u73A9\u610F"
+    DrawDes: "\u4E0A\u9762\u53EF\u80FD\u6709\u4E00\u4E9B\u968F\u673A\u7684\u73A9\u610F\uFF0C\u66F4\u53EF\u80FD\u51FA\u73B0\u4E66\u672C"
     Sprite: {fileID: 0}
     ToDrawModels:
     - {fileID: 200836427785094215, guid: 53fc17312d38d5a4b80d55e3cd2c6817, type: 3}
@@ -69,7 +69,7 @@ MonoBehaviour:
     ToDrawModels:
     - {fileID: 6401134182384579923, guid: aa7316236486a5745a535e9d21a18db9, type: 3}
   - DrawTitle: "+1\u5706\u684C"
-    DrawDes: "\u4E0A\u9762\u53EF\u80FD\u6709\u4E00\u4E9B\u968F\u673A\u7684\u73A9\u610F"
+    DrawDes: "\u4E0A\u9762\u53EF\u80FD\u6709\u4E00\u4E9B\u968F\u673A\u7684\u73A9\u610F\uFF0C\u66F4\u53EF\u80FD\u51FA\u73B0\u98DF\u7269"
     Sprite: {fileID: 0}
     ToDrawModels:
     - {fileID: 4924288751575700440, guid: 7eaf231c825651a40866a325cc2ffbe0, type: 3}

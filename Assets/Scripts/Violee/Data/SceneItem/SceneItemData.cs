@@ -244,7 +244,7 @@ public class BookShelfItemData : SceneItemData
 
     protected override string GetInteractDesInternal()
     {
-        return $"和{EnergyCost}点精力,从书中吸收{Creativity}点灵感。";
+        return $"并消耗{EnergyCost}点精力,从书中吸收{Creativity}点灵感。";
     }
     protected override void UseEffect()
     {
@@ -301,7 +301,7 @@ public class ElectricItemData : SceneItemData
 
     protected override string GetInteractDesInternal()
     {
-        return $"消耗{CreativityCost}点灵感。";
+        return $"并消耗{CreativityCost}点灵感";
     }
 
     protected override void UseEffect()
@@ -348,14 +348,15 @@ public class DreamCatcherItemData : SceneItemData
             {ECatchType.Energy, (int)(EnergyProbability * 100)},
             {ECatchType.Creativity, (int)((1 - StaminaCosProbability - EnergyProbability) * 100)}
         };
-        GetStaminaCost = () => MainItemMono.CheckStaminaCost(CatchCostDic[ECatchType.Stamina] + StaminaCost);
-        GetEnergyCost = () => MainItemMono.CheckEnergyCost(CatchCostDic[ECatchType.Energy]);
-        GetCreativityCost = () => MainItemMono.CheckCreativityCost(CatchCostDic[ECatchType.Creativity]);
         CurCatchType = gos.ToList().RandomItem(weightFunc: pair => pair.Value).Key;
         CatchGoDic.ForEach(pair =>
         {
             pair.Value.SetActive(pair.Key == CurCatchType);
         });
+        GetStaminaCost = () => MainItemMono.CheckStaminaCost(
+            (CurCatchType == ECatchType.Stamina ? CatchCostDic[ECatchType.Stamina] : 0) + StaminaCost);
+        GetEnergyCost = () => MainItemMono.CheckEnergyCost(CatchCostDic[ECatchType.Energy]);
+        GetCreativityCost = () => MainItemMono.CheckCreativityCost(CatchCostDic[ECatchType.Creativity]);
         
     }
 
@@ -375,8 +376,8 @@ public class DreamCatcherItemData : SceneItemData
             failReason = CurCatchType switch
             {
                 ECatchType.Stamina => $"这个捕梦网需要消耗{GetStaminaCost()}点体力",
-                ECatchType.Energy => $"这个捕梦网需要消耗{GetEnergyCost()}点精力",
-                _ => $"这个捕梦网需要消耗{GetCreativityCost()}点灵感",
+                ECatchType.Energy => $"这个捕梦网需要消耗{GetStaminaCost()}点体力、{GetEnergyCost()}点精力",
+                _ => $"这个捕梦网需要消耗{GetStaminaCost()}点体力、{GetCreativityCost()}点灵感",
             };
             return false;
         }

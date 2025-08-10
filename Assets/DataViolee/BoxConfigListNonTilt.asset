@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de30a77feef24ad08d01b362c33b86a5, type: 3}
-  m_Name: NonTilt
+  m_Name: BoxConfigListNonTilt
   m_EditorClassIdentifier: 
   Height: 6
   Width: 6
