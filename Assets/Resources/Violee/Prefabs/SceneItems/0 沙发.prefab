@@ -810,6 +810,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1440650563421696741, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.602
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440650563421696741, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.598
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440650563421696741, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.567
+      objectReference: {fileID: 0}
     - target: {fileID: 5397903089958649194, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.5449998
@@ -1064,7 +1076,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788512332251189].HasSpreadPos
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[6059727542167535616].ConBuffCount
@@ -1176,7 +1188,7 @@ PrefabInstance:
       objectReference: {fileID: 2909642965410983483}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788512332251189].SpreadObjectDic.list.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[6059727542167535616].SpreadObjectDic.list.Array.size
@@ -1187,13 +1199,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7097256154115433471}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788512332251189].SpreadObjectDic.list.Array.data[0].Key
+      value: 
+      objectReference: {fileID: 7097256154115433471}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[6059727542167535616].SpreadObjectDic.list.Array.data[0].Key
       value: 
       objectReference: {fileID: 7097256154115433471}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788512332251189].SpreadObjectDic.list.Array.data[0].Value.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[6059727542167535616].SpreadObjectDic.list.Array.data[0].Value.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788512332251189].SpreadObjectDic.list.Array.data[0].Value.Array.data[0]
+      value: 
+      objectReference: {fileID: 9115882220886493704, guid: 769fe2e79d846ab4c8149d4cabfa4152, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

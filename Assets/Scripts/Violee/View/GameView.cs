@@ -358,42 +358,52 @@ class GameView : ViewBase<GameView>
     Action showDrawConfigsAct = () => { };
     async Task GetUICb(InteractInfo info)
     {
-        if (info is SceneItemInteractInfo itemInfo)
+        try
         {
-            if(itemInfo.SceneItemData.IsSleep)
-                await FadeImageAlpha(itemInfo.SceneItemData.SleepTime);
-            if (itemInfo.SceneItemData.HasCamera)
+            if (info is SceneItemInteractInfo itemInfo)
             {
-                GameManager.WindowList.MyAdd(GameManager.WatchingClockWindow);
-                await Task.Delay(CameraMono.SceneItemEase);
-                ExitWatchingItemBtn.gameObject.SetActive(true);
+                if(itemInfo.SceneItemData.IsSleep)
+                    await FadeImageAlpha(itemInfo.SceneItemData.SleepTime);
+                if (itemInfo.SceneItemData.HasCamera)
+                {
+                    GameManager.WindowList.MyAdd(GameManager.WatchingClockWindow);
+                    await Task.Delay(CameraMono.SceneItemEase);
+                    ExitWatchingItemBtn.gameObject.SetActive(true);
+                }
+            }
+            else if (info is DoorInteractInfo doorInfo)
+            {
+                GameManager.WindowList.MyAdd(DrawWindow);
+                GameManager.WindowList.MyAdd(fullMapWindow);
+                DrawBtnContent.DisableAllChildren();
+                showDrawConfigsAct = () =>
+                {
+                    var configs = doorInfo.GetDrawConfigs() ?? [];
+                    for (int i = 0; i < configs.Count; i++)
+                    {
+                        var config = configs[i];
+                        RoomIcon roomIcon = DrawBtnContent.GetChild(i).GetComponent<RoomIcon>();
+                        roomIcon.RoomImg.sprite = config.Sprite;
+                        roomIcon.TitleTxt.text = config.DrawTitle;
+                        roomIcon.DesPnl.SetActive(false);
+                        roomIcon.DesTxt.text = config.DrawDes;
+                        roomIcon.Btn.onClick.RemoveAllListeners();
+                        roomIcon.Btn.onClick.AddListener(() =>
+                        {
+                            MapManager.DrawAtWall(doorInfo.InsidePointDataList, doorInfo.WallData, config);
+                            GameManager.WindowList.MyRemove(DrawWindow);
+                            GameManager.WindowList.MyRemove(fullMapWindow);
+                        });
+                        roomIcon.gameObject.SetActive(true);
+                    }
+                };
+                showDrawConfigsAct();
             }
         }
-        else if (info is DoorInteractInfo doorInfo)
+        catch (Exception e)
         {
-            GameManager.WindowList.MyAdd(DrawWindow);
-            GameManager.WindowList.MyAdd(fullMapWindow);
-            DrawBtnContent.DisableAllChildren();
-            showDrawConfigsAct = () =>
-            {
-                var configs = doorInfo.GetDrawConfigs() ?? [];
-                for (int i = 0; i < configs.Count; i++)
-                {
-                    var config = configs[i];
-                    var go = DrawBtnContent.GetChild(i).gameObject;
-                    go.SetActive(true);
-                    go.GetComponent<Image>().sprite = config.Sprite;
-                    go.GetComponent<Button>().onClick.RemoveAllListeners();
-                    go.GetComponent<Button>().onClick.AddListener(() =>
-                    {
-                        MapManager.DrawAtWall(doorInfo.InsidePointDataList, doorInfo.WallData, config);
-                        GameManager.WindowList.MyRemove(DrawWindow);
-                        GameManager.WindowList.MyRemove(fullMapWindow);
-                    });
-                    go.GetComponentInChildren<Text>().text = config.DrawDes;
-                }
-            };
-            showDrawConfigsAct();
+            MyDebug.LogError(e);
+            throw;
         }
     }
 

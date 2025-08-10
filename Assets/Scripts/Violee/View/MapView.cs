@@ -92,7 +92,12 @@ class MapView : ViewBase<MapView>
             });
         
         TitleBtn.OnClickAsObservable()
-            .Scan(0, (count, _) => count + 1)
+            .TimeInterval()
+            .Scan(0, (count, time) =>                               
+                    time.Interval.TotalSeconds <= 0.2f
+                        ? count + 1
+                        : 1
+            )
             .Where(count => count == 10)
             .Subscribe(_ =>
             {

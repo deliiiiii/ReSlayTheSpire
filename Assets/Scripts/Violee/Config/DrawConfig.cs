@@ -13,6 +13,7 @@ namespace Violee;
 public class DrawConfig
 {
     // public EDrawType DrawType;
+    public string DrawTitle = string.Empty;
     public string DrawDes = string.Empty;
     public Sprite Sprite = null!;
     

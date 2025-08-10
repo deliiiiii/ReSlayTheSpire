@@ -134,9 +134,8 @@ public class GameManager : SingletonCS<GameManager>
     }
 
 
-    public static void Init()
+    static GameManager()
     {
-        Configer.Init();
         TitleState = Binder.From(gameFsm.GetState(EGameState.Title));
         TitleState
             .OnEnter(() =>

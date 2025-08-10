@@ -18,7 +18,7 @@ public class VioletMono : Singleton<VioletMono>
 #if UNITY_EDITOR
         Binder.Update(_ => GUIHelper.RequestRepaint());
 #endif
-        GameManager.Init();
+        Configer.Init();
         GameView.Init();
         MapView.Init();
         MainItemMono.Init();

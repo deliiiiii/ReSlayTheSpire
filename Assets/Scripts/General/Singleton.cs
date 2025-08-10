@@ -21,8 +21,8 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 
     protected virtual void Awake()
     {
-        // if(name == "New Game Object")
-            // name = GetType().ToString();
+        if(name == "New Game Object")
+            name = GetType().ToString();
         if(Instance && Instance != this)
         {
             // duplicate!!!
