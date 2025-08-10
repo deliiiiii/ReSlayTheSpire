@@ -73,6 +73,7 @@ class GameView : ViewBase<GameView>
         VioleTWindow
             .OnAdd(() =>
             {
+                RefreshDic();
                 VioleTBtn.interactable = false;
                 VioleTPnl.SetActive(true);
             })
@@ -85,7 +86,6 @@ class GameView : ViewBase<GameView>
         DicWindow
             .OnAdd(() =>
             {
-                wordLineList.ForEach(w => w.RefreshGottenLetter(VioleTWindow.GetWord()));
                 DicScrollPnl.SetActive(true);
             })
             .OnRemove(() =>
@@ -106,6 +106,9 @@ class GameView : ViewBase<GameView>
                 CameraMono.SceneItemVirtualCamera.gameObject.SetActive(false);
                 ExitWatchingItemBtn.gameObject.SetActive(false);
             });
+
+
+        ScrambleView.ExchangeWindow.OnExchangeEnd += RefreshDic;
 
         Binder.From(PlayerMono.InteractInfo).To(info => {
             NormalReticle.SetActive(info == null);
@@ -416,6 +419,7 @@ class GameView : ViewBase<GameView>
     public required Button DicScrollCloseBtn;
     public required Transform DicScrollContent;
     public required WordLine WordLinePrefab;
+    public required GameObject RedPoint;
     
     static readonly List<WordLine> wordLineList = [];
 
@@ -430,5 +434,14 @@ class GameView : ViewBase<GameView>
         });
     }
 
+    void RefreshDic()
+    {
+        var anyFit = false;
+        wordLineList.ForEach(w =>
+        {
+            anyFit |= w.RefreshGottenLetter(VioleTWindow.GetWord());
+        });
+        RedPoint.SetActive(anyFit);
+    }
     #endregion
 }

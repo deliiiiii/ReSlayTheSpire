@@ -10,7 +10,7 @@ namespace Violee.View;
 public class ScrambleView : Singleton<ScrambleView>
 {
     public required Transform ScrambleIconParent;
-    public required Button ExchangeButton;
+    // public required Button ExchangeButton;
     public required Text ExchangeTxt;
     public float ExchangeDuration = 1f;
     public required GameObject ExchangingPnl;
@@ -19,7 +19,7 @@ public class ScrambleView : Singleton<ScrambleView>
     public static readonly MyList<ScrambleIcon> SelectedList = [];
     public static readonly List<ScrambleIcon> AllList = [];
     
-    public static readonly WindowInfo ExchangeWindow = new()
+    public static readonly ExchangeWindowInfo ExchangeWindow = new()
     {
         Des = "交换字母中",
     };
@@ -29,13 +29,12 @@ public class ScrambleView : Singleton<ScrambleView>
         var layoutGroup = ScrambleIconParent.GetComponent<HorizontalLayoutGroup>();
         var contentSizeFitter = ScrambleIconParent.GetComponent<ContentSizeFitter>();
         base.Awake();
-        ExchangeWindow.OnAddEvent +=  () =>
+        ExchangeWindow.OnAddEventWithArg += w =>
         {
             ExchangingPnl.SetActive(true);
             var seq = DOTween.Sequence();
             var first = SelectedList[0];
             var second = SelectedList[1];
-            SelectedList.MyClear();
             layoutGroup.enabled = false;
             contentSizeFitter.enabled = false;
             first.transform
@@ -47,6 +46,7 @@ public class ScrambleView : Singleton<ScrambleView>
             seq.AppendInterval(ExchangeDuration);
             seq.AppendCallback(() =>
             {
+                SelectedList.MyClear();
                 MainItemMono.ExchangeLetter(first.ID, second.ID);
                 var tempID = first.ID;
                 first.ID = second.ID;
@@ -56,7 +56,9 @@ public class ScrambleView : Singleton<ScrambleView>
                 layoutGroup.enabled = true;
                 contentSizeFitter.enabled = true;
                 GameManager.WindowList.MyRemove(ExchangeWindow);
+                (w as ExchangeWindowInfo)!.OnExchangeEnd?.Invoke();
             });
+            
         };
         ExchangeWindow.OnRemoveEvent += () =>
         {
@@ -67,14 +69,13 @@ public class ScrambleView : Singleton<ScrambleView>
         {
             if (SelectedList.Count == 2)
             {
-                EnableBtn();
+                EnableTxt();
             }
             icon.OnSelected();
         };
         SelectedList.OnRemove += icon =>
         {
             DisableBtn();
-            
             icon.OnNotSelected();
         };
         for(int i = 0; i < ScrambleIconParent.childCount; i++)
@@ -87,7 +88,6 @@ public class ScrambleView : Singleton<ScrambleView>
             var vWindow = w as VioleTWindowInfo;
             SelectedList.MyClear();
             DisableBtn();
-            
             AllList.Clear();
             for(int i = 0; i < ScrambleIconParent.childCount; i++)
             {
@@ -108,21 +108,18 @@ public class ScrambleView : Singleton<ScrambleView>
                 AllList[i].LetterTxt.text = string.Empty;
             }
         };
-        Binder.From(ExchangeButton).To(() =>
-        {
-            GameManager.WindowList.MyAdd(ExchangeWindow);
-        });
     }
 
-    void EnableBtn()
+    void EnableTxt()
     {
-        ExchangeButton.interactable = true;
-        ExchangeTxt.text = "交换 ↔";
+        // ExchangeButton.interactable = true;
+        ExchangeTxt.text = "交换中";
+        GameManager.WindowList.MyAdd(ExchangeWindow);
     }
 
     void DisableBtn()
     {
-        ExchangeButton.interactable = false;
+        // ExchangeButton.interactable = false;
         ExchangeTxt.text = "↑ 选择两个字母牌交换它们 ↑";
     }
     public static void TryReverseSelected(ScrambleIcon icon)

@@ -348,7 +348,7 @@ public class DreamCatcherItemData : SceneItemData
             {ECatchType.Energy, (int)(EnergyProbability * 100)},
             {ECatchType.Creativity, (int)((1 - StaminaCosProbability - EnergyProbability) * 100)}
         };
-        GetStaminaCost = () => MainItemMono.CheckStaminaCost(CatchCostDic[ECatchType.Stamina]);
+        GetStaminaCost = () => MainItemMono.CheckStaminaCost(CatchCostDic[ECatchType.Stamina] + StaminaCost);
         GetEnergyCost = () => MainItemMono.CheckEnergyCost(CatchCostDic[ECatchType.Energy]);
         GetCreativityCost = () => MainItemMono.CheckCreativityCost(CatchCostDic[ECatchType.Creativity]);
         CurCatchType = gos.ToList().RandomItem(weightFunc: pair => pair.Value).Key;
@@ -387,7 +387,7 @@ public class DreamCatcherItemData : SceneItemData
     {
         var s1 = CurCatchType switch
         {
-            ECatchType.Stamina => $"再消耗{GetStaminaCost()}点体力",
+            ECatchType.Stamina => $"",
             ECatchType.Energy => $"消耗{GetEnergyCost()}点精力",
             _ => $"消耗{GetCreativityCost()}点灵感",
         };

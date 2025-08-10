@@ -38,6 +38,12 @@ public class BuffWindowInfo : WindowInfo
     public GameObject? BuffWindowIns;
 }
 
+[Serializable]
+public class ExchangeWindowInfo : WindowInfo
+{
+    public Action? OnExchangeEnd;
+}
+
 
 public static class WindowInfoExt
 {

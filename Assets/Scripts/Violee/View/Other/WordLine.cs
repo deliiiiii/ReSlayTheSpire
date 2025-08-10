@@ -39,7 +39,7 @@ public class WordLine : MonoBehaviour
         }
     }
 
-    public void RefreshGottenLetter(string gottenLetter)
+    public bool RefreshGottenLetter(string gottenLetter)
     {
         int tarCount = word.Length;
         int curCount = 0;
@@ -60,16 +60,17 @@ public class WordLine : MonoBehaviour
         {
             ChooseWordBtn.interactable = false;
             ChooseWordTxt.text = "未集齐";
-            return;
+            return false;
         }
 
         if (!gottenLetter.Contains(word))
         {
             ChooseWordBtn.interactable = false;
             ChooseWordTxt.text = "顺序不对..";
-            return;
+            return false;
         }
         ChooseWordBtn.interactable = true;
         ChooseWordTxt.text = "选择 →";
+        return true;
     }
 }
