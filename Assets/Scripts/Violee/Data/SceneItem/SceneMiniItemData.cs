@@ -59,6 +59,7 @@ public class SceneMiniItemDataBook : SceneMiniItemData
 public class SceneMiniItemDataFood : SceneMiniItemData
 {
     public BuffedInt StaminaGain = new(0);
+    public string DesPre = "吃";
     public override void BindBuff()
     {
         base.BindBuff();
@@ -67,7 +68,7 @@ public class SceneMiniItemDataFood : SceneMiniItemData
 
     protected override string GetInteractDesInternal()
     {
-        return $"获得{StaminaGain}点体力";
+        return $"{DesPre},获得{StaminaGain}点体力";
     }
 
     protected override void PickUpInternal()

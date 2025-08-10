@@ -138,7 +138,7 @@ class GameView : ViewBase<GameView>
         GameManager.PauseWindow
             .OnAdd(() =>
             {
-                PauseOrWinPnl.GetComponent<Image>().color = PauseOrWinPnl.GetComponent<Image>().color.SetAlpha(0.5f);
+                PauseOrWinPnl.GetComponent<Image>().color = PauseOrWinPnl.GetComponent<Image>().color.SetAlpha(0.9f);
                 PauseOrWinPnl.SetActive(true);
                 PausePnl.SetActive(true);
                 ReturnToTitleBtn.gameObject.SetActive(true);
@@ -243,6 +243,7 @@ class GameView : ViewBase<GameView>
             conBuffInsDic.Remove(conBuff);
         };
         MainItemMono.OnChangeVioleT += cList => VioleTTxt.text = string.Join("", cList);
+        MainItemMono.OnGainVioleT += OnGainVioleT;
         AudioMono.OnUnPauseLoop += clip =>
         {
             MusicWindow.BGMTxt.text = clip.name;
@@ -419,6 +420,15 @@ class GameView : ViewBase<GameView>
     public required Transform OverlapWindowTransform;
     public required BuffWindow BuffWindowPrefab;
     public required MusicWindow MusicWindow;
+    public required LetterIcon LetterIcon;
+    
+    void OnGainVioleT(char c)
+    {
+        LetterIcon.gameObject.SetActive(true);
+        LetterIcon.Letter.text = c.ToString();
+        LetterIcon.OnComplete = () => VioleTTxt.text += c;
+    }
+    
     #endregion
     
     
@@ -480,7 +490,7 @@ class GameView : ViewBase<GameView>
         }
     }
 
-    async Task FadeIn(Image img, float duration)
+    static async Task FadeIn(Image img, float duration)
     {
         try
         {
@@ -495,7 +505,7 @@ class GameView : ViewBase<GameView>
                 img.color = c;
                 await Task.Yield();
             }
-            img.color.SetAlpha(1);
+            img.color.SetAlpha(1f);
         }
         catch (Exception e)
         {
@@ -504,22 +514,30 @@ class GameView : ViewBase<GameView>
         }
     }
 
-    async Task FadeOut(Image img, float duration)
+    public async Task FadeOut(Image img, float duration)
     {
-        var initAlpha = 1f;
-        var half = duration;
-        for (float t = 0; t < half; t += Time.deltaTime)
+        try
         {
-            if (img == null)
-                return;
-            var norm = t / half;
-            var eased = Mathf.SmoothStep(0f, 1f, norm);
-            var c = img.color;
-            c.a = Mathf.Lerp(1f, initAlpha, eased);
-            img.color = c;
-            await Task.Yield();
+            var initAlpha = 1f;
+            var half = duration;
+            for (float t = 0; t < half; t += Time.deltaTime)
+            {
+                if (img == null)
+                    return;
+                var norm = t / half;
+                var eased = Mathf.SmoothStep(0f, 1f, norm);
+                var c = img.color;
+                c.a = Mathf.Lerp(0f, initAlpha, half - eased);
+                img.color = c;
+                await Task.Yield();
+            }
+            img.color.SetAlpha(0f);
         }
-        img.color.SetAlpha(initAlpha);
+        catch (Exception e)
+        {
+            MyDebug.LogError(e);
+            throw;
+        }
     }
     #endregion
 

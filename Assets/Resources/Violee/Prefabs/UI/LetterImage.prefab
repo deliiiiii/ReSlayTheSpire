@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 1546696612423796283}
   - component: {fileID: 8236145901931715909}
   m_Layer: 5
-  m_Name: WordImage
+  m_Name: LetterImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -213,7 +213,7 @@ MonoBehaviour:
   LetterTxt: {fileID: 2069810545670902364}
   SelectedObj: {fileID: 961402151795224781}
   Btn: {fileID: 1546696612423796283}
-  InitID: 0
+  ID: 0
 --- !u!1 &5804625393899067145
 GameObject:
   m_ObjectHideFlags: 0

@@ -148,6 +148,7 @@ public class MainItemMono : Singleton<MainItemMono>
     #endregion
 
     public static event Action<List<char>>? OnChangeVioleT;
+    public static event Action<char>? OnGainVioleT;
     public static void GainVioleT()
     {
         if (Instance.mainItemData.LetterList.Count == 6)
@@ -161,7 +162,7 @@ public class MainItemMono : Singleton<MainItemMono>
             : c => c != 'T';
         var c = violeT.RandomItem(c => !Instance.mainItemData.LetterList.Contains(c) && filter(c));
         Instance.mainItemData.LetterList.Add(c);
-        OnChangeVioleT?.Invoke(Instance.mainItemData.LetterList);
+        OnGainVioleT?.Invoke(c);
     }
 
     public static void ExchangeLetter(int id1, int id2)

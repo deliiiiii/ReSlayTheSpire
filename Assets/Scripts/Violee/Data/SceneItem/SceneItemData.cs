@@ -34,8 +34,6 @@ public class SceneItemData : DataBase
     // public int OccupyCount = 1;
     public bool IsAir;
     public int ID;
-    public BuffedInt StaminaCost = new(1);
-    public string DesPre = string.Empty;
     
     [Header("MinimapIcon")]
     public required Sprite MinimapIcon;
@@ -48,6 +46,8 @@ public class SceneItemData : DataBase
     [ShowIf(nameof(HasSpreadPos))] public MyList<SceneMiniItemModel> HasSpreadObjList = [];
     
     public bool IsActive;
+    [ShowIf(nameof(IsActive))] public BuffedInt StaminaCost = new(1);
+    [ShowIf(nameof(IsActive))] public string DesPre = string.Empty;
     [Header("HasCount")]
     [ShowIf(nameof(IsActive))] public bool HasCount;
     [ShowIf(nameof(IsActive))][ShowIf(nameof(HasCount))] public int Count;
