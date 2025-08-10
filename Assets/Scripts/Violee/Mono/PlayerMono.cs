@@ -55,16 +55,31 @@ public class PlayerMono : Singleton<PlayerMono>
         staGameObject.SetActive(false);
     }
 
-    public static void Tick(bool hasWindowed)
+    public static void TickOnTitle()
+    {
+        if (InteractInfo.Value is StartBoxInteractInfo)
+        {
+            HandleClick();
+        }
+    }
+    public static void TickOnPlaying(bool hasWindowed)
     {
         fpc.enabled = !hasWindowed;
-        if ((InteractInfo.Value?.CanUse ?? false) && Input.GetMouseButtonDown(0) && !hasWindowed)
+        
+        if ((InteractInfo.Value?.CanUse ?? false) && !hasWindowed)
         {
-            InteractInfo.Value.Act();
-            OnClickInteract?.Invoke(InteractInfo.Value);
+            HandleClick();
         }
     }
 
+    static void HandleClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            InteractInfo.Value!.Act();
+            OnClickInteract?.Invoke(InteractInfo.Value);
+        }
+    }
     public static Vector3 GetPos() => staTransform.position;
 
 

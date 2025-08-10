@@ -95,9 +95,11 @@ class GameView : ViewBase<GameView>
             
         GameManager.PauseWindow
             .OnAdd(() => PausePnl.SetActive(true))
-            .OnRemove(() =>
+            .OnRemoveWithArg(w =>
             {
                 PausePnl.SetActive(false);
+                if((w as PauseWindowInfo)!.TarState == GameManager.TitleState)
+                    GameManager.EnterTitle();
             });
         GameManager.WatchingClockWindow
             .OnAdd(() => CameraMono.SceneItemVirtualCamera.gameObject.SetActive(true))
@@ -137,6 +139,7 @@ class GameView : ViewBase<GameView>
             .OnEnter(() =>
             {
                 MiniItemPnl.SetActive(true);
+                EnableMapObj();
                 ShowMinimap();
             })
             .OnUpdate(dt =>
@@ -157,7 +160,11 @@ class GameView : ViewBase<GameView>
                         GameManager.WindowList.MyRemove(fullMapWindow);
                 }
             })
-            .OnExit(() => MiniItemPnl.SetActive(false));
+            .OnExit(() =>
+            {
+                DisableMapObj();
+                MiniItemPnl.SetActive(false);
+            });
         
 
         var conBuffInsDic = new Dictionary<BuffData, GameObject>();
@@ -198,7 +205,16 @@ class GameView : ViewBase<GameView>
             MainItemMono.CostCreativity(MainItemMono.CheckCreativityCost(1));
             showDrawConfigsAct();
         });
-        Binder.From(ContinueBtn).To(() => GameManager.WindowList.MyRemove(GameManager.PauseWindow));
+        Binder.From(ContinueBtn).To(() =>
+        {
+            GameManager.PauseWindow.TarState = GameManager.PlayingState;
+            GameManager.WindowList.MyRemove(GameManager.PauseWindow);
+        });
+        Binder.From(ReturnToTitleBtn).To(() =>
+        {
+            GameManager.PauseWindow.TarState = GameManager.TitleState;
+            GameManager.WindowList.MyRemove(GameManager.PauseWindow);
+        });
         Binder.From(ExitWatchingItemBtn).To(async () =>
         {
             try
@@ -225,6 +241,7 @@ class GameView : ViewBase<GameView>
     public required GameObject LoadPnl;
     public required GameObject PausePnl;
     public required Button ContinueBtn;
+    public required Button ReturnToTitleBtn;
 
     #region Minimap
 
@@ -249,6 +266,17 @@ class GameView : ViewBase<GameView>
                 tarSize,
                 ChangeSpeed * dt);
         }
+    }
+
+    void EnableMapObj()
+    {
+        FullScreenImg.gameObject.SetActive(true);
+        MinimapImg.gameObject.SetActive(true);
+    }
+    void DisableMapObj()
+    {
+        FullScreenImg.gameObject.SetActive(false);
+        MinimapImg.gameObject.SetActive(false);
     }
     void ShowMinimap()
     {

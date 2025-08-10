@@ -8,7 +8,7 @@ namespace Violee;
 
 public enum EGameState
 {
-    Idle,
+    Title,
     GeneratingMap,
     Playing,
 }
@@ -23,6 +23,14 @@ public class WindowInfo
     public Action<WindowInfo>? OnAddEventWithArg;
     [NonSerialized]
     public Action? OnRemoveEvent;
+    [NonSerialized]
+    public Action<WindowInfo>? OnRemoveEventWithArg;
+}
+
+[Serializable]
+public class PauseWindowInfo : WindowInfo
+{
+    public BindDataState TarState = null!;
 }
 
 [Serializable]
@@ -57,6 +65,11 @@ public static class WindowInfoExt
         info.OnRemoveEvent += action;
         return info;
     }
+    public static WindowInfo OnRemoveWithArg(this WindowInfo info, Action<WindowInfo> action)
+    {
+        info.OnRemoveEventWithArg += action;
+        return info;
+    }
 }
 
 
@@ -67,6 +80,8 @@ public class GameManager : SingletonCS<GameManager>
     
     static readonly MyFSM<EGameState> gameFsm = new ();
     public static string GameState => gameFsm.CurStateName;
+    public static BindDataState TitleState = null!;
+    public static void EnterTitle() => gameFsm.ChangeState(EGameState.Title);
     public static BindDataState GeneratingMapState = null!;
     public static BindDataState PlayingState = null!;
     
@@ -76,29 +91,36 @@ public class GameManager : SingletonCS<GameManager>
         {
             x.OnAddEvent?.Invoke();
             x.OnAddEventWithArg?.Invoke(x);
-        }, x => x.OnRemoveEvent?.Invoke());
-    public static readonly WindowInfo PauseWindow = new ()
+        }, x =>
+        {
+            x.OnRemoveEvent?.Invoke();
+            x.OnRemoveEventWithArg?.Invoke(x);
+        });
+    public static readonly PauseWindowInfo PauseWindow = new ()
     {
-        // WindowType = EWindowType.GamePause,
         Des = "游戏窗口失去焦点 or 按下了暂停键。",
-        OnAddEvent = () =>
-        {
-            Time.timeScale = 0;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        },
-        OnRemoveEvent = () =>
-        {
-            Time.timeScale = 1;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        OnAddEvent = EnableCursor,
+        OnRemoveEvent = DisableCursor
     };
     public static readonly WindowInfo WatchingClockWindow = new ()
     {
         // WindowType = EWindowType.WaitingSceneItem,
         Des = "看时间...",
     };
+
+    public static void EnableCursor()
+    {
+        Time.timeScale = 0;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public static void DisableCursor()
+    {
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
     
 
     public static BuffWindowInfo CreateAndAddBuffWindow(string des)
@@ -115,14 +137,18 @@ public class GameManager : SingletonCS<GameManager>
     public static void Init()
     {
         Configer.Init();
+        TitleState = Binder.From(gameFsm.GetState(EGameState.Title));
+        TitleState
+            .OnEnter(() =>
+            {
+                WindowList.MyClear();
+                EnableCursor();
+            })
+            .OnUpdate(_ => PlayerMono.TickOnTitle());
         GeneratingMapState = Binder.From(gameFsm.GetState(EGameState.GeneratingMap));
         PlayingState = Binder.From(gameFsm.GetState(EGameState.Playing));
         PlayingState
-            .OnEnter(() =>
-            {
-                PlayerMono.OnEnterPlaying();
-                WindowList.MyClear();
-            })
+            .OnEnter(PlayerMono.OnEnterPlaying)
             .OnUpdate(dt =>
             {
                 if (Input.GetKey(KeyCode.LeftAlt) || HasWindow)
@@ -141,12 +167,12 @@ public class GameManager : SingletonCS<GameManager>
                 PlayerMono.PlayerCurPoint.Value = curPoint;
                 if(!HasPaused)
                     MapManager.Tick(dt);
-                PlayerMono.Tick(HasWindow);
+                PlayerMono.TickOnPlaying(HasWindow);
             })
             .OnExit(PlayerMono.OnExitPlaying);
         
         MapManager.GenerateStream
-            .Where(_ => IsIdle || IsPlaying)
+            .Where(_ => IsTitle)
             .OnBegin(_ => gameFsm.ChangeState(EGameState.GeneratingMap));
         MapManager.DijkstraStream
             .OnEnd(param =>
@@ -160,8 +186,6 @@ public class GameManager : SingletonCS<GameManager>
             var ret = CreateAndAddBuffWindow($"{winBuff.Des}");
             ret.OnRemove(() => winBuff.BuffEffect());
         };
-        
-        gameFsm.ChangeState(EGameState.Idle);
         Binder.Update(dt =>
         {
             gameFsm.Update(dt);
@@ -170,18 +194,14 @@ public class GameManager : SingletonCS<GameManager>
         Binder.Update(_ =>
         {
             Time.timeScale = Configer.SettingsConfig.QuickKey && Input.GetKey(KeyCode.Q) ? 10f : 1f;
-            if (!IsIdle && !IsPlaying)
-                return;
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                Task.FromResult(MapManager.GenerateStream.CallTriggerAsync());
-            }
         }, EUpdatePri.Input);
     }
     
     static void CheckGameWindow()
     {
         if (Configer.SettingsConfig.DisablePause)
+            return;
+        if (!IsPlaying)
             return;
         if (!Application.isFocused)
         {
@@ -195,13 +215,14 @@ public class GameManager : SingletonCS<GameManager>
                 WindowList.MyAdd(PauseWindow);
             else
             {
+                PauseWindow.TarState = PlayingState;
                 WindowList.MyRemove(PauseWindow);
             }
         }
     }
 
     
-    public static bool IsIdle => gameFsm.IsState(EGameState.Idle);
+    public static bool IsTitle => gameFsm.IsState(EGameState.Title);
     public static bool IsPlaying => gameFsm.IsState(EGameState.Playing);
     public static bool HasWindow => WindowList.Any();
     public static bool HasPaused => WindowList.Contains(PauseWindow);

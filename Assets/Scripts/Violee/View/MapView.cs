@@ -9,6 +9,18 @@ namespace Violee.View;
 
 class MapView : ViewBase<MapView>
 {
+    [Header("Title")]
+    
+    public required Light Light;
+    public required GameObject TitlePnl;
+    public required GameObject StartBox;
+    public required InteractCasterMouse MouseCaster;
+    public required InteractReceiver StartIr;
+    public required Button TutorialBtn;
+    public required Button SettingsBtn;
+    public required Button ExitBtn;
+    
+    [Header("Map")]
     public Text CostTxtPrefab = null!;
     protected override void IBL()
     {
@@ -16,6 +28,34 @@ class MapView : ViewBase<MapView>
         if (Configer.SettingsConfig.ShowBoxCost)
             MapManager.DijkstraStream.OnBeginAsync(BindAllCostTxt);
 
+        MouseCaster.Init();
+        StartIr.GetInteractInfo = () =>
+        {
+            return new StartBoxInteractInfo
+            {
+                Description = "点击开始",
+                Color = Color.cyan,
+                Act = () => Task.FromResult(MapManager.GenerateStream.CallTriggerAsync()),
+            };
+        };
+        
+
+        GameManager.TitleState
+            .OnEnter(() =>
+            {
+                CameraMono.PlayerVirtualCamera.enabled = false;
+                TitlePnl.SetActive(true);
+                StartBox.SetActive(true);
+                Light.gameObject.SetActive(false);
+            })
+            .OnExit(() =>
+            {
+                CameraMono.PlayerVirtualCamera.enabled = true;
+                TitlePnl.SetActive(false);
+                StartBox.SetActive(false);
+                Light.gameObject.SetActive(true);
+            });
+        
         
         GameView.DrawWindow
             .OnAdd(() =>
@@ -32,6 +72,8 @@ class MapView : ViewBase<MapView>
                 var doorInteractInfo = PlayerMono.InteractInfo.Value as DoorInteractInfo;
                 doorInteractInfo?.InsidePointDataList.ForEach(x => x.Flash(false));
             });
+
+        GameManager.EnterTitle();
     }
 
     readonly HashSet<Text> costTxtSet = [];

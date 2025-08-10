@@ -101,7 +101,6 @@ internal class MapManager : SingletonCS<MapManager>
             .SetTrigger(_ =>
             {
                 var param = generateParam;
-                InitCollections(param);
                 GenerateMain(param);
                 return param;
             });
@@ -112,6 +111,11 @@ internal class MapManager : SingletonCS<MapManager>
                 VisitEdgeWalls(param.EdgeWallSet);
                 param.DateTime = new DateTime(2025, 8, 14, 8, 0, 0);
             });
+
+        GameManager.TitleState.OnEnter(() =>
+        {
+            InitCollections(generateParam);
+        });
     }
 
     public static void Tick(float dt)

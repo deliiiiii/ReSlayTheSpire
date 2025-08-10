@@ -93,3 +93,8 @@ public class SceneMiniItemInteractInfo : InteractInfo
 {
     public required SceneMiniItemData SceneMiniItemData;
 }
+
+public class StartBoxInteractInfo : InteractInfo
+{
+    
+}
