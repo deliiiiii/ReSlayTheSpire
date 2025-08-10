@@ -21,11 +21,12 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 
     protected virtual void Awake()
     {
-        if(name == "New Game Object")
-            name = GetType().ToString();
+        // if(name == "New Game Object")
+            // name = GetType().ToString();
         if(Instance && Instance != this)
         {
             // duplicate!!!
+            MyDebug.LogError($"{typeof(T)} already exists on {name}, destroying the new instance.");
             Destroy(Instance.gameObject);
         }
         // Instance!.OnInit();

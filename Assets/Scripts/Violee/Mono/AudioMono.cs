@@ -25,7 +25,8 @@ public class AudioMono : Singleton<AudioMono>
 
     public static event Action<AudioClip>? OnUnPauseLoop;
 
-    protected override void Awake()
+    public static void Init() => Instance._Init();
+    void _Init()
     {
         base.Awake();
         titleBGMSource = gameObject.AddComponent<AudioSource>();
@@ -34,9 +35,13 @@ public class AudioMono : Singleton<AudioMono>
             var go = new GameObject("SE_" + i);
             go.transform.SetParent(transform);
             seSource.Add(go.AddComponent<AudioSource>());
-        } 
-        
-        PlayLoop(titleBGMSource, BGMKisekiIns);
+        }
+
+        GameManager.TitleState.OnEnter(() =>
+        {
+            PlayLoop(titleBGMSource, BGMKisekiIns);
+        });
+
     }
     
 

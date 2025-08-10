@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d606e8641a4149fcb90baf245d658bd8, type: 3}
   m_Name: SettingsConfig
   m_EditorClassIdentifier: 
-  RefreshConfigOnAwake: 0
-  QuickKey: 1
-  ShowBoxCost: 1
-  DisablePause: 0
+  IsDevelop: 1
+  quickKey: 1
+  showBoxCost: 1
+  disablePause: 0
   BoxCostPosOffset: 0.37
   TimeSpeed: 30
   PointSpriteFlashTime: 1

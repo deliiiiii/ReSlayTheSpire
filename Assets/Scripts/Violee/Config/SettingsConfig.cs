@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -7,10 +8,21 @@ namespace Violee
     [CreateAssetMenu(fileName = nameof(SettingsConfig), menuName = "Violee/" + nameof(SettingsConfig))]
     public class SettingsConfig : ScriptableObject
     {
-        public bool RefreshConfigOnAwake;
-        public bool QuickKey;
-        public bool ShowBoxCost = true;
-        public bool DisablePause = true;
+        // public bool RefreshConfigOnAwake;
+        public bool IsDevelop;
+
+        [ShowIf(nameof(IsDevelop))][SerializeField]
+        bool quickKey;
+        public bool QuickKey => quickKey && IsDevelop;
+
+        [ShowIf(nameof(IsDevelop))][SerializeField]
+        bool showBoxCost;
+        public bool ShowBoxCost => showBoxCost && IsDevelop;
+        [ShowIf(nameof(IsDevelop))][SerializeField]
+        bool disablePause;
+        public bool DisablePause => disablePause && IsDevelop;
+
+
         [MinValue(0)][MaxValue(0.5f)]
         public float BoxCostPosOffset = 0.35f;
 

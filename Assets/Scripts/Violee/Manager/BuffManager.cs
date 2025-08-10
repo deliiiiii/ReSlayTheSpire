@@ -20,17 +20,12 @@ public class BuffManager : SingletonCS<BuffManager>
     }
 
 
-    public static void AddWinBuffClock(int hour)
+    public static void AddWinBuff(string des, Action act)
     {
-        int energy = hour % 2 == 0 ? 2 : 1;
         var added = new WindowBuffData
         {
-            Des = $"叮! 时间到了{hour}点整...!\n鉴于你凝思了许久，精力+{energy}点。",
-            BuffEffect = () =>
-            {
-                // TODO 消除耦合
-                MainItemMono.GainEnergy(energy);
-            },
+            Des = des,
+            BuffEffect = act,
         };
         winBuffList.MyAdd(added);
     }
@@ -50,8 +45,6 @@ public class BuffManager : SingletonCS<BuffManager>
     
     static bool ContainsConBuff(EConBuffType conBuffType) 
         => conBuffList.Any(b => b.ConBuffType == conBuffType);
-
-    static readonly UnityAction<int> refreshBuffActInt = _ => PlayerMono.RefreshCurPointBuff();
     
     public static void RefreshConBuffs(IEnumerable<SceneItemData> items)
     {
@@ -63,7 +56,7 @@ public class BuffManager : SingletonCS<BuffManager>
                 return;
             if (i.ConBuffData.HasCount && i.ConBuffData.Count <= 0)
                 return;
-            i.ConBuffData.Count.OnValueChangedAfter += refreshBuffActInt;
+            i.ConBuffData.Count.OnValueChangedAfter += _ => PlayerMono.RefreshCurPointBuff();
             conBuffList.MyAdd(i.ConBuffData);
         });
     }

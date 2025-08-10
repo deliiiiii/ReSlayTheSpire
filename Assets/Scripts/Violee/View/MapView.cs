@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,20 +16,23 @@ class MapView : ViewBase<MapView>
     public required GameObject TitlePnl;
     public required GameObject StartBox;
     public required InteractCasterMouse MouseCaster;
+    public required Transform Hitobj;
     public required InteractReceiver StartIr;
+    public required Button TitleBtn;
     public required Button TutorialBtn;
     public required Button SettingsBtn;
     public required Button ExitBtn;
     
     [Header("Map")]
     public Text CostTxtPrefab = null!;
+    
+    public static void Init() => Instance.IBL();
     protected override void IBL()
     {
         costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform, 42);
         if (Configer.SettingsConfig.ShowBoxCost)
             MapManager.DijkstraStream.OnBeginAsync(BindAllCostTxt);
 
-        MouseCaster.Init();
         StartIr.GetInteractInfo = () =>
         {
             return new StartBoxInteractInfo
@@ -38,22 +42,36 @@ class MapView : ViewBase<MapView>
                 Act = () => Task.FromResult(MapManager.GenerateStream.CallTriggerAsync()),
             };
         };
-        
 
+        async Task DelayTickMouse()
+        {
+            await Task.Delay(CameraMono.DefaultEase);
+            MouseCaster.gameObject.SetActive(true);
+        }
+        
         GameManager.TitleState
             .OnEnter(() =>
             {
+                CameraMono.TitleVirtualCamera.LookAt = Hitobj;
                 CameraMono.PlayerVirtualCamera.enabled = false;
                 TitlePnl.SetActive(true);
                 StartBox.SetActive(true);
                 Light.gameObject.SetActive(false);
+                _ = DelayTickMouse();
+            })
+            .OnUpdate(_ =>
+            {
+                if(MouseCaster.gameObject.activeSelf)
+                    MouseCaster.Tick();
             })
             .OnExit(() =>
             {
+                CameraMono.TitleVirtualCamera.LookAt = null;
                 CameraMono.PlayerVirtualCamera.enabled = true;
                 TitlePnl.SetActive(false);
                 StartBox.SetActive(false);
                 Light.gameObject.SetActive(true);
+                MouseCaster.gameObject.SetActive(false);
             });
         
         
@@ -72,8 +90,16 @@ class MapView : ViewBase<MapView>
                 var doorInteractInfo = PlayerMono.InteractInfo.Value as DoorInteractInfo;
                 doorInteractInfo?.InsidePointDataList.ForEach(x => x.Flash(false));
             });
-
-        GameManager.EnterTitle();
+        
+        TitleBtn.OnClickAsObservable()
+            .Scan(0, (count, _) => count + 1)
+            .Where(count => count == 10)
+            .Subscribe(_ =>
+            {
+                var buffAct = () => { Configer.SettingsConfig.IsDevelop = true; };
+                BuffManager.AddWinBuff("Oh It's 萝符号!\n(已启用开发者模式.)", buffAct);
+            })
+            .AddTo(this);
     }
 
     readonly HashSet<Text> costTxtSet = [];

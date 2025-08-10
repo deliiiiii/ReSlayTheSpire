@@ -32,7 +32,8 @@ class GameView : ViewBase<GameView>
     {
         Des = "查看单词表",
     };
-    
+
+    public static void Init() => Instance.IBL();
     protected override void IBL()
     {
         GameManager.WindowList.OnAdd += w =>

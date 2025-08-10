@@ -179,6 +179,11 @@ public class FirstPersonController : Singleton<FirstPersonController>
 
     float camRotation;
 
+
+    public void OnEnterPlayingState()
+    {
+        yaw = pitch = 0;
+    }
     public void Update()
     {
         // #region Camera

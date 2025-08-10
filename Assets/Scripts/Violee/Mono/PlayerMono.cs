@@ -53,6 +53,7 @@ public class PlayerMono : Singleton<PlayerMono>
     public static void OnExitPlaying()
     {
         staGameObject.SetActive(false);
+        fpc.OnEnterPlayingState();
     }
 
     public static void TickOnTitle()

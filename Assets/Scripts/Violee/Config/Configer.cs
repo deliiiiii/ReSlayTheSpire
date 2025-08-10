@@ -10,10 +10,6 @@ namespace Violee
 {
     public class Configer : Singleton<Configer>
     {
-        [Header("Singleton's Model")] 
-        public PlayerMono PlayerMonoIns = null!;
-        public static PlayerMono playerMono => Instance.PlayerMonoIns;
-
         [Header("Object Pool")]
         public BoxModel BoxModelIns = null!;
         public static BoxModel BoxModel => Instance.BoxModelIns;
@@ -38,8 +34,9 @@ namespace Violee
         
         public static void Init()
         {
-            if (SettingsConfig.RefreshConfigOnAwake)
-                Task.FromResult(LoadConfig());
+            SettingsConfig.IsDevelop = false;
+            // if (SettingsConfig.RefreshConfigOnAwake)
+            //     Task.FromResult(LoadConfig());
         }
 
         static async Task LoadConfig()

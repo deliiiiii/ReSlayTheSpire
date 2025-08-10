@@ -5,34 +5,41 @@ namespace Violee;
 
 public class InteractCasterMouse : MonoBehaviour
 {
-    public LayerMask TarLayer;
+    public LayerMask TarInteractLayer;
+    public LayerMask HitWallLayer;
+    public required GameObject HitWallObj;
     readonly Observable<InteractReceiver?> lastIr
         = new(null, x => x?.DisableOutline(), x => x?.EnableOutline());
 
-    public void Init()
+    public void Tick()
     {
-        var playerCamera = CameraMono.PlayerCamera;
-        GameManager.TitleState
-        .OnUpdate(_ =>
+        TickHitWall();
+        var ray = CameraMono.PlayerCamera.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out var hit, BoxHelper.BoxSize, TarInteractLayer))
         {
-            var ray = playerCamera.ScreenPointToRay(Input.mousePosition);
-            if (!Physics.Raycast(ray, out var hit, BoxHelper.BoxSize) ||
-                (TarLayer.value & (1 << hit.collider.gameObject.layer)) == 0)
-            {
-                lastIr.Value = null;
-                PlayerMono.InteractInfo.Value = null;
-                return;
-            }
-            var ir = hit.collider.gameObject.GetComponent<InteractReceiver>();
-            if (ir == null || !ir.GetInteractInfo().Active)
-            {
-                lastIr.Value = null;
-                PlayerMono.InteractInfo.Value = null;
-                return;
-            }
+            lastIr.Value = null;
+            PlayerMono.InteractInfo.Value = null;
+            return;
+        }
+          
+        var ir = hit.collider.gameObject.GetComponent<InteractReceiver>();
+        if (ir == null || !ir.GetInteractInfo().Active)
+        {
+            lastIr.Value = null;
+            PlayerMono.InteractInfo.Value = null;
+            return;
+        }
 
-            lastIr.Value = ir;
-            PlayerMono.InteractInfo.Value = lastIr.Value?.GetInteractInfo();
-        });
+        lastIr.Value = ir;
+        PlayerMono.InteractInfo.Value = lastIr.Value?.GetInteractInfo();
+    }
+
+    void TickHitWall()
+    {
+        var ray = CameraMono.PlayerCamera.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out var hit, BoxHelper.BoxSize) ||
+            (HitWallLayer.value & (1 << hit.collider.gameObject.layer)) == 0)
+            return;
+        HitWallObj.transform.position = hit.point;
     }
 }

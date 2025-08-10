@@ -4,20 +4,25 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 #endif
 using UnityEngine;
+using Violee.View;
 
 namespace Violee;
 
-public class VioletMono : Singleton<PlayerMono>
+public class VioletMono : Singleton<VioletMono>
 {
     [ShowInInspector] public string GameState => GameManager.GameState;
     [ShowInInspector] public List<WindowInfo> WindowList => GameManager.WindowList;
 
-    protected override void Awake()
+    void Start()
     {
 #if UNITY_EDITOR
         Binder.Update(_ => GUIHelper.RequestRepaint());
 #endif
         GameManager.Init();
+        GameView.Init();
+        MapView.Init();
+        AudioMono.Init();
+        GameManager.EnterTitle();
     }
 
     // public Vector2Int CreateSceneItemPos;
