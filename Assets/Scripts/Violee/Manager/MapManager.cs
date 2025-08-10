@@ -15,7 +15,8 @@ public class GenerateParam
 {
     readonly MapData mapData;
     readonly ObjectPool<BoxModel> boxPool;
-    readonly BoxConfigList boxConfigList;
+    readonly Func<BoxConfigList> getBoxConfigList;
+    BoxConfigList boxConfigList => getBoxConfigList();
     public int Height => boxConfigList.Height;
     public int Width => boxConfigList.Width;
     public Vector2Int StartPos => boxConfigList.StartPos;
@@ -54,12 +55,12 @@ public class GenerateParam
     {
         this.mapData = mapData;
         
-        boxConfigList = Configer.BoxConfigList;
+        getBoxConfigList = () => Configer.BoxConfigList;
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, go.transform, 42);
         
-        BoxDataDic.OnAdd += boxData =>
+        BoxDataDic.OnAddAsync += async boxData =>
             {
-                Task.FromResult(OnAddBoxData(boxData));
+                await OnAddBoxData(boxData);
                 EmptyPosSet.Remove(boxData.Pos2D);
 
                 var nextPairs = BoxHelper.GetNextLocAndGoInDirList(boxData.Pos2D);
@@ -98,14 +99,33 @@ internal class MapManager : SingletonCS<MapManager>
     {
         GenerateStream = Streamer
             .Bind(ValueTuple.Create)
-            .SetTrigger(_ =>
+            .SetTriggerAsync(async _ =>
             {
-                var param = generateParam;
-                GenerateMain(param);
-                return param;
+                try
+                {
+                    await GenerateMain(generateParam);
+                    return generateParam;
+                }
+                catch (Exception e)
+                {
+                    MyDebug.LogError(e);
+                    throw;
+                }
+                
             });
         DijkstraStream = GenerateStream
-            .ContinueAsync(Dijkstra)
+            .ContinueAsync(async param =>
+            {
+                try
+                {
+                    return await Dijkstra(param);
+                }
+                catch (Exception e)
+                {
+                    MyDebug.LogError(e);
+                    throw;
+                }
+            })
             .OnEnd(param =>
             {
                 VisitEdgeWalls(param.EdgeWallSet);
@@ -197,15 +217,15 @@ internal class MapManager : SingletonCS<MapManager>
         ];
         param.EdgeWallSet = [];
     }
-    static void GenerateMain(GenerateParam param)
+    static async Task GenerateMain(GenerateParam param)
     {
-        GenerateOneFakeConnection(true, param);
+        await GenerateOneFakeConnection(true, param);
         while (param.EmptyPosSet.Count > 0)
         {
-            GenerateOneFakeConnection(false, param);
+            await GenerateOneFakeConnection(false, param);
         }
     }
-    static void GenerateOneFakeConnection(bool startWithStartLoc, GenerateParam param)
+    static async Task GenerateOneFakeConnection(bool startWithStartLoc, GenerateParam param)
     {
         static BoxData ReadBoxConfig(Vector2Int pos, BoxConfig config) 
             => new(pos, config);
@@ -216,7 +236,7 @@ internal class MapManager : SingletonCS<MapManager>
             ? Configer.BoxConfigList.BoxConfigs.First(x => x.Walls == 0)
             : Configer.BoxConfigList.BoxConfigs.RandomItem(weightFunc: x => x.BasicWeight);
         var firstBox = ReadBoxConfig(firstLoc, firstConfig);
-        param.BoxDataDic.Add(firstLoc, firstBox);
+        await param.BoxDataDic.Add(firstLoc, firstBox);
         edgeBoxStack.Push(firstBox);
         while (edgeBoxStack.Count > 0)
         {
@@ -231,7 +251,7 @@ internal class MapManager : SingletonCS<MapManager>
                     var edgeWall = new WallData(curGoOutDir, EDoorType.None){BelongBox = curBox};
                     param.EdgeWallSet.Add(edgeWall);
                     curBox.WallDataMyDic.Remove(edgeWall.WallType);
-                    curBox.WallDataMyDic.Add(edgeWall.WallType, edgeWall);
+                    await curBox.WallDataMyDic.Add(edgeWall.WallType, edgeWall);
                     // MyDebug.Log($"ReachMapEdge, AddWall {curBox.Pos}:{curGoOutDir}");
                     continue;
                 }
@@ -242,7 +262,7 @@ internal class MapManager : SingletonCS<MapManager>
                 var nextBox = ReadBoxConfig(nextPos, boxConfig);
                 if (!param.HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
                 {
-                    param.BoxDataDic.Add(nextPos, nextBox);
+                    await param.BoxDataDic.Add(nextPos, nextBox);
                     edgeBoxStack.Push(nextBox);
                 }
             }
@@ -250,81 +270,73 @@ internal class MapManager : SingletonCS<MapManager>
     }
     static async Task<GenerateParam> Dijkstra(GenerateParam param)
     {
-        try
+        var boxDataDic = param.BoxDataDic;
+        boxDataDic.Values.ForEach(boxData => boxData.ResetBeforeDij());
+        var vSet = new HashSet<BoxPointData>();
+        var pq = new SimplePriorityQueue<BoxPointData, int>();
+        var startBox = boxDataDic[param.StartPos];
+        var startPoint = startBox.PointDataMyDic[param.StartDir];
+        startPoint.CostWall.Value = 0;
+        pq.Enqueue(startPoint, 0);
+        while (pq.Count != 0)
         {
-            var boxDataDic = param.BoxDataDic;
-            boxDataDic.Values.ForEach(boxData => boxData.ResetBeforeDij());
-            var vSet = new HashSet<BoxPointData>();
-            var pq = new SimplePriorityQueue<BoxPointData, int>();
-            var startBox = boxDataDic[param.StartPos];
-            var startPoint = startBox.PointDataMyDic[param.StartDir];
-            startPoint.CostWall.Value = 0;
-            pq.Enqueue(startPoint, 0);
-            while (pq.Count != 0)
+            var curPoint = pq.Dequeue();
+            vSet.Add(curPoint);
+            var curCost = curPoint.CostWall;
+            var curBox = curPoint.BelongBox;
+            var curDir = curPoint.Dir;
+            var nextPos = BoxHelper.NextPos(curBox.Pos2D, curDir);
+            if (param.InMap(nextPos))
             {
-                var curPoint = pq.Dequeue();
-                vSet.Add(curPoint);
-                var curCost = curPoint.CostWall;
-                var curBox = curPoint.BelongBox;
-                var curDir = curPoint.Dir;
-                var nextPos = BoxHelper.NextPos(curBox.Pos2D, curDir);
-                if (param.InMap(nextPos))
+                var nextBox = boxDataDic[nextPos];
+                var oppositeDir = BoxHelper.OppositeDirDic[curDir];
+                var nextPoint = nextBox.PointDataMyDic[oppositeDir];
+                var costSWall = curBox.CostStraight(curDir, out var wallData1) + nextBox.CostStraight(oppositeDir, out var wallData2);
+                nextPoint.CostWall.Value = Math.Min(
+                    nextPoint.CostWall.Value,
+                    curCost.Value + costSWall);
+                if (wallData1 != null)
+                    curPoint.AddWallAndNextPoint((nextPoint, wallData1));
+                if (wallData2 != null)
+                    curPoint.AddWallAndNextPoint((nextPoint, wallData2));
+                
+                if (!vSet.Contains(nextPoint))
                 {
-                    var nextBox = boxDataDic[nextPos];
-                    var oppositeDir = BoxHelper.OppositeDirDic[curDir];
-                    var nextPoint = nextBox.PointDataMyDic[oppositeDir];
-                    var costSWall = curBox.CostStraight(curDir, out var wallData1) + nextBox.CostStraight(oppositeDir, out var wallData2);
-                    nextPoint.CostWall.Value = Math.Min(
-                        nextPoint.CostWall.Value,
-                        curCost.Value + costSWall);
-                    if (wallData1 != null)
-                        curPoint.AddWallAndNextPoint((nextPoint, wallData1));
-                    if (wallData2 != null)
-                        curPoint.AddWallAndNextPoint((nextPoint, wallData2));
-                    
+                    if(pq.Contains(nextPoint))
+                        pq.UpdatePriority(nextPoint, nextPoint.CostWall);
+                    else
+                        pq.Enqueue(nextPoint, nextPoint.CostWall);
+                    if(costSWall == 0)
+                    {
+                        curPoint.Merge(nextPoint);
+                    }
+                }
+            }
+            curPoint.NextPointsInBox
+                .ForEach(nextPoint =>
+                {
+                    var costTWall = curBox.CostTilt(curPoint.Dir, nextPoint.Dir, out var wallData3);
+                    if(wallData3 != null)
+                        curPoint.AddWallAndNextPoint((nextPoint, wallData3));
                     if (!vSet.Contains(nextPoint))
                     {
-                        if(pq.Contains(nextPoint))
+                        nextPoint.CostWall.Value = Math.Min(
+                            nextPoint.CostWall.Value,
+                            curPoint.CostWall + costTWall);
+                        if (pq.Contains(nextPoint))
                             pq.UpdatePriority(nextPoint, nextPoint.CostWall);
                         else
                             pq.Enqueue(nextPoint, nextPoint.CostWall);
-                        if(costSWall == 0)
-                        {
+                        if(costTWall == 0)
                             curPoint.Merge(nextPoint);
-                        }
                     }
-                }
-                curPoint.NextPointsInBox
-                    .ForEach(nextPoint =>
-                    {
-                        var costTWall = curBox.CostTilt(curPoint.Dir, nextPoint.Dir, out var wallData3);
-                        if(wallData3 != null)
-                            curPoint.AddWallAndNextPoint((nextPoint, wallData3));
-                        if (!vSet.Contains(nextPoint))
-                        {
-                            nextPoint.CostWall.Value = Math.Min(
-                                nextPoint.CostWall.Value,
-                                curPoint.CostWall + costTWall);
-                            if (pq.Contains(nextPoint))
-                                pq.UpdatePriority(nextPoint, nextPoint.CostWall);
-                            else
-                                pq.Enqueue(nextPoint, nextPoint.CostWall);
-                            if(costTWall == 0)
-                                curPoint.Merge(nextPoint);
-                        }
-                    });
-                await Configer.SettingsConfig.YieldFrames();
-            }
-            MyDebug.Log("Dijkstra finished!");
-            if (!CheckConnective(boxDataDic))
-                await Dijkstra(param);
-            return param;
+                });
+            await Configer.SettingsConfig.YieldFrames();
         }
-        catch (Exception e)
-        {
-            MyDebug.LogError(e);
-            throw;
-        }
+        MyDebug.Log("Dijkstra finished!");
+        if (!CheckConnective(boxDataDic))
+            await Dijkstra(param);
+        return param;
     }
 
     static bool CheckConnective(MyDictionary<Vector2Int,BoxData> boxDataDic)
@@ -337,7 +349,7 @@ internal class MapManager : SingletonCS<MapManager>
             return true;
         var boxData = invalidWallData.BelongBox;
         boxData.WallDataMyDic.Remove(invalidWallData.WallType);
-        boxData.WallDataMyDic.Add(invalidWallData.WallType, new WallData(invalidWallData.WallType, EDoorType.Wooden){BelongBox = boxData});
+        _ = boxData.WallDataMyDic.Add(invalidWallData.WallType, new WallData(invalidWallData.WallType, EDoorType.Wooden){BelongBox = boxData});
         MyDebug.Log($"ReplaceWall At {boxData.Pos2D}.{invalidWallData.WallType}");
         return false;
     }

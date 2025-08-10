@@ -67,12 +67,16 @@ class MapView : ViewBase<MapView>
             .OnExit(() =>
             {
                 CameraMono.TitleVirtualCamera.LookAt = null;
-                CameraMono.PlayerVirtualCamera.enabled = true;
                 TitlePnl.SetActive(false);
                 StartBox.SetActive(false);
                 Light.gameObject.SetActive(true);
                 MouseCaster.gameObject.SetActive(false);
             });
+
+        GameManager.PlayingState.OnEnter(() =>
+        {
+            CameraMono.PlayerVirtualCamera.enabled = true;
+        });
         
         
         GameView.DrawWindow
