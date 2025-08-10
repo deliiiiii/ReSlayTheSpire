@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cinemachine;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +21,7 @@ class GameView : ViewBase<GameView>
     {
         Des = "选择房间装修中"
     };
-    public static readonly VioleTWindowInfo VioleTWindow = new ()
+    public static readonly StringWindowInfo VioleTWindow = new ()
     {
         Des = "VioleT",
     };
@@ -93,12 +91,63 @@ class GameView : ViewBase<GameView>
             {
                 DicScrollPnl.SetActive(false);
             });
+        GameManager.WinWindow.OnAddEventWithArg += async void (w) =>
+        {
+            try
+            {
+                AudioMono.PlayWinLoop();
+                PauseOrWinPnl.SetActive(true);
+                WinPnl.SetActive(true);
+                await FadeIn(PauseOrWinPnl.GetComponent<Image>(), 2f);
+                WinPnlL1.SetActive(true);
+                await Task.Delay(1000);
+                WinPnlL2.SetActive(true);
+                await Task.Delay(800);
+                WinPnlL3.SetActive(true);
+                await Task.Delay(800);
+                WinWordTxt.text = (w as StringWindowInfo)!.GetWord();
+                WinWordTxt.gameObject.SetActive(true);
+                await Task.Delay(1000);
+                WinPnlRight.SetActive(true);
+                await Task.Delay(2000);
+                RunOutPnl.SetActive(true);
+                await Task.Delay(2000);
+                WinCountPnl.SetActive(true);
+                ReturnToTitleBtn.gameObject.SetActive(true);
+            }
+            catch (Exception e)
+            {
+                MyDebug.LogError(e);
+                throw;
+            }
+        };
+        GameManager.WinWindow.OnRemove(() =>
+            {
+                PauseOrWinPnl.SetActive(false);
+                WinPnl.SetActive(false);
+                WinPnlL1.SetActive(false);
+                WinPnlL2.SetActive(false);
+                WinPnlL3.SetActive(false);
+                WinWordTxt.gameObject.SetActive(false);
+                WinPnlRight.SetActive(false);
+                RunOutPnl.SetActive(false);
+                WinCountPnl.SetActive(false);
+                ReturnToTitleBtn.gameObject.SetActive(false);
+            });
             
         GameManager.PauseWindow
-            .OnAdd(() => PausePnl.SetActive(true))
+            .OnAdd(() =>
+            {
+                PauseOrWinPnl.GetComponent<Image>().color = PauseOrWinPnl.GetComponent<Image>().color.SetAlpha(0.5f);
+                PauseOrWinPnl.SetActive(true);
+                PausePnl.SetActive(true);
+                ReturnToTitleBtn.gameObject.SetActive(true);
+            })
             .OnRemoveWithArg(w =>
             {
+                PauseOrWinPnl.SetActive(false);
                 PausePnl.SetActive(false);
+                ReturnToTitleBtn.gameObject.SetActive(false);
                 if((w as PauseWindowInfo)!.TarState == GameManager.TitleState)
                     GameManager.EnterTitle();
             });
@@ -109,10 +158,11 @@ class GameView : ViewBase<GameView>
                 CameraMono.SceneItemVirtualCamera.gameObject.SetActive(false);
                 ExitWatchingItemBtn.gameObject.SetActive(false);
             });
-
-
+        
         ScrambleView.ExchangeWindow.OnExchangeEnd += RefreshDic;
 
+        Binder.From(MainItemMono.WinCount).To(v => WinCountTxt.text = v.ToString());
+        
         Binder.From(PlayerMono.InteractInfo).To(info => {
             NormalReticle.SetActive(info == null);
             FindReticle.SetActive(info != null);
@@ -200,6 +250,7 @@ class GameView : ViewBase<GameView>
             MusicWindow.gameObject.SetActive(true);
         };
 
+        
         Binder.From(MinimapBtn).To(() => GameManager.WindowList.MyAdd(fullMapWindow));
         Binder.From(RedrawBtn).To(() =>
         {
@@ -215,6 +266,7 @@ class GameView : ViewBase<GameView>
         {
             GameManager.PauseWindow.TarState = GameManager.TitleState;
             GameManager.WindowList.MyRemove(GameManager.PauseWindow);
+            GameManager.WindowList.MyRemove(GameManager.WinWindow);
         });
         Binder.From(ExitWatchingItemBtn).To(async () =>
         {
@@ -235,15 +287,29 @@ class GameView : ViewBase<GameView>
         Binder.From(VioleTPnlBtn).To(() => GameManager.WindowList.MyRemove(VioleTWindow));
         Binder.From(DicScrollOpenBtn).To(() => GameManager.WindowList.MyAdd(DicWindow));
         Binder.From(DicScrollCloseBtn).To(() => GameManager.WindowList.MyRemove(DicWindow));
+
+        Binder.From(ResetWinCountBtn).To(() => MainItemMono.WinCount.Value = 0);
         InitDic();
     }
 
     [Header("Load & Pause")]
     public required GameObject LoadPnl;
+    public required GameObject PauseOrWinPnl;
     public required GameObject PausePnl;
+    public required GameObject WinPnl;
     public required Button ContinueBtn;
     public required Button ReturnToTitleBtn;
-
+    public required GameObject WinPnlL1;
+    public required GameObject WinPnlL2;
+    public required GameObject WinPnlL3;
+    public required Text WinWordTxt;
+    public required GameObject WinPnlRight;
+    public required GameObject RunOutPnl;
+    public required GameObject WinCountPnl;
+    public required Text WinCountTxt;
+    public required Button ResetWinCountBtn;
+    
+    
     #region Minimap
 
     [Header("Minimap")]
@@ -324,6 +390,7 @@ class GameView : ViewBase<GameView>
     public required Button VioleTPnlBtn;
     #endregion
 
+    
     #region ConsistentBuff
     [Header("ConsistentBuff")] 
     public required Transform ConsistentBuffIconPnl;
@@ -362,8 +429,14 @@ class GameView : ViewBase<GameView>
         {
             if (info is SceneItemInteractInfo itemInfo)
             {
-                if(itemInfo.SceneItemData.IsSleep)
-                    await FadeImageAlpha(itemInfo.SceneItemData.SleepTime);
+                if (itemInfo.SceneItemData.IsSleep)
+                {
+                    GameManager.WindowList.MyAdd(sleepWindow);
+                    await FadeIn(SleepPnl.GetComponent<Image>(), itemInfo.SceneItemData.SleepTime / 2);
+                    await FadeOut(SleepPnl.GetComponent<Image>(), itemInfo.SceneItemData.SleepTime / 2);
+                    GameManager.WindowList.MyRemove(sleepWindow);
+                }
+                    
                 if (itemInfo.SceneItemData.HasCamera)
                 {
                     GameManager.WindowList.MyAdd(GameManager.WatchingClockWindow);
@@ -407,16 +480,12 @@ class GameView : ViewBase<GameView>
         }
     }
 
-    async Task FadeImageAlpha(float duration)
+    async Task FadeIn(Image img, float duration)
     {
         try
         {
-            GameManager.WindowList.MyAdd(sleepWindow);
-            var img = SleepPnl.GetComponent<Image>();
             var initAlpha = 0f;
-            var half = duration * 0.5f;
-    
-            // Fade in
+            var half = duration;
             for (float t = 0; t < half; t += Time.deltaTime)
             {
                 var norm = t / half;
@@ -427,27 +496,30 @@ class GameView : ViewBase<GameView>
                 await Task.Yield();
             }
             img.color.SetAlpha(1);
-            // Fade out
-            for (float t = 0; t < half; t += Time.deltaTime)
-            {
-                if (img == null)
-                    return;
-                var norm = t / half;
-                var eased = Mathf.SmoothStep(0f, 1f, norm);
-                var c = img.color;
-                c.a = Mathf.Lerp(1f, initAlpha, eased);
-                img.color = c;
-                await Task.Yield();
-            }
-            img.color.SetAlpha(initAlpha);
-            GameManager.WindowList.MyRemove(sleepWindow);
         }
         catch (Exception e)
         {
             MyDebug.LogError(e);
             throw;
         }
-        
+    }
+
+    async Task FadeOut(Image img, float duration)
+    {
+        var initAlpha = 1f;
+        var half = duration;
+        for (float t = 0; t < half; t += Time.deltaTime)
+        {
+            if (img == null)
+                return;
+            var norm = t / half;
+            var eased = Mathf.SmoothStep(0f, 1f, norm);
+            var c = img.color;
+            c.a = Mathf.Lerp(1f, initAlpha, eased);
+            img.color = c;
+            await Task.Yield();
+        }
+        img.color.SetAlpha(initAlpha);
     }
     #endregion
 
@@ -469,6 +541,7 @@ class GameView : ViewBase<GameView>
         {
             var wordIns = Instantiate(WordLinePrefab, DicScrollContent);
             wordIns.InitWithWord(info.Word);
+            wordIns.OnWin += Win;
             wordIns.gameObject.SetActive(true);
             wordLineList.Add(wordIns);
         });
@@ -482,6 +555,13 @@ class GameView : ViewBase<GameView>
             anyFit |= w.RefreshGottenLetter(VioleTWindow.GetWord());
         });
         RedPoint.SetActive(anyFit);
+    }
+
+    void Win(string word)
+    {
+        MainItemMono.WinCount.Value++;
+        GameManager.WinWindow.GetWord = () => word;
+        GameManager.EnterWinning();
     }
     #endregion
 }

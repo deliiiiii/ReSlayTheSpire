@@ -12,12 +12,11 @@ public class AudioMono : Singleton<AudioMono>
     public required AudioClip BGMKisekiIns;
     public required List<AudioClip> BGMRecordPlayerIns;
     public required AudioClip BGMVioletLineIns;
+    public required AudioClip BGMReturnsIns;
 
-    public static AudioClip BGMKiseki => Instance.BGMKisekiIns;
     public static List<AudioClip> BGMRecordPlayer => Instance.BGMRecordPlayerIns;
-    public static AudioClip BGMVioletLine => Instance.BGMVioletLineIns;
 
-    AudioSource titleBGMSource = null!;
+    static AudioSource titleBGMSource = null!;
     static AudioSource? curBGMSource;
     
     List<AudioSource> seSource = [];
@@ -43,9 +42,12 @@ public class AudioMono : Singleton<AudioMono>
         });
 
     }
-    
 
 
+    public static void PlayWinLoop()
+    {
+        PlayLoop(titleBGMSource, Instance.BGMReturnsIns);
+    }
     public static void PlayLoop(AudioSource audioSource, AudioClip clip, bool mute = false, bool loop = true)
     {
         if(curBGMSource != null)
@@ -75,7 +77,7 @@ public class AudioMono : Singleton<AudioMono>
     [Button]
     public void PlayTest()
     {
-        PlayLoop(titleBGMSource, BGMKiseki);
+        PlayLoop(titleBGMSource, Instance.BGMKisekiIns);
     }
     
     [Button]

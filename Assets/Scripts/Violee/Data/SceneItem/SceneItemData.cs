@@ -353,8 +353,7 @@ public class DreamCatcherItemData : SceneItemData
         {
             pair.Value.SetActive(pair.Key == CurCatchType);
         });
-        GetStaminaCost = () => MainItemMono.CheckStaminaCost(
-            (CurCatchType == ECatchType.Stamina ? CatchCostDic[ECatchType.Stamina] : 0) + StaminaCost);
+        GetStaminaCost = () => CatchCostDic[ECatchType.Stamina];
         GetEnergyCost = () => MainItemMono.CheckEnergyCost(CatchCostDic[ECatchType.Energy]);
         GetCreativityCost = () => MainItemMono.CheckCreativityCost(CatchCostDic[ECatchType.Creativity]);
         
@@ -366,7 +365,7 @@ public class DreamCatcherItemData : SceneItemData
         Func<bool> catchCost = CurCatchType switch
         {
             ECatchType.Stamina => () =>
-                MainItemMono.StaminaCount >= GetStaminaCost(),
+                MainItemMono.StaminaCount >= StaminaCost + GetStaminaCost(),
             ECatchType.Energy => () =>
                 MainItemMono.EnergyCount >= GetEnergyCost(),
             _ => () => MainItemMono.CreativityCount >= GetCreativityCost(),
@@ -375,7 +374,7 @@ public class DreamCatcherItemData : SceneItemData
         {
             failReason = CurCatchType switch
             {
-                ECatchType.Stamina => $"这个捕梦网需要消耗{GetStaminaCost()}点体力",
+                ECatchType.Stamina => $"这个捕梦网需要消耗{StaminaCost + GetStaminaCost()}点体力",
                 ECatchType.Energy => $"这个捕梦网需要消耗{GetStaminaCost()}点体力、{GetEnergyCost()}点精力",
                 _ => $"这个捕梦网需要消耗{GetStaminaCost()}点体力、{GetCreativityCost()}点灵感",
             };

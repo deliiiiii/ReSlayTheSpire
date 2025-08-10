@@ -11,6 +11,7 @@ public enum EGameState
     Title,
     GeneratingMap,
     Playing,
+    Winning,
 }
 
 [Serializable]
@@ -34,10 +35,9 @@ public class PauseWindowInfo : WindowInfo
 }
 
 [Serializable]
-public class VioleTWindowInfo : WindowInfo
+public class StringWindowInfo : WindowInfo
 {
     public Func<string> GetWord = () => string.Empty;
-    public Action<string>? OnScramble;
 }
 
 [Serializable]
@@ -80,10 +80,12 @@ public class GameManager : SingletonCS<GameManager>
     
     static readonly MyFSM<EGameState> gameFsm = new ();
     public static string GameState => gameFsm.CurStateName;
-    public static BindDataState TitleState = null!;
+    public static readonly BindDataState TitleState;
     public static void EnterTitle() => gameFsm.ChangeState(EGameState.Title);
-    public static BindDataState GeneratingMapState = null!;
-    public static BindDataState PlayingState = null!;
+    public static readonly BindDataState WinningState;
+    public static void EnterWinning() => gameFsm.ChangeState(EGameState.Winning);
+    public static readonly BindDataState GeneratingMapState;
+    public static readonly BindDataState PlayingState;
     
     
     public static readonly MyList<WindowInfo> WindowList
@@ -107,23 +109,27 @@ public class GameManager : SingletonCS<GameManager>
         // WindowType = EWindowType.WaitingSceneItem,
         Des = "看时间...",
     };
+    public static readonly StringWindowInfo WinWindow = new ()
+    {
+        Des = "Winning",
+    };
 
-    public static void EnableCursor()
+    static void EnableCursor()
     {
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    public static void DisableCursor()
+    static void DisableCursor()
     {
         Time.timeScale = 1;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-    
 
-    public static BuffWindowInfo CreateAndAddBuffWindow(string des)
+
+    static BuffWindowInfo CreateAndAddBuffWindow(string des)
     {
         var ret = new BuffWindowInfo()
         {
@@ -169,6 +175,11 @@ public class GameManager : SingletonCS<GameManager>
                 PlayerMono.TickOnPlaying(HasWindow);
             })
             .OnExit(PlayerMono.OnExitPlaying);
+        WinningState = Binder.From(gameFsm.GetState(EGameState.Winning));
+        WinningState.OnEnter(() =>
+        {
+            WindowList.MyAdd(WinWindow);
+        });
         
         MapManager.GenerateStream
             .Where(_ => IsTitle)

@@ -85,7 +85,7 @@ public class ScrambleView : Singleton<ScrambleView>
         }
         GameView.VioleTWindow.OnAddEventWithArg += w =>
         {
-            var vWindow = w as VioleTWindowInfo;
+            var vWindow = w as StringWindowInfo;
             SelectedList.MyClear();
             DisableBtn();
             AllList.Clear();

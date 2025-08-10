@@ -13,13 +13,11 @@ public class RoomIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public required Text DesTxt;
     public void OnPointerEnter(PointerEventData eventData)
     {
-        MyDebug.Log("OnPointerEnter");
         DesPnl.gameObject.SetActive(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        MyDebug.Log("OnPointerExit");
         DesPnl.gameObject.SetActive(false);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ public class WordLine : MonoBehaviour
     public required Button ChooseWordBtn;
     public required Text ChooseWordTxt;
     string word = string.Empty;
+    public Action<string>? OnWin;
     
     public void InitWithWord(string fWord)
     {
@@ -24,6 +26,7 @@ public class WordLine : MonoBehaviour
         Binder.From(ChooseWordBtn).To(() =>
         {
             MyDebug.LogError($"Win !! {word}");
+            OnWin?.Invoke(word);
         });
         word = fWord;
         for (int i = 0; i < word.Length; i++)
@@ -43,16 +46,16 @@ public class WordLine : MonoBehaviour
     {
         int tarCount = word.Length;
         int curCount = 0;
-        foreach (var icon in ScrambleIconList)
+        for (int i = 0; i < word.Length; i++)
         {
-            if (gottenLetter.Contains(icon.LetterTxt.text))
+            if (gottenLetter.Contains(word[i]))
             {
                 curCount++;
-                icon.SetGot();
+                // icon.SetGot();
             }
             else
             {
-                icon.SetNotGot();
+                // icon.SetNotGot();
             }
         }
 

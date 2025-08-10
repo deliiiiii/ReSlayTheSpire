@@ -10,7 +10,9 @@ public class MainItemMono : Singleton<MainItemMono>
 {
     [ShowInInspector]
     MainItemData mainItemData = null!;
-    
+
+    [ShowInInspector]
+    public static Observable<int> WinCount = new(0);
     public static int StaminaCount => Instance.mainItemData.Stamina.Count;
     public static int EnergyCount => Instance.mainItemData.Energy.Count;
     public static int CreativityCount => Instance.mainItemData.Creativity.Count;
@@ -21,6 +23,17 @@ public class MainItemMono : Singleton<MainItemMono>
 
     void _Init()
     {
+        var loaded = Saver.Load<Observable<int>>("DataVioleT", "WakeUpCount");
+        if (loaded == null)
+        {
+            Saver.Save("DataVioleT", "WakeUpCount", WinCount);
+        }
+        else
+        {
+            WinCount.Value = loaded.Value;
+        }
+        WinCount.OnValueChangedAfter += _ => Saver.Save("DataVioleT", "WakeUpCount", WinCount);
+        
         GameManager.PlayingState.OnUpdate(_ =>
         {
             if (!Configer.SettingsConfig.IsDevelop)
@@ -40,6 +53,16 @@ public class MainItemMono : Singleton<MainItemMono>
     public static void OnDijkstraEnd()
     {
         Instance.mainItemData = new MainItemData();
+        var winRewardDic = new List<Action>()
+        {
+            () => Instance.mainItemData.Stamina.Count++,
+            () => Instance.mainItemData.Energy.Count++,
+            () => Instance.mainItemData.Creativity.Count++,
+        };
+        for (int i = 0; i < WinCount; i++)
+        {
+            winRewardDic.RandomItem()();
+        }
         OnChangeVioleT?.Invoke([]);
     }
 
