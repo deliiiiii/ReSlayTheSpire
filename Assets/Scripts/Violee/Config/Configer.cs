@@ -22,6 +22,7 @@ namespace Violee
         public required BoxConfigList BoxConfigListIns;
 
         public required ConBuffConfigList ConBuffConfigListIns;
+        public required DicConfig DicConfigIns;
         public required DrawConfigList DrawConfigListIns;
         public required MainItemConfigList MainItemConfigListIns;
         public required SceneItemModelList SceneItemModelListIns;
@@ -29,6 +30,7 @@ namespace Violee
         
         public static BoxConfigList BoxConfigList => Instance.BoxConfigListIns;
         public static ConBuffConfigList ConBuffConfigList => Instance.ConBuffConfigListIns;
+        public static DicConfig DicConfig => Instance.DicConfigIns;
         public static DrawConfigList DrawConfigList => Instance.DrawConfigListIns;
         public static MainItemConfigList mainItemConfigList => Instance.MainItemConfigListIns;
         public static SceneItemModelList SceneItemModelList => Instance.SceneItemModelListIns;

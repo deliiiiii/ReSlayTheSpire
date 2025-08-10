@@ -28,7 +28,7 @@ public class WindowInfo
 [Serializable]
 public class VioleTWindowInfo : WindowInfo
 {
-    public string Word = string.Empty;
+    public Func<string> GetWord = () => string.Empty;
     public Action<string>? OnScramble;
 }
 

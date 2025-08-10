@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cinemachine;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,6 +26,11 @@ class GameView : ViewBase<GameView>
     public static readonly VioleTWindowInfo VioleTWindow = new ()
     {
         Des = "VioleT",
+    };
+
+    public static readonly WindowInfo DicWindow = new()
+    {
+        Des = "查看单词表",
     };
     
     protected override void IBL()
@@ -75,6 +81,18 @@ class GameView : ViewBase<GameView>
                 VioleTBtn.interactable = true;
                 VioleTPnl.SetActive(false);
             });
+        VioleTWindow.GetWord = () => VioleTTxt.text;
+        DicWindow
+            .OnAdd(() =>
+            {
+                wordLineList.ForEach(w => w.RefreshGottenLetter(VioleTWindow.GetWord()));
+                DicScrollPnl.SetActive(true);
+            })
+            .OnRemove(() =>
+            {
+                DicScrollPnl.SetActive(false);
+            });
+            
         GameManager.PauseWindow
             .OnAdd(() => PausePnl.SetActive(true))
             .OnRemove(() =>
@@ -171,10 +189,7 @@ class GameView : ViewBase<GameView>
             MusicWindow.gameObject.SetActive(true);
         };
 
-        Binder.From(MinimapBtn).To(() =>
-        {
-            GameManager.WindowList.MyAdd(fullMapWindow);
-        });
+        Binder.From(MinimapBtn).To(() => GameManager.WindowList.MyAdd(fullMapWindow));
         Binder.From(RedrawBtn).To(() =>
         {
             MainItemMono.CostCreativity(MainItemMono.CheckCreativityCost(1));
@@ -196,12 +211,11 @@ class GameView : ViewBase<GameView>
                 throw;
             }
         });
-        Binder.From(VioleTBtn).To(() =>
-        {
-            VioleTWindow.Word = VioleTTxt.text;
-            GameManager.WindowList.MyAdd(VioleTWindow);
-        });
+        Binder.From(VioleTBtn).To(() => GameManager.WindowList.MyAdd(VioleTWindow));
         Binder.From(VioleTPnlBtn).To(() => GameManager.WindowList.MyRemove(VioleTWindow));
+        Binder.From(DicScrollOpenBtn).To(() => GameManager.WindowList.MyAdd(DicWindow));
+        Binder.From(DicScrollCloseBtn).To(() => GameManager.WindowList.MyRemove(DicWindow));
+        InitDic();
     }
 
     [Header("Load & Pause")]
@@ -392,5 +406,29 @@ class GameView : ViewBase<GameView>
         }
         
     }
+    #endregion
+
+
+    #region Scramble
+    [Header("Scramble")]
+    public required GameObject DicScrollPnl;
+    public required Button DicScrollOpenBtn;
+    public required Button DicScrollCloseBtn;
+    public required Transform DicScrollContent;
+    public required WordLine WordLinePrefab;
+    
+    static readonly List<WordLine> wordLineList = [];
+
+    void InitDic()
+    {
+        Configer.DicConfig.Dic.ForEach(pair =>
+        {
+            var wordIns = Instantiate(WordLinePrefab, DicScrollContent);
+            wordIns.InitWithWord(pair.Key);
+            wordIns.gameObject.SetActive(true);
+            wordLineList.Add(wordIns);
+        });
+    }
+
     #endregion
 }

@@ -95,12 +95,14 @@ public class ScrambleView : Singleton<ScrambleView>
                 icon.ID = i;
                 AllList.Add(icon);
             }
-            for(int i = 0; i < vWindow!.Word.Length; i++)
+
+            var word = vWindow!.GetWord();
+            for(int i = 0; i < word.Length; i++)
             {
                 AllList[i].Btn.interactable = true;
-                AllList[i].LetterTxt.text = vWindow.Word[i].ToString();
+                AllList[i].LetterTxt.text = word[i].ToString();
             }
-            for(int i = vWindow.Word.Length; i < AllList.Count; i++)
+            for(int i = word.Length; i < AllList.Count; i++)
             {
                 AllList[i].Btn.interactable = false;
                 AllList[i].LetterTxt.text = string.Empty;

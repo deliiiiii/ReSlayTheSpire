@@ -26,4 +26,19 @@ public class ScrambleIcon : MonoBehaviour
     {
         SelectedObj.SetActive(false);
     }
+
+    public void SetDefaultImg()
+    {
+        
+    }
+
+    public void SetNotGot()
+    {
+        
+    }
+
+    public void SetGot()
+    {
+        
+    }
 }

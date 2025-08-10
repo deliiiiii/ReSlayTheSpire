@@ -25,3 +25,7 @@ MonoBehaviour:
     Sprite: {fileID: 0}
     ToDrawModels:
     - {fileID: 2238235364395328710, guid: 52391c677e75e504291f6a63aac71711, type: 3}
+  - DrawDes: 3
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 2035840915431417207, guid: cd929ec3b6ba15047b1be2f502f0b000, type: 3}
