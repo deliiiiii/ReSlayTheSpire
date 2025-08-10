@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -31,7 +30,7 @@ namespace Violee
 
         public InteractInfo GetCb()
         {
-            if (Data.DoorType == EDoorType.None || Data.Opened.Value)
+            if (!Data.HasDoor || Data.Opened.Value)
                 return InteractInfo.CreateUnActive();
             // TODO BuffedValue...
             var energyCost = 1;
@@ -60,15 +59,11 @@ namespace Violee
                 {
                     List<DrawConfig> ret = [];
                     List<DrawConfig> pool = [..Configer.DrawConfigList.DrawConfigs];
-                    DrawConfig defaultConfig = pool[0];
+                    DrawConfig dreamCatcherConfig = pool.First(d => d.ToDrawModels.Any(m => m.Data.ID == 14));
+                    float dreamRatio = MainItemMono.VioleTRequireCount / 1f / MapManager.DoorCount;
                     Enumerable.Range(0, 3).ForEach(i =>
                     {
-                        if(pool.Count == 0)
-                        {
-                            ret.Add(defaultConfig);
-                            return;
-                        }
-                        var added = pool.RandomItem();
+                        var added = Random.Range(0, 1f) <= dreamRatio ? dreamCatcherConfig : pool.RandomItem();
                         pool.Remove(added);
                         ret.Add(added);
                     });
@@ -125,13 +120,13 @@ namespace Violee
                     LockedSprite.SetActive(true);
                 }
             }).Immediate();
-            switch (Data.DoorType)
+            switch (Data.HasDoor)
             {
-                case EDoorType.None:
+                case false:
                     NotDoor.SetActive(true);
                     WallSprite.sortingOrder = 25;
                     break;
-                case EDoorType.Wooden:
+                default:
                     Door.SetActive(true);
                     WallSprite.sortingOrder = 5;
                     break;

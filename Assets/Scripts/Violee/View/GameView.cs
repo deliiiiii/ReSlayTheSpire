@@ -162,6 +162,7 @@ class GameView : ViewBase<GameView>
         ScrambleView.ExchangeWindow.OnExchangeEnd += RefreshDic;
 
         Binder.From(MainItemMono.WinCount).To(v => WinCountTxt.text = v.ToString());
+        Binder.From(MapManager.DoorCount).To(v => DoorCountTxt.text = v.ToString());
         
         Binder.From(PlayerMono.InteractInfo).To(info => {
             NormalReticle.SetActive(info == null);
@@ -285,7 +286,7 @@ class GameView : ViewBase<GameView>
             }
         });
         Binder.From(VioleTBtn).To(() => GameManager.WindowList.MyAdd(VioleTWindow));
-        Binder.From(VioleTPnlBtn).To(() => GameManager.WindowList.MyRemove(VioleTWindow));
+        Binder.From(VioleTPnlCloseBtn).To(() => GameManager.WindowList.MyRemove(VioleTWindow));
         Binder.From(DicScrollOpenBtn).To(() => GameManager.WindowList.MyAdd(DicWindow));
         Binder.From(DicScrollCloseBtn).To(() => GameManager.WindowList.MyRemove(DicWindow));
 
@@ -388,7 +389,8 @@ class GameView : ViewBase<GameView>
     public required GameObject VioleTPnl;
     public required Button VioleTBtn;
     public required Text VioleTTxt;
-    public required Button VioleTPnlBtn;
+    public required Button VioleTPnlCloseBtn;
+    public required Text DoorCountTxt;
     #endregion
 
     
@@ -494,14 +496,14 @@ class GameView : ViewBase<GameView>
     {
         try
         {
-            var initAlpha = 0f;
+            var initAlpha = 0;
             var half = duration;
             for (float t = 0; t < half; t += Time.deltaTime)
             {
                 var norm = t / half;
-                var eased = Mathf.SmoothStep(0f, 1f, norm);
+                var eased = Mathf.SmoothStep(0, 1, norm);
                 var c = img.color;
-                c.a = Mathf.Lerp(initAlpha, 1f, eased);
+                c.a = Mathf.Lerp(initAlpha, 1, eased);
                 img.color = c;
                 await Task.Yield();
             }
@@ -518,20 +520,20 @@ class GameView : ViewBase<GameView>
     {
         try
         {
-            var initAlpha = 1f;
+            var initAlpha = 1;
             var half = duration;
             for (float t = 0; t < half; t += Time.deltaTime)
             {
                 if (img == null)
                     return;
                 var norm = t / half;
-                var eased = Mathf.SmoothStep(0f, 1f, norm);
+                var eased = Mathf.SmoothStep(0, 1, norm);
                 var c = img.color;
-                c.a = Mathf.Lerp(0f, initAlpha, half - eased);
+                c.a = Mathf.Lerp(0, initAlpha, 1 - eased);
                 img.color = c;
                 await Task.Yield();
             }
-            img.color.SetAlpha(0f);
+            img.color.SetAlpha(0);
         }
         catch (Exception e)
         {

@@ -59,7 +59,7 @@ public class SceneMiniItemDataBook : SceneMiniItemData
 public class SceneMiniItemDataFood : SceneMiniItemData
 {
     public BuffedInt StaminaGain = new(0);
-    public string DesPre = "吃";
+    public string DesPre = string.Empty;
     public override void BindBuff()
     {
         base.BindBuff();

@@ -162,3 +162,4 @@ MonoBehaviour:
         InteractColor: {r: 0, g: 0.91391253, b: 1, a: 1}
         StaminaGain:
           value: 2
+        DesPre: "\u996E\u8336"

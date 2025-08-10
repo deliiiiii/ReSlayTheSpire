@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de30a77feef24ad08d01b362c33b86a5, type: 3}
   m_Name: BoxConfigListNonTilt
   m_EditorClassIdentifier: 
-  Height: 6
-  Width: 6
-  StartPos: {x: 0, y: 0}
-  StartDir: 1
+  Height: 9
+  Width: 5
+  StartPos: {x: 2, y: 8}
+  StartDir: 4
   DoorPossibility: 0.85
   WalkInTolerance: 0.49
   BoxConfigs:

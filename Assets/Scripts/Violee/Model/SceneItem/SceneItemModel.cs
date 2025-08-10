@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Violee;
 
@@ -8,11 +10,12 @@ namespace Violee;
 public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
 {
     [SerializeReference] public required List<InteractReceiver> IrList;
-    
+    public required MiniIconGetter MiniIconGetter;
 
     protected override void OnReadData()
     {
         Data.CheckData();
+        MiniIconGetter = GetComponent<MiniIconGetter>();
         IrList.ForEach(i => i.GetInteractInfo = GetCb);
         if (Data.HasSpreadPos)
         {
@@ -29,9 +32,10 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
             };
             SpreadMiniItem();
         }
+        
+        Binder.Update(_ => MiniIconGetter.SetEnable(Data.ShouldShowMiniIcon()));
     }
-    
-    
+
     public InteractInfo GetCb()
     {
         if (!Data.IsActive)

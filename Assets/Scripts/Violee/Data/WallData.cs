@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Violee
 {
@@ -25,7 +26,9 @@ namespace Violee
         
         public EWallType WallType = wallType;
         public Observable<bool> Visited = new (false);
-        public EDoorType DoorType = doorType == EDoorType.Random ? RandomDoor() : doorType;
+        [SerializeField]
+        EDoorType doorType = doorType == EDoorType.Random ? RandomDoor() : doorType;
+        public bool HasDoor => doorType != EDoorType.None;
         public Observable<bool> Opened = new (false);
     }
     

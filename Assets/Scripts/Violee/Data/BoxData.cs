@@ -48,7 +48,7 @@ namespace Violee
                 return 0;
             }
             wallDataCanNull = wallData;
-            if(wallData.DoorType == EDoorType.Wooden)
+            if(wallData.HasDoor)
                 return BoxData.DoorCost;
             return BoxData.WallCost;
         }
@@ -73,7 +73,7 @@ namespace Violee
                 _ => throw new ArgumentException($"from{from} and to{to} must be adjacent directions!"),
             };
             wallDataCanNull = self.WallDataMyDic[t];
-            if(self.WallDataMyDic[t].DoorType == EDoorType.Wooden)
+            if(self.WallDataMyDic[t].HasDoor)
                 return BoxData.DoorCost;
             return BoxData.WallCost;
         }

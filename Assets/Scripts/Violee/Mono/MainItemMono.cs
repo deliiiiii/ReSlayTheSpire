@@ -173,5 +173,7 @@ public class MainItemMono : Singleton<MainItemMono>
         Instance.mainItemData.LetterList[id2] = c1;
         OnChangeVioleT?.Invoke(Instance.mainItemData.LetterList);
     }
+
+    public static int VioleTRequireCount => 6 - Instance.mainItemData.LetterList.Count;
 }
 

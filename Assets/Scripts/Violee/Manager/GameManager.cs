@@ -171,7 +171,7 @@ public class GameManager : SingletonCS<GameManager>
                 MapManager.GetPlayerVisit(PlayerMono.GetPos(), ref curPoint);
                 PlayerMono.PlayerCurPoint.Value = curPoint;
                 if(!HasPaused)
-                    MapManager.Tick(dt);
+                    MapManager.OnPlaying(dt);
                 PlayerMono.TickOnPlaying(HasWindow);
             })
             .OnExit(PlayerMono.OnExitPlaying);

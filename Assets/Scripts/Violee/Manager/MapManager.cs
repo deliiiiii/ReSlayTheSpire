@@ -15,8 +15,7 @@ public class GenerateParam
 {
     readonly MapData mapData;
     readonly ObjectPool<BoxModel> boxPool;
-    readonly Func<BoxConfigList> getBoxConfigList;
-    BoxConfigList boxConfigList => getBoxConfigList();
+    BoxConfigList boxConfigList => Configer.BoxConfigList;
     public int Height => boxConfigList.Height;
     public int Width => boxConfigList.Width;
     public Vector2Int StartPos => boxConfigList.StartPos;
@@ -55,7 +54,6 @@ public class GenerateParam
     {
         this.mapData = mapData;
         
-        getBoxConfigList = () => Configer.BoxConfigList;
         boxPool = new ObjectPool<BoxModel>(Configer.BoxModel, go.transform, 42);
         
         BoxDataDic.OnAddAsync += async boxData =>
@@ -95,6 +93,8 @@ internal class MapManager : SingletonCS<MapManager>
     public static readonly Stream<ValueTuple, GenerateParam> GenerateStream;
     public static readonly Stream<GenerateParam, GenerateParam> DijkstraStream;
     static readonly GenerateParam generateParam = new (new MapData(), Instance.go);
+
+    public static Observable<int> DoorCount = new(0);
     static MapManager()
     {
         GenerateStream = Streamer
@@ -103,6 +103,7 @@ internal class MapManager : SingletonCS<MapManager>
             {
                 try
                 {
+                    InitCollections(generateParam);
                     await GenerateMain(generateParam);
                     return generateParam;
                 }
@@ -138,7 +139,7 @@ internal class MapManager : SingletonCS<MapManager>
         });
     }
 
-    public static void Tick(float dt)
+    public static void OnPlaying(float dt)
     {
         generateParam.DateTime = generateParam.DateTime.AddSeconds(dt * Configer.SettingsConfig.TimeSpeed);
     }
@@ -201,6 +202,7 @@ internal class MapManager : SingletonCS<MapManager>
             tempPoints.Remove(p);
             p.BelongBox.SceneItemDataMyList.MyAdd(model.Data.CreateNew([p.Dir]));
         });
+        DoorCount.Value--;
     }
     #endregion
     
@@ -336,6 +338,7 @@ internal class MapManager : SingletonCS<MapManager>
         MyDebug.Log("Dijkstra finished!");
         if (!CheckConnective(boxDataDic))
             await Dijkstra(param);
+        DoorCount.Value = boxDataDic.Values.SelectMany(b => b.WallDataMyDic.Values.Where(w => w.HasDoor)).Count();
         return param;
     }
 

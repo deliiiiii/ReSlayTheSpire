@@ -162,12 +162,20 @@ public class SceneItemData : DataBase
     {
         return string.Empty;
     }
-    public Color DesColor() => this switch
+    public virtual Color DesColor() => this switch
     {
         {StaminaCost.Value : > 0} => Color.blue,
         // FoodItemData => Color.cyan, 
         _ => Color.white,
     };
+
+    public virtual bool ShouldShowMiniIcon()
+    {
+        return !IsActive
+            || (HasCount && Count > 0)
+            || (HasConBuff && ConBuffActivated && (!ConBuffData.HasCount || ConBuffData.Count > 0));
+    }
+    
     void LogErrorWith(string str)
     {
         MyDebug.LogError($"{InsModel}.Data Has An Error: {str}");
@@ -213,6 +221,11 @@ public class ClockItemData : SceneItemData
             return false;
         }
         return true;
+    }
+
+    public override bool ShouldShowMiniIcon()
+    {
+        return !Watched;
     }
 }
 
