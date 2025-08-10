@@ -19,7 +19,7 @@ public class MainItemMono : Singleton<MainItemMono>
     public static void OnDijkstraEnd()
     {
         Instance.mainItemData = new MainItemData();
-        OnGainVioleT?.Invoke([]);
+        OnChangeVioleT?.Invoke([]);
     }
 
     
@@ -103,7 +103,7 @@ public class MainItemMono : Singleton<MainItemMono>
     }
     #endregion
 
-    public static event Action<List<char>>? OnGainVioleT;
+    public static event Action<List<char>>? OnChangeVioleT;
     public static void GainVioleT()
     {
         if (Instance.mainItemData.LetterList.Count == 6)
@@ -112,9 +112,21 @@ public class MainItemMono : Singleton<MainItemMono>
             return;
         }
         List<char> violeT = ['V', 'i', 'o', 'l', 'e', 'T'];
-        var c = violeT.RandomItem(c => !Instance.mainItemData.LetterList.Contains(c));
+        Func<char, bool> filter = Instance.mainItemData.LetterList.Count == 5 
+            ? _ => true
+            : c => c != 'T';
+        var c = violeT.RandomItem(c => !Instance.mainItemData.LetterList.Contains(c) && filter(c));
         Instance.mainItemData.LetterList.Add(c);
-        OnGainVioleT?.Invoke(Instance.mainItemData.LetterList);
+        OnChangeVioleT?.Invoke(Instance.mainItemData.LetterList);
+    }
+
+    public static void ExchangeLetter(int id1, int id2)
+    {
+        var c1 = Instance.mainItemData.LetterList[id1];
+        var c2 = Instance.mainItemData.LetterList[id2];
+        Instance.mainItemData.LetterList[id1] = c2;
+        Instance.mainItemData.LetterList[id2] = c1;
+        OnChangeVioleT?.Invoke(Instance.mainItemData.LetterList);
     }
 }
 

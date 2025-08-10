@@ -163,7 +163,7 @@ class GameView : ViewBase<GameView>
             Destroy(conBuffInsDic[conBuff]);
             conBuffInsDic.Remove(conBuff);
         };
-        MainItemMono.OnGainVioleT += cList => VioleTTxt.text = string.Join("", cList);
+        MainItemMono.OnChangeVioleT += cList => VioleTTxt.text = string.Join("", cList);
         AudioMono.OnUnPauseLoop += clip =>
         {
             MusicWindow.BGMTxt.text = clip.name;

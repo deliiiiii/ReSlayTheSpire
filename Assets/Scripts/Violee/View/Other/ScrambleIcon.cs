@@ -8,14 +8,13 @@ public class ScrambleIcon : MonoBehaviour
     public required Text LetterTxt;
     public required GameObject SelectedObj;
     public required Button Btn;
-    public int InitID;
+    public int ID;
 
 
     void Awake()
     {
-        InitID = transform.GetSiblingIndex();
         
-        Binder.From(Btn).To(() => ScrambleMono.TryReverseSelected(this));
+        Binder.From(Btn).To(() => ScrambleView.TryReverseSelected(this));
     }
 
     public void OnSelected()

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f49ec36b325a43af8940002d5ce10591, type: 3}
+  m_Name: Draw14
+  m_EditorClassIdentifier: 
+  DrawConfigs:
+  - DrawDes: 12
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 7293147631049604207, guid: fff69bc5da4a8254e82af5bc44d92132, type: 3}
+  - DrawDes: 13
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 1510157720301975787, guid: f4756762bcc44df418029695dd988c6d, type: 3}
+  - DrawDes: 14
+    Sprite: {fileID: 0}
+    ToDrawModels:
+    - {fileID: 2238235364395328710, guid: 52391c677e75e504291f6a63aac71711, type: 3}
