@@ -421,10 +421,10 @@ class GameView : ViewBase<GameView>
 
     void InitDic()
     {
-        Configer.DicConfig.Dic.ForEach(pair =>
+        Configer.DicConfig.WordList.ForEach(info =>
         {
             var wordIns = Instantiate(WordLinePrefab, DicScrollContent);
-            wordIns.InitWithWord(pair.Key);
+            wordIns.InitWithWord(info.Word);
             wordIns.gameObject.SetActive(true);
             wordLineList.Add(wordIns);
         });

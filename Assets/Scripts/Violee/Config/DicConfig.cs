@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Violee;
@@ -6,12 +7,12 @@ namespace Violee;
 [CreateAssetMenu(fileName = nameof(DicConfig), menuName = "Violee/" + nameof(DicConfig))]
 public class DicConfig : ScriptableObject
 {
-    public SerializableDictionary<string, WordInfo> Dic = [];
+    public List<WordInfo> WordList = [];
 }
 
 
 [Serializable]
 public class WordInfo
 {
-    
+    public required string Word;
 }

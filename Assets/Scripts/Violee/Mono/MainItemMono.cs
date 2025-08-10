@@ -111,7 +111,7 @@ public class MainItemMono : Singleton<MainItemMono>
             MyDebug.Log("<UNK>");
             return;
         }
-        List<char> violeT = ['V', 'i', 'o', 'l', 'e', 'T'];
+        List<char> violeT = ['v', 'i', 'o', 'l', 'e', 'T'];
         Func<char, bool> filter = Instance.mainItemData.LetterList.Count == 5 
             ? _ => true
             : c => c != 'T';

@@ -12,17 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba3ca7ee616f41c2b47b13b6753d3b89, type: 3}
   m_Name: DicConfig
   m_EditorClassIdentifier: 
-  Dic:
-    list:
-    - Key: oi
-    - Key: io
-    - Key: li
-    - Key: lie
-    - Key: evil
-    - Key: live
-    - Key: love
-    - Key: veil
-    - Key: vile
-    - Key: olive
-    - Key: violeT
-    - Key: eve
+  WordList:
+  - Word: oi
+  - Word: io
+  - Word: oil
+  - Word: lie
+  - Word: evil
+  - Word: live
+  - Word: love
+  - Word: veil
+  - Word: vile
+  - Word: olive
+  - Word: violeT

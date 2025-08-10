@@ -345,8 +345,8 @@ public class DreamCatcherItemData : SceneItemData
         Dictionary<ECatchType, int> gos = new()
         {
             {ECatchType.Stamina, (int)(StaminaCosProbability * 100)},
-            {ECatchType.Energy, (int)((StaminaCosProbability + EnergyProbability) * 100)},
-            {ECatchType.Creativity, 100}
+            {ECatchType.Energy, (int)(EnergyProbability * 100)},
+            {ECatchType.Creativity, (int)((1 - StaminaCosProbability - EnergyProbability) * 100)}
         };
         GetStaminaCost = () => MainItemMono.CheckStaminaCost(CatchCostDic[ECatchType.Stamina]);
         GetEnergyCost = () => MainItemMono.CheckEnergyCost(CatchCostDic[ECatchType.Energy]);
