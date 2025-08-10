@@ -29734,6 +29734,7 @@ MonoBehaviour:
   MinimapBtn: {fileID: 726215052}
   ChangeSpeed: 1.2
   MiniSize: 18
+  FullSizeMulti: 1.2
   MiniItemPnl: {fileID: 311952528}
   StaminaTxt: {fileID: 1410939456}
   EnergyTxt: {fileID: 372808339}

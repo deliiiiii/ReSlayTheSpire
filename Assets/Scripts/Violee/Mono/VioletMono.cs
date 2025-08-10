@@ -21,6 +21,7 @@ public class VioletMono : Singleton<VioletMono>
         GameManager.Init();
         GameView.Init();
         MapView.Init();
+        MainItemMono.Init();
         AudioMono.Init();
         GameManager.EnterTitle();
     }

@@ -16,6 +16,27 @@ public class MainItemMono : Singleton<MainItemMono>
     public static int CreativityCount => Instance.mainItemData.Creativity.Count;
     // public static int VioleeCount => Instance.mainItemData.Violee.Count;
 
+
+    public static void Init() => Instance._Init();
+
+    void _Init()
+    {
+        GameManager.PlayingState.OnUpdate(_ =>
+        {
+            if (!Configer.SettingsConfig.IsDevelop)
+                return;
+            if (Input.GetKey(KeyCode.D)
+                && Input.GetKey(KeyCode.E)
+                && Input.GetKey(KeyCode.L)
+                && Input.GetKey(KeyCode.I))
+            {
+                Instance.mainItemData.Stamina.Count = 2025;
+                Instance.mainItemData.Energy.Count = 813;
+                Instance.mainItemData.Creativity.Count = 1130;
+            }
+        });
+    }
+    
     public static void OnDijkstraEnd()
     {
         Instance.mainItemData = new MainItemData();

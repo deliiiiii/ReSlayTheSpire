@@ -30,8 +30,8 @@ class MapView : ViewBase<MapView>
     protected override void IBL()
     {
         costTxtPool = new ObjectPool<Text>(CostTxtPrefab, transform, 42);
-        if (Configer.SettingsConfig.ShowBoxCost)
-            MapManager.DijkstraStream.OnBeginAsync(BindAllCostTxt);
+        
+        MapManager.DijkstraStream.OnBeginAsync(BindAllCostTxt);
 
         StartIr.GetInteractInfo = () =>
         {
@@ -114,9 +114,12 @@ class MapView : ViewBase<MapView>
     }
     async Task BindAllCostTxt(GenerateParam param)
     {
+        
         try
         {
             await DestroyAllCostTxt();
+            if (!Configer.SettingsConfig.ShowBoxCost)
+                return;
             var boxKList = param.BoxDataDic.Values;
             var allPoints = boxKList.SelectMany(x => x.PointDataMyDic.Values).ToList();
             foreach (var point in allPoints)

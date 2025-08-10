@@ -255,12 +255,13 @@ class GameView : ViewBase<GameView>
     public required Button MinimapBtn; 
     public float ChangeSpeed = 1.2f;
     public float MiniSize = 12f;
+    public float FullSizeMulti = 1f;
     bool isMinimap => MinimapImg.enabled;
     float maxSize => Mathf.Max(Configer.BoxConfigList.Width, Configer.BoxConfigList.Height) * BoxHelper.BoxSize;
     void ChangeFOV(float dt)
     {
         
-        var tarSize = isMinimap ? MiniSize : maxSize / 1.616f;
+        var tarSize = isMinimap ? MiniSize : maxSize * FullSizeMulti;
         if (!Mathf.Approximately(MinimapCameraVirtual.m_Lens.OrthographicSize, tarSize))
         {
             MinimapCameraVirtual.m_Lens.OrthographicSize = Mathf.Lerp(MinimapCameraVirtual.m_Lens.OrthographicSize,

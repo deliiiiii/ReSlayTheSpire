@@ -387,9 +387,9 @@ public class DreamCatcherItemData : SceneItemData
     {
         var s1 = CurCatchType switch
         {
-            ECatchType.Stamina => $"",
-            ECatchType.Energy => $"消耗{GetEnergyCost()}点精力",
-            _ => $"消耗{GetCreativityCost()}点灵感",
+            ECatchType.Stamina => $"再消耗{GetStaminaCost()}点体力",
+            ECatchType.Energy => $"再消耗{GetEnergyCost()}点精力",
+            _ => $"再消耗{GetCreativityCost()}点灵感",
         };
         s1 += "，转化为1个VioleT";
         return s1;

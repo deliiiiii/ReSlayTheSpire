@@ -237,8 +237,8 @@ internal class MapManager : SingletonCS<MapManager>
                 }
                 var boxConfig = 
                     Configer.BoxConfigList.BoxConfigs.RandomItem(
-                        x => !BoxHelper.HasSWallByByteAndDir(x.Walls, nextGoInDir),
-                        x => x.BasicWeight);
+                        // x => !BoxHelper.HasSWallByByteAndDir(x.Walls, nextGoInDir),
+                        weightFunc: x => x.BasicWeight);
                 var nextBox = ReadBoxConfig(nextPos, boxConfig);
                 if (!param.HasBox(nextPos) && !curBox.HasSWallByDir(curGoOutDir, out _))
                 {
