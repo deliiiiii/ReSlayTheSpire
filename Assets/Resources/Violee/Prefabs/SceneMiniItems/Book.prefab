@@ -163,4 +163,4 @@ MonoBehaviour:
       data:
         InteractColor: {r: 0, g: 0.91391253, b: 1, a: 1}
         CreativityGain:
-          value: 2
+          value: 1
