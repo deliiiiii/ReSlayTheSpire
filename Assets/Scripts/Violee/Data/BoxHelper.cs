@@ -94,7 +94,8 @@ namespace Violee
             };
         }
         public static bool HasSWallByByteAndDir(byte walls, EBoxDir dir) => (walls & (byte)dir) != 0;
-        
-        
+
+        public static bool HasTiltWallByByte(byte walls) => (walls >> 4) != 0;
+
     }
 }

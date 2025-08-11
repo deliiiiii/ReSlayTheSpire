@@ -187,7 +187,7 @@ public class GameManager : SingletonCS<GameManager>
         MapManager.DijkstraStream
             .OnEnd(param =>
             {
-                PlayerMono.OnDijkstraEnd(param.PlayerStartPos);
+                PlayerMono.OnDijkstraEnd(BoxHelper.Pos2DTo3DPoint(param.StartPos, param.StartDir));
                 MainItemMono.OnDijkstraEnd();
                 gameFsm.ChangeState(EGameState.Playing);
             });

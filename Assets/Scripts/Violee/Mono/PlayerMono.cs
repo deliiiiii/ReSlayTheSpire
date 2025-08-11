@@ -43,7 +43,7 @@ public class PlayerMono : Singleton<PlayerMono>
     static GameObject staGameObject => Instance.gameObject;
     public static void OnDijkstraEnd(Vector3 pos3D)
     {
-        staTransform.position = pos3D + Vector3.up * (1.5f * staTransform.localScale.y);
+        staTransform.position = pos3D + Vector3.up * (3f * staTransform.localScale.y);
     }
     public static void OnEnterPlaying()
     {

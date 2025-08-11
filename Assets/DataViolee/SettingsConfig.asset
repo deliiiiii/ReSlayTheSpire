@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d606e8641a4149fcb90baf245d658bd8, type: 3}
   m_Name: SettingsConfig
   m_EditorClassIdentifier: 
-  IsDevelop: 0
-  quickKey: 0
+  IsDevelop: 1
+  quickKey: 1
   showBoxCost: 0
   disablePause: 0
   dreamCatcherGachaUp: 0
   addTiltWall: 0
+  useSmallMap: 0
   BoxCostPosOffset: 0.37
   TimeSpeed: 30
   PointSpriteFlashTime: 1

@@ -165,7 +165,7 @@ class GameView : ViewBase<GameView>
         Binder.From(MapManager.DoorCount).To(v => DoorCountTxt.text = v.ToString());
         
         Binder.From(PlayerMono.InteractInfo).To(info => {
-            NormalReticle.SetActive(info == null);
+            NormalReticle.SetActive(GameManager.IsPlaying && info == null);
             FindReticle.SetActive(info != null);
             SceneItemInfoPnl.SetActive(info != null);
             SceneItemInfoTxt.text = info?.Description ?? "";

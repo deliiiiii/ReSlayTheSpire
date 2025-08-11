@@ -34,6 +34,10 @@ namespace Violee
         bool addTiltWall;
         public bool AddTiltWall => addTiltWall && IsDevelop;
         public void ReverseAddTiltWall() => addTiltWall = !addTiltWall;
+        [ShowIf(nameof(IsDevelop))] [SerializeField]
+        bool useSmallMap;
+        public bool UseSmallMap => useSmallMap && IsDevelop;
+        public void ReverseUseSmallMap() => useSmallMap = !useSmallMap;
 
         [MinValue(0)][MaxValue(0.5f)]
         public float BoxCostPosOffset = 0.35f;

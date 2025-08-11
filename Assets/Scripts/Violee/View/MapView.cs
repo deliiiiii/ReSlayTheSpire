@@ -38,8 +38,13 @@ class MapView : ViewBase<MapView>
     public required Text DreamCatcherGachaTxt;
     public required Button AddTiltWallBtn;
     public required Text AddTiltWallTxt;
+    public required Button UseSmallMapBtn;
+    public required Text UseSmallMapTxt;
     
     public required Button ReturnBtn;
+
+    [Header("Input Pnl")]
+    public required GameObject DevelopKeyPnl;
     
     [Header("Map")]
     public Text CostTxtPrefab = null!;
@@ -86,6 +91,7 @@ class MapView : ViewBase<MapView>
                 // DisablePauseTxt.color = Configer.SettingsConfig.DisablePause ? Color.blue : Color.white;
                 DreamCatcherGachaTxt.color = Configer.SettingsConfig.DreamCatcherGachaUp ? Color.blue : Color.white;
                 AddTiltWallTxt.color = Configer.SettingsConfig.AddTiltWall ? Color.blue : Color.white;
+                UseSmallMapTxt.color = Configer.SettingsConfig.UseSmallMap ? Color.blue : Color.white;
             })
             .OnExit(() =>
             {
@@ -131,6 +137,7 @@ class MapView : ViewBase<MapView>
                 var buffAct = () => { Configer.SettingsConfig.IsDevelop = true; };
                 BuffManager.AddWinBuff("Oh It's 萝符号!\n(已启用开发者模式.)", buffAct);
                 SettingsBtn.gameObject.SetActive(true);
+                DevelopKeyPnl.gameObject.SetActive(true);
             })
             .AddTo(this);
 
@@ -139,6 +146,7 @@ class MapView : ViewBase<MapView>
         // Binder.From(DisablePauseBtn).To(() => Configer.SettingsConfig.ReverseDisablePause());
         Binder.From(DreamCatcherGachaBtn).To(() => Configer.SettingsConfig.ReverseDreamCatcherGachaUp());
         Binder.From(AddTiltWallBtn).To(() => Configer.SettingsConfig.ReverseAddTiltWall());
+        Binder.From(UseSmallMapBtn).To(() => Configer.SettingsConfig.ReverseUseSmallMap());
         
         
         Binder.From(SettingsBtn).To(() =>

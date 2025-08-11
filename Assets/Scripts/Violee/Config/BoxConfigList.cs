@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Violee;
@@ -7,9 +9,12 @@ namespace Violee;
 public class BoxConfigList : ScriptableObject
 {
     [Header("Map Settings")]
-    public int Height = 4;
-    public int Width = 6;
-    public Vector2Int StartPos = Vector2Int.zero;
+    [SerializeField] int height = 4;
+    public int Height => Configer.SettingsConfig.UseSmallMap ? 5 : height;
+    [SerializeField] int width = 6;
+    public int Width => Configer.SettingsConfig.UseSmallMap ? 5 : width;
+    [SerializeField] Vector2Int startPos = Vector2Int.zero;
+    public Vector2Int StartPos => Configer.SettingsConfig.UseSmallMap ? new Vector2Int(2, 2) : startPos;
     public EBoxDir StartDir = EBoxDir.Up;
         
     [Header("Other")]
@@ -17,5 +22,21 @@ public class BoxConfigList : ScriptableObject
     public float DoorPossibility;
     [Range(0.4f, 0.5f)]
     public float WalkInTolerance = 0.45f;
-    public List<BoxConfig> BoxConfigs = [];
+    [SerializeField] List<BoxConfig> boxConfigs = [];
+
+    public List<BoxConfig> BoxConfigs
+    {
+        get
+        {
+            if(!Configer.SettingsConfig.AddTiltWall)
+                return boxConfigs;
+            List<BoxConfig> ret = [..boxConfigs];
+            ret.ForEach(b =>
+            {
+                if (BoxHelper.HasTiltWallByByte(b.Walls))
+                    b.BasicWeight += 200;
+            });
+            return ret;
+        }
+    }
 }

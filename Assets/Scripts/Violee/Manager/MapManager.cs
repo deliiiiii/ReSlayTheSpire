@@ -33,7 +33,6 @@ public class GenerateParam
     
     public HashSet<Vector2Int> EmptyPosSet = [];
     public HashSet<WallData> EdgeWallSet = [];
-    public readonly Vector3 PlayerStartPos;
     readonly Dictionary<Vector3Int, BoxModel> boxModelDic = [];
 
     async Task OnAddBoxData(BoxData boxData)
@@ -83,7 +82,6 @@ public class GenerateParam
                 OnRemoveBoxData(boxData);
                 EmptyPosSet.Add(boxData.Pos2D);
             };
-        PlayerStartPos = BoxHelper.Pos2DTo3DPoint(StartPos, StartDir);
     }
 }
 
