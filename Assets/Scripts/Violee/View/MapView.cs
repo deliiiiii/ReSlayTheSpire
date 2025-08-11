@@ -18,10 +18,28 @@ class MapView : ViewBase<MapView>
     public required InteractCasterMouse MouseCaster;
     public required Transform Hitobj;
     public required InteractReceiver StartIr;
+
+    [Header("FirstBtnPnl")] 
+    public required GameObject FirstBtnPnl;
     public required Button TitleBtn;
     public required Button TutorialBtn;
     public required Button SettingsBtn;
     public required Button ExitBtn;
+
+    [Header("Second - SettingsPnl")]
+    public required GameObject SettingsPnl;
+    public required Button QuickKeyBtn;
+    public required Text QuickKeyTxt;
+    public required Button ShowBoxCostBtn;
+    public required Text ShowBoxCostTxt;
+    // public required Button DisablePauseBtn;
+    // public required Text DisablePauseTxt;
+    public required Button DreamCatcherGachaBtn;
+    public required Text DreamCatcherGachaTxt;
+    public required Button AddTiltWallBtn;
+    public required Text AddTiltWallTxt;
+    
+    public required Button ReturnBtn;
     
     [Header("Map")]
     public Text CostTxtPrefab = null!;
@@ -63,6 +81,11 @@ class MapView : ViewBase<MapView>
             {
                 if(MouseCaster.gameObject.activeSelf)
                     MouseCaster.Tick();
+                QuickKeyTxt.color = Configer.SettingsConfig.QuickKey ? Color.blue : Color.white;
+                ShowBoxCostTxt.color = Configer.SettingsConfig.ShowBoxCost ? Color.blue : Color.white;
+                // DisablePauseTxt.color = Configer.SettingsConfig.DisablePause ? Color.blue : Color.white;
+                DreamCatcherGachaTxt.color = Configer.SettingsConfig.DreamCatcherGachaUp ? Color.blue : Color.white;
+                AddTiltWallTxt.color = Configer.SettingsConfig.AddTiltWall ? Color.blue : Color.white;
             })
             .OnExit(() =>
             {
@@ -107,8 +130,40 @@ class MapView : ViewBase<MapView>
             {
                 var buffAct = () => { Configer.SettingsConfig.IsDevelop = true; };
                 BuffManager.AddWinBuff("Oh It's 萝符号!\n(已启用开发者模式.)", buffAct);
+                SettingsBtn.gameObject.SetActive(true);
             })
             .AddTo(this);
+
+        Binder.From(QuickKeyBtn).To(() => Configer.SettingsConfig.ReverseQuickKey());
+        Binder.From(ShowBoxCostBtn).To(() => Configer.SettingsConfig.ReverseShowBoxCost());
+        // Binder.From(DisablePauseBtn).To(() => Configer.SettingsConfig.ReverseDisablePause());
+        Binder.From(DreamCatcherGachaBtn).To(() => Configer.SettingsConfig.ReverseDreamCatcherGachaUp());
+        Binder.From(AddTiltWallBtn).To(() => Configer.SettingsConfig.ReverseAddTiltWall());
+        
+        
+        Binder.From(SettingsBtn).To(() =>
+        {
+            FirstBtnPnl.gameObject.SetActive(false);
+            SettingsPnl.gameObject.SetActive(true);
+        });
+        // QuickKeyTg.onValueChanged.AddListener(Configer.SettingsConfig.SetQuickKey);
+        // ShowBoxCostTg.onValueChanged.AddListener(Configer.SettingsConfig.SetShowBoxCost);
+        // DisablePauseTg.onValueChanged.AddListener(Configer.SettingsConfig.SetDisablePause);
+        // DreamCatcherGachaTg.onValueChanged.AddListener(Configer.SettingsConfig.SetDreamCatcherGachaUp);
+        
+        Binder.From(ReturnBtn).To(() =>
+        {
+            FirstBtnPnl.gameObject.SetActive(true);
+            SettingsPnl.gameObject.SetActive(false);
+        });
+        Binder.From(ExitBtn).To(() =>
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        });
     }
 
     readonly HashSet<Text> costTxtSet = [];

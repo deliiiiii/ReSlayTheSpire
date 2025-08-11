@@ -16,6 +16,7 @@ namespace Violee
         
         [Header("Config")] 
         public required BoxConfigList BoxConfigListIns;
+        public required BoxConfigList BoxConfigListTiltIns;
 
         public required ConBuffConfigList ConBuffConfigListIns;
         public required DicConfig DicConfigIns;
@@ -24,7 +25,8 @@ namespace Violee
         public required SceneItemModelList SceneItemModelListIns;
         public required SettingsConfig SettingsConfigIns;
         
-        public static BoxConfigList BoxConfigList => Instance.BoxConfigListIns;
+        public static BoxConfigList BoxConfigList => 
+            SettingsConfig.AddTiltWall ? Instance.BoxConfigListTiltIns : Instance.BoxConfigListIns;
         public static ConBuffConfigList ConBuffConfigList => Instance.ConBuffConfigListIns;
         public static DicConfig DicConfig => Instance.DicConfigIns;
         public static DrawConfigList DrawConfigList => Instance.DrawConfigListIns;

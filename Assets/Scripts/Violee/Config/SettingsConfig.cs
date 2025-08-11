@@ -14,17 +14,26 @@ namespace Violee
         [ShowIf(nameof(IsDevelop))][SerializeField]
         bool quickKey;
         public bool QuickKey => quickKey && IsDevelop;
+        public void ReverseQuickKey() => quickKey = !quickKey;
 
         [ShowIf(nameof(IsDevelop))][SerializeField]
         bool showBoxCost;
         public bool ShowBoxCost => showBoxCost && IsDevelop;
+        public void ReverseShowBoxCost() => showBoxCost = !showBoxCost;
+        
         [ShowIf(nameof(IsDevelop))][SerializeField]
         bool disablePause;
         public bool DisablePause => disablePause && IsDevelop;
+        public void ReverseDisablePause() => disablePause = !disablePause;
 
         [ShowIf(nameof(IsDevelop))] [SerializeField]
         bool dreamCatcherGachaUp;
         public bool DreamCatcherGachaUp => dreamCatcherGachaUp && IsDevelop;
+        public void ReverseDreamCatcherGachaUp() => dreamCatcherGachaUp = !dreamCatcherGachaUp;
+        [ShowIf(nameof(IsDevelop))] [SerializeField]
+        bool addTiltWall;
+        public bool AddTiltWall => addTiltWall && IsDevelop;
+        public void ReverseAddTiltWall() => addTiltWall = !addTiltWall;
 
         [MinValue(0)][MaxValue(0.5f)]
         public float BoxCostPosOffset = 0.35f;

@@ -16,6 +16,8 @@ MonoBehaviour:
   quickKey: 1
   showBoxCost: 1
   disablePause: 0
+  dreamCatcherGachaUp: 1
+  addTiltWall: 0
   BoxCostPosOffset: 0.37
   TimeSpeed: 30
   PointSpriteFlashTime: 1

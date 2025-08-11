@@ -13,10 +13,11 @@ public class Observable<T>
     bool forceEverySet;
     bool enableRepeatEvent;
 
-    [Button]
+    bool canAddOne => value is int or float or double;
+    [Button][ShowIf(nameof(canAddOne))]
     public void AddOne()
     {
-        if (value is int or float or double)
+        if (canAddOne)
         {
             Value = (dynamic)Value + 1;
         }

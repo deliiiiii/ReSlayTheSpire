@@ -96,6 +96,7 @@ class GameView : ViewBase<GameView>
             try
             {
                 AudioMono.PlayWinLoop();
+                WinWordTxt.text = (w as StringWindowInfo)!.GetWord();
                 PauseOrWinPnl.SetActive(true);
                 WinPnl.SetActive(true);
                 await FadeIn(PauseOrWinPnl.GetComponent<Image>(), 2f);
@@ -105,7 +106,6 @@ class GameView : ViewBase<GameView>
                 await Task.Delay(800);
                 WinPnlL3.SetActive(true);
                 await Task.Delay(800);
-                WinWordTxt.text = (w as StringWindowInfo)!.GetWord();
                 WinWordTxt.gameObject.SetActive(true);
                 await Task.Delay(1000);
                 WinPnlRight.SetActive(true);
