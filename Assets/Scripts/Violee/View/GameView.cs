@@ -243,7 +243,11 @@ class GameView : ViewBase<GameView>
             Destroy(conBuffInsDic[conBuff]);
             conBuffInsDic.Remove(conBuff);
         };
-        MainItemMono.OnChangeVioleT += cList => VioleTTxt.text = string.Join("", cList);
+        MainItemMono.OnChangeVioleT += cList =>
+        {
+            VioleTTxt.text = string.Join("", cList);
+            VioleTInfoTxt.gameObject.SetActive(cList.Count == 0);
+        };
         MainItemMono.OnGainVioleT += OnGainVioleT;
         AudioMono.OnUnPauseLoop += clip =>
         {
@@ -389,6 +393,7 @@ class GameView : ViewBase<GameView>
     public required GameObject VioleTPnl;
     public required Button VioleTBtn;
     public required Text VioleTTxt;
+    public required Text VioleTInfoTxt;
     public required Button VioleTPnlCloseBtn;
     public required Text DoorCountTxt;
     #endregion
@@ -427,6 +432,7 @@ class GameView : ViewBase<GameView>
     
     void OnGainVioleT(char c)
     {
+        VioleTInfoTxt.gameObject.SetActive(false);
         LetterIcon.gameObject.SetActive(true);
         LetterIcon.Letter.text = c.ToString();
         LetterIcon.OnComplete = () => VioleTTxt.text += c;

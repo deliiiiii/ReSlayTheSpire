@@ -160,6 +160,10 @@ public class SceneItemData : DataBase
         if (StaminaCost > 0)
             sb.Append($"消耗{StaminaCost}点体力,\n");
         sb.Append(GetInteractDesInternal());
+        if (IsActive && HasCount && Count >= 2)
+        {
+            sb.Append($"$(可用{Count}次)");
+        }
         if (HasConBuff)
             sb.Append($"\n{ConBuffData.Des}。");
         return sb.ToString();
