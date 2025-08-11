@@ -6,13 +6,13 @@ using JetBrains.Annotations;
 public class BindDataUpdate
 {
     public Action<float> Act;
-    readonly EUpdatePri priority;
+    public readonly EUpdatePri Priority;
     public HashSet<Func<bool>> GuardSet = new ();
 
     public BindDataUpdate(Action<float> act, EUpdatePri priority)
     {
         this.Act = act;
-        this.priority = priority;
+        this.Priority = priority;
     }
     
     public BindDataUpdate Where(Func<bool> guard)
@@ -23,7 +23,7 @@ public class BindDataUpdate
 
     public void UnBind()
     {
-        if(Updater.UpdateDic.TryGetValue(priority, out var value))
+        if(Updater.UpdateDic.TryGetValue(Priority, out var value))
             value.Remove(this);
     }
 }

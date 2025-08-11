@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Violee
 {
@@ -60,10 +62,17 @@ namespace Violee
                     List<DrawConfig> ret = [];
                     List<DrawConfig> pool = [..Configer.DrawConfigList.DrawConfigs];
                     DrawConfig dreamCatcherConfig = pool.First(d => d.ToDrawModels.Any(m => m.Data.ID == 14));
-                    float dreamRatio = MainItemMono.VioleTRequireCount / 1f / MapManager.DoorCount;
+                    
+                    // float dreamRatio = MainItemMono.VioleTRequireCount / 1f / MapManager.DoorCount;
+                    double dreamRatio = 1f / MapManager.DoorCount;
+                    if(Configer.SettingsConfig.DreamCatcherGachaUp)
+                        // 1 - (1 - x)^3 = 1/16
+                        dreamRatio = (1 - Math.Pow(15.0 / 16.0, 1.0 / 3.0)) * 3;
+                    
+                    MyDebug.Log("Dream Ratio: " + dreamRatio);
                     Enumerable.Range(0, 3).ForEach(i =>
                     {
-                        var added = Random.Range(0, 1f) <= dreamRatio ? dreamCatcherConfig : pool.RandomItem();
+                        var added = Random.Range(0, 1f) <= dreamRatio ? dreamCatcherConfig : pool.RandomItem(x => x != dreamCatcherConfig);
                         pool.Remove(added);
                         ret.Add(added);
                     });

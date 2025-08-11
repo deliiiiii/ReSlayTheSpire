@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using General.Binder;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,6 +39,16 @@ public static class Binder
         Updater.UpdateDic.TryAdd(priority, new HashSet<BindDataUpdate>());
         Updater.UpdateDic[priority].Add(ret);
         return ret;
+    }
+    
+    public static void RemoveUpdate([CanBeNull] BindDataUpdate bindDataUpdate)
+    {
+        if (bindDataUpdate == null)
+            return;
+        if (Updater.UpdateDic.TryGetValue(bindDataUpdate.Priority, out var set))
+        {
+            set.Remove(bindDataUpdate);
+        }
     }
 }
 

@@ -171,9 +171,9 @@ public class SceneItemData : DataBase
 
     public virtual bool ShouldShowMiniIcon()
     {
-        return !IsActive
-            || (HasCount && Count > 0)
-            || (HasConBuff && ConBuffActivated && (!ConBuffData.HasCount || ConBuffData.Count > 0));
+        return (!IsActive && HasSpreadObjList.Count != 0) 
+               || (HasCount && Count > 0)
+               || (HasConBuff && ConBuffActivated && (!ConBuffData.HasCount || ConBuffData.Count > 0));
     }
     
     void LogErrorWith(string str)
@@ -283,7 +283,7 @@ public class RecordPlayerItemData : SceneItemData
 
     public void PlayOne()
     {
-        curClip = AudioMono.BGMRecordPlayer.RandomItem(x => x != curClip);
+        curClip = AudioMono.BGMRecordPlayer.RandomItem(x => x != curClip && x != AudioMono.CurClip);
         AudioMono.PlayLoop(audioSource, curClip);
     }
 }

@@ -11,6 +11,7 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
 {
     [SerializeReference] public required List<InteractReceiver> IrList;
     public required MiniIconGetter MiniIconGetter;
+    BindDataUpdate b;
 
     protected override void OnReadData()
     {
@@ -33,7 +34,12 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
             SpreadMiniItem();
         }
         
-        Binder.Update(_ => MiniIconGetter.SetEnable(Data.ShouldShowMiniIcon()));
+        b = Binder.Update(_ => MiniIconGetter.SetEnable(Data.ShouldShowMiniIcon()));
+    }
+
+    void OnDisable()
+    {
+        Binder.RemoveUpdate(b);
     }
 
     public InteractInfo GetCb()

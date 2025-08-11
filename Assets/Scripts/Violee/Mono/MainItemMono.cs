@@ -53,6 +53,7 @@ public class MainItemMono : Singleton<MainItemMono>
     public static void OnDijkstraEnd()
     {
         Instance.mainItemData = new MainItemData();
+        WinCount.Value = Saver.Load<Observable<int>>("DataVioleT", "WakeUpCount");
         var winRewardDic = new List<Action>()
         {
             () => Instance.mainItemData.Stamina.Count++,

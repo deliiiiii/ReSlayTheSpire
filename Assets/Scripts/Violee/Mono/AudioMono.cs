@@ -60,6 +60,8 @@ public class AudioMono : Singleton<AudioMono>
         curBGMSource.Play();
         UnPauseLoop();
     }
+    
+    public static AudioClip? CurClip => curBGMSource!.clip;
 
     static void PauseLoop()
     {

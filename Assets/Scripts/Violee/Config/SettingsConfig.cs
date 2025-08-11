@@ -22,6 +22,9 @@ namespace Violee
         bool disablePause;
         public bool DisablePause => disablePause && IsDevelop;
 
+        [ShowIf(nameof(IsDevelop))] [SerializeField]
+        bool dreamCatcherGachaUp;
+        public bool DreamCatcherGachaUp => dreamCatcherGachaUp && IsDevelop;
 
         [MinValue(0)][MaxValue(0.5f)]
         public float BoxCostPosOffset = 0.35f;
