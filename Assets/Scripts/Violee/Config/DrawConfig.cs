@@ -14,7 +14,7 @@ public class DrawConfig
 {
     // public EDrawType DrawType;
     public string DrawTitle = string.Empty;
-    public string DrawDes = string.Empty;
+    public string DrawDes => ToDrawModels.Count == 1 ? ToDrawModels[0].Data.GetInteractDes() : string.Empty;
     public Sprite Sprite = null!;
     
     public List<SceneItemModel> ToDrawModels = [];

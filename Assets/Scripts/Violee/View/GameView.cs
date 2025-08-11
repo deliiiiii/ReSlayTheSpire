@@ -201,7 +201,7 @@ class GameView : ViewBase<GameView>
                 CreativityTxt.text = MainItemMono.CreativityCount.ToString();
                 // VioleeTxt.text = MainItemMono.VioleeCount.ToString();
                 RedrawBtn.interactable = MainItemMono.CreativityCount >= MainItemMono.CheckCreativityCost(1);
-                
+                RedrawCostTxt.text = MainItemMono.CheckCreativityCost(1).ToString();
                 ChangeFOV(dt);
                 
                 if (Input.GetKeyDown(KeyCode.Tab) && !GameManager.HasPaused)
@@ -412,6 +412,7 @@ class GameView : ViewBase<GameView>
     public required GameObject SleepPnl;
     public required GameObject DrawPnl;
     public required Button RedrawBtn;
+    public required Text RedrawCostTxt;
     public required Transform DrawBtnContent;
 
     public required Button ExitWatchingItemBtn;

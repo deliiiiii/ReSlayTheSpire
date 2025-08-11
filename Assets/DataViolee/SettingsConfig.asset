@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d606e8641a4149fcb90baf245d658bd8, type: 3}
   m_Name: SettingsConfig
   m_EditorClassIdentifier: 
-  IsDevelop: 1
+  IsDevelop: 0
   quickKey: 0
   showBoxCost: 0
   disablePause: 0

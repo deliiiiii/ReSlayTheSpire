@@ -249,6 +249,10 @@ PrefabInstance:
       value: 2.89
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788486813057024].SpreadDes
+      value: "\u53EF\u80FD\u53EF\u4EE5\u62FE\u53D6\u98DF\u7269or\u4E66\u672C\u3002"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788486813057024].HasConBuff
       value: 0
       objectReference: {fileID: 0}

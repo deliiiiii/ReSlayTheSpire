@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -37,6 +38,9 @@ public class SceneItemData : DataBase
 
     [Header("HasSpreadPos")]
     public bool HasSpreadPos;
+
+    bool OnlyHasSpread => !IsActive && HasSpreadPos;
+    [ShowIf(nameof(OnlyHasSpread))] public string SpreadDes = string.Empty;
     [ShowIf(nameof(HasSpreadPos))][Range(0, 1)] public float SpreadPossibility = 0.2f;
     [ShowIf(nameof(HasSpreadPos))] public int SpreadMaxCount = 1;
     [ShowIf(nameof(HasSpreadPos))] [SerializeField] public SerializableDictionary<Transform, List<SceneMiniItemModel>> SpreadObjectDic = [];
@@ -147,6 +151,11 @@ public class SceneItemData : DataBase
     public string GetInteractDes()
     {
         var sb = new StringBuilder();
+        if (OnlyHasSpread)
+        {
+            sb.Append(SpreadDes);
+            return sb.ToString();
+        }
         sb.Append($"{DesPre}:");
         if (StaminaCost > 0)
             sb.Append($"消耗{StaminaCost}点体力,\n");
