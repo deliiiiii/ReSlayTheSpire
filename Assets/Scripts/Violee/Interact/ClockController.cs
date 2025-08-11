@@ -25,10 +25,9 @@ public class ClockController : MonoBehaviour
                     { SceneItemData: ClockItemData { Watched: false } clockItemData }
                 && clockItemData == data
                 && newTime.Hour != oldTime.Hour
-                && newTime.Hour == 10
                )
             {
-                int energy = newTime.Hour % 2 == 0 ? 2 : 1;
+                int energy = newTime.Hour == 10 ? 3 : 1;
                 var des = $"叮! 时间到了{newTime.Hour}点整...!\n鉴于你凝思了许久，精力+{energy}点。";
                 void BuffAct() => MainItemMono.GainEnergy(energy);
                 BuffManager.AddWinBuff(des, BuffAct);

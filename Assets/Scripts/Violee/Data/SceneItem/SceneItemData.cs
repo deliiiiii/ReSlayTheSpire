@@ -34,9 +34,6 @@ public class SceneItemData : DataBase
     // public int OccupyCount = 1;
     public bool IsAir;
     public int ID;
-    
-    [Header("MinimapIcon")]
-    public required Sprite MinimapIcon;
 
     [Header("HasSpreadPos")]
     public bool HasSpreadPos;
@@ -321,7 +318,6 @@ public class ElectricItemData : SceneItemData
     {
         base.UseEffect();
         MainItemMono.CostCreativity(CreativityCost);
-        IsActive = false;
     }
 }
 

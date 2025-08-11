@@ -18263,7 +18263,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3665146052183188559, guid: 432d3c74bc339924ca33a853e69a7db8, type: 3}
       propertyPath: m_Text
-      value: "\u5C06\u201C\u6355\u68A6\u7F51\u201D\u7684\u62BD\u53D6\u6982\u7387\u63D0\u53473\u500D"
+      value: "\u5C06\u201C\u6355\u68A6\u7F51\u201D\u7684\u62BD\u53D6\u6982\u7387\u63D0\u5347\u81F33\u500D"
       objectReference: {fileID: 0}
     - target: {fileID: 6254339970441280459, guid: 432d3c74bc339924ca33a853e69a7db8, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -21773,7 +21773,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 0.2
   m_Viewport: {fileID: 1795435025}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
@@ -37225,7 +37225,7 @@ MonoBehaviour:
   m_Elasticity: 0.06
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 0.2
   m_Viewport: {fileID: 135480405}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
@@ -41015,7 +41015,7 @@ MonoBehaviour:
   m_Elasticity: 0.05
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 0.2
   m_Viewport: {fileID: 1925162043}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
