@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsDevelop: 1
   quickKey: 1
-  showBoxCost: 0
+  showBoxCost: 1
   disablePause: 0
   dreamCatcherGachaUp: 0
   addTiltWall: 0
-  useSmallMap: 0
+  useSmallMap: 1
   BoxCostPosOffset: 0.37
   TimeSpeed: 30
   PointSpriteFlashTime: 1
   PointSpriteAlpha: 255
   interactCasterRadius: 0.3
-  YieldCount: 0.1
+  YieldCount: 0.02

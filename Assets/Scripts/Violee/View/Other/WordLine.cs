@@ -25,7 +25,7 @@ public class WordLine : MonoBehaviour
 
         Binder.From(ChooseWordBtn).To(() =>
         {
-            MyDebug.LogError($"Win !! {word}");
+            MyDebug.Log($"Win !! {word}");
             OnWin?.Invoke(word);
         });
         word = fWord;
