@@ -14,82 +14,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DrawConfigs:
   - DrawTitle: "+1\u6C99\u53D1"
-    DrawDes: "\u53EF\u6D88\u8017\u4F53\u529B\uFF0C\u56DE\u590D\u7CBE\u529B"
     Sprite: {fileID: 21300000, guid: 452e2011900638b4a9eb10aa3fbb626a, type: 3}
     ToDrawModels:
     - {fileID: 722521660514919285, guid: 06e4fff4d3039244fb242275e38451ed, type: 3}
   - DrawTitle: "+1\u77F3\u82F1\u949F"
-    DrawDes: "Just\u80FD\u770B\u770B\u65F6\u95F4\uFF1F"
     Sprite: {fileID: 21300000, guid: 7c05744799db3a348831c352241427ea, type: 3}
     ToDrawModels:
     - {fileID: 1631350398351584338, guid: 9084445cbdf95064aa7152e5c0d0b9dd, type: 3}
   - DrawTitle: "+1\u4E66\u67B6"
-    DrawDes: "\u53EF\u83B7\u5F97\u5927\u91CF\u7075\u611F"
     Sprite: {fileID: 21300000, guid: 02e608a3ba3d40c4aa507a46defa2df8, type: 3}
     ToDrawModels:
     - {fileID: 8151254302739763842, guid: ef9b392421af3644e93a2ecaf765834b, type: 3}
   - DrawTitle: "+1\u5531\u7247\u673A"
-    DrawDes: "\u53EF\u83B7\u5F97\u4E00\u4E2A\u6301\u7EEDBuff"
     Sprite: {fileID: 21300000, guid: cfde216df782adc479a0d49f48eda651, type: 3}
     ToDrawModels:
     - {fileID: 2035840915431417207, guid: cd929ec3b6ba15047b1be2f502f0b000, type: 3}
   - DrawTitle: "+1\u843D\u5730\u706F"
-    DrawDes: "\u53EF\u83B7\u5F97\u4E00\u4E2A\u6301\u7EEDBuff"
     Sprite: {fileID: 21300000, guid: a4bcb39097532dc4399d052671a52533, type: 3}
     ToDrawModels:
     - {fileID: 421955680217720637, guid: cdaf66f63173d1b4c816e03128740b2c, type: 3}
   - DrawTitle: "+1\u5E8A\u5934\u706F"
-    DrawDes: "\u53EF\u83B7\u5F97\u4E00\u4E2A\u4E34\u65F6Buff"
     Sprite: {fileID: 21300000, guid: f953800e49324734dbc4ac03fdd9564d, type: 3}
     ToDrawModels:
     - {fileID: 2663367891045794257, guid: b69b96fa940137a4a8eb7859ef5e14fb, type: 3}
   - DrawTitle: "+1\u65B9\u684C"
-    DrawDes: "\u4E0A\u9762\u53EF\u80FD\u6709\u4E00\u4E9B\u968F\u673A\u7684\u73A9\u610F"
     Sprite: {fileID: 21300000, guid: a13a06b17fdf327429521c774384a302, type: 3}
     ToDrawModels:
     - {fileID: 1961720712683584349, guid: 51868a6990831c342a096343425ef0e1, type: 3}
   - DrawTitle: "+1\u4E66\u684C"
-    DrawDes: "\u53EF\u6062\u590D\u4E24\u6B21\u7CBE\u529B"
     Sprite: {fileID: 21300000, guid: 93f213d17ced369438bcec6af8c73f23, type: 3}
     ToDrawModels:
     - {fileID: 616563387378865544, guid: 330c4bd657ed7f9408406b4dd73a845b, type: 3}
-  - DrawTitle: "+1\u9AD8\u4E66\u684C"
-    DrawDes: "\u5927\u6982\u7387\u51FA\u73B0\u4E66\u672C"
+  - DrawTitle: "+1\u9AD8\u4E66\u67B6"
     Sprite: {fileID: 21300000, guid: 761564856efb0ef48b4b18da78dc807a, type: 3}
     ToDrawModels:
     - {fileID: 200836427785094215, guid: 53fc17312d38d5a4b80d55e3cd2c6817, type: 3}
-  - DrawTitle: "+1\u77EE\u684C"
-    DrawDes: "\u4E0A\u9762\u53EF\u80FD\u6709\u4E00\u4E9B\u968F\u673A\u7684\u73A9\u610F"
+  - DrawTitle: "+1\u8336\u51E0"
     Sprite: {fileID: 21300000, guid: a13a06b17fdf327429521c774384a302, type: 3}
     ToDrawModels:
     - {fileID: 8283341455724098720, guid: 104818a384fd4d448978638d7955a831, type: 3}
   - DrawTitle: "+1\u7A7A\u8C03"
-    DrawDes: "\u53EF\u83B7\u5F97\u4E00\u4E2A\u6301\u7EEDBuff"
     Sprite: {fileID: 21300000, guid: 14b3f37d3cc641b468f1a27b2900b1ba, type: 3}
     ToDrawModels:
     - {fileID: 6401134182384579923, guid: aa7316236486a5745a535e9d21a18db9, type: 3}
   - DrawTitle: "+1\u5706\u684C"
-    DrawDes: "\u4E0A\u9762\u53EF\u80FD\u6709\u4E00\u4E9B\u968F\u673A\u7684\u73A9\u610F\uFF0C\u66F4\u53EF\u80FD\u51FA\u73B0\u98DF\u7269"
     Sprite: {fileID: 21300000, guid: 15f9c57c3c888e1478aabf3afa113334, type: 3}
     ToDrawModels:
     - {fileID: 4924288751575700440, guid: 7eaf231c825651a40866a325cc2ffbe0, type: 3}
   - DrawTitle: "+1\u677F\u51F3"
-    DrawDes: "\u53EF\u7528\u6765\u56DE\u590D\u7CBE\u529B"
     Sprite: {fileID: 21300000, guid: 3ee15cae89a2430408b6c1c0c587428c, type: 3}
     ToDrawModels:
     - {fileID: 7293147631049604207, guid: fff69bc5da4a8254e82af5bc44d92132, type: 3}
   - DrawTitle: "+1\u51B0\u7BB1"
-    DrawDes: "\u53EF\u83B7\u5F97\u4E00\u4E2A\u6301\u7EEDBuff"
     Sprite: {fileID: 21300000, guid: 2570b10f50c31574da307b8d968080a0, type: 3}
     ToDrawModels:
     - {fileID: 1510157720301975787, guid: f4756762bcc44df418029695dd988c6d, type: 3}
   - DrawTitle: "+1\u6355\u68A6\u7F51"
-    DrawDes: "\u53EF\u62BD\u53D6\u5B57\u6BCD\u724C\uFF1A{VioleT}"
     Sprite: {fileID: 21300000, guid: 55b2371a798a02540a30dea7bdcd0bc6, type: 3}
     ToDrawModels:
     - {fileID: 2238235364395328710, guid: 52391c677e75e504291f6a63aac71711, type: 3}
   - DrawTitle: "+1\u7076\u53F0"
-    DrawDes: "\u5927\u6982\u7387\u51FA\u73B0\u98DF\u7269"
     Sprite: {fileID: 21300000, guid: 740ebc311327a5e489d588a27410d919, type: 3}
     ToDrawModels:
     - {fileID: 4141533885984093393, guid: dca71e91f4464b6449665873d1eefff0, type: 3}
