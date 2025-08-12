@@ -48,13 +48,14 @@ public class AudioMono : Singleton<AudioMono>
     {
         PlayLoop(titleBGMSource, Instance.BGMReturnsIns);
     }
-    public static void PlayLoop(AudioSource audioSource, AudioClip clip, bool mute = false, bool loop = true)
+    public static void PlayLoop(AudioSource audioSource, AudioClip clip, float volume = 0.4f, bool mute = false, bool loop = true)
     {
         if(curBGMSource != null)
             curBGMSource.Pause();
         curBGMSource = audioSource;
         // audioSource.clip = BGMRecordPlayer.RandomItem();
         curBGMSource.clip = clip;
+        curBGMSource.volume = volume;
         curBGMSource.mute = mute;
         curBGMSource.loop = loop;
         curBGMSource.Play();

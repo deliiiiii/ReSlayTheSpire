@@ -16,7 +16,7 @@ MonoBehaviour:
   width: 5
   startPos: {x: 2, y: 8}
   StartDir: 4
-  DoorPossibility: 0.85
+  DoorPossibility: 0.666
   WalkInTolerance: 0.49
   boxConfigs:
   - Walls: 0

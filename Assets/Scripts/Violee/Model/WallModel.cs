@@ -73,14 +73,19 @@ namespace Violee
                     MyDebug.Log("Dream Ratio: " + dreamRatio);
                     Enumerable.Range(0, 3).ForEach(i =>
                     {
-                        var added = Random.Range(0, 1f) <= dreamRatio ? dreamCatcherConfig : pool.RandomItem(x => x != dreamCatcherConfig);
+                        var added = Random.Range(0, 1f) <= dreamRatio ? dreamCatcherConfig : pool.RandomItem(x => x != dreamCatcherConfig && !lastestDrawnConfigs.Contains(x));
                         pool.Remove(added);
                         ret.Add(added);
+                        lastestDrawnConfigs.Enqueue(added);
+                        if (lastestDrawnConfigs.Count >= 12)
+                            lastestDrawnConfigs.Dequeue();
                     });
                     return ret;
                 }
             };
         }
+        
+        static readonly Queue<DrawConfig> lastestDrawnConfigs = [];
         
         void SetAllActive()
         {

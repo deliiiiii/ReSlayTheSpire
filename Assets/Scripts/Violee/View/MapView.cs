@@ -15,7 +15,7 @@ class MapView : ViewBase<MapView>
     public required Light Light;
     public required GameObject TitlePnl;
     public required GameObject StartBox;
-    public required InteractCasterMouse MouseCaster;
+    public required InteractCasterTitle TitleCaster;
     public required Transform Hitobj;
     public required InteractReceiver StartIr;
 
@@ -69,7 +69,7 @@ class MapView : ViewBase<MapView>
         async Task DelayTickMouse()
         {
             await Task.Delay(CameraMono.DefaultEase);
-            MouseCaster.gameObject.SetActive(true);
+            TitleCaster.gameObject.SetActive(true);
         }
         
         GameManager.TitleState
@@ -84,8 +84,8 @@ class MapView : ViewBase<MapView>
             })
             .OnUpdate(_ =>
             {
-                if(MouseCaster.gameObject.activeSelf)
-                    MouseCaster.Tick();
+                if(TitleCaster.gameObject.activeSelf)
+                    TitleCaster.Tick();
                 QuickKeyTxt.color = Configer.SettingsConfig.QuickKey ? Color.blue : Color.white;
                 ShowBoxCostTxt.color = Configer.SettingsConfig.ShowBoxCost ? Color.blue : Color.white;
                 // DisablePauseTxt.color = Configer.SettingsConfig.DisablePause ? Color.blue : Color.white;
@@ -99,7 +99,7 @@ class MapView : ViewBase<MapView>
                 TitlePnl.SetActive(false);
                 StartBox.SetActive(false);
                 Light.gameObject.SetActive(true);
-                MouseCaster.gameObject.SetActive(false);
+                TitleCaster.gameObject.SetActive(false);
             });
 
         GameManager.PlayingState.OnEnter(() =>
@@ -135,9 +135,11 @@ class MapView : ViewBase<MapView>
             .Subscribe(_ =>
             {
                 var buffAct = () => { Configer.SettingsConfig.IsDevelop = true; };
+                buffAct.Invoke();
                 BuffManager.AddWinBuff("Oh It's 萝符号!\n(已启用开发者模式.)", buffAct);
                 SettingsBtn.gameObject.SetActive(true);
                 DevelopKeyPnl.gameObject.SetActive(true);
+                OpenSettingsPnl();
             })
             .AddTo(this);
 
@@ -149,11 +151,7 @@ class MapView : ViewBase<MapView>
         Binder.From(UseSmallMapBtn).To(() => Configer.SettingsConfig.ReverseUseSmallMap());
         
         
-        Binder.From(SettingsBtn).To(() =>
-        {
-            FirstBtnPnl.gameObject.SetActive(false);
-            SettingsPnl.gameObject.SetActive(true);
-        });
+        Binder.From(SettingsBtn).To(OpenSettingsPnl);
         // QuickKeyTg.onValueChanged.AddListener(Configer.SettingsConfig.SetQuickKey);
         // ShowBoxCostTg.onValueChanged.AddListener(Configer.SettingsConfig.SetShowBoxCost);
         // DisablePauseTg.onValueChanged.AddListener(Configer.SettingsConfig.SetDisablePause);
@@ -172,6 +170,12 @@ class MapView : ViewBase<MapView>
             Application.Quit();
 #endif
         });
+    }
+
+    void OpenSettingsPnl()
+    {
+        FirstBtnPnl.gameObject.SetActive(false);
+        SettingsPnl.gameObject.SetActive(true);
     }
 
     readonly HashSet<Text> costTxtSet = [];

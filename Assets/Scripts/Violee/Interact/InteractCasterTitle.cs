@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Violee;
 
-public class InteractCasterMouse : MonoBehaviour
+public class InteractCasterTitle : MonoBehaviour
 {
     public LayerMask TarInteractLayer;
     public LayerMask HitWallLayer;

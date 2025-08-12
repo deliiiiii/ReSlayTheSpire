@@ -92,7 +92,7 @@ internal class MapManager : SingletonCS<MapManager>
     public static readonly Stream<GenerateParam, GenerateParam> DijkstraStream;
     static readonly GenerateParam generateParam = new (new MapData(), Instance.go);
 
-    public static Observable<int> DoorCount = new(0);
+    public static readonly Observable<int> DoorCount = new(0);
     static MapManager()
     {
         GenerateStream = Streamer

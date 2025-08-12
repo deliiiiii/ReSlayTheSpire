@@ -21,7 +21,8 @@ public class InteractCasterReticle : MonoBehaviour
                     lastIr.Value = null;
                     return;
                 }
-                if (!Physics.Raycast(ray, out var hit, radius, TarLayer))
+                if (!Physics.Raycast(ray, out var hit, radius) || 
+                    (TarLayer.value & (1 << hit.collider.gameObject.layer)) == 0)
                 {
                     lastIr.Value = null;
                     PlayerMono.InteractInfo.Value = null;

@@ -7228,7 +7228,7 @@ MonoBehaviour:
   Light: {fileID: 705507994}
   TitlePnl: {fileID: 1860195759}
   StartBox: {fileID: 561411437}
-  MouseCaster: {fileID: 484465443}
+  TitleCaster: {fileID: 1860195761}
   Hitobj: {fileID: 481490614}
   StartIr: {fileID: 1837913291}
   FirstBtnPnl: {fileID: 2052055091}
@@ -39985,7 +39985,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8c3925612f0634f4d85a3842fb515c62, type: 3}
   - {fileID: 8300000, guid: 02af76aa3b5792a458d03007c0c32778, type: 3}
   - {fileID: 8300000, guid: a13d0ba77c7ae434289d45b8ebe2260a, type: 3}
-  BGMVioletLineIns: {fileID: 8300000, guid: 7bd86c3fa1578ff468a67921d0edc1fb, type: 3}
+  - {fileID: 8300000, guid: 7bd86c3fa1578ff468a67921d0edc1fb, type: 3}
+  BGMVioletLineIns: {fileID: 8300000, guid: 8c3925612f0634f4d85a3842fb515c62, type: 3}
   BGMReturnsIns: {fileID: 8300000, guid: 1efe0a5503d46cc4ea232c16ab63916b, type: 3}
 --- !u!1 &1848948352
 GameObject:
@@ -40402,6 +40403,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1860195760}
+  - component: {fileID: 1860195761}
   m_Layer: 0
   m_Name: TitlePnl
   m_TagString: Untagged
@@ -40435,6 +40437,25 @@ RectTransform:
   m_AnchoredPosition: {x: -4.89, y: 5.1870117}
   m_SizeDelta: {x: 3.8099997, y: 1.7790003}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1860195761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860195759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c5d24895e314f09905fae0693556d45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TarInteractLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  HitWallLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  HitWallObj: {fileID: 481490613}
 --- !u!43 &1871208881
 Mesh:
   m_ObjectHideFlags: 0

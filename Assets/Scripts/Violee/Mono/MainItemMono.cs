@@ -23,15 +23,6 @@ public class MainItemMono : Singleton<MainItemMono>
 
     void _Init()
     {
-        var loaded = Saver.Load<Observable<int>>("DataVioleT", "WakeUpCount");
-        if (loaded == null)
-        {
-            Saver.Save("DataVioleT", "WakeUpCount", WinCount);
-        }
-        else
-        {
-            WinCount.Value = loaded.Value;
-        }
         WinCount.OnValueChangedAfter += _ => Saver.Save("DataVioleT", "WakeUpCount", WinCount);
         
         GameManager.PlayingState.OnUpdate(_ =>
@@ -52,6 +43,15 @@ public class MainItemMono : Singleton<MainItemMono>
     
     public static void OnDijkstraEnd()
     {
+        var loaded = Saver.Load<Observable<int>>("DataVioleT", "WakeUpCount");
+        if (loaded == null)
+        {
+            Saver.Save("DataVioleT", "WakeUpCount", WinCount);
+        }
+        else
+        {
+            WinCount.Value = loaded.Value;
+        }
         Instance.mainItemData = new MainItemData();
         WinCount.Value = Saver.Load<Observable<int>>("DataVioleT", "WakeUpCount");
         var winRewardDic = new List<Action>()
