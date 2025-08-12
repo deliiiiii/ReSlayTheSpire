@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: SettingsConfig
   m_EditorClassIdentifier: 
   IsDevelop: 1
-  quickKey: 1
-  showBoxCost: 1
+  quickKey: 0
+  showBoxCost: 0
   disablePause: 0
   dreamCatcherGachaUp: 0
   addTiltWall: 0
-  useSmallMap: 1
+  useSmallMap: 0
   BoxCostPosOffset: 0.37
   TimeSpeed: 30
   PointSpriteFlashTime: 1
   PointSpriteAlpha: 255
-  interactCasterRadius: 0.3
+  interactCasterRadius: 0.35
   YieldCount: 0.02

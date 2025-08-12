@@ -32,7 +32,8 @@ namespace Violee
 
         public InteractInfo GetCb()
         {
-            if (!Data.HasDoor || Data.Opened.Value)
+            if (!Data.HasDoor || Data.Opened.Value ||
+                (PlayerMono.PlayerCurPoint.Value?.NextPointAndWallSet.All(pair => pair.Item2 != Data) ?? true))
                 return InteractInfo.CreateUnActive();
             // TODO BuffedValue...
             var energyCost = 1;

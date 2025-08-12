@@ -51,20 +51,26 @@ public class SceneItemData : DataBase
     [ShowIf(nameof(IsActive))] public string DesPre = string.Empty;
     [Header("HasCount")]
     [ShowIf(nameof(IsActive))] public bool HasCount;
-    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasCount))] public int Count;
-    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasCount))] public List<GameObject> HideAfterUseList = [];
-    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasCount))] public List<GameObject> ShowAfterUseList = [];
-    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasCount))] public string RunOutDes = string.Empty;
+    bool OnlyHasCount => IsActive && HasCount;
+    [ShowIf(nameof(OnlyHasCount))] public int Count;
+    [ShowIf(nameof(OnlyHasCount))] public List<GameObject> HideAfterUseList = [];
+    [ShowIf(nameof(OnlyHasCount))] public List<GameObject> ShowAfterUseList = [];
+    [ShowIf(nameof(OnlyHasCount))] public string RunOutDes = string.Empty;
+    [ShowIf(nameof(OnlyHasCount))] public bool HasDebuff;
+    bool OnlyHasDebuff => OnlyHasCount && HasDebuff;
+    [ShowIf(nameof(OnlyHasDebuff))] public string RunOutEffectDes = string.Empty;
 
     
     [Header("HasConBuff")]
     public bool HasConBuff;
-    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasConBuff))] [ReadOnly] public ObservableBool ConBuffActivated = new(false);
-    [ShowIf(nameof(IsActive))][ShowIf(nameof(HasConBuff))] [SerializeReference] public ConsistentBuffData ConBuffData = null!;
+    bool OnlyHasConBuff => IsActive && HasConBuff;
+    [ShowIf(nameof(OnlyHasConBuff))] [ReadOnly] public ObservableBool ConBuffActivated = new(false);
+    [ShowIf(nameof(OnlyHasConBuff))] [SerializeReference] public ConsistentBuffData ConBuffData = null!;
     
     [Header("IsSleep")]
     [ShowIf(nameof(IsActive))]public bool IsSleep;
-    [ShowIf(nameof(IsActive))][ShowIf(nameof(IsSleep))] public float SleepTime = 2.89f;
+    bool OnlyIsSleep => IsActive && IsSleep;
+    [ShowIf(nameof(OnlyIsSleep))] public float SleepTime = 2.89f;
     
     [Header("Camera")]
     [ShowIf(nameof(IsActive))][SerializeField] InteractHasCamera? iCamera;
@@ -162,7 +168,9 @@ public class SceneItemData : DataBase
         sb.Append(GetInteractDesInternal());
         if (IsActive && HasCount && Count >= 2)
         {
-            sb.Append($"(可用{Count}次)");
+            sb.Append($"(可用{Count}次)。");
+            if(HasDebuff)
+                sb.Append($"用完后，{RunOutEffectDes}");
         }
         if (HasConBuff)
             sb.Append($"\n{ConBuffData.Des}。");
@@ -215,6 +223,15 @@ public class PurpleSceneItemData : SceneItemData
     {
         base.UseEffect();
         MainItemMono.GainEnergy(Energy);
+    }
+
+    protected override void OnUseEnd()
+    {
+        base.OnUseEnd();
+        if (HasDebuff)
+        {
+            MainItemMono.CostCreativity(2);
+        }
     }
 }
 

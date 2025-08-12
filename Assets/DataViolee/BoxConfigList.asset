@@ -16,7 +16,7 @@ MonoBehaviour:
   width: 5
   startPos: {x: 2, y: 8}
   StartDir: 4
-  DoorPossibility: 0.666
+  DoorPossibility: 0.8
   WalkInTolerance: 0.49
   boxConfigs:
   - Walls: 0
@@ -63,10 +63,10 @@ MonoBehaviour:
     BasicWeight: 400
   - Walls: 80
     Texture2D: {fileID: 2800000, guid: bd6424a9d430ff64c8c8d18c94907581, type: 3}
-    BasicWeight: 0
+    BasicWeight: 200
   - Walls: 160
     Texture2D: {fileID: 2800000, guid: 3218f70dcae473b478e0e6fb14b3818d, type: 3}
-    BasicWeight: 0
+    BasicWeight: 200
   - Walls: 240
     Texture2D: {fileID: 2800000, guid: 047864e3767443846b3f08b42cdf2158, type: 3}
-    BasicWeight: 0
+    BasicWeight: 200

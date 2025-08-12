@@ -34,7 +34,7 @@ public class BoxConfigList : ScriptableObject
             ret.ForEach(b =>
             {
                 if (BoxHelper.HasTiltWallByByte(b.Walls))
-                    b.BasicWeight += 200;
+                    b.BasicWeight = 335;
             });
             return ret;
         }
