@@ -170,13 +170,17 @@ public class SceneItemData : DataBase
         {
             sb.Append($"(可用{Count}次)。");
             if(HasDebuff)
-                sb.Append($"用完后，{RunOutEffectDes}");
+                sb.Append($"用完后，{GetDebuffDesInternal()}");
         }
         if (HasConBuff)
             sb.Append($"\n{ConBuffData.Des}。");
         return sb.ToString();
     }
     protected virtual string GetInteractDesInternal()
+    {
+        return string.Empty;
+    }
+    protected virtual string GetDebuffDesInternal()
     {
         return string.Empty;
     }
@@ -217,6 +221,11 @@ public class PurpleSceneItemData : SceneItemData
     protected override string GetInteractDesInternal()
     {
         return $"恢复{Energy}点精力";
+    }
+
+    protected override string GetDebuffDesInternal()
+    {
+        return $"灵感-2";
     }
 
     protected override void UseEffect()
