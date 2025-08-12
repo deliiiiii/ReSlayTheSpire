@@ -17,6 +17,11 @@ public class BuffManager : SingletonCS<BuffManager>
         winBuffList.OnAdd += b => OnAddWindowBuff?.Invoke(b);
         conBuffList.OnAdd += b => OnAddConBuff?.Invoke(b);
         conBuffList.OnRemove += b => OnRemoveConBuff?.Invoke(b);
+        
+        GameManager.PlayingState.OnExit(() =>
+        {
+            conBuffList.MyClear();
+        });
     }
 
 
