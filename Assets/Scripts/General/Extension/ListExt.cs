@@ -23,7 +23,13 @@ public static class ListExt
         return 0;
     }
 
-    public static T RandomItem<T>(this List<T> list, [CanBeNull] Func<T, bool> filter = null, [CanBeNull] Func<T, int> weightFunc = null)
+    public static T RandomItem<T>(this List<T> list)
+        => RandomItem(list, null, null);
+    [CanBeNull] public static T RandomItem<T>(this List<T> list, Func<T, bool> filter)
+        => RandomItem(list, filter, null);
+    public static T RandomItem<T>(this List<T> list, [CanBeNull] Func<T, int> weightFunc)
+        => RandomItem(list, null, weightFunc);
+    [CanBeNull] public static T RandomItem<T>(this List<T> list, [CanBeNull] Func<T, bool> filter, [CanBeNull] Func<T, int> weightFunc)
     {
         filter ??= _ => true;
         if (weightFunc != null)

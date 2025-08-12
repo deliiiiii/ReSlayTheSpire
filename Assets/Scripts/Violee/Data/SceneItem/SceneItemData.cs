@@ -326,8 +326,7 @@ public class RecordPlayerItemData : SceneItemData
 
     public void PlayOne()
     {
-        curClip = AudioMono.BGMRecordPlayer.RandomItem(x => x != curClip && x != AudioMono.CurClip);
-        AudioMono.PlayLoop(audioSource, curClip);
+        AudioMono.PlayLoop(audioSource, AudioMono.GetRandomClips);
     }
 }
 

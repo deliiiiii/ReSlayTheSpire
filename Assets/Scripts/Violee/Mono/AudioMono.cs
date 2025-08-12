@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,61 +9,77 @@ namespace Violee;
 
 public class AudioMono : Singleton<AudioMono>
 {
-    // ReSharper disable once IdentifierTypo
     public required AudioClip BGMKisekiIns;
-    public required List<AudioClip> BGMRecordPlayerIns;
-    public required AudioClip BGMVioletLineIns;
     public required AudioClip BGMReturnsIns;
-
-    public static List<AudioClip> BGMRecordPlayer => Instance.BGMRecordPlayerIns;
-
+    static List<AudioClip> recordList = null!;
     static AudioSource titleBGMSource = null!;
     static AudioSource? curBGMSource;
     
-    List<AudioSource> seSource = [];
-    const int SeCount = 10;
+    // List<AudioSource> seSource = [];
+    // const int SeCount = 10;
 
     public static event Action<AudioClip>? OnUnPauseLoop;
 
-    public static void Init() => Instance._Init();
-    void _Init()
+    public static async Task Init() => await Instance._Init();
+    async Task _Init()
     {
-        base.Awake();
-        titleBGMSource = gameObject.AddComponent<AudioSource>();
-        for (int i = 0; i < SeCount; i++)
+        try
         {
-            var go = new GameObject("SE_" + i);
-            go.transform.SetParent(transform);
-            seSource.Add(go.AddComponent<AudioSource>());
+            recordList = await Resourcer.LoadAssetsAsyncByLabel<AudioClip>("VioleTAudio");
+        
+            titleBGMSource = gameObject.AddComponent<AudioSource>();
+            // for (int i = 0; i < SeCount; i++)
+            // {
+            //     var go = new GameObject("SE_" + i);
+            //     go.transform.SetParent(transform);
+            //     seSource.Add(go.AddComponent<AudioSource>());
+            // }
+
+            GameManager.TitleState.OnEnter(() =>
+            {
+                lastestClips.Add(BGMKisekiIns);
+                PlayLoop(titleBGMSource, () => BGMKisekiIns);
+            });
         }
-
-        GameManager.TitleState.OnEnter(() =>
+        catch (Exception e)
         {
-            PlayLoop(titleBGMSource, BGMKisekiIns);
-        });
-
+            MyDebug.LogError(e);
+            throw;
+        }
     }
 
-
+    [ShowInInspector]
+    static readonly HashSet<AudioClip> lastestClips = [];
+    public static AudioClip GetRandomClips()
+    {
+        if (lastestClips.Count == recordList.Count)
+        {
+            lastestClips.Clear();
+        }
+        var newClip = recordList.RandomItem(x => x != CurClip && !lastestClips.Contains(x)) ?? Instance.BGMKisekiIns;
+        lastestClips.Add(newClip);
+        return newClip;
+    }
     public static void PlayWinLoop()
     {
-        PlayLoop(titleBGMSource, Instance.BGMReturnsIns);
+        PlayLoop(titleBGMSource, () => Instance.BGMReturnsIns);
     }
-    public static void PlayLoop(AudioSource audioSource, AudioClip clip, float volume = 0.4f, bool mute = false, bool loop = true)
+    
+    public static void PlayLoop(AudioSource audioSource, Func<AudioClip> getClip, float volume = 0.4f, bool mute = false, bool loop = true)
     {
         if(curBGMSource != null)
             curBGMSource.Pause();
+        // audioSource.getClip = recordList.RandomItem();
+        audioSource.clip = getClip();
+        audioSource.volume = volume;
+        audioSource.mute = mute;
+        audioSource.loop = loop;
+        audioSource.Play();
         curBGMSource = audioSource;
-        // audioSource.clip = BGMRecordPlayer.RandomItem();
-        curBGMSource.clip = clip;
-        curBGMSource.volume = volume;
-        curBGMSource.mute = mute;
-        curBGMSource.loop = loop;
-        curBGMSource.Play();
         UnPauseLoop();
     }
     
-    public static AudioClip? CurClip => curBGMSource!.clip;
+    public static AudioClip? CurClip => curBGMSource?.clip;
 
     static void PauseLoop()
     {
@@ -77,15 +94,15 @@ public class AudioMono : Singleton<AudioMono>
         OnUnPauseLoop?.Invoke(curBGMSource.clip);
     }
     
-    [Button]
-    public void PlayTest()
-    {
-        PlayLoop(titleBGMSource, Instance.BGMKisekiIns);
-    }
-    
-    [Button]
-    public void PlayTestRandom()
-    {
-        PlayLoop(titleBGMSource, BGMRecordPlayer.RandomItem());
-    }
+    // [Button]
+    // public void PlayTest()
+    // {
+    //     PlayLoop(titleBGMSource, Instance.BGMKisekiIns);
+    // }
+    //
+    // [Button]
+    // public void PlayTestRandom()
+    // {
+    //     PlayLoop(titleBGMSource, recordList.RandomItem());
+    // }
 }

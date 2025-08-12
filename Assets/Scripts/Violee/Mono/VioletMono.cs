@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 #if UNITY_EDITOR
 using Sirenix.Utilities.Editor;
@@ -18,14 +19,18 @@ public class VioletMono : Singleton<VioletMono>
 #if UNITY_EDITOR
         Binder.Update(_ => GUIHelper.RequestRepaint());
 #endif
+        _ = InitAll();
+    }
+
+    static async Task InitAll()
+    {
         Configer.Init();
         GameView.Init();
         MapView.Init();
         MainItemMono.Init();
-        AudioMono.Init();
+        await AudioMono.Init();
         GameManager.EnterTitle();
     }
-
     // public Vector2Int CreateSceneItemPos;
     // public EBoxDir D;
     // public SceneItemModel SceneItemModel = null!;

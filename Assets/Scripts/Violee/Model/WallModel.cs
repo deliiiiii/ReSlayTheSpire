@@ -78,8 +78,8 @@ namespace Violee
                         pool.Remove(added);
                         ret.Add(added);
                         lastestDrawnConfigs.Enqueue(added);
-                        if (lastestDrawnConfigs.Count >= 10)
-                            lastestDrawnConfigs.Dequeue();
+                        if (lastestDrawnConfigs.Count >= 15)
+                            lastestDrawnConfigs.Clear();
                     });
                     return ret;
                 }

@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: ce7f416894bb52b4c889c890aeb32539
   m_currentHash:
     serializedVersion: 2
-    Hash: f2c6e6f5db58350e2e638af5418c0726
+    Hash: 7ce79722c3ea5e29aef614f61e2f9d7e
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -88,6 +88,7 @@ MonoBehaviour:
     m_LabelNames:
     - DDellii
     - BoxFigma
+    - VioleTAudio
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 92468b259f906c54f8f2e4250d056bda, type: 2}
