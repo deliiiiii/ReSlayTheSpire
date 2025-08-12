@@ -124,10 +124,10 @@ public class SceneItemData : DataBase
             Count--;
             HideAfterUseList[Count].SetActive(false);
             ShowAfterUseList[Count].SetActive(true);
-            // if (Count <= 0)
-            // {
-            //     OnRunOut?.Invoke();
-            // }
+            if (Count <= 0)
+            {
+                OnRunOut();
+            }
         }
         UseEffect();
         OnUseEnd();
@@ -154,6 +154,11 @@ public class SceneItemData : DataBase
             ConBuffActivated.Value = true;
         }
     }
+
+    protected virtual void OnRunOut()
+    {
+        
+    }
     public string GetInteractDes()
     {
         var sb = new StringBuilder();
@@ -166,12 +171,14 @@ public class SceneItemData : DataBase
         if (StaminaCost > 0)
             sb.Append($"消耗{StaminaCost}点体力,\n");
         sb.Append(GetInteractDesInternal());
-        if (IsActive && HasCount && Count >= 2)
+        if (IsActive && HasCount)
         {
-            sb.Append($"(可用{Count}次)。");
+            if(Count >= 2)
+                sb.Append($"(可用{Count}次)。");
             if(HasDebuff)
-                sb.Append($"用完后，{GetDebuffDesInternal()}");
+                sb.Append($"\n用完后，{GetDebuffDesInternal()}");
         }
+        
         if (HasConBuff)
             sb.Append($"\n{ConBuffData.Des}。");
         return sb.ToString();
@@ -234,9 +241,9 @@ public class PurpleSceneItemData : SceneItemData
         MainItemMono.GainEnergy(Energy);
     }
 
-    protected override void OnUseEnd()
+    protected override void OnRunOut()
     {
-        base.OnUseEnd();
+        base.OnRunOut();
         if (HasDebuff)
         {
             MainItemMono.CostCreativity(2);

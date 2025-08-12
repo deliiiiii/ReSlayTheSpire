@@ -201,6 +201,7 @@ internal class MapManager : SingletonCS<MapManager>
             p.BelongBox.SceneItemDataMyList.MyAdd(model.Data.CreateNew([p.Dir]));
         });
         DoorCount.Value--;
+        WallModel.ClearLatestDrawn();
     }
     #endregion
     

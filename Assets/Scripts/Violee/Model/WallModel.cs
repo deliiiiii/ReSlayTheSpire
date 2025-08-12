@@ -78,7 +78,7 @@ namespace Violee
                         pool.Remove(added);
                         ret.Add(added);
                         lastestDrawnConfigs.Enqueue(added);
-                        if (lastestDrawnConfigs.Count >= 12)
+                        if (lastestDrawnConfigs.Count >= 10)
                             lastestDrawnConfigs.Dequeue();
                     });
                     return ret;
@@ -87,6 +87,7 @@ namespace Violee
         }
         
         static readonly Queue<DrawConfig> lastestDrawnConfigs = [];
+        public static void ClearLatestDrawn() => lastestDrawnConfigs.Clear();
         
         void SetAllActive()
         {

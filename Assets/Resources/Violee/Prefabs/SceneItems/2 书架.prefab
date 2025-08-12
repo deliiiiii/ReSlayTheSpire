@@ -1117,19 +1117,19 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: e714841548468ff48af0236c8aca5a58, type: 3}
     - target: {fileID: 7035799403508661513, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.69218016
+      value: 0.46498662
       objectReference: {fileID: 0}
     - target: {fileID: 7035799403508661513, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.69218016
+      value: 0.46498662
       objectReference: {fileID: 0}
     - target: {fileID: 7035799403508661513, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.69218016
+      value: 0.46498662
       objectReference: {fileID: 0}
     - target: {fileID: 7035799403508661513, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.72
+      value: -5.98
       objectReference: {fileID: 0}
     - target: {fileID: 7035799403508661513, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1137,7 +1137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7035799403508661513, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.22
+      value: -6.64
       objectReference: {fileID: 0}
     - target: {fileID: 7035799403508661513, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1232,6 +1232,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788462231552002].HasDebuff
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788462231552002].RunOutDes
       value: "\u8FD9\u91CC\u7684\u77E5\u8BC6\u5DF2\u7136\u67AF\u7AED\u3002"
       objectReference: {fileID: 0}
@@ -1286,6 +1290,10 @@ PrefabInstance:
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788462231552002].ConBuffHasCount
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
+      propertyPath: managedReferences[746788462231552002].RunOutEffectDes
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788462231552002].ConBuffActivated
