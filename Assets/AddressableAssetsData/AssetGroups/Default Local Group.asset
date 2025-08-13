@@ -217,6 +217,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - VioleTAudio
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d1b14311ce810e2439e121afa50e008a
+    m_Address: Assets/Art/VoileT/Audio/RAISE A SUILEN - TWIN TALE (instrumental).mp3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - VioleTAudio
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d2262981af6a51b44a0e72a60c9a41f9
     m_Address: Assets/Art/BoxFigma/Box4.png
     m_ReadOnly: 0
