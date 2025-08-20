@@ -25,12 +25,12 @@ public class MainItemMono : Singleton<MainItemMono>
     {
         WinCount.OnValueChangedAfter += _ => Saver.Save("DataVioleT", "WakeUpCount", WinCount);
         
-        GameManager.PlayingState.OnUpdate(_ =>
+        GameState.PlayingState.OnUpdate(_ =>
         {
             if (!Configer.SettingsConfig.IsDevelop)
                 return;
             if (Input.GetKey(KeyCode.D)
-                && Input.GetKey(KeyCode.E)
+                // && Input.GetKey(KeyCode.E)
                 && Input.GetKey(KeyCode.L)
                 && Input.GetKey(KeyCode.I))
             {
@@ -38,6 +38,27 @@ public class MainItemMono : Singleton<MainItemMono>
                 Instance.mainItemData.Energy.Count = 813;
                 Instance.mainItemData.Creativity.Count = 1130;
             }
+            
+            // if (Input.GetKey(KeyCode.D))
+            // {
+            //     MyDebug.Log("D");
+            // }
+            // if (Input.GetKey(KeyCode.F))
+            // {
+            //     MyDebug.Log("F");
+            // }
+            // if (Input.GetKey(KeyCode.E))
+            // {
+            //     MyDebug.Log("E");
+            // }
+            // if (Input.GetKey(KeyCode.L))
+            // {
+            //     MyDebug.Log("L");
+            // }
+            // if (Input.GetKey(KeyCode.I))
+            // {
+            //     MyDebug.Log("I");
+            // }
         });
     }
     

@@ -4,40 +4,54 @@ using UnityEngine;
 
 namespace Violee;
 
-[Serializable]
-public class WindowInfo
+public interface IMyListItem
 {
-    public required string Des;
-    [NonSerialized]
-    public Action? OnAddEvent;
-    [NonSerialized]
-    public Action<WindowInfo>? OnAddEventWithArg;
-    [NonSerialized]
-    public Action? OnRemoveEvent;
-    [NonSerialized]
-    public Action<WindowInfo>? OnRemoveEventWithArg;
+    public Action? OnAddEvent { get;}
+    public Action? OnRemoveEvent{ get;}
+    public Action? CallOnAddEventWithArg{ get; }
+    public Action? CallOnRemoveEventWithArg{ get; }
+    
 }
 
 [Serializable]
-public class PauseWindowInfo : WindowInfo
+public abstract class WindowInfo<T> : IMyListItem where T : WindowInfo<T>
+{
+    public required string Des;
+   
+
+    public Action<T>? OnAddEventWithArg;
+    public Action<T>? OnRemoveEventWithArg;
+    
+    public Action? OnAddEvent { get; set; }
+    public Action? OnRemoveEvent{ get; set; }
+    public Action CallOnAddEventWithArg => () => OnAddEventWithArg?.Invoke((this as T)!);
+
+    public Action CallOnRemoveEventWithArg => () => OnRemoveEventWithArg?.Invoke((this as T)!);
+}
+
+public class SimpleWindowInfo : WindowInfo<SimpleWindowInfo>;
+
+
+[Serializable]
+public class PauseWindowInfo : WindowInfo<PauseWindowInfo>
 {
     public BindDataState TarState = null!;
 }
 
 [Serializable]
-public class StringWindowInfo : WindowInfo
+public class StringWindowInfo : WindowInfo<StringWindowInfo>
 {
     public Func<string> GetWord = () => string.Empty;
 }
 
 [Serializable]
-public class BuffWindowInfo : WindowInfo
+public class BuffWindowInfo : WindowInfo<BuffWindowInfo>
 {
     public GameObject? BuffWindowIns;
 }
 
 [Serializable]
-public class ExchangeWindowInfo : WindowInfo
+public class ExchangeWindowInfo : WindowInfo<ExchangeWindowInfo>
 {
     public Action? OnExchangeEnd;
 }
@@ -45,17 +59,27 @@ public class ExchangeWindowInfo : WindowInfo
 
 public static class WindowInfoExt
 {
-    public static WindowInfo OnAdd(this WindowInfo info, Action action)
+    public static WindowInfo<T> OnAdd<T>(this WindowInfo<T> info, Action action)
+        where T : WindowInfo<T>
     {
         info.OnAddEvent += action;
         return info;
     }
-    public static WindowInfo OnRemove(this WindowInfo info, Action action)
+    public static WindowInfo<T> OnRemove<T>(this WindowInfo<T> info, Action action)
+        where T : WindowInfo<T>
     {
         info.OnRemoveEvent += action;
         return info;
     }
-    public static WindowInfo OnRemoveWithArg(this WindowInfo info, Action<WindowInfo> action)
+
+    public static WindowInfo<T> OnAddWithArg<T>(this WindowInfo<T> info, Action<T> action)
+        where T : WindowInfo<T>
+    {
+        info.OnAddEventWithArg += action;
+        return info;
+    }
+    public static WindowInfo<T> OnRemoveWithArg<T>(this WindowInfo<T> info, Action<T> action)
+        where T : WindowInfo<T>
     {
         info.OnRemoveEventWithArg += action;
         return info;
@@ -67,14 +91,14 @@ public class WindowManager : Singleton<WindowManager>
     
     static WindowManager()
     {
-        GameManager.TitleState
+        GameState.TitleState
             .OnEnter(() =>
             {
                 WindowList.MyClear();
                 EnableCursor();
             });
 
-        GameManager.PlayingState
+        GameState.PlayingState
             .OnUpdate(dt =>
             {
                 if (Input.GetKey(KeyCode.LeftAlt) || HasWindow)
@@ -89,7 +113,7 @@ public class WindowManager : Singleton<WindowManager>
                 }
             });
 
-        GameManager.WinningState
+        GameState.WinningState
             .OnEnter(() =>
             {
                 WindowList.MyAdd(WinWindow);
@@ -105,15 +129,15 @@ public class WindowManager : Singleton<WindowManager>
     }
     
     
-    public static readonly MyList<WindowInfo> WindowList
+    public static readonly MyList<IMyListItem> WindowList
         = new ([], x =>
         {
             x.OnAddEvent?.Invoke();
-            x.OnAddEventWithArg?.Invoke(x);
+            x.CallOnAddEventWithArg?.Invoke();
         }, x =>
         {
             x.OnRemoveEvent?.Invoke();
-            x.OnRemoveEventWithArg?.Invoke(x);
+            x.CallOnRemoveEventWithArg?.Invoke();
         });
     public static readonly PauseWindowInfo PauseWindow = new ()
     {
@@ -121,7 +145,7 @@ public class WindowManager : Singleton<WindowManager>
         OnAddEvent = EnableCursor,
         OnRemoveEvent = DisableCursor
     };
-    public static readonly WindowInfo WatchingClockWindow = new ()
+    public static readonly SimpleWindowInfo WatchingClockWindow = new ()
     {
         // WindowType = EWindowType.WaitingSceneItem,
         Des = "看时间...",
@@ -130,6 +154,29 @@ public class WindowManager : Singleton<WindowManager>
     {
         Des = "Winning",
     };
+    
+    public static readonly SimpleWindowInfo FullMapWindow = new ()
+    {
+        Des = "全屏地图"
+    };
+    public static readonly SimpleWindowInfo SleepWindow = new ()
+    {
+        Des = "休息..."
+    };
+    public static readonly SimpleWindowInfo DrawWindow = new ()
+    {
+        Des = "选择房间装修中"
+    };
+    public static readonly StringWindowInfo VioleTWindow = new ()
+    {
+        Des = "VioleT",
+    };
+
+    public static readonly SimpleWindowInfo DicWindow = new()
+    {
+        Des = "查看单词表",
+    };
+    
     
     static void EnableCursor()
     {
@@ -160,7 +207,7 @@ public class WindowManager : Singleton<WindowManager>
     {
         if (Configer.SettingsConfig.DisablePause)
             return;
-        if (!GameManager.IsPlaying)
+        if (!GameState.IsPlaying)
             return;
         if (!Application.isFocused)
         {
@@ -174,7 +221,7 @@ public class WindowManager : Singleton<WindowManager>
                 WindowList.MyAdd(PauseWindow);
             else
             {
-                PauseWindow.TarState = GameManager.PlayingState;
+                PauseWindow.TarState = GameState.PlayingState;
                 WindowList.MyRemove(PauseWindow);
             }
         }

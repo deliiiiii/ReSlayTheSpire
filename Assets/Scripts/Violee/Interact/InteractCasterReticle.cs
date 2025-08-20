@@ -12,7 +12,7 @@ public class InteractCasterReticle : MonoBehaviour
     {
         var playerCamera = CameraMono.PlayerCamera;
         var radius = Configer.SettingsConfig.InteractCasterRadius;
-        GameManager.PlayingState
+        GameState.PlayingState
             .OnUpdate(_ =>
             {
                 var ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));

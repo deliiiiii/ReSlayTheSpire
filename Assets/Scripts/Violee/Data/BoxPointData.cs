@@ -44,7 +44,7 @@ public static class BoxPointDataExt
     }
 }
 [Serializable]
-public class BoxPointData : DataBase, IComparable
+public class BoxPointData : DataBase
 {
     public EBoxDir Dir;
     public Observable<int> CostWall = new (int.MaxValue / 2);
@@ -138,13 +138,6 @@ public class BoxPointData : DataBase, IComparable
     {
         return BelongBox.HasSWallByDir(Dir, out _) || 
                NextPointAndWallSet.Any(pair => pair.Item2.WallType == BoxHelper.WallDirToType(BoxHelper.OppositeDirDic[Dir]));
-    }
-        
-    public int CompareTo(object obj)
-    {
-        if (obj is not BoxPointData other)
-            return 1;
-        return this == other ? 0 : 1;
     }
 }
 

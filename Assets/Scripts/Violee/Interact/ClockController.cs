@@ -43,12 +43,12 @@ public class ClockController : MonoBehaviour
                 return;
             Tick();
         };
-        GameManager.PlayingState.OnUpdate(act);
+        GameState.PlayingState.OnUpdate(act);
     }
 
     void OnDisable()
     {
-        GameManager.PlayingState.RemoveUpdate(act);
+        GameState.PlayingState.RemoveUpdate(act);
     }
 
     public void Tick()

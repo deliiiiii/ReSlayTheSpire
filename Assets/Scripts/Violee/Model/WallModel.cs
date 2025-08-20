@@ -35,10 +35,7 @@ namespace Violee
             if (!Data.HasDoor || Data.Opened.Value ||
                 (PlayerMono.PlayerCurPoint.Value?.NextPointAndWallSet.All(pair => pair.Item2 != Data) ?? true))
                 return InteractInfo.CreateUnActive();
-            // TODO BuffedValue...
-            var energyCost = 1;
-            if (BuffManager.IsWithRecordPlayer)
-                energyCost -= 1;
+            var energyCost = MainItemMono.CheckEnergyCost(1);
             if (MainItemMono.EnergyCount < energyCost)
             {
                 return InteractInfo.CreateInvalid($"精力不足{energyCost}，无法打开门");

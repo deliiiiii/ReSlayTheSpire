@@ -56,7 +56,7 @@ public class ScrambleView : Singleton<ScrambleView>
                 layoutGroup.enabled = true;
                 contentSizeFitter.enabled = true;
                 WindowManager.WindowList.MyRemove(ExchangeWindow);
-                (w as ExchangeWindowInfo)!.OnExchangeEnd?.Invoke();
+                w.OnExchangeEnd?.Invoke();
             });
             
         };
@@ -83,9 +83,8 @@ public class ScrambleView : Singleton<ScrambleView>
             var icon = ScrambleIconParent.GetChild(i).GetComponent<ScrambleIcon>();
             AllList.Add(icon);
         }
-        GameView.VioleTWindow.OnAddEventWithArg += w =>
+        WindowManager.VioleTWindow.OnAddEventWithArg += w =>
         {
-            var vWindow = w as StringWindowInfo;
             SelectedList.MyClear();
             DisableBtn();
             AllList.Clear();
@@ -96,7 +95,7 @@ public class ScrambleView : Singleton<ScrambleView>
                 AllList.Add(icon);
             }
 
-            var word = vWindow!.GetWord();
+            var word = w.GetWord();
             for(int i = 0; i < word.Length; i++)
             {
                 AllList[i].Btn.interactable = true;

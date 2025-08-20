@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Violee;
 
@@ -15,7 +16,7 @@ public class SceneItemData : DataBase
 {
     public SceneItemData CreateNew(HashSet<EBoxDir> dirSet)
     {
-        var newModel = GameObject.Instantiate(OriginModel);
+        var newModel = Object.Instantiate(OriginModel);
         var newData = newModel.Data;
         newData.InsModel = newModel;
         if(IsAir)
@@ -47,7 +48,12 @@ public class SceneItemData : DataBase
     [ShowIf(nameof(HasSpreadPos))] public MyList<SceneMiniItemModel> HasSpreadObjList = [];
     
     public bool IsActive;
-    [ShowIf(nameof(IsActive))] public BuffedInt StaminaCost = new(1);
+
+    [field: SerializeField, ShowIf(nameof(IsActive))]
+    public int StaminaCost
+    {
+        get => MainItemMono.CheckStaminaCost(field);
+    } = 1;
     [ShowIf(nameof(IsActive))] public string DesPre = string.Empty;
     [Header("HasCount")]
     [ShowIf(nameof(IsActive))] public bool HasCount;
@@ -81,7 +87,6 @@ public class SceneItemData : DataBase
 
     protected virtual void BindBuff()
     {
-        StaminaCost.SetBuff(MainItemMono.CheckStaminaCost);
         ConBuffActivated.OnValueChangedAfter += _ => PlayerMono.RefreshCurPointBuff();
     }
     
@@ -193,7 +198,7 @@ public class SceneItemData : DataBase
     }
     public virtual Color DesColor() => this switch
     {
-        {StaminaCost.Value : > 0} => Color.blue,
+        {StaminaCost : > 0} => Color.blue,
         // FoodItemData => Color.cyan, 
         _ => Color.white,
     };
@@ -390,7 +395,7 @@ public class DreamCatcherItemData : SceneItemData
     public SerializableDictionary<ECatchType, int> CatchCostDic = [];
 
     
-    Func<int> getStaminaCost = null!;
+    Func<int>? getStaminaCost;
     Func<int> getEnergyCost = null!;
     Func<int> getCreativityCost = null!;
     protected override void BindBuff()
@@ -416,6 +421,7 @@ public class DreamCatcherItemData : SceneItemData
     protected override bool CanUseInternal(out string failReason)
     {
         failReason = string.Empty;
+        getStaminaCost ??= () => 0;
         Func<bool> catchCost = CurCatchType switch
         {
             ECatchType.Stamina => () =>
@@ -461,7 +467,7 @@ public class DreamCatcherItemData : SceneItemData
         {
             ECatchType.Stamina => () =>
             {
-                MainItemMono.CostStamina(getStaminaCost());
+                MainItemMono.CostStamina(getStaminaCost!());
             },
             ECatchType.Energy => () =>
             {

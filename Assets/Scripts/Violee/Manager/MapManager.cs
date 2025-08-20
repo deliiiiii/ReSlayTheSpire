@@ -131,7 +131,7 @@ internal class MapManager : SingletonCS<MapManager>
                 param.DateTime = new DateTime(2025, 8, 14, 8, 0, 0);
             });
 
-        GameManager.TitleState.OnEnter(() =>
+        GameState.TitleState.OnEnter(() =>
         {
             InitCollections(generateParam);
         });

@@ -72,7 +72,7 @@ class MapView : ViewBase<MapView>
             TitleCaster.gameObject.SetActive(true);
         }
         
-        GameManager.TitleState
+        GameState.TitleState
             .OnEnter(() =>
             {
                 CameraMono.TitleVirtualCamera.LookAt = Hitobj;
@@ -102,13 +102,13 @@ class MapView : ViewBase<MapView>
                 TitleCaster.gameObject.SetActive(false);
             });
 
-        GameManager.PlayingState.OnEnter(() =>
+        GameState.PlayingState.OnEnter(() =>
         {
             CameraMono.PlayerVirtualCamera.enabled = true;
         });
         
         
-        GameView.DrawWindow
+        WindowManager.DrawWindow
             .OnAdd(() =>
             {
                 var doorInteractInfo = PlayerMono.InteractInfo.Value as DoorInteractInfo;

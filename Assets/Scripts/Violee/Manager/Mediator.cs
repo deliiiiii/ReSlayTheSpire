@@ -4,7 +4,7 @@ public static class Mediator
 {
     public static void Mediate()
     {
-        GameManager.PlayingState
+        GameState.PlayingState
             .OnUpdate(dt =>
             {
                 var curPoint = PlayerMono.PlayerCurPoint.Value;
@@ -13,6 +13,17 @@ public static class Mediator
                 if (!WindowManager.HasPaused)
                     MapManager.OnPlaying(dt);
                 PlayerMono.TickOnPlaying(WindowManager.HasWindow);
+            });
+        
+        MapManager.GenerateStream
+            .Where(_ => GameState.IsTitle)
+            .OnBegin(_ => GameState.EnterGeneratingMap());
+        MapManager.DijkstraStream
+            .OnEnd(param =>
+            {
+                PlayerMono.OnDijkstraEnd(BoxHelper.Pos2DTo3DPoint(param.StartPos, param.StartDir));
+                MainItemMono.OnDijkstraEnd();
+                GameState.EnterPlaying();
             });
     }
 }

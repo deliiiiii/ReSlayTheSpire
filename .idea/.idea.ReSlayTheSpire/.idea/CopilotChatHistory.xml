@@ -4,6 +4,11 @@
     <option name="conversations">
       <list>
         <Conversation>
+          <option name="createTime" value="1755674768173" />
+          <option name="id" value="0198c65ef32d7da48b414fc262956151" />
+          <option name="updateTime" value="1755674768173" />
+        </Conversation>
+        <Conversation>
           <option name="createTime" value="1754403379072" />
           <option name="id" value="01987a971780711cb66868bf0bec3e21" />
           <option name="title" value="@SerializableDictionary.cs JsonSerializationExcept" />
@@ -63,15 +68,7 @@
                 <option name="status" value="SUCCESS" />
                 <option name="totalToken" value="10349" />
                 <option name="variables">
-                  <list>
-                    <FileVariable>
-                      <option name="endOffset" value="26" />
-                      <option name="identifierHash" value="VARIABLE_69ffd557684a90d50ee958eed48f3a8518464f7876d9681c03b5858fbc113e01" />
-                      <option name="selectedVariable">
-                        <Object />
-                      </option>
-                    </FileVariable>
-                  </list>
+                  <list />
                 </option>
               </Turn>
             </list>
@@ -202,24 +199,7 @@
                 </option>
                 <option name="totalToken" value="10362" />
                 <option name="variables">
-                  <list>
-                    <FileVariable>
-                      <option name="endOffset" value="192" />
-                      <option name="identifierHash" value="VARIABLE_4718dc52e896f16c5ae02b02aac48a01d7822276317fc967360e2bf6a7820005" />
-                      <option name="selectedVariable">
-                        <Object />
-                      </option>
-                      <option name="startOffset" value="171" />
-                    </FileVariable>
-                    <FileVariable>
-                      <option name="endOffset" value="204" />
-                      <option name="identifierHash" value="VARIABLE_4c2c757f8bf87a96c2429a701196dad6dd34a5d49c416128157794abc88049cd" />
-                      <option name="selectedVariable">
-                        <Object />
-                      </option>
-                      <option name="startOffset" value="193" />
-                    </FileVariable>
-                  </list>
+                  <list />
                 </option>
               </Turn>
             </list>

@@ -9,28 +9,6 @@ namespace Violee.View;
 
 class GameView : ViewBase<GameView>
 {
-    static readonly WindowInfo fullMapWindow = new ()
-    {
-        Des = "全屏地图"
-    };
-    static readonly WindowInfo sleepWindow = new ()
-    {
-        Des = "休息..."
-    };
-    public static readonly WindowInfo DrawWindow = new ()
-    {
-        Des = "选择房间装修中"
-    };
-    public static readonly StringWindowInfo VioleTWindow = new ()
-    {
-        Des = "VioleT",
-    };
-
-    public static readonly WindowInfo DicWindow = new()
-    {
-        Des = "查看单词表",
-    };
-
     public static void Init() => Instance.IBL();
     protected override void IBL()
     {
@@ -60,16 +38,16 @@ class GameView : ViewBase<GameView>
             }
         };
         
-        fullMapWindow
+        WindowManager.FullMapWindow
             .OnAdd(ShowFullScreenMap)
             .OnRemove(ShowMinimap);
-        sleepWindow
+        WindowManager.SleepWindow
             .OnAdd(() => SleepPnl.SetActive(true))
             .OnRemove(() => SleepPnl.SetActive(false));
-        DrawWindow
+        WindowManager.DrawWindow
             .OnAdd(() => DrawPnl.SetActive(true))
             .OnRemove(() => DrawPnl.SetActive(false));
-        VioleTWindow
+        WindowManager.VioleTWindow
             .OnAdd(() =>
             {
                 RefreshDic();
@@ -81,8 +59,8 @@ class GameView : ViewBase<GameView>
                 VioleTBtn.interactable = true;
                 VioleTPnl.SetActive(false);
             });
-        VioleTWindow.GetWord = () => VioleTTxt.text;
-        DicWindow
+        WindowManager.VioleTWindow.GetWord = () => VioleTTxt.text;
+        WindowManager.DicWindow
             .OnAdd(() =>
             {
                 DicScrollPnl.SetActive(true);
@@ -96,7 +74,7 @@ class GameView : ViewBase<GameView>
             try
             {
                 AudioMono.PlayWinLoop();
-                WinWordTxt.text = (w as StringWindowInfo)!.GetWord();
+                WinWordTxt.text = w.GetWord();
                 PauseOrWinPnl.SetActive(true);
                 WinPnl.SetActive(true);
                 await FadeIn(PauseOrWinPnl.GetComponent<Image>(), 2f);
@@ -148,8 +126,8 @@ class GameView : ViewBase<GameView>
                 PauseOrWinPnl.SetActive(false);
                 PausePnl.SetActive(false);
                 ReturnToTitleBtn.gameObject.SetActive(false);
-                if((w as PauseWindowInfo)!.TarState == GameManager.TitleState)
-                    GameManager.EnterTitle();
+                if(w.TarState == GameState.TitleState)
+                    GameState.EnterTitle();
             });
         WindowManager.WatchingClockWindow
             .OnAdd(() => CameraMono.SceneItemVirtualCamera.gameObject.SetActive(true))
@@ -165,7 +143,7 @@ class GameView : ViewBase<GameView>
         Binder.From(MapManager.DoorCount).To(v => DoorCountTxt.text = v.ToString());
         
         Binder.From(PlayerMono.InteractInfo).To(info => {
-            NormalReticle.SetActive(GameManager.IsPlaying && info == null);
+            NormalReticle.SetActive(GameState.IsPlaying && info == null);
             FindReticle.SetActive(info != null);
             SceneItemInfoPnl.SetActive(info != null);
             SceneItemInfoTxt.text = info?.Description ?? "";
@@ -184,10 +162,10 @@ class GameView : ViewBase<GameView>
             }
         };
         
-        GameManager.GeneratingMapState
+        GameState.GeneratingMapState
             .OnEnter(() => LoadPnl.SetActive(true))
             .OnExit(() => LoadPnl.SetActive(false));
-        GameManager.PlayingState
+        GameState.PlayingState
             .OnEnter(() =>
             {
                 MiniItemPnl.SetActive(true);
@@ -207,9 +185,9 @@ class GameView : ViewBase<GameView>
                 if (Input.GetKeyDown(KeyCode.Tab) && !WindowManager.HasPaused)
                 {
                     if (isMinimap)
-                        WindowManager.WindowList.MyAdd(fullMapWindow);
+                        WindowManager.WindowList.MyAdd(WindowManager.FullMapWindow);
                     else if(!isMinimap)
-                        WindowManager.WindowList.MyRemove(fullMapWindow);
+                        WindowManager.WindowList.MyRemove(WindowManager.FullMapWindow);
                 }
             })
             .OnExit(() =>
@@ -257,7 +235,7 @@ class GameView : ViewBase<GameView>
         };
 
         
-        Binder.From(MinimapBtn).To(() => WindowManager.WindowList.MyAdd(fullMapWindow));
+        Binder.From(MinimapBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.FullMapWindow));
         Binder.From(RedrawBtn).To(() =>
         {
             MainItemMono.CostCreativity(MainItemMono.CheckCreativityCost(1));
@@ -265,12 +243,12 @@ class GameView : ViewBase<GameView>
         });
         Binder.From(ContinueBtn).To(() =>
         {
-            WindowManager.PauseWindow.TarState = GameManager.PlayingState;
+            WindowManager.PauseWindow.TarState = GameState.PlayingState;
             WindowManager.WindowList.MyRemove(WindowManager.PauseWindow);
         });
         Binder.From(ReturnToTitleBtn).To(() =>
         {
-            WindowManager.PauseWindow.TarState = GameManager.TitleState;
+            WindowManager.PauseWindow.TarState = GameState.TitleState;
             WindowManager.WindowList.MyRemove(WindowManager.PauseWindow);
             WindowManager.WindowList.MyRemove(WindowManager.WinWindow);
         });
@@ -289,10 +267,10 @@ class GameView : ViewBase<GameView>
                 throw;
             }
         });
-        Binder.From(VioleTBtn).To(() => WindowManager.WindowList.MyAdd(VioleTWindow));
-        Binder.From(VioleTPnlCloseBtn).To(() => WindowManager.WindowList.MyRemove(VioleTWindow));
-        Binder.From(DicScrollOpenBtn).To(() => WindowManager.WindowList.MyAdd(DicWindow));
-        Binder.From(DicScrollCloseBtn).To(() => WindowManager.WindowList.MyRemove(DicWindow));
+        Binder.From(VioleTBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.VioleTWindow));
+        Binder.From(VioleTPnlCloseBtn).To(() => WindowManager.WindowList.MyRemove(WindowManager.VioleTWindow));
+        Binder.From(DicScrollOpenBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.DicWindow));
+        Binder.From(DicScrollCloseBtn).To(() => WindowManager.WindowList.MyRemove(WindowManager.DicWindow));
 
         Binder.From(ResetWinCountBtn).To(() => MainItemMono.WinCount.Value = 0);
         InitDic();
@@ -450,10 +428,10 @@ class GameView : ViewBase<GameView>
             {
                 if (itemInfo.SceneItemData.IsSleep)
                 {
-                    WindowManager.WindowList.MyAdd(sleepWindow);
+                    WindowManager.WindowList.MyAdd(WindowManager.SleepWindow);
                     await FadeIn(SleepPnl.GetComponent<Image>(), itemInfo.SceneItemData.SleepTime / 2);
                     await FadeOut(SleepPnl.GetComponent<Image>(), itemInfo.SceneItemData.SleepTime / 2);
-                    WindowManager.WindowList.MyRemove(sleepWindow);
+                    WindowManager.WindowList.MyRemove(WindowManager.SleepWindow);
                 }
                     
                 if (itemInfo.SceneItemData.HasCamera)
@@ -465,8 +443,8 @@ class GameView : ViewBase<GameView>
             }
             else if (info is DoorInteractInfo doorInfo)
             {
-                WindowManager.WindowList.MyAdd(DrawWindow);
-                WindowManager.WindowList.MyAdd(fullMapWindow);
+                WindowManager.WindowList.MyAdd(WindowManager.DrawWindow);
+                WindowManager.WindowList.MyAdd(WindowManager.FullMapWindow);
                 DrawBtnContent.DisableAllChildren();
                 showDrawConfigsAct = () =>
                 {
@@ -483,8 +461,8 @@ class GameView : ViewBase<GameView>
                         roomIcon.Btn.onClick.AddListener(() =>
                         {
                             MapManager.DrawAtWall(doorInfo.InsidePointDataList, doorInfo.WallData, config);
-                            WindowManager.WindowList.MyRemove(DrawWindow);
-                            WindowManager.WindowList.MyRemove(fullMapWindow);
+                            WindowManager.WindowList.MyRemove(WindowManager.DrawWindow);
+                            WindowManager.WindowList.MyRemove(WindowManager.FullMapWindow);
                         });
                         roomIcon.gameObject.SetActive(true);
                     }
@@ -579,7 +557,7 @@ class GameView : ViewBase<GameView>
         var anyFit = false;
         wordLineList.ForEach(w =>
         {
-            anyFit |= w.RefreshGottenLetter(VioleTWindow.GetWord());
+            anyFit |= w.RefreshGottenLetter(WindowManager.VioleTWindow.GetWord());
         });
         RedPoint.SetActive(anyFit);
     }
@@ -588,7 +566,7 @@ class GameView : ViewBase<GameView>
     {
         MainItemMono.WinCount.Value++;
         WindowManager.WinWindow.GetWord = () => word;
-        GameManager.EnterWinning();
+        GameState.EnterWinning();
     }
     #endregion
 }

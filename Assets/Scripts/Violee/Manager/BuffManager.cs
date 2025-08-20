@@ -17,11 +17,6 @@ public class BuffManager : SingletonCS<BuffManager>
         winBuffList.OnAdd += b => OnAddWindowBuff?.Invoke(b);
         conBuffList.OnAdd += b => OnAddConBuff?.Invoke(b);
         conBuffList.OnRemove += b => OnRemoveConBuff?.Invoke(b);
-        
-        GameManager.PlayingState.OnExit(() =>
-        {
-            conBuffList.MyClear();
-        });
     }
 
 
@@ -61,7 +56,7 @@ public class BuffManager : SingletonCS<BuffManager>
                 return;
             if (i.ConBuffData.HasCount && i.ConBuffData.Count <= 0)
                 return;
-            i.ConBuffData.Count.OnValueChangedAfter += _ => PlayerMono.RefreshCurPointBuff();
+            i.ConBuffData.Count.OnValueChangedAfter += _ => RefreshConBuffs(items);
             conBuffList.MyAdd(i.ConBuffData);
         });
     }

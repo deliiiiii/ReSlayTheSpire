@@ -16,7 +16,7 @@ public class PlayerMono : Singleton<PlayerMono>
 
         OnPlayerEnter += p =>
         {
-            if (!p.Visited)
+            if (!(p?.Visited ?? true))
             {
                 p.VisitConnected();
                 // MyDebug.Log($"First Enter Point!!{p.BelongBox.Pos2D}:{p.Dir}");
@@ -25,8 +25,8 @@ public class PlayerMono : Singleton<PlayerMono>
             RefreshCurPointBuff();
         };
         
-        GameManager.TitleState.OnUpdate(_ => TickOnTitle());
-        GameManager.PlayingState
+        GameState.TitleState.OnUpdate(_ => TickOnTitle());
+        GameState.PlayingState
             .OnEnter(OnEnterPlaying)
             .OnExit(OnExitPlaying);
     }
@@ -37,8 +37,8 @@ public class PlayerMono : Singleton<PlayerMono>
     }
     
     
-    public static event Action<BoxPointData>? OnPlayerEnter;
-    public static event Action<BoxPointData>? OnPlayerExit;
+    static event Action<BoxPointData?>? OnPlayerExit;
+    static event Action<BoxPointData?>? OnPlayerEnter;
     public static readonly Observable<BoxPointData> PlayerCurPoint 
         = new(null!, p => OnPlayerExit?.Invoke(p), p => OnPlayerEnter?.Invoke(p));
     
@@ -57,6 +57,8 @@ public class PlayerMono : Singleton<PlayerMono>
     {
         staGameObject.SetActive(false);
         fpc.OnEnterPlayingState();
+        // 会让BuffManager清空ConsistentBuff，随后View的显示也会清空
+        PlayerCurPoint.Value = null;
     }
 
     public static void TickOnTitle()

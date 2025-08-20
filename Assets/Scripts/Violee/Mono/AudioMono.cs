@@ -35,7 +35,7 @@ public class AudioMono : Singleton<AudioMono>
             //     seSource.Add(go.AddComponent<AudioSource>());
             // }
 
-            GameManager.TitleState.OnEnter(() =>
+            GameState.TitleState.OnEnter(() =>
             {
                 lastestClips.Add(BGMKisekiIns);
                 PlayLoop(titleBGMSource, () => BGMKisekiIns);
