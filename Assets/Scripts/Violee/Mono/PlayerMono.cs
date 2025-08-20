@@ -25,7 +25,10 @@ public class PlayerMono : Singleton<PlayerMono>
             RefreshCurPointBuff();
         };
         
-        
+        GameManager.TitleState.OnUpdate(_ => TickOnTitle());
+        GameManager.PlayingState
+            .OnEnter(OnEnterPlaying)
+            .OnExit(OnExitPlaying);
     }
     
     public static void RefreshCurPointBuff()

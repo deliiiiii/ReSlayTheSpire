@@ -34,7 +34,7 @@ class GameView : ViewBase<GameView>
     public static void Init() => Instance.IBL();
     protected override void IBL()
     {
-        GameManager.WindowList.OnAdd += w =>
+        WindowManager.WindowList.OnAdd += w =>
         {
             NormalReticle.SetActive(false);
             FindReticle.SetActive(false);
@@ -45,14 +45,14 @@ class GameView : ViewBase<GameView>
                 buffWindow.BuffWindowIns = windowIns.gameObject;
                 windowIns.CloseButton.onClick.AddListener(() =>
                 {
-                    GameManager.WindowList.MyRemove(buffWindow);
+                    WindowManager.WindowList.MyRemove(buffWindow);
                 });
                 windowIns.DesTxt.text = buffWindow.Des;
                 windowIns.gameObject.SetActive(true);
             }
         };
 
-        GameManager.WindowList.OnRemove += w =>
+        WindowManager.WindowList.OnRemove += w =>
         {
             if (w is BuffWindowInfo buffWindow)
             {
@@ -91,7 +91,7 @@ class GameView : ViewBase<GameView>
             {
                 DicScrollPnl.SetActive(false);
             });
-        GameManager.WinWindow.OnAddEventWithArg += async void (w) =>
+        WindowManager.WinWindow.OnAddEventWithArg += async void (w) =>
         {
             try
             {
@@ -121,7 +121,7 @@ class GameView : ViewBase<GameView>
                 throw;
             }
         };
-        GameManager.WinWindow.OnRemove(() =>
+        WindowManager.WinWindow.OnRemove(() =>
             {
                 PauseOrWinPnl.SetActive(false);
                 WinPnl.SetActive(false);
@@ -135,7 +135,7 @@ class GameView : ViewBase<GameView>
                 ReturnToTitleBtn.gameObject.SetActive(false);
             });
             
-        GameManager.PauseWindow
+        WindowManager.PauseWindow
             .OnAdd(() =>
             {
                 PauseOrWinPnl.GetComponent<Image>().color = PauseOrWinPnl.GetComponent<Image>().color.SetAlpha(0.9f);
@@ -151,7 +151,7 @@ class GameView : ViewBase<GameView>
                 if((w as PauseWindowInfo)!.TarState == GameManager.TitleState)
                     GameManager.EnterTitle();
             });
-        GameManager.WatchingClockWindow
+        WindowManager.WatchingClockWindow
             .OnAdd(() => CameraMono.SceneItemVirtualCamera.gameObject.SetActive(true))
             .OnRemove(() =>
             {
@@ -204,12 +204,12 @@ class GameView : ViewBase<GameView>
                 RedrawCostTxt.text = MainItemMono.CheckCreativityCost(1).ToString();
                 ChangeFOV(dt);
                 
-                if (Input.GetKeyDown(KeyCode.Tab) && !GameManager.HasPaused)
+                if (Input.GetKeyDown(KeyCode.Tab) && !WindowManager.HasPaused)
                 {
                     if (isMinimap)
-                        GameManager.WindowList.MyAdd(fullMapWindow);
+                        WindowManager.WindowList.MyAdd(fullMapWindow);
                     else if(!isMinimap)
-                        GameManager.WindowList.MyRemove(fullMapWindow);
+                        WindowManager.WindowList.MyRemove(fullMapWindow);
                 }
             })
             .OnExit(() =>
@@ -257,7 +257,7 @@ class GameView : ViewBase<GameView>
         };
 
         
-        Binder.From(MinimapBtn).To(() => GameManager.WindowList.MyAdd(fullMapWindow));
+        Binder.From(MinimapBtn).To(() => WindowManager.WindowList.MyAdd(fullMapWindow));
         Binder.From(RedrawBtn).To(() =>
         {
             MainItemMono.CostCreativity(MainItemMono.CheckCreativityCost(1));
@@ -265,14 +265,14 @@ class GameView : ViewBase<GameView>
         });
         Binder.From(ContinueBtn).To(() =>
         {
-            GameManager.PauseWindow.TarState = GameManager.PlayingState;
-            GameManager.WindowList.MyRemove(GameManager.PauseWindow);
+            WindowManager.PauseWindow.TarState = GameManager.PlayingState;
+            WindowManager.WindowList.MyRemove(WindowManager.PauseWindow);
         });
         Binder.From(ReturnToTitleBtn).To(() =>
         {
-            GameManager.PauseWindow.TarState = GameManager.TitleState;
-            GameManager.WindowList.MyRemove(GameManager.PauseWindow);
-            GameManager.WindowList.MyRemove(GameManager.WinWindow);
+            WindowManager.PauseWindow.TarState = GameManager.TitleState;
+            WindowManager.WindowList.MyRemove(WindowManager.PauseWindow);
+            WindowManager.WindowList.MyRemove(WindowManager.WinWindow);
         });
         Binder.From(ExitWatchingItemBtn).To(async () =>
         {
@@ -281,7 +281,7 @@ class GameView : ViewBase<GameView>
                 ExitWatchingItemBtn.gameObject.SetActive(false);
                 CameraMono.SceneItemVirtualCamera.gameObject.SetActive(false);
                 await Task.Delay(CameraMono.PlayerEase);
-                GameManager.WindowList.MyRemove(GameManager.WatchingClockWindow);
+                WindowManager.WindowList.MyRemove(WindowManager.WatchingClockWindow);
             }
             catch (Exception e)
             {
@@ -289,10 +289,10 @@ class GameView : ViewBase<GameView>
                 throw;
             }
         });
-        Binder.From(VioleTBtn).To(() => GameManager.WindowList.MyAdd(VioleTWindow));
-        Binder.From(VioleTPnlCloseBtn).To(() => GameManager.WindowList.MyRemove(VioleTWindow));
-        Binder.From(DicScrollOpenBtn).To(() => GameManager.WindowList.MyAdd(DicWindow));
-        Binder.From(DicScrollCloseBtn).To(() => GameManager.WindowList.MyRemove(DicWindow));
+        Binder.From(VioleTBtn).To(() => WindowManager.WindowList.MyAdd(VioleTWindow));
+        Binder.From(VioleTPnlCloseBtn).To(() => WindowManager.WindowList.MyRemove(VioleTWindow));
+        Binder.From(DicScrollOpenBtn).To(() => WindowManager.WindowList.MyAdd(DicWindow));
+        Binder.From(DicScrollCloseBtn).To(() => WindowManager.WindowList.MyRemove(DicWindow));
 
         Binder.From(ResetWinCountBtn).To(() => MainItemMono.WinCount.Value = 0);
         InitDic();
@@ -450,23 +450,23 @@ class GameView : ViewBase<GameView>
             {
                 if (itemInfo.SceneItemData.IsSleep)
                 {
-                    GameManager.WindowList.MyAdd(sleepWindow);
+                    WindowManager.WindowList.MyAdd(sleepWindow);
                     await FadeIn(SleepPnl.GetComponent<Image>(), itemInfo.SceneItemData.SleepTime / 2);
                     await FadeOut(SleepPnl.GetComponent<Image>(), itemInfo.SceneItemData.SleepTime / 2);
-                    GameManager.WindowList.MyRemove(sleepWindow);
+                    WindowManager.WindowList.MyRemove(sleepWindow);
                 }
                     
                 if (itemInfo.SceneItemData.HasCamera)
                 {
-                    GameManager.WindowList.MyAdd(GameManager.WatchingClockWindow);
+                    WindowManager.WindowList.MyAdd(WindowManager.WatchingClockWindow);
                     await Task.Delay(CameraMono.SceneItemEase);
                     ExitWatchingItemBtn.gameObject.SetActive(true);
                 }
             }
             else if (info is DoorInteractInfo doorInfo)
             {
-                GameManager.WindowList.MyAdd(DrawWindow);
-                GameManager.WindowList.MyAdd(fullMapWindow);
+                WindowManager.WindowList.MyAdd(DrawWindow);
+                WindowManager.WindowList.MyAdd(fullMapWindow);
                 DrawBtnContent.DisableAllChildren();
                 showDrawConfigsAct = () =>
                 {
@@ -483,8 +483,8 @@ class GameView : ViewBase<GameView>
                         roomIcon.Btn.onClick.AddListener(() =>
                         {
                             MapManager.DrawAtWall(doorInfo.InsidePointDataList, doorInfo.WallData, config);
-                            GameManager.WindowList.MyRemove(DrawWindow);
-                            GameManager.WindowList.MyRemove(fullMapWindow);
+                            WindowManager.WindowList.MyRemove(DrawWindow);
+                            WindowManager.WindowList.MyRemove(fullMapWindow);
                         });
                         roomIcon.gameObject.SetActive(true);
                     }
@@ -587,7 +587,7 @@ class GameView : ViewBase<GameView>
     void Win(string word)
     {
         MainItemMono.WinCount.Value++;
-        GameManager.WinWindow.GetWord = () => word;
+        WindowManager.WinWindow.GetWord = () => word;
         GameManager.EnterWinning();
     }
     #endregion

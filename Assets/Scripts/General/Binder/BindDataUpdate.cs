@@ -32,5 +32,8 @@ public enum EUpdatePri
 {
     Default = -1,
     Input,
+    
+    Fsm = 10,
+    
     Sprite,
 }

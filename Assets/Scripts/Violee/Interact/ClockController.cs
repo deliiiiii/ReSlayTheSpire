@@ -20,12 +20,11 @@ public class ClockController : MonoBehaviour
         data = GetComponent<SceneItemModel>().Data;
         curTime.OnValueChangedFull += (oldTime, newTime) =>
         {
-            if (GameManager.WindowList.Contains(GameManager.WatchingClockWindow)
-                && PlayerMono.InteractInfo.Value is SceneItemInteractInfo 
+            if (WindowManager.HasWatchingClock
+                && PlayerMono.InteractInfo.Value is SceneItemInteractInfo
                     { SceneItemData: ClockItemData { Watched: false } clockItemData }
                 && clockItemData == data
-                && newTime.Hour != oldTime.Hour
-               )
+                && newTime.Hour != oldTime.Hour)
             {
                 int energy = newTime.Hour == 10 ? 4 : 2;
                 var des = $"叮! 时间到了{newTime.Hour}点整...!\n鉴于你凝思了许久，精力+{energy}点。";
@@ -40,7 +39,7 @@ public class ClockController : MonoBehaviour
     {
         act ??= _ =>
         {
-            if (GameManager.HasPaused)
+            if (WindowManager.HasPaused)
                 return;
             Tick();
         };

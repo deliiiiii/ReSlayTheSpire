@@ -16,7 +16,7 @@ public class InteractCasterReticle : MonoBehaviour
             .OnUpdate(_ =>
             {
                 var ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-                if (GameManager.HasWindow)
+                if (WindowManager.HasWindow)
                 {
                     lastIr.Value = null;
                     return;

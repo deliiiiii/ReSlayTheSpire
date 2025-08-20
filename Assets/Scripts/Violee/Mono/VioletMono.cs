@@ -11,8 +11,8 @@ namespace Violee;
 
 public class VioletMono : Singleton<VioletMono>
 {
-    [ShowInInspector] public string GameState => GameManager.GameState;
-    [ShowInInspector] public List<WindowInfo> WindowList => GameManager.WindowList;
+    // [ShowInInspector] public string GameState => GameManager.GameState;
+    // [ShowInInspector] public List<WindowInfo> WindowList => WindowManager.WindowList;
 
     void Start()
     {
@@ -29,6 +29,9 @@ public class VioletMono : Singleton<VioletMono>
         MapView.Init();
         MainItemMono.Init();
         await AudioMono.Init();
+
+        Mediator.Mediate();
+        
         GameManager.EnterTitle();
     }
     // public Vector2Int CreateSceneItemPos;

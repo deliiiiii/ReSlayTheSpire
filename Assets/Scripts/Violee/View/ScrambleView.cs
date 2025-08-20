@@ -55,7 +55,7 @@ public class ScrambleView : Singleton<ScrambleView>
                 second.transform.SetSiblingIndex(second.ID);
                 layoutGroup.enabled = true;
                 contentSizeFitter.enabled = true;
-                GameManager.WindowList.MyRemove(ExchangeWindow);
+                WindowManager.WindowList.MyRemove(ExchangeWindow);
                 (w as ExchangeWindowInfo)!.OnExchangeEnd?.Invoke();
             });
             
@@ -114,7 +114,7 @@ public class ScrambleView : Singleton<ScrambleView>
     {
         // ExchangeButton.interactable = true;
         ExchangeTxt.text = "交换中";
-        GameManager.WindowList.MyAdd(ExchangeWindow);
+        WindowManager.WindowList.MyAdd(ExchangeWindow);
     }
 
     void DisableBtn()
