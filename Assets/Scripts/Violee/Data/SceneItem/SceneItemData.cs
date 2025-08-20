@@ -390,7 +390,7 @@ public class DreamCatcherItemData : SceneItemData
     public SerializableDictionary<ECatchType, int> CatchCostDic = [];
 
     
-    Func<int>? getStaminaCost;
+    Func<int> getStaminaCost = null!;
     Func<int> getEnergyCost = null!;
     Func<int> getCreativityCost = null!;
     protected override void BindBuff()

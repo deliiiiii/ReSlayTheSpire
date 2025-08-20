@@ -28,15 +28,18 @@ public class BoxConfigList : ScriptableObject
     {
         get
         {
-            if(!Configer.SettingsConfig.AddTiltWall)
-                return boxConfigs;
-            List<BoxConfig> ret = [..boxConfigs];
-            ret.ForEach(b =>
+            if (!Configer.SettingsConfig.AddTiltWall)
             {
-                if (BoxHelper.HasTiltWallByByte(b.Walls))
-                    b.BasicWeight = 335;
-            });
-            return ret;
+                boxConfigs
+                    .Where(b => BoxHelper.HasTiltWallByByte(b.Walls))
+                    .ForEach(b => b.BasicWeight = 0);
+                return boxConfigs;
+            }
+            
+            boxConfigs
+                .Where(b => BoxHelper.HasTiltWallByByte(b.Walls))
+                .ForEach(b => b.BasicWeight = 335);
+            return boxConfigs;
         }
     }
 }
