@@ -6,8 +6,39 @@ using Unit = System.ValueTuple;
 
 namespace Violee;
 
+// public abstract class Maybe<T>
+// {
+//     sealed class Just(T value) : Maybe<T>
+//     {
+//         public T JustValue { get; } = value;
+//     }
+//
+//     public sealed class Nothing : Maybe<T>
+//     {
+//         public static Nothing Instance { get; } = new Nothing();
+//     }
+//
+//     public bool HasValue => this != Nothing.Instance; 
+//     
+//     public static Maybe<T> Of(T value) => 
+//         value != null ? new Just(value) : Nothing.Instance;
+//     
+//     public static implicit operator T(Maybe<T> maybe) =>
+//         maybe switch
+//         {
+//             Just just => just.JustValue,
+//             _ => default!,
+//         };
+//     public static implicit operator Maybe<T>(T value) => Of(value);
+//     public T Value => this switch
+//     {
+//         Just just => just.JustValue,
+//         _ => default!
+//     };
+// }
 
-public class Dele<T>;
+
+// public class Dele<T>;
 public static class Streamer
 {
     // public static bool GreaterFull<TClass, T>(TClass tClass, Func<TClass, T> func, T val)
@@ -124,14 +155,12 @@ public static class Streamer
         });
         return SetTriggerAsync(self, trigger);
     }
-    public static Stream<T, TOut> SetTrigger<T, TOut>(this Func<T> self, Func<T, TOut> act)
-    {
-        var trigger = new Func<T, Task<TOut>>(x => Task.FromResult(act(x)));
-        return SetTriggerAsync(self, trigger);
-    }
-    
-    public static Stream<T, TOut> SetTriggerAsync<T, TOut>(this Func<T> self, Func<T, Task<TOut>> func)
-    {
-        return new Stream<T, TOut>(startFunc: self, triggerFuncAsync: func);
-    }
+    public static Stream<T, TOut> SetTrigger<T, TOut>(this Func<T> self, Func<T, TOut> act) 
+        => SetTriggerAsync(self, x => Task.FromResult(act(x)));
+
+    public static Stream<T, TOut> SetTriggerAsync<T, TOut>(this Func<T> self, Func<T, Task<TOut>> func) 
+        => new(startFunc: self, triggerFuncAsync: func);
+
+    public static Stream<Unit, TOut> SetTriggerAsync<TOut>(this Func<Unit> self, Func<Task<TOut>> func)
+        => SetTriggerAsync(self, _ => func());
 }

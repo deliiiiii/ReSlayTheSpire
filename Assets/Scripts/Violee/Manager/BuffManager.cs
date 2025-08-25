@@ -7,6 +7,13 @@ using UnityEngine.Events;
 
 namespace Violee;
 
+public interface IMayHasConBuff
+{
+    public bool HasConBuff { get; }
+    public Observable<bool> ConBuffActivated { get; }
+    public ConsistentBuffData ConBuffData { get; }
+}
+
 public class BuffManager : SingletonCS<BuffManager>
 {
     static readonly MyList<WindowBuffData> winBuffList = [];
@@ -46,7 +53,7 @@ public class BuffManager : SingletonCS<BuffManager>
     static bool ContainsConBuff(EConBuffType conBuffType) 
         => conBuffList.Any(b => b.ConBuffType == conBuffType);
     
-    public static void RefreshConBuffs(IEnumerable<SceneItemData> items)
+    public static void RefreshConBuffs(IEnumerable<IMayHasConBuff> items)
     {
         conBuffList.MyClear();
         

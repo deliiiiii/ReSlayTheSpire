@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 namespace Violee;
 
 [Serializable]
-public class SceneItemData : DataBase
+public class SceneItemData : DataBase, IMayHasConBuff
 {
     public SceneItemData CreateNew(HashSet<EBoxDir> dirSet)
     {
@@ -66,12 +66,12 @@ public class SceneItemData : DataBase
     bool OnlyHasDebuff => OnlyHasCount && HasDebuff;
     [ShowIf(nameof(OnlyHasDebuff))] public string RunOutEffectDes = string.Empty;
 
-    
-    [Header("HasConBuff")]
-    public bool HasConBuff;
+
+    [Header("HasConBuff")] bool conBuffHeader;
+    [field: SerializeField] public bool HasConBuff { get; set; }
     bool OnlyHasConBuff => IsActive && HasConBuff;
-    [ShowIf(nameof(OnlyHasConBuff))] [ReadOnly] public Observable<bool> ConBuffActivated = new(false);
-    [ShowIf(nameof(OnlyHasConBuff))] [SerializeReference] public ConsistentBuffData ConBuffData = null!;
+    [ShowIf(nameof(OnlyHasConBuff))] [field: ReadOnly] public Observable<bool> ConBuffActivated { get; set; } = new(false);
+    [ShowIf(nameof(OnlyHasConBuff))] [field: SerializeReference] public ConsistentBuffData ConBuffData { get; set; } = null!;
     
     [Header("IsSleep")]
     [ShowIf(nameof(IsActive))]public bool IsSleep;

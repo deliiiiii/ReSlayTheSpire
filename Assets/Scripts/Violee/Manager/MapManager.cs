@@ -94,7 +94,7 @@ internal class MapManager : SingletonCS<MapManager>
     static MapManager()
     {
         GenerateStream = Streamer.CreateBind()
-            .SetTriggerAsync(async _ =>
+            .SetTriggerAsync(async () =>
             {
                 InitCollections(generateParam);
                 await GenerateMain(generateParam);

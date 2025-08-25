@@ -8,56 +8,22 @@ using Unit = System.ValueTuple;
 
 namespace Violee;
 
-public abstract class Maybe<T>
-{
-    sealed class Just(T value) : Maybe<T>
-    {
-        public T JustValue { get; } = value;
-    }
-
-    public sealed class Nothing : Maybe<T>
-    {
-        public static Nothing Instance { get; } = new Nothing();
-    }
-
-    public bool HasValue => this != Nothing.Instance; 
-    
-    public static Maybe<T> Of(T value) => 
-        value != null ? new Just(value) : Nothing.Instance;
-    
-    public static implicit operator T(Maybe<T> maybe) =>
-        maybe switch
-        {
-            Just just => just.JustValue,
-            _ => default!,
-        };
-    public static implicit operator Maybe<T>(T value) => Of(value);
-    public T Value => this switch
-    {
-        Just just => just.JustValue,
-        _ => default!
-    };
-}
-
 public interface IStream
 {
     Task CallTriggerAsync();
 }
 
-public class Stream(Func<Unit> startFunc, Func<Unit, Task<Unit>> triggerFuncAsync)
-    : Stream<Unit, Unit>(startFunc, triggerFuncAsync);
-public class Stream<T, TOut>(Func<T?> startFunc, Func<T, Task<TOut>> triggerFuncAsync): 
-    Dele<T>, IStream
+// public class Stream(Func<Unit> startFunc, Func<Unit, Task<Unit>> triggerFuncAsync)
+//     : Stream<Unit, Unit>(startFunc, triggerFuncAsync);
+public class Stream<T, TOut>(Func<T?> startFunc, Func<T, Task<TOut>> triggerFuncAsync): IStream
 {
-    // public Stream(Func<T> startFunc, Func<T, TOut> triggerFunc) 
-    //     : this(startFunc, x => Task.FromResult(triggerFunc(x))){ }
-
     readonly List<(Func<T, Task<T?>>, string)> mappers = [];
     Action<T>? onBegin;
     Func<T, Task>? onBeginAsync;
     Action<TOut>? onEnd;
     Func<TOut, Task>? onEndAsync;
-    List<IStream> endStreams = [];
+    readonly List<IStream> endStreams = [];
+    TOut? result;
     
     public async Task CallTriggerAsync()
     {
@@ -95,8 +61,7 @@ public class Stream<T, TOut>(Func<T?> startFunc, Func<T, Task<TOut>> triggerFunc
             throw;
         }
     }
-    // Maybe<TOut> result { get; set; } = Maybe<TOut>.Nothing.Instance;
-    TOut? result;
+  
     
     static bool CheckValidMethod(MethodInfo methodInfo) => methodInfo.IsStatic || methodInfo.Name.Contains("b__");
     public Stream<T, TOut> Map(Func<T, T?> mapper, string logInfo = "")
