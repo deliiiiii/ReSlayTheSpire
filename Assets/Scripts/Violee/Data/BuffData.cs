@@ -21,7 +21,7 @@ public class ConsistentBuffData : BuffData
 {
     public EConBuffType ConBuffType;
     public bool HasCount;
-    [ShowIf(nameof(HasCount))] public ObservableInt Count = new(0);
+    [ShowIf(nameof(HasCount))] public Observable<int> Count = new(0);
 }
 
 public enum EConBuffType

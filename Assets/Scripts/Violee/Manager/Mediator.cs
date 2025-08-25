@@ -23,7 +23,7 @@ public static class Mediator
             {
                 PlayerMono.OnDijkstraEnd(BoxHelper.Pos2DTo3DPoint(param.StartPos, param.StartDir));
                 MainItemMono.OnDijkstraEnd();
-                GameState.EnterPlaying();
             });
+        MapManager.DijkstraStream.Continue(_ => GameState.EnterPlaying());
     }
 }

@@ -8078,7 +8078,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788510524768258].Des
-      value: "\u6240\u5728\u8FDE\u901A\u5757\u4E0A\uFF0C\u6253\u5F00\u623F\u95E8\u6D88\u8017\u7684\u7CBE\u529B-1"
+      value: "\u6240\u5728\u8FDE\u901A\u5757\u7684\u6240\u6709\u7CBE\u529B\u6D88\u8017-1"
       objectReference: {fileID: 0}
     - target: {fileID: 8900895499418235503, guid: 10cb40024a9522e4f9cc4bc0c8dedb1c, type: 3}
       propertyPath: managedReferences[746788462231552003].Count

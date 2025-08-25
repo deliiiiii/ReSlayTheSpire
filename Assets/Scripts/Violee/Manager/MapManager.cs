@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Sirenix.Utilities;
@@ -21,11 +22,6 @@ public class GenerateParam
     public Vector2Int StartPos => boxConfigList.StartPos;
     public EBoxDir StartDir => boxConfigList.StartDir;
     public MyDictionary<Vector2Int, BoxData> BoxDataDic => mapData.BoxDataDic;
-    public DateTime DateTime
-    {
-        get => mapData.DateTime;
-        set => mapData.DateTime = value;
-    }
 
     public bool InMap(Vector2Int pos) => pos.x >= 0 && pos.x < Width && pos.y >= 0 && pos.y < Height;
     public bool HasBox(Vector2Int pos) => BoxDataDic.ContainsKey(pos);
@@ -90,45 +86,26 @@ internal class MapManager : SingletonCS<MapManager>
 {
     public static readonly Stream<ValueTuple, GenerateParam> GenerateStream;
     public static readonly Stream<GenerateParam, GenerateParam> DijkstraStream;
-    static readonly GenerateParam generateParam = new (new MapData(), Instance.go);
-
+    
     public static readonly Observable<int> DoorCount = new(0);
+    public static DateTime DateTime;
+
+    static readonly GenerateParam generateParam = new (new MapData(), Instance.go);
     static MapManager()
     {
-        GenerateStream = Streamer
-            .Bind(ValueTuple.Create)
+        GenerateStream = Streamer.CreateBind()
             .SetTriggerAsync(async _ =>
             {
-                try
-                {
-                    InitCollections(generateParam);
-                    await GenerateMain(generateParam);
-                    return generateParam;
-                }
-                catch (Exception e)
-                {
-                    MyDebug.LogError(e);
-                    throw;
-                }
-                
+                InitCollections(generateParam);
+                await GenerateMain(generateParam);
+                return generateParam;
             });
         DijkstraStream = GenerateStream
-            .ContinueAsync(async param =>
-            {
-                try
-                {
-                    return await Dijkstra(param);
-                }
-                catch (Exception e)
-                {
-                    MyDebug.LogError(e);
-                    throw;
-                }
-            })
+            .ContinueAsync(Dijkstra)
             .OnEnd(param =>
             {
                 VisitEdgeWalls(param.EdgeWallSet);
-                param.DateTime = new DateTime(2025, 8, 14, 8, 0, 0);
+                DateTime = new DateTime(2025, 8, 14, 8, 0, 0);
             });
 
         GameState.TitleState.OnEnter(() =>
@@ -139,7 +116,7 @@ internal class MapManager : SingletonCS<MapManager>
 
     public static void OnPlaying(float dt)
     {
-        generateParam.DateTime = generateParam.DateTime.AddSeconds(dt * Configer.SettingsConfig.TimeSpeed);
+        DateTime = DateTime.AddSeconds(dt * Configer.SettingsConfig.TimeSpeed);
     }
     
     
@@ -147,7 +124,8 @@ internal class MapManager : SingletonCS<MapManager>
     #region Visit
     public static void GetPlayerVisit(Vector3 playerPos, ref BoxPointData? curPoint)
     {
-        var param = DijkstraStream.SelectResult();
+        // var param = DijkstraStream.SelectResult();
+        var param = generateParam;
         var boxDataDic = param.BoxDataDic;
         var x = playerPos.x;
         var z = playerPos.z;
@@ -182,10 +160,11 @@ internal class MapManager : SingletonCS<MapManager>
     
     
     #region SceneItems
-    public static DateTime GetCurTime() => DijkstraStream.SelectResult(x => x.DateTime);
 
     public static void DrawAtWall(List<BoxPointData> insidePoints, WallData wallData, DrawConfig config)
     {
+        var failedItemNames = new StringBuilder();
+        
         List<BoxPointData> tempPoints = [..insidePoints];
         config.ToDrawModels.ForEach(model =>
         {
@@ -194,7 +173,10 @@ internal class MapManager : SingletonCS<MapManager>
                 : !p.BelongBox.OccupiedFloors.Contains(p.Dir));
             if (p == null)
             {
-                MyDebug.LogWarning("No Enough Points...");
+                var splitName = model.name.Split(' ')[1];
+                MyDebug.LogWarning($"No Enough Points... {splitName}");
+                failedItemNames.Append(failedItemNames.Length == 0 ? "" : ", ");
+                failedItemNames.Append(splitName);
                 return;
             }
             tempPoints.Remove(p);
@@ -202,6 +184,8 @@ internal class MapManager : SingletonCS<MapManager>
         });
         DoorCount.Value--;
         WallModel.ClearLatestDrawn();
+        if(failedItemNames.Length != 0)
+            BuffManager.AddWinBuff($"{failedItemNames} 无法放置。", () => {});
     }
     #endregion
     

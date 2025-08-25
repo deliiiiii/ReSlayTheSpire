@@ -30,7 +30,7 @@ public class MainItemMono : Singleton<MainItemMono>
             if (!Configer.SettingsConfig.IsDevelop)
                 return;
             if (Input.GetKey(KeyCode.D)
-                // && Input.GetKey(KeyCode.E)
+                && Input.GetKey(KeyCode.E)
                 && Input.GetKey(KeyCode.L)
                 && Input.GetKey(KeyCode.I))
             {

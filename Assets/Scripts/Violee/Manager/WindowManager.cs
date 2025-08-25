@@ -111,6 +111,8 @@ public class WindowManager : Singleton<WindowManager>
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
                 }
+
+                CheckGameWindow();
             });
 
         GameState.WinningState
@@ -124,8 +126,6 @@ public class WindowManager : Singleton<WindowManager>
             var ret = CreateAndAddBuffWindow($"{winBuff.Des}");
             ret.OnRemove(() => winBuff.BuffEffect());
         };
-        
-        Binder.Update(_ => CheckGameWindow(), EUpdatePri.Input);
     }
     
     
@@ -206,8 +206,6 @@ public class WindowManager : Singleton<WindowManager>
     static void CheckGameWindow()
     {
         if (Configer.SettingsConfig.DisablePause)
-            return;
-        if (!GameState.IsPlaying)
             return;
         if (!Application.isFocused)
         {

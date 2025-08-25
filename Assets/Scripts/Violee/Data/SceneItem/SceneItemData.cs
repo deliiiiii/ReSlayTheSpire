@@ -70,7 +70,7 @@ public class SceneItemData : DataBase
     [Header("HasConBuff")]
     public bool HasConBuff;
     bool OnlyHasConBuff => IsActive && HasConBuff;
-    [ShowIf(nameof(OnlyHasConBuff))] [ReadOnly] public ObservableBool ConBuffActivated = new(false);
+    [ShowIf(nameof(OnlyHasConBuff))] [ReadOnly] public Observable<bool> ConBuffActivated = new(false);
     [ShowIf(nameof(OnlyHasConBuff))] [SerializeReference] public ConsistentBuffData ConBuffData = null!;
     
     [Header("IsSleep")]

@@ -124,50 +124,50 @@ public class Observable<T>
 }
 
 
-[Serializable]
-public class ObservableInt : Observable<int>
-{
-    public ObservableInt(int initValue) : base(initValue)
-    {
-    }
+// [Serializable]
+// public class ObservableInt : Observable<int>
+// {
+//     public ObservableInt(int initValue) : base(initValue)
+//     {
+//     }
+//
+//     public ObservableInt(int initValue, [CanBeNull] UnityAction<int> before = null, [CanBeNull] UnityAction<int> after = null, bool forceEverySet = false, bool enableRepeatEvent = false) : base(initValue, before, after, forceEverySet, enableRepeatEvent)
+//     {
+//     }
+// }
+//
+// [Serializable]
+// public class ObservableFloat : Observable<float>
+// {
+//     public ObservableFloat(float initValue) : base(initValue)
+//     {
+//     }
+//
+//     public ObservableFloat(float initValue, [CanBeNull] UnityAction<float> before = null, [CanBeNull] UnityAction<float> after = null, bool forceEverySet = false, bool enableRepeatEvent = false) : base(initValue, before, after, forceEverySet, enableRepeatEvent)
+//     {
+//     }
+// }
+//
+// [Serializable]
+// public class ObservableBool : Observable<bool>
+// {
+//     public ObservableBool(bool initValue) : base(initValue)
+//     {
+//     }
+//
+//     public ObservableBool(bool initValue, [CanBeNull] UnityAction<bool> before = null, [CanBeNull] UnityAction<bool> after = null, bool forceEverySet = false, bool enableRepeatEvent = false) : base(initValue, before, after, forceEverySet, enableRepeatEvent)
+//     {
+//     }
+// }
 
-    public ObservableInt(int initValue, [CanBeNull] UnityAction<int> before = null, [CanBeNull] UnityAction<int> after = null, bool forceEverySet = false, bool enableRepeatEvent = false) : base(initValue, before, after, forceEverySet, enableRepeatEvent)
-    {
-    }
-}
-
-[Serializable]
-public class ObservableFloat : Observable<float>
-{
-    public ObservableFloat(float initValue) : base(initValue)
-    {
-    }
-
-    public ObservableFloat(float initValue, [CanBeNull] UnityAction<float> before = null, [CanBeNull] UnityAction<float> after = null, bool forceEverySet = false, bool enableRepeatEvent = false) : base(initValue, before, after, forceEverySet, enableRepeatEvent)
-    {
-    }
-}
-
-[Serializable]
-public class ObservableBool : Observable<bool>
-{
-    public ObservableBool(bool initValue) : base(initValue)
-    {
-    }
-
-    public ObservableBool(bool initValue, [CanBeNull] UnityAction<bool> before = null, [CanBeNull] UnityAction<bool> after = null, bool forceEverySet = false, bool enableRepeatEvent = false) : base(initValue, before, after, forceEverySet, enableRepeatEvent)
-    {
-    }
-}
-
-[Serializable]
-public class ObservableEnum : Observable<Enum>
-{
-    public ObservableEnum(Enum initValue) : base(initValue)
-    {
-    }
-
-    public ObservableEnum(Enum initValue, [CanBeNull] UnityAction<Enum> before = null, [CanBeNull] UnityAction<Enum> after = null, bool forceEverySet = false, bool enableRepeatEvent = false) : base(initValue, before, after, forceEverySet, enableRepeatEvent)
-    {
-    }
-}
+// [Serializable]
+// public class ObservableEnum : Observable<Enum>
+// {
+//     public ObservableEnum(Enum initValue) : base(initValue)
+//     {
+//     }
+//
+//     public ObservableEnum(Enum initValue, [CanBeNull] UnityAction<Enum> before = null, [CanBeNull] UnityAction<Enum> after = null, bool forceEverySet = false, bool enableRepeatEvent = false) : base(initValue, before, after, forceEverySet, enableRepeatEvent)
+//     {
+//     }
+// }

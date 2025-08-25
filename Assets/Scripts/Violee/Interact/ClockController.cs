@@ -53,7 +53,7 @@ public class ClockController : MonoBehaviour
 
     public void Tick()
     {
-        var now = curTime.Value = MapManager.GetCurTime();
+        var now = curTime.Value = MapManager.DateTime;
  
         float secondsAngle = (now.Second + now.Millisecond / 1000f) / 60f * 360f;
         float minutesAngle = (now.Minute + now.Second / 60f) / 60f * 360f;

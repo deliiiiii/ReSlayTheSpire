@@ -103,49 +103,18 @@ public static class Streamer
     // }
     
     
-    public static Func<Unit> ToFunc(Action action)
-        => () => { action(); return default; };
-    public static Func<T1, Unit> ToFunc<T1>(Action<T1> action)
-        => (t1) => { action(t1); return default; };
-    public static Func<T1, T2, Unit> ToFunc<T1, T2>(Action<T1, T2> action)
-        => (t1, t2) => { action(t1, t2); return default; };
+    // public static Func<Unit> ToFunc(Action action)
+    //     => () => { action(); return default; };
+    // public static Func<T1, Unit> ToFunc<T1>(Action<T1> action)
+    //     => (t1) => { action(t1); return default; };
+    // public static Func<T1, T2, Unit> ToFunc<T1, T2>(Action<T1, T2> action)
+    //     => (t1, t2) => { action(t1, t2); return default; };
 
-
+    public static Func<Unit> CreateBind()
+        => Bind(Unit.Create);
     public static Func<T> Bind<T>(Func<T> bind)
         => bind;
     
-    static bool CheckValidMethod(MethodInfo methodInfo) => methodInfo.IsStatic || methodInfo.Name.Contains("b__");
-    public static Stream<T, TOut> Map<T, TOut>(this Stream<T, TOut> self, Func<T, T> mapper, string logInfo = "")
-    {   
-        // method可以是lambda表达式, lambda表达式函数名包含b__
-        if (!CheckValidMethod(mapper.Method))
-        {
-            Debug.LogWarning($"{self.startFunc.Method.Name} .Map {mapper.Method.Name} must be static, " +
-                             $"otherwise that added func is probably not PURE function !!");
-            return self;
-        }
-        self.mappers.Add((x => Task.FromResult(Maybe<T>.Of(mapper(x))), logInfo));
-        return self;
-    }
-
-    public static Stream<T, TOut> Where<T, TOut>(this Stream<T, TOut> self, Predicate<T> predicate, string logInfo = "")
-    {
-        if (!CheckValidMethod(predicate.Method))
-        {
-            Debug.LogWarning($"{self.startFunc.Method.Name} .Where {predicate.Method.Name} must be static, " +
-                               $"otherwise that added func is probably not PURE function !!");
-            return self;
-        }
-        self.mappers.Add((value => Task.FromResult(predicate(value) ? Maybe<T>.Of(value) : Maybe<T>.Nothing.Instance), logInfo));
-        return self;
-    }
-
-    // public static Stream<T> Delay<T>(this Stream<T> self, int millSeconds)
-    // {
-    //     self.mappers.Add((value => Task.Delay(millSeconds).ContinueWith(_ => Maybe<T>.Of(value)), $"Delay {millSeconds}ms"));
-    //     return self;
-    // }
-
     public static Stream<T, Unit> SetTrigger<T>(this Func<T> self, Action<T> act)
     {
         var trigger = new Func<T, Task<Unit>>(x =>
@@ -160,76 +129,9 @@ public static class Streamer
         var trigger = new Func<T, Task<TOut>>(x => Task.FromResult(act(x)));
         return SetTriggerAsync(self, trigger);
     }
+    
     public static Stream<T, TOut> SetTriggerAsync<T, TOut>(this Func<T> self, Func<T, Task<TOut>> func)
     {
         return new Stream<T, TOut>(startFunc: self, triggerFuncAsync: func);
-        // stream.endStream = stream;
-        // return stream;
     }
-    public static Stream<T, TOut> OnBegin<T, TOut>(this Stream<T, TOut> self, Action<T> act)
-    {
-        self.onBegin += act;
-        return self;
-    }
-    public static Stream<T, TOut> OnBeginAsync<T, TOut>(this Stream<T, TOut> self, Func<T, Task> func)
-    {
-        self.onBeginAsync += func;
-        return self;
-    }
-    public static Stream<T, TOut> OnEnd<T, TOut>(this Stream<T, TOut> self, Action<TOut> act)
-    {
-        self.onEnd += act;
-        return self;
-    }
-    public static Stream<T, TOut> OnEndAsync<T, TOut>(this Stream<T, TOut> self, Func<TOut, Task> func)
-    {
-        self.onEndAsync += func;
-        return self;
-    }
-    public static Stream<T, TOut> RemoveOnEndAsync<T, TOut>(this Stream<T, TOut> self, Func<TOut, Task> func)
-    {
-        self.onEndAsync -= func;
-        return self;
-    }
-    
-    public static TOut SelectResult<T, TOut>(this Stream<T, TOut> self)
-    {
-        return self.result;
-    }
-    public static TOut2 SelectResult<T, TOut, TOut2>(this Stream<T, TOut> self, Func<TOut, TOut2> selector)
-    {
-        return selector(self.result);
-    }
-    public static Func<TOut> BindResult<T, TOut>(this Stream<T, TOut> self)
-    {
-        return () => self.result;
-    }
-    public static Func<TOut2> BindResult<T, TOut, TOut2>(this Stream<T, TOut> self, Func<TOut, TOut2> selector)
-    {
-        return () => selector(self.result);
-    }
-    
-    
-    
-    public static Stream<TOut, Unit> Continue<T, TOut>(this Stream<T, TOut> self, Action<TOut> act)
-    {
-        var trigger = new Func<TOut, Task<Unit>>(x =>
-        {
-            act(x);
-            return Task.FromResult(Unit.Create());
-        });
-        return ContinueAsync(self, trigger);
-    }
-    public static Stream<TOut, TOut2> ContinueAsync<T, TOut, TOut2>(this Stream<T, TOut> self, Func<TOut, Task<TOut2>> func)
-    {
-        var ret = new Stream<TOut, TOut2>(startFunc: () => self.result, triggerFuncAsync: func);
-        self.endStreams.Add(ret);
-        return ret;
-    }
-    // public static Stream<T2> ContinueAsync<T, T2>(this Stream<T> self, Func<T, T2> selector, Func<T2, Task> endAsync)
-    // {
-    //     var ret = new Stream<T2>(startFunc: () => selector(self.result), triggerFuncAsync: endAsync);
-    //     self.endStream = ret;
-    //     return ret;
-    // }
 }

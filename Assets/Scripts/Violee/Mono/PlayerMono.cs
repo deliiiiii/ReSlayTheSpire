@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 using Violee;
 
 public class PlayerMono : Singleton<PlayerMono>
@@ -25,12 +26,16 @@ public class PlayerMono : Singleton<PlayerMono>
             RefreshCurPointBuff();
         };
         
-        GameState.TitleState.OnUpdate(_ => TickOnTitle());
+        GameState.TitleState
+            .OnUpdate(_ => TickOnTitle());
         GameState.PlayingState
             .OnEnter(OnEnterPlaying)
             .OnExit(OnExitPlaying);
     }
-    
+
+    void Func(float dt)
+    {
+    }
     public static void RefreshCurPointBuff()
     {
         BuffManager.RefreshConBuffs(PlayerCurPoint.Value?.ConnectedPointItems() ?? []);
