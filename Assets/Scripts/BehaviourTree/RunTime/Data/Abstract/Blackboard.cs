@@ -27,20 +27,22 @@ namespace BehaviourTree
             // return lambda.Compile().DynamicInvoke(this);
             if (!fieldInfoCache.TryGetValue(fieldName, out var field))
             {
-                fieldInfoCache.Add(fieldName, GetType().GetField(fieldName));
+                field = GetType().GetField(fieldName);
+                fieldInfoCache.Add(fieldName, field);
             }
-            return field?.GetValue(this);
+            return field.GetValue(this);
         }
 
         Dictionary<string, FieldInfo> fieldInfoCache = new();
         public void Set(string fieldName, object value)
         {
-            if (!fieldInfoCache.TryGetValue(fieldName, out var fieldInfo))
+            if (!fieldInfoCache.TryGetValue(fieldName, out FieldInfo fieldInfo))
             {
-                fieldInfoCache.Add(fieldName, GetType().GetField(fieldName));
+                fieldInfo = GetType().GetField(fieldName);
+                fieldInfoCache.Add(fieldName, fieldInfo);
             }
 
-            if (fieldInfo?.FieldType.IsGenericType ?? false)
+            if (fieldInfo.FieldType.IsGenericType)
             {
                 var genericType = fieldInfo?.FieldType.GetGenericTypeDefinition();
                 var tType = fieldInfo?.FieldType.GetGenericArguments()[0];
@@ -52,7 +54,7 @@ namespace BehaviourTree
                 }
                 return;
             }
-            fieldInfo?.SetValue(this, value);
+            fieldInfo.SetValue(this, value);
         }
     }
 }

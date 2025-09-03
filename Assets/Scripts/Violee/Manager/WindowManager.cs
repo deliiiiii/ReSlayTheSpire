@@ -1,32 +1,36 @@
 ﻿using System;
 using System.Linq;
+using UnityEditor.Search;
 using UnityEngine;
 
 namespace Violee;
 
 public interface IMyListItem
 {
-    public Action? OnAddEvent { get;}
-    public Action? OnRemoveEvent{ get;}
+    public Action? OnAddEvent { get; set; }
+    public Action? OnRemoveEvent{ get; set; }
+
     public Action? CallOnAddEventWithArg{ get; }
     public Action? CallOnRemoveEventWithArg{ get; }
-    
+}
+public interface IMyListItem<T> : IMyListItem
+{
+    Action? IMyListItem.CallOnAddEventWithArg => OnAddEventWithArg == null ? null : () => OnAddEventWithArg((T)this);
+    Action? IMyListItem.CallOnRemoveEventWithArg => OnRemoveEventWithArg == null ? null : () => OnRemoveEventWithArg((T)this);
+    public Action<T>? OnAddEventWithArg { get; set; }
+    public Action<T>? OnRemoveEventWithArg { get; set; }
+
 }
 
 [Serializable]
-public abstract class WindowInfo<T> : IMyListItem where T : WindowInfo<T>
+public abstract class WindowInfo<T> : IMyListItem<T> where T : WindowInfo<T>
 {
     public required string Des;
-   
-
-    public Action<T>? OnAddEventWithArg;
-    public Action<T>? OnRemoveEventWithArg;
+    public Action<T>? OnAddEventWithArg { get; set; }
+    public Action<T>? OnRemoveEventWithArg { get; set; }
     
     public Action? OnAddEvent { get; set; }
     public Action? OnRemoveEvent{ get; set; }
-    public Action CallOnAddEventWithArg => () => OnAddEventWithArg?.Invoke((this as T)!);
-
-    public Action CallOnRemoveEventWithArg => () => OnRemoveEventWithArg?.Invoke((this as T)!);
 }
 
 public class SimpleWindowInfo : WindowInfo<SimpleWindowInfo>;
@@ -57,32 +61,32 @@ public class ExchangeWindowInfo : WindowInfo<ExchangeWindowInfo>
 }
 
 
-public static class WindowInfoExt
+public static class MyListExt
 {
-    public static WindowInfo<T> OnAdd<T>(this WindowInfo<T> info, Action action)
-        where T : WindowInfo<T>
+    public static T OnAdd<T>(this T self, Action action)
+        where T : IMyListItem<T>
     {
-        info.OnAddEvent += action;
-        return info;
+        self.OnAddEvent += action;
+        return self;
     }
-    public static WindowInfo<T> OnRemove<T>(this WindowInfo<T> info, Action action)
-        where T : WindowInfo<T>
+    public static T OnRemove<T>(this T self, Action action)
+        where T : IMyListItem<T>
     {
-        info.OnRemoveEvent += action;
-        return info;
+        self.OnRemoveEvent += action;
+        return self;
     }
 
-    public static WindowInfo<T> OnAddWithArg<T>(this WindowInfo<T> info, Action<T> action)
-        where T : WindowInfo<T>
+    public static T OnAddWithArg<T>(this T self, Action<T> action)
+        where T : IMyListItem<T>
     {
-        info.OnAddEventWithArg += action;
-        return info;
+        self.OnAddEventWithArg += action;
+        return self;
     }
-    public static WindowInfo<T> OnRemoveWithArg<T>(this WindowInfo<T> info, Action<T> action)
-        where T : WindowInfo<T>
+    public static T OnRemoveWithArg<T>(this T self, Action<T> action)
+        where T : IMyListItem<T>
     {
-        info.OnRemoveEventWithArg += action;
-        return info;
+        self.OnRemoveEventWithArg += action;
+        return self;
     }
 }
 
