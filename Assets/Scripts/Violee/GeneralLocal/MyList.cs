@@ -17,12 +17,14 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
     public event Action? OnClear;
     
     /// Please Call MyAdd() instead
+    [Obsolete]
     public new void Add(T item)
     {
         MyDebug.LogError("Please Call MyAdd() instead");
     }
     
     /// Please Call MyRemove() instead
+    [Obsolete]
     public new bool Remove(T item)
     {
         MyDebug.LogError("Please Call MyRemove() instead");
@@ -30,9 +32,18 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
     }
     
     /// Please Call MyClear() instead
+    [Obsolete]
     public new void Clear()
     {
         MyDebug.LogError("Please Call MyClear() instead");
+    }
+    
+    /// Please Call MyRemoveAll() instead
+    [Obsolete]
+    public new int RemoveAll(Predicate<T> match)
+    {
+        MyDebug.LogError("Please Call MyRemoveAll() instead");
+        return 0;
     }
     
     public void MyAdd(T item)
@@ -46,18 +57,11 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
         OnRemove?.Invoke(item);
     }
 
-    public new int RemoveAll(Predicate<T> match)
-    {
-        MyDebug.LogError("Please Call MyRemoveAll() instead");
-        return 0;
-    }
-
     public void MyRemoveAll(Predicate<T> match)
     {
         var allRemoved = this.Where(x => match(x));
         allRemoved.ForEach(MyRemove);
     }
-    
     public void MyClear()
     {
         foreach (var item in this)
