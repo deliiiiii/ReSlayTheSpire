@@ -147,13 +147,8 @@ namespace BehaviourTree
             DrawNodeField();
         }
         
-        void CreateNodeBase(Type t)
+        void CreateNodeBase(Type nodeType)
         {
-            var nodeType = t;
-            if (nodeType.IsGenericType)
-            {
-                nodeType = nodeType.MakeGenericType(typeof(int));
-            }
             NodeBase = ScriptableObject.CreateInstance(nodeType) as T;
             NodeBase.name = nodeType.Name;
         }
