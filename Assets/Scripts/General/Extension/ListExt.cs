@@ -65,7 +65,7 @@ public static class ListExt
         return filteredList[^1];
     }
 
-    [NotNull]
+    [CanBeNull]
     public static LinkedListNode<T> At<T>(this LinkedList<T> list, int index)
     {
         // if ((list?.Count ?? 0) == 0)

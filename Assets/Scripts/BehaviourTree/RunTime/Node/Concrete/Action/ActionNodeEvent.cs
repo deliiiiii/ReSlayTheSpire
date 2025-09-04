@@ -9,7 +9,7 @@ using UnityEngine.Events;
 namespace BehaviourTree
 {
     [Serializable]
-    public class ActionNodeEvent : ActionNode, IShowDetail
+    public class ActionNodeEvent : ActionNode
     {
         public EEventK1 EventK1Type;
         [ValueDropdown(nameof(GetK2sByK1))]
@@ -29,7 +29,7 @@ namespace BehaviourTree
             }
             return k2s;
         }
-        public new string GetDetail()
+        public override string GetDetail()
         {
             return $"{base.GetDetail()}{EventK1Type.ToString()}::{EventK2}";
         }

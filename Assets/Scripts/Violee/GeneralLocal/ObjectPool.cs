@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 using Object = UnityEngine.Object;
@@ -30,10 +31,16 @@ namespace Violee
                 {
                     if (!Application.isPlaying)
                         return;
-                    var g = Object.Instantiate(tPrefab, tPrefab.transform.position, tPrefab.transform.rotation, objParent);
+                    var req = GameObject.InstantiateAsync(tPrefab, tPrefab.transform.position, tPrefab.transform.rotation);
+                    while (req.isDone)
+                    {
+                        await Task.Yield();
+                    }
+                    var g = req.Result[0];
+                    g.transform.SetParent(objParent);
                     g.gameObject.SetActive(false);
                     availableObject.Push(g);
-                    await Configer.SettingsConfig.YieldFrames(1/3.28f);
+                    // await Configer.SettingsConfig.YieldFrames(1/3.28f);
                 }
             }
             catch (Exception e)

@@ -10,7 +10,7 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    public class ActionNodeSetValue: ActionNode, IShowDetail
+    public class ActionNodeSetValue: ActionNode
     {
         protected override void OnEnable()
         {
@@ -34,7 +34,7 @@ namespace BehaviourTree
             ToValue.BoardEValueType =
                 Union.ConvertType(fieldInfoDic[SelectedOption].FieldType);
         }
-        public new string GetDetail()
+        public override string GetDetail()
         {
             return $"{base.GetDetail()}{Blackboard?.name ?? "null"}.{SelectedOption} = {ToValue.GetValue()}";
         }

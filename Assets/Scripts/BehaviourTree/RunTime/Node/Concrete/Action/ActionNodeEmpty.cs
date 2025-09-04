@@ -3,11 +3,7 @@
 namespace BehaviourTree
 {
     [Serializable]
-    public class ActionNodeEmpty : ActionNode, IShowDetail
+    public class ActionNodeEmpty : ActionNode
     {
-        public new string GetDetail()
-        {
-            return base.GetDetail();
-        }
     }
 }

@@ -154,7 +154,7 @@ namespace BehaviourTree
         }
         
         #region IShowDetail
-        public string GetDetail()
+        public virtual string GetDetail()
         {
             StringBuilder sb = new StringBuilder();
             if (HasDebug)

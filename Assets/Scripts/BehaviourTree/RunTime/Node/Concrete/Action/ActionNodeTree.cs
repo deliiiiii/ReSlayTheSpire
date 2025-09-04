@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 namespace BehaviourTree
 {
     [Serializable]
-    public class ActionNodeTree : ActionNode, IShowDetail
+    public class ActionNodeTree : ActionNode
     {
         protected override void OnEnable()
         {
@@ -26,7 +26,7 @@ namespace BehaviourTree
 
         [Required][CanBeNull]
         public RootNode SubTreeRoot;
-        public new string GetDetail()
+        public override string GetDetail()
         {
             string warn = HasDelay ? "在这个节点上设置延迟无效！\n" : string.Empty;
             return $"{warn}{base.GetDetail()}SubTree:{SubTreeRoot?.name ?? "null"}";
