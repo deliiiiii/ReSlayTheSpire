@@ -118,12 +118,6 @@ public class TestAwait : MonoBehaviour
     // {
     //     yield break;
     // }
-
-    void Test3()
-    {
-        var a = TestAsync2().GetAwaiter();
-        var b = a.GetResult();
-    }
     
     [Button]
     static async Task TestAsync2()
