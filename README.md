@@ -1,3 +1,7 @@
+↓仓库链接↓
+
+[deliiiiii/ReSlayTheSpire](https://github.com/deliiiiii/ReSlayTheSpire)
+
 # 1 创建（或打开）配置文件(.asset)
 
 ### 1.1 创建根节点

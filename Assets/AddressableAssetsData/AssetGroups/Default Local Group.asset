@@ -193,6 +193,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - VioleTAudio
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b680b8a9ce64cc541b3596dcd372167b
+    m_Address: Assets/DataViolee/TestS.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bbb05c1f92c5bd5478ccaac5d9de5bb4
     m_Address: Assets/Art/VoileT/Audio/Roselia - ZEAL of proud (instrumental).mp3
     m_ReadOnly: 0
