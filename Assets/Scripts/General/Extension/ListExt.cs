@@ -6,22 +6,23 @@ using JetBrains.Annotations;
 public static class ListExt
 {
     public static int RandomIndexWeighted(this List<int> list)
-    {
-        if ((list?.Count ?? 0) == 0)
-            return 0;
-        var totalWeight = list.Sum();
-        var randomValue = UnityEngine.Random.Range(0, totalWeight);
-        var curWeight = 0;
-        for (var i = 0; i < list.Count; i++)
-        {
-            curWeight += list[i];
-            if (curWeight >= randomValue)
-            {
-                return i;
-            }
-        }
-        return 0;
-    }
+        => list.IndexOf(list.RandomItem(weightFunc: x => x));
+    // {
+    //     if ((list?.Count ?? 0) == 0)
+    //         return 0;
+    //     var totalWeight = list.Sum();
+    //     var randomValue = UnityEngine.Random.Range(0, totalWeight);
+    //     var curWeight = 0;
+    //     for (var i = 0; i < list.Count; i++)
+    //     {
+    //         curWeight += list[i];
+    //         if (curWeight >= randomValue)
+    //         {
+    //             return i;
+    //         }
+    //     }
+    //     return 0;
+    // }
 
     public static T RandomItem<T>(this List<T> list)
         => RandomItem(list, null, null);

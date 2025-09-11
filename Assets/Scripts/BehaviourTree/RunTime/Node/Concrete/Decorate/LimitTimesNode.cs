@@ -51,7 +51,7 @@ namespace BehaviourTree
             if (NodeWithEvent != null)
             {
                 sb.Append("\n");
-                sb.Append($"【Reset】OnEvent {NodeWithEvent.EventK1}::{NodeWithEvent.EventK2}");
+                sb.Append($"【Reset OnReceiveEvent】{NodeWithEvent.EventK1}::{NodeWithEvent.EventK2}");
             }
             return sb.ToString();
         }

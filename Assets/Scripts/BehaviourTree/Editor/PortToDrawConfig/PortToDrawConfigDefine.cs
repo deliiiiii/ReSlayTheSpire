@@ -18,10 +18,14 @@ namespace BehaviourTree
     public class SinglePortData
     {
         public bool IsValid;
+        [ShowIf(nameof(IsValid))]
         public Direction Direction;
+        [ShowIf(nameof(IsValid))]
         public Port.Capacity Capacity;
+        [ShowIf(nameof(IsValid))]
         [ValueDropdown(nameof(GetPortType))]
         public string PortTypeName;
+        [ShowIf(nameof(IsValid))]
         public string PortName;
         
         static IEnumerable GetPortType()

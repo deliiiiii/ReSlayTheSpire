@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d02a09294e514ecab2e89791937ccdf9, type: 3}
   m_Name: ActionNodeEvent
   m_EditorClassIdentifier: 
-  Position: {x: 1137.6, y: 200.8}
-  Size: {x: 276, y: 150.4}
+  Position: {x: 1100, y: 210.4}
+  Size: {x: 276, y: 150.40001}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 0
@@ -56,8 +56,8 @@ MonoBehaviour:
   DebugType: 0
   HasDelay: 1
   DelayType: 0
-  DelayFrames: 758
-  DelayFramesTimer: 680
+  DelayFrames: 108
+  DelayFramesTimer: 0
   DelaySeconds: 0
   DelaySecondsTimer: 0
 --- !u!114 &-6637145511271000250
@@ -105,7 +105,7 @@ MonoBehaviour:
   DelayType: 1
   DelayFrames: 0
   DelayFramesTimer: 0
-  DelaySeconds: 7.1
+  DelaySeconds: 0.36
   DelaySecondsTimer: 0
 --- !u!114 &-5272941269076269755
 MonoBehaviour:
@@ -128,8 +128,8 @@ MonoBehaviour:
   DebugType: 0
   HasDelay: 1
   DelayType: 0
-  DelayFrames: 802
-  DelayFramesTimer: 0
+  DelayFrames: 131
+  DelayFramesTimer: 63
   DelaySeconds: 0
   DelaySecondsTimer: 0
 --- !u!114 &-1740314970512826825
@@ -190,7 +190,7 @@ MonoBehaviour:
   DebugType: 0
   HasDelay: 1
   DelayType: 0
-  DelayFrames: 632
+  DelayFrames: 121
   DelayFramesTimer: 0
   DelaySeconds: 0
   DelaySecondsTimer: 0
@@ -206,15 +206,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1be339da6e4b49759e24d0861155cfc6, type: 3}
   m_Name: LimitTimesNode
   m_EditorClassIdentifier: 
-  Position: {x: 405.6, y: 175.2}
-  Size: {x: 315.19998, y: 153.6}
+  Position: {x: 216, y: 210.4}
+  Size: {x: 372, y: 161.59999}
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -6637145511271000250}
   NodeWithEvent:
     rid: 4447336780449972224
   LimitTimes: 10
-  LimitTimer: 1
+  LimitTimer: 5
   references:
     version: 2
     RefIds:
@@ -235,13 +235,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 877.6, y: 200.8}
-  Size: {x: 231.20007, y: 128}
+  Position: {x: 720.8, y: 210.4}
+  Size: {x: 231.20001, y: 128.00002}
   GuardNode: {fileID: 0}
   ChildList: []
-  HasDebug: 0
-  DebugContent: 
-  DebugType: 0
+  HasDebug: 1
+  DebugContent: End...
+  DebugType: 1
   HasDelay: 1
   DelayType: 1
   DelayFrames: 0
