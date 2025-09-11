@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
   m_Name: GuardNodeCompare
   m_EditorClassIdentifier: 
-  Position: {x: 106, y: 119}
-  Size: {x: 280, y: 107}
+  Position: {x: 106.4, y: 119.2}
+  Size: {x: 280, y: 107.2}
   GuardNode: {fileID: 0}
   ChildList: []
   Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
@@ -40,8 +40,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4316b55131de47a0bbb28a652c8b75d3, type: 3}
   m_Name: ActionNodeTree
   m_EditorClassIdentifier: 
-  Position: {x: 508, y: 361}
-  Size: {x: 275, y: 147}
+  Position: {x: 508, y: 361.6}
+  Size: {x: 301.59998, y: 138.4}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 0
@@ -66,8 +66,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode Parent
   m_EditorClassIdentifier: 
-  Position: {x: 508, y: 25}
-  Size: {x: 89, y: 68}
+  Position: {x: 494.4, y: 17.600002}
+  Size: {x: 256.80002, y: 101.6}
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: 3367503873071508926}
@@ -84,8 +84,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
   m_Name: SelectorNode
   m_EditorClassIdentifier: 
-  Position: {x: 559, y: 184}
-  Size: {x: 188, y: 89}
+  Position: {x: 559.2, y: 184}
+  Size: {x: 233.59998, y: 127.999985}
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: 9102875646451785876}
@@ -106,8 +106,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 834, y: 358}
-  Size: {x: 224, y: 150}
+  Position: {x: 900, y: 378.40002}
+  Size: {x: 224, y: 150.39996}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 0
@@ -131,8 +131,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 1225, y: 378}
-  Size: {x: 133, y: 130}
+  Position: {x: 1224.8, y: 378.40002}
+  Size: {x: 133.59998, y: 129.59998}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 1
@@ -156,8 +156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765a60156eb84ccaa17612c15af147e6, type: 3}
   m_Name: ActionNodeSetValue
   m_EditorClassIdentifier: 
-  Position: {x: 162, y: 358}
-  Size: {x: 269, y: 133}
+  Position: {x: 162.4, y: 358.40002}
+  Size: {x: 268.80002, y: 132.79999}
   GuardNode: {fileID: -5180527572930752590}
   ChildList: []
   HasDebug: 0

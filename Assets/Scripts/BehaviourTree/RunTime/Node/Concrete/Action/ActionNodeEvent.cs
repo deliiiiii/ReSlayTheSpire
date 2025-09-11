@@ -11,27 +11,25 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeEvent : ActionNode
     {
-        public EEventK1 EventK1Type;
-        [ValueDropdown(nameof(GetK2sByK1))]
-        public string EventK2;
+        [SerializeReference]
+        public NodeWithEvent NodeWithEvent;
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            OnDelayEnd += () => BTEvent.SendEvent((EventK1Type, EventK2));
-        }
-        List<string> GetK2sByK1()
-        {
-            var k2s = BTEvent.GetK2sByK1(EventK1Type).ToList();
-            if (k2s.Count != 0 && !k2s.Contains(EventK2))
-            {
-                EventK2 = k2s[0];
-            }
-            return k2s;
+            OnDelayEnd += () => BTEvent.SendEvent((NodeWithEvent.EventK1, NodeWithEvent.EventK2));
         }
         public override string GetDetail()
         {
-            return $"{base.GetDetail()}{EventK1Type.ToString()}::{EventK2}";
+            var sb = new StringBuilder();
+            sb.Append(base.GetDetail());
+            if (sb.Length > 0)
+                sb.Append("\n");
+            sb.Append("【SendEvent】");
+            sb.Append(NodeWithEvent == null 
+                ? string.Empty 
+                : $"{NodeWithEvent.EventK1.ToString()}::{NodeWithEvent.EventK2}");
+            return sb.ToString();
         }
     }
 }

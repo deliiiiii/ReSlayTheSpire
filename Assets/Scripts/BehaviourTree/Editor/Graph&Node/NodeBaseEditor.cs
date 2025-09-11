@@ -54,13 +54,15 @@ namespace BehaviourTree
             // MyDebug.Log($"Editor : {NodeBase.name} AddGuard {guard?.name ?? "null"}");
             NodeBase.OnRefreshTreeEnd();
         }
-        
-        Rect GetRect();
+
+        Node Node { get; }
+        Rect GetRect() => Node.GetPosition();
     }
     
     [Serializable]
     public class NodeBaseEditor<T> : Node, INodeBaseEditor<T> where T : NodeBase
     {
+        public Node Node => this;
         T nodeBase;
         public T NodeBase
         {
@@ -70,7 +72,9 @@ namespace BehaviourTree
                 if (nodeBase == value)
                     return;
                 nodeBase = value;
-                OnNodeBaseChange();
+                extensionContainer.Clear();
+                DrawTypeField();
+                DrawNodeField();
             }
         }
         public Port InputParentPort { get; protected set; }
@@ -110,41 +114,26 @@ namespace BehaviourTree
             if (isDefault)
             {
                 CreateNodeBase(nodeBase.GetType());
-                SetPosition(new Rect(600, 600, 400, 250));
+                base.SetPosition(new Rect(600, 600, 400, 250));
             }
             else
             {
                 NodeBase = nodeBase;
-                MySetPosition(new Rect(NodeBase.Position, NodeBase.Size));
+                var rect = new Rect(NodeBase.Position, NodeBase.Size);
+                base.SetPosition(rect);
+                style.width = rect.width;
+                style.height = rect.height;
             }
-            
             DrawAllPorts();
             //隐藏名字栏
             titleContainer.style.display = DisplayStyle.None;
             //大小可以调整
             capabilities |= Capabilities.Resizable;
-            RefreshAllSettings();
-        }
-
-        void MySetPosition(Rect rect)
-        {
-            base.SetPosition(rect);
-            style.width = rect.width;
-            style.height = rect.height;
-        }
-
-        void RefreshAllSettings()
-        {
+            
+            // 重置一些内置参数
             RefreshPorts();
-            expanded = true;
+            base.expanded = true;
             RefreshExpandedState();
-        }
-        
-        void OnNodeBaseChange()
-        {
-            extensionContainer.Clear();
-            DrawTypeField();
-            DrawNodeField();
         }
         
         void CreateNodeBase(Type nodeType)

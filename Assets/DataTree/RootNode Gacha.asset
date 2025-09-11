@@ -1,5 +1,40 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7925047198538508938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02a09294e514ecab2e89791937ccdf9, type: 3}
+  m_Name: ActionNodeEvent
+  m_EditorClassIdentifier: 
+  Position: {x: 1137.6, y: 200.8}
+  Size: {x: 276, y: 150.4}
+  GuardNode: {fileID: 0}
+  ChildList: []
+  HasDebug: 0
+  DebugContent: 
+  DebugType: 0
+  HasDelay: 0
+  DelayType: 0
+  DelayFrames: 0
+  DelayFramesTimer: 0
+  DelaySeconds: 0
+  DelaySecondsTimer: 0
+  NodeWithEvent:
+    rid: 4447336780449972225
+  references:
+    version: 2
+    RefIds:
+    - rid: 4447336780449972225
+      type: {class: NodeWithEvent, ns: BehaviourTree, asm: BHRumtime}
+      data:
+        EventK1: 1
+        EventK2: 222
 --- !u!114 &-7671512093609679375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,17 +47,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 286.4, y: 603.2}
-  Size: {x: 212, y: 162.40002}
+  Position: {x: 150.4, y: 762.4}
+  Size: {x: 212, y: 162.39996}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 1
   DebugContent: "\u2605\u2605\u2605"
   DebugType: 0
-  HasDelay: 0
+  HasDelay: 1
   DelayType: 0
-  DelayFrames: 0
-  DelayFramesTimer: 0
+  DelayFrames: 758
+  DelayFramesTimer: 680
   DelaySeconds: 0
   DelaySecondsTimer: 0
 --- !u!114 &-6637145511271000250
@@ -37,7 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
   m_Name: SelectorNode
   m_EditorClassIdentifier: 
-  Position: {x: 592, y: 440}
+  Position: {x: 456, y: 599.2}
   Size: {x: 227.20001, y: 130.40002}
   GuardNode: {fileID: 0}
   ChildList:
@@ -45,8 +80,8 @@ MonoBehaviour:
   - {fileID: -5272941269076269755}
   - {fileID: 2959327518532414317}
   - {fileID: -5274064586181910554}
-  IsRandom: 0
-  FixedSelections: 00000000000000000000000000000000
+  IsRandom: 1
+  FixedSelections: 28000000320000000800000002000000
 --- !u!114 &-5274064586181910554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 999.2, y: 604}
+  Position: {x: 995.2, y: 756.8}
   Size: {x: 227.20001, y: 151.20001}
   GuardNode: {fileID: 0}
   ChildList: []
@@ -70,8 +105,8 @@ MonoBehaviour:
   DelayType: 1
   DelayFrames: 0
   DelayFramesTimer: 0
-  DelaySeconds: 0.35
-  DelaySecondsTimer: 0.3509291
+  DelaySeconds: 7.1
+  DelaySecondsTimer: 0
 --- !u!114 &-5272941269076269755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,19 +119,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 592, y: 603.2}
-  Size: {x: 135.20001, y: 152}
+  Position: {x: 456, y: 762.4}
+  Size: {x: 204, y: 145.59998}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 1
   DebugContent: "\u2605\u2605\u2605\u2605"
   DebugType: 0
-  HasDelay: 0
+  HasDelay: 1
   DelayType: 0
-  DelayFrames: 0
+  DelayFrames: 802
   DelayFramesTimer: 0
   DelaySeconds: 0
   DelaySecondsTimer: 0
+--- !u!114 &-1740314970512826825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
+  m_Name: SequenceNode
+  m_EditorClassIdentifier: 
+  Position: {x: 705.6, y: 13.600002}
+  Size: {x: 192.80005, y: 111.200005}
+  GuardNode: {fileID: 0}
+  ChildList:
+  - {fileID: 4319439301526744795}
+  - {fileID: 8035868344012158639}
+  - {fileID: -7925047198538508938}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,38 +163,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode Gacha
   m_EditorClassIdentifier: 
-  Position: {x: 592, y: 166.4}
-  Size: {x: 205.59998, y: 92.000015}
+  Position: {x: 605.6, y: -178.40001}
+  Size: {x: 292.80005, y: 108.8}
   GuardNode: {fileID: 0}
   ChildList:
-  - {fileID: 4319439301526744795}
+  - {fileID: -1740314970512826825}
   Running: 1
---- !u!114 &1891296194845640679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4316b55131de47a0bbb28a652c8b75d3, type: 3}
-  m_Name: ActionNodeTree
-  m_EditorClassIdentifier: 
-  Position: {x: 0, y: 0}
-  Size: {x: 0, y: 0}
-  GuardNode: {fileID: 0}
-  ChildList: []
-  HasDebug: 0
-  DebugContent: 
-  DebugType: 0
-  HasDelay: 0
-  DelayType: 0
-  DelayFrames: 0
-  DelayFramesTimer: 0
-  DelaySeconds: 0
-  DelaySecondsTimer: 0
-  SubTreeRoot: {fileID: 0}
 --- !u!114 &2959327518532414317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,16 +181,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 784, y: 603.2}
+  Position: {x: 705.6, y: 761.60004}
   Size: {x: 151.20001, y: 152}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 1
   DebugContent: "\u2605\u2605\u2605\u2605\u2605"
   DebugType: 0
-  HasDelay: 0
+  HasDelay: 1
   DelayType: 0
-  DelayFrames: 0
+  DelayFrames: 632
   DelayFramesTimer: 0
   DelaySeconds: 0
   DelaySecondsTimer: 0
@@ -178,10 +206,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1be339da6e4b49759e24d0861155cfc6, type: 3}
   m_Name: LimitTimesNode
   m_EditorClassIdentifier: 
-  Position: {x: 592, y: 288.80002}
-  Size: {x: 188.79999, y: 130.4}
+  Position: {x: 405.6, y: 175.2}
+  Size: {x: 315.19998, y: 153.6}
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -6637145511271000250}
+  NodeWithEvent:
+    rid: 4447336780449972224
   LimitTimes: 10
-  LimitTimer: 10
+  LimitTimer: 1
+  references:
+    version: 2
+    RefIds:
+    - rid: 4447336780449972224
+      type: {class: NodeWithEvent, ns: BehaviourTree, asm: BHRumtime}
+      data:
+        EventK1: 1
+        EventK2: 222
+--- !u!114 &8035868344012158639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
+  m_Name: ActionNodeEmpty
+  m_EditorClassIdentifier: 
+  Position: {x: 877.6, y: 200.8}
+  Size: {x: 231.20007, y: 128}
+  GuardNode: {fileID: 0}
+  ChildList: []
+  HasDebug: 0
+  DebugContent: 
+  DebugType: 0
+  HasDelay: 1
+  DelayType: 1
+  DelayFrames: 0
+  DelayFramesTimer: 0
+  DelaySeconds: 3
+  DelaySecondsTimer: 0

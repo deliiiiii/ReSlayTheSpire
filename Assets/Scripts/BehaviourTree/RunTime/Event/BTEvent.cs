@@ -44,7 +44,7 @@ namespace BehaviourTree
                 return;
             if (!EventsDic.ContainsKey(keys.Item1))
                 return;
-            if(!eventsDic[keys.Item1].ContainsKey(keys.Item2))
+            if(!EventsDic[keys.Item1].ContainsKey(keys.Item2))
                 return;
             EventsDic[keys.Item1][keys.Item2]?.Invoke();
         }
@@ -54,7 +54,7 @@ namespace BehaviourTree
                 return;
             if (!EventsDic.ContainsKey(keys.Item1))
                 return;
-            if(!eventsDic[keys.Item1].ContainsKey(keys.Item2))
+            if(!EventsDic[keys.Item1].ContainsKey(keys.Item2))
                 return;
             EventsDic[keys.Item1][keys.Item2] += action;
         }
@@ -64,7 +64,7 @@ namespace BehaviourTree
                 return;
             if (!EventsDic.ContainsKey(keys.Item1))
                 return;
-            if(!eventsDic[keys.Item1].ContainsKey(keys.Item2))
+            if(!EventsDic[keys.Item1].ContainsKey(keys.Item2))
                 return;
             EventsDic[keys.Item1][keys.Item2] -= action;
         }

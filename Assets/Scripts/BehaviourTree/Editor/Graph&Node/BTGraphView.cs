@@ -63,8 +63,7 @@ namespace BehaviourTree
                 return null;
             ins.OnTypeChanged += _ => DelayOnGraphViewChanged(default);
             
-            var node = ins as Node;
-            AddElement(node);
+            AddElement(ins.Node);
             return ins;
         }
         
@@ -73,7 +72,6 @@ namespace BehaviourTree
             Observable.NextFrame().Subscribe(_ =>
             {
                 MyDebug.LogWarning($"OnGraphViewChanged");
-                nodeEditors.ForEach(node => node.NodeBase.ClearChildren());
                 RefreshTreeAndSave();
             });
             return graphViewChange;
@@ -84,6 +82,7 @@ namespace BehaviourTree
         /// </summary>
         void RefreshTreeAndSave()
         {
+            nodeEditors.ForEach(node => node.NodeBase.ClearChildren());
             rootEditor = nodeEditors.FirstOrDefault(node => node.NodeBase is RootNode) as INodeBaseEditor<RootNode>;
             if (rootEditor == null)
             {
