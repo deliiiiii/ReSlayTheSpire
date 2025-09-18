@@ -57,7 +57,7 @@ MonoBehaviour:
   HasDelay: 1
   DelayType: 0
   DelayFrames: 108
-  DelayFramesTimer: 0
+  DelayFramesTimer: 47
   DelaySeconds: 0
   DelaySecondsTimer: 0
 --- !u!114 &-6637145511271000250
@@ -129,7 +129,7 @@ MonoBehaviour:
   HasDelay: 1
   DelayType: 0
   DelayFrames: 131
-  DelayFramesTimer: 63
+  DelayFramesTimer: 0
   DelaySeconds: 0
   DelaySecondsTimer: 0
 --- !u!114 &-1740314970512826825
@@ -214,7 +214,7 @@ MonoBehaviour:
   NodeWithEvent:
     rid: 4447336780449972224
   LimitTimes: 10
-  LimitTimer: 5
+  LimitTimer: 1
   references:
     version: 2
     RefIds:

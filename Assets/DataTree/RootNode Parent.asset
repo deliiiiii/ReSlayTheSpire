@@ -33,8 +33,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 978e977ca311406db618c0d93d831d50, type: 3}
   m_Name: GuardNodeCompare
   m_EditorClassIdentifier: 
-  Position: {x: 991.2, y: 299.2}
-  Size: {x: 343.99994, y: 112}
+  Position: {x: 1005.6, y: 287.2}
+  Size: {x: 344, y: 112}
   GuardNode: {fileID: 0}
   ChildList: []
   Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: -170.4, y: 449.6}
+  Position: {x: -180.8, y: 449.6}
   Size: {x: 260, y: 142.4}
   GuardNode: {fileID: 0}
   ChildList: []
@@ -118,6 +118,31 @@ MonoBehaviour:
   ChildList:
   - {fileID: -7407545655702213385}
   Running: 1
+--- !u!114 &6313181919724288898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
+  m_Name: ActionNodeEmpty
+  m_EditorClassIdentifier: 
+  Position: {x: 0, y: 0}
+  Size: {x: 0, y: 0}
+  GuardNode: {fileID: 0}
+  ChildList: []
+  HasDebug: 0
+  DebugContent: 
+  DebugType: 0
+  HasDelay: 0
+  DelayType: 0
+  DelayFrames: 0
+  DelayFramesTimer: 0
+  DelaySeconds: 0
+  DelaySecondsTimer: 0
 --- !u!114 &6597437282939447541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,7 +181,7 @@ MonoBehaviour:
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
   Position: {x: 1467.2, y: 435.2}
-  Size: {x: 132.80005, y: 129.59998}
+  Size: {x: 224, y: 178.40002}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 0
@@ -195,12 +220,12 @@ MonoBehaviour:
   DelaySecondsTimer: 0
   Blackboard: {fileID: 11400000, guid: 4ddce612d74df8a4681540f3fd743d3b, type: 2}
   ToValue:
-    BoardEValueType: 6
+    BoardEValueType: 4
     intVal: 0
     longVal: 0
-    floatVal: 25.76
+    floatVal: 22.8
     doubleVal: 0
     boolVal: 0
     stringVal: 
     vector3: {x: 0, y: 0, z: 0}
-  SelectedOption: Boollll
+  SelectedOption: Floatttt
