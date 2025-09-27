@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d02a09294e514ecab2e89791937ccdf9, type: 3}
   m_Name: ActionNodeEvent
   m_EditorClassIdentifier: 
-  Position: {x: 1100, y: 210.4}
+  Position: {x: 1366.4, y: 210.4}
   Size: {x: 276, y: 150.40001}
   GuardNode: {fileID: 0}
   ChildList: []
@@ -57,7 +57,7 @@ MonoBehaviour:
   HasDelay: 1
   DelayType: 0
   DelayFrames: 108
-  DelayFramesTimer: 47
+  DelayFramesTimer: 0
   DelaySeconds: 0
   DelaySecondsTimer: 0
 --- !u!114 &-6637145511271000250
@@ -72,7 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af9ea6ad0a14504971f9eac8f90086e, type: 3}
   m_Name: SelectorNode
   m_EditorClassIdentifier: 
-  Position: {x: 456, y: 599.2}
+  Position: {x: 432.8, y: 512}
   Size: {x: 227.20001, y: 130.40002}
   GuardNode: {fileID: 0}
   ChildList:
@@ -144,8 +144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b59d837321804392a89c125c92e8d957, type: 3}
   m_Name: SequenceNode
   m_EditorClassIdentifier: 
-  Position: {x: 705.6, y: 13.600002}
-  Size: {x: 192.80005, y: 111.200005}
+  Position: {x: 720.8, y: 21.600002}
+  Size: {x: 192.79999, y: 111.200005}
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: 4319439301526744795}
@@ -163,8 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
   m_Name: RootNode Gacha
   m_EditorClassIdentifier: 
-  Position: {x: 605.6, y: -178.40001}
-  Size: {x: 292.80005, y: 108.8}
+  Position: {x: 636.8, y: -216.8}
+  Size: {x: 292.8, y: 108.8}
   GuardNode: {fileID: 0}
   ChildList:
   - {fileID: -1740314970512826825}
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
   Position: {x: 705.6, y: 761.60004}
-  Size: {x: 151.20001, y: 152}
+  Size: {x: 168.80005, y: 154.39996}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 1
@@ -206,7 +206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1be339da6e4b49759e24d0861155cfc6, type: 3}
   m_Name: LimitTimesNode
   m_EditorClassIdentifier: 
-  Position: {x: 216, y: 210.4}
+  Position: {x: 215.2, y: 210.4}
   Size: {x: 372, y: 161.59999}
   GuardNode: {fileID: 0}
   ChildList:
@@ -214,7 +214,7 @@ MonoBehaviour:
   NodeWithEvent:
     rid: 4447336780449972224
   LimitTimes: 10
-  LimitTimer: 1
+  LimitTimer: 10
   references:
     version: 2
     RefIds:
@@ -235,8 +235,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6873adba8bfc48d1b914e00eb3d25a6f, type: 3}
   m_Name: ActionNodeEmpty
   m_EditorClassIdentifier: 
-  Position: {x: 720.8, y: 210.4}
-  Size: {x: 231.20001, y: 128.00002}
+  Position: {x: 913.6, y: 222.4}
+  Size: {x: 231.20007, y: 128.00002}
   GuardNode: {fileID: 0}
   ChildList: []
   HasDebug: 1
@@ -247,4 +247,4 @@ MonoBehaviour:
   DelayFrames: 0
   DelayFramesTimer: 0
   DelaySeconds: 3
-  DelaySecondsTimer: 0
+  DelaySecondsTimer: 0.728217

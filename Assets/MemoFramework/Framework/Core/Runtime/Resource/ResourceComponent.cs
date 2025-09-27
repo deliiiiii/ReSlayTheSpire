@@ -15,7 +15,7 @@ namespace MemoFramework
     /// </summary>
     public class ResourceComponent : MemoFrameworkComponent
     {
-        private Dictionary<string, AsyncOperationHandle<Object>> _assetHandleCache = new();
+        private Dictionary<string, AsyncOperationHandle> _assetHandleCache = new();
         private Dictionary<string, IList<IResourceLocation>> _labelLocationsCache = new();
 
         /// <summary>
@@ -64,10 +64,10 @@ namespace MemoFramework
 
             // Stopwatch st = new Stopwatch();
             // st.Start();
-            AsyncOperationHandle<Object> assetHandle = default;
+            AsyncOperationHandle<T> assetHandle = default;
             try
             {
-                assetHandle = Addressables.LoadAssetAsync<Object>(address);
+                assetHandle = Addressables.LoadAssetAsync<T>(address);
                 await assetHandle.ToUniTask();
             }
             catch (Exception e)
@@ -84,7 +84,7 @@ namespace MemoFramework
             _assetHandleCache[address] = assetHandle;
             // st.Stop();
             // MFLogger.LogInfo($"加载资源{address}用时:{st.Elapsed.TotalMilliseconds}ms");
-            return (T)assetHandle.Result;
+            return assetHandle.Result;
         }
 
         /// <summary>
