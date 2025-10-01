@@ -6,14 +6,14 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    public class CompositeNode : NodeBase
+    public class CompositeNode : BTNodeData
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.Multiple;
-        [CanBeNull] protected LinkedListNode<NodeBase> curNode;
+        [CanBeNull] protected LinkedListNode<BTNodeData> curNode;
 
-        protected override void OnReset()
+        protected override void Reset()
         {
-            base.OnReset();
+            base.Reset();
             curNode = null;
         }
     }

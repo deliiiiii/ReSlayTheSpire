@@ -12,9 +12,9 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeSetValue: ActionNode
     {
-        protected override void OnEnable()
+        public override void OnDeserializeEnd()
         {
-            base.OnEnable();
+            base.OnDeserializeEnd();
             OnDelayEnd += () => Blackboard?.Set(SelectedOption, ToValue.GetValue());
         }
         

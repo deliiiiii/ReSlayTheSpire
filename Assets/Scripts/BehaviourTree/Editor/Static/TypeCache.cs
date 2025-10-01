@@ -24,10 +24,10 @@ namespace BehaviourTree
         public static readonly HashSet<string> PortPropertyNames;
         static TypeCache()
         {
-            NodeGeneralTypes = typeof(NodeBase).Assembly.GetTypes()
+            NodeGeneralTypes = typeof(NodeData).Assembly.GetTypes()
                 .Where(type =>
-                    type.InheritsFrom(typeof(NodeBase))
-                    && type != typeof(NodeBase)
+                    type.InheritsFrom(typeof(NodeData))
+                    && type != typeof(NodeData)
                     && !type.IsAbstract
                     && (type.BaseType?.IsAbstract ?? false)
                 ).ToList();
@@ -47,9 +47,9 @@ namespace BehaviourTree
                         new List<Type>(){generalType});
             });
 
-            PortPropertyNames = typeof(NodeBaseEditor<>)
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(p => p.PropertyType == typeof(Port))
+            PortPropertyNames = typeof(NodeEditorBase)
+                .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(p => p.FieldType == typeof(Port))
                 .Select(p => p.Name)
                 .ToHashSet();
         }

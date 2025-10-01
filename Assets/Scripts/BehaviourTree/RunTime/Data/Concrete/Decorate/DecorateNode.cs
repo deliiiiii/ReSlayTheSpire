@@ -3,7 +3,7 @@
 namespace BehaviourTree
 {
     [Serializable]
-    public class DecorateNode : NodeBase
+    public class DecorateNode : BTNodeData
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.Single;
     }

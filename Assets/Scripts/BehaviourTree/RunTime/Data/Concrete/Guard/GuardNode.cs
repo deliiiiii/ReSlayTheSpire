@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace BehaviourTree
 {
     [Serializable]
-    public class GuardNode : NodeBase
+    public class GuardNode : BTNodeData
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
         [NotNull] protected virtual Func<bool> Condition { get; } = () => true;

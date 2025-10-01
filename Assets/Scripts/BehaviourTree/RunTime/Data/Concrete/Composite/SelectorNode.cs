@@ -7,7 +7,7 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    public class SelectorNode : CompositeNode, IShowDetail
+    public class SelectorNode : CompositeNode
     {
         /// <summary>
         /// 根据list随机数的权重,随机选择子节点，且失败后不会尝试下一个节点
@@ -15,7 +15,7 @@ namespace BehaviourTree
         public bool IsRandom;
         [ShowIf(nameof(IsRandom))]
         [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true)]
-        public List<int> FixedSelections = new ();
+        public List<int> FixedSelections = new();
         public override void OnRefreshTreeEnd()
         {
             base.OnRefreshTreeEnd();
@@ -29,7 +29,7 @@ namespace BehaviourTree
         {
             if (State.Value is not EState.Running)
             {
-                RecursiveDo(CallReset);
+                RecursiveDo(Reset);
                 curNode = IsRandom ? 
                     ChildLinkedList?.At(FixedSelections.RandomIndexWeighted()) :
                     ChildLinkedList?.First;
@@ -50,7 +50,7 @@ namespace BehaviourTree
             return EState.Failed;
         }
 
-        public string GetDetail()
+        public override string GetDetail()
         {
             if (!IsRandom)
                 return string.Empty;

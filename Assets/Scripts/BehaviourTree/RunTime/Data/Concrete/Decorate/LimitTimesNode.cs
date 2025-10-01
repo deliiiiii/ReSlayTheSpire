@@ -6,7 +6,7 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    public class LimitTimesNode : DecorateNode, IShowDetail
+    public class LimitTimesNode : DecorateNode
     {
         [SerializeReference]
         public NodeWithEvent NodeWithEvent;
@@ -14,20 +14,20 @@ namespace BehaviourTree
         public int LimitTimes = 1;
         public int LimitTimer = 0;
 
-        protected override void OnEnable()
+        public override void OnDeserializeEnd()
         {
-            base.OnEnable();
-            BTEvent.RegisterEvent((NodeWithEvent.EventK1, NodeWithEvent.EventK2), OnReset);
+            base.OnDeserializeEnd();
+            BTEvent.RegisterEvent((NodeWithEvent.EventK1, NodeWithEvent.EventK2), Reset);
         }
 
         void OnDisable()
         {
-            BTEvent.UnRegisterEvent((NodeWithEvent.EventK1, NodeWithEvent.EventK2), OnReset);
+            BTEvent.UnRegisterEvent((NodeWithEvent.EventK1, NodeWithEvent.EventK2), Reset);
         }
 
-        protected override void OnReset()
+        protected override void Reset()
         {
-            base.OnReset();
+            base.Reset();
             LimitTimer = 0;
         }
 
@@ -35,7 +35,7 @@ namespace BehaviourTree
         {
             if (LimitTimer >= LimitTimes)
             {
-                LastChild?.RecursiveDo(CallReset);
+                LastChild?.RecursiveDo(Reset);
                 return EState.Succeeded;
             }
             var ret = LastChild?.TickTemplate(dt) ?? EState.Succeeded;
@@ -44,7 +44,7 @@ namespace BehaviourTree
             ret = EState.Running;
             return ret;
         }
-        public string GetDetail()
+        public override string GetDetail()
         {
             StringBuilder sb =  new StringBuilder();
             sb.Append($"Limited:{LimitTimer}/{LimitTimes}");

@@ -22,7 +22,7 @@ namespace BehaviourTree
     }
     
     [Serializable]
-    public class ActionNode : NodeBase, IShowDetail
+    public class ActionNode : BTNodeData
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.None;
         // [CanBeNull] protected Action OnEnter;
@@ -60,9 +60,9 @@ namespace BehaviourTree
         Func<float, EState> secondsOnContinue;
         #endregion
 
-        protected override void OnEnable()
+        public override void OnDeserializeEnd()
         {
-            base.OnEnable();
+            base.OnDeserializeEnd();
             debugOnDelayEnd = () =>
             {
                 switch (DebugType)
@@ -128,9 +128,9 @@ namespace BehaviourTree
             }
         }
 
-        protected override void OnReset()
+        protected override void Reset()
         {
-            base.OnReset();
+            base.Reset();
             DelayFramesTimer = 0;
             DelaySecondsTimer = 0;
         }
@@ -139,7 +139,7 @@ namespace BehaviourTree
             // 上一帧完成，这一帧才重置
             if (State.Value == EState.Succeeded)
             {
-                RecursiveDo(CallReset);
+                RecursiveDo(Reset);
             }
             // if (State.Value == EState.Failed)
             // {
@@ -154,7 +154,7 @@ namespace BehaviourTree
         }
         
         #region IShowDetail
-        public virtual string GetDetail()
+        public override string GetDetail()
         {
             StringBuilder sb = new StringBuilder();
             if (HasDebug)

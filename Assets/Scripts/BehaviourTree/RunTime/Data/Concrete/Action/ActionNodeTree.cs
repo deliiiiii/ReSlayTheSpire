@@ -7,9 +7,9 @@ namespace BehaviourTree
     [Serializable]
     public class ActionNodeTree : ActionNode
     {
-        protected override void OnEnable()
+        public override void OnDeserializeEnd()
         {
-            base.OnEnable();
+            base.OnDeserializeEnd();
             OnContinue = dt =>
             {
                 var ret = SubTreeRoot?.TickTemplate(dt) ?? EState.Succeeded;
@@ -17,10 +17,10 @@ namespace BehaviourTree
             };
         }
 
-        protected override void OnReset()
+        protected override void Reset()
         {
-            base.OnReset();
-            SubTreeRoot?.RecursiveDo(CallReset);
+            base.Reset();
+            SubTreeRoot?.RecursiveDo(Reset);
         }
 
 

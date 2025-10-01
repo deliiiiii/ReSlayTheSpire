@@ -14,9 +14,9 @@ namespace BehaviourTree
         [SerializeReference]
         public NodeWithEvent NodeWithEvent;
 
-        protected override void OnEnable()
+        public override void OnDeserializeEnd()
         {
-            base.OnEnable();
+            base.OnDeserializeEnd();
             OnDelayEnd += () => BTEvent.SendEvent((NodeWithEvent.EventK1, NodeWithEvent.EventK2));
         }
         public override string GetDetail()

@@ -6,16 +6,15 @@ using UnityEngine;
 namespace BehaviourTree
 {
     [Serializable]
-    [CreateAssetMenu(fileName = nameof(RootNode), menuName = "BehaviourTree/" + nameof(RootNode))]
-    public class RootNode : NodeBase
+    public class RootNode : BTNodeData
     {
         protected override EChildCountType childCountType { get; set; } = EChildCountType.Single;
         [ReadOnly]
         public bool Running;
         [CanBeNull] BindDataUpdate b;
-        protected override void OnEnable()
+        public override void OnDeserializeEnd()
         {
-            base.OnEnable();
+            base.OnDeserializeEnd();
             if(Position.x != 0 || Position.y != 0)
                 return;
             Position = new Vector2(600, 200);
@@ -32,7 +31,7 @@ namespace BehaviourTree
             if (Running)
                 return;
             Running = true;
-            RecursiveDo(CallReset);
+            RecursiveDo(Reset);
             b = Binder.Update(dt => TickTemplate(dt));
         }
         public void StopTick()

@@ -18,7 +18,7 @@ namespace BehaviourTree
         LessThanOrEqual
     }
     [Serializable]
-    public class GuardNodeCompare : GuardNode, IShowDetail
+    public class GuardNodeCompare : GuardNode
     {
         protected override Func<bool> Condition => () =>
             {
@@ -76,7 +76,7 @@ namespace BehaviourTree
             ToValue.BoardEValueType =
                 Union.ConvertType(fieldInfoDic[SelectedOption].FieldType);
         }
-        public string GetDetail()
+        public override string GetDetail()
         {
             string compareSymbol = CompareType switch
             {

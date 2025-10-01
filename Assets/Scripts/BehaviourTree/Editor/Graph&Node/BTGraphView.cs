@@ -7,18 +7,17 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace BehaviourTree
 {
     public class BTGraphView : GraphView
     {
-        public event Action<int> OnRootNodeDeleted;
-        INodeBaseEditor<RootNode> rootEditor;
-        RootNode rootNode;
-        
-        string path => $"Assets/DataTree/{rootNode?.name ?? "null"}.asset";
-        IEnumerable<INodeBaseEditor<NodeBase>> nodeEditors => 
-            nodes.OfType<INodeBaseEditor<NodeBase>>().ToList();
+        GraphData graphData;
+        readonly string prePath = "Assets/DataTree";
+        string fileName => $"{graphData?.name ?? "null"}.asset";
+        string path => $"{prePath}/{fileName}";
+        IEnumerable<NodeEditorBase> nodeEditors => nodes.OfType<NodeEditorBase>();
         
         public BTGraphView()
         {
@@ -40,31 +39,33 @@ namespace BehaviourTree
 
         /// <param name="nodeConcreteType">如ActionNodeDebug，具体Node类型</param>
         /// <returns></returns>
-        public void DrawNodeEditorWithType(Type nodeConcreteType)
+        public void DrawNewNodeEditor(Type nodeConcreteType)
         {
-            DrawNodeEditorWithIns(ScriptableObject.CreateInstance(nodeConcreteType) as NodeBase, true);
+            // // TODO 多余的Cast
+            DrawNodeEditorByData(ScriptableObject.CreateInstance(nodeConcreteType) as BTNodeData, isDefault: true);
         }
-            
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="nodeConcrete">如ActionNodeDebug, 具体Node类的实例</param>
+        /// <param name="nodeData">如ActionNodeDebug, 具体Node类的实例</param>
         /// <param name="isDefault">nodeConcrete是否是默认值</param>
-        INodeBaseEditor<T> DrawNodeEditorWithIns<T>(T nodeConcrete, bool isDefault) where T : NodeBase
+        // TODO 多余的Cast
+        void DrawNodeEditorByData<T>(T nodeData, bool isDefault) where T : BTNodeData
         {
             // 不允许创建多个RootNodeEditor
-            if (rootEditor != null && nodeConcrete?.GetType() == typeof(RootNode))
-                return rootEditor as INodeBaseEditor<T>;
+            // if (rootEditor != null && nodeData.GetType() == typeof(RootNode))
+            //     return rootEditor as NodeEditor<T>;
             
             // 利用反射调用构造函数, 参数列表恰好是{T}
-            if (typeof(NodeBaseEditor<>).MakeGenericType(nodeConcrete!.GetGeneralType())
-                    .GetConstructor(new []{nodeConcrete!.GetGeneralType(), typeof(bool)})
-                    ?.Invoke(new object[]{nodeConcrete, isDefault}) is not INodeBaseEditor<T> ins)
-                return null;
-            ins.OnTypeChanged += _ => DelayOnGraphViewChanged(default);
+            var ins = typeof(NodeEditor<>).MakeGenericType(nodeData.GetGeneralType())
+                .GetConstructor(new[] { nodeData.GetGeneralType(), typeof(bool) })?
+                .Invoke(new object[] { nodeData, isDefault }) as NodeEditorBase;
+            ins!.OnTypeChanged += _ => DelayOnGraphViewChanged(default);
+            nodeData.OnDeserializeEnd();
+            ins.ConnectEdges();
             
-            AddElement(ins.Node);
-            return ins;
+            AddElement(ins);
         }
         
         GraphViewChange DelayOnGraphViewChanged(GraphViewChange graphViewChange)
@@ -72,75 +73,30 @@ namespace BehaviourTree
             Observable.NextFrame().Subscribe(_ =>
             {
                 MyDebug.LogWarning($"OnGraphViewChanged");
-                RefreshTreeAndSave();
+                int id = 0;
+                nodeEditors.ForEach(nodeEditor =>
+                {
+                    nodeEditor.OnRefreshTree();
+                    nodeEditor.NodeData.NodeID = id++;
+                });
+                Save();
             });
             return graphViewChange;
         }
         
-        /// <summary>
-        ///  更新节点连接状态。。。
-        /// </summary>
-        void RefreshTreeAndSave()
+        public void Load(GraphData fGraphData)
         {
-            nodeEditors.ForEach(node => node.NodeBase.ClearChildren());
-            rootEditor = nodeEditors.FirstOrDefault(node => node.NodeBase is RootNode) as INodeBaseEditor<RootNode>;
-            if (rootEditor == null)
-            {
-                MyDebug.LogError("No ROOT node found in the graph, NOT save the graph and CLOSE the window!");
-                OnRootNodeDeleted?.Invoke(rootNode.GetInstanceID());
-                return;
-            }
-            rootEditor.OnRefreshTree();
-            rootNode = rootEditor.NodeBase;
-            Save();
-        }
-
-        void CreateChildNodeEditors(INodeBaseEditor<NodeBase> thisNodeEditor, NodeBase thisNodeBase)
-        {
-            var guardNode = thisNodeBase.GuardNode;
-            if (guardNode != null)
-            {
-                var guardEditor = DrawNodeEditorWithIns(guardNode, false);
-                var ele = thisNodeEditor.ConnectGuardNodeEditor(guardEditor);
-                if (ele == null)
-                {
-                    MyDebug.LogError($"Failed to connect guardNodeEditor {guardNode.name} for {thisNodeBase.name}, probably some port is NULL! Check the config.");
-                }
-                else
-                {
-                    AddElement(ele);
-                }
-                CreateChildNodeEditors(guardEditor, guardNode);
-            }
-            thisNodeBase.ChildList?.ForEach(childNode =>
-            {
-                var childNodeEditor = DrawNodeEditorWithIns(childNode, false);
-                var ele = thisNodeEditor.ConnectChildNodeEditor(childNodeEditor);
-                if (ele == null)
-                {
-                    MyDebug.LogError($"Failed to connect childNodeEditor {childNode.name} for {thisNodeBase.name}, probably some port is NULL! Check the config.");
-                }
-                else
-                {
-                    AddElement(ele);
-                }
-                CreateChildNodeEditors(childNodeEditor, childNode);
-            });
-        }
-        public void Load(RootNode loadedRootNode)
-        {
+            graphData = fGraphData;
             nodes.ForEach(RemoveElement);
-            rootNode = loadedRootNode;
-            rootEditor = DrawNodeEditorWithIns(rootNode, false);
-            CreateChildNodeEditors(rootEditor, rootNode);
+            // TODO 多余的Cast
+            graphData.NodeDataList.Cast<BTNodeData>().ForEach(node => DrawNodeEditorByData(node, isDefault: false));
         }
         
         void Save()
         {
-            IEnumerable<NodeBase> nodeBases = nodeEditors
-                .Select(nodeEditor => nodeEditor.NodeBase)
-                .ToList();
-            if (AssetDatabase.LoadAssetAtPath<RootNode>(path))
+            IEnumerable<NodeData> nodeBases = nodeEditors
+                .Select(nodeEditor => nodeEditor.NodeData);
+            if (AssetDatabase.LoadAssetAtPath<GraphData>(path))
             {
                 AssetDatabase.LoadAllAssetRepresentationsAtPath(path)
                     .Where(ass => !nodeBases.Contains(ass))
@@ -148,16 +104,28 @@ namespace BehaviourTree
             }
             else
             {
-                AssetDatabase.CreateAsset(rootNode, path);
+                AssetDatabase.CreateAsset(graphData, path);
             }
-            EditorUtility.SetDirty(rootNode);
+            EditorUtility.SetDirty(graphData);
             nodeEditors.ForEach(nodeEditor =>
             {
-                AssetDataBaseExt.SafeAddSubAsset(nodeEditor.NodeBase, rootNode);
+                AssetDataBaseExt.SafeAddSubAsset(nodeEditor.NodeData, graphData);
             });
             
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        public static List<Object> GetAllSubAssets(ScriptableObject target)
+        {
+            var ret = new List<Object>();
+            if (target == null) 
+                return ret;
+            string assetPath = AssetDatabase.GetAssetPath(target);
+            if (string.IsNullOrEmpty(assetPath)) 
+                return ret;
+            ret.AddRange(AssetDatabase.LoadAllAssetsAtPath(assetPath));
+            return ret;
         }
     }
 }
