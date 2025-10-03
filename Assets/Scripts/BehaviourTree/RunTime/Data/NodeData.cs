@@ -43,6 +43,7 @@ public abstract class BTNodeData : NodeData
     public override void OnDeserializeEnd()
     {
         // TODO OfType性能
+        base.OnDeserializeEnd();
         GuardNode = ChildList.OfType<GuardNode>().FirstOrDefault();
     }
 
@@ -91,7 +92,7 @@ public abstract class NodeData : SerializedScriptableObject
     // public string Description;
     [ReadOnly] public int NodeID;
     protected abstract EChildCountType childCountType { get; set; }
-    public List<NodeData> ChildList;
+    public List<NodeData> ChildList = new();
     #endregion
     
     public virtual void OnDeserializeEnd(){}

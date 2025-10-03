@@ -30,9 +30,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  Position: {x: 461.6, y: 314.40002}
-  Size: {x: 88.80002, y: 105.599976}
-  NodeID: 2
+  Position: {x: 154.4, y: 324.80002}
+  Size: {x: 196, y: 119.19998}
+  NodeID: 3
   ChildList: []
   Running: 0
 --- !u!114 &11400000
@@ -47,6 +47,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43bedc71f8d34a218492ddab6a8c388f, type: 3}
   m_Name: GraphData
   m_EditorClassIdentifier: 
+--- !u!114 &428280428729552977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc923665e79a455d8362390bfbd8d0e6, type: 3}
+  m_Name: InverseNode
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: State
+      Entry: 7
+      Data: 0|Observable`1[[BehaviourTree.EState, BHRumtime]], CSharp13
+    - Name: value
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+  Position: {x: 382.4, y: 486.40002}
+  Size: {x: 188.80002, y: 129.59998}
+  NodeID: 4
+  ChildList: []
 --- !u!114 &1949894297622585430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,9 +111,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  Position: {x: 592, y: 276.80002}
-  Size: {x: 188.79999, y: 129.6}
-  NodeID: 0
+  Position: {x: 514.4, y: 314.40002}
+  Size: {x: 188.79999, y: 129.59998}
+  NodeID: 1
   ChildList: []
 --- !u!114 &5171906857006832626
 MonoBehaviour:
@@ -111,9 +145,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  Position: {x: 535.2, y: 116.8}
-  Size: {x: 88.79999, y: 105.59999}
-  NodeID: 3
+  Position: {x: 476.8, y: 109.59999}
+  Size: {x: 203.20001, y: 101.600006}
+  NodeID: 2
   ChildList:
   - {fileID: 1949894297622585430}
   Running: 0
@@ -147,7 +181,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  Position: {x: 860, y: 300.80002}
+  Position: {x: 782.4, y: 324.80002}
   Size: {x: 177.59998, y: 105.600006}
-  NodeID: 1
+  NodeID: 0
   ChildList: []

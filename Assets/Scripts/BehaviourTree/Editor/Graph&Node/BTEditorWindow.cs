@@ -14,17 +14,17 @@ namespace BehaviourTree
     {
         static readonly Dictionary<int, BTEditorWindow> windowDic = new();
         static GraphData curGraphData;
-        // static BTEditorWindow()
-        // {
+        static BTEditorWindow()
+        {
             // 编译前关闭所有已打开窗口
             // AssemblyReloadEvents.beforeAssemblyReload += CloseAllWindows;
             // 关掉unity时关闭所有窗口 
-            // EditorApplication.wantsToQuit += () =>
-            // {
-                // CloseAllWindows();
-                // return true;
-            // };
-        // }
+            EditorApplication.wantsToQuit += () =>
+            {
+                CloseAllWindows();
+                return true;
+            };
+        }
         [UnityEditor.Callbacks.OnOpenAsset(1)]
         static bool OnOpenAsset(int instanceID, int line)
         {
@@ -61,6 +61,22 @@ namespace BehaviourTree
             });
             return ret;
         }
+        static void CloseAllWindows()
+        {
+            foreach (var kvp in windowDic.ToList())
+            {
+                kvp.Value.Close();
+            }
+            windowDic.Clear();
+        }
+        // static void CloseWindow(int instanceID)
+        // {
+        //     if (!windowDic.TryGetValue(instanceID, out var value))
+        //         return;
+        //     value.Close();
+        //     windowDic.Remove(instanceID);
+        // }
+        
         
         GraphData graphData;
         void OnEnable()
@@ -83,21 +99,5 @@ namespace BehaviourTree
         {
             windowDic.Remove(graphData.GetInstanceID());
         }
-        
-        // static void CloseAllWindows()
-        // {
-        //     foreach (var kvp in windowDic.ToList())
-        //     {
-        //         kvp.Value.Close();
-        //     }
-        //     windowDic.Clear();
-        // }
-        // static void CloseWindow(int instanceID)
-        // {
-        //     if (!windowDic.TryGetValue(instanceID, out var value))
-        //         return;
-        //     value.Close();
-        //     windowDic.Remove(instanceID);
-        // }
     }
 }
