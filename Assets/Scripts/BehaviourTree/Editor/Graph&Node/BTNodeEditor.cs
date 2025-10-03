@@ -1,22 +1,12 @@
-﻿using System;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourTree
 {
-    [Serializable]
-    public class BTNodeEditor<T> : NodeEditorBase where T : BTNodeData
+    public class BTNodeEditor : NodeEditor<BTNodeData>
     {
-        public BTNodeEditor(NodeData nodeData, bool isDefault) : base(nodeData, isDefault)
-        {
-        }
-
-        public new T NodeData
-        {
-            get => base.NodeData as T;
-            set => base.NodeData = value;
-        }
+        public BTNodeEditor(BTNodeData nodeData, bool isDefault) 
+            : base(nodeData, isDefault){}
 
         protected override void DrawNodeField()
         {
@@ -43,6 +33,11 @@ namespace BehaviourTree
                 detailLabel.text = NodeData.GetDetail();
             }).Every(10);
             extensionContainer.Add(detailLabel);
+        }
+
+        public override NodeData CreateNodeData()
+        {
+            return ScriptableObject.CreateInstance<BTNodeData>();
         }
     }
 }

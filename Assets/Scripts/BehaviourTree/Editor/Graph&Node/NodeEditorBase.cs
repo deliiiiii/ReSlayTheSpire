@@ -172,5 +172,7 @@ namespace BehaviourTree
             };
             extensionContainer.Add(nodeField);
         }
+
+        public abstract NodeData CreateNodeData();
     }
 }

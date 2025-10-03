@@ -1,48 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8337347352441891752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1be339da6e4b49759e24d0861155cfc6, type: 3}
-  m_Name: LimitTimesNode
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: State
-      Entry: 7
-      Data: 0|Observable`1[[BehaviourTree.EState, BHRumtime]], CSharp13
-    - Name: value
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-  Position: {x: 456.8, y: 238.40001}
-  Size: {x: 216.79999, y: 116}
-  NodeID: 3
-  ChildList: []
-  NodeWithEvent:
-    rid: -2
-  LimitTimes: 1
-  LimitTimer: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!114 &-6976674351719881960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,9 +30,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  Position: {x: 182.4, y: 152}
-  Size: {x: 196, y: 119.2}
-  NodeID: 2
+  Position: {x: 207.2, y: 114.399994}
+  Size: {x: 196.00002, y: 119.2}
+  NodeID: 3
   ChildList: []
   Running: 0
 --- !u!114 &-3521301464684857615
@@ -110,9 +67,9 @@ MonoBehaviour:
       Data: 
   Position: {x: 503.2, y: 410.40002}
   Size: {x: 193.59998, y: 77.599976}
-  NodeID: 4
+  NodeID: 2
   ChildList: []
---- !u!114 &-1003048883415267758
+--- !u!114 &-35910181652191535
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,8 +78,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
-  m_Name: RootNode
+  m_Script: {fileID: 11500000, guid: 1be339da6e4b49759e24d0861155cfc6, type: 3}
+  m_Name: LimitTimesNode
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -142,11 +99,22 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  Position: {x: 820.8, y: 488}
-  Size: {x: 88.79999, y: 72.79999}
-  NodeID: 5
+  Position: {x: 304.8, y: 245.59999}
+  Size: {x: 449.60004, y: 105.600006}
+  NodeID: 1
   ChildList: []
-  Running: 0
+  NodeWithEvent:
+    rid: 4049882935991730177
+  LimitTimes: 1
+  LimitTimer: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 4049882935991730177
+      type: {class: NodeWithEvent, ns: BehaviourTree, asm: BHRumtime}
+      data:
+        EventK1: 0
+        EventK2: 11Bus
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,41 +127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43bedc71f8d34a218492ddab6a8c388f, type: 3}
   m_Name: GraphData
   m_EditorClassIdentifier: 
---- !u!114 &5171906857006832626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29130919a9024a2ba31263f89aaf519f, type: 3}
-  m_Name: RootNode
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: State
-      Entry: 7
-      Data: 0|Observable`1[[BehaviourTree.EState, BHRumtime]], CSharp13
-    - Name: value
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-  Position: {x: 469.6, y: 119.2}
-  Size: {x: 229.6, y: 92.8}
-  NodeID: 1
-  ChildList: []
-  Running: 0
 --- !u!114 &5731271867611374406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,7 +157,41 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  Position: {x: 798.4, y: 271.2}
+  Position: {x: 771.2, y: 125.59999}
   Size: {x: 193.59998, y: 108}
+  NodeID: 4
+  ChildList: []
+--- !u!114 &7245774165090937739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71ea6caf7fa4c7f8bbacd88184474d3, type: 3}
+  m_Name: GuardNodeAlwaysFalse
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: State
+      Entry: 7
+      Data: 0|Observable`1[[BehaviourTree.EState, BHRumtime]], CSharp13
+    - Name: value
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+  Position: {x: 193.6, y: 415.2}
+  Size: {x: 163.19998, y: 72.79999}
   NodeID: 0
   ChildList: []
