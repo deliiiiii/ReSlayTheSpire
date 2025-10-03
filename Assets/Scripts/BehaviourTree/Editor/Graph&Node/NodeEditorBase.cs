@@ -32,83 +32,13 @@ namespace BehaviourTree
                     "PortToDrawConfig not found, please create it in Assets/DataTree/PortToDrawConfig.asset");
             }
         }
-
-        protected Dictionary<string, Port> portDic = new();
-
-        public NodeData NodeData;
-        public Port InputParentPort;
-        public Port InputGuardingPort;
-        public Port OutputChildPorts;
-        public Port OutputGuardedPort;
-
-        public Action<Type> OnTypeChanged;
-
-        IEnumerable<NodeEditorBase> ChildNodeEditors =>
-            portDic.Values
-                .Where(p => p.direction == Direction.Output)
-                .SelectMany(p => p.connections.Select(c => c.input.node))
-                .OfType<NodeEditorBase>();
-            
         
-        [CanBeNull]
-        public Edge ConnectEdges()
-        {
-            // TODO
-            return null;
-        }
-        
-        /// <summary>
-        /// 当树变化时调用，主要是从头开始构建NodeBase的连接关系
-        /// </summary>
-        public void OnRefreshTree()
-        {
-            NodeData.Position = GetRect().position;
-            NodeData.Size = GetRect().size;
-            NodeData.ClearChildren();
-            ChildNodeEditors?
-                .OrderBy(nodeEditor => nodeEditor.NodeData.Position.x)
-                .ForEach(nodeEditor =>
-                {
-                    MyDebug.Log($"OnRefreshTree : {NodeData.name} AddChild {nodeEditor.NodeData.name}");
-                    NodeData.AddChild(nodeEditor.NodeData);
-                    // nodeDAta.OnRefreshTree();
-                });
-            
-            // NodeData.GuardNode = this.GuardingNode();
-            // this.GuardingEditor()?.OnRefreshTree();
-            // MyDebug.Log($"Editor : {NodeBase.name} AddGuard {guard?.name ?? "null"}");
-            NodeData.OnRefreshTreeEnd();
-        }
-
-        Rect GetRect() => GetPosition();
-    }
-    
-    // TODO 多余的Cast
-    [Serializable]
-    public class NodeEditor<T> : NodeEditorBase where T : BTNodeData
-    {
-        public new T NodeData
-        {
-            get => base.NodeData as T;
-            set
-            {
-                if (base.NodeData == value)
-                    return;
-                base.NodeData = value;
-                extensionContainer.Clear();
-                DrawTypeField();
-                DrawNodeField();
-            }
-        }
-
-        public Rect GetRect() => GetPosition();
-        
-        public NodeEditor(T nodeData, bool isDefault)
+        protected NodeEditorBase(NodeData nodeData, bool isDefault)
         {
             NodeData = nodeData;
             OnTypeChanged += nodeType =>
             {
-                NodeData = ScriptableObject.CreateInstance(nodeType) as T;
+                NodeData = ScriptableObject.CreateInstance(nodeType) as NodeData;
                 NodeData!.name = NodeData.GetType().Name;
             };
             if (isDefault)
@@ -135,8 +65,61 @@ namespace BehaviourTree
             base.expanded = true;
             RefreshExpandedState();
         }
+        
 
-        void DrawAllPorts()
+        protected readonly Dictionary<string, Port> portDic = new();
+
+        NodeData nodeData;
+        public NodeData NodeData
+        {
+            get => nodeData;
+            protected set
+            {
+                if (nodeData == value)
+                    return;
+                nodeData = value;
+                extensionContainer.Clear();
+                DrawTypeField();
+                DrawNodeField();
+            }
+        }
+        
+
+        public Action<Type> OnTypeChanged;
+
+        IEnumerable<NodeEditorBase> ChildNodeEditors =>
+            portDic.Values
+                .Where(p => p.direction == Direction.Output)
+                .SelectMany(p => p.connections.Select(c => c.input.node))
+                .OfType<NodeEditorBase>();
+            
+        
+        [CanBeNull]
+        public Edge ConnectEdges()
+        {
+            // TODO
+            return null;
+        }
+        
+        /// <summary>
+        /// 当树变化时调用，主要是从头开始构建NodeBase的连接关系
+        /// </summary>
+        public void OnRefreshTree()
+        {
+            NodeData.Position = GetPosition().position;
+            NodeData.Size = GetPosition().size;
+            NodeData.ClearChildren();
+            ChildNodeEditors?
+                .OrderBy(nodeEditor => nodeEditor.NodeData.Position.x)
+                .ForEach(nodeEditor =>
+                {
+                    MyDebug.Log($"OnRefreshTree : {NodeData.name} AddChild {nodeEditor.NodeData.name}");
+                    NodeData.AddChild(nodeEditor.NodeData);
+                });
+            NodeData.OnRefreshTreeEnd();
+        }
+        
+        protected void DrawAllPorts()
         { 
             portDic.Clear();
             var portToDrawData = portToDrawConfig.TypeToPortToDrawData[NodeData.GetGeneralType().Name];
@@ -165,7 +148,7 @@ namespace BehaviourTree
             
         }
         
-        void DrawTypeField()
+        protected void DrawTypeField()
         {
             var selections = TypeCache.GeneralToSelectionsDic[NodeData.GetGeneralType()];
             var typeField = new DropdownField(selections.Select(x => x.Name).ToList(), NodeData.GetType().Name);
@@ -176,14 +159,8 @@ namespace BehaviourTree
             extensionContainer.Add(typeField);
         }
 
-        void DrawNodeField()
+        protected virtual void DrawNodeField()
         {
-            style.backgroundColor = tickStateColorDic[NodeData.State];
-            NodeData.State.OnValueChangedAfter += evt =>
-            {
-                style.backgroundColor = tickStateColorDic[evt];
-            };
-            
             var nodeField = new ObjectField()
             {
                 objectType = NodeData.GetType(),
@@ -194,24 +171,6 @@ namespace BehaviourTree
                 },
             };
             extensionContainer.Add(nodeField);
-
-            var detailLabel = new Label(NodeData.GetDetail())
-            {
-                style =
-                {
-                    whiteSpace = WhiteSpace.Normal,
-                    color = Color.white,
-                    fontSize = 15,
-                    unityFontStyleAndWeight = FontStyle.Bold,
-                }
-            };
-            detailLabel.schedule.Execute(() =>
-            {
-                detailLabel.text = NodeData.GetDetail();
-            }).Every(10);
-            extensionContainer.Add(detailLabel);
         }
     }
-
-    
 }

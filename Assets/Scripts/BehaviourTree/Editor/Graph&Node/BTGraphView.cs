@@ -58,7 +58,7 @@ namespace BehaviourTree
             //     return rootEditor as NodeEditor<T>;
             
             // 利用反射调用构造函数, 参数列表恰好是{T}
-            var ins = typeof(NodeEditor<>).MakeGenericType(nodeData.GetGeneralType())
+            var ins = typeof(BTNodeEditor<>).MakeGenericType(nodeData.GetGeneralType())
                 .GetConstructor(new[] { nodeData.GetGeneralType(), typeof(bool) })?
                 .Invoke(new object[] { nodeData, isDefault }) as NodeEditorBase;
             ins!.OnTypeChanged += _ => DelayOnGraphViewChanged(default);
