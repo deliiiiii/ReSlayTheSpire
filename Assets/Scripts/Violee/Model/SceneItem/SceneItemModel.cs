@@ -9,7 +9,7 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
 {
     [SerializeReference] public required List<InteractReceiver> IrList;
     public required MiniIconGetter MiniIconGetter;
-    BindDataUpdate b;
+    BindDataUpdate b = null!;
 
     protected override void OnReadData()
     {

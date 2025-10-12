@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -214,7 +213,6 @@ GameObject:
   - component: {fileID: 1150023988}
   - component: {fileID: 1150023987}
   - component: {fileID: 1150023986}
-  - component: {fileID: 1150023985}
   - component: {fileID: 1150023984}
   m_Layer: 5
   m_Name: Prefab Card
@@ -602,6 +600,7 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1 &930887246
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,24 +894,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1150023985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 328116724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea0cbad8d337af9499b9c8b3e9ffe391, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardCost: {fileID: 359625552}
-  cardName: {fileID: 172508343}
-  cardImage: {fileID: 1150023987}
-  description: {fileID: 1959624366}
-  cardDescription: {fileID: 1959624366}
-  IsHandCard: 0
 --- !u!114 &1150023986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1469,7 +1450,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2071141965}
-  - component: {fileID: 2071141966}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -1492,20 +1472,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2071141966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2071141963}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9000d18cf9204180a571983350239c28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MainViewIns: {fileID: 4512057174557312181}
-  BattleViewIns: {fileID: 2404329948218407982}
 --- !u!222 &29275207457938958
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1707,14 +1673,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4375667549598501031}
-  - component: {fileID: 4512057174557312181}
   m_Layer: 5
   m_Name: Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &316000511946660647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3375,24 +3340,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7865817297421652920}
   m_CullTransparentMesh: 1
---- !u!114 &2205824311240559023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6769410755959695169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea0cbad8d337af9499b9c8b3e9ffe391, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardCost: {fileID: 6401608760277814773}
-  cardName: {fileID: 850622515221297562}
-  cardImage: {fileID: 4577591279005339503}
-  description: {fileID: 1415435993761960722}
-  cardDescription: {fileID: 1415435993761960722}
-  IsHandCard: 0
 --- !u!224 &2209685994715677117
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3568,36 +3515,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -524.86}
   m_SizeDelta: {x: 0, y: 805.3898}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2404329948218407982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6658467996035551921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d493967928744c445bac1eaa27e99dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabUICard: {fileID: 1824995784214872487, guid: 44b1910fd81a3c94889cf24dd153bfd2, type: 3}
-  panelEnterNextRoom: {fileID: 3478178672336832086}
-  uiMapNodeEnemy: {fileID: 4201041756022486466}
-  panelHandCard: {fileID: 4618244528481617609}
-  panelDeckCard: {fileID: 8372157188388562355}
-  panelDeckCardBack: {fileID: 3538044575777709791}
-  transDeckCardContent: {fileID: 2453760699863010771}
-  panelDetailCard: {fileID: 5263940366654946377}
-  detailUICard: {fileID: 2205824311240559023}
-  txtPlayerName: {fileID: 9119642495958063974}
-  txtJob: {fileID: 1268200598894728857}
-  txtCurHP: {fileID: 8989984046670201194}
-  txtMaxHP: {fileID: 8986143535842066897}
-  txtCurCoin: {fileID: 5522036730935037776}
-  panelKusuri: {fileID: 1620357423311688090}
-  btnDeckCard: {fileID: 857333602091208089}
-  txtDeckCardCount: {fileID: 5179074075573233149}
-  btnExit: {fileID: 6097028518468159401}
 --- !u!1 &2451616335157327771
 GameObject:
   m_ObjectHideFlags: 0
@@ -3953,7 +3870,6 @@ GameObject:
   - component: {fileID: 4317747642514019482}
   - component: {fileID: 5154969170436928915}
   - component: {fileID: 3403915718327824323}
-  - component: {fileID: 7390503334221427539}
   - component: {fileID: 8612581037641470029}
   m_Layer: 5
   m_Name: Prefab Card
@@ -4287,7 +4203,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!222 &3328011455118806951
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4910,20 +4826,6 @@ RectTransform:
   m_AnchoredPosition: {x: 1312.8336, y: -62.365}
   m_SizeDelta: {x: 134.0576, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4201041756022486466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6016262367495875093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: faf5b611d9ea1474a9a3fbae8d42b497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BtnEnter: {fileID: 5142982218208742904}
-  ddEnemy: {fileID: 4638510285477665903}
 --- !u!114 &4210418743455448413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5219,30 +5121,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8287200293266674632}
   m_CullTransparentMesh: 1
---- !u!114 &4512057174557312181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 309128785590375121}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 749eb78d8f7f931458dd738148645161, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TxtPlayTime: {fileID: 3194224400770252724}
-  errorPanel: {fileID: 1126155207}
-  txtError: {fileID: 1869388140}
-  panelTitle: {fileID: 3292984335170817769}
-  btnStart: {fileID: 7083807845882515173}
-  btnQuit: {fileID: 8412831404897733689}
-  panelSelectJob: {fileID: 2552641351320506601}
-  btnSelectJobUp: {fileID: 6063750788604042607}
-  btnSelectJobDown: {fileID: 1146576557785891060}
-  btnConfirmJob: {fileID: 6907834130017930297}
-  btnCancelJob: {fileID: 6276215141959318924}
-  TxtJobName: {fileID: 3531897290717810986}
 --- !u!1 &4512798531885048604
 GameObject:
   m_ObjectHideFlags: 0
@@ -6612,7 +6490,6 @@ GameObject:
   - component: {fileID: 8726998981113348774}
   - component: {fileID: 7394340660315877282}
   - component: {fileID: 9124842969686545684}
-  - component: {fileID: 4201041756022486466}
   m_Layer: 5
   m_Name: MapNode Enemy
   m_TagString: Untagged
@@ -7360,7 +7237,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2504320203798260199}
-  - component: {fileID: 2404329948218407982}
   m_Layer: 5
   m_Name: Battle
   m_TagString: Untagged
@@ -7388,7 +7264,6 @@ GameObject:
   - component: {fileID: 4892957296283725414}
   - component: {fileID: 4577591279005339503}
   - component: {fileID: 6283046401215419711}
-  - component: {fileID: 2205824311240559023}
   - component: {fileID: 1119978987671726769}
   m_Layer: 5
   m_Name: Detail UICard
@@ -7904,24 +7779,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Option A
---- !u!114 &7390503334221427539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2737406895305137597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea0cbad8d337af9499b9c8b3e9ffe391, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardCost: {fileID: 2367744852509259529}
-  cardName: {fileID: 8341504946264818534}
-  cardImage: {fileID: 5154969170436928915}
-  description: {fileID: 7757553366184126958}
-  cardDescription: {fileID: 7757553366184126958}
-  IsHandCard: 0
 --- !u!222 &7394340660315877282
 CanvasRenderer:
   m_ObjectHideFlags: 0

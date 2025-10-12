@@ -2,7 +2,8 @@
     "name": "BHRumtime",
     "rootNamespace": "",
     "references": [
-        "GUID:8b779b61c8bed72409294131dca64e73"
+        "GUID:8b779b61c8bed72409294131dca64e73",
+        "GUID:d7cd482536f444347ae1515d520f0e9b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

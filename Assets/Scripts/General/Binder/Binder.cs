@@ -29,15 +29,20 @@ public static class Binder
         return new BindDataState(state);
     }
 
-    public static void Awake(Action act)
-    {
-        Updater.AwakeAct += act;
-    }
     public static BindDataUpdate Update(Action<float> act, EUpdatePri priority = EUpdatePri.Default)
     {
         var ret = new BindDataUpdate(act, priority);
-        Updater.UpdateDic.TryAdd(priority, new HashSet<BindDataUpdate>());
-        Updater.UpdateDic[priority].Add(ret);
+        Updater.UpdateDic.TryAdd(ret.Priority, new HashSet<BindDataUpdate>());
+        Updater.UpdateDic[ret.Priority].Add(ret);
+        return ret;
+    }
+
+    public static BindDataUpdate<TEnum> Update<TEnum>(Action<float> act, TEnum priority)
+        where TEnum : Enum
+    {
+        var ret = new BindDataUpdate<TEnum>(act, priority);
+        Updater.UpdateDic.TryAdd(ret.Priority, new HashSet<BindDataUpdate>());
+        Updater.UpdateDic[ret.Priority].Add(ret);
         return ret;
     }
     

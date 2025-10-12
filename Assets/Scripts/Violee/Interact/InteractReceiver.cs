@@ -12,12 +12,12 @@ public interface IHasInteractReceiver
 }
 
 [RequireComponent(typeof(MeshCollider))]
-[RequireComponent(typeof(Outline))]
+[RequireComponent(typeof(MyOutline))]
     
 public class InteractReceiver : MonoBehaviour
 {
     public Func<InteractInfo> GetInteractInfo = InteractInfo.CreateUnActive;
-    Outline? outline;
+    MyOutline? outline;
     void Awake()
     {
         if (gameObject.layer != LayerMask.NameToLayer(nameof(InteractReceiver)))
@@ -25,8 +25,8 @@ public class InteractReceiver : MonoBehaviour
             MyDebug.LogError($"{name} should be on layer {nameof(InteractReceiver)}");
             gameObject.layer = LayerMask.NameToLayer(nameof(InteractReceiver));
         }
-        outline = gameObject.GetOrAddComponent<Outline>();
-        outline.OutlineMode = Outline.Mode.OutlineAll;
+        outline = gameObject.GetOrAddComponent<MyOutline>();
+        outline.OutlineMode = MyOutline.Mode.OutlineAll;
         outline.OutlineWidth = 10f; 
         DisableOutline();
     }

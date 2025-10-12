@@ -1,33 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 public class Updater : Singleton<Updater>
 {
-    public static event Action AwakeAct;
-    readonly SortedDictionary<EUpdatePri, HashSet<BindDataUpdate>> updateDic = new();
-    public static SortedDictionary<EUpdatePri, HashSet<BindDataUpdate>> UpdateDic => Instance.updateDic;
-    protected override void Awake()
-    {
-        base.Awake();
-        AwakeAct?.Invoke();
-    }
+    readonly SortedDictionary<int, HashSet<BindDataUpdate>> updateDic = new();
+    public static SortedDictionary<int, HashSet<BindDataUpdate>> UpdateDic => Instance.updateDic;
     void Update()
     {
-        var updateDicValues = UpdateDic.Values;
-        for (var i = 0; i < updateDicValues.Count; i++)
+        UpdateDic.Values.ForEach(set =>
         {
-            var bindDataUpdates = updateDicValues.ElementAt(i);
-            var bindDataUpdatesList = bindDataUpdates.ToList();
-            // ReSharper disable once ForCanBeConvertedToForeach
-            for (var j = 0; j < bindDataUpdatesList.Count; j++)
+            set.ForEach(v =>
             {
-                var bindDataUpdate = bindDataUpdatesList[j];
-                if (bindDataUpdate.GuardSet.All(guard => guard()))
-                    bindDataUpdate.Act(Time.deltaTime);
-            }
-        }
+                if(v.GuardSet.All(guard => guard()))
+                    v.Act(Time.deltaTime);
+            });
+        });
     }
 }
-

@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 public class BindDataUpdate
 {
     public Action<float> Act;
-    public readonly EUpdatePri Priority;
+    public readonly int Priority;
     public HashSet<Func<bool>> GuardSet = new ();
 
     public BindDataUpdate(Action<float> act, EUpdatePri priority)
     {
         this.Act = act;
-        this.Priority = priority;
+        this.Priority = (int)priority;
     }
     
     public BindDataUpdate Where(Func<bool> guard)
@@ -28,6 +26,12 @@ public class BindDataUpdate
     }
 }
 
+public class BindDataUpdate<T> : BindDataUpdate
+    where T : Enum
+{
+    public BindDataUpdate(Action<float> act, T priority) : base(act, (EUpdatePri)Convert.ToInt32(priority)){}
+}
+
 public enum EUpdatePri
 {
     Default = -1,
@@ -35,5 +39,5 @@ public enum EUpdatePri
     
     Fsm = 10,
     
-    Sprite,
+    Sprite = 11,
 }

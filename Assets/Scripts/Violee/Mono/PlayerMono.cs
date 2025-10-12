@@ -32,10 +32,6 @@ public class PlayerMono : Singleton<PlayerMono>
             .OnEnter(OnEnterPlaying)
             .OnExit(OnExitPlaying);
     }
-
-    void Func(float dt)
-    {
-    }
     public static void RefreshCurPointBuff()
     {
         BuffManager.RefreshConBuffs(PlayerCurPoint.Value?.ConnectedPointItems() ?? []);

@@ -7,16 +7,17 @@ public class BindDataActImg<T> : BindDataAct<T>
     {
         this.img = img;
         this.func = func;
-        act = (_) => img.fillAmount = func(osv);
+        act = _ => img.fillAmount = func(osv);
     }
-    Image img;
-    Func<float, float> func;
-    float deltaPerSecond = float.MaxValue;
+
+    readonly Image img;
+    readonly Func<float, float> func;
+    // float deltaPerSecond = float.MaxValue;
     public BindDataActImg<T> Fluent(float deltaPerSecond)
     {
         BeforeTo();
-        this.deltaPerSecond = deltaPerSecond;
-        act = (_) => img.DoFluentFill(func(osv), deltaPerSecond);
+        // this.deltaPerSecond = deltaPerSecond;
+        act = _ => img.DoFluentFill(func(osv), deltaPerSecond);
         AfterTo();
         return this;
     }

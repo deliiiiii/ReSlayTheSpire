@@ -2,7 +2,6 @@
 //需要被继承 xxx : Singleton<xxx>
 //获取单例 xxx.Instance
 
-using System;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -40,6 +39,7 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
         }
     }
 
+#if UNITY_EDITOR
     void OnPlayModeStateChanged(PlayModeStateChange s)
     {
         if (s == PlayModeStateChange.ExitingPlayMode && instance != null)
@@ -51,15 +51,12 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 
     void OnEnable()
     {
-#if UNITY_EDITOR
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-#endif
     }
 
     void OnDisable()
     {
-#if UNITY_EDITOR
         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-#endif
     }
+#endif
 }

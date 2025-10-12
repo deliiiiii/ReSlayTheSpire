@@ -1,6 +1,6 @@
+#nullable enable
 using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -9,7 +9,7 @@ using UnityEngine.Events;
 [Serializable]
 public class Observable<T>
 {
-    [SerializeField] [CanBeNull] T value;
+    [SerializeField] T? value;
     bool forceEverySet;
     bool enableRepeatEvent;
 
@@ -19,10 +19,9 @@ public class Observable<T>
     {
         if (canAddOne)
         {
-            Value = (dynamic)Value + 1;
+            Value = (Value as dynamic) + 1;
         }
     }
-    [CanBeNull]
     public T? Value
     {
         get => value;
@@ -44,8 +43,8 @@ public class Observable<T>
             onValueChangedFull?.Invoke(oldV, value);
         }
     }
-    [CanBeNull] UnityAction<T> onValueChangedBefore;
-    [CanBeNull] public event UnityAction<T> OnValueChangedBefore
+    UnityAction<T?>? onValueChangedBefore;
+    public event UnityAction<T>? OnValueChangedBefore
     {
         add
         {
@@ -57,8 +56,8 @@ public class Observable<T>
         remove => onValueChangedBefore -= value;
     }
     
-    [CanBeNull] UnityAction<T> onValueChangedAfter;
-    [CanBeNull] public event UnityAction<T> OnValueChangedAfter
+    UnityAction<T?>? onValueChangedAfter;
+    public event UnityAction<T?>? OnValueChangedAfter
     {
         add
         {
@@ -69,8 +68,8 @@ public class Observable<T>
         }
         remove => onValueChangedAfter -= value;
     }
-    [CanBeNull] UnityAction<T, T> onValueChangedFull;
-    [CanBeNull] public event UnityAction<T, T> OnValueChangedFull
+    UnityAction<T?, T?>? onValueChangedFull;
+    public event UnityAction<T?, T?>? OnValueChangedFull
     {
         add
         {
@@ -86,9 +85,9 @@ public class Observable<T>
     {
         value = initValue;
     }
-    public Observable(T initValue, 
-        [CanBeNull] UnityAction<T> before = null, 
-        [CanBeNull] UnityAction<T> after = null,
+    public Observable(T? initValue, 
+        UnityAction<T?>? before = null, 
+        UnityAction<T?>? after = null,
         bool forceEverySet = false,
         bool enableRepeatEvent = false
         )
@@ -101,7 +100,7 @@ public class Observable<T>
     }
     public static implicit operator T(Observable<T> v)
     {
-        return v.Value;
+        return v.Value!;
     }
     
     public static implicit operator float(Observable<T> v)
@@ -112,7 +111,7 @@ public class Observable<T>
             float f => f,
             double d => (float)d,
             char c => c,
-            _ => (dynamic)v.Value
+            _ => throw new InvalidCastException($"Cannot convert {v.value} (Type: {typeof(T)}) to float")
         };
     }
 

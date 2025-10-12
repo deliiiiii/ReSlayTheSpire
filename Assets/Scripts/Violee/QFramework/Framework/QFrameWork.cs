@@ -30,6 +30,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+#pragma warning disable CS8602 // 解引用可能出现空引用。
+#pragma warning disable CS8604 // 引用类型参数可能为 null。
+#pragma warning disable CS8601 // 引用类型赋值可能为 null。
+#pragma warning disable CS8625 // 无法将 null 字面量转换为非 null 的引用类型。
+#pragma warning disable CS8603 // 可能返回 null 引用。
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
 namespace QFramework
 {
@@ -66,10 +74,10 @@ namespace QFramework
 
     public abstract class Architecture<T> : IArchitecture where T : Architecture<T>, new()
     {
-        private bool mInited = false;
+        bool mInited;
 
 
-        public static Action<T> OnRegisterPatch = architecture => { };
+        public static readonly Action<T> OnRegisterPatch = _ => { };
 
         protected static T mArchitecture;
 
@@ -124,12 +132,12 @@ namespace QFramework
         {
         }
 
-        private IOCContainer mContainer = new IOCContainer();
+        private IocContainer mContainer = new IocContainer();
 
         public void RegisterSystem<TSystem>(TSystem system) where TSystem : ISystem
         {
             system.SetArchitecture(this);
-            mContainer.Register<TSystem>(system);
+            mContainer.Register(system);
 
             if (mInited)
             {
@@ -141,7 +149,7 @@ namespace QFramework
         public void RegisterModel<TModel>(TModel model) where TModel : IModel
         {
             model.SetArchitecture(this);
-            mContainer.Register<TModel>(model);
+            mContainer.Register(model);
 
             if (mInited)
             {
@@ -151,7 +159,7 @@ namespace QFramework
         }
 
         public void RegisterUtility<TUtility>(TUtility utility) where TUtility : IUtility =>
-            mContainer.Register<TUtility>(utility);
+            mContainer.Register(utility);
 
         public TSystem GetSystem<TSystem>() where TSystem : class, ISystem => mContainer.Get<TSystem>();
 
@@ -175,7 +183,7 @@ namespace QFramework
             command.Execute();
         }
 
-        public TResult SendQuery<TResult>(IQuery<TResult> query) => DoQuery<TResult>(query);
+        public TResult SendQuery<TResult>(IQuery<TResult> query) => DoQuery(query);
 
         protected virtual TResult DoQuery<TResult>(IQuery<TResult> query)
         {
@@ -183,15 +191,15 @@ namespace QFramework
             return query.Do();
         }
 
-        private TypeEventSystem mTypeEventSystem = new TypeEventSystem();
+        readonly TypeEventSystem mTypeEventSystem = new();
 
         public void SendEvent<TEvent>() where TEvent : new() => mTypeEventSystem.Send<TEvent>();
 
-        public void SendEvent<TEvent>(TEvent e) => mTypeEventSystem.Send<TEvent>(e);
+        public void SendEvent<TEvent>(TEvent e) => mTypeEventSystem.Send(e);
 
-        public IUnRegister RegisterEvent<TEvent>(Action<TEvent> onEvent) => mTypeEventSystem.Register<TEvent>(onEvent);
+        public IUnRegister RegisterEvent<TEvent>(Action<TEvent> onEvent) => mTypeEventSystem.Register(onEvent);
 
-        public void UnRegisterEvent<TEvent>(Action<TEvent> onEvent) => mTypeEventSystem.UnRegister<TEvent>(onEvent);
+        public void UnRegisterEvent<TEvent>(Action<TEvent> onEvent) => mTypeEventSystem.UnRegister(onEvent);
     }
 
     public interface IOnEvent<T>
@@ -212,7 +220,7 @@ namespace QFramework
 
     #region Controller
 
-    public interface IController : IBelongToArchitecture, ICanSendCommand, ICanGetSystem, ICanGetModel,
+    public interface IController : ICanSendCommand, ICanGetSystem, ICanGetModel,
         ICanRegisterEvent, ICanSendQuery, ICanGetUtility
     {
     }
@@ -221,7 +229,7 @@ namespace QFramework
 
     #region System
 
-    public interface ISystem : IBelongToArchitecture, ICanSetArchitecture, ICanGetModel, ICanGetUtility,
+    public interface ISystem : ICanSetArchitecture, ICanGetModel, ICanGetUtility,
         ICanRegisterEvent, ICanSendEvent, ICanGetSystem, ICanInit
     {
     }
@@ -250,7 +258,7 @@ namespace QFramework
 
     #region Model
 
-    public interface IModel : IBelongToArchitecture, ICanSetArchitecture, ICanGetUtility, ICanSendEvent, ICanInit
+    public interface IModel : ICanSetArchitecture, ICanGetUtility, ICanSendEvent, ICanInit
     {
     }
 
@@ -280,13 +288,13 @@ namespace QFramework
 
     #region Command
 
-    public interface ICommand : IBelongToArchitecture, ICanSetArchitecture, ICanGetSystem, ICanGetModel, ICanGetUtility,
+    public interface ICommand : ICanSetArchitecture, ICanGetSystem, ICanGetModel, ICanGetUtility,
         ICanSendEvent, ICanSendCommand, ICanSendQuery
     {
         void Execute();
     }
 
-    public interface ICommand<TResult> : IBelongToArchitecture, ICanSetArchitecture, ICanGetSystem, ICanGetModel,
+    public interface ICommand<TResult> : ICanSetArchitecture, ICanGetSystem, ICanGetModel,
         ICanGetUtility,
         ICanSendEvent, ICanSendCommand, ICanSendQuery
     {
@@ -319,7 +327,7 @@ namespace QFramework
 
     #region Query
 
-    public interface IQuery<TResult> : IBelongToArchitecture, ICanSetArchitecture, ICanGetModel, ICanGetSystem,
+    public interface IQuery<TResult> : ICanSetArchitecture, ICanGetModel, ICanGetSystem,
         ICanSendQuery
     {
         TResult Do();
@@ -385,10 +393,10 @@ namespace QFramework
     public static class CanRegisterEventExtension
     {
         public static IUnRegister RegisterEvent<T>(this ICanRegisterEvent self, Action<T> onEvent) =>
-            self.GetArchitecture().RegisterEvent<T>(onEvent);
+            self.GetArchitecture().RegisterEvent(onEvent);
 
         public static void UnRegisterEvent<T>(this ICanRegisterEvent self, Action<T> onEvent) =>
-            self.GetArchitecture().UnRegisterEvent<T>(onEvent);
+            self.GetArchitecture().UnRegisterEvent(onEvent);
     }
 
     public interface ICanSendCommand : IBelongToArchitecture
@@ -398,10 +406,10 @@ namespace QFramework
     public static class CanSendCommandExtension
     {
         public static void SendCommand<T>(this ICanSendCommand self) where T : ICommand, new() =>
-            self.GetArchitecture().SendCommand<T>(new T());
+            self.GetArchitecture().SendCommand(new T());
 
         public static void SendCommand<T>(this ICanSendCommand self, T command) where T : ICommand =>
-            self.GetArchitecture().SendCommand<T>(command);
+            self.GetArchitecture().SendCommand(command);
 
         public static TResult SendCommand<TResult>(this ICanSendCommand self, ICommand<TResult> command) =>
             self.GetArchitecture().SendCommand(command);
@@ -416,7 +424,7 @@ namespace QFramework
         public static void SendEvent<T>(this ICanSendEvent self) where T : new() =>
             self.GetArchitecture().SendEvent<T>();
 
-        public static void SendEvent<T>(this ICanSendEvent self, T e) => self.GetArchitecture().SendEvent<T>(e);
+        public static void SendEvent<T>(this ICanSendEvent self, T e) => self.GetArchitecture().SendEvent(e);
     }
 
     public interface ICanSendQuery : IBelongToArchitecture
@@ -479,7 +487,7 @@ namespace QFramework
     }
 
 #if UNITY_5_6_OR_NEWER
-    public abstract class UnRegisterTrigger : UnityEngine.MonoBehaviour
+    public abstract class UnRegisterTrigger : MonoBehaviour
     {
         private readonly HashSet<IUnRegister> mUnRegisters = new HashSet<IUnRegister>();
 
@@ -565,20 +573,20 @@ namespace QFramework
         }
 
         public static IUnRegister UnRegisterWhenGameObjectDestroyed(this IUnRegister unRegister,
-            UnityEngine.GameObject gameObject) =>
+            GameObject gameObject) =>
             GetOrAddComponent<UnRegisterOnDestroyTrigger>(gameObject)
                 .AddUnRegister(unRegister);
 
         public static IUnRegister UnRegisterWhenGameObjectDestroyed<T>(this IUnRegister self, T component)
-            where T : UnityEngine.Component =>
+            where T : Component =>
             self.UnRegisterWhenGameObjectDestroyed(component.gameObject);
 
         public static IUnRegister UnRegisterWhenDisabled<T>(this IUnRegister self, T component)
-            where T : UnityEngine.Component =>
+            where T : Component =>
             self.UnRegisterWhenDisabled(component.gameObject);
 
         public static IUnRegister UnRegisterWhenDisabled(this IUnRegister unRegister,
-            UnityEngine.GameObject gameObject) =>
+            GameObject gameObject) =>
             GetOrAddComponent<UnRegisterOnDisableTrigger>(gameObject)
                 .AddUnRegister(unRegister);
         
@@ -619,22 +627,15 @@ namespace QFramework
 
     #region IOC
 
-    public class IOCContainer
+    public class IocContainer
     {
-        private Dictionary<Type, object> mInstances = new Dictionary<Type, object>();
+        readonly Dictionary<Type, object> mInstances = new();
 
         public void Register<T>(T instance)
         {
             var key = typeof(T);
 
-            if (mInstances.ContainsKey(key))
-            {
-                mInstances[key] = instance;
-            }
-            else
-            {
-                mInstances.Add(key, instance);
-            }
+            mInstances[key] = instance;
         }
 
         public T Get<T>() where T : class
@@ -737,28 +738,28 @@ namespace QFramework
     internal class ComparerAutoRegister
     {
 #if UNITY_5_6_OR_NEWER
-        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.BeforeSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void AutoRegister()
         {
             BindableProperty<int>.Comparer = (a, b) => a == b;
-            BindableProperty<float>.Comparer = (a, b) => a == b;
-            BindableProperty<double>.Comparer = (a, b) => a == b;
+            BindableProperty<float>.Comparer = Mathf.Approximately;
+            BindableProperty<double>.Comparer = (a, b) => Math.Abs(a - b) < 0.00001;
             BindableProperty<string>.Comparer = (a, b) => a == b;
             BindableProperty<long>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.Vector2>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.Vector3>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.Vector4>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.Color>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.Color32>.Comparer =
+            BindableProperty<Vector2>.Comparer = (a, b) => a == b;
+            BindableProperty<Vector3>.Comparer = (a, b) => a == b;
+            BindableProperty<Vector4>.Comparer = (a, b) => a == b;
+            BindableProperty<Color>.Comparer = (a, b) => a == b;
+            BindableProperty<Color32>.Comparer =
                 (a, b) => a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
-            BindableProperty<UnityEngine.Bounds>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.Rect>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.Quaternion>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.Vector2Int>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.Vector3Int>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.BoundsInt>.Comparer = (a, b) => a == b;
-            BindableProperty<UnityEngine.RangeInt>.Comparer = (a, b) => a.start == b.start && a.length == b.length;
-            BindableProperty<UnityEngine.RectInt>.Comparer = (a, b) => a.Equals(b);
+            BindableProperty<Bounds>.Comparer = (a, b) => a == b;
+            BindableProperty<Rect>.Comparer = (a, b) => a == b;
+            BindableProperty<Quaternion>.Comparer = (a, b) => a == b;
+            BindableProperty<Vector2Int>.Comparer = (a, b) => a == b;
+            BindableProperty<Vector3Int>.Comparer = (a, b) => a == b;
+            BindableProperty<BoundsInt>.Comparer = (a, b) => a == b;
+            BindableProperty<RangeInt>.Comparer = (a, b) => a.start == b.start && a.length == b.length;
+            BindableProperty<RectInt>.Comparer = (a, b) => a.Equals(b);
         }
 #endif
     }
@@ -795,7 +796,7 @@ namespace QFramework
 
     public class EasyEvent<T> : IEasyEvent
     {
-        private Action<T> mOnEvent = e => { };
+        private Action<T> mOnEvent = _ => { };
 
         public IUnRegister Register(Action<T> onEvent)
         {
@@ -815,45 +816,45 @@ namespace QFramework
         }
     }
 
-    public class EasyEvent<T, K> : IEasyEvent
+    public class EasyEvent<T, TK> : IEasyEvent
     {
-        private Action<T, K> mOnEvent = (t, k) => { };
+        private Action<T, TK> mOnEvent = (_, _) => { };
 
-        public IUnRegister Register(Action<T, K> onEvent)
+        public IUnRegister Register(Action<T, TK> onEvent)
         {
             mOnEvent += onEvent;
             return new CustomUnRegister(() => { UnRegister(onEvent); });
         }
 
-        public void UnRegister(Action<T, K> onEvent) => mOnEvent -= onEvent;
+        public void UnRegister(Action<T, TK> onEvent) => mOnEvent -= onEvent;
 
-        public void Trigger(T t, K k) => mOnEvent?.Invoke(t, k);
+        public void Trigger(T t, TK k) => mOnEvent?.Invoke(t, k);
 
         IUnRegister IEasyEvent.Register(Action onEvent)
         {
             return Register(Action);
-            void Action(T _, K __) => onEvent();
+            void Action(T _, TK __) => onEvent();
         }
     }
 
-    public class EasyEvent<T, K, S> : IEasyEvent
+    public class EasyEvent<T, TK, TS> : IEasyEvent
     {
-        private Action<T, K, S> mOnEvent = (t, k, s) => { };
+        private Action<T, TK, TS> mOnEvent = (_, _, _) => { };
 
-        public IUnRegister Register(Action<T, K, S> onEvent)
+        public IUnRegister Register(Action<T, TK, TS> onEvent)
         {
             mOnEvent += onEvent;
             return new CustomUnRegister(() => { UnRegister(onEvent); });
         }
 
-        public void UnRegister(Action<T, K, S> onEvent) => mOnEvent -= onEvent;
+        public void UnRegister(Action<T, TK, TS> onEvent) => mOnEvent -= onEvent;
 
-        public void Trigger(T t, K k, S s) => mOnEvent?.Invoke(t, k, s);
+        public void Trigger(T t, TK k, TS s) => mOnEvent?.Invoke(t, k, s);
 
         IUnRegister IEasyEvent.Register(Action onEvent)
         {
             return Register(Action);
-            void Action(T _, K __, S ___) => onEvent();
+            void Action(T _, TK __, TS ___) => onEvent();
         }
     }
 
@@ -937,7 +938,7 @@ namespace QFramework
     internal class EditorMenus
     {
         [UnityEditor.MenuItem("QFramework/Install QFrameworkWithToolKits")]
-        public static void InstallPackageKit() => UnityEngine.Application.OpenURL("https://qframework.cn/qf");
+        public static void InstallPackageKit() => Application.OpenURL("https://qframework.cn/qf");
     }
 #endif
 }
