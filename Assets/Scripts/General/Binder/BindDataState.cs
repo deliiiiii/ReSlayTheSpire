@@ -1,40 +1,49 @@
 ﻿using System;
 
-public class BindDataState
+public class BindDataState : BindDataBase
 {
-    internal MyState state;
+    readonly MyState state;
+    Action onEnter;
+    Action<float> onUpdate;
+    Action onExit;
     public BindDataState(MyState state)
     {
         this.state = state;
     }
+    
+    public override void Bind()
+    {
+        state.OnEnter += onEnter;
+        state.OnUpdate += onUpdate;
+        state.OnExit += onExit;
+    }
 
-   
-    
-    //TODO UnBind()
-}
-
-public static class BindDataStateExt
-{
-    public static BindDataState OnEnter(this BindDataState self, Action act)
+    public override void UnBind()
     {
-        self.state.OnEnter += act;
-        return self;
+        // if(onExit != null)
+            state.OnEnter -= onEnter;
+        // if(onUpdate != null)
+            state.OnUpdate -= onUpdate;
+        // if(onExit != null)
+            state.OnExit -= onExit;
     }
     
-    public static BindDataState OnExit(this BindDataState self, Action act)
+    
+    public BindDataState OnEnter(Action act)
     {
-        self.state.OnExit += act;
-        return self;
+        onEnter = act;
+        return this;
     }
     
-    public static BindDataState OnUpdate(this BindDataState self, Action<float> act)
+    public BindDataState OnExit(Action act)
     {
-        self.state.OnUpdate += act;
-        return self;
+        onExit = act;
+        return this;
     }
-    public static BindDataState RemoveUpdate(this BindDataState self, Action<float> act)
+    
+    public BindDataState OnUpdate(Action<float> act)
     {
-        self.state.OnUpdate -= act;
-        return self;
+        onUpdate = act;
+        return this;
     }
 }

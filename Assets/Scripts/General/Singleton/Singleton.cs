@@ -2,6 +2,7 @@
 //需要被继承 xxx : Singleton<xxx>
 //获取单例 xxx.Instance
 
+using System.Threading.Tasks;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -48,15 +49,21 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
             instance = null;
         }
     }
-
-    void OnEnable()
-    {
-        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-    }
-
-    void OnDisable()
-    {
-        EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-    }
 #endif
+    
+    protected virtual Task OnEnable()
+    {
+#if UNITY_EDITOR
+        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+#endif
+        return Task.CompletedTask;
+    }
+
+    protected virtual Task OnDisable()
+    {
+#if UNITY_EDITOR
+        EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        return Task.CompletedTask;
+#endif
+    }
 }

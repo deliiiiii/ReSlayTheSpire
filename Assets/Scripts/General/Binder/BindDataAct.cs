@@ -3,68 +3,59 @@ using JetBrains.Annotations;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BindDataAct<T>
+public class BindDataAct<T> : BindDataBase
 {
     protected Observable<T> osv;
     protected UnityAction<T> act;
-    UnityAction<T> latestAct;
+    bool isImmediate;
 
-    public BindDataAct<T> To(UnityAction<T> act)
+    public BindDataAct<T> To(UnityAction<T> fAct)
     {
-        BeforeTo();
-        this.act = act;
-        AfterTo();
+        osv.OnValueChangedAfter -= fAct;
+        act = fAct;
         return this;
     }
     
-    public BindDataActTxt<T> ToTxt(Text txt)
-    {
-        BeforeTo();
-        var ret = new BindDataActTxt<T>(osv, txt);
-        ret.AfterTo();
-        return ret;
-    }
+    // public BindDataActTxt<T> ToTxt(Text txt)
+    // {
+    //     BeforeTo();
+    //     var ret = new BindDataActTxt<T>(osv, txt);
+    //     ret.AfterTo();
+    //     return ret;
+    // }
+    //
+    // public BindDataActImg<T> ToImg(Image img, [CanBeNull] Func<float, float> func = null)
+    // {
+    //     BeforeTo();
+    //     func ??= v => v;
+    //     var ret = new BindDataActImg<T>(osv, img, func);
+    //     ret.AfterTo();
+    //     return ret;
+    // }
 
-    public BindDataActImg<T> ToImg(Image img, [CanBeNull] Func<float, float> func = null)
+    public void Immediate()
     {
-        BeforeTo();
-        func ??= v => v;
-        var ret = new BindDataActImg<T>(osv, img, func);
-        ret.AfterTo();
-        return ret;
-    }
-
-    protected void BeforeTo()
-    {
-        osv.OnValueChangedAfter -= act;
-    }
-    protected void AfterTo()
-    {
-        osv.OnValueChangedAfter += act;
-        latestAct = act;
-    }
-
-    public BindDataAct<T> Immediate()
-    {
-        latestAct(osv.Value);
-        return this;
+        isImmediate = true;
+        
     }
     
     public BindDataAct(Observable<T> osv)
     {
         this.osv = osv;
     }
-    
-    public BindDataAct<T> UnBind()
-    {
-        osv.OnValueChangedAfter -= act;
-        return this;
-    }
 
-    public BindDataAct<T> ReBind()
+    public override void Bind()
     {
         osv.OnValueChangedAfter += act;
-        return this;
+        if (isImmediate)
+        {
+            act(osv.Value);
+        }
+    }
+
+    public override void UnBind()
+    {
+        osv.OnValueChangedAfter -= act;
     }
 }
 

@@ -37,7 +37,8 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
 
     void OnDisable()
     {
-        Binder.RemoveUpdate(b);
+        // TODO obsolete
+        // Binder.RemoveUpdate(b);
     }
 
     public InteractInfo GetCb()

@@ -1,16 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
-public class BindDataUpdate
+public class BindDataUpdate : BindDataBase
 {
-    public Action<float> Act;
-    public readonly int Priority;
-    public HashSet<Func<bool>> GuardSet = new ();
+    public readonly Action<float> Act;
+    public readonly HashSet<Func<bool>> GuardSet = new ();
+    readonly int priority;
 
-    public BindDataUpdate(Action<float> act, EUpdatePri priority)
+    public BindDataUpdate(Action<float> act, EUpdatePri e)
     {
-        this.Act = act;
-        this.Priority = (int)priority;
+        Act = act;
+        priority = (int)e;
+    }
+    
+    public override void Bind()
+    {
+        Updater.UpdateDic.TryAdd(priority, new HashSet<BindDataUpdate>());
+        Updater.UpdateDic[priority].Add(this);
+    }
+    
+    public override void UnBind()
+    {
+        // if (Updater.UpdateDic.TryGetValue(priority, out var value))
+        // {
+            var found = Updater.UpdateDic[priority].FirstOrDefault(v => v.Act == Act);
+            if(found != null)
+                Updater.UpdateDic[priority].Remove(found);
+        // }
     }
     
     public BindDataUpdate Where(Func<bool> guard)
@@ -18,18 +35,6 @@ public class BindDataUpdate
         GuardSet.Add(guard);
         return this;
     }
-
-    public void UnBind()
-    {
-        if(Updater.UpdateDic.TryGetValue(Priority, out var value))
-            value.Remove(this);
-    }
-}
-
-public class BindDataUpdate<T> : BindDataUpdate
-    where T : Enum
-{
-    public BindDataUpdate(Action<float> act, T priority) : base(act, (EUpdatePri)Convert.ToInt32(priority)){}
 }
 
 public enum EUpdatePri

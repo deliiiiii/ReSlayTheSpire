@@ -10,7 +10,6 @@ public class ClockController : MonoBehaviour
     public required Transform minuteHand;
     public required Transform secondHand;
 
-    Action<float>? act;
     readonly Observable<DateTime> curTime = new(default);
 
     SceneItemData data = null!;
@@ -37,18 +36,19 @@ public class ClockController : MonoBehaviour
 
     void OnEnable()
     {
-        act ??= _ =>
+        // TODO：拿到的State应该是一次性的，这样才能方便取消绑定。
+        GameState.PlayingState.OnUpdate(_ =>
         {
             if (WindowManager.HasPaused)
                 return;
             Tick();
-        };
-        GameState.PlayingState.OnUpdate(act);
+        });
     }
 
     void OnDisable()
     {
-        GameState.PlayingState.RemoveUpdate(act);
+        // TODO：
+        // GameState.PlayingState.RemoveUpdate();
     }
 
     public void Tick()
