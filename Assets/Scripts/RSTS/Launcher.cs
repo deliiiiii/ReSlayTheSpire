@@ -10,18 +10,29 @@ using Sirenix.Utilities.Editor;
 
 namespace RSTS;
 
-public class Launcher : SingletonWithInit<Launcher>, IHasBind
+public class Launcher : Singleton<Launcher>, IHasBind
 {
     FSMHolder<EGameState> gameFsmHolder = null!;
     FSMHolder<EState2> fsmHolder = null!;
 
-    protected override Task OnBeforeEnableAsync()
+    protected override void Awake()
     {
-        gameFsmHolder = new FSMHolder<EGameState>();
-        gameFsmHolder.EnterState(EGameState.Title);
-        fsmHolder = new FSMHolder<EState2>();
-        fsmHolder.EnterState(EState2.B);
-        return Task.CompletedTask;
+        base.Awake();
+        OnEnableAsync += () =>
+        {
+            gameFsmHolder = new FSMHolder<EGameState>();
+            gameFsmHolder.EnterState(EGameState.Title);
+            fsmHolder = new FSMHolder<EState2>();
+            fsmHolder.EnterState(EState2.B);
+            
+            this.BindAll();
+            return Task.CompletedTask;
+        };
+        OnDisableAsync += () =>
+        {
+            this.UnBindAll();
+            return Task.CompletedTask;
+        };
     }
     
     public IEnumerable<BindDataBase> GetAllBinders()

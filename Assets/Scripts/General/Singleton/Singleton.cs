@@ -2,13 +2,15 @@
 //需要被继承 xxx : Singleton<xxx>
 //获取单例 xxx.Instance
 
+using System;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class Singleton<T> : MonoBehaviour where T : Singleton<T>
+public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
     public bool GlobalOnScene;
 
@@ -51,19 +53,24 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     }
 #endif
     
-    protected virtual Task OnEnable()
+    
+    [CanBeNull] protected event Func<Task> OnEnableAsync;
+    [CanBeNull] protected event Func<Task> OnDisableAsync;
+    // ReSharper disable once Unity.IncorrectMethodSignature
+    async Task OnEnable()
     {
 #if UNITY_EDITOR
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 #endif
-        return Task.CompletedTask;
+        await (OnEnableAsync?.Invoke() ?? Task.CompletedTask);
     }
 
-    protected virtual Task OnDisable()
+    // ReSharper disable once Unity.IncorrectMethodSignature
+    async Task OnDisable()
     {
 #if UNITY_EDITOR
         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-        return Task.CompletedTask;
+        await (OnDisableAsync?.Invoke() ?? Task.CompletedTask);
 #endif
     }
 }
