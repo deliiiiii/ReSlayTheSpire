@@ -34,9 +34,9 @@ public class Launcher : SingletonWithInit<Launcher>, IHasBind
         yield return gameFsmHolder
             .GetBindState(EGameState.Title)
             .OnUpdate(_ => MyDebug.LogWarning("Title Update"));
-        yield return Binder.From(dt =>
+        yield return Binder.From(_ =>
         {
-            MyDebug.LogWarning("Binder From Action<float>");
+            MyDebug.LogWarning("Test.. Binder From Action<float>");
         });
     }
 }
