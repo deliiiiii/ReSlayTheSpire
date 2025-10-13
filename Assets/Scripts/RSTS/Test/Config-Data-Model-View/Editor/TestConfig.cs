@@ -9,6 +9,7 @@ namespace RSTS.Test;
 public class TestConfig : ConfigBase
 {
     public int SpreadCount;
+    public int SpreadMaxId;
     
     [SerializeReference]
     public required TestConfig2 Config2;

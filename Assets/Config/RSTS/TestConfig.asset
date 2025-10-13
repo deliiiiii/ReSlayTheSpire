@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9816aa0f3d9f4ba991075a6575d30f88, type: 3}
   m_Name: TestConfig
   m_EditorClassIdentifier: 
-  SpreadCount: 0
+  SpreadCount: 8
+  SpreadMaxId: 5
   Config2: {fileID: 11400000, guid: c540aa3d47eafe2408fb00417d0138d7, type: 2}
