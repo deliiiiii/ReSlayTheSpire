@@ -1,8 +1,9 @@
-﻿using RSTS.CDMV;
-using RSTS.Test;
+﻿using System;
+using RSTS.CDMV;
 
 namespace RSTS;
 
+[Serializable]
 public class CardData : DataBase<CardConfig>
 {
     public int UpgradeLevel;

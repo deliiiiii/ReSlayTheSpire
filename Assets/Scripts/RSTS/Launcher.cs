@@ -1,29 +1,22 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-#if UNITY_EDITOR
-using Sirenix.Utilities.Editor;
-#endif
+using UnityEngine;
 
 namespace RSTS;
-
+[DefaultExecutionOrder(0)]
 public class Launcher : Singleton<Launcher>, IHasBind
 {
-    FSMHolder<EGameState> gameFsmHolder = null!;
-    FSMHolder<EState2> fsmHolder = null!;
-
     protected override void Awake()
     {
         base.Awake();
+        MyDebug.Log("Launcher Awake Register");
+        StateFactory.Register<EGameState>();
         OnEnableAsync += () =>
         {
-            gameFsmHolder = new FSMHolder<EGameState>();
-            gameFsmHolder.EnterState(EGameState.Title);
-            fsmHolder = new FSMHolder<EState2>();
-            fsmHolder.EnterState(EState2.B);
-            
+            MyDebug.Log("Launcher Enable 1 Bind");
             this.BindAll();
+            MyDebug.Log("Launcher Enable 2 Enter");
+            StateFactory.EnterState(EGameState.ChoosePlayer);
             return Task.CompletedTask;
         };
         OnDisableAsync += () =>
@@ -32,64 +25,26 @@ public class Launcher : Singleton<Launcher>, IHasBind
             return Task.CompletedTask;
         };
     }
-    
+
+    void OnDestroy()
+    {
+        StateFactory.Release<EGameState>();
+    }
+
     public IEnumerable<BindDataBase> GetAllBinders()
     {
 #if UNITY_EDITOR
-        yield return Binder.From(_ => GUIHelper.RequestRepaint());
+        yield return Binder.From(_ => Sirenix.Utilities.Editor.GUIHelper.RequestRepaint());
 #endif
-        foreach (var b in gameFsmHolder.GetAllBinders())
+        foreach (var b in StateFactory.GetAllBinders<EGameState>())
             yield return b;
-        yield return gameFsmHolder
-            .GetBindState(EGameState.Title)
-            .OnUpdate(_ => MyDebug.LogWarning("Title Update"));
-        yield return Binder.From(_ =>
-        {
-            MyDebug.LogWarning("Test.. Binder From Action<float>");
-        });
     }
 }
 
-public enum EGameState
+public enum EGameState : long
 {
+    ChoosePlayer,
     Title,
-    S2,
-    S3,
+    Battle,
 }
 
-public enum EState2
-{
-    A, B, C
-}
-
-public class FSMHolder<T> : IHasBind
-    where T : Enum
-{
-    readonly MyFSM<T> gameFsm = new ();
-    public FSMHolder()
-    {
-        MyDebug.Log("FSMHolder ctor" + typeof(T).Name);
-    }
-
-    // public void Dispose()
-    // {
-    //     MyDebug.Log("FSMHolder Dispose" + typeof(T).Name);
-    // }
-    ~FSMHolder()
-    {
-        MyDebug.Log("FSMHolder deconstruct" + typeof(T).Name);
-    }
-
-    public IEnumerable<BindDataBase> GetAllBinders()
-    {
-        yield return Binder.From(dt => gameFsm.Update(dt), EUpdatePri.Fsm);
-    }
-    
-
-    public void EnterState(T state)
-        => gameFsm.ChangeState(state);
-    public bool IsState(T state)
-        => gameFsm.IsState(state);
-
-    public BindDataState GetBindState(T state) => Binder.From(gameFsm.GetState(state));
-}
