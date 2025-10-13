@@ -1,4 +1,5 @@
 ﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace RSTS.Test;
@@ -7,7 +8,7 @@ namespace RSTS.Test;
 public abstract class ModelBase<TData> : MonoBehaviour
 	where TData : DataBase, new()
 {
-	[SerializeReference]
+	[SerializeReference][ReadOnly]
 	protected TData Data;
 	
 	[Obsolete("At least ONE config is required.")]

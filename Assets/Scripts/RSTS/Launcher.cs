@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 #if UNITY_EDITOR
 using Sirenix.Utilities.Editor;
 #endif
