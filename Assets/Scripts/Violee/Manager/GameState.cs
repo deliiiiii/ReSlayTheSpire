@@ -42,6 +42,6 @@ public class GameState : SingletonCS<GameState>
         }, EUpdatePri.Input);
     }
     
-    public static bool IsTitle => gameFsm.IsState(EGameState.Title);
-    public static bool IsPlaying => gameFsm.IsState(EGameState.Playing);
+    public static bool IsTitle => gameFsm.IsOneOfState(EGameState.Title);
+    public static bool IsPlaying => gameFsm.IsOneOfState(EGameState.Playing);
 }

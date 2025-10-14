@@ -1,14 +1,14 @@
-﻿using System;
+﻿
+using System;
 using RSTS.CDMV;
 
 namespace RSTS;
 
 [Serializable]
-public class CardData: DataBase
+public class BottleData : DataBase
 {
-    public int UpgradeLevel;
     protected override void OnReadConfig()
     {
-        UpgradeLevel = 0;
+        
     }
 }

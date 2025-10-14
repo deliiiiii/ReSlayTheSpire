@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -10,13 +11,12 @@ public class Launcher : Singleton<Launcher>, IHasBind
     {
         base.Awake();
         MyDebug.Log("Launcher Awake Register");
-        StateFactory.Register<EGameState>();
+        MyFSM.Register<EGameState>();
         OnEnableAsync += () =>
         {
             MyDebug.Log("Launcher Enable 1 Bind");
             this.BindAll();
             MyDebug.Log("Launcher Enable 2 Enter");
-            StateFactory.EnterState(EGameState.ChoosePlayer);
             return Task.CompletedTask;
         };
         OnDisableAsync += () =>
@@ -26,17 +26,22 @@ public class Launcher : Singleton<Launcher>, IHasBind
         };
     }
 
+    void Start()
+    {
+        MyFSM.EnterState(EGameState.Title);
+    }
+
     void OnDestroy()
     {
-        StateFactory.Release<EGameState>();
+        MyFSM.Release<EGameState>();
     }
 
     public IEnumerable<BindDataBase> GetAllBinders()
     {
 #if UNITY_EDITOR
-        yield return Binder.From(_ => Sirenix.Utilities.Editor.GUIHelper.RequestRepaint());
+        // yield return Binder.From(_ => Sirenix.Utilities.Editor.GUIHelper.RequestRepaint());
 #endif
-        foreach (var b in StateFactory.GetAllBinders<EGameState>())
+        foreach (var b in MyFSM.GetAllBinders<EGameState>())
             yield return b;
     }
 }
