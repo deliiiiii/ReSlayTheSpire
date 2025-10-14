@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace RSTS.CDMV;
 
-public interface ISingleRef;
-public interface IMultiRef;
+public interface IRefSimple;
+public interface IRefMulti;
 
-public static class RefPoolSingle<T> where T : class, ISingleRef
+public static class RefPoolSingle<T> where T : class, IRefSimple
 {
     static readonly Dictionary<Type, T> oneDataDic = [];
     public static T Register(Func<T> ctor)
@@ -37,7 +37,7 @@ public static class RefPoolSingle<T> where T : class, ISingleRef
     }
 }
 
-public static class RefPoolMulti<T> where T : class, IMultiRef
+public static class RefPoolMulti<T> where T : class, IRefMulti
 {
     static readonly Dictionary<Type, List<T>> listDataDic = [];
     public static T RegisterOne(Func<T> ctor)

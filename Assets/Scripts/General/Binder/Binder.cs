@@ -25,12 +25,12 @@ public static class Binder
         return new BindDataState(state);
     }
 
-    public static BindDataUpdate From(Action<float> act, EUpdatePri priority = EUpdatePri.Default)
+    public static BindDataUpdate FromUpdate(Action<float> act, EUpdatePri priority = EUpdatePri.Default)
     {
         return new BindDataUpdate(act, priority);
     }
 
-    public static BindDataUpdate From<TEnum>(Action<float> act, TEnum priority)
+    public static BindDataUpdate FromUpdate<TEnum>(Action<float> act, TEnum priority)
     {
         return new BindDataUpdate(act, (EUpdatePri)Convert.ToInt32(priority));
     }

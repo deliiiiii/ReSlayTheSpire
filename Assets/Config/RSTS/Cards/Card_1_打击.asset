@@ -29,18 +29,18 @@ MonoBehaviour:
   Upgrades:
   - Des: "\u9020\u62106\u70B9\u4F24\u5BB3\u3002"
     CostInfo:
-      rid: 4049883161270943750
+      rid: 4049883180725436426
   - Des: "\u9020\u62109\u70B9\u4F24\u5BB3\u3002"
     CostInfo:
-      rid: 4049883161270943751
+      rid: 4049883180725436427
   references:
     version: 2
     RefIds:
-    - rid: 4049883161270943750
-      type: {class: CardCostNumber, ns: , asm: RSTS}
+    - rid: 4049883180725436426
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 1
-    - rid: 4049883161270943751
-      type: {class: CardCostNumber, ns: , asm: RSTS}
+    - rid: 4049883180725436427
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 1

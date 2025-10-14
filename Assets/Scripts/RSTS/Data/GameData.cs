@@ -7,7 +7,7 @@ using RSTS.CDMV;
 namespace RSTS;
 
 [Serializable]
-public class GameData : ISingleRef
+public class GameData : IRefSimple
 {
     public float LaunchTime;
     public List<SlotDataMulti> SlotList = [];

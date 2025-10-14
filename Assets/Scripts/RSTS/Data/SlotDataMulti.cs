@@ -16,13 +16,19 @@ public enum EPlayerJob
     GuanZhe
 }
 
+
+
 [Serializable]
-public class SlotDataMulti : IMultiRef
+public class SlotDataMulti : IRefMulti
 {
     public string PlayerName;
+    public bool HasLastBuff;
+    public int CurHP;
+    public int MaxHP;
     public int Coin;
     public EPlayerJob Job;
     public List<BottleData> BottleList = [];
+    public float InBattleTime;
     public List<CardData> CardList = [];
     public List<ItemData> ItemList = [];
     
@@ -36,5 +42,10 @@ public class SlotDataMulti : IMultiRef
         {
             CardList.Add(new CardData(c));
         });
+    }
+
+    public void ExitBattle()
+    {
+        
     }
 }

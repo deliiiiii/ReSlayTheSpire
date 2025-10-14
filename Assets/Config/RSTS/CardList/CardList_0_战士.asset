@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94a9f2dcd5d74a989682413dfe06d420, type: 3}
+  m_Name: "CardList_0_\u6218\u58EB"
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  Name: "\u6218\u58EB"
+  ID: 0
+  Job: 0
+  InitialCards:
+  - {fileID: 11400000, guid: b7b0029de5f6b4349bd00d1cd5b2953c, type: 2}
+  - {fileID: 11400000, guid: b7b0029de5f6b4349bd00d1cd5b2953c, type: 2}
+  - {fileID: 11400000, guid: b7b0029de5f6b4349bd00d1cd5b2953c, type: 2}
+  - {fileID: 11400000, guid: b7b0029de5f6b4349bd00d1cd5b2953c, type: 2}
+  - {fileID: 11400000, guid: b7b0029de5f6b4349bd00d1cd5b2953c, type: 2}
+  - {fileID: 11400000, guid: 915c6cdb9a0491a4987145b6a688d6c5, type: 2}
+  - {fileID: 11400000, guid: 915c6cdb9a0491a4987145b6a688d6c5, type: 2}
+  - {fileID: 11400000, guid: 915c6cdb9a0491a4987145b6a688d6c5, type: 2}
+  - {fileID: 11400000, guid: 915c6cdb9a0491a4987145b6a688d6c5, type: 2}
+  - {fileID: 11400000, guid: 915c6cdb9a0491a4987145b6a688d6c5, type: 2}

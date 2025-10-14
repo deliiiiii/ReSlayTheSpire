@@ -1,51 +1,75 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using Sirenix.OdinInspector;
+using JetBrains.Annotations;
 using Sirenix.Utilities;
-using UnityEngine;
 
 public abstract class MyFSM
 {
-    static readonly Dictionary<Type, object> fsmDic = new();
-    public static void Register<T>() where T : Enum
+    static readonly Dictionary<Type, MyFSM> fsmDic = new();
+    // 这两条永远不能移除内存，是上帝规则。
+    static readonly Dictionary<Type, Action> onRegisterDic = new();
+    static readonly Dictionary<Type, Action> onReleaseDic = new();
+    public static void Register<T>(T initState) where T : Enum
     {
-        if (fsmDic.ContainsKey(typeof(T)))
+        if (Get<T>(shouldFind: false) != null)
         {
             MyDebug.LogError("StateFactory: Acquire<" + typeof(T).Name + ">Duplicated");
             return;
         }
-        var added = new MyFSM<T>();
-        fsmDic[typeof(T)] = added;
+        fsmDic[typeof(T)] = new MyFSM<T>();
+        onRegisterDic[typeof(T)]?.Invoke();
+        EnterState(initState);
+        GetUpdateBind<T>().Bind();
     }
-    
+    public static void OnRegister<T>(Action onRegister) where T : Enum
+    {
+        onRegisterDic.TryAdd(typeof(T), null);
+        onRegisterDic[typeof(T)] += onRegister;
+    }
     public static void Release<T>() where T : Enum
     {
-        GetAllBinders<T>().ForEach(b => b.UnBind());
+        var fsm = Get<T>();
+        if (fsm == null)
+            return;
+        // 跳转到空状态
+        GetUpdateBind<T>().UnBind();
+        fsm.OnDestroy();
+        onReleaseDic[typeof(T)]?.Invoke();
         fsmDic.Remove(typeof(T));
+    }
+    public static void OnRelease<T>(Action onRelease) where T : Enum
+    {
+        onReleaseDic.TryAdd(typeof(T), null);
+        onReleaseDic[typeof(T)] += onRelease;
     }
 
     public static void EnterState<T>(T state) where T : Enum
-        => Get<T>().ChangeState(state);
+        => Get<T>()?.ChangeState(state);
     public static bool IsState<T>(T state) where T : Enum
-        => Get<T>().IsOneOfState(state);
+        => Get<T>()?.IsOneOfState(state) ?? false;
     public static BindDataState GetBindState<T>(T state) where T : Enum
-        => Binder.From(Get<T>().GetState(state));
-    
-    public static IEnumerable<BindDataBase> GetAllBinders<T>() where T : Enum
-    {
-        yield return Binder.From(Get<T>().Update, EUpdatePri.Fsm);
-    }
+        => Binder.From(Get<T>()?.GetState(state));
     
     public static string ShowState<T>() where T : Enum
-        => Get<T>().CurStateName;
+        => Get<T>(shouldFind : false)?.CurStateName;
     
-    static MyFSM<T> Get<T>() where T : Enum
-    {;
+    [CanBeNull]
+    static MyFSM<T> Get<T>(bool shouldFind = true) where T : Enum
+    {
         if (fsmDic.TryGetValue(typeof(T), out var holder))
             return (MyFSM<T>)holder;
-        MyDebug.LogError("StateFactory: Get<" + typeof(T).Name + ">Not Exist");
-        return new MyFSM<T>();
+        if(shouldFind)
+            MyDebug.LogError("StateFactory: Get<" + typeof(T).Name + ">Not Exist");
+        return null;
+    }
+    
+    static BindDataBase GetUpdateBind<T>() where T : Enum
+    {
+        var fsm = Get<T>();
+        if (fsm == null)
+            return null;
+        return Binder.FromUpdate(fsm.Update, EUpdatePri.Fsm);
     }
 }
 
@@ -100,5 +124,12 @@ public class MyFSM<TEnum> : MyFSM
         curStateClass = GetState(startState);
         curState = startState;
         curStateClass.Enter();
+    }
+
+    public void OnDestroy()
+    {
+        curStateClass.Exit();
+        curState = null;
+        curStateClass = null;
     }
 }

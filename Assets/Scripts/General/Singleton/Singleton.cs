@@ -2,9 +2,6 @@
 //需要被继承 xxx : Singleton<xxx>
 //获取单例 xxx.Instance
 
-using System;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -35,7 +32,6 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
             MyDebug.LogError($"{typeof(T)} already exists on {name}, destroying the new instance.");
             Destroy(Instance.gameObject);
         }
-        // Instance!.OnInit();
         if (GlobalOnScene)
         {
             DontDestroyOnLoad(gameObject);
@@ -52,25 +48,16 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
         }
     }
 #endif
-    
-    
-    [CanBeNull] protected event Func<Task> OnEnableAsync;
-    [CanBeNull] protected event Func<Task> OnDisableAsync;
-    // ReSharper disable once Unity.IncorrectMethodSignature
-    async Task OnEnable()
+    void OnEnable()
     {
 #if UNITY_EDITOR
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 #endif
-        await (OnEnableAsync?.Invoke() ?? Task.CompletedTask);
     }
-
-    // ReSharper disable once Unity.IncorrectMethodSignature
-    async Task OnDisable()
+    void OnDisable()
     {
 #if UNITY_EDITOR
         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-        await (OnDisableAsync?.Invoke() ?? Task.CompletedTask);
 #endif
     }
 }

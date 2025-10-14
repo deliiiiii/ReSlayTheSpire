@@ -5,4 +5,4 @@ using RSTS.CDMV;
 namespace RSTS;
 
 [Serializable]
-public class BottleData : IMultiRef;
+public class BottleData;

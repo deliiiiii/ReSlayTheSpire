@@ -11,8 +11,9 @@ public class StaticShower : Singleton<StaticShower>
 {
     #region State
     const string NotInPlayMode = "Not in Play Mode";
-    [ShowInInspector]
-    static string GameState => GetState<EGameState>();
+    [ShowInInspector] static string GameState => GetState<EGameState>();
+    [ShowInInspector] static string BattleState => GetState<EBattleState>();
+    [ShowInInspector] static string YieldCardState => GetState<EYieldCardState>();
     static string GetState<T>() where T : Enum 
         => !Application.isPlaying ? NotInPlayMode : MyFSM.ShowState<T>();
     #endregion
@@ -25,5 +26,6 @@ public class StaticShower : Singleton<StaticShower>
     #endregion
 
     [ShowInInspector]
-    public SlotDataMulti? SlotData => RefPoolMulti<SlotDataMulti>.Acquire().FirstOrDefault();
+    public SlotDataMulti? SlotData 
+        => !Application.isPlaying ? null : RefPoolMulti<SlotDataMulti>.Acquire().FirstOrDefault();
 }

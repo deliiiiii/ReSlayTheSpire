@@ -9,7 +9,7 @@ namespace RSTS.CDMV;
 [Serializable]
 public abstract class ConfigBase : SerializedScriptableObject;
 
-public abstract class ConfigSingle<T> : ConfigBase, ISingleRef
+public abstract class ConfigSingle<T> : ConfigBase, IRefSimple
     where T : ConfigSingle<T>, new()
 {
     protected virtual void OnEnable()
@@ -19,7 +19,7 @@ public abstract class ConfigSingle<T> : ConfigBase, ISingleRef
 }
 
 [Serializable]
-public abstract class ConfigMulti<T> : ConfigBase, IMultiRef
+public abstract class ConfigMulti<T> : ConfigBase, IRefMulti
     where T : ConfigMulti<T>, new()
 {
     protected virtual void OnEnable()

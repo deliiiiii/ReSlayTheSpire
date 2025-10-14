@@ -7,6 +7,7 @@ using UnityEngine;
 
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
+namespace RSTS;
 [CreateAssetMenu(menuName = "RSTS/Card", order = 0)][PublicAPI][Serializable]
 public class CardConfigMulti : ConfigMulti<CardConfigMulti>
 {
@@ -50,3 +51,26 @@ public class CardConfigMulti : ConfigMulti<CardConfigMulti>
         }
     }
 }
+
+#region Cost
+public abstract class CardCostBase;
+[Serializable][PublicAPI]
+public class CardCostNumber : CardCostBase
+{
+    public int Cost;
+}
+[Serializable]
+public class CardCostX : CardCostBase;
+[Serializable]
+public class CardCostNone : CardCostBase;
+#endregion
+
+#region Upgrade
+[Serializable][PublicAPI]
+public class CardUpgradeInfo
+{
+    public string Des;
+    [SerializeReference]
+    public CardCostBase CostInfo = new CardCostNumber();
+}
+#endregion
