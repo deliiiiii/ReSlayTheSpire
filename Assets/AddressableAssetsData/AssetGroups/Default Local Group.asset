@@ -16,7 +16,55 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: f737eafdf170c7147afb6b5f3a5de178
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 0260993ad759fb24fb34137e68f0e009
+    m_Address: "Card_3_\u8BC5\u5492\uFF08\u6D4B\u8BD5\uFF09"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 270c2084d35011248b06a513bb6fb5d6
+    m_Address: "Bottle_1_\u6D4B\u8BD5"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 44670dc01c93d6c49aacb0a54743b9db
+    m_Address: "CardList_2_\u9E21\u7172"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 466dba388be368a47af24a659c2db885
+    m_Address: "CardList_0_\u6218\u58EB"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 915c6cdb9a0491a4987145b6a688d6c5
+    m_Address: "Card_2_\u9632\u5FA1"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b7b0029de5f6b4349bd00d1cd5b2953c
+    m_Address: "Card_1_\u6253\u51FB"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dcf9f43a7bdc0f040aba0b9f9129a31e
+    m_Address: "Item_0_\u9057\u72690"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f1bea8dcfc5533e4f8f1d9e7ec2ab3ca
+    m_Address: "Bottle_0_\u529B\u91CF"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fa8710fe9b96bbe4b91276498905531d, type: 2}
   m_SchemaSet:

@@ -7,26 +7,23 @@ using Sirenix.OdinInspector;
 namespace RSTS.CDMV;
 
 [Serializable]
-public abstract class ConfigBase : SerializedScriptableObject;
+public abstract class ConfigBase : SerializedScriptableObject
+{
+    public abstract void OnLoad();
+}
 
 public abstract class ConfigSingle<T> : ConfigBase, IRefSimple
     where T : ConfigSingle<T>, new()
 {
-    protected virtual void OnEnable()
-    {
-        RefPoolSingle<T>.Register(() => (this as T)!);
-    }
+    public sealed override void OnLoad() => RefPoolSingle<T>.Register(() => (this as T)!);
 }
 
 [Serializable]
 public abstract class ConfigMulti<T> : ConfigBase, IRefMulti
     where T : ConfigMulti<T>, new()
 {
-    protected virtual void OnEnable()
-    {
-        RefPoolMulti<T>.RegisterSome(() => (this as T)!, 1);
-    }
-    
+    public sealed override void OnLoad() => RefPoolMulti<T>.RegisterSome(() => (this as T)!, 1);
+
     [OnValueChanged(nameof(OnNameAndIdChanged))] 
     [ValidateInput(nameof(CheckName), "名称不能为空")]
     public string Name = string.Empty;
@@ -58,6 +55,10 @@ public abstract class ConfigMulti<T> : ConfigBase, IRefMulti
             .Where(path => path != thisPath)
             .All(path => int.Parse(path.Split('_')[1]) != ID);
 #endif
+#pragma warning disable CS0162 // 检测到不可到达的代码
+        // ReSharper disable once HeuristicUnreachableCode
+        return true;
+#pragma warning restore CS0162 // 检测到不可到达的代码
     }
     string newName => $"{PrefixName}_{ID}_{Name}.asset";
     

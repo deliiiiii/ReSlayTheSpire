@@ -24,10 +24,11 @@ MonoBehaviour:
   Name: "\u9057\u72690"
   ID: 0
   CountConfig:
-    rid: 4049883180725436424
+    rid: 4049883184597041152
   references:
     version: 2
     RefIds:
-    - rid: 4049883180725436424
-      type: {class: ItemCountNoneConfig, ns: , asm: RSTS}
-      data: 
+    - rid: 4049883184597041152
+      type: {class: ItemCountAscentConfig, ns: RSTS, asm: RSTS}
+      data:
+        MaxCount: 3

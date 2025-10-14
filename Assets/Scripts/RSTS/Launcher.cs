@@ -1,8 +1,11 @@
-﻿namespace RSTS;
+﻿using System.Threading.Tasks;
+
+namespace RSTS;
 public class Launcher : Singleton<Launcher>
 {
-    void Start()
+    async Task Start()
     {
+        await Loader.LoadAll();
         MyFSM.Register(EGameState.Title);
     }
 
@@ -11,8 +14,8 @@ public class Launcher : Singleton<Launcher>
         MyFSM.Release<EGameState>();
     }
 
-    void Update()
-    {
-        // Sirenix.Utilities.Editor.GUIHelper.RequestRepaint();
-    }
+    // void Update()
+    // {
+    //     // Sirenix.Utilities.Editor.GUIHelper.RequestRepaint();
+    // }
 }
