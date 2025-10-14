@@ -1,16 +1,22 @@
 ﻿using System.Collections.Generic;
 using Sirenix.Utilities;
 
+namespace RSTS.CDMV;
+
 public interface IHasBind
 {
-    public IEnumerable<BindDataBase> GetAllBinders();
+    IEnumerable<BindDataBase> GetAllBinders();
 }
 
-public static class HasBindExtensions
+public static class IHasBindExtension
 {
     public static void BindAll(this IHasBind self)
-        => self.GetAllBinders().ForEach(b => b.Bind());
+    {
+        self.GetAllBinders().ForEach(b => b.Bind());
+    }
 
     public static void UnBindAll(this IHasBind self)
-        => self.GetAllBinders().ForEach(b => b.UnBind());
+    {
+        self.GetAllBinders().ForEach(b => b.UnBind());
+    }
 }

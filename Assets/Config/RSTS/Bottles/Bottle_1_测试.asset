@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 742828f24d694e269941cd061d8639e3, type: 3}
-  m_Name: New Bottle Config
+  m_Name: "Bottle_1_\u6D4B\u8BD5"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,5 +21,5 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Name: Input Name...
-  ID: 114514
+  Name: "\u6D4B\u8BD5"
+  ID: 1

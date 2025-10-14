@@ -1,10 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using RSTS.CDMV;
+using UnityEngine;
 
 namespace RSTS;
 
-public class ChooseNameView : ViewBase<ChooseNameView>
+[DefaultExecutionOrder(10)]
+public class ChooseNameView : Singleton<ChooseNameView>, IHasBind
 {
-    public override IEnumerable<BindDataBase> GetAllBinders()
+    protected override void Awake()
+    {
+        base.Awake();
+        Launcher.OnInitAllAsync += () =>
+        {
+            this.BindAll();
+            return Task.CompletedTask;
+        };
+    }
+
+    public IEnumerable<BindDataBase> GetAllBinders()
     {
         yield return MyFSM.GetBindState(EGameState.ChoosePlayer)
             .OnEnter(() => MyDebug.Log("ChooseNameView Show"))

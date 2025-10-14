@@ -22,12 +22,12 @@ public class BindDataUpdate : BindDataBase
     
     public override void UnBind()
     {
-        // if (Updater.UpdateDic.TryGetValue(priority, out var value))
-        // {
-            var found = Updater.UpdateDic[priority].FirstOrDefault(v => v.Act == Act);
+        if (Updater.UpdateDic.TryGetValue(priority, out var value))
+        {
+            var found = value.FirstOrDefault(v => v.Act == Act);
             if(found != null)
-                Updater.UpdateDic[priority].Remove(found);
-        // }
+                value.Remove(found);
+        }
     }
     
     public BindDataUpdate Where(Func<bool> guard)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RSTS.CDMV;
 using UnityEngine;
 
 namespace RSTS;
@@ -10,31 +11,23 @@ public class Launcher : Singleton<Launcher>, IHasBind
     protected override void Awake()
     {
         base.Awake();
-        MyDebug.Log("Launcher Awake Register");
         MyFSM.Register<EGameState>();
-        OnEnableAsync += () =>
-        {
-            MyDebug.Log("Launcher Enable 1 Bind");
-            this.BindAll();
-            MyDebug.Log("Launcher Enable 2 Enter");
-            return Task.CompletedTask;
-        };
-        OnDisableAsync += () =>
-        {
-            this.UnBindAll();
-            return Task.CompletedTask;
-        };
     }
 
     void Start()
     {
+        OnInitAllAsync?.Invoke();
         MyFSM.EnterState(EGameState.Title);
     }
 
     void OnDestroy()
     {
+        OnUnInitAllAsync?.Invoke();
         MyFSM.Release<EGameState>();
     }
+
+    public static event Func<Task>? OnInitAllAsync;
+    public static event Func<Task>? OnUnInitAllAsync;
 
     public IEnumerable<BindDataBase> GetAllBinders()
     {
@@ -46,7 +39,7 @@ public class Launcher : Singleton<Launcher>, IHasBind
     }
 }
 
-public enum EGameState : long
+public enum EGameState
 {
     ChoosePlayer,
     Title,

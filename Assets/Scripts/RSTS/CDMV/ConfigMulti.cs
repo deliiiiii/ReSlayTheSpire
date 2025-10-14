@@ -2,15 +2,12 @@
 using System.IO;
 using System.Linq;
 using Sirenix.OdinInspector;
-using UnityEditor;
 
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 namespace RSTS.CDMV;
 
 [Serializable]
-public abstract class ConfigBase : SerializedScriptableObject
-{  
-}
+public abstract class ConfigBase : SerializedScriptableObject;
 
 public abstract class ConfigSingle<T> : ConfigBase
     where T : ConfigSingle<T>, new()
@@ -53,7 +50,7 @@ public abstract class ConfigMulti<T> : ConfigBase
 #if UNITY_EDITOR
         if (!CheckName())
             return false;
-        var thisPath = AssetDatabase.GetAssetPath(this);
+        var thisPath = UnityEditor.AssetDatabase.GetAssetPath(this);
         var directoryName = Path.GetDirectoryName(thisPath);
         // 获取该目录下所有ScriptableObject
         return Directory.GetFiles(directoryName!, "*.asset")
@@ -66,10 +63,10 @@ public abstract class ConfigMulti<T> : ConfigBase
     
     void OnNameAndIdChanged()
     {
+#if UNITY_EDITOR
         if (!CheckAll())
             return;
-#if UNITY_EDITOR
-        AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(this), newName);
+        UnityEditor.AssetDatabase.RenameAsset(UnityEditor.AssetDatabase.GetAssetPath(this), newName);
 #endif
     }
 }
