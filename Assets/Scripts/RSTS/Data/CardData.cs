@@ -4,11 +4,8 @@ using RSTS.CDMV;
 namespace RSTS;
 
 [Serializable]
-public class CardData: DataBase
+public class CardData(CardConfigMulti config) : IMultiRef
 {
     public int UpgradeLevel;
-    protected override void OnReadConfig()
-    {
-        UpgradeLevel = 0;
-    }
+    public CardConfigMulti Config = config;
 }

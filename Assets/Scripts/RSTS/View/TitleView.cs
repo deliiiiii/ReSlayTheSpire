@@ -31,5 +31,9 @@ public class TitleView : Singleton<TitleView>, IHasBind
         yield return MyFSM.GetBindState(EGameState.Title)
             .OnEnter(() => PnlButtons.SetActive(true))
             .OnExit(() => PnlButtons.SetActive(false));
+        yield return Binder.From(BtnStart).To(() =>
+        {
+            MyFSM.EnterState(EGameState.Battle);
+        });
     }
 }

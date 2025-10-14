@@ -15,19 +15,21 @@ public class BattleView : Singleton<BattleView>, IHasBind
         base.Awake();
         Launcher.OnInitAllAsync += () =>
         {
-            GameData = RefPool<DataBase>.RegisterOne(() => new GameData());
+            SlotData = RefPoolMulti<SlotDataMulti>.RegisterOne(() => new SlotDataMulti());
             this.BindAll();
             return Task.CompletedTask;
         };
     }
     
-    public GameData GameData;
+    [SerializeReference]
+    public SlotDataMulti SlotData;
 
     public IEnumerable<BindDataBase> GetAllBinders()
     {
         yield return MyFSM.GetBindState(EGameState.Battle)
             .OnEnter(() =>
             {
+                SlotData.EnterBattle(EPlayerJob.JiBao);
             });
     }
 }

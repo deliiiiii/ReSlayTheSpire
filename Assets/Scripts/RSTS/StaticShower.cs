@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RSTS.CDMV;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -18,9 +19,11 @@ public class StaticShower : Singleton<StaticShower>
     
     #region Config
     [ShowInInspector]
-    public List<CardConfig> CardConfigs => RefPool<CardConfig>.AcquireList();
+    public List<CardConfigMulti> CardConfigs => RefPoolMulti<CardConfigMulti>.Acquire();
     // [ShowInInspector]
     // public List<BottleConfig> ItemConfigs => RefPool<BottleConfig>.AcquireList();
     #endregion
 
+    [ShowInInspector]
+    public SlotDataMulti? SlotData => RefPoolMulti<SlotDataMulti>.Acquire().FirstOrDefault();
 }

@@ -9,22 +9,22 @@ namespace RSTS.CDMV;
 [Serializable]
 public abstract class ConfigBase : SerializedScriptableObject;
 
-public abstract class ConfigSingle<T> : ConfigBase
+public abstract class ConfigSingle<T> : ConfigBase, ISingleRef
     where T : ConfigSingle<T>, new()
 {
     protected virtual void OnEnable()
     {
-        RefPool<ConfigBase>.RegisterOne(() => (this as T)!);
+        RefPoolSingle<T>.Register(() => (this as T)!);
     }
 }
 
 [Serializable]
-public abstract class ConfigMulti<T> : ConfigBase
+public abstract class ConfigMulti<T> : ConfigBase, IMultiRef
     where T : ConfigMulti<T>, new()
 {
     protected virtual void OnEnable()
     {
-        RefPool<T>.RegisterList(() => (this as T)!, 1);
+        RefPoolMulti<T>.RegisterSome(() => (this as T)!, 1);
     }
     
     [OnValueChanged(nameof(OnNameAndIdChanged))] 
