@@ -22,7 +22,7 @@ public abstract class ConfigSingle<T> : ConfigBase, IRefSimple
 public abstract class ConfigMulti<T> : ConfigBase, IRefMulti
     where T : ConfigMulti<T>, new()
 {
-    public sealed override void OnLoad() => RefPoolMulti<T>.RegisterSome(() => (this as T)!, 1);
+    public sealed override void OnLoad() => RefPoolMulti<T>.RegisterOne(() => (this as T)!);
 
     [OnValueChanged(nameof(OnNameAndIdChanged))] 
     [ValidateInput(nameof(CheckName), "名称不能为空")]

@@ -27,20 +27,26 @@ MonoBehaviour:
   Rarity: 0
   Category: 1
   Upgrades:
-  - Des: "\u83B7\u5F975\u70B9\u683C\u6321\u3002"
+  - Des:
+      Content: 
+      EmbedIntList: 
+    Keywords: 
     CostInfo:
-      rid: 4049883180725436428
-  - Des: "\u83B7\u5F978\u70B9\u683C\u6321\u3002"
+      rid: 4049883199248531463
+  - Des:
+      Content: 
+      EmbedIntList: 
+    Keywords: 
     CostInfo:
       rid: 4049883180725436429
   references:
     version: 2
     RefIds:
-    - rid: 4049883180725436428
+    - rid: 4049883180725436429
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 1
-    - rid: 4049883180725436429
+    - rid: 4049883199248531463
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 1

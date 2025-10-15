@@ -27,20 +27,26 @@ MonoBehaviour:
   Rarity: 0
   Category: 0
   Upgrades:
-  - Des: "\u9020\u62106\u70B9\u4F24\u5BB3\u3002"
+  - Des:
+      Content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
+      EmbedIntList: 06000000
+    Keywords: 
     CostInfo:
-      rid: 4049883180725436426
-  - Des: "\u9020\u62109\u70B9\u4F24\u5BB3\u3002"
+      rid: 4049883199248531460
+  - Des:
+      Content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
+      EmbedIntList: 09000000
+    Keywords: 
     CostInfo:
-      rid: 4049883180725436427
+      rid: 4049883199248531461
   references:
     version: 2
     RefIds:
-    - rid: 4049883180725436426
+    - rid: 4049883199248531460
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 1
-    - rid: 4049883180725436427
+    - rid: 4049883199248531461
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 1

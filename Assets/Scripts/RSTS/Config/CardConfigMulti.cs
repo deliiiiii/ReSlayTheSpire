@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using RSTS.CDMV;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
@@ -66,11 +67,37 @@ public class CardCostNone : CardCostBase;
 #endregion
 
 #region Upgrade
-[Serializable][PublicAPI]
+[Serializable]
 public class CardUpgradeInfo
 {
-    public string Des;
+    public EmbedString Des;
+    [ValueDropdown(nameof(GetKeywords), IsUniqueList = true)]
+    public List<ECardKeyword> Keywords = [];
     [SerializeReference]
     public CardCostBase CostInfo = new CardCostNumber();
+
+
+    List<ECardKeyword> GetKeywords() => [..(ECardKeyword[])Enum.GetValues(typeof(ECardKeyword))];
 }
 #endregion
+
+[Serializable]
+public class EmbedString
+{
+    public static Dictionary<EmbedType, string> EmbedCharPairs = new()
+    {
+        { EmbedType.Int, "[]" },
+        // { EmbedType.Float, new EmbedCharPair() { Left = "[[", Right = "]]" } },
+    }; 
+    public string Content;
+    // 在编辑器中显示另一个文本的Attribute
+    [Header("嵌入Int使用[]")][HideLabel]
+    public List<int> EmbedIntList = [];
+}
+
+
+public enum EmbedType
+{
+    Int,
+    // Float
+}
