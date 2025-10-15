@@ -27,7 +27,10 @@ MonoBehaviour:
   Rarity: 3
   Category: 4
   Upgrades:
-  - Des: 
+  - Des:
+      content: "\u6D4B\u8BD5[],,TEST[][]"
+      EmbedIntList: 0b0000002d0000000e000000
+    Keywords: 01000000
     CostInfo:
       rid: 4049883199248531459
   references:
@@ -36,4 +39,4 @@ MonoBehaviour:
     - rid: 4049883199248531459
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
-        Cost: 114514
+        Cost: 0

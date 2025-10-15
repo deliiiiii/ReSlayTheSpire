@@ -36,7 +36,6 @@ public class BindDataAct<T> : BindDataBase
     public void Immediate()
     {
         isImmediate = true;
-        
     }
     
     public BindDataAct(Observable<T> osv)

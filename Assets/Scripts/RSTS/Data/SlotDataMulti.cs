@@ -22,6 +22,7 @@ public enum EPlayerJob
 public class SlotDataMulti : IRefMulti
 {
     public string PlayerName;
+    public bool EverInBattle;
     public bool HasLastBuff;
     public int CurHP;
     public int MaxHP;
@@ -29,19 +30,16 @@ public class SlotDataMulti : IRefMulti
     public EPlayerJob Job;
     public List<BottleData> BottleList = [];
     public float InBattleTime;
-    public List<CardData> CardList = [];
+    public CardDataHolder CardDataHolder = new();
     public List<ItemData> ItemList = [];
     
     public MapData MapData;
 
-    public void EnterBattle(EPlayerJob job)
+    public void FirstEnterBattle(EPlayerJob job)
     {
         Job = job;
-        var config = RefPoolMulti<CardListConfigMulti>.Acquire().First(c => c.Job == job);
-        config.InitialCards.ForEach(c =>
-        {
-            CardList.Add(new CardData(c));
-        });
+        CardDataHolder.InitDeck(Job);
+        EverInBattle = true;
     }
 
     public void ExitBattle()

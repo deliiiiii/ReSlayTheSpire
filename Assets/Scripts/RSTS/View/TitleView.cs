@@ -21,7 +21,6 @@ public class TitleView : Singleton<TitleView>
 
     IEnumerable<BindDataBase> GameStateBinders()
     {
-        MyDebug.Log("TitleView GetAllBinders");
         yield return MyFSM.GetBindState(EGameState.Title)
             .OnEnter(() => PnlButtons.SetActive(true))
             .OnExit(() => PnlButtons.SetActive(false));

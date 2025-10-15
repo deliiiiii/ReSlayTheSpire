@@ -65,19 +65,19 @@ public class ScrambleView : Singleton<ScrambleView>
             ExchangingPnl.SetActive(false);
         };
         
-        SelectedList.OnAdd += icon =>
+        SelectedList.OnAdd?.AddListener(icon =>
         {
             if (SelectedList.Count == 2)
             {
                 EnableTxt();
             }
             icon.OnSelected();
-        };
-        SelectedList.OnRemove += icon =>
+        });
+        SelectedList.OnRemove?.AddListener(icon =>
         {
             DisableBtn();
             icon.OnNotSelected();
-        };
+        });
         for(int i = 0; i < ScrambleIconParent.childCount; i++)
         {
             var icon = ScrambleIconParent.GetChild(i).GetComponent<ScrambleIcon>();

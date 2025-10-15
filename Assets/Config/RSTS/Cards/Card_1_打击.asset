@@ -28,13 +28,13 @@ MonoBehaviour:
   Category: 0
   Upgrades:
   - Des:
-      Content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
       EmbedIntList: 06000000
     Keywords: 
     CostInfo:
       rid: 4049883199248531460
   - Des:
-      Content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
       EmbedIntList: 09000000
     Keywords: 
     CostInfo:

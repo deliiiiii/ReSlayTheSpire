@@ -10,21 +10,29 @@ public enum EBattleState
 {
     SelectLastBuff,
     SelectRoom,
-    YieldCard,
+    BothTurn,
     SelectReward,
     Lose,
     Win,
 }
 
-public enum EYieldCardState
+public enum EPlayerTurn
 {
-    Start,
+    Start_BeforeDraw,
     PlayerDraw,
-    PlayerYield,
+    PlayerYieldCard,
     PlayerYieldEnd,
-    PlayerRecycle,
-    End,
+    PlayerDiscard,
+    End_AfterDiscard,
 }
+
+// public enum EYieldCardState
+// {
+//     None,
+//     Drag,
+//     Use,
+//     CantUse,
+// }
 
 public enum ECardColor
 {

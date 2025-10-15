@@ -28,14 +28,14 @@ MonoBehaviour:
   Category: 1
   Upgrades:
   - Des:
-      Content: 
-      EmbedIntList: 
+      content: "\u83B7\u5F97[]\u70B9\u683C\u6321\u3002"
+      EmbedIntList: 05000000
     Keywords: 
     CostInfo:
       rid: 4049883199248531463
   - Des:
-      Content: 
-      EmbedIntList: 
+      content: "\u83B7\u5F97[]\u70B9\u683C\u6321\u3002"
+      EmbedIntList: 08000000
     Keywords: 
     CostInfo:
       rid: 4049883180725436429

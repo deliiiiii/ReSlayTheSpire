@@ -12,7 +12,7 @@ class GameView : ViewBase<GameView>
     public static void Init() => Instance.IBL();
     protected override void IBL()
     {
-        WindowManager.WindowList.OnAdd += w =>
+        WindowManager.WindowList.OnAdd?.AddListener(w =>
         {
             NormalReticle.SetActive(false);
             FindReticle.SetActive(false);
@@ -28,15 +28,15 @@ class GameView : ViewBase<GameView>
                 windowIns.DesTxt.text = buffWindow.Des;
                 windowIns.gameObject.SetActive(true);
             }
-        };
+        });
 
-        WindowManager.WindowList.OnRemove += w =>
+        WindowManager.WindowList.OnRemove?.AddListener(w =>
         {
             if (w is BuffWindowInfo buffWindow)
             {
                 Destroy(buffWindow.BuffWindowIns);
             }
-        };
+        });
         
         WindowManager.FullMapWindow
             .OnAdd(ShowFullScreenMap)

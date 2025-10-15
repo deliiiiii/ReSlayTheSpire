@@ -13,19 +13,8 @@ public class StaticShower : Singleton<StaticShower>
     const string NotInPlayMode = "Not in Play Mode";
     [ShowInInspector] static string GameState => GetState<EGameState>();
     [ShowInInspector] static string BattleState => GetState<EBattleState>();
-    [ShowInInspector] static string YieldCardState => GetState<EYieldCardState>();
+    [ShowInInspector] static string YieldCardState => GetState<EPlayerTurn>();
     static string GetState<T>() where T : Enum 
         => !Application.isPlaying ? NotInPlayMode : MyFSM.ShowState<T>();
     #endregion
-    
-    #region Config
-    [ShowInInspector]
-    public List<CardConfigMulti> CardConfigs => RefPoolMulti<CardConfigMulti>.Acquire();
-    // [ShowInInspector]
-    // public List<BottleConfig> ItemConfigs => RefPool<BottleConfig>.AcquireList();
-    #endregion
-
-    [ShowInInspector]
-    public SlotDataMulti? SlotData 
-        => !Application.isPlaying ? null : RefPoolMulti<SlotDataMulti>.Acquire().FirstOrDefault();
 }

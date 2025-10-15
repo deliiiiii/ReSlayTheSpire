@@ -130,18 +130,18 @@ public class WindowManager : Singleton<WindowManager>
             ret.OnRemove(() => winBuff.BuffEffect());
         };
     }
-    
-    
-    public static readonly MyList<IMyListItem> WindowList
-        = new ([], x =>
-        {
-            x.OnAddEvent?.Invoke();
-            x.CallOnAddEventWithArg?.Invoke();
-        }, x =>
-        {
-            x.OnRemoveEvent?.Invoke();
-            x.CallOnRemoveEventWithArg?.Invoke();
-        });
+
+    public static readonly MyList<IMyListItem> WindowList = new([]);
+    // TODO AddListener
+        // = new ([], x =>
+        // {
+        //     x.OnAddEvent?.Invoke();
+        //     x.CallOnAddEventWithArg?.Invoke();
+        // }, x =>
+        // {
+        //     x.OnRemoveEvent?.Invoke();
+        //     x.CallOnRemoveEventWithArg?.Invoke();
+        // });
     public static readonly PauseWindowInfo PauseWindow = new ()
     {
         Des = "游戏窗口失去焦点 or 按下了暂停键。",

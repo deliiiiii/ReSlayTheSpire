@@ -28,11 +28,14 @@ public static class RefPoolSingle<T> where T : class, IRefSimple
         MyDebug.LogError("DataBase: AcquireOne<" + typeof(T).Name + "> Not Exist, Auto Register");
         return null!;
     }
-    public static void Release()
+    public static void Release(ref T toRemove)
     {
         var type = typeof(T);
         if (oneDataDic.Remove(type))
+        {
+            toRemove = null!;
             return;
+        }
         MyDebug.LogError("DataBase: ReleaseOne<" + typeof(T).Name + "> Not Exist");
     }
 }
@@ -73,18 +76,38 @@ public static class RefPoolMulti<T> where T : class, IRefMulti
         MyDebug.LogError("DataBase: AcquireList<" + typeof(T).Name + "> Not Exist");
         return [];
     }
-    public static void ReleaseOne(T toRemove)
+    public static void ReleaseOne(ref T toRemove)
     {
         var type = typeof(T);
         if (listDataDic.TryGetValue(type, out var data)) 
         {
             if (data.Remove(toRemove))
+            {
+                toRemove = null!;
                 return;
+            }
             MyDebug.LogError("DataBase: ReleaseListOne<" + typeof(T).Name + "> Not Exist In List");
             return;
         }
         MyDebug.LogError("DataBase: ReleaseListOne<" + typeof(T).Name + "> Not Exist");
     }
+    
+    public static void ReleaseSome(ref List<T> toRemove)
+    {
+        var type = typeof(T);
+        if (listDataDic.TryGetValue(type, out var data)) 
+        {
+            toRemove.ForEach(r =>
+            {
+                if (!data.Remove(r))
+                    MyDebug.LogError("DataBase: ReleaseListSome<" + typeof(T).Name + "> Not Exist In List");
+            });
+            toRemove = null!;
+            return;
+        }
+        MyDebug.LogError("DataBase: ReleaseListSome<" + typeof(T).Name + "> Not Exist");
+    }
+    
     public static void ReleaseAll()
     {
         var type = typeof(T);

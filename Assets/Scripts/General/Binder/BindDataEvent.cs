@@ -32,3 +32,31 @@ public class BindDataEvent : BindDataBase
     }
     
 }
+
+public class BindDataEvent<T> : BindDataBase
+{
+    UnityAction<T> act;
+    [CanBeNull] readonly UnityEvent<T> evt;
+
+    public BindDataEvent(UnityEvent<T> evt)
+    {
+        this.evt = evt;
+    }
+
+    public BindDataEvent<T> To(UnityAction<T> fAct)
+    {
+        act = fAct;
+        return this;
+    }
+
+    public override void Bind()
+    {
+        evt?.AddListener(act);
+    }
+
+    public override void UnBind()
+    {
+        evt?.RemoveListener(act);
+    }
+    
+}

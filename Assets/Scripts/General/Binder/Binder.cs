@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public static class Binder
@@ -14,6 +15,16 @@ public static class Binder
     public static BindDataEvent From(Button btn)
     {
         return new BindDataEvent(btn.onClick);
+    }
+    
+    public static BindDataEvent From(UnityEvent evt)
+    {
+        return new BindDataEvent(evt);
+    }
+    
+    public static BindDataEvent<T> From<T>(UnityEvent<T> evt)
+    {
+        return new BindDataEvent<T>(evt);
     }
     // public static BindDataEvent From(GameObject pnl)
     // {

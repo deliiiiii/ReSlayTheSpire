@@ -3,23 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Sirenix.Utilities;
+using UnityEngine.Events;
 
 
 [Serializable]
-public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? onRemove = null)
+public class MyList<T>(IEnumerable<T> ie)
     : List<T>(ie)
 {
     [JsonConstructor]
-    public MyList() : this(new List<T>(), null, null) { }
-    public event Action<T>? OnAdd = onAdd;
-    public event Action<T>? OnRemove = onRemove;
-    public event Action? OnClear;
+    public MyList() : this([]) { }
+    public UnityEvent<T>? OnAdd = new();
+    public UnityEvent<T>? OnRemove = new();
+    public UnityEvent? OnClear = new();
     
     /// Please Call MyAdd() instead
     [Obsolete]
     public new void Add(T item)
     {
         MyDebug.LogError("Please Call MyAdd() instead");
+    }
+    
+    /// Please Call MyAddRange() instead
+    [Obsolete]
+    public new void AddRange(IEnumerable<T> collection)
+    {
+        MyDebug.LogError("Please Call MyAddRange() instead");
     }
     
     /// Please Call MyRemove() instead
@@ -37,6 +45,13 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
         MyDebug.LogError("Please Call MyClear() instead");
     }
     
+    /// Please Call MyRemoveAt() instead
+    [Obsolete]
+    public new void RemoveAt(int index)
+    {
+        MyDebug.LogError("Please Call MyRemoveAt() instead");
+    }
+    
     /// Please Call MyRemoveAll() instead
     [Obsolete]
     public new int RemoveAll(Predicate<T> match)
@@ -50,9 +65,20 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
         base.Add(item);
         OnAdd?.Invoke(item);
     }
+    public void MyAddRange(IEnumerable<T> collection)
+    {
+        foreach (var item in collection)
+            MyAdd(item);
+    }
     public void MyRemove(T item)
     {
         base.Remove(item);
+        OnRemove?.Invoke(item);
+    }
+    public void MyRemoveAt(int index)
+    {
+        var item = this[index];
+        base.RemoveAt(index);
         OnRemove?.Invoke(item);
     }
 
@@ -63,13 +89,10 @@ public class MyList<T>(IEnumerable<T> ie, Action<T>? onAdd = null, Action<T>? on
     }
     public void MyClear()
     {
-        foreach (var item in this)
-            OnRemove?.Invoke(item);
-        base.Clear();
+        while (Count > 0)
+        {
+            MyRemoveAt(Count - 1);
+        }
         OnClear?.Invoke();
-    }
-
-    public MyList(Action<T>? onAdd = null, Action<T>? onRemove = null) : this([], onAdd, onRemove)
-    {
     }
 }
