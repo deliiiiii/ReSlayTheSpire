@@ -23,10 +23,17 @@ MonoBehaviour:
     SerializationNodes: []
   Name: "\u8BC5\u5492\uFF08\u6D4B\u8BD5\uFF09"
   ID: 3
-  Color: 5
+  Color: 1
   Rarity: 3
   Category: 4
-  Upgrades: []
+  Upgrades:
+  - Des: 
+    CostInfo:
+      rid: 4049883199248531459
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 4049883199248531459
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
+      data:
+        Cost: 114514

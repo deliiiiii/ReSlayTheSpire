@@ -2,6 +2,8 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
+using RSTS;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 
@@ -10,7 +12,7 @@ public class AddressableBatchProcessor
     const string TargetFolderPath = "Assets/Config/RSTS";
     const string LabelName = "RSTSConfig";
 
-    [MenuItem("Tools/Mark Folder as Addressable with RSTSConfig Label")]
+    [MenuItem("Tools/RSTS/Mark Folder as Addressable with RSTSConfig Label")]
     public static void MarkFolderAsAddressable()
     {
         if (!Directory.Exists(TargetFolderPath))
@@ -81,5 +83,73 @@ public class AddressableBatchProcessor
         }
 
         return false;
+    }
+}
+
+public static class ScriptableObjectOModifier
+{
+    const string TargetFolderPath = "Assets/Config/RSTS/Cards";
+
+    static void FilterAndDo(IEnumerable<ScriptableObject> sos, out List<ScriptableObject> modified)
+    {
+        var tar = sos
+            .OfType<CardConfigMulti>()
+            .Where(x => x.Color == ECardColor.Green)
+            .ToList();
+        tar.ForEach(x =>
+        {
+            Debug.Log(x.name);
+            x.Upgrades.Clear();
+            x.Upgrades.Add(new CardUpgradeInfo()
+            {
+                CostInfo = new CardCostNumber()
+                {
+                    Cost = 114514
+                }
+            });
+        });
+        
+        modified = tar.OfType<ScriptableObject>().ToList();
+    }
+    
+    
+    [MenuItem("Tools/RSTS/Modify ScriptableObjects in Folder: ")]
+    public static void ModifyScriptableObjectsInFolder()
+    {
+        if (!Directory.Exists(TargetFolderPath))
+        {
+            Debug.LogError($"文件夹不存在: {TargetFolderPath}");
+            return;
+        }
+
+        // 获取文件夹内所有.asset文件
+        string[] allAssetFiles = Directory.GetFiles(TargetFolderPath, "*.asset", SearchOption.AllDirectories);
+        var targetObjects = new List<ScriptableObject>();
+
+        // 查找所有指定类型的ScriptableObject
+        foreach (string assetFile in allAssetFiles)
+        {
+            string assetPath = assetFile.Replace("\\", "/");
+            if (assetPath.StartsWith(Application.dataPath))
+            {
+                assetPath = "Assets" + assetPath.Substring(Application.dataPath.Length);
+            }
+
+            targetObjects.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(assetPath));
+        }
+
+        if (targetObjects.Count == 0)
+        {
+            Debug.Log($"在文件夹 {TargetFolderPath} 中未找到ScriptableObject");
+            return;
+        }
+
+        FilterAndDo(targetObjects, out var modified);
+
+        modified.ForEach(EditorUtility.SetDirty);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        Debug.Log($"成功修改 {modified.Count} 个对象");
     }
 }
