@@ -16,7 +16,7 @@ public enum EBattleState
     Win,
 }
 
-public enum EPlayerTurn
+public enum EBothTurn
 {
     Start_BeforeDraw,
     PlayerDraw,

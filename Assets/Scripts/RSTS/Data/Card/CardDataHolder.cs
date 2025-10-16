@@ -1,31 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using RSTS.CDMV;
-using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.Events;
-
 namespace RSTS;
-
-[Serializable]
-public class CardData(CardConfigMulti config)
-{
-    public int UpgradeLevel;
-    public CardConfigMulti Config = config;
-
-    public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
-    public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
-}
-
 [Serializable]
 public class CardDataHolder
 {
-    public MyList<CardData> DeckList = [];
-    public MyList<CardData> HandList = [];
-    public MyList<CardData> DrawList = [];
-    public MyList<CardData> DiscardList = [];
-    public MyList<CardData> ExhaustList = [];
+    [SerializeReference]
+    public MyList<CardDataBase> DeckList = [];
+    [SerializeReference]
+    public MyList<CardDataBase> HandList = [];
+    [SerializeReference]
+    public MyList<CardDataBase> DrawList = [];
+    [SerializeReference]
+    public MyList<CardDataBase> DiscardList = [];
+    [SerializeReference]
+    public MyList<CardDataBase> ExhaustList = [];
     public int Energy;
     
     public void OnEnterBothTurn()
@@ -41,9 +32,10 @@ public class CardDataHolder
     public void InitDeck(EPlayerJob job)
     {
         var config = RefPoolMulti<CardListConfigMulti>.Acquire().First(c => c.Job == job);
-        config.InitialCards.ForEach(c =>
+        config.InitialCardDic.ForEach(pair =>
         {
-            DeckList.MyAdd(new CardData(c));
+            for(int i = 0; i < pair.Value; i++)
+                DeckList.MyAdd(CardDataBase.CreateCard(pair.Key.ID));
         });
     }
 
@@ -72,7 +64,7 @@ public class CardDataHolder
         return true;
     }
 
-    public bool TryYield(CardData toYield, out string failReason)
+    public bool TryYield(CardDataBase toYield, out string failReason)
     {
         failReason = string.Empty;
         if (Energy < toYield.CurUpgradeInfo.CostInfo switch
@@ -107,7 +99,7 @@ public class CardDataHolder
         HandList.MyClear();
     }
 
-    void Yield(CardData toYield)
+    void Yield(CardDataBase toYield)
     {
         HandList.MyRemove(toYield);
         if (toYield.CurUpgradeInfo.Keywords.Contains(ECardKeyword.Exhaust))

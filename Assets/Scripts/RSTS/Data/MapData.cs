@@ -3,7 +3,4 @@
 namespace RSTS;
 
 [Serializable]
-public class MapData
-{
-    
-}
+public class MapData;

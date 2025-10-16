@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using RSTS.CDMV;
+﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,35 +50,19 @@ public class BattleView : Singleton<BattleView>
     #endregion
     [Header(nameof(slotData))]
     [SerializeReference][ReadOnly] SlotDataMulti slotData;
+    [SerializeReference] [ReadOnly] BothTurnData bothTurnData;
     
     protected override void Awake()
     {
         base.Awake();
-        MyFSM.OnRegister<EGameState>(() =>
-        {
-            GetGameStateBinds().BindAll();
-            
-        });
-        MyFSM.OnRelease<EGameState>(() =>
-        {
-            GetGameStateBinds().UnBindAll();
-        });
+        MyFSM.OnRegister<EGameState>(() => GetGameStateBinds().BindAll());
+        MyFSM.OnRelease<EGameState>(() => GetGameStateBinds().UnBindAll());
         
-        MyFSM.OnRegister<EBattleState>(() =>
-        {
-            GetBattleStateBinds().BindAll();
-            InfoView.GetBattleStateBinds().BindAll();
-            CharacterModelHolder.GetBattleStateBinds().BindAll();
-        });
-        MyFSM.OnRelease<EBattleState>(() =>
-        {
-            CharacterModelHolder.GetBattleStateBinds().UnBindAll();
-            InfoView.GetBattleStateBinds().UnBindAll();
-            GetBattleStateBinds().UnBindAll();
-        });
+        MyFSM.OnRegister<EBattleState>(() => GetBattleStateBinds().BindAll());
+        MyFSM.OnRelease<EBattleState>(() => GetBattleStateBinds().UnBindAll());
         
-        MyFSM.OnRegister<EPlayerTurn>(() => GetPlayerTurnBinds().BindAll());
-        MyFSM.OnRelease<EPlayerTurn>(() => GetPlayerTurnBinds().UnBindAll());
+        MyFSM.OnRegister<EBothTurn>(() => GetBothTurnStateBinds().BindAll());
+        MyFSM.OnRelease<EBothTurn>(() => GetBothTurnStateBinds().UnBindAll());
     }
 
     IEnumerable<BindDataBase> GetGameStateBinds()
@@ -89,29 +71,27 @@ public class BattleView : Singleton<BattleView>
             .OnEnter(() =>
             {
                 EBattleState savedBattleState = EBattleState.BothTurn;
-                slotData = RefPoolMulti<SlotDataMulti>.RegisterOne(() => new SlotDataMulti());
+                slotData = new SlotDataMulti();
                 if (!slotData.EverInBattle)
                 {
                     savedBattleState = EBattleState.SelectLastBuff;
                 }
+                InfoView.OnEnterBattle(slotData);
                 InfoView.gameObject.SetActive(true);
                 PnlItem.SetActive(true);
                 MyFSM.Register(savedBattleState);
             })
-            // .OnUpdate(_ => MyDebug.Log("EGameState.Battle"))
             .OnExit(() =>
             {
                 MyFSM.Release<EBattleState>();
                 PnlItem.SetActive(false);
                 InfoView.gameObject.SetActive(false);
                 slotData.ExitBattle();
-                RefPoolMulti<SlotDataMulti>.ReleaseOne(ref slotData);
             });
     }
 
     IEnumerable<BindDataBase> GetBattleStateBinds()
     {
-        // MyDebug.Log("BattleView : GetBattleStateBinds");
         yield return MyFSM.GetBindState(EBattleState.SelectLastBuff)
             .OnEnter(() =>
             {
@@ -132,20 +112,18 @@ public class BattleView : Singleton<BattleView>
         yield return MyFSM.GetBindState(EBattleState.BothTurn)
             .OnEnter(() =>
             {
-                bothTurnData = RefPoolSingle<BothTurnData>.Register(() => new BothTurnData());
+                bothTurnData = new BothTurnData();
                 bothTurnData.EnterBothTurn();
                 PnlCard.SetActive(true);
                 slotData.CardDataHolder.OnEnterBothTurn();
-                MyFSM.Register(EPlayerTurn.Start_BeforeDraw);
+                CharacterModelHolder.OnEnterBothTurn(bothTurnData);
+                MyFSM.Register(EBothTurn.Start_BeforeDraw);
             })
-            // .OnUpdate(_ => MyDebug.Log("EBattleState.YieldCard"))
             .OnExit(() =>
             {
-                RefPoolSingle<BothTurnData>.Release(ref bothTurnData);
-                // slotData.CardDataHolder.OnEnterAndExitBothTurn();
-                
+                MyFSM.Release<EBothTurn>();
+                CharacterModelHolder.OnExitBothTurn();
                 PnlCard.SetActive(false);
-                MyFSM.Release<EPlayerTurn>();
             });
         
         yield return Binder.From(slotData.CardDataHolder.DrawList.OnAdd).To(cardData =>
@@ -189,20 +167,19 @@ public class BattleView : Singleton<BattleView>
             TxtHasExhaustCount.text = "0";
         });
     }
-
-    [SerializeReference] [ReadOnly] BothTurnData bothTurnData;
-    IEnumerable<BindDataBase> GetPlayerTurnBinds()
+    
+    IEnumerable<BindDataBase> GetBothTurnStateBinds()
     {
-        yield return MyFSM.GetBindState(EPlayerTurn.Start_BeforeDraw)
-            .OnEnter(() => MyFSM.EnterState(EPlayerTurn.PlayerDraw));
+        yield return MyFSM.GetBindState(EBothTurn.Start_BeforeDraw)
+            .OnEnter(() => MyFSM.EnterState(EBothTurn.PlayerDraw));
         
-        yield return MyFSM.GetBindState(EPlayerTurn.PlayerDraw)
+        yield return MyFSM.GetBindState(EBothTurn.PlayerDraw)
             .OnEnter(() =>
             {
                 PrtHandCard.DestroyActiveChildren();
                 slotData.CardDataHolder.DrawSome(5);
                 
-                MyFSM.EnterState(EPlayerTurn.PlayerYieldCard);
+                MyFSM.EnterState(EBothTurn.PlayerYieldCard);
             });
         
         yield return Binder.From(slotData.CardDataHolder.HandList.OnAdd).To(cardData =>
@@ -211,6 +188,8 @@ public class BattleView : Singleton<BattleView>
             cardModel.InitByData(cardData);
             cardModel.OnPointerEnterEvt += () =>
             {
+                if (isDragging)
+                    return;
                 CurDragCard.gameObject.SetActive(true);
                 CurDragCard.InitByData(cardModel.Data);
                 initThisPos = CurDragCard.transform.position = cardModel.transform.position;
@@ -244,7 +223,7 @@ public class BattleView : Singleton<BattleView>
                 isDragging = false;
                 CurDragCard.gameObject.SetActive(false);
                 CharacterModelHolder.EnableNoTargetArea(false);
-                if (!CharacterModelHolder.CheckPointerPos(pos))
+                if (!CharacterModelHolder.CheckInNoTarget(pos))
                 {
                     MyDebug.LogError("没有拖到无目标区域，");
                     return;
@@ -263,7 +242,7 @@ public class BattleView : Singleton<BattleView>
             PrtHandCard.transform.DestroyChild(t => t.GetComponent<CardModel>().Data == cardData);
         });
 
-        yield return MyFSM.GetBindState(EPlayerTurn.PlayerYieldCard)
+        yield return MyFSM.GetBindState(EBothTurn.PlayerYieldCard)
             .OnEnter(() =>
             {
                 BtnEndTurn.enabled = true;
@@ -272,20 +251,19 @@ public class BattleView : Singleton<BattleView>
             {
                 BtnEndTurn.enabled = false;
             });
-        yield return Binder.From(BtnEndTurn).To(() => MyFSM.EnterState(EPlayerTurn.PlayerYieldEnd));
-        yield return MyFSM.GetBindState(EPlayerTurn.PlayerYieldEnd)
-            .OnEnter(() => MyFSM.EnterState(EPlayerTurn.PlayerDiscard));
+        yield return Binder.From(BtnEndTurn).To(() => MyFSM.EnterState(EBothTurn.PlayerYieldEnd));
+        yield return MyFSM.GetBindState(EBothTurn.PlayerYieldEnd)
+            .OnEnter(() => MyFSM.EnterState(EBothTurn.PlayerDiscard));
         
-        yield return MyFSM.GetBindState(EPlayerTurn.PlayerDiscard)
+        yield return MyFSM.GetBindState(EBothTurn.PlayerDiscard)
             .OnEnter(() =>
             {
                 slotData.CardDataHolder.DiscardAllHand();
-                PrtHandCard.DestroyActiveChildren();
-                MyFSM.EnterState(EPlayerTurn.End_AfterDiscard);
+                MyFSM.EnterState(EBothTurn.End_AfterDiscard);
             });
         
-        yield return MyFSM.GetBindState(EPlayerTurn.End_AfterDiscard)
-            .OnEnter(() => MyFSM.EnterState(EPlayerTurn.Start_BeforeDraw));
+        yield return MyFSM.GetBindState(EBothTurn.End_AfterDiscard)
+            .OnEnter(() => MyFSM.EnterState(EBothTurn.Start_BeforeDraw));
     }
 }
 

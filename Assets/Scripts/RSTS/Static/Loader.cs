@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using RSTS;
 using RSTS.CDMV;
 
 public static class Loader
@@ -14,5 +15,7 @@ public static class Loader
             config.OnLoad();
         }
         
+        CardDataBase.InitCardDic();
+        EnemyDataBase.InitEnemyDic();
     }
 }

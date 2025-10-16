@@ -8,7 +8,7 @@ public class ChooseNameView : Singleton<ChooseNameView>
     {
         base.Awake();
         MyFSM.OnRegister<EGameState>(() => GameStateBinders().BindAll());
-        MyFSM.OnRelease<EGameState>(() => GameStateBinders().BindAll());
+        MyFSM.OnRelease<EGameState>(() => GameStateBinders().UnBindAll());
     }
 
     IEnumerable<BindDataBase> GameStateBinders()

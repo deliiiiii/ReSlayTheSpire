@@ -41,6 +41,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 68283da790c78804a9d12e0664391b43
+    m_Address: "Enemy_0_\u6D4B\u8BD50"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 825cd0cf7b1f3d74083469043d6cda75
+    m_Address: "Enemy_1_\u6D4B\u8BD51"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 915c6cdb9a0491a4987145b6a688d6c5
     m_Address: "Card_2_\u9632\u5FA1"
     m_ReadOnly: 0

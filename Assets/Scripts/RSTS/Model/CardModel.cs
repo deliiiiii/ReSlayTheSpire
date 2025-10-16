@@ -1,6 +1,4 @@
 ﻿using System;
-using Cysharp.Threading.Tasks;
-using Cysharp.Threading.Tasks.Triggers;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
@@ -13,7 +11,7 @@ namespace RSTS;
 public class CardModel : MonoBehaviour
 {
     [SerializeReference][ReadOnly]
-    public CardData Data;
+    public CardDataBase Data;
 
     public Text TxtCost;
     public Text TxtName;
@@ -24,7 +22,7 @@ public class CardModel : MonoBehaviour
     public event Action<Vector3>? OnBeginDragEvt;
     public event Action<Vector3>? OnDragEvt;
     public event Action<Vector3>? OnEndDragEvt;
-    public void InitByData(CardData data)
+    public void InitByData(CardDataBase data)
     {
         Data = data;
         TxtCost.text = Data.CurUpgradeInfo.CostInfo switch

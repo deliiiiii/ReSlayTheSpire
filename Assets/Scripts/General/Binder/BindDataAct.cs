@@ -33,9 +33,10 @@ public class BindDataAct<T> : BindDataBase
     //     return ret;
     // }
 
-    public void Immediate()
+    public BindDataAct<T> Immediate()
     {
         isImmediate = true;
+        return this;
     }
     
     public BindDataAct(Observable<T> osv)

@@ -5,4 +5,15 @@ namespace RSTS;
 public class EnemyModel : MonoBehaviour
 {
     public HPModel MdlHP;
+    public RectHolder RectHolder;
+
+    public void ReadData(EnemyDataBase data)
+    {
+        name = $"Enemy_{data.Config.Name}";
+        Binder.From(data.CurHP).To(v =>
+        {
+            MdlHP.SetHP(v, data.Config.MaxHP);
+            MdlHP.SetShield(0);
+        }).Immediate().Bind();
+    }
 }
