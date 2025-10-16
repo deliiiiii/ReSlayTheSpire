@@ -12,9 +12,9 @@ public class MyList<T>(IEnumerable<T> ie)
 {
     [JsonConstructor]
     public MyList() : this([]) { }
-    public UnityEvent<T>? OnAdd = new();
-    public UnityEvent<T>? OnRemove = new();
-    public UnityEvent? OnClear = new();
+    public event Action<T>? OnAdd;
+    public event Action<T>? OnRemove;
+    public event Action? OnClear;
     
     /// Please Call MyAdd() instead
     [Obsolete]

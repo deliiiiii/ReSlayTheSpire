@@ -1,4 +1,5 @@
-﻿using UnityEngine.UI;
+﻿using System.Collections.Generic;
+using UnityEngine.UI;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
 namespace RSTS;
@@ -16,17 +17,21 @@ public class InfoView : Singleton<InfoView>
     public Button BtnDeck;
     public Button BtnExitBattle;
 
-    public void OnEnterBattle(SlotDataMulti slotData)
+
+    public IEnumerable<BindDataBase> GetGameStateBinds()
     {
-        Binder.From(slotData.CardDataHolder.DeckList.OnAdd).To(cardData =>
+        yield return Binder.From(BtnExitBattle).To(() => MyFSM.EnterState(GameStateWrap.One, EGameState.Title));
+    }
+
+    public void BindBattleData(SlotDataMulti.BattleData battleData)
+    {
+        battleData.DeckList.OnAdd += cardData =>
         {
-            TxtDeckCount.text = slotData.CardDataHolder.DeckList.Count.ToString();
-        }).Bind();
-        Binder.From(slotData.CardDataHolder.DeckList.OnRemove).To(cardData =>
+            TxtDeckCount.text = battleData.DeckList.Count.ToString();
+        };
+        battleData.DeckList.OnRemove += cardData =>
         {
-            TxtDeckCount.text = slotData.CardDataHolder.DeckList.Count.ToString();
-        }).Bind();
-        
-        Binder.From(BtnExitBattle).To(() => MyFSM.EnterState(EGameState.Title)).Bind();
+            TxtDeckCount.text = battleData.DeckList.Count.ToString();
+        };
     }
 }

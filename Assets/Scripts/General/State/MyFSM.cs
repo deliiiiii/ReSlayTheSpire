@@ -2,57 +2,84 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using JetBrains.Annotations;
-using Sirenix.Utilities;
+
+public interface IMyFSMArg{}
+
+public class StateWrapper<TEnum, TArg>
+    where TEnum : Enum
+    where TArg : class, IMyFSMArg
+{
+    public static StateWrapper<TEnum, TArg> One => new();
+}
 
 public abstract class MyFSM
 {
     static readonly Dictionary<Type, MyFSM> fsmDic = new();
     // 这两条永远不能移除内存，是上帝规则。
-    static readonly Dictionary<Type, Action> onRegisterDic = new();
+    static readonly Dictionary<Type, Action<IMyFSMArg>> onRegisterDic = new();
     static readonly Dictionary<Type, Action> onReleaseDic = new();
-    public static void Register<T>(T initState) where T : Enum
+
+    public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, TArg arg)
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
     {
-        if (Get<T>(shouldFind: false) != null)
+        if (Get<TEnum>(shouldFind: false) != null)
         {
-            MyDebug.LogError("StateFactory: Acquire<" + typeof(T).Name + ">Duplicated");
+            MyDebug.LogError("StateFactory: Acquire<" + typeof(TEnum).Name + ">Duplicated");
             return;
         }
-        fsmDic[typeof(T)] = new MyFSM<T>();
-        onRegisterDic[typeof(T)]?.Invoke();
-        EnterState(initState);
-        GetUpdateBind<T>().Bind();
+        fsmDic[typeof(TEnum)] = new MyFSM<TEnum>();
+        onRegisterDic[one.GetType()]?.Invoke(arg);
+        EnterState(one, state);
+        GetUpdateBind<TEnum>().Bind();
     }
-    public static void OnRegister<T>(Action onRegister) where T : Enum
+    
+    public static void OnRegister<TEnum, TArg>(StateWrapper<TEnum, TArg> one, Action<TArg> onRegister)
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
     {
-        onRegisterDic.TryAdd(typeof(T), null);
-        onRegisterDic[typeof(T)] += onRegister;
+        onRegisterDic.TryAdd(one.GetType(), null);
+        onRegisterDic[one.GetType()] += v => onRegister(v as TArg);
     }
-    public static void Release<T>() where T : Enum
+
+    public static void Release<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
     {
-        var fsm = Get<T>();
+        var fsm = Get<TEnum>();
         if (fsm == null)
             return;
         // 跳转到空状态
-        GetUpdateBind<T>().UnBind();
+        GetUpdateBind<TEnum>().UnBind();
         fsm.OnDestroy();
-        onReleaseDic[typeof(T)]?.Invoke();
-        fsmDic.Remove(typeof(T));
+        onReleaseDic[one.GetType()]?.Invoke();
+        fsmDic.Remove(typeof(TEnum));
     }
-    public static void OnRelease<T>(Action onRelease) where T : Enum
+    public static void OnRelease<TEnum, TArg>(StateWrapper<TEnum, TArg> one, Action onRelease) 
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
     {
-        onReleaseDic.TryAdd(typeof(T), null);
-        onReleaseDic[typeof(T)] += onRelease;
+        onReleaseDic.TryAdd(one.GetType(), null);
+        onReleaseDic[one.GetType()] += onRelease;
     }
 
-    public static void EnterState<T>(T state) where T : Enum
-        => Get<T>()?.ChangeState(state);
-    public static bool IsState<T>(T state) where T : Enum
-        => Get<T>()?.IsOneOfState(state) ?? false;
-    public static BindDataState GetBindState<T>(T state) where T : Enum
-        => Binder.From(Get<T>()?.GetState(state));
+    public static void EnterState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
+        => Get<TEnum>()?.ChangeState(state);
+    public static bool IsState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
+        => Get<TEnum>()?.IsOneOfState(state) ?? false;
+    public static BindDataState GetBindState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
+        => Binder.From(Get<TEnum>()?.GetState(state));
     
-    public static string ShowState<T>() where T : Enum
-        => Get<T>(shouldFind : false)?.CurStateName;
+    public static string ShowState<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
+        => Get<TEnum>(shouldFind : false)?.CurStateName;
     
     [CanBeNull]
     static MyFSM<T> Get<T>(bool shouldFind = true) where T : Enum

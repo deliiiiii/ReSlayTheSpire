@@ -18,17 +18,17 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
         IrList.ForEach(i => i.GetInteractInfo = GetCb);
         if (Data.HasSpreadPos)
         {
-            Data.HasSpreadObjList.OnAdd?.AddListener(model =>
+            Data.HasSpreadObjList.OnAdd += model =>
             {
                 model.Data.OnPickedUp += () =>
                 {
                     Data.HasSpreadObjList.MyRemove(model);
                 };
-            });
-            Data.HasSpreadObjList.OnRemove?.AddListener(model =>
+            };
+            Data.HasSpreadObjList.OnRemove += model =>
             {
                 Destroy(model.gameObject);
-            });
+            };
             SpreadMiniItem();
         }
         

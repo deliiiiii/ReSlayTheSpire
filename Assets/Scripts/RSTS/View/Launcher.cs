@@ -6,12 +6,12 @@ public class Launcher : Singleton<Launcher>
     async Task Start()
     {
         await Loader.LoadAll();
-        MyFSM.Register(EGameState.Title);
+        MyFSM.Register(GameStateWrap.One, EGameState.Title, new SlotDataMulti());
     }
 
     void OnDestroy()
     {
-        MyFSM.Release<EGameState>();
+        MyFSM.Release(GameStateWrap.One);
     }
 
     // void Update()

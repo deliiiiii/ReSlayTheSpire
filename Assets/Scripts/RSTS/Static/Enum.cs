@@ -6,6 +6,8 @@ public enum EGameState
     Title,
     Battle,
 }
+public class GameStateWrap : StateWrapper<EGameState, SlotDataMulti>;
+
 public enum EBattleState
 {
     SelectLastBuff,
@@ -16,6 +18,8 @@ public enum EBattleState
     Win,
 }
 
+public class BattleStateWrap : StateWrapper<EBattleState, SlotDataMulti.BattleData>;
+
 public enum EBothTurn
 {
     Start_BeforeDraw,
@@ -25,6 +29,8 @@ public enum EBothTurn
     PlayerDiscard,
     End_AfterDiscard,
 }
+
+public class BothTurnStateWrap : StateWrapper<EBothTurn, SlotDataMulti.BattleData.BothTurnData>;
 
 // public enum EYieldCardState
 // {

@@ -21,9 +21,9 @@ public class BuffManager : SingletonCS<BuffManager>
 
     static BuffManager()
     {
-        Binder.From(winBuffList.OnAdd).To(b => OnAddWindowBuff?.Invoke(b));
-        Binder.From(conBuffList.OnAdd).To(b => OnAddConBuff?.Invoke(b));
-        Binder.From(conBuffList.OnRemove).To(b => OnRemoveConBuff?.Invoke(b));
+        winBuffList.OnAdd += b => OnAddWindowBuff?.Invoke(b);
+        conBuffList.OnAdd += b => OnAddConBuff?.Invoke(b);
+        conBuffList.OnRemove += b => OnRemoveConBuff?.Invoke(b);
     }
 
 

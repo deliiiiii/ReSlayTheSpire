@@ -7,13 +7,13 @@ public class ChooseNameView : Singleton<ChooseNameView>
     protected override void Awake()
     {
         base.Awake();
-        MyFSM.OnRegister<EGameState>(() => GameStateBinders().BindAll());
-        MyFSM.OnRelease<EGameState>(() => GameStateBinders().UnBindAll());
+        MyFSM.OnRegister(GameStateWrap.One, _ => GameStateBinders().BindAll());
+        MyFSM.OnRelease(GameStateWrap.One, () => GameStateBinders().UnBindAll());
     }
 
     IEnumerable<BindDataBase> GameStateBinders()
     {
-        yield return MyFSM.GetBindState(EGameState.ChoosePlayer)
+        yield return MyFSM.GetBindState(GameStateWrap.One, EGameState.ChoosePlayer)
             .OnEnter(() => MyDebug.Log("ChooseNameView Show"))
             .OnUpdate(_ => MyDebug.Log("ChooseNameView Update"));
     }

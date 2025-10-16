@@ -48,141 +48,125 @@ public class BattleView : Singleton<BattleView>
     public Button BtnEndTurn;
     
     #endregion
-    [Header(nameof(slotData))]
-    [SerializeReference][ReadOnly] SlotDataMulti slotData;
-    [SerializeReference] [ReadOnly] BothTurnData bothTurnData;
     
     protected override void Awake()
     {
         base.Awake();
-        MyFSM.OnRegister<EGameState>(() => GetGameStateBinds().BindAll());
-        MyFSM.OnRelease<EGameState>(() => GetGameStateBinds().UnBindAll());
+        MyFSM.OnRegister(GameStateWrap.One, s =>
+        {
+            GetGameStateBinds(s).BindAll();
+            InfoView.GetGameStateBinds().BindAll();
+        });
+        MyFSM.OnRelease(GameStateWrap.One, () =>
+        {
+            GetGameStateBinds(null).UnBindAll();
+            InfoView.GetGameStateBinds().UnBindAll();
+        });
         
-        MyFSM.OnRegister<EBattleState>(() => GetBattleStateBinds().BindAll());
-        MyFSM.OnRelease<EBattleState>(() => GetBattleStateBinds().UnBindAll());
+        MyFSM.OnRegister(BattleStateWrap.One, b => GetBattleStateBinds(b).BindAll());
+        MyFSM.OnRelease(BattleStateWrap.One, () => GetBattleStateBinds(null).UnBindAll());
         
-        MyFSM.OnRegister<EBothTurn>(() => GetBothTurnStateBinds().BindAll());
-        MyFSM.OnRelease<EBothTurn>(() => GetBothTurnStateBinds().UnBindAll());
+        MyFSM.OnRegister(BothTurnStateWrap.One, b => GetBothTurnStateBinds(b).BindAll());
+        MyFSM.OnRelease(BothTurnStateWrap.One, () => GetBothTurnStateBinds(null).UnBindAll());
     }
 
-    IEnumerable<BindDataBase> GetGameStateBinds()
+    IEnumerable<BindDataBase> GetGameStateBinds(SlotDataMulti slotData)
     {
-        yield return MyFSM.GetBindState(EGameState.Battle)
+        yield return MyFSM.GetBindState(GameStateWrap.One, EGameState.Battle)
             .OnEnter(() =>
             {
-                EBattleState savedBattleState = EBattleState.BothTurn;
-                slotData = new SlotDataMulti();
-                if (!slotData.EverInBattle)
-                {
-                    savedBattleState = EBattleState.SelectLastBuff;
-                }
-                InfoView.OnEnterBattle(slotData);
+                EBattleState savedBattleState = EBattleState.SelectLastBuff;
+                var battleData = slotData.CreateBattleData(EPlayerJob.ZhanShi);
+                InfoView.BindBattleData(battleData);
+                battleData.InitDeck();
                 InfoView.gameObject.SetActive(true);
                 PnlItem.SetActive(true);
-                MyFSM.Register(savedBattleState);
+                MyFSM.Register(BattleStateWrap.One, savedBattleState, battleData);
             })
             .OnExit(() =>
             {
-                MyFSM.Release<EBattleState>();
+                MyFSM.Release(BattleStateWrap.One);
                 PnlItem.SetActive(false);
                 InfoView.gameObject.SetActive(false);
-                slotData.ExitBattle();
             });
     }
 
-    IEnumerable<BindDataBase> GetBattleStateBinds()
+    IEnumerable<BindDataBase> GetBattleStateBinds(SlotDataMulti.BattleData battleData)
     {
-        yield return MyFSM.GetBindState(EBattleState.SelectLastBuff)
+        yield return MyFSM.GetBindState(BattleStateWrap.One, EBattleState.SelectLastBuff)
             .OnEnter(() =>
             {
-                slotData.FirstEnterBattle(EPlayerJob.ZhanShi);
                 // InitBuffButtons();
                 PnlSelectLastBuff.SetActive(true);
             })
             .OnExit(() => PnlSelectLastBuff.SetActive(false));
 
         foreach (var btn in LastBuffBtnList)
-            yield return Binder.From(btn).To(() => MyFSM.EnterState(EBattleState.SelectRoom));
+            yield return Binder.From(btn).To(() => MyFSM.EnterState(BattleStateWrap.One, EBattleState.SelectRoom));
         
         // Select Room
 
-        yield return MyFSM.GetBindState(EBattleState.SelectRoom)
-            .OnEnter(() => MyFSM.EnterState(EBattleState.BothTurn));
+        yield return MyFSM.GetBindState(BattleStateWrap.One, EBattleState.SelectRoom)
+            .OnEnter(() => MyFSM.EnterState(BattleStateWrap.One, EBattleState.BothTurn));
         
-        yield return MyFSM.GetBindState(EBattleState.BothTurn)
+        yield return MyFSM.GetBindState(BattleStateWrap.One, EBattleState.BothTurn)
             .OnEnter(() =>
             {
-                bothTurnData = new BothTurnData();
-                bothTurnData.EnterBothTurn();
+                var bothTurnData = battleData.CreateBothTurnData();
+                BindBothTurnData(bothTurnData);
+                CharacterModelHolder.BindBothTurnData(bothTurnData);
+                bothTurnData.Init();
                 PnlCard.SetActive(true);
-                slotData.CardDataHolder.OnEnterBothTurn();
-                CharacterModelHolder.OnEnterBothTurn(bothTurnData);
-                MyFSM.Register(EBothTurn.Start_BeforeDraw);
+                MyFSM.Register(BothTurnStateWrap.One, EBothTurn.Start_BeforeDraw, bothTurnData);
             })
             .OnExit(() =>
             {
-                MyFSM.Release<EBothTurn>();
-                CharacterModelHolder.OnExitBothTurn();
+                MyFSM.Release(BothTurnStateWrap.One);
                 PnlCard.SetActive(false);
+                CharacterModelHolder.OnExitBothTurn();
             });
-        
-        yield return Binder.From(slotData.CardDataHolder.DrawList.OnAdd).To(cardData =>
-        {
-            TxtToDrawCount.text = slotData.CardDataHolder.DrawList.Count.ToString();
-        });
-        yield return Binder.From(slotData.CardDataHolder.DrawList.OnRemove).To(cardData =>
-        {
-            TxtToDrawCount.text = slotData.CardDataHolder.DrawList.Count.ToString();
-        });
-        yield return Binder.From(slotData.CardDataHolder.DrawList.OnClear).To(() =>
-        {
-            TxtToDrawCount.text = "0";
-        });
-        
-        
-        yield return Binder.From(slotData.CardDataHolder.DiscardList.OnAdd).To(cardData =>
-        {
-            TxtHasDiscardCount.text = slotData.CardDataHolder.DiscardList.Count.ToString();
-        });
-        yield return Binder.From(slotData.CardDataHolder.DiscardList.OnRemove).To(cardData =>
-        {
-            TxtHasDiscardCount.text = slotData.CardDataHolder.DiscardList.Count.ToString();
-        });
-        yield return Binder.From(slotData.CardDataHolder.DiscardList.OnClear).To(() =>
-        {
-            TxtHasDiscardCount.text = "0";
-        });
-        
-        
-        yield return Binder.From(slotData.CardDataHolder.ExhaustList.OnAdd).To(cardData =>
-        {
-            TxtHasExhaustCount.text = slotData.CardDataHolder.ExhaustList.Count.ToString();
-        });
-        yield return Binder.From(slotData.CardDataHolder.ExhaustList.OnRemove).To(cardData =>
-        {
-            TxtHasExhaustCount.text = slotData.CardDataHolder.ExhaustList.Count.ToString();
-        });
-        yield return Binder.From(slotData.CardDataHolder.ExhaustList.OnClear).To(() =>
-        {
-            TxtHasExhaustCount.text = "0";
-        });
     }
     
-    IEnumerable<BindDataBase> GetBothTurnStateBinds()
+    IEnumerable<BindDataBase> GetBothTurnStateBinds(SlotDataMulti.BattleData.BothTurnData bothTurnData)
     {
-        yield return MyFSM.GetBindState(EBothTurn.Start_BeforeDraw)
-            .OnEnter(() => MyFSM.EnterState(EBothTurn.PlayerDraw));
+        yield return MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.Start_BeforeDraw)
+            .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerDraw));
         
-        yield return MyFSM.GetBindState(EBothTurn.PlayerDraw)
+        yield return MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.PlayerDraw)
             .OnEnter(() =>
             {
                 PrtHandCard.DestroyActiveChildren();
-                slotData.CardDataHolder.DrawSome(5);
-                
-                MyFSM.EnterState(EBothTurn.PlayerYieldCard);
+                bothTurnData.DrawSome(5);
+                MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard);
+            });
+
+        yield return MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard)
+            .OnEnter(() =>
+            {
+                BtnEndTurn.enabled = true;
+            })
+            .OnExit(() =>
+            {
+                BtnEndTurn.enabled = false;
+            });
+        yield return Binder.From(BtnEndTurn).To(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerYieldEnd));
+        yield return MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.PlayerYieldEnd)
+            .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerDiscard));
+        
+        yield return MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.PlayerDiscard)
+            .OnEnter(() =>
+            {
+                bothTurnData.DiscardAllHand();
+                MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.End_AfterDiscard);
             });
         
-        yield return Binder.From(slotData.CardDataHolder.HandList.OnAdd).To(cardData =>
+        yield return MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.End_AfterDiscard)
+            .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.Start_BeforeDraw));
+    }
+
+    void BindBothTurnData(SlotDataMulti.BattleData.BothTurnData bothTurnData)
+    {
+        bothTurnData.HandList.OnAdd += cardData =>
         {
             var cardModel = Instantiate(PfbCard, PrtHandCard);
             cardModel.InitByData(cardData);
@@ -229,41 +213,55 @@ public class BattleView : Singleton<BattleView>
                     return;
                 }
 
-                if (!slotData.CardDataHolder.TryYield(cardModel.Data, out var failReason))
+                if (!bothTurnData.TryYield(cardModel.Data, out var failReason))
                 {
                     MyDebug.LogError($"不可打出，原因：{failReason}");
                 }
             };
             cardModel.gameObject.SetActive(true);
-        });
+        };
 
-        yield return Binder.From(slotData.CardDataHolder.HandList.OnRemove).To(cardData =>
+        bothTurnData.HandList.OnRemove += cardData =>
         {
             PrtHandCard.transform.DestroyChild(t => t.GetComponent<CardModel>().Data == cardData);
-        });
-
-        yield return MyFSM.GetBindState(EBothTurn.PlayerYieldCard)
-            .OnEnter(() =>
-            {
-                BtnEndTurn.enabled = true;
-            })
-            .OnExit(() =>
-            {
-                BtnEndTurn.enabled = false;
-            });
-        yield return Binder.From(BtnEndTurn).To(() => MyFSM.EnterState(EBothTurn.PlayerYieldEnd));
-        yield return MyFSM.GetBindState(EBothTurn.PlayerYieldEnd)
-            .OnEnter(() => MyFSM.EnterState(EBothTurn.PlayerDiscard));
+        };
         
-        yield return MyFSM.GetBindState(EBothTurn.PlayerDiscard)
-            .OnEnter(() =>
-            {
-                slotData.CardDataHolder.DiscardAllHand();
-                MyFSM.EnterState(EBothTurn.End_AfterDiscard);
-            });
-        
-        yield return MyFSM.GetBindState(EBothTurn.End_AfterDiscard)
-            .OnEnter(() => MyFSM.EnterState(EBothTurn.Start_BeforeDraw));
+        bothTurnData.DrawList.OnAdd += cardData =>
+        {
+            TxtToDrawCount.text = bothTurnData.DrawList.Count.ToString();
+        };
+        bothTurnData.DrawList.OnRemove += cardData =>
+        {
+            TxtToDrawCount.text = bothTurnData.DrawList.Count.ToString();
+        };
+        bothTurnData.DrawList.OnClear += () =>
+        {
+            TxtToDrawCount.text = "0";
+        };
+        bothTurnData.DiscardList.OnAdd += cardData =>
+        {
+            TxtHasDiscardCount.text = bothTurnData.DiscardList.Count.ToString();
+        };
+        bothTurnData.DiscardList.OnRemove += cardData =>
+        {
+            TxtHasDiscardCount.text = bothTurnData.DiscardList.Count.ToString();
+        };
+        bothTurnData.DiscardList.OnClear += () =>
+        {
+            TxtHasDiscardCount.text = "0";
+        };
+        bothTurnData.ExhaustList.OnAdd += cardData =>
+        {
+            TxtHasExhaustCount.text = bothTurnData.ExhaustList.Count.ToString();
+        };
+        bothTurnData.ExhaustList.OnRemove += cardData =>
+        {
+            TxtHasExhaustCount.text = bothTurnData.ExhaustList.Count.ToString();
+        };
+        bothTurnData.ExhaustList.OnClear += () =>
+        {
+            TxtHasExhaustCount.text = "0";
+        };
     }
 }
 

@@ -27,8 +27,8 @@ namespace Violee
 
             SceneItemParent.ClearChildren();
             Data.SceneItemDataMyList.ForEach(OnAddSceneItemItemData);
-            Data.SceneItemDataMyList.OnAdd?.AddListener(OnAddSceneItemItemData);
-            Data.SceneItemDataMyList.OnRemove?.AddListener(OnRemoveSceneItemItemData);
+            Data.SceneItemDataMyList.OnAdd += OnAddSceneItemItemData;
+            Data.SceneItemDataMyList.OnRemove += OnRemoveSceneItemItemData;
         }
 
         public void OnAddWallData(WallData wallData)

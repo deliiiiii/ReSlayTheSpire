@@ -26,7 +26,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         return PosInRect(pos, EnemyModelList[id].RectHolder.RectTransform);
     }
 
-    public void OnEnterBothTurn(BothTurnData bothTurnData)
+    public void BindBothTurnData(SlotDataMulti.BattleData.BothTurnData bothTurnData)
     {
         bothTurnData.EnemyList.ForEach((enemyData, i) =>
         {
