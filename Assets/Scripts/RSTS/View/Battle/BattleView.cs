@@ -37,12 +37,6 @@ public class BattleView : Singleton<BattleView>
     public Text TxtHasDiscardCount;
     public Text TxtHasExhaustCount;
     
-    [ShowInInspector]
-    Vector3 initThisPos;
-    [ShowInInspector]
-    Vector3 initPointerPos;
-    Vector3 initScale;
-    bool isDragging;
     public CardModel CurDragCard;
     
     public Button BtnEndTurn;
@@ -57,17 +51,17 @@ public class BattleView : Singleton<BattleView>
             GetGameStateBinds(s).BindAll();
             InfoView.GetGameStateBinds().BindAll();
         });
-        MyFSM.OnRelease(GameStateWrap.One, () =>
+        MyFSM.OnRelease(GameStateWrap.One, @null =>
         {
-            GetGameStateBinds(null).UnBindAll();
+            GetGameStateBinds(@null).UnBindAll();
             InfoView.GetGameStateBinds().UnBindAll();
         });
         
         MyFSM.OnRegister(BattleStateWrap.One, b => GetBattleStateBinds(b).BindAll());
-        MyFSM.OnRelease(BattleStateWrap.One, () => GetBattleStateBinds(null).UnBindAll());
+        MyFSM.OnRelease(BattleStateWrap.One, @null => GetBattleStateBinds(@null).UnBindAll());
         
         MyFSM.OnRegister(BothTurnStateWrap.One, b => GetBothTurnStateBinds(b).BindAll());
-        MyFSM.OnRelease(BothTurnStateWrap.One, () => GetBothTurnStateBinds(null).UnBindAll());
+        MyFSM.OnRelease(BothTurnStateWrap.One, @null => GetBothTurnStateBinds(@null).UnBindAll());
     }
 
     IEnumerable<BindDataBase> GetGameStateBinds(SlotDataMulti slotData)
@@ -168,6 +162,13 @@ public class BattleView : Singleton<BattleView>
     {
         bothTurnData.HandList.OnAdd += cardData =>
         {
+            // [ShowInInspector]
+            Vector3 initThisPos = default;
+            // [ShowInInspector]
+            Vector3 initPointerPos = default;
+            Vector3 initScale = default;
+            bool isDragging = false;
+            
             var cardModel = Instantiate(PfbCard, PrtHandCard);
             cardModel.InitByData(cardData);
             cardModel.OnPointerEnterEvt += () =>

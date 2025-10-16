@@ -17,7 +17,7 @@ public abstract class MyFSM
     static readonly Dictionary<Type, MyFSM> fsmDic = new();
     // 这两条永远不能移除内存，是上帝规则。
     static readonly Dictionary<Type, Action<IMyFSMArg>> onRegisterDic = new();
-    static readonly Dictionary<Type, Action> onReleaseDic = new();
+    static readonly Dictionary<Type, Action<IMyFSMArg>> onReleaseDic = new();
 
     public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, TArg arg)
         where TEnum : Enum
@@ -52,15 +52,15 @@ public abstract class MyFSM
         // 跳转到空状态
         GetUpdateBind<TEnum>().UnBind();
         fsm.OnDestroy();
-        onReleaseDic[one.GetType()]?.Invoke();
+        onReleaseDic[one.GetType()]?.Invoke(null);
         fsmDic.Remove(typeof(TEnum));
     }
-    public static void OnRelease<TEnum, TArg>(StateWrapper<TEnum, TArg> one, Action onRelease) 
+    public static void OnRelease<TEnum, TArg>(StateWrapper<TEnum, TArg> one, Action<TArg> onRelease) 
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
         onReleaseDic.TryAdd(one.GetType(), null);
-        onReleaseDic[one.GetType()] += onRelease;
+        onReleaseDic[one.GetType()] += v => onRelease(v as TArg);
     }
 
     public static void EnterState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
