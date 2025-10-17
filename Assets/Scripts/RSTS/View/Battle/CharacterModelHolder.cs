@@ -28,19 +28,23 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
 
     public void BindBothTurnData(SlotDataMulti.BattleData.BothTurnData bothTurnData)
     {
-        bothTurnData.EnemyList.ForEach((enemyData, i) =>
+        bothTurnData.EnemyList.OnAdd += enemyData =>
         {
-            var enemyModel = Instantiate(PrbEnemy, TransEnemy[i]);
+            var enemyModel = Instantiate(PrbEnemy, TransEnemy[bothTurnData.EnemyList.Count - 1]);
             enemyModel.ReadData(enemyData);
             enemyModel.gameObject.SetActive(true);
             EnemyModelList.Add(enemyModel);
-        });
-    }
-
-    public void OnExitBothTurn()
-    {
-        EnemyModelList.ForEach(m => Destroy(m.gameObject));
-        EnemyModelList.Clear();
+        };
+        
+        bothTurnData.EnemyList.OnRemove += enemyData =>
+        {
+            var enemyModel = EnemyModelList.Find(em => em.Data == enemyData);
+            if (enemyModel != null)
+            {
+                EnemyModelList.Remove(enemyModel);
+                Destroy(enemyModel.gameObject);
+            }
+        };
     }
     
     public void EnableNoTargetArea(bool enable)

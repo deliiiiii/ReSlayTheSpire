@@ -27,10 +27,14 @@ public class SlotDataMulti: IMyFSMArg
     public bool HasLastBuff;
     [SerializeReference]
     BattleData battleData;
+    public event Action<BattleData>? OnBattleDataCreate;
     
-    public BattleData CreateBattleData(EPlayerJob job)
+    public BattleData CreateAndInitBattleData(EPlayerJob job)
     {
-        return battleData = new BattleData(this, job);
+        battleData = new BattleData(this, job);
+        OnBattleDataCreate?.Invoke(battleData);
+        battleData.InitDeck();
+        return battleData;
     }
     
     
@@ -80,7 +84,7 @@ public class SlotDataMulti: IMyFSMArg
             
             public int PlayerDefend;
             public int TurnID;
-            public List<EnemyDataBase> EnemyList = [];
+            public MyList<EnemyDataBase> EnemyList = [];
 
             public BothTurnData(BattleData battleData)
             {
@@ -92,15 +96,24 @@ public class SlotDataMulti: IMyFSMArg
             public void Init()
             {
                 PlayerDefend = TurnID = 0;
-                EnemyList.Clear();
-                EnemyList.Add(EnemyDataBase.CreateEnemy(0));
-                EnemyList.Add(EnemyDataBase.CreateEnemy(1));
-                EnemyList.Add(EnemyDataBase.CreateEnemy(0));
+                EnemyList.MyClear();
+                EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
+                EnemyList.MyAdd(EnemyDataBase.CreateEnemy(1));
+                EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
                 
                 HandList.MyClear();
                 DrawList.MyClear();
                 DrawList.MyAddRange(battleData.DeckList);
                 DrawList.Shuffle();
+                DiscardList.MyClear();
+                ExhaustList.MyClear();
+            }
+
+            public void UnInit()
+            {
+                EnemyList.MyClear();
+                HandList.MyClear();
+                DrawList.MyClear();
                 DiscardList.MyClear();
                 ExhaustList.MyClear();
             }
@@ -197,9 +210,20 @@ public class SlotDataMulti: IMyFSMArg
             }
         }
 
-        public BothTurnData CreateBothTurnData()
+        public BothTurnData CreateAndInitBothTurnData()
         {
-            return bothTurnData = new BothTurnData(this);
+            bothTurnData = new BothTurnData(this);
+            OnBothTurnDataCreate?.Invoke(bothTurnData);
+            bothTurnData.Init();
+            return bothTurnData;
+        }
+
+        public event Action<BothTurnData>? OnBothTurnDataCreate;
+        
+        public BothTurnData UnloadBothTurnData()
+        {
+            bothTurnData.UnInit();
+            return bothTurnData;
         }
     }
 }

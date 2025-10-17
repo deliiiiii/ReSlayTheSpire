@@ -9077,15 +9077,7 @@ MonoBehaviour:
   TxtHasExhaustCount: {fileID: 529067448}
   CurDragCard: {fileID: 1142717449}
   BtnEndTurn: {fileID: 1506074821}
-  slotData:
-    rid: -2
-  bothTurnData:
-    rid: -2
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+  TxtEndTurn: {fileID: 1804133866}
 --- !u!1 &1075010788
 GameObject:
   m_ObjectHideFlags: 0
@@ -15520,7 +15512,7 @@ GameObject:
   - component: {fileID: 1804133867}
   - component: {fileID: 1804133866}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: Text EndTurn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -22,12 +22,14 @@ public class BattleStateWrap : StateWrapper<EBattleState, SlotDataMulti.BattleDa
 
 public enum EBothTurn
 {
-    Start_BeforeDraw,
+    GrossStart,
+    TurnStart,
     PlayerDraw,
     PlayerYieldCard,
     PlayerYieldEnd,
     PlayerDiscard,
-    End_AfterDiscard,
+    DiscardEnd,
+    EnemyTurn,
 }
 
 public class BothTurnStateWrap : StateWrapper<EBothTurn, SlotDataMulti.BattleData.BothTurnData>;

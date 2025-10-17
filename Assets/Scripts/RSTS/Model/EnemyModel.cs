@@ -4,6 +4,7 @@
 namespace RSTS;
 public class EnemyModel : MonoBehaviour
 {
+    public EnemyDataBase Data;
     public HPModel MdlHP;
     public RectHolder RectHolder;
 
@@ -15,5 +16,7 @@ public class EnemyModel : MonoBehaviour
             MdlHP.SetHP(v, data.Config.MaxHP);
             MdlHP.SetShield(0);
         }).Immediate().Bind();
+
+        Data = data;
     }
 }
