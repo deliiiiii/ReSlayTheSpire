@@ -1,4 +1,6 @@
-﻿using System;
+﻿global using BattleData = RSTS.SlotDataMulti.BattleData;
+global using BothTurnData = RSTS.SlotDataMulti.BattleData.BothTurnData;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RSTS.CDMV;
@@ -190,6 +192,7 @@ public class SlotDataMulti: IMyFSMArg
 
             void Yield(CardDataBase toYield)
             {
+                toYield.Yield(this);
                 HandList.MyRemove(toYield);
                 if (toYield.CurUpgradeInfo.Keywords.Contains(ECardKeyword.Exhaust))
                 {

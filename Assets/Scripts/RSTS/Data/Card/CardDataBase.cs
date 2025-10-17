@@ -48,7 +48,9 @@ public abstract class CardDataBase
 
     public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
-    public abstract void Use();
+    public virtual bool HasTarget() => false;
+    public abstract void Yield(BothTurnData bothTurnData);
+    
     
     void ReadConfig(CardConfigMulti config)
     {

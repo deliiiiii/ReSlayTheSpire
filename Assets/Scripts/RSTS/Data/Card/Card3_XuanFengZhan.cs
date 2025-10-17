@@ -4,5 +4,5 @@ namespace RSTS;
 [CardID(3)][Serializable]
 public class Card3 : CardDataBase
 {
-    public override void Use(){}
+    public override void Yield(BothTurnData bothTurnData){}
 }

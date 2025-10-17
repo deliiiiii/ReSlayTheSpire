@@ -88,7 +88,7 @@ public class BattleView : Singleton<BattleView>
             });
     }
 
-    void BindBattleData(SlotDataMulti.BattleData battleData)
+    void BindBattleData(BattleData battleData)
     {
         battleData.OnBothTurnDataCreate += bothTurnData =>
         {
@@ -97,7 +97,7 @@ public class BattleView : Singleton<BattleView>
         };
     }
 
-    IEnumerable<BindDataBase> GetBattleStateBinds(SlotDataMulti.BattleData battleData)
+    IEnumerable<BindDataBase> GetBattleStateBinds(BattleData battleData)
     {
         yield return MyFSM.GetBindState(BattleStateWrap.One, EBattleState.SelectLastBuff)
             .OnEnter(() =>
@@ -130,7 +130,7 @@ public class BattleView : Singleton<BattleView>
             });
     }
     
-    IEnumerable<BindDataBase> GetBothTurnStateBinds(SlotDataMulti.BattleData.BothTurnData bothTurnData)
+    IEnumerable<BindDataBase> GetBothTurnStateBinds(BothTurnData bothTurnData)
     {
         yield return MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.GrossStart)
             .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.TurnStart));
@@ -170,7 +170,7 @@ public class BattleView : Singleton<BattleView>
             .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.TurnStart));
     }
 
-    void BindBothTurnData(SlotDataMulti.BattleData.BothTurnData bothTurnData)
+    void BindBothTurnData(BothTurnData bothTurnData)
     {
         // [ShowInInspector]
         Vector3 initThisPos = default;

@@ -18,7 +18,7 @@ public enum EBattleState
     Win,
 }
 
-public class BattleStateWrap : StateWrapper<EBattleState, SlotDataMulti.BattleData>;
+public class BattleStateWrap : StateWrapper<EBattleState, BattleData>;
 
 public enum EBothTurn
 {
@@ -32,7 +32,7 @@ public enum EBothTurn
     EnemyTurn,
 }
 
-public class BothTurnStateWrap : StateWrapper<EBothTurn, SlotDataMulti.BattleData.BothTurnData>;
+public class BothTurnStateWrap : StateWrapper<EBothTurn, BothTurnData>;
 
 // public enum EYieldCardState
 // {
