@@ -196,7 +196,7 @@ public static class Resourcer
             }
 
             st.Stop();
-            // MFLogger.LogInfo($"加载标签组{label}资源用时:{st.Elapsed.TotalMilliseconds}ms");
+            MyDebug.Log($"加载标签组{label}资源用时:{st.Elapsed.TotalMilliseconds}ms");
             return loadedAssets;
         }
         

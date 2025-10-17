@@ -5,7 +5,7 @@ using System.Linq;
 public class BindDataUpdate : BindDataBase
 {
     public readonly Action<float> Act;
-    public readonly HashSet<Func<bool>> GuardSet = new ();
+    
     readonly int priority;
 
     public BindDataUpdate(Action<float> act, EUpdatePri e)
@@ -13,8 +13,8 @@ public class BindDataUpdate : BindDataBase
         Act = act;
         priority = (int)e;
     }
-    
-    public override void Bind()
+
+    protected override void BindInternal()
     {
         Updater.UpdateDic.TryAdd(priority, new HashSet<BindDataUpdate>());
         Updater.UpdateDic[priority].Add(this);
@@ -30,11 +30,7 @@ public class BindDataUpdate : BindDataBase
         }
     }
     
-    public BindDataUpdate Where(Func<bool> guard)
-    {
-        GuardSet.Add(guard);
-        return this;
-    }
+    
 }
 
 public enum EUpdatePri

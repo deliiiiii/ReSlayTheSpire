@@ -10,8 +10,8 @@ public class BindDataState : BindDataBase
     {
         this.state = state;
     }
-    
-    public override void Bind()
+
+    protected override void BindInternal()
     {
         state.OnEnter += onEnter;
         state.OnUpdate += onUpdate;

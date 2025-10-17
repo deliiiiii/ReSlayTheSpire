@@ -67,10 +67,10 @@ public abstract class MyFSM
         where TEnum : Enum
         where TArg : class, IMyFSMArg
         => Get<TEnum>()?.ChangeState(state);
-    public static bool IsState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
-        where TEnum : Enum
-        where TArg : class, IMyFSMArg
-        => Get<TEnum>()?.IsOneOfState(state) ?? false;
+    // public static bool IsState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+    //     where TEnum : Enum
+    //     where TArg : class, IMyFSMArg
+    //     => Get<TEnum>()?.IsOneOfState(state) ?? false;
     public static BindDataState GetBindState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
         where TEnum : Enum
         where TArg : class, IMyFSMArg

@@ -44,7 +44,7 @@ public class BindDataAct<T> : BindDataBase
         this.osv = osv;
     }
 
-    public override void Bind()
+    protected override void BindInternal()
     {
         osv.OnValueChangedAfter += act;
         if (isImmediate)

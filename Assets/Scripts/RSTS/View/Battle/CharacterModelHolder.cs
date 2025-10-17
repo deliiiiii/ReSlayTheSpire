@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Sirenix.Utilities;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
@@ -15,25 +16,37 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     public EnemyModel PrbEnemy;
     public List<Transform> TransEnemy = [];
     public List<EnemyModel> EnemyModelList = [];
-    public bool CheckInNoTarget(Vector2 pos)
+
+    readonly List<EnemyModel> enteredTargetEnemyModels = [];
+    
+    public bool TargetingEnemy => enteredTargetEnemyModels.Any();
+    public bool CheckInNoTarget(Vector2 screenPos)
     {
-        return PosInRect(pos, TransNoTargetArea.RectTransform);
-    }
-    public bool CheckInEnemy(Vector2 pos, int id)
-    {
-        if(id < 0 || id >= EnemyModelList.Count)
-            return false;
-        return PosInRect(pos, EnemyModelList[id].RectHolder.RectTransform);
+        return PosInRect(screenPos, TransNoTargetArea.RectTransform);
     }
 
     public void BindBothTurnData(BothTurnData bothTurnData)
     {
         bothTurnData.EnemyList.OnAdd += enemyData =>
         {
-            var enemyModel = Instantiate(PrbEnemy, TransEnemy[bothTurnData.EnemyList.Count - 1]);
-            enemyModel.ReadData(enemyData);
-            enemyModel.gameObject.SetActive(true);
-            EnemyModelList.Add(enemyModel);
+            var m = Instantiate(PrbEnemy, TransEnemy[bothTurnData.EnemyList.Count - 1]);
+            m.ReadData(enemyData);
+            m.OnPointerEnterEvt += () =>
+            {
+                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
+                m.EnableSelectTarget(true);
+                enteredTargetEnemyModels.Add(m);
+            };
+                
+            m.OnPointerExitEvt += () =>
+            {
+                enteredTargetEnemyModels.Remove(m);
+                m.EnableSelectTarget(false);
+                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);
+            };
+            
+            m.gameObject.SetActive(true);
+            EnemyModelList.Add(m);
         };
         
         bothTurnData.EnemyList.OnRemove += enemyData =>
@@ -45,6 +58,30 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
                 Destroy(enemyModel.gameObject);
             }
         };
+    }
+
+    public IEnumerable<BindDataBase> GetPlayerYieldStateBinds(BothTurnData bothTurnData)
+    {
+        yield return MyFSM.GetBindState(YieldCardStateWrap.One, EYieldCardState.Drag)
+            .OnUpdate(_ =>
+            {
+                foreach (var m in EnemyModelList)
+                {
+                    m.CanBeSelect = bothTurnData.HasSelectTarget;
+                }
+            })
+            .OnExit(() =>
+            {
+                foreach (var m in EnemyModelList)
+                {
+                    m.CanBeSelect = false;
+                }
+                foreach (var enemyModel in enteredTargetEnemyModels)
+                {
+                    enemyModel.EnableSelectTarget(false);
+                }
+                enteredTargetEnemyModels.Clear();
+            });
     }
     
     public void EnableNoTargetArea(bool enable)

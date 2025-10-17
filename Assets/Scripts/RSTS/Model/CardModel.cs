@@ -12,7 +12,6 @@ public class CardModel : MonoBehaviour
 {
     [SerializeReference][ReadOnly]
     public CardDataBase Data;
-
     public Text TxtCost;
     public Text TxtName;
     public Text TextCategory;
@@ -25,15 +24,15 @@ public class CardModel : MonoBehaviour
     public void InitByData(CardDataBase data)
     {
         Data = data;
-        TxtCost.text = Data.CurUpgradeInfo.CostInfo switch
+        TxtCost.text = data.CurUpgradeInfo.CostInfo switch
         {
             CardCostNumber costNumber => costNumber.Cost.ToString(),
             CardCostX => "X",
             CardCostNone or _=> "",
         };
-        TxtName.text = Data.Config.Name;
-        TextCategory.text = Data.Config.Category.ToString();
-        TxtDes.text = Data.CurUpgradeInfo.Des.Content;
+        TxtName.text = data.Config.Name;
+        TextCategory.text = data.Config.Category.ToString();
+        TxtDes.text = data.CurUpgradeInfo.Des.Content;
         
         var evtTrigger = GetComponent<EventTrigger>();
         EventTrigger.Entry entryPointerEnter = new EventTrigger.Entry

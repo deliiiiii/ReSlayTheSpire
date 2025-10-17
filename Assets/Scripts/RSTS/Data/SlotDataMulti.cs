@@ -56,8 +56,8 @@ public class SlotDataMulti: IMyFSMArg
         public EPlayerJob Job;
         public List<BottleData> BottleList = [];
         public float InBattleTime;
-        [SerializeField]MapData mapData;
-        [SerializeField]BothTurnData bothTurnData;
+        [SerializeReference]MapData mapData;
+        [SerializeReference]BothTurnData bothTurnData;
 
 
         public BattleData(SlotDataMulti slotData, EPlayerJob job)
@@ -86,14 +86,17 @@ public class SlotDataMulti: IMyFSMArg
             
             public int PlayerDefend;
             public int TurnID;
+            [SerializeReference]
             public MyList<EnemyDataBase> EnemyList = [];
-
+            public bool HasSelectTarget;
+            
             public BothTurnData(BattleData battleData)
             {
                 MyDebug.Log("BothTurnData ctor()");
                 this.battleData = battleData;
                 Init();
             }
+            
 
             public void Init()
             {

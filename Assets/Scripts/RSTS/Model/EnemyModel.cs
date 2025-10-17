@@ -1,13 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
 namespace RSTS;
-public class EnemyModel : MonoBehaviour
+public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHandler
 {
     public EnemyDataBase Data;
     public HPModel MdlHP;
     public RectHolder RectHolder;
+    public GameObject ImgSelectTarget;
+    
+    public event Action? OnPointerEnterEvt;
+    public event Action? OnPointerExitEvt;
 
+    public bool CanBeSelect;
+    
+    
+    
     public void ReadData(EnemyDataBase data)
     {
         name = $"Enemy_{data.Config.Name}";
@@ -18,5 +30,28 @@ public class EnemyModel : MonoBehaviour
         }).Immediate().Bind();
 
         Data = data;
+    }
+    
+    public void EnableSelectTarget(bool enable)
+    {
+        ImgSelectTarget.SetActive(enable);
+    }
+    
+    public void OnPointerEnter(PointerEventData _)
+    {
+        if (!CanBeSelect)
+            return;
+        Debug.Log($"{name} OnPointerEnter");
+        OnPointerEnterEvt?.Invoke();
+    }
+
+    
+
+    public void OnPointerExit(PointerEventData _)
+    {
+        if (!CanBeSelect)
+            return;
+        Debug.Log($"{name} OnPointerExit");
+        OnPointerExitEvt?.Invoke();
     }
 }

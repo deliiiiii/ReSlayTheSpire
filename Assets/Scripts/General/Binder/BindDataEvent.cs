@@ -20,7 +20,7 @@ public class BindDataEvent : BindDataBase
         return this;
     }
 
-    public override void Bind()
+    protected override void BindInternal()
     {
         evt.AddListener(act);
     }
@@ -49,7 +49,7 @@ public class BindDataEvent<T> : BindDataBase
         return this;
     }
 
-    public override void Bind()
+    protected override void BindInternal()
     {
         evt?.AddListener(act);
     }

@@ -34,13 +34,13 @@ public enum EBothTurn
 
 public class BothTurnStateWrap : StateWrapper<EBothTurn, BothTurnData>;
 
-// public enum EYieldCardState
-// {
-//     None,
-//     Drag,
-//     Use,
-//     CantUse,
-// }
+public enum EYieldCardState
+{
+    None,
+    Drag,
+}
+
+public class YieldCardStateWrap : StateWrapper<EYieldCardState, BothTurnData>;
 
 public enum ECardColor
 {
