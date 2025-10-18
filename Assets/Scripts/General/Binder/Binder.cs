@@ -31,9 +31,10 @@ public static class Binder
     //     return From(pnl.GetComponent<Button>());
     // }
 
-    public static BindDataState From(MyState state)
+    [Obsolete]
+    public static StateHolder From(MyState state)
     {
-        return new BindDataState(state);
+        return new StateHolder(state);
     }
 
     public static BindDataUpdate FromUpdate(Action<float> act, EUpdatePri priority = EUpdatePri.Default)

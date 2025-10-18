@@ -18,12 +18,15 @@ public class InfoView : Singleton<InfoView>
     public Button BtnExitBattle;
 
 
-    public void BindGameState()
+    public IEnumerable<BindDataBase> OnRegisterBattleState(BattleData _)
     {
-        Binder.From(BtnExitBattle).To(() => MyFSM.EnterState(GameStateWrap.One, EGameState.Title)).Bind();
+        yield return Binder.From(BtnExitBattle).To(() =>
+        {
+            MyFSM.EnterState(GameStateWrap.One, EGameState.Title);
+        });
     }
 
-    public void BindBattleData(BattleData battleData)
+    public void OnCreateBattleData(BattleData battleData)
     {
         battleData.DeckList.OnAdd += cardData =>
         {

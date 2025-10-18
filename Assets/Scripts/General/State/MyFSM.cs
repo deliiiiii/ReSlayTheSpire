@@ -17,8 +17,10 @@ public abstract class MyFSM
 {
     static readonly Dictionary<Type, MyFSM> fsmDic = new();
     // 这两条永远不能移除内存，是上帝规则。
-    static readonly Dictionary<Type, Action<IMyFSMArg>> onRegisterDic = new();
-    static readonly Dictionary<Type, Action<IMyFSMArg>> onReleaseDic = new();
+    static readonly Dictionary<Type, Func<IMyFSMArg, IEnumerable<BindDataBase>>> onRegisterDic = new();
+    static readonly Dictionary<Type, BindDataUpdate> onUpdateDic = new();
+    static readonly Dictionary<Type, Action<IMyFSMArg>> onChangeDic = new();
+    // static readonly Dictionary<Type, Action<IMyFSMArg>> onReleaseDic = new();
     static readonly Dictionary<Type, IMyFSMArg> argDic = new();
 
     public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, TArg arg)
@@ -30,21 +32,28 @@ public abstract class MyFSM
             MyDebug.LogError("StateFactory: Acquire<" + typeof(TEnum).Name + ">Duplicated");
             return;
         }
-        fsmDic[typeof(TEnum)] = new MyFSM<TEnum>();
-        onRegisterDic[one.GetType()]?.Invoke(arg);
-        EnterState(one, state);
-        GetUpdateBind<TEnum>().Bind();
         argDic[typeof(TEnum)] = arg;
+        fsmDic[typeof(TEnum)] = new MyFSM<TEnum>();
+        onRegisterDic[typeof(TEnum)]?.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind());
+        onUpdateDic.Add(typeof(TEnum), Binder.FromUpdate(Get<TEnum>()!.Update, EUpdatePri.Fsm));
+        onUpdateDic[typeof(TEnum)].Bind();
+        onChangeDic[typeof(TEnum)]?.Invoke(arg);
+        EnterState(one, state);
     }
     
-    public static void OnRegister<TEnum, TArg>(StateWrapper<TEnum, TArg> one, Action<TArg> onRegister, params BindDataState[] onStateChanges)
+    public static void OnRegister<TEnum, TArg>(
+        StateWrapper<TEnum, TArg> one,
+        Func<TArg, IEnumerable<BindDataBase>> onRegister,
+        [CanBeNull] Action<TArg> onChange)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
-        onRegisterDic.TryAdd(one.GetType(), null);
-        onRegisterDic[one.GetType()] += v => onRegister(v as TArg);
-
-        onStateChanges.ForEach(bds => bds.Bind());
+        if(!onRegisterDic.ContainsKey(typeof(TEnum)))
+            onRegisterDic[typeof(TEnum)] = null;
+        onRegisterDic[typeof(TEnum)] += arg => onRegister(arg as TArg);
+        if(!onChangeDic.ContainsKey(typeof(TEnum)))
+            onChangeDic[typeof(TEnum)] = null;
+        onChangeDic[typeof(TEnum)] += arg => onChange?.Invoke(arg as TArg);
     }
 
     public static void Release<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
@@ -55,18 +64,12 @@ public abstract class MyFSM
         if (fsm == null)
             return;
         // 跳转到空状态
-        argDic.Remove(typeof(TEnum));
-        GetUpdateBind<TEnum>().UnBind();
         fsm.OnDestroy();
-        onReleaseDic[one.GetType()]?.Invoke(null);
+        onUpdateDic[typeof(TEnum)].UnBind();
+        onUpdateDic.Remove(typeof(TEnum));
+        onRegisterDic[typeof(TEnum)]?.Invoke(argDic[typeof(TEnum)]).ForEach(bindDataBase => bindDataBase.UnBind());
         fsmDic.Remove(typeof(TEnum));
-    }
-    public static void OnRelease<TEnum, TArg>(StateWrapper<TEnum, TArg> one, Action<TArg> onRelease) 
-        where TEnum : Enum
-        where TArg : class, IMyFSMArg
-    {
-        onReleaseDic.TryAdd(one.GetType(), null);
-        onReleaseDic[one.GetType()] += v => onRelease(v as TArg);
+        argDic.Remove(typeof(TEnum));
     }
 
     public static void EnterState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
@@ -82,10 +85,10 @@ public abstract class MyFSM
         return ret;
     }
 
-    public static BindDataState GetBindState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+    public static StateHolder GetBindState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
-        => Binder.From(Get<TEnum>()?.GetState(state));
+        => new (Get<TEnum>()?.GetState(state));
     
     public static string ShowState<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
         where TEnum : Enum
@@ -100,14 +103,6 @@ public abstract class MyFSM
         if(shouldFind)
             MyDebug.LogError("StateFactory: Get<" + typeof(T).Name + ">Not Exist");
         return null;
-    }
-    
-    static BindDataBase GetUpdateBind<T>() where T : Enum
-    {
-        var fsm = Get<T>();
-        if (fsm == null)
-            return null;
-        return Binder.FromUpdate(fsm.Update, EUpdatePri.Fsm);
     }
 }
 
@@ -169,5 +164,32 @@ public class MyFSM<TEnum> : MyFSM
         curStateClass.Exit();
         curState = null;
         curStateClass = null;
+    }
+}
+
+public class StateHolder
+{
+    readonly MyState state;
+    public StateHolder(MyState state)
+    {
+        this.state = state;
+    }
+    
+    public StateHolder OnEnter(Action act)
+    {
+        state.OnEnter += act;
+        return this;
+    }
+    
+    public StateHolder OnExit(Action act)
+    {
+        state.OnExit += act;
+        return this;
+    }
+    
+    public StateHolder OnUpdate(Action<float> act)
+    {
+        state.OnUpdate += act;
+        return this;
     }
 }

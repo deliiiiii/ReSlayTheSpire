@@ -25,7 +25,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         return PosInRect(screenPos, TransNoTargetArea.RectTransform);
     }
 
-    public void BindBothTurnData(BothTurnData bothTurnData)
+    public void OnCreateBothTurnData(BothTurnData bothTurnData)
     {
         bothTurnData.EnemyList.OnAdd += enemyData =>
         {
@@ -46,9 +46,9 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         };
     }
 
-    public IEnumerable<BindDataBase> GetYieldCardStateBinds(YieldCardData yieldCardData)
+    public void OnChangeYieldCardState(YieldCardData yieldCardData)
     {
-        yield return MyFSM.GetBindState(YieldCardStateWrap.One, EYieldCardState.Drag)
+        MyFSM.GetBindState(YieldCardStateWrap.One, EYieldCardState.Drag)
             .OnEnter(() =>
             {
                 EnemyModelList.ForEach(m =>

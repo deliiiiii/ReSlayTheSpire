@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
+#pragma warning disable CS0612 // 类型或成员已过时
 
 namespace Violee;
 
@@ -18,13 +19,13 @@ public enum EGameState
 public class GameState : SingletonCS<GameState>
 {
     static readonly MyFSM<EGameState> gameFsm = new ();
-    public static readonly BindDataState TitleState;
+    public static readonly StateHolder TitleState;
     public static void EnterTitle() => gameFsm.ChangeState(EGameState.Title);
-    public static readonly BindDataState WinningState;
+    public static readonly StateHolder WinningState;
     public static void EnterWinning() => gameFsm.ChangeState(EGameState.Winning);
-    public static readonly BindDataState GeneratingMapState;
+    public static readonly StateHolder GeneratingMapState;
     public static void EnterGeneratingMap() => gameFsm.ChangeState(EGameState.GeneratingMap);
-    public static readonly BindDataState PlayingState;
+    public static readonly StateHolder PlayingState;
     public static void EnterPlaying() => gameFsm.ChangeState(EGameState.Playing);
     
 

@@ -24,7 +24,7 @@ public class SlotData: IMyFSMArg
     
     [SerializeReference] BattleData battleData;
     public event Action<BattleData>? OnBattleDataCreate;
-    public BattleData CreateAndInitBattleData(EPlayerJob job) 
+    public BattleData CreateBattleData(EPlayerJob job) 
         => battleData = new BattleData(job, OnBattleDataCreate);
 }
 
