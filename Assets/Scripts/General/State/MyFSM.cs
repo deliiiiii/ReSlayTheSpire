@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using JetBrains.Annotations;
+using Sirenix.Utilities;
 
 public interface IMyFSMArg{}
 
@@ -36,12 +37,14 @@ public abstract class MyFSM
         argDic[typeof(TEnum)] = arg;
     }
     
-    public static void OnRegister<TEnum, TArg>(StateWrapper<TEnum, TArg> one, Action<TArg> onRegister)
+    public static void OnRegister<TEnum, TArg>(StateWrapper<TEnum, TArg> one, Action<TArg> onRegister, params BindDataState[] onStateChanges)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
         onRegisterDic.TryAdd(one.GetType(), null);
         onRegisterDic[one.GetType()] += v => onRegister(v as TArg);
+
+        onStateChanges.ForEach(bds => bds.Bind());
     }
 
     public static void Release<TEnum, TArg>(StateWrapper<TEnum, TArg> one)

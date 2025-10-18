@@ -48,21 +48,35 @@ public class BattleView : Singleton<BattleView>
     protected override void Awake()
     {
         base.Awake();
-        MyFSM.OnRegister(GameStateWrap.One, slotData =>
-        {
-            slotData.OnBattleDataCreate += battleData =>
+        MyFSM.OnRegister(GameStateWrap.One, 
+            slotData =>
             {
-                BindBattleData(battleData);
-                InfoView.BindBattleData(battleData);
-            };
-            GetGameStateBinds(slotData).BindAll();
-            InfoView.GetGameStateBinds().BindAll();
-        });
-        MyFSM.OnRelease(GameStateWrap.One, @null =>
-        {
-            GetGameStateBinds(@null).UnBindAll();
-            InfoView.GetGameStateBinds().UnBindAll();
-        });
+                slotData.OnBattleDataCreate += battleData =>
+                {
+                    battleData.OnBothTurnDataCreate += bothTurnData =>
+                    {
+                        BindBothTurnData(bothTurnData);
+                        CharacterModelHolder.BindBothTurnData(bothTurnData);
+                    };
+                    InfoView.BindBattleData(battleData);
+                };
+                MyFSM.GetBindState(GameStateWrap.One, EGameState.Battle)
+                    .OnEnter(() =>
+                    {
+                        InfoView.gameObject.SetActive(true);
+                        PnlItem.SetActive(true);
+                        MyFSM.Register(BattleStateWrap.One, EBattleState.SelectLastBuff, 
+                            slotData.CreateAndInitBattleData(EPlayerJob.ZhanShi));
+                    })
+                    .OnExit(() =>
+                    {
+                        MyFSM.Release(BattleStateWrap.One);
+                        PnlItem.SetActive(false);
+                        InfoView.gameObject.SetActive(false);
+                    }).Bind();
+                
+                InfoView.BindGameState();
+            });
         
         MyFSM.OnRegister(BattleStateWrap.One, battleData => GetBattleStateBinds(battleData).BindAll());
         MyFSM.OnRelease(BattleStateWrap.One, @null => GetBattleStateBinds(@null).UnBindAll());
@@ -78,34 +92,6 @@ public class BattleView : Singleton<BattleView>
         {
             CharacterModelHolder.GetYieldCardStateBinds(yieldCardData).UnBindAll();
         });
-    }
-
-
-    IEnumerable<BindDataBase> GetGameStateBinds(SlotDataMulti slotData)
-    {
-        yield return MyFSM.GetBindState(GameStateWrap.One, EGameState.Battle)
-            .OnEnter(() =>
-            {
-                InfoView.gameObject.SetActive(true);
-                PnlItem.SetActive(true);
-                MyFSM.Register(BattleStateWrap.One, EBattleState.SelectLastBuff, 
-                    slotData.CreateAndInitBattleData(EPlayerJob.ZhanShi));
-            })
-            .OnExit(() =>
-            {
-                MyFSM.Release(BattleStateWrap.One);
-                PnlItem.SetActive(false);
-                InfoView.gameObject.SetActive(false);
-            });
-    }
-
-    void BindBattleData(BattleData battleData)
-    {
-        battleData.OnBothTurnDataCreate += bothTurnData =>
-        {
-            BindBothTurnData(bothTurnData);
-            CharacterModelHolder.BindBothTurnData(bothTurnData);
-        };
     }
 
     IEnumerable<BindDataBase> GetBattleStateBinds(BattleData battleData)
@@ -128,7 +114,7 @@ public class BattleView : Singleton<BattleView>
         yield return MyFSM.GetBindState(BattleStateWrap.One, EBattleState.BothTurn)
             .OnEnter(() =>
             {
-                var bothTurnData = battleData.CreateAndInitBothTurnData();
+                var bothTurnData = battleData.CreateBothTurnData();
                 PnlCard.SetActive(true);
                 // 跳过GrossStart、TurnStart阶段。
                 MyFSM.Register(BothTurnStateWrap.One, EBothTurn.PlayerDraw, bothTurnData);
@@ -202,7 +188,7 @@ public class BattleView : Singleton<BattleView>
             {
                 if (MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out _))
                     return;
-                MyDebug.Log($"第 {cardModel.transform.GetSiblingIndex()} 张牌 OnPointerEnterEvt");
+                // MyDebug.Log($"第 {cardModel.transform.GetSiblingIndex()} 张牌 OnPointerEnterEvt");
                 CurDragCard.gameObject.SetActive(true);
                 CurDragCard.InitByData(cardData);
                 initThisPos = CurDragCard.transform.position = cardModel.transform.position;
@@ -220,7 +206,7 @@ public class BattleView : Singleton<BattleView>
             };
             cardModel.OnBeginDragEvt += worldPos =>
             {
-                if (MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out var yieldCardData))
+                if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.None, out var yieldCardData))
                     return;
                 MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.Drag);
                 initPointerPos = worldPos;
@@ -238,7 +224,7 @@ public class BattleView : Singleton<BattleView>
             };
             cardModel.OnEndDragEvt += screenPos =>
             {
-                MyDebug.Log("结束拖拽");
+                // MyDebug.Log("结束拖拽");
                 bool targetingEnemy = CharacterModelHolder.TargetingEnemy;
                 MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.None);
 

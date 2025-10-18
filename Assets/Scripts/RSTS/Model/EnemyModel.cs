@@ -35,7 +35,7 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
     
     public void OnPointerEnter(PointerEventData _)
     {
-        Debug.Log($"{name} OnPointerEnter");
+        // Debug.Log($"{name} OnPointerEnter");
         OnPointerEnterEvt?.Invoke();
     }
 
@@ -43,7 +43,7 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData _)
     {
-        Debug.Log($"{name} OnPointerExit");
+        // Debug.Log($"{name} OnPointerExit");
         OnPointerExitEvt?.Invoke();
     }
 }
