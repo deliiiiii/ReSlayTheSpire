@@ -17,9 +17,9 @@ public abstract class MyFSM
 {
     static readonly Dictionary<Type, MyFSM> fsmDic = new();
     // 这两条永远不能移除内存，是上帝规则。
-    static readonly Dictionary<Type, Func<IMyFSMArg, IEnumerable<BindDataBase>>> onRegisterDic = new();
+    static readonly Dictionary<Type, List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>> onRegisterDic = new();
     static readonly Dictionary<Type, BindDataUpdate> onUpdateDic = new();
-    static readonly Dictionary<Type, Action<IMyFSMArg>> onChangeDic = new();
+    static readonly Dictionary<Type, List<Action<IMyFSMArg>>> onChangeDic = new();
     // static readonly Dictionary<Type, Action<IMyFSMArg>> onReleaseDic = new();
     static readonly Dictionary<Type, IMyFSMArg> argDic = new();
 
@@ -34,26 +34,24 @@ public abstract class MyFSM
         }
         argDic[typeof(TEnum)] = arg;
         fsmDic[typeof(TEnum)] = new MyFSM<TEnum>();
-        onRegisterDic[typeof(TEnum)]?.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind());
+        onRegisterDic[typeof(TEnum)].ForEach(func =>func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
         onUpdateDic.Add(typeof(TEnum), Binder.FromUpdate(Get<TEnum>()!.Update, EUpdatePri.Fsm));
         onUpdateDic[typeof(TEnum)].Bind();
-        onChangeDic[typeof(TEnum)]?.Invoke(arg);
+        onChangeDic[typeof(TEnum)].ForEach(act => act.Invoke(arg));
         EnterState(one, state);
     }
     
     public static void OnRegister<TEnum, TArg>(
         StateWrapper<TEnum, TArg> one,
         Func<TArg, IEnumerable<BindDataBase>> onRegister,
-        [CanBeNull] Action<TArg> onChange)
+        Action<TArg> onChange)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
-        if(!onRegisterDic.ContainsKey(typeof(TEnum)))
-            onRegisterDic[typeof(TEnum)] = null;
-        onRegisterDic[typeof(TEnum)] += arg => onRegister(arg as TArg);
-        if(!onChangeDic.ContainsKey(typeof(TEnum)))
-            onChangeDic[typeof(TEnum)] = null;
-        onChangeDic[typeof(TEnum)] += arg => onChange?.Invoke(arg as TArg);
+        onRegisterDic.TryAdd(typeof(TEnum), new List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>());
+        onRegisterDic[typeof(TEnum)].Add(arg => onRegister(arg as TArg));
+        onChangeDic.TryAdd(typeof(TEnum), new List<Action<IMyFSMArg>>());
+        onChangeDic[typeof(TEnum)].Add(arg => onChange(arg as TArg));
     }
 
     public static void Release<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
@@ -67,7 +65,7 @@ public abstract class MyFSM
         fsm.OnDestroy();
         onUpdateDic[typeof(TEnum)].UnBind();
         onUpdateDic.Remove(typeof(TEnum));
-        onRegisterDic[typeof(TEnum)]?.Invoke(argDic[typeof(TEnum)]).ForEach(bindDataBase => bindDataBase.UnBind());
+        onRegisterDic[typeof(TEnum)]?.ForEach(func => func.Invoke(argDic[typeof(TEnum)]).ForEach(bindDataBase => bindDataBase.UnBind()));
         fsmDic.Remove(typeof(TEnum));
         argDic.Remove(typeof(TEnum));
     }

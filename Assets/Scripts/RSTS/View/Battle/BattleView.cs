@@ -48,20 +48,19 @@ public class BattleView : Singleton<BattleView>
 
     IEnumerable<BindDataBase> OnRegisterGameState(SlotData slotData)
     {
-        MyDebug.Log("OnRegisterGameState");
+        // MyDebug.Log("OnRegisterGameState");
         slotData.OnBattleDataCreate += battleData =>
         {
-            MyDebug.Log("OnBattleDataCreate");
+            // MyDebug.Log("OnBattleDataCreate");
             battleData.OnBothTurnDataCreate += bothTurnData =>
             {
-                MyDebug.Log("OnBothTurnDataCreate");
+                // MyDebug.Log("OnBothTurnDataCreate");
                 OnCreateBothTurnData(bothTurnData);
                 CharacterModelHolder.OnCreateBothTurnData(bothTurnData);
             };
             InfoView.OnCreateBattleData(battleData);
         };
-        yield return Binder.From(new Observable<int>(1)).To(i => MyDebug.Log(i)).Immediate();
-        // yield break;
+        yield break;
     }
     void OnChangeGameState(SlotData slotData)
     {
@@ -182,7 +181,7 @@ public class BattleView : Singleton<BattleView>
     {
         bothTurnData.HandList.OnAdd += cardData =>
         {
-            MyDebug.Log("BothTurnData HandList OnAdd");
+            // MyDebug.Log("BothTurnData HandList OnAdd");
             Vector3 initThisPos = default;
             Vector3 initPointerPos = default;
             Vector3 initScale = default;

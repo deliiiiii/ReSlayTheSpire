@@ -15,7 +15,7 @@ public class TitleView : Singleton<TitleView>
     protected override void Awake()
     {
         base.Awake();
-        // MyFSM.OnRegister(GameStateWrap.One, OnRegisterGameState, OnChangeGameState);
+        MyFSM.OnRegister(GameStateWrap.One, OnRegisterGameState, OnChangeGameState);
     }
 
     IEnumerable<BindDataBase> OnRegisterGameState(SlotData slotData)

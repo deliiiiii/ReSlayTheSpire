@@ -53,13 +53,13 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
             {
                 EnemyModelList.ForEach(m =>
                 {
-                    MyDebug.Log($"EnemyModel {m.name} find Enter Drag");
+                    // MyDebug.Log($"EnemyModel {m.name} find Enter Drag");
                     m.OnPointerEnterEvt += () =>
                     {
-                        MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt try...");
+                        // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt try...");
                         if (!yieldCardData.HasTarget)
                             return;
-                        MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt success!");
+                        // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt success!");
                         enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
                         m.EnableSelectTarget(true);
                         enteredTargetEnemyModels.Add(m);
