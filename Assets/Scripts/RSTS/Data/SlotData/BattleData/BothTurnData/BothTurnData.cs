@@ -89,7 +89,7 @@ public class BothTurnData : IMyFSMArg
             failReason = "该牌无法打出";
             return false;
         }
-        Yield(toYield);
+        YieldOne(toYield);
         return true;
     }
 
@@ -105,18 +105,29 @@ public class BothTurnData : IMyFSMArg
         HandList.MyClear();
     }
 
-    void Yield(CardDataBase toYield)
+    void YieldOne(CardDataBase toYield)
     {
         toYield.Yield(this);
-        HandList.MyRemove(toYield);
         if (toYield.CurUpgradeInfo.Keywords.Contains(ECardKeyword.Exhaust))
         {
-            ExhaustList.MyAdd(toYield);
+            ExhaustOne(toYield);
         }
         else
         {
-            DiscardList.MyAdd(toYield);
+            NormallyYieldOne(toYield);
         }
+    }
+    
+    void ExhaustOne(CardDataBase toExhaust)
+    {
+        HandList.MyRemove(toExhaust);
+        ExhaustList.MyAdd(toExhaust);
+    }
+
+    void NormallyYieldOne(CardDataBase toYield)
+    {
+        HandList.MyRemove(toYield);
+        DiscardList.MyAdd(toYield);
     }
     
     

@@ -11,7 +11,7 @@ namespace RSTS;
 public class CardModel : MonoBehaviour
 {
     [SerializeReference][ReadOnly]
-    public CardDataBase Data;
+    CardDataBase data;
     public Text TxtCost;
     public Text TxtName;
     public Text TextCategory;
@@ -21,18 +21,18 @@ public class CardModel : MonoBehaviour
     public Action<Vector3>? OnBeginDragEvt;
     public Action<Vector3>? OnDragEvt;
     public Action<Vector3>? OnEndDragEvt;
-    public void InitByData(CardDataBase data)
+    public void InitByData(CardDataBase fData)
     {
-        Data = data;
-        TxtCost.text = data.CurUpgradeInfo.CostInfo switch
+        data = fData;
+        TxtCost.text = fData.CurUpgradeInfo.CostInfo switch
         {
             CardCostNumber costNumber => costNumber.Cost.ToString(),
             CardCostX => "X",
             CardCostNone or _=> "",
         };
-        TxtName.text = data.Config.Name;
-        TextCategory.text = data.Config.Category.ToString();
-        TxtDes.text = data.CurUpgradeInfo.Des.Content;
+        TxtName.text = fData.Config.Name;
+        TextCategory.text = fData.Config.Category.ToString();
+        TxtDes.text = fData.CurUpgradeInfo.Des.Content;
         
         var evtTrigger = GetComponent<EventTrigger>();
         EventTrigger.Entry entryPointerEnter = new EventTrigger.Entry
