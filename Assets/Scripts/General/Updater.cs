@@ -15,7 +15,7 @@ public class Updater : Singleton<Updater>
         {
             set.ForEach(v =>
             {
-                if(v.GuardSet.All(guard => guard()))
+                // if(v.GuardSet.All(guard => guard()))
                     v.Act(Time.deltaTime);
             });
         });

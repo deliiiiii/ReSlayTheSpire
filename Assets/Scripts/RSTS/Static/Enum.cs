@@ -40,7 +40,7 @@ public enum EYieldCardState
     Drag,
 }
 
-public class YieldCardStateWrap : StateWrapper<EYieldCardState, BothTurnData>;
+public class YieldCardStateWrap : StateWrapper<EYieldCardState, YieldCardData>;
 
 public enum ECardColor
 {

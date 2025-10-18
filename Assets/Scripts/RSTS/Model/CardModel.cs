@@ -16,11 +16,11 @@ public class CardModel : MonoBehaviour
     public Text TxtName;
     public Text TextCategory;
     public TMP_Text TxtDes;
-    public event Action? OnPointerEnterEvt;
-    public event Action? OnPointerExitEvt;
-    public event Action<Vector3>? OnBeginDragEvt;
-    public event Action<Vector3>? OnDragEvt;
-    public event Action<Vector3>? OnEndDragEvt;
+    public Action? OnPointerEnterEvt;
+    public Action? OnPointerExitEvt;
+    public Action<Vector3>? OnBeginDragEvt;
+    public Action<Vector3>? OnDragEvt;
+    public Action<Vector3>? OnEndDragEvt;
     public void InitByData(CardDataBase data)
     {
         Data = data;

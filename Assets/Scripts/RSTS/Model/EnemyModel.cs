@@ -10,15 +10,11 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
 {
     public EnemyDataBase Data;
     public HPModel MdlHP;
-    public RectHolder RectHolder;
     public GameObject ImgSelectTarget;
     
-    public event Action? OnPointerEnterEvt;
-    public event Action? OnPointerExitEvt;
+    public Action? OnPointerEnterEvt;
+    public Action? OnPointerExitEvt;
 
-    public bool CanBeSelect;
-    
-    
     
     public void ReadData(EnemyDataBase data)
     {
@@ -39,8 +35,6 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
     
     public void OnPointerEnter(PointerEventData _)
     {
-        if (!CanBeSelect)
-            return;
         Debug.Log($"{name} OnPointerEnter");
         OnPointerEnterEvt?.Invoke();
     }
@@ -49,8 +43,6 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData _)
     {
-        if (!CanBeSelect)
-            return;
         Debug.Log($"{name} OnPointerExit");
         OnPointerExitEvt?.Invoke();
     }

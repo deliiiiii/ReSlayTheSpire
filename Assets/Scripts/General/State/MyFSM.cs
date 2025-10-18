@@ -18,6 +18,7 @@ public abstract class MyFSM
     // 这两条永远不能移除内存，是上帝规则。
     static readonly Dictionary<Type, Action<IMyFSMArg>> onRegisterDic = new();
     static readonly Dictionary<Type, Action<IMyFSMArg>> onReleaseDic = new();
+    static readonly Dictionary<Type, IMyFSMArg> argDic = new();
 
     public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, TArg arg)
         where TEnum : Enum
@@ -32,6 +33,7 @@ public abstract class MyFSM
         onRegisterDic[one.GetType()]?.Invoke(arg);
         EnterState(one, state);
         GetUpdateBind<TEnum>().Bind();
+        argDic[typeof(TEnum)] = arg;
     }
     
     public static void OnRegister<TEnum, TArg>(StateWrapper<TEnum, TArg> one, Action<TArg> onRegister)
@@ -50,6 +52,7 @@ public abstract class MyFSM
         if (fsm == null)
             return;
         // 跳转到空状态
+        argDic.Remove(typeof(TEnum));
         GetUpdateBind<TEnum>().UnBind();
         fsm.OnDestroy();
         onReleaseDic[one.GetType()]?.Invoke(null);
@@ -67,10 +70,15 @@ public abstract class MyFSM
         where TEnum : Enum
         where TArg : class, IMyFSMArg
         => Get<TEnum>()?.ChangeState(state);
-    // public static bool IsState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
-    //     where TEnum : Enum
-    //     where TArg : class, IMyFSMArg
-    //     => Get<TEnum>()?.IsOneOfState(state) ?? false;
+    public static bool IsState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, out TArg arg)
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
+    {
+        var ret = Get<TEnum>()?.IsOneOfState(state) ?? false;
+        arg = ret ? arg = argDic[typeof(TEnum)] as TArg : null;
+        return ret;
+    }
+
     public static BindDataState GetBindState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
         where TEnum : Enum
         where TArg : class, IMyFSMArg

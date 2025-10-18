@@ -31,20 +31,6 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         {
             var m = Instantiate(PrbEnemy, TransEnemy[bothTurnData.EnemyList.Count - 1]);
             m.ReadData(enemyData);
-            m.OnPointerEnterEvt += () =>
-            {
-                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
-                m.EnableSelectTarget(true);
-                enteredTargetEnemyModels.Add(m);
-            };
-                
-            m.OnPointerExitEvt += () =>
-            {
-                enteredTargetEnemyModels.Remove(m);
-                m.EnableSelectTarget(false);
-                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);
-            };
-            
             m.gameObject.SetActive(true);
             EnemyModelList.Add(m);
         };
@@ -60,26 +46,41 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         };
     }
 
-    public IEnumerable<BindDataBase> GetPlayerYieldStateBinds(BothTurnData bothTurnData)
+    public IEnumerable<BindDataBase> GetYieldCardStateBinds(YieldCardData yieldCardData)
     {
         yield return MyFSM.GetBindState(YieldCardStateWrap.One, EYieldCardState.Drag)
-            .OnUpdate(_ =>
+            .OnEnter(() =>
             {
-                foreach (var m in EnemyModelList)
+                EnemyModelList.ForEach(m =>
                 {
-                    m.CanBeSelect = bothTurnData.HasSelectTarget;
-                }
+                    MyDebug.Log($"EnemyModel {m.name} find Enter Drag");
+                    m.OnPointerEnterEvt += () =>
+                    {
+                        MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt try...");
+                        if (!yieldCardData.HasTarget)
+                            return;
+                        MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt success!");
+                        enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
+                        m.EnableSelectTarget(true);
+                        enteredTargetEnemyModels.Add(m);
+                    };
+
+                    m.OnPointerExitEvt += () =>
+                    {
+                        enteredTargetEnemyModels.Remove(m);
+                        m.EnableSelectTarget(false);
+                        enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);
+                    };
+                });
             })
             .OnExit(() =>
             {
-                foreach (var m in EnemyModelList)
+                EnemyModelList.ForEach(m =>
                 {
-                    m.CanBeSelect = false;
-                }
-                foreach (var enemyModel in enteredTargetEnemyModels)
-                {
-                    enemyModel.EnableSelectTarget(false);
-                }
+                    m.OnPointerEnterEvt = null;
+                    m.OnPointerExitEvt = null;
+                    m.EnableSelectTarget(false);
+                });
                 enteredTargetEnemyModels.Clear();
             });
     }

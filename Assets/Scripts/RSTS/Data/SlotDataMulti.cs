@@ -1,5 +1,6 @@
 ﻿global using BattleData = RSTS.SlotDataMulti.BattleData;
 global using BothTurnData = RSTS.SlotDataMulti.BattleData.BothTurnData;
+global using YieldCardData = RSTS.SlotDataMulti.BattleData.BothTurnData.YieldCardData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,7 +89,13 @@ public class SlotDataMulti: IMyFSMArg
             public int TurnID;
             [SerializeReference]
             public MyList<EnemyDataBase> EnemyList = [];
-            public bool HasSelectTarget;
+
+            YieldCardData yieldCardData; 
+            
+            public class YieldCardData : IMyFSMArg
+            {
+                public bool HasTarget;
+            }
             
             public BothTurnData(BattleData battleData)
             {
@@ -96,7 +103,11 @@ public class SlotDataMulti: IMyFSMArg
                 this.battleData = battleData;
                 Init();
             }
-            
+
+            public YieldCardData CreateYieldCardData()
+            {
+                return yieldCardData = new YieldCardData();
+            }
 
             public void Init()
             {

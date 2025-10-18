@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -69,9 +70,16 @@ public class BattleView : Singleton<BattleView>
         MyFSM.OnRegister(BothTurnStateWrap.One, bothTurnData => GetBothTurnStateBinds(bothTurnData).BindAll());
         MyFSM.OnRelease(BothTurnStateWrap.One, @null => GetBothTurnStateBinds(@null).UnBindAll());
         
-        MyFSM.OnRegister(YieldCardStateWrap.One, bothTurnData => { CharacterModelHolder.GetPlayerYieldStateBinds(bothTurnData).BindAll();});
-        MyFSM.OnRelease(YieldCardStateWrap.One, bothTurnData => { CharacterModelHolder.GetPlayerYieldStateBinds(bothTurnData).UnBindAll();});
+        MyFSM.OnRegister(YieldCardStateWrap.One, yieldCardData => 
+        {
+            CharacterModelHolder.GetYieldCardStateBinds(yieldCardData).BindAll();
+        });
+        MyFSM.OnRelease(YieldCardStateWrap.One, yieldCardData =>
+        {
+            CharacterModelHolder.GetYieldCardStateBinds(yieldCardData).UnBindAll();
+        });
     }
+
 
     IEnumerable<BindDataBase> GetGameStateBinds(SlotDataMulti slotData)
     {
@@ -153,7 +161,7 @@ public class BattleView : Singleton<BattleView>
                 BtnEndTurn.enabled = true;
                 TxtEndTurn.text = "结束回合";
                 
-                MyFSM.Register(YieldCardStateWrap.One, EYieldCardState.None, bothTurnData);
+                MyFSM.Register(YieldCardStateWrap.One, EYieldCardState.None, bothTurnData.CreateYieldCardData());
             })
             .OnExit(() =>
             {
@@ -177,44 +185,46 @@ public class BattleView : Singleton<BattleView>
             .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.TurnStart));
     }
 
+    
+    
     void BindBothTurnData(BothTurnData bothTurnData)
     {
-        // [ShowInInspector]
-        Vector3 initThisPos = default;
-        // [ShowInInspector]
-        Vector3 initPointerPos = default;
-        Vector3 initScale = default;
-        bool isDragging = false;
-        
         bothTurnData.HandList.OnAdd += cardData =>
         {
+            Vector3 initThisPos = default;
+            Vector3 initPointerPos = default;
+            Vector3 initScale = default;
+            
             var cardModel = Instantiate(PfbCard, PrtHandCard);
             cardModel.InitByData(cardData);
+            cardModel.gameObject.SetActive(true);
             cardModel.OnPointerEnterEvt += () =>
             {
-                if (isDragging)
+                if (MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out _))
                     return;
+                MyDebug.Log($"第 {cardModel.transform.GetSiblingIndex()} 张牌 OnPointerEnterEvt");
                 CurDragCard.gameObject.SetActive(true);
                 CurDragCard.InitByData(cardData);
                 initThisPos = CurDragCard.transform.position = cardModel.transform.position;
-                var initDeltaScale = cardModel.GetComponent<RectTransform>().sizeDelta.x 
-                    / CurDragCard.GetComponent<RectTransform>().sizeDelta.x;
+                var initDeltaScale = cardModel.GetComponent<RectTransform>().sizeDelta.x
+                                     / CurDragCard.GetComponent<RectTransform>().sizeDelta.x;
                 initScale = cardModel.transform.localScale;
                 CurDragCard.transform.localScale = initScale * (initDeltaScale * 1.5f);
             };
             cardModel.OnPointerExitEvt += () =>
             {
-                if (isDragging)
+                if (MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out _))
                     return;
                 CurDragCard.transform.localScale = initScale;
                 CurDragCard.gameObject.SetActive(false);
             };
             cardModel.OnBeginDragEvt += worldPos =>
             {
-                isDragging = true;
+                if (MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out var yieldCardData))
+                    return;
                 MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.Drag);
                 initPointerPos = worldPos;
-                bothTurnData.HasSelectTarget = cardData.HasTarget;
+                yieldCardData.HasTarget = cardData.HasTarget;
                 if (!cardData.HasTarget)
                 {
                     CharacterModelHolder.EnableNoTargetArea(true);
@@ -229,8 +239,9 @@ public class BattleView : Singleton<BattleView>
             cardModel.OnEndDragEvt += screenPos =>
             {
                 MyDebug.Log("结束拖拽");
-                isDragging = false;
-                
+                bool targetingEnemy = CharacterModelHolder.TargetingEnemy;
+                MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.None);
+
                 CurDragCard.gameObject.SetActive(false);
                 if (!cardData.HasTarget)
                 {
@@ -238,16 +249,14 @@ public class BattleView : Singleton<BattleView>
                     if (!CharacterModelHolder.CheckInNoTarget(screenPos))
                     {
                         MyDebug.LogError("没有拖到无目标区域，");
-                        MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.None);
                         return;
                     }
                 }
                 else
                 {
-                    if (!CharacterModelHolder.TargetingEnemy)
+                    if (!targetingEnemy)
                     {
                         MyDebug.LogError("没有指向任何目标。");
-                        MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.None);
                         return;
                     }
                 }
@@ -256,15 +265,13 @@ public class BattleView : Singleton<BattleView>
                 {
                     MyDebug.LogError($"不可打出，原因：{failReason}");
                 }
-                MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.None);
             };
-            cardModel.gameObject.SetActive(true);
         };
 
         bothTurnData.HandList.OnRemove += cardData =>
         {
             // TODO 准备改为Dic存储
-            PrtHandCard.transform.DestroyChild(t => t.GetComponent<CardModel>().Data == cardData);
+            PrtHandCard.DestroyChild(t => t.GetComponent<CardModel>().Data == cardData);
         };
         
         bothTurnData.DrawList.OnAdd += cardData =>
