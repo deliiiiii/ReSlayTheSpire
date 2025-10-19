@@ -25,11 +25,14 @@ public class BothTurnData : IMyFSMArg
         DrawList.Shuffle();
         DiscardList.MyClear();
         ExhaustList.MyClear();
+        
     }
     public void UnInit()
     {
+        MyDebug.Log("BothTurnData UnInit");
         EnemyList.MyClear();
         HandList.MyClear();
+        MyDebug.Log("BothTurnData MyClear handlist");
         DrawList.MyClear();
         DiscardList.MyClear();
         ExhaustList.MyClear();
@@ -115,6 +118,10 @@ public class BothTurnData : IMyFSMArg
         else
         {
             NormallyYieldOne(toYield);
+        }
+        if(EnemyList.Count == 0)
+        {
+            MyFSM.EnterState(BattleStateWrap.One, EBattleState.Win);
         }
     }
     

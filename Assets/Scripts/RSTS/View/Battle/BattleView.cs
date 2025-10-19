@@ -45,6 +45,12 @@ public class BattleView : Singleton<BattleView>
     public Text TxtEndTurn;
     
     #endregion
+    
+    #region Win
+    [Header("Win")]
+    public GameObject PnlWin;
+    public Button BtnReturnToTitle;
+    #endregion
 
     IEnumerable<BindDataBase> OnRegisterGameState(SlotData slotData)
     {
@@ -128,7 +134,7 @@ public class BattleView : Singleton<BattleView>
                                 MyDebug.LogError("没有指向任何目标。");
                                 return;
                             }
-                            cardData.Target = targetingEnemy;
+                            cardData.SetTarget(targetingEnemy);
                         }
 
                         if (!bothTurnData.TryYield(cardData, out var failReason))
@@ -139,6 +145,7 @@ public class BattleView : Singleton<BattleView>
                 };
                 bothTurnData.HandList.OnRemove += cardData =>
                 {
+                    MyDebug.Log("bothTurnData.HandList.OnRemove");
                     // TODO 准备改为Dic存储
                     Destroy(handCardModelDic[cardData].gameObject);
                     handCardModelDic.Remove(cardData);
@@ -210,6 +217,8 @@ public class BattleView : Singleton<BattleView>
             yield return Binder.From(btn).To(() => MyFSM.EnterState(BattleStateWrap.One, EBattleState.BothTurn));
         foreach (var b in InfoView.OnRegisterBattleState(battleData))
             yield return b;
+        
+        yield return Binder.From(BtnReturnToTitle).To(() => MyFSM.EnterState(GameStateWrap.One, EGameState.Title));
     }
     void OnChangeBattleState(BattleData battleData)
     {
@@ -238,6 +247,16 @@ public class BattleView : Singleton<BattleView>
                 battleData.UnloadBothTurnData();
                 PnlCard.SetActive(false);
                 MyFSM.Release(BothTurnStateWrap.One);
+            });
+
+        MyFSM.GetBindState(BattleStateWrap.One, EBattleState.Win)
+            .OnEnter(() =>
+            {
+                PnlWin.SetActive(true);
+            })
+            .OnExit(() =>
+            {
+                PnlWin.SetActive(false);
             });
     }
 
@@ -281,7 +300,10 @@ public class BattleView : Singleton<BattleView>
                 MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.DiscardEnd);
             });
         MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.DiscardEnd)
-            .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.TurnStart));
+            .OnEnter(() =>
+            {
+                MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.TurnStart);
+            });
     }
     
     IEnumerable<BindDataBase> OnRegisterYieldCardState(YieldCardData arg)

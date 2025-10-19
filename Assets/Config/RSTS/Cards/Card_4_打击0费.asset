@@ -29,7 +29,7 @@ MonoBehaviour:
   Upgrades:
   - Des:
       content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
-      EmbedIntList: 06000000
+      EmbedIntList: c8000000
     Keywords: 
     CostInfo:
       rid: 4049883199248531460

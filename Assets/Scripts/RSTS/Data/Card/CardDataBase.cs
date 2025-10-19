@@ -27,7 +27,8 @@ public abstract class CardDataBase
             cardDic.Add(config.ID, () =>
             {
                 var ins = (Activator.CreateInstance(type) as CardDataBase)!;
-                ins.ReadConfig(config);
+                ins.Config = config;
+                ins.OnCreate();
                 return ins;
             });
         }
@@ -48,14 +49,34 @@ public abstract class CardDataBase
 
     public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
-    public abstract bool HasTarget { get; }
-    public EnemyDataBase Target;
+    public List<CardComponentBase> ComponentList = [];
+    
+    public bool HasTarget => HasComponent<CardHasTarget>(out _);
+    public void SetTarget(EnemyDataBase target) => GetComponent<CardHasTarget>().Target = target;
+    
+    protected bool HasComponent<T>(out T component) where T : CardComponentBase
+        => (component = ComponentList.OfType<T>().FirstOrDefault()!) is not null;
+
+    protected T GetComponent<T>() where T : CardComponentBase
+    {
+        if(!HasComponent<T>(out var component))
+            throw new Exception($"Card {Config.ID} level:{UpgradeLevel} not has component {typeof(T).Name}");
+        return component;
+    }
+    public abstract void OnCreate();
     public abstract void Yield(BothTurnData bothTurnData);
     
-    
-    void ReadConfig(CardConfigMulti config)
+    protected T AddComponent<T>() where T : CardComponentBase, new()
     {
-        Config = config;
+        var component = new T();
+        ComponentList.Add(component);
+        return component;
+    }
+    protected void RemoveComponent<T>() where T : CardComponentBase
+    {
+        if (!HasComponent<T>(out var component))
+            return;
+        ComponentList.Remove(component);
     }
 }
 

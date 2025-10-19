@@ -11,7 +11,14 @@ public class StateWrapper<TEnum, TArg>
     where TArg : class, IMyFSMArg
 {
     public static StateWrapper<TEnum, TArg> One => new();
+    // TEnum state;
+    // TArg arg;
+    // Func<TArg, IEnumerable<BindDataBase>> onRegister;
+    // Action<TArg> onChange;
 }
+
+// public class SlotData2 : IMyFSMArg{}
+// public class SlotData3 : IMyFSMArg{}
 
 public abstract class MyFSM
 {
@@ -23,10 +30,21 @@ public abstract class MyFSM
     // static readonly Dictionary<Type, Action<IMyFSMArg>> onReleaseDic = new();
     static readonly Dictionary<Type, IMyFSMArg> argDic = new();
 
+    // static Dictionary<EUpdatePri, SlotData2> dic;
+
+    // public static void Register3<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
+    //     where TEnum : Enum
+    //     where TArg : class, IMyFSMArg
+    // {
+    //     TEnum state = one.state;
+    // }
+    
     public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, TArg arg)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
+        // Register3(new GameStateWrap(state, arg))
+        
         if (Get<TEnum>(shouldFind: false) != null)
         {
             MyDebug.LogError("StateFactory: Acquire<" + typeof(TEnum).Name + ">Duplicated");
