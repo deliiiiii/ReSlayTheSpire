@@ -12,8 +12,8 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
     public HPModel MdlHP;
     public GameObject ImgSelectTarget;
     
-    public Action? OnPointerEnterEvt;
-    public Action? OnPointerExitEvt;
+    public event Action? OnPointerEnterEvt;
+    public event Action? OnPointerExitEvt;
 
     
     public void ReadData(EnemyDataBase data)
