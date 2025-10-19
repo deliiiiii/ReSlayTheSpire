@@ -49,6 +49,7 @@ public abstract class CardDataBase
     public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public abstract bool HasTarget { get; }
+    public EnemyDataBase Target;
     public abstract void Yield(BothTurnData bothTurnData);
     
     

@@ -138,6 +138,14 @@ public class BothTurnData : IMyFSMArg
         DrawList.Shuffle();
     }
     
+    public void AttackEnemy(EnemyDataBase enemyData, int damage)
+    {
+        enemyData.CurHP.Value -= damage;
+        if (enemyData.CurHP < 0)
+            EnemyList.MyRemove(enemyData);
+    }
+    
+    
     [SerializeReference]YieldCardData yieldCardData;
     public YieldCardData CreateYieldCardData() => 
         yieldCardData = new YieldCardData();

@@ -19,7 +19,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
 
     readonly List<EnemyModel> enteredTargetEnemyModels = [];
     
-    public bool TargetingEnemy => enteredTargetEnemyModels.Any();
+    public EnemyDataBase? TargetingEnemy => enteredTargetEnemyModels.LastOrDefault()?.Data;
     public bool CheckInNoTarget(Vector2 screenPos)
     {
         return PosInRect(screenPos, TransNoTargetArea.RectTransform);

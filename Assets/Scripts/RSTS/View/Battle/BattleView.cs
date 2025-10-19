@@ -108,7 +108,7 @@ public class BattleView : Singleton<BattleView>
                     cardModel.OnEndDragEvt += screenPos =>
                     {
                         // MyDebug.Log("结束拖拽");
-                        bool targetingEnemy = CharacterModelHolder.TargetingEnemy;
+                        EnemyDataBase? targetingEnemy = CharacterModelHolder.TargetingEnemy;
                         MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.None);
 
                         CurDragCard.gameObject.SetActive(false);
@@ -123,11 +123,12 @@ public class BattleView : Singleton<BattleView>
                         }
                         else
                         {
-                            if (!targetingEnemy)
+                            if (targetingEnemy == null)
                             {
                                 MyDebug.LogError("没有指向任何目标。");
                                 return;
                             }
+                            cardData.Target = targetingEnemy;
                         }
 
                         if (!bothTurnData.TryYield(cardData, out var failReason))
