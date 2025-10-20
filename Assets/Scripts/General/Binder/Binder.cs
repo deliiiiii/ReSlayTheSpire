@@ -8,10 +8,6 @@ public static class Binder
     {
         return new BindDataAct<T>(osv);
     }
-    // public static BindDataActComparable<T> FromComparable<T>(Observable<T> osv) where T : IComparable
-    // {
-    //     return new BindDataActComparable<T>(osv);
-    // }
     public static BindDataEvent From(Button btn)
     {
         return new BindDataEvent(btn.onClick);
@@ -26,15 +22,11 @@ public static class Binder
     {
         return new BindDataEvent<T>(evt);
     }
-    // public static BindDataEvent From(GameObject pnl)
-    // {
-    //     return From(pnl.GetComponent<Button>());
-    // }
 
     [Obsolete]
-    public static StateHolder From(MyState state)
+    public static BindState From(MyState state)
     {
-        return new StateHolder(state);
+        return new BindState(state);
     }
 
     public static BindDataUpdate FromUpdate(Action<float> act, EUpdatePri priority = EUpdatePri.Default)

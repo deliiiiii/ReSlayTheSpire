@@ -19,13 +19,13 @@ public enum EGameState
 public class GameState : SingletonCS<GameState>
 {
     static readonly MyFSM<EGameState> gameFsm = new ();
-    public static readonly StateHolder TitleState;
+    public static readonly BindState TitleState;
     public static void EnterTitle() => gameFsm.ChangeState(EGameState.Title);
-    public static readonly StateHolder WinningState;
+    public static readonly BindState WinningState;
     public static void EnterWinning() => gameFsm.ChangeState(EGameState.Winning);
-    public static readonly StateHolder GeneratingMapState;
+    public static readonly BindState GeneratingMapState;
     public static void EnterGeneratingMap() => gameFsm.ChangeState(EGameState.GeneratingMap);
-    public static readonly StateHolder PlayingState;
+    public static readonly BindState PlayingState;
     public static void EnterPlaying() => gameFsm.ChangeState(EGameState.Playing);
     
 

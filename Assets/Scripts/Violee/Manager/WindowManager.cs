@@ -38,7 +38,7 @@ public class SimpleWindowInfo : WindowInfo<SimpleWindowInfo>;
 [Serializable]
 public class PauseWindowInfo : WindowInfo<PauseWindowInfo>
 {
-    public StateHolder TarState = null!;
+    public BindState TarState = null!;
 }
 
 [Serializable]

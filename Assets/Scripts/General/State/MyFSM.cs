@@ -4,47 +4,19 @@ using System.Linq;
 using JetBrains.Annotations;
 using Sirenix.Utilities;
 
-public interface IMyFSMArg{}
-
-public class StateWrapper<TEnum, TArg>
-    where TEnum : Enum
-    where TArg : class, IMyFSMArg
-{
-    public static StateWrapper<TEnum, TArg> One => new();
-    // TEnum state;
-    // TArg arg;
-    // Func<TArg, IEnumerable<BindDataBase>> onRegister;
-    // Action<TArg> onChange;
-}
-
-// public class SlotData2 : IMyFSMArg{}
-// public class SlotData3 : IMyFSMArg{}
-
 public abstract class MyFSM
 {
     static readonly Dictionary<Type, MyFSM> fsmDic = new();
-    // 这两条永远不能移除内存，是上帝规则。
+    // onRegisterDic永远不能移除内存，是上帝规则。
     static readonly Dictionary<Type, List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>> onRegisterDic = new();
     static readonly Dictionary<Type, BindDataUpdate> onUpdateDic = new();
     static readonly Dictionary<Type, List<Action<IMyFSMArg>>> onChangeDic = new();
-    // static readonly Dictionary<Type, Action<IMyFSMArg>> onReleaseDic = new();
     static readonly Dictionary<Type, IMyFSMArg> argDic = new();
-
-    // static Dictionary<EUpdatePri, SlotData2> dic;
-
-    // public static void Register3<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
-    //     where TEnum : Enum
-    //     where TArg : class, IMyFSMArg
-    // {
-    //     TEnum state = one.state;
-    // }
     
     public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, TArg arg)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
-        // Register3(new GameStateWrap(state, arg))
-        
         if (Get<TEnum>(shouldFind: false) != null)
         {
             MyDebug.LogError("StateFactory: Acquire<" + typeof(TEnum).Name + ">Duplicated");
@@ -101,7 +73,7 @@ public abstract class MyFSM
         return ret;
     }
 
-    public static StateHolder GetBindState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+    public static BindState GetBindState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
         => new (Get<TEnum>()?.GetState(state));
@@ -180,32 +152,5 @@ public class MyFSM<TEnum> : MyFSM
         curStateClass.Exit();
         curState = null;
         curStateClass = null;
-    }
-}
-
-public class StateHolder
-{
-    readonly MyState state;
-    public StateHolder(MyState state)
-    {
-        this.state = state;
-    }
-    
-    public StateHolder OnEnter(Action act)
-    {
-        state.OnEnter += act;
-        return this;
-    }
-    
-    public StateHolder OnExit(Action act)
-    {
-        state.OnExit += act;
-        return this;
-    }
-    
-    public StateHolder OnUpdate(Action<float> act)
-    {
-        state.OnUpdate += act;
-        return this;
     }
 }
