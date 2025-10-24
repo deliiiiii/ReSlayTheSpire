@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace Violee;
-
 //C#单例
 //需要被继承 xxx : SingletonCS<xxx>
 //获取单例 xxx.Instance
@@ -28,19 +26,20 @@ public class SingletonCS<T> where T : SingletonCS<T>, new()
     } = null!;
     void OnInit()
     {
-        var destroyAct = () =>
+        void DestroyAct()
         {
             Object.DestroyImmediate(go);
             go = null!;
-        };
+        }
+
         go = new GameObject($"{typeof(T).Name} (SingletonCS)");
 #if UNITY_EDITOR
-        AssemblyReloadEvents.beforeAssemblyReload += () => destroyAct();
+        AssemblyReloadEvents.beforeAssemblyReload += DestroyAct;
         EditorApplication.playModeStateChanged += s =>
         {
             if (s == PlayModeStateChange.ExitingPlayMode && go != null)
             {
-                destroyAct();
+                DestroyAct();
             }
         };
 #endif

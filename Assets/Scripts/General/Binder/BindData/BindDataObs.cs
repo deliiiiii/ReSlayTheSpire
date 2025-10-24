@@ -3,13 +3,13 @@ using JetBrains.Annotations;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BindDataAct<T> : BindDataBase
+public class BindDataObs<T> : BindDataBase
 {
     protected Observable<T> osv;
     protected UnityAction<T> act;
     bool isImmediate;
 
-    public BindDataAct<T> To(UnityAction<T> fAct)
+    public BindDataObs<T> To(UnityAction<T> fAct)
     {
         osv.OnValueChangedAfter -= fAct;
         act = fAct;
@@ -33,13 +33,13 @@ public class BindDataAct<T> : BindDataBase
     //     return ret;
     // }
 
-    public BindDataAct<T> Immediate()
+    public BindDataObs<T> Immediate()
     {
         isImmediate = true;
         return this;
     }
     
-    public BindDataAct(Observable<T> osv)
+    public BindDataObs(Observable<T> osv)
     {
         this.osv = osv;
     }

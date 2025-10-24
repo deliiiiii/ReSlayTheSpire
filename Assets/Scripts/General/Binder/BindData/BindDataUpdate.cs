@@ -29,8 +29,6 @@ public class BindDataUpdate : BindDataBase
                 value.Remove(found);
         }
     }
-    
-    
 }
 
 public enum EUpdatePri

@@ -11,6 +11,7 @@ public abstract class MyFSM
     static readonly Dictionary<Type, List<Action<IMyFSMArg>>> bindAlwaysDic = new();
     // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
     static readonly Dictionary<Type, List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>> unbindDic = new();
+    // tickDic包括状态机的Update调用的OnUpdate，和自己绑定的与Data有关的Tick委托（类型Action<float, IMyFSMArg>）
     static readonly Dictionary<Type, List<BindDataUpdate>> tickDic = new();
     static readonly Dictionary<Type, IMyFSMArg> argDic = new();
     
@@ -72,7 +73,6 @@ public abstract class MyFSM
         // 跳转到空状态
         fsm.OnDestroy();
         tickDic[type].ForEach(bindDataUpdate => bindDataUpdate.UnBind());
-        tickDic.Remove(typeof(TEnum));
         argDic[type].UnInit();
         unbindDic[type]?.ForEach(func => func.Invoke(argDic[type]).ForEach(bindDataBase => bindDataBase.UnBind()));
         fsmDic.Remove(type);

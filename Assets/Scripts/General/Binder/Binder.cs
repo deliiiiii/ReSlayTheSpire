@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public static class Binder
 {
-    public static BindDataAct<T> FromObs<T>(Observable<T> osv) 
+    public static BindDataObs<T> FromObs<T>(Observable<T> osv) 
     {
-        return new BindDataAct<T>(osv);
+        return new BindDataObs<T>(osv);
     }
 
     public static BindDataEvent FromBtn(Button btn)
@@ -29,20 +29,5 @@ public static class Binder
     {
         return new BindDataUpdate(act, (EUpdatePri)Convert.ToInt32(priority));
     }
-    
-    // [Obsolete]
-    // public static BindState From(MyState state)
-    // {
-    //     return new BindState(state);
-    // }
-    
-    //
-    // [Obsolete]
-    // public static BindDataUpdate Update(Action<float> act, EUpdatePri priority = EUpdatePri.Default)
-    // {
-    //     var ret = new BindDataUpdate(act, priority);
-    //     ret.Bind();
-    //     return ret;
-    // }
 }
 
