@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RSTS.CDMV;
 using Sirenix.Utilities;
+using UnityEngine;
 
 namespace RSTS;
 [Serializable]
@@ -45,6 +46,7 @@ public abstract class EnemyDataBase
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
     public Observable<int> CurHP = new(0);
     public Observable<int> Block = new(0);
+    public BuffCom BuffCom = new();
 
     void ReadConfig(EnemyConfigMulti config)
     {

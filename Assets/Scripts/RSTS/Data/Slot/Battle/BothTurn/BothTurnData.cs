@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
@@ -12,6 +13,12 @@ public class BothTurnData : IMyFSMArg
     public Observable<int> PlayerMaxHP => battleData.MaxHP;
     public Observable<int> PlayerBlock;
     [SerializeReference]public List<BuffDataBase> BuffList = [];
+    public bool HasBuff<T>(out T buffData) where T : BuffDataBase
+    {
+        buffData = BuffList.OfType<T>().First();
+        return buffData == null;
+    }
+    
     public int TurnID;
     [SerializeReference]public MyList<EnemyDataBase> EnemyList = [];
     [SerializeReference]public YieldCardData YieldCardData;
@@ -168,11 +175,17 @@ public class BothTurnData : IMyFSMArg
     }
     
     #region yield effect
+    // 使用攻击牌攻击的伤害
     public void AttackEnemy(EnemyDataBase enemyData, int damage)
     {
         enemyData.CurHP.Value -= damage;
         if (enemyData.CurHP < 0)
             EnemyList.MyRemove(enemyData);
+    }
+    
+    public void AddBuffToEnemy(EnemyDataBase enemyData, BuffDataBase buffData)
+    {
+        enemyData.BuffCom.AddBuff(buffData);
     }
 
     public void PlayerAddBlock(int addedBlock)

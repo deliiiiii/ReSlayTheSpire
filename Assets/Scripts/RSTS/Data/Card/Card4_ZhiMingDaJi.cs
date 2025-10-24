@@ -19,5 +19,6 @@ public class Card4 : CardDataBase
             throw new ArgumentNullException($"No target for {nameof(Card4)}");
         }
         bothTurnData.AttackEnemy(target, attackValue);
+        // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
     }
 }

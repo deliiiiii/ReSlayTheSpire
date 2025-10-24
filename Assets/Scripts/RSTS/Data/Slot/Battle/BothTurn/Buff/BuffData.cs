@@ -7,16 +7,16 @@ namespace RSTS;
 [Serializable]
 public enum EBuffUseTime
 {
-    
+    None,
 }
 [Serializable]
 public enum EBuffDisposeTime
 {
-    
+    TurnEnd,
 }
 
-public abstract class BuffStackInfo;
-public class BuffCanStack : BuffStackInfo
+[Serializable]
+public class BuffStackInfo
 {
     public int Count;
     public void ChangeCount(int delta)
@@ -24,14 +24,24 @@ public class BuffCanStack : BuffStackInfo
         Count += delta;
     }
 }
-public class BuffStackNone : BuffStackInfo;
 
 [Serializable]
 public abstract class BuffDataBase
 {
-    public string Name;
     [SerializeReference]
-    public BuffStackInfo StackInfo;
+    public required BuffStackInfo? StackInfo;
     public abstract EBuffUseTime UseTime { get; }
     public abstract EBuffDisposeTime DisposeTime { get; }
+}
+
+[Serializable]
+public class BuffDataVulnerable : BuffDataBase
+{
+    public override EBuffUseTime UseTime => EBuffUseTime.None;
+    public override EBuffDisposeTime DisposeTime => EBuffDisposeTime.TurnEnd;
+    
+    public BuffDataVulnerable(int count)
+    {
+        StackInfo = new BuffStackInfo { Count = count };
+    }
 }
