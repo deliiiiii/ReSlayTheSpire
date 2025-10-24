@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94a9f2dcd5d74a989682413dfe06d420, type: 3}
-  m_Name: "CardList_0_\u6218\u58EB"
+  m_Name: "Player_2_\u9E21\u7172"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -19,7 +19,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: b7b0029de5f6b4349bd00d1cd5b2953c, type: 2}
     - {fileID: 11400000, guid: 915c6cdb9a0491a4987145b6a688d6c5, type: 2}
     - {fileID: 11400000, guid: 0260993ad759fb24fb34137e68f0e009, type: 2}
-    - {fileID: 11400000, guid: b5d70707f17691c4c9561a622ad9eba2, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -38,7 +37,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 4
+      Data: 3
     - Name: 
       Entry: 7
       Data: 
@@ -47,7 +46,7 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 3
-      Data: 0
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -76,24 +75,12 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 10
-      Data: 3
-    - Name: $v
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
-  Name: "\u6218\u58EB"
-  ID: 0
-  Job: 0
-  MaxHP: 80
+  Name: "\u9E21\u7172"
+  ID: 2
+  Job: 2
+  MaxHP: 75

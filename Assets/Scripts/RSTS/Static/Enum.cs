@@ -61,6 +61,10 @@ public enum ECardRarity
     Epic,
     /// 特殊
     Special,
+    /// 诅咒
+    Curse,
+    /// 基本
+    Basic
 }
 public enum ECardCategory
 {

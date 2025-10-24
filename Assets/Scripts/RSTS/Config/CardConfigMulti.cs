@@ -46,7 +46,7 @@ public class CardConfigMulti : ConfigMulti<CardConfigMulti>
         {
             Category = ECardCategory.Curse;
             Color = ECardColor.Curse;
-            Rarity = ECardRarity.Special;
+            Rarity = ECardRarity.Curse;
             quickCurse = false;
             Upgrades.Clear();
         }
