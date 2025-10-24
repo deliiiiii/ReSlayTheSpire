@@ -187,6 +187,7 @@ public class BattleView : Singleton<BattleView>
             {
                 if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.None, out var yieldCardData))
                     return;
+                CharacterModelHolder.HidePlayerWarning();
                 if (!bothTurnData.TryYield(cardData, out var failReason))
                 {
                     CharacterModelHolder.ShowPlayerWarning(failReason);

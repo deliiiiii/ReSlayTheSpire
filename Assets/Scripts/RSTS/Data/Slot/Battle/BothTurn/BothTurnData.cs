@@ -17,13 +17,24 @@ public class BothTurnData : IMyFSMArg
     [SerializeReference]public YieldCardData YieldCardData;
     public YieldCardData CreateYieldCardData() => 
         YieldCardData = new YieldCardData();
-    
-    
+
+    static BothTurnData()
+    {
+        MyFSM.OnRegister(BothTurnStateWrap.One, alwaysBind: BindBothTurn);
+    }
     public BothTurnData(BattleData battleData)
     {
         this.battleData = battleData;
         PlayerBlock = new Observable<int>(0);
         TurnID = 0;
+    }
+
+    static void BindBothTurn(MyFSM<EBothTurn> fsm, BothTurnData bothTurnData)
+    {
+        fsm.GetState(EBothTurn.TurnStart).OnEnter += () =>
+        {
+            bothTurnData.PlayerBlock.Value = 0;
+        };
     }
 
     public void Launch()

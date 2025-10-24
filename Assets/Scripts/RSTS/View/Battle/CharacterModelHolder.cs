@@ -36,6 +36,11 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         PnlPlayerWarning.SetActive(true);
         TxtPlayerWarning.text = warning;
     }
+
+    public void HidePlayerWarning()
+    {
+        PnlPlayerWarning.SetActive(false);
+    }
     
     void BindBattle(MyFSM<EBattleState> fsm, BattleData battleData)
     {
@@ -46,7 +51,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         fsm.GetState(EBattleState.BothTurn).OnExit += () =>
         {
             PlayerModel.gameObject.SetActive(false);
-            PnlPlayerWarning.SetActive(false);
+            HidePlayerWarning();
         };
     }
     
