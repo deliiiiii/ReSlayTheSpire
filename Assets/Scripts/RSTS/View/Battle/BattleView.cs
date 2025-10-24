@@ -68,13 +68,6 @@ public class BattleView : Singleton<BattleView>
             InfoView.gameObject.SetActive(false);
         };
     }
-    
-    IEnumerable<BindDataBase> CanUnbindBattle(BattleData battleData)
-    {
-        foreach (var btn in LastBuffBtnList) 
-            yield return Binder.FromBtn(btn).To(() => MyFSM.EnterState(BattleStateWrap.One, EBattleState.BothTurn));
-        yield return Binder.FromBtn(BtnReturnToTitle).To(() => MyFSM.EnterState(GameStateWrap.One, EGameState.Title));
-    }
     void BindBattle(MyFSM<EBattleState> fsm, BattleData battleData)
     {
         fsm.GetState(EBattleState.SelectLastBuff).OnEnter += () =>
@@ -93,11 +86,9 @@ public class BattleView : Singleton<BattleView>
         
         fsm.GetState(EBattleState.BothTurn).OnEnter += () =>
         {
-            MyDebug.Log("进入 EBattleState.BothTurn");
-            var bothTurnData = battleData.CreateBothTurnData();
             PnlCard.SetActive(true);
             // 跳过GrossStart、TurnStart阶段。
-            MyFSM.Register(BothTurnStateWrap.One, EBothTurn.PlayerDraw, bothTurnData);
+            MyFSM.Register(BothTurnStateWrap.One, EBothTurn.PlayerDraw, battleData.CreateBothTurnData());
         };
             
         fsm.GetState(EBattleState.BothTurn).OnExit += () =>
@@ -115,10 +106,11 @@ public class BattleView : Singleton<BattleView>
             PnlWin.SetActive(false);
         };
     }
-
-    IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)
+    IEnumerable<BindDataBase> CanUnbindBattle(BattleData battleData)
     {
-        yield return Binder.FromBtn(BtnEndTurn).To(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerYieldEnd));
+        foreach (var btn in LastBuffBtnList) 
+            yield return Binder.FromBtn(btn).To(() => MyFSM.EnterState(BattleStateWrap.One, EBattleState.BothTurn));
+        yield return Binder.FromBtn(BtnReturnToTitle).To(() => MyFSM.EnterState(GameStateWrap.One, EGameState.Title));
     }
     void BindBothTurn(MyFSM<EBothTurn> fsm, BothTurnData bothTurnData)
     {
@@ -195,6 +187,12 @@ public class BattleView : Singleton<BattleView>
             {
                 if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.None, out var yieldCardData))
                     return;
+                if (!bothTurnData.TryYield(cardData, out var failReason))
+                {
+                    CharacterModelHolder.ShowPlayerWarning(failReason);
+                    return;
+                }
+                cardModel.EnableAllShown(false);
                 MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.Drag);
                 initPointerPos = worldPos;
                 yieldCardData.HasTarget = cardData.HasComponent<CardHasTarget>();
@@ -205,13 +203,17 @@ public class BattleView : Singleton<BattleView>
             };
             cardModel.OnDragEvt += worldPos =>
             {
+                if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag))
+                    return;
                 var delta = worldPos - initPointerPos;
                 CurDragCard.transform.position =
                     new Vector3(initThisPos.x + delta.x, initThisPos.y + delta.y, initThisPos.z);
             };
             cardModel.OnEndDragEvt += screenPos =>
             {
-                // MyDebug.Log("结束拖拽");
+                if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag))
+                    return;
+                cardModel.EnableAllShown(true);
                 EnemyDataBase? targetingEnemy = CharacterModelHolder.TargetingEnemy;
                 var yieldCardData = MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.None);
 
@@ -221,7 +223,7 @@ public class BattleView : Singleton<BattleView>
                     CharacterModelHolder.EnableNoTargetArea(false);
                     if (!CharacterModelHolder.CheckInNoTarget(screenPos))
                     {
-                        MyDebug.LogError("没有拖到无目标区域，");
+                        CharacterModelHolder.ShowPlayerWarning("没有拖到无目标区域");
                         return;
                     }
                 }
@@ -229,16 +231,12 @@ public class BattleView : Singleton<BattleView>
                 {
                     if (targetingEnemy == null)
                     {
-                        MyDebug.LogError("没有指向任何目标。");
+                        CharacterModelHolder.ShowPlayerWarning("没有指向任何目标");
                         return;
                     }
                     cardData.GetComponent<CardHasTarget>().Target = targetingEnemy;
                 }
-
-                if (!bothTurnData.TryYield(cardData, out var failReason))
-                {
-                    MyDebug.LogError($"不可打出，原因：{failReason}");
-                }
+                bothTurnData.Yield(cardData);
             };
         };
         bothTurnData.HandList.OnRemove += cardData =>
@@ -283,6 +281,10 @@ public class BattleView : Singleton<BattleView>
         {
             TxtHasExhaustCount.text = "0";
         };
+    }
+    IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)
+    {
+        yield return Binder.FromBtn(BtnEndTurn).To(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerYieldEnd));
     }
     protected override void Awake()
     {

@@ -2,6 +2,8 @@
 using System.Linq;
 using UnityEngine;
 using Sirenix.Utilities;
+using UnityEngine.UI;
+
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 namespace RSTS;
 
@@ -11,6 +13,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
 {
     public RectHolder TransNoTargetArea;
     public GameObject PnlPlayerWarning;
+    public Text TxtPlayerWarning;
     public PlayerModel PlayerModel;
 
     public EnemyModel PrbEnemy;
@@ -18,6 +21,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     public List<EnemyModel> EnemyModelList = [];
 
     readonly List<EnemyModel> enteredTargetEnemyModels = [];
+    readonly List<string> playerWarningList = [];
     
     public EnemyDataBase? TargetingEnemy => enteredTargetEnemyModels.LastOrDefault()?.Data;
     public bool CheckInNoTarget(Vector2 screenPos) => PosInRect(screenPos, TransNoTargetArea.RectTransform);
@@ -25,6 +29,12 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     public void EnableNoTargetArea(bool enable)
     {
         TransNoTargetArea.gameObject.SetActive(enable);
+    }
+
+    public void ShowPlayerWarning(string warning)
+    {
+        PnlPlayerWarning.SetActive(true);
+        TxtPlayerWarning.text = warning;
     }
     
     void BindBattle(MyFSM<EBattleState> fsm, BattleData battleData)
@@ -36,6 +46,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         fsm.GetState(EBattleState.BothTurn).OnExit += () =>
         {
             PlayerModel.gameObject.SetActive(false);
+            PnlPlayerWarning.SetActive(false);
         };
     }
     

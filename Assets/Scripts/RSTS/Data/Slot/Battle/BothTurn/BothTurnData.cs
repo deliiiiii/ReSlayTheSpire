@@ -104,7 +104,6 @@ public class BothTurnData : IMyFSMArg
             failReason = "该牌无法打出";
             return false;
         }
-        YieldOne(toYield);
         return true;
     }
 
@@ -120,7 +119,7 @@ public class BothTurnData : IMyFSMArg
         HandList.MyClear();
     }
 
-    void YieldOne(CardDataBase toYield)
+    public void Yield(CardDataBase toYield)
     {
         toYield.Yield(this);
         if (toYield.ContainsKeyword(ECardKeyword.Exhaust))

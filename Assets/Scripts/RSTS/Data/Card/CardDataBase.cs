@@ -22,6 +22,7 @@ public abstract class CardDataBase
             if (!subTypeDic.TryGetValue(config.ID, out var type))
             {
                 MyDebug.LogError($"class Card{config.ID} not found");
+                cardDic.Add(config.ID, () => new Card_Template{ Config = config });
                 continue;
             }
             cardDic.Add(config.ID, () =>

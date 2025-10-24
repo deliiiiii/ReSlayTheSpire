@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ab6a8cf5d5949f3a77e224229b63d35, type: 3}
-  m_Name: "Card_3_\u8BC5\u5492\uFF08\u6D4B\u8BD5\uFF09"
+  m_Name: "Card_1001_\u8BC5\u5492\uFF08\u865A\u65E0\uFF09"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,22 +21,22 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Name: "\u8BC5\u5492\uFF08\u6D4B\u8BD5\uFF09"
-  ID: 3
-  Color: 1
-  Rarity: 3
+  Name: "\u8BC5\u5492\uFF08\u865A\u65E0\uFF09"
+  ID: 1001
+  Color: 5
+  Rarity: 4
   Category: 4
   Upgrades:
   - Des:
-      content: "\u6D4B\u8BD5[],,TEST[][]"
-      EmbedIntList: 0b0000002d0000000e000000
-    Keywords: 01000000
+      content: "\u8FD9\u662F\u4E00\u5F20\u865A\u65E0\u8BC5\u5492\uFF01"
+      EmbedIntList: 
+    Keywords: 0100000002000000
     CostInfo:
-      rid: 4049883199248531459
+      rid: 4049883412018233344
   references:
     version: 2
     RefIds:
-    - rid: 4049883199248531459
+    - rid: 4049883412018233344
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 0

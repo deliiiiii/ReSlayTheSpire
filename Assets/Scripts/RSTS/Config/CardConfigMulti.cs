@@ -15,7 +15,7 @@ public class CardConfigMulti : ConfigMulti<CardConfigMulti>
     public ECardColor Color;
     public ECardRarity Rarity;
     public ECardCategory Category;
-    [ValidateInput(nameof(CheckUpgradeCount), "如果不是状态牌或诅咒牌，升级列表不能为空")]
+    [ValidateInput(nameof(CheckUpgradeCount), "升级列表中至少需要一行！")]
     public List<CardUpgradeInfo> Upgrades = [];
     
     protected override string PrefixName => "Card";
@@ -28,8 +28,8 @@ public class CardConfigMulti : ConfigMulti<CardConfigMulti>
     [NonSerialized][ShowInInspector] bool quickCurse;
     bool CheckUpgradeCount()
     {
-        if (Category is ECardCategory.State or ECardCategory.Curse)
-            return true;
+        // if (Category is ECardCategory.State or ECardCategory.Curse)
+        //     return true;
         return Upgrades.Count > 0;
     }
     void OnValidate()
