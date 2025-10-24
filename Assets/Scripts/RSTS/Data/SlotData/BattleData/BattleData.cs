@@ -12,6 +12,8 @@ namespace RSTS;
 [Serializable]
 public class BattleData : IMyFSMArg
 {
+    [NonSerialized] SlotData slotData;
+    
     [SerializeReference]
     public MyList<CardDataBase> DeckList = [];
     
@@ -23,12 +25,15 @@ public class BattleData : IMyFSMArg
     public List<BottleData> BottleList = [];
     public float InBattleTime;
     
-    #region Init
-    public BattleData(EPlayerJob job, Action<BattleData>? onCreate)
+    #region Init, Launch
+    public BattleData(SlotData slotData, EPlayerJob job)
     {
+        this.slotData = slotData;
         Job = job;
-        onCreate?.Invoke(this);
-        //Init Deck
+    }
+    public void Launch()
+    {
+        MyDebug.Log("BattleData Launch");
         var config = RefPoolMulti<CardListConfigMulti>.Acquire().First(c => c.Job == Job);
         config.InitialCardDic.ForEach(pair =>
         {
@@ -36,15 +41,17 @@ public class BattleData : IMyFSMArg
                 DeckList.MyAdd(CardDataBase.CreateCard(pair.Key.ID));
         });
     }
+    public void UnInit()
+    {
+        MyDebug.Log("BattleData UnInit");
+        DeckList.MyClear();
+    }
     #endregion
 
     #region BothTurnData
     [SerializeReference]BothTurnData bothTurnData;
-    public event Action<BothTurnData>? OnBothTurnDataCreate;
     public BothTurnData CreateBothTurnData()
-        => bothTurnData = new BothTurnData(DeckList, OnBothTurnDataCreate);
-    public void UnloadBothTurnData() => bothTurnData.UnInit();
+        => bothTurnData = new BothTurnData(this);
     #endregion
-    
     [SerializeReference]MapData mapData;
 }

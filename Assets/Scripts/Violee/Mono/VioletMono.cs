@@ -14,7 +14,8 @@ public class VioletMono : Singleton<VioletMono>
     void Start()
     {
 #if UNITY_EDITOR
-        Binder.Update(_ => GUIHelper.RequestRepaint());
+        // obsolete
+        // Binder.Update(_ => GUIHelper.RequestRepaint());
 #endif
         _ = InitAll();
     }

@@ -9,7 +9,7 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
 {
     [SerializeReference] public required List<InteractReceiver> IrList;
     public required MiniIconGetter MiniIconGetter;
-    BindDataUpdate b = null!;
+    // BindDataUpdate b = null!;
 
     protected override void OnReadData()
     {
@@ -32,7 +32,8 @@ public class SceneItemModel : ModelBase<SceneItemData>, IHasInteractReceiver
             SpreadMiniItem();
         }
         
-        b = Binder.Update(_ => MiniIconGetter.SetEnable(Data.ShouldShowMiniIcon()));
+        // TODO obsolete
+        // b = Binder.Update(_ => MiniIconGetter.SetEnable(Data.ShouldShowMiniIcon()));
     }
 
     void OnDisable()

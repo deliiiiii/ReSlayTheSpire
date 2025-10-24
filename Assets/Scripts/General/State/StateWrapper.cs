@@ -1,6 +1,10 @@
 ﻿using System;
 
-public interface IMyFSMArg{}
+public interface IMyFSMArg
+{
+    public void Launch();
+    public void UnInit();
+}
 
 public class StateWrapper<TEnum, TArg>
     where TEnum : Enum

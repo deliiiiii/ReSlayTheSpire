@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RSTS;
 using UnityEngine;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
@@ -6,14 +7,25 @@ using UnityEngine;
 [Serializable]
 public class BothTurnData : IMyFSMArg
 {
-    public int PlayerDefend;
+    [NonSerialized]BattleData battleData;
+    public Observable<int> PlayerBlock;
+    [SerializeReference]public List<BuffDataBase> BuffList = [];
     public int TurnID;
     [SerializeReference]public MyList<EnemyDataBase> EnemyList = [];
+    [SerializeReference]YieldCardData yieldCardData;
+    public YieldCardData CreateYieldCardData() => 
+        yieldCardData = new YieldCardData();
     
-    public BothTurnData(MyList<CardDataBase> deckList, Action<BothTurnData>? onCreate)
+    
+    public BothTurnData(BattleData battleData)
     {
-        onCreate?.Invoke(this);
-        PlayerDefend = TurnID = 0;
+        this.battleData = battleData;
+        PlayerBlock = new Observable<int>(0);
+        TurnID = 0;
+    }
+
+    public void Launch()
+    {
         EnemyList.MyClear();
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(1));
@@ -21,18 +33,16 @@ public class BothTurnData : IMyFSMArg
         
         HandList.MyClear();
         DrawList.MyClear();
-        DrawList.MyAddRange(deckList);
+        DrawList.MyAddRange(battleData.DeckList);
         DrawList.Shuffle();
         DiscardList.MyClear();
         ExhaustList.MyClear();
-        
     }
+
     public void UnInit()
     {
-        MyDebug.Log("BothTurnData UnInit");
         EnemyList.MyClear();
         HandList.MyClear();
-        MyDebug.Log("BothTurnData MyClear handlist");
         DrawList.MyClear();
         DiscardList.MyClear();
         ExhaustList.MyClear();
@@ -145,15 +155,17 @@ public class BothTurnData : IMyFSMArg
         DrawList.Shuffle();
     }
     
+    #region yield effect
     public void AttackEnemy(EnemyDataBase enemyData, int damage)
     {
         enemyData.CurHP.Value -= damage;
         if (enemyData.CurHP < 0)
             EnemyList.MyRemove(enemyData);
     }
-    
-    
-    [SerializeReference]YieldCardData yieldCardData;
-    public YieldCardData CreateYieldCardData() => 
-        yieldCardData = new YieldCardData();
+
+    public void PlayerAddBlock(int addedBlock)
+    {
+        PlayerBlock.Value += addedBlock;
+    }
+    #endregion
 }

@@ -1,4 +1,1 @@
-﻿public abstract class CardComponentBase
-{
-    
-}
+﻿public abstract class CardComponentBase;

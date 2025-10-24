@@ -33,12 +33,14 @@ namespace BehaviourTree
                 return;
             Running = true;
             RecursiveDo(CallReset);
-            b = Binder.Update(dt => TickTemplate(dt));
+            // TODO obsolete
+            // b = Binder.Update(dt => TickTemplate(dt));
         }
         public void StopTick()
         {
             Running = false;
-            b?.UnBind();
+            // TODO
+            // b?.UnBind();
         }
         public override string ToString()
         {

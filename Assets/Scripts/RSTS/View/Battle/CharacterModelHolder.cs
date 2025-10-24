@@ -20,12 +20,14 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     readonly List<EnemyModel> enteredTargetEnemyModels = [];
     
     public EnemyDataBase? TargetingEnemy => enteredTargetEnemyModels.LastOrDefault()?.Data;
-    public bool CheckInNoTarget(Vector2 screenPos)
-    {
-        return PosInRect(screenPos, TransNoTargetArea.RectTransform);
-    }
+    public bool CheckInNoTarget(Vector2 screenPos) => PosInRect(screenPos, TransNoTargetArea.RectTransform);
 
-    public void OnCreateBothTurnData(BothTurnData bothTurnData)
+    public void EnableNoTargetArea(bool enable)
+    {
+        TransNoTargetArea.gameObject.SetActive(enable);
+    }
+    
+    IEnumerable<BindDataBase> OnRegisterBothTurnState(BothTurnData bothTurnData)
     {
         bothTurnData.EnemyList.OnAdd += enemyData =>
         {
@@ -50,7 +52,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
 
             m.OnPointerExitEvt += () =>
             {
-                if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out var _))
+                if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag))
                     return;
                 enteredTargetEnemyModels.Remove(m);
                 m.EnableSelectTarget(false);
@@ -67,9 +69,11 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
                 Destroy(enemyModel.gameObject);
             }
         };
+
+        yield break;
     }
 
-    public void OnChangeYieldCardState(YieldCardData yieldCardData)
+    void OnChangeYieldCardState(YieldCardData yieldCardData)
     {
         MyFSM.GetBindState(YieldCardStateWrap.One, EYieldCardState.Drag)
             .OnExit(() =>
@@ -82,9 +86,11 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
             });
     }
     
-    public void EnableNoTargetArea(bool enable)
+    protected override void Awake()
     {
-        TransNoTargetArea.gameObject.SetActive(enable);
+        base.Awake();
+        MyFSM.OnRegister(BothTurnStateWrap.One, onRegister: OnRegisterBothTurnState);
+        MyFSM.OnRegister(YieldCardStateWrap.One, onChange: OnChangeYieldCardState);
     }
     
     static bool PosInRect(Vector2 pos, RectTransform rectTransform)

@@ -18,15 +18,13 @@ public class InfoView : Singleton<InfoView>
     public Button BtnExitBattle;
 
 
-    public IEnumerable<BindDataBase> OnRegisterBattleState(BattleData _)
+    protected override void Awake()
     {
-        yield return Binder.From(BtnExitBattle).To(() =>
-        {
-            MyFSM.EnterState(GameStateWrap.One, EGameState.Title);
-        });
+        base.Awake();
+        MyFSM.OnRegister(BattleStateWrap.One, onRegister: OnRegisterBattleState);
     }
-
-    public void OnCreateBattleData(BattleData battleData)
+    
+    IEnumerable<BindDataBase> OnRegisterBattleState(BattleData battleData)
     {
         battleData.DeckList.OnAdd += cardData =>
         {
@@ -36,5 +34,9 @@ public class InfoView : Singleton<InfoView>
         {
             TxtDeckCount.text = battleData.DeckList.Count.ToString();
         };
+        yield return Binder.From(BtnExitBattle).To(() =>
+        {
+            MyFSM.EnterState(GameStateWrap.One, EGameState.Title);
+        });
     }
 }

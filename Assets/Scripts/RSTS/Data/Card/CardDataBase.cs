@@ -48,19 +48,20 @@ public abstract class CardDataBase
     public int UpgradeLevel;
 
     public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
+    protected int EmbedInt(int id) => CurUpgradeInfo.Des.EmbedIntList[id];
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public List<CardComponentBase> ComponentList = [];
     
-    public bool HasTarget => HasComponent<CardHasTarget>(out _);
-    public void SetTarget(EnemyDataBase target) => GetComponent<CardHasTarget>().Target = target;
+    public bool HasComponent<T>() where T : CardComponentBase, new()
+        => ComponentList.OfType<T>().FirstOrDefault() is not null;
     
-    protected bool HasComponent<T>(out T component) where T : CardComponentBase
+    protected bool HasComponent<T>(out T component) where T : CardComponentBase, new()
         => (component = ComponentList.OfType<T>().FirstOrDefault()!) is not null;
 
-    protected T GetComponent<T>() where T : CardComponentBase
+    public T GetComponent<T>() where T : CardComponentBase, new()
     {
-        if(!HasComponent<T>(out var component))
-            throw new Exception($"Card {Config.ID} level:{UpgradeLevel} not has component {typeof(T).Name}");
+        if (!HasComponent<T>(out var component))
+            throw new Exception($"CardDataBase GetComponent<{typeof(T).Name}> not found");
         return component;
     }
     public abstract void OnCreate();
@@ -72,7 +73,7 @@ public abstract class CardDataBase
         ComponentList.Add(component);
         return component;
     }
-    protected void RemoveComponent<T>() where T : CardComponentBase
+    protected void RemoveComponent<T>() where T : CardComponentBase, new()
     {
         if (!HasComponent<T>(out var component))
             return;

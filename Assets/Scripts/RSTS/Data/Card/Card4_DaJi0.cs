@@ -9,8 +9,15 @@ public class Card4 : CardDataBase
         AddComponent<CardHasTarget>();
     }
 
+    int attackValue => EmbedInt(0);
+
     public override void Yield(BothTurnData bothTurnData)
     {
-        bothTurnData.AttackEnemy(GetComponent<CardHasTarget>().Target, CurUpgradeInfo.Des.EmbedIntList[0]);
+        var target = GetComponent<CardHasTarget>().Target;
+        if (target == null)
+        {
+            throw new ArgumentNullException($"No target for {nameof(Card4)}");
+        }
+        bothTurnData.AttackEnemy(target, attackValue);
     }
 }

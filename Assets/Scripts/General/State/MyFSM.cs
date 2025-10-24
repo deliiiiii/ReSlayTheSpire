@@ -22,26 +22,34 @@ public abstract class MyFSM
             MyDebug.LogError("StateFactory: Acquire<" + typeof(TEnum).Name + ">Duplicated");
             return;
         }
-        argDic[typeof(TEnum)] = arg;
-        fsmDic[typeof(TEnum)] = new MyFSM<TEnum>();
-        onRegisterDic[typeof(TEnum)].ForEach(func =>func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
-        onUpdateDic.Add(typeof(TEnum), Binder.FromUpdate(Get<TEnum>()!.Update, EUpdatePri.Fsm));
-        onUpdateDic[typeof(TEnum)].Bind();
-        onChangeDic[typeof(TEnum)].ForEach(act => act.Invoke(arg));
+        var type = typeof(TEnum);
+        // IBL的Init，写在构造函数里了。
+        argDic[type] = arg;
+        fsmDic[type] = new MyFSM<TEnum>();
+        // IBL的Bind
+        onRegisterDic[type].ForEach(func =>func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
+        // IBL的Launch
+        arg.Launch();
+        onUpdateDic.Add(type, Binder.FromUpdate(Get<TEnum>()!.Update, EUpdatePri.Fsm));
+        onUpdateDic[type].Bind();
+        onChangeDic[type].ForEach(act => act.Invoke(arg));
         EnterState(one, state);
     }
     
     public static void OnRegister<TEnum, TArg>(
         StateWrapper<TEnum, TArg> one,
-        Func<TArg, IEnumerable<BindDataBase>> onRegister,
-        Action<TArg> onChange)
+        [CanBeNull] Func<TArg, IEnumerable<BindDataBase>> onRegister = null,
+        [CanBeNull] Action<TArg> onChange = null)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
-        onRegisterDic.TryAdd(typeof(TEnum), new List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>());
-        onRegisterDic[typeof(TEnum)].Add(arg => onRegister(arg as TArg));
-        onChangeDic.TryAdd(typeof(TEnum), new List<Action<IMyFSMArg>>());
-        onChangeDic[typeof(TEnum)].Add(arg => onChange(arg as TArg));
+        var type = typeof(TEnum);
+        onRegisterDic.TryAdd(type, new List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>());
+        if(onRegister != null)
+            onRegisterDic[type].Add(arg => onRegister(arg as TArg));
+        onChangeDic.TryAdd(type, new List<Action<IMyFSMArg>>());
+        if(onChange != null)
+            onChangeDic[type].Add(arg => onChange(arg as TArg));
     }
 
     public static void Release<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
@@ -51,19 +59,30 @@ public abstract class MyFSM
         var fsm = Get<TEnum>();
         if (fsm == null)
             return;
+        var type = typeof(TEnum);
         // 跳转到空状态
         fsm.OnDestroy();
-        onUpdateDic[typeof(TEnum)].UnBind();
+        onUpdateDic[type].UnBind();
         onUpdateDic.Remove(typeof(TEnum));
-        onRegisterDic[typeof(TEnum)]?.ForEach(func => func.Invoke(argDic[typeof(TEnum)]).ForEach(bindDataBase => bindDataBase.UnBind()));
-        fsmDic.Remove(typeof(TEnum));
-        argDic.Remove(typeof(TEnum));
+        argDic[type].UnInit();
+        onRegisterDic[type]?.ForEach(func => func.Invoke(argDic[type]).ForEach(bindDataBase => bindDataBase.UnBind()));
+        fsmDic.Remove(type);
+        argDic.Remove(type);
     }
 
-    public static void EnterState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+    public static TArg EnterState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
-        => Get<TEnum>()?.ChangeState(state);
+    {
+        Get<TEnum>()?.ChangeState(state);
+        return argDic[typeof(TEnum)] as TArg;
+    }
+
+    public static bool IsState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+        where TEnum : Enum
+        where TArg : class, IMyFSMArg
+        => Get<TEnum>()?.IsOneOfState(state) ?? false;
+
     public static bool IsState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, out TArg arg)
         where TEnum : Enum
         where TArg : class, IMyFSMArg

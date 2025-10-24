@@ -3,4 +3,11 @@
 public class YieldCardData : IMyFSMArg
 {
     public bool HasTarget;
+    public void Launch()
+    {
+    }
+
+    public void UnInit()
+    {
+    }
 }

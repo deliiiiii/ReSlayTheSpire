@@ -23,8 +23,15 @@ public class SlotData: IMyFSMArg
     public bool HasLastBuff;
     
     [SerializeReference] BattleData battleData;
-    public event Action<BattleData>? OnBattleDataCreate;
     public BattleData CreateBattleData(EPlayerJob job) 
-        => battleData = new BattleData(job, OnBattleDataCreate);
+        => battleData = new BattleData(this, job);
+
+    public void Launch()
+    {
+    }
+
+    public void UnInit()
+    {
+    }
 }
 

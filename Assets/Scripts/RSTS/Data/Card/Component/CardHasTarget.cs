@@ -2,5 +2,5 @@
 
 public class CardHasTarget : CardComponentBase
 {
-    public EnemyDataBase Target;
+    public EnemyDataBase? Target;
 }
