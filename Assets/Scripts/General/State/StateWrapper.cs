@@ -11,4 +11,5 @@ public class StateWrapper<TEnum, TArg>
     where TArg : class, IMyFSMArg
 {
     public static StateWrapper<TEnum, TArg> One => new();
+    protected StateWrapper(){}
 }

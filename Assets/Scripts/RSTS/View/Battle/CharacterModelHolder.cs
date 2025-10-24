@@ -27,6 +27,18 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         TransNoTargetArea.gameObject.SetActive(enable);
     }
     
+    void BindBattle(MyFSM<EBattleState> fsm, BattleData battleData)
+    {
+        fsm.GetState(EBattleState.BothTurn).OnEnter += () =>
+        {
+            PlayerModel.gameObject.SetActive(true);
+        };
+        fsm.GetState(EBattleState.BothTurn).OnExit += () =>
+        {
+            PlayerModel.gameObject.SetActive(false);
+        };
+    }
+    
     void BindBothTurn(MyFSM<EBothTurn> fsm, BothTurnData bothTurnData)
     {
         bothTurnData.EnemyList.OnAdd += enemyData =>
@@ -96,6 +108,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     protected override void Awake()
     {
         base.Awake();
+        MyFSM.OnRegister(BattleStateWrap.One, alwaysBind: BindBattle);
         MyFSM.OnRegister(BothTurnStateWrap.One, 
             alwaysBind: BindBothTurn,
             canUnbind: CanUnbindBothTurn
