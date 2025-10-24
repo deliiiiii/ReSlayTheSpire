@@ -10,8 +10,8 @@ namespace Violee
         {
             // BindDataUpdate? bFlash = null;
             var sr = GetComponent<SpriteRenderer>();
-            Binder.From(Data.Visited).To(gameObject.SetActive).Immediate();
-            Binder.From(Data.IsFlash).To(b =>
+            Binder.FromObs(Data.Visited).To(gameObject.SetActive).Immediate();
+            Binder.FromObs(Data.IsFlash).To(b =>
             {
                 if (b)
                 {

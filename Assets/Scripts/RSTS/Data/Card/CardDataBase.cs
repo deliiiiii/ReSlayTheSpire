@@ -46,18 +46,10 @@ public abstract class CardDataBase
     public CardConfigMulti Config;
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
     public int UpgradeLevel;
-
-    public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
-    protected int EmbedInt(int id) => CurUpgradeInfo.Des.EmbedIntList[id];
-    public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public List<CardComponentBase> ComponentList = [];
     
     public bool HasComponent<T>() where T : CardComponentBase, new()
         => ComponentList.OfType<T>().FirstOrDefault() is not null;
-    
-    protected bool HasComponent<T>(out T component) where T : CardComponentBase, new()
-        => (component = ComponentList.OfType<T>().FirstOrDefault()!) is not null;
-
     public T GetComponent<T>() where T : CardComponentBase, new()
     {
         if (!HasComponent<T>(out var component))
@@ -66,7 +58,14 @@ public abstract class CardDataBase
     }
     public abstract void OnCreate();
     public abstract void Yield(BothTurnData bothTurnData);
+    public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
+    public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
+    public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
+    public EmbedString CurDes => CurUpgradeInfo.Des;
     
+    protected int EmbedInt(int id) => CurUpgradeInfo.Des.EmbedIntList[id];
+    protected bool HasComponent<T>(out T component) where T : CardComponentBase, new()
+        => (component = ComponentList.OfType<T>().FirstOrDefault()!) is not null;
     protected T AddComponent<T>() where T : CardComponentBase, new()
     {
         var component = new T();
@@ -79,6 +78,8 @@ public abstract class CardDataBase
             return;
         ComponentList.Remove(component);
     }
+    
+    CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
 }
 
 

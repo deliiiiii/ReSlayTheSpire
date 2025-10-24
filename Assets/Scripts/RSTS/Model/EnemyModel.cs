@@ -19,7 +19,7 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
     public void ReadData(EnemyDataBase data)
     {
         name = $"Enemy_{data.Config.Name}";
-        Binder.From(data.CurHP).To(v =>
+        Binder.FromObs(data.CurHP).To(v =>
         {
             MdlHP.SetHP(v, data.Config.MaxHP);
             MdlHP.SetShield(0);

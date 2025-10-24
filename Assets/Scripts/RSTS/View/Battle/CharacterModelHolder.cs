@@ -27,7 +27,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         TransNoTargetArea.gameObject.SetActive(enable);
     }
     
-    IEnumerable<BindDataBase> OnRegisterBothTurnState(BothTurnData bothTurnData)
+    void BindBothTurn(MyFSM<EBothTurn> fsm, BothTurnData bothTurnData)
     {
         bothTurnData.EnemyList.OnAdd += enemyData =>
         {
@@ -69,28 +69,25 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
                 Destroy(enemyModel.gameObject);
             }
         };
-
-        yield break;
     }
 
-    void OnChangeYieldCardState(YieldCardData yieldCardData)
+    void BindYieldCard(MyFSM<EYieldCardState> fsm, YieldCardData yieldCardData)
     {
-        MyFSM.GetBindState(YieldCardStateWrap.One, EYieldCardState.Drag)
-            .OnExit(() =>
+        fsm.GetState(EYieldCardState.Drag).OnExit += () =>
+        {
+            EnemyModelList.ForEach(m =>
             {
-                EnemyModelList.ForEach(m =>
-                {
-                    m.EnableSelectTarget(false);
-                });
-                enteredTargetEnemyModels.Clear();
+                m.EnableSelectTarget(false);
             });
+            enteredTargetEnemyModels.Clear();
+        };
     }
     
     protected override void Awake()
     {
         base.Awake();
-        MyFSM.OnRegister(BothTurnStateWrap.One, onRegister: OnRegisterBothTurnState);
-        MyFSM.OnRegister(YieldCardStateWrap.One, onChange: OnChangeYieldCardState);
+        MyFSM.OnRegister(BothTurnStateWrap.One, alwaysBind: BindBothTurn);
+        MyFSM.OnRegister(YieldCardStateWrap.One, alwaysBind: BindYieldCard);
     }
     
     static bool PosInRect(Vector2 pos, RectTransform rectTransform)

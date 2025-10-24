@@ -16,15 +16,8 @@ public class InfoView : Singleton<InfoView>
     public Button BtnMap;
     public Button BtnDeck;
     public Button BtnExitBattle;
-
-
-    protected override void Awake()
-    {
-        base.Awake();
-        MyFSM.OnRegister(BattleStateWrap.One, onRegister: OnRegisterBattleState);
-    }
     
-    IEnumerable<BindDataBase> OnRegisterBattleState(BattleData battleData)
+    void BindBattle(MyFSM<EBattleState> fsm, BattleData battleData)
     {
         battleData.DeckList.OnAdd += cardData =>
         {
@@ -34,9 +27,51 @@ public class InfoView : Singleton<InfoView>
         {
             TxtDeckCount.text = battleData.DeckList.Count.ToString();
         };
-        yield return Binder.From(BtnExitBattle).To(() =>
+        
+        TxtPlayerJob.text = battleData.Job.ToString();
+    }
+
+    IEnumerable<BindDataBase> CanUnbindBattle(BattleData battleData)
+    {
+        yield return Binder.FromBtn(BtnExitBattle).To(() =>
         {
             MyFSM.EnterState(GameStateWrap.One, EGameState.Title);
         });
+        yield return Binder.FromObs(battleData.CurHP).To(v =>
+        {
+            ShowHP(v, battleData.MaxHP);
+        });
+        yield return Binder.FromObs(battleData.MaxHP).To(v =>
+        {
+            ShowHP(battleData.CurHP, v);
+        });
+        yield return Binder.FromObs(battleData.Coin).To(v =>
+        {
+            TxtCoin.text = v.ToString();
+        });
+        yield return Binder.FromObs(battleData.InBattleTime).To(ShowTime);
+    }
+
+    static void TickBattle(float dt, BattleData battleData)
+    {
+        battleData.InBattleTime.Value += dt;
+    }
+   
+    void ShowHP(int curHP, int maxHP)
+    {
+        TxtPlayerHP.text = $"{curHP}/{maxHP}";
+    }
+    void ShowTime(float time)
+    {
+        TxtBattleTime.text = $"{(int)(time / 60):00}:{(int)(time % 60):00}";
+    }
+    
+    protected override void Awake()
+    {
+        base.Awake();
+        MyFSM.OnRegister(BattleStateWrap.One, 
+            canUnbind: CanUnbindBattle,
+            alwaysBind: BindBattle,
+            tick: TickBattle);
     }
 }

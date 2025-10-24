@@ -86,7 +86,7 @@ public class BothTurnData : IMyFSMArg
     public bool TryYield(CardDataBase toYield, out string failReason)
     {
         failReason = string.Empty;
-        if (Energy < toYield.CurUpgradeInfo.CostInfo switch
+        if (Energy < toYield.CurCostInfo switch
             {
                 CardCostNumber costNumber => costNumber.Cost,
                 CardCostX => 0,
@@ -97,7 +97,7 @@ public class BothTurnData : IMyFSMArg
             return false;
         }
 
-        if(toYield.CurUpgradeInfo.Keywords.Contains(ECardKeyword.Unplayable))
+        if(toYield.ContainsKeyword(ECardKeyword.Unplayable))
         {
             failReason = "该牌无法打出";
             return false;
@@ -108,12 +108,12 @@ public class BothTurnData : IMyFSMArg
 
     public void DiscardAllHand()
     {
-        HandList.ForEach(c =>
+        HandList.ForEach(card =>
         {
-            if(c.CurUpgradeInfo.Keywords.Contains(ECardKeyword.Ethereal))
-                ExhaustList.MyAdd(c);
-            else if(c.Config.Category != ECardCategory.State)
-                DiscardList.MyAdd(c);
+            if(card.ContainsKeyword(ECardKeyword.Ethereal))
+                ExhaustList.MyAdd(card);
+            else if(card.Config.Category != ECardCategory.State)
+                DiscardList.MyAdd(card);
         });
         HandList.MyClear();
     }
@@ -121,7 +121,7 @@ public class BothTurnData : IMyFSMArg
     void YieldOne(CardDataBase toYield)
     {
         toYield.Yield(this);
-        if (toYield.CurUpgradeInfo.Keywords.Contains(ECardKeyword.Exhaust))
+        if (toYield.ContainsKeyword(ECardKeyword.Exhaust))
         {
             ExhaustOne(toYield);
         }

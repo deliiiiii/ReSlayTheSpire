@@ -15,20 +15,21 @@ public class TitleView : Singleton<TitleView>
     protected override void Awake()
     {
         base.Awake();
-        MyFSM.OnRegister(GameStateWrap.One, OnRegisterGameState, OnChangeGameState);
+        MyFSM.OnRegister(GameStateWrap.One,
+            canUnbind: OnRegisterGameState,
+            alwaysBind: OnChangeGameState);
     }
 
-    IEnumerable<BindDataBase> OnRegisterGameState(SlotData slotData)
+    IEnumerable<BindDataBase> OnRegisterGameState(GameData gameData)
     {
-        yield return Binder.From(BtnStart).To(() =>
+        yield return Binder.FromBtn(BtnStart).To(() =>
         {
             MyFSM.EnterState(GameStateWrap.One, EGameState.Battle);
         });
     }
-    void OnChangeGameState(SlotData slotData)
+    void OnChangeGameState(MyFSM<EGameState> fsm, GameData gameData)
     {
-        MyFSM.GetBindState(GameStateWrap.One, EGameState.Title)
-            .OnEnter(() => PnlButtons.SetActive(true))
-            .OnExit(() => PnlButtons.SetActive(false));
+        fsm.GetState(EGameState.Title).OnEnter += () => PnlButtons.SetActive(true);
+        fsm.GetState(EGameState.Title).OnExit += () => PnlButtons.SetActive(false);
     }
 }

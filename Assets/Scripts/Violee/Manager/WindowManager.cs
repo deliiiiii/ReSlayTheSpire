@@ -38,7 +38,8 @@ public class SimpleWindowInfo : WindowInfo<SimpleWindowInfo>;
 [Serializable]
 public class PauseWindowInfo : WindowInfo<PauseWindowInfo>
 {
-    public BindState TarState = null!;
+    // TODO BindState is deleted
+    // public BindState TarState = null!;
 }
 
 [Serializable]
@@ -94,35 +95,36 @@ public class WindowManager : Singleton<WindowManager>
     
     static WindowManager()
     {
-        GameState.TitleState
-            .OnEnter(() =>
-            {
-                WindowList.MyClear();
-                EnableCursor();
-            });
-
-        GameState.PlayingState
-            .OnUpdate(dt =>
-            {
-                if (Input.GetKey(KeyCode.LeftAlt) || HasWindow)
-                {
-                    Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
-                }
-                else
-                {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                }
-
-                CheckGameWindow();
-            });
-
-        GameState.WinningState
-            .OnEnter(() =>
-            {
-                WindowList.MyAdd(WinWindow);
-            });
+        // TODO BindState is deleted
+        // GameState.TitleState
+        //     .OnEnter(() =>
+        //     {
+        //         WindowList.MyClear();
+        //         EnableCursor();
+        //     });
+        //
+        // GameState.PlayingState
+        //     .OnUpdate(dt =>
+        //     {
+        //         if (Input.GetKey(KeyCode.LeftAlt) || HasWindow)
+        //         {
+        //             Cursor.lockState = CursorLockMode.None;
+        //             Cursor.visible = true;
+        //         }
+        //         else
+        //         {
+        //             Cursor.lockState = CursorLockMode.Locked;
+        //             Cursor.visible = false;
+        //         }
+        //
+        //         CheckGameWindow();
+        //     });
+        //
+        // GameState.WinningState
+        //     .OnEnter(() =>
+        //     {
+        //         WindowList.MyAdd(WinWindow);
+        //     });
         
         BuffManager.OnAddWindowBuff += winBuff =>
         {
@@ -205,28 +207,29 @@ public class WindowManager : Singleton<WindowManager>
         WindowList.MyAdd(ret);
         return ret;
     }
-    
-    static void CheckGameWindow()
-    {
-        if (Configer.SettingsConfig.DisablePause)
-            return;
-        if (!Application.isFocused)
-        {
-            if(!HasPaused)
-                WindowList.MyAdd(PauseWindow);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if(!HasPaused)
-                WindowList.MyAdd(PauseWindow);
-            else
-            {
-                PauseWindow.TarState = GameState.PlayingState;
-                WindowList.MyRemove(PauseWindow);
-            }
-        }
-    }
+    // TODO BindState is deleted
+    // static void CheckGameWindow()
+    // {
+    //     if (Configer.SettingsConfig.DisablePause)
+    //         return;
+    //     if (!Application.isFocused)
+    //     {
+    //         if(!HasPaused)
+    //             WindowList.MyAdd(PauseWindow);
+    //     }
+    //
+    //     if (Input.GetKeyDown(KeyCode.Escape))
+    //     {
+    //         if(!HasPaused)
+    //             WindowList.MyAdd(PauseWindow);
+    //         else
+    //         {
+    //             // TODO BindState is deleted
+    //             // PauseWindow.TarState = GameState.PlayingState;
+    //             WindowList.MyRemove(PauseWindow);
+    //         }
+    //     }
+    // }
     public static bool HasWindow => WindowList.Any();
     public static bool HasPaused => WindowList.Contains(PauseWindow);
     public static bool HasWatchingClock => WindowList.Contains(WatchingClockWindow);

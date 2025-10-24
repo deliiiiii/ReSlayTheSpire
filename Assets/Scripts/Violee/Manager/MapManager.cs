@@ -107,11 +107,11 @@ internal class MapManager : SingletonCS<MapManager>
                 VisitEdgeWalls(param.EdgeWallSet);
                 DateTime = new DateTime(2025, 8, 14, 8, 0, 0);
             });
-
-        GameState.TitleState.OnEnter(() =>
-        {
-            InitCollections(generateParam);
-        });
+        // TODO BindState is deleted
+        // GameState.TitleState.OnEnter(() =>
+        // {
+        //     InitCollections(generateParam);
+        // });
     }
 
     public static void OnPlaying(float dt)

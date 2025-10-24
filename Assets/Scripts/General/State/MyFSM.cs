@@ -7,17 +7,19 @@ using Sirenix.Utilities;
 public abstract class MyFSM
 {
     static readonly Dictionary<Type, MyFSM> fsmDic = new();
-    // onRegisterDic永远不能移除内存，是上帝规则。
-    static readonly Dictionary<Type, List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>> onRegisterDic = new();
-    static readonly Dictionary<Type, BindDataUpdate> onUpdateDic = new();
-    static readonly Dictionary<Type, List<Action<IMyFSMArg>>> onChangeDic = new();
+    // bindAlwaysDic包括了State的OnEnter、OnExit，和Data的事件绑定回调，如data.OnXXXEvent += () => {}
+    static readonly Dictionary<Type, List<Action<IMyFSMArg>>> bindAlwaysDic = new();
+    // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
+    static readonly Dictionary<Type, List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>> unbindDic = new();
+    static readonly Dictionary<Type, List<BindDataUpdate>> tickDic = new();
     static readonly Dictionary<Type, IMyFSMArg> argDic = new();
     
     public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, TArg arg)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
-        if (Get<TEnum>(shouldFind: false) != null)
+        var fsm = Get<TEnum>(shouldFind: false);
+        if (fsm != null)
         {
             MyDebug.LogError("StateFactory: Acquire<" + typeof(TEnum).Name + ">Duplicated");
             return;
@@ -25,31 +27,38 @@ public abstract class MyFSM
         var type = typeof(TEnum);
         // IBL的Init，写在构造函数里了。
         argDic[type] = arg;
-        fsmDic[type] = new MyFSM<TEnum>();
+        fsmDic[type] = fsm = new MyFSM<TEnum>();
         // IBL的Bind
-        onRegisterDic[type].ForEach(func =>func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
+        if (unbindDic.TryGetValue(type, out var unbindFuncList)) 
+            unbindFuncList?.ForEach(func =>func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
         // IBL的Launch
+        if (bindAlwaysDic.TryGetValue(type, out var bindAlwaysActList)) 
+            bindAlwaysActList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(arg));
         arg.Launch();
-        onUpdateDic.Add(type, Binder.FromUpdate(Get<TEnum>()!.Update, EUpdatePri.Fsm));
-        onUpdateDic[type].Bind();
-        onChangeDic[type].ForEach(act => act.Invoke(arg));
+        tickDic.TryAdd(type, new List<BindDataUpdate>());
+        tickDic[type].Add(Binder.FromTick(fsm.Update, EUpdatePri.Fsm));
+        tickDic[type].ForEach(bindDataUpdate => bindDataUpdate.Bind());
         EnterState(one, state);
     }
     
     public static void OnRegister<TEnum, TArg>(
         StateWrapper<TEnum, TArg> one,
-        [CanBeNull] Func<TArg, IEnumerable<BindDataBase>> onRegister = null,
-        [CanBeNull] Action<TArg> onChange = null)
+        [CanBeNull] Action<MyFSM<TEnum>, TArg> alwaysBind = null,
+        [CanBeNull] Func<TArg, IEnumerable<BindDataBase>> canUnbind = null,
+        [CanBeNull] Action<float, TArg> tick = null)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
         var type = typeof(TEnum);
-        onRegisterDic.TryAdd(type, new List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>());
-        if(onRegister != null)
-            onRegisterDic[type].Add(arg => onRegister(arg as TArg));
-        onChangeDic.TryAdd(type, new List<Action<IMyFSMArg>>());
-        if(onChange != null)
-            onChangeDic[type].Add(arg => onChange(arg as TArg));
+        unbindDic.TryAdd(type, new List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>());
+        if(canUnbind != null)
+            unbindDic[type].Add(arg => canUnbind(arg as TArg));
+        bindAlwaysDic.TryAdd(type, new List<Action<IMyFSMArg>>());
+        if(alwaysBind != null)
+            bindAlwaysDic[type].Add(arg => alwaysBind.Invoke(Get<TEnum>(), arg as TArg));
+        tickDic.TryAdd(type, new List<BindDataUpdate>());
+        if(tick != null)
+            tickDic[type].Add(Binder.FromTick(dt => tick(dt, argDic[type] as TArg), EUpdatePri.Fsm));
     }
 
     public static void Release<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
@@ -62,10 +71,10 @@ public abstract class MyFSM
         var type = typeof(TEnum);
         // 跳转到空状态
         fsm.OnDestroy();
-        onUpdateDic[type].UnBind();
-        onUpdateDic.Remove(typeof(TEnum));
+        tickDic[type].ForEach(bindDataUpdate => bindDataUpdate.UnBind());
+        tickDic.Remove(typeof(TEnum));
         argDic[type].UnInit();
-        onRegisterDic[type]?.ForEach(func => func.Invoke(argDic[type]).ForEach(bindDataBase => bindDataBase.UnBind()));
+        unbindDic[type]?.ForEach(func => func.Invoke(argDic[type]).ForEach(bindDataBase => bindDataBase.UnBind()));
         fsmDic.Remove(type);
         argDic.Remove(type);
     }
@@ -91,11 +100,6 @@ public abstract class MyFSM
         arg = ret ? arg = argDic[typeof(TEnum)] as TArg : null;
         return ret;
     }
-
-    public static BindState GetBindState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
-        where TEnum : Enum
-        where TArg : class, IMyFSMArg
-        => new (Get<TEnum>()?.GetState(state));
     
     public static string ShowState<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
         where TEnum : Enum

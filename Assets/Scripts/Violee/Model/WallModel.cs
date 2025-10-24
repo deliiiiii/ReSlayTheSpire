@@ -96,7 +96,7 @@ namespace Violee
             UnlockedSprite.SetActive(false);
             gameObject.SetActive(true);
             
-            Binder.From(Data.Visited).To(v =>
+            Binder.FromObs(Data.Visited).To(v =>
             {
                 WallSprite.enabled = v;
                 if (!v)
@@ -111,7 +111,7 @@ namespace Violee
                     LockedSprite.SetActive(true);
                 }
             }).Immediate();
-            Binder.From(Data.Opened).To(b =>
+            Binder.FromObs(Data.Opened).To(b =>
             {
                 if (b)
                 {

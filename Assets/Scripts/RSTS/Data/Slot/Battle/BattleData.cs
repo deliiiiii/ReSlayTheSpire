@@ -12,38 +12,44 @@ namespace RSTS;
 [Serializable]
 public class BattleData : IMyFSMArg
 {
-    [NonSerialized] SlotData slotData;
+    [NonSerialized] GameData gameData;
+    
+    public EPlayerJob Job;
     
     [SerializeReference]
     public MyList<CardDataBase> DeckList = [];
-    
-    public List<ItemData> ItemList = [];
-    public int CurHP;
-    public int MaxHP;
-    public int Coin;
-    public EPlayerJob Job;
-    public List<BottleData> BottleList = [];
-    public float InBattleTime;
+    [SerializeReference]
+    public MyList<ItemData> ItemList = [];
+    [SerializeReference]
+    public MyList<BottleData?> BottleList = [];
+    public Observable<int> CurHP = new(0);
+    public Observable<int> MaxHP = new(0);
+    public Observable<int> Coin = new(0);
+    public Observable<float> InBattleTime = new(0);
     
     #region Init, Launch
-    public BattleData(SlotData slotData, EPlayerJob job)
+    public BattleData(GameData gameData, EPlayerJob job)
     {
-        this.slotData = slotData;
+        this.gameData = gameData;
         Job = job;
     }
     public void Launch()
     {
-        MyDebug.Log("BattleData Launch");
-        var config = RefPoolMulti<CardListConfigMulti>.Acquire().First(c => c.Job == Job);
+        var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);
         config.InitialCardDic.ForEach(pair =>
         {
             for(int i = 0; i < pair.Value; i++)
                 DeckList.MyAdd(CardDataBase.CreateCard(pair.Key.ID));
         });
+        for (int i = 0; i < 3; i++)
+        {
+            BottleList.MyAdd(null);
+        }
+        CurHP.Value = MaxHP.Value = config.MaxHP;
+        Coin.Value = 99;
     }
     public void UnInit()
     {
-        MyDebug.Log("BattleData UnInit");
         DeckList.MyClear();
     }
     #endregion
@@ -53,5 +59,8 @@ public class BattleData : IMyFSMArg
     public BothTurnData CreateBothTurnData()
         => bothTurnData = new BothTurnData(this);
     #endregion
-    [SerializeReference]MapData mapData;
+    
+    // #region MapData
+    // [SerializeReference]MapData mapData;
+    // #endregion
 }

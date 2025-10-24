@@ -66,46 +66,48 @@ class MapView : ViewBase<MapView>
             };
         };
 
-        async Task DelayTickMouse()
-        {
-            await Task.Delay(CameraMono.DefaultEase);
-            TitleCaster.gameObject.SetActive(true);
-        }
+        // TODO DelayTickMouse is not used
+        // async Task DelayTickMouse()
+        // {
+        //     await Task.Delay(CameraMono.DefaultEase);
+        //     TitleCaster.gameObject.SetActive(true);
+        // }
         
-        GameState.TitleState
-            .OnEnter(() =>
-            {
-                CameraMono.TitleVirtualCamera.LookAt = Hitobj;
-                CameraMono.PlayerVirtualCamera.enabled = false;
-                TitlePnl.SetActive(true);
-                StartBox.SetActive(true);
-                Light.gameObject.SetActive(false);
-                _ = DelayTickMouse();
-            })
-            .OnUpdate(_ =>
-            {
-                if(TitleCaster.gameObject.activeSelf)
-                    TitleCaster.Tick();
-                QuickKeyTxt.color = Configer.SettingsConfig.QuickKey ? Color.blue : Color.white;
-                ShowBoxCostTxt.color = Configer.SettingsConfig.ShowBoxCost ? Color.blue : Color.white;
-                // DisablePauseTxt.color = Configer.SettingsConfig.DisablePause ? Color.blue : Color.white;
-                DreamCatcherGachaTxt.color = Configer.SettingsConfig.DreamCatcherGachaUp ? Color.blue : Color.white;
-                AddTiltWallTxt.color = Configer.SettingsConfig.AddTiltWall ? Color.blue : Color.white;
-                UseSmallMapTxt.color = Configer.SettingsConfig.UseSmallMap ? Color.blue : Color.white;
-            })
-            .OnExit(() =>
-            {
-                CameraMono.TitleVirtualCamera.LookAt = null;
-                TitlePnl.SetActive(false);
-                StartBox.SetActive(false);
-                Light.gameObject.SetActive(true);
-                TitleCaster.gameObject.SetActive(false);
-            });
-
-        GameState.PlayingState.OnEnter(() =>
-        {
-            CameraMono.PlayerVirtualCamera.enabled = true;
-        });
+        // TODO BindState is deleted
+        // GameState.TitleState
+        //     .OnEnter(() =>
+        //     {
+        //         CameraMono.TitleVirtualCamera.LookAt = Hitobj;
+        //         CameraMono.PlayerVirtualCamera.enabled = false;
+        //         TitlePnl.SetActive(true);
+        //         StartBox.SetActive(true);
+        //         Light.gameObject.SetActive(false);
+        //         _ = DelayTickMouse();
+        //     })
+        //     .OnUpdate(_ =>
+        //     {
+        //         if(TitleCaster.gameObject.activeSelf)
+        //             TitleCaster.Tick();
+        //         QuickKeyTxt.color = Configer.SettingsConfig.QuickKey ? Color.blue : Color.white;
+        //         ShowBoxCostTxt.color = Configer.SettingsConfig.ShowBoxCost ? Color.blue : Color.white;
+        //         // DisablePauseTxt.color = Configer.SettingsConfig.DisablePause ? Color.blue : Color.white;
+        //         DreamCatcherGachaTxt.color = Configer.SettingsConfig.DreamCatcherGachaUp ? Color.blue : Color.white;
+        //         AddTiltWallTxt.color = Configer.SettingsConfig.AddTiltWall ? Color.blue : Color.white;
+        //         UseSmallMapTxt.color = Configer.SettingsConfig.UseSmallMap ? Color.blue : Color.white;
+        //     })
+        //     .OnExit(() =>
+        //     {
+        //         CameraMono.TitleVirtualCamera.LookAt = null;
+        //         TitlePnl.SetActive(false);
+        //         StartBox.SetActive(false);
+        //         Light.gameObject.SetActive(true);
+        //         TitleCaster.gameObject.SetActive(false);
+        //     });
+        //
+        // GameState.PlayingState.OnEnter(() =>
+        // {
+        //     CameraMono.PlayerVirtualCamera.enabled = true;
+        // });
         
         
         WindowManager.DrawWindow
@@ -143,26 +145,26 @@ class MapView : ViewBase<MapView>
             })
             .AddTo(this);
 
-        Binder.From(QuickKeyBtn).To(() => Configer.SettingsConfig.ReverseQuickKey());
-        Binder.From(ShowBoxCostBtn).To(() => Configer.SettingsConfig.ReverseShowBoxCost());
+        Binder.FromBtn(QuickKeyBtn).To(() => Configer.SettingsConfig.ReverseQuickKey());
+        Binder.FromBtn(ShowBoxCostBtn).To(() => Configer.SettingsConfig.ReverseShowBoxCost());
         // Binder.From(DisablePauseBtn).To(() => Configer.SettingsConfig.ReverseDisablePause());
-        Binder.From(DreamCatcherGachaBtn).To(() => Configer.SettingsConfig.ReverseDreamCatcherGachaUp());
-        Binder.From(AddTiltWallBtn).To(() => Configer.SettingsConfig.ReverseAddTiltWall());
-        Binder.From(UseSmallMapBtn).To(() => Configer.SettingsConfig.ReverseUseSmallMap());
+        Binder.FromBtn(DreamCatcherGachaBtn).To(() => Configer.SettingsConfig.ReverseDreamCatcherGachaUp());
+        Binder.FromBtn(AddTiltWallBtn).To(() => Configer.SettingsConfig.ReverseAddTiltWall());
+        Binder.FromBtn(UseSmallMapBtn).To(() => Configer.SettingsConfig.ReverseUseSmallMap());
         
         
-        Binder.From(SettingsBtn).To(OpenSettingsPnl);
+        Binder.FromBtn(SettingsBtn).To(OpenSettingsPnl);
         // QuickKeyTg.onValueChanged.AddListener(Configer.SettingsConfig.SetQuickKey);
         // ShowBoxCostTg.onValueChanged.AddListener(Configer.SettingsConfig.SetShowBoxCost);
         // DisablePauseTg.onValueChanged.AddListener(Configer.SettingsConfig.SetDisablePause);
         // DreamCatcherGachaTg.onValueChanged.AddListener(Configer.SettingsConfig.SetDreamCatcherGachaUp);
         
-        Binder.From(ReturnBtn).To(() =>
+        Binder.FromBtn(ReturnBtn).To(() =>
         {
             FirstBtnPnl.gameObject.SetActive(true);
             SettingsPnl.gameObject.SetActive(false);
         });
-        Binder.From(ExitBtn).To(() =>
+        Binder.FromBtn(ExitBtn).To(() =>
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -202,7 +204,7 @@ class MapView : ViewBase<MapView>
             {
                 var txt = await costTxtPool.MyInstantiate(point.Pos3D + Vector3.up * 0.1f);
                 txt.gameObject.SetActive(true);
-                var b = Binder.From(point.CostWall).To(v =>
+                var b = Binder.FromObs(point.CostWall).To(v =>
                 {
                     txt.text = v > 1e9 ? "∞" : point.CostWall.ToString();
                 });

@@ -35,11 +35,12 @@ public class AudioMono : Singleton<AudioMono>
             //     seSource.Add(go.AddComponent<AudioSource>());
             // }
 
-            GameState.TitleState.OnEnter(() =>
-            {
-                lastestClips.Add(BGMKisekiIns);
-                PlayLoop(titleBGMSource, () => BGMKisekiIns);
-            });
+            // TODO BindState is deleted
+            // GameState.TitleState.OnEnter(() =>
+            // {
+            //     lastestClips.Add(BGMKisekiIns);
+            //     PlayLoop(titleBGMSource, () => BGMKisekiIns);
+            // });
         }
         catch (Exception e)
         {

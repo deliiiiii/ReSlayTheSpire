@@ -37,17 +37,18 @@ public class ClockController : MonoBehaviour
     void OnEnable()
     {
         // TODO：拿到的State应该是一次性的，这样才能方便取消绑定。
-        GameState.PlayingState.OnUpdate(_ =>
-        {
-            if (WindowManager.HasPaused)
-                return;
-            Tick();
-        });
+        // TODO BindState is deleted
+        // GameState.PlayingState.OnUpdate(_ =>
+        // {
+        //     if (WindowManager.HasPaused)
+        //         return;
+        //     Tick();
+        // });
     }
 
     void OnDisable()
     {
-        // TODO：
+        // TODO BindState is deleted
         // GameState.PlayingState.RemoveUpdate();
     }
 

@@ -126,8 +126,9 @@ class GameView : ViewBase<GameView>
                 PauseOrWinPnl.SetActive(false);
                 PausePnl.SetActive(false);
                 ReturnToTitleBtn.gameObject.SetActive(false);
-                if(w.TarState == GameState.TitleState)
-                    GameState.EnterTitle();
+                // TODO BindState is deleted
+                // if(w.TarState == GameState.TitleState)
+                //     GameState.EnterTitle();
             });
         WindowManager.WatchingClockWindow
             .OnAdd(() => CameraMono.SceneItemVirtualCamera.gameObject.SetActive(true))
@@ -139,10 +140,10 @@ class GameView : ViewBase<GameView>
         
         ScrambleView.ExchangeWindow.OnExchangeEnd += RefreshDic;
 
-        Binder.From(MainItemMono.WinCount).To(v => WinCountTxt.text = v.ToString());
-        Binder.From(MapManager.DoorCount).To(v => DoorCountTxt.text = v.ToString());
+        Binder.FromObs(MainItemMono.WinCount).To(v => WinCountTxt.text = v.ToString());
+        Binder.FromObs(MapManager.DoorCount).To(v => DoorCountTxt.text = v.ToString());
         
-        Binder.From(PlayerMono.InteractInfo).To(info => {
+        Binder.FromObs(PlayerMono.InteractInfo).To(info => {
             NormalReticle.SetActive(GameState.IsPlaying && info == null);
             FindReticle.SetActive(info != null);
             SceneItemInfoPnl.SetActive(info != null);
@@ -162,40 +163,41 @@ class GameView : ViewBase<GameView>
             }
         };
         
-        GameState.GeneratingMapState
-            .OnEnter(() => LoadPnl.SetActive(true))
-            .OnExit(() => LoadPnl.SetActive(false));
-        GameState.PlayingState
-            .OnEnter(() =>
-            {
-                MiniItemPnl.SetActive(true);
-                EnableMapObj();
-                ShowMinimap();
-            })
-            .OnUpdate(dt =>
-            {
-                StaminaTxt.text = MainItemMono.StaminaCount.ToString();
-                EnergyTxt.text = MainItemMono.EnergyCount.ToString();
-                CreativityTxt.text = MainItemMono.CreativityCount.ToString();
-                // VioleeTxt.text = MainItemMono.VioleeCount.ToString();
-                RedrawBtn.interactable = MainItemMono.CreativityCount >= MainItemMono.CheckCreativityCost(1);
-                RedrawCostTxt.text = MainItemMono.CheckCreativityCost(1).ToString();
-                ChangeFOV(dt);
-                
-                if (Input.GetKeyDown(KeyCode.Tab) && !WindowManager.HasPaused)
-                {
-                    if (isMinimap)
-                        WindowManager.WindowList.MyAdd(WindowManager.FullMapWindow);
-                    else if(!isMinimap)
-                        WindowManager.WindowList.MyRemove(WindowManager.FullMapWindow);
-                }
-            })
-            .OnExit(() =>
-            {
-                DisableMapObj();
-                MiniItemPnl.SetActive(false);
-            });
-        
+        // TODO BindState is deleted
+        // GameState.GeneratingMapState
+        //     .OnEnter(() => LoadPnl.SetActive(true))
+        //     .OnExit(() => LoadPnl.SetActive(false));
+        // GameState.PlayingState
+        //     .OnEnter(() =>
+        //     {
+        //         MiniItemPnl.SetActive(true);
+        //         EnableMapObj();
+        //         ShowMinimap();
+        //     })
+        //     .OnUpdate(dt =>
+        //     {
+        //         StaminaTxt.text = MainItemMono.StaminaCount.ToString();
+        //         EnergyTxt.text = MainItemMono.EnergyCount.ToString();
+        //         CreativityTxt.text = MainItemMono.CreativityCount.ToString();
+        //         // VioleeTxt.text = MainItemMono.VioleeCount.ToString();
+        //         RedrawBtn.interactable = MainItemMono.CreativityCount >= MainItemMono.CheckCreativityCost(1);
+        //         RedrawCostTxt.text = MainItemMono.CheckCreativityCost(1).ToString();
+        //         ChangeFOV(dt);
+        //         
+        //         if (Input.GetKeyDown(KeyCode.Tab) && !WindowManager.HasPaused)
+        //         {
+        //             if (isMinimap)
+        //                 WindowManager.WindowList.MyAdd(WindowManager.FullMapWindow);
+        //             else if(!isMinimap)
+        //                 WindowManager.WindowList.MyRemove(WindowManager.FullMapWindow);
+        //         }
+        //     })
+        //     .OnExit(() =>
+        //     {
+        //         DisableMapObj();
+        //         MiniItemPnl.SetActive(false);
+        //     });
+        //
 
         var conBuffInsDic = new Dictionary<BuffData, GameObject>();
         BuffManager.OnAddConBuff += conBuff =>
@@ -235,24 +237,26 @@ class GameView : ViewBase<GameView>
         };
 
         
-        Binder.From(MinimapBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.FullMapWindow));
-        Binder.From(RedrawBtn).To(() =>
+        Binder.FromBtn(MinimapBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.FullMapWindow));
+        Binder.FromBtn(RedrawBtn).To(() =>
         {
             MainItemMono.CostCreativity(MainItemMono.CheckCreativityCost(1));
             showDrawConfigsAct();
         });
-        Binder.From(ContinueBtn).To(() =>
+        Binder.FromBtn(ContinueBtn).To(() =>
         {
-            WindowManager.PauseWindow.TarState = GameState.PlayingState;
+            // TODO BindState is deleted
+            // WindowManager.PauseWindow.TarState = GameState.PlayingState;
             WindowManager.WindowList.MyRemove(WindowManager.PauseWindow);
         });
-        Binder.From(ReturnToTitleBtn).To(() =>
+        Binder.FromBtn(ReturnToTitleBtn).To(() =>
         {
-            WindowManager.PauseWindow.TarState = GameState.TitleState;
+            // TODO BindState is deleted
+            // WindowManager.PauseWindow.TarState = GameState.TitleState;
             WindowManager.WindowList.MyRemove(WindowManager.PauseWindow);
             WindowManager.WindowList.MyRemove(WindowManager.WinWindow);
         });
-        Binder.From(ExitWatchingItemBtn).To(async () =>
+        Binder.FromBtn(ExitWatchingItemBtn).To(async () =>
         {
             try
             {
@@ -267,12 +271,12 @@ class GameView : ViewBase<GameView>
                 throw;
             }
         });
-        Binder.From(VioleTBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.VioleTWindow));
-        Binder.From(VioleTPnlCloseBtn).To(() => WindowManager.WindowList.MyRemove(WindowManager.VioleTWindow));
-        Binder.From(DicScrollOpenBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.DicWindow));
-        Binder.From(DicScrollCloseBtn).To(() => WindowManager.WindowList.MyRemove(WindowManager.DicWindow));
+        Binder.FromBtn(VioleTBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.VioleTWindow));
+        Binder.FromBtn(VioleTPnlCloseBtn).To(() => WindowManager.WindowList.MyRemove(WindowManager.VioleTWindow));
+        Binder.FromBtn(DicScrollOpenBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.DicWindow));
+        Binder.FromBtn(DicScrollCloseBtn).To(() => WindowManager.WindowList.MyRemove(WindowManager.DicWindow));
 
-        Binder.From(ResetWinCountBtn).To(() => MainItemMono.WinCount.Value = 0);
+        Binder.FromBtn(ResetWinCountBtn).To(() => MainItemMono.WinCount.Value = 0);
         InitDic();
     }
 

@@ -17,7 +17,7 @@ public enum EPlayerJob
 
 
 [Serializable]
-public class SlotData: IMyFSMArg
+public class GameData: IMyFSMArg
 {
     public string PlayerName;
     public bool HasLastBuff;

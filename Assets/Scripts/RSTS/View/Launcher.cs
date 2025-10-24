@@ -6,7 +6,7 @@ public class Launcher : Singleton<Launcher>
     async Task Start()
     {
         await Loader.LoadAll();
-        MyFSM.Register(GameStateWrap.One, EGameState.Title, new SlotData());
+        MyFSM.Register(GameStateWrap.One, EGameState.Title, new GameData());
     }
 
     void OnDestroy()

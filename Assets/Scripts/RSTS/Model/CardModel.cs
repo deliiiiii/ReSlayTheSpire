@@ -24,7 +24,7 @@ public class CardModel : MonoBehaviour
     public void InitByData(CardDataBase fData)
     {
         data = fData;
-        TxtCost.text = fData.CurUpgradeInfo.CostInfo switch
+        TxtCost.text = fData.CurCostInfo switch
         {
             CardCostNumber costNumber => costNumber.Cost.ToString(),
             CardCostX => "X",
@@ -32,7 +32,7 @@ public class CardModel : MonoBehaviour
         };
         TxtName.text = fData.Config.Name;
         TextCategory.text = fData.Config.Category.ToString();
-        TxtDes.text = fData.CurUpgradeInfo.Des.Content;
+        TxtDes.text = fData.CurDes.Content;
         
         var evtTrigger = GetComponent<EventTrigger>();
         EventTrigger.Entry entryPointerEnter = new EventTrigger.Entry

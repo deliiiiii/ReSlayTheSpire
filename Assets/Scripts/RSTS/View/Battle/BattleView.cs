@@ -52,74 +52,116 @@ public class BattleView : Singleton<BattleView>
     public Button BtnReturnToTitle;
     #endregion
 
-    void OnChangeGameState(SlotData slotData)
+    void BindGame(MyFSM<EGameState> fsm, GameData gameData)
     {
-        MyFSM.GetBindState(GameStateWrap.One, EGameState.Battle)
-            .OnEnter(() =>
-            {
-                InfoView.gameObject.SetActive(true);
-                PnlItem.SetActive(true);
-                MyFSM.Register(BattleStateWrap.One, EBattleState.SelectLastBuff,
-                    slotData.CreateBattleData(EPlayerJob.ZhanShi));
-            })
-            .OnExit(() =>
-            {
-                MyFSM.Release(BattleStateWrap.One);
-                PnlItem.SetActive(false);
-                InfoView.gameObject.SetActive(false);
-            });
+        fsm.GetState(EGameState.Battle).OnEnter += () =>
+        {
+            InfoView.gameObject.SetActive(true);
+            PnlItem.SetActive(true);
+            MyFSM.Register(BattleStateWrap.One, EBattleState.SelectLastBuff,
+                gameData.CreateBattleData(EPlayerJob.ZhanShi));
+        };
+        fsm.GetState(EGameState.Battle).OnExit += () =>
+        {
+            MyFSM.Release(BattleStateWrap.One);
+            PnlItem.SetActive(false);
+            InfoView.gameObject.SetActive(false);
+        };
     }
     
-    IEnumerable<BindDataBase> OnRegisterBattleState(BattleData battleData)
+    IEnumerable<BindDataBase> CanUnbindBattle(BattleData battleData)
     {
         foreach (var btn in LastBuffBtnList) 
-            yield return Binder.From(btn).To(() => MyFSM.EnterState(BattleStateWrap.One, EBattleState.BothTurn));
-        yield return Binder.From(BtnReturnToTitle).To(() => MyFSM.EnterState(GameStateWrap.One, EGameState.Title));
+            yield return Binder.FromBtn(btn).To(() => MyFSM.EnterState(BattleStateWrap.One, EBattleState.BothTurn));
+        yield return Binder.FromBtn(BtnReturnToTitle).To(() => MyFSM.EnterState(GameStateWrap.One, EGameState.Title));
     }
-    void OnChangeBattleState(BattleData battleData)
+    void BindBattle(MyFSM<EBattleState> fsm, BattleData battleData)
     {
-        MyFSM.GetBindState(BattleStateWrap.One, EBattleState.SelectLastBuff)
-            .OnEnter(() =>
-            {
-                // InitBuffButtons();
-                PnlSelectLastBuff.SetActive(true);
-            })
-            .OnExit(() => PnlSelectLastBuff.SetActive(false));
+        fsm.GetState(EBattleState.SelectLastBuff).OnEnter += () =>
+        {
+            // InitBuffButtons();
+            PnlSelectLastBuff.SetActive(true);
+        };
+        fsm.GetState(EBattleState.SelectLastBuff).OnExit += () =>
+        {
+            PnlSelectLastBuff.SetActive(false);
+        };
         
         // 跳过SelectRoom阶段。
         // MyFSM.GetBindState(BattleStateWrap.One, EBattleState.SelectRoom)
         //     .OnEnter(() => MyFSM.EnterState(BattleStateWrap.One, EBattleState.BothTurn));
         
-        MyFSM.GetBindState(BattleStateWrap.One, EBattleState.BothTurn)
-            .OnEnter(() =>
-            {
-                MyDebug.Log("进入 EBattleState.BothTurn");
-                var bothTurnData = battleData.CreateBothTurnData();
-                PnlCard.SetActive(true);
-                // 跳过GrossStart、TurnStart阶段。
-                MyFSM.Register(BothTurnStateWrap.One, EBothTurn.PlayerDraw, bothTurnData);
-            })
-            .OnExit(() =>
-            {
-                PnlCard.SetActive(false);
-                MyFSM.Release(BothTurnStateWrap.One);
-            });
+        fsm.GetState(EBattleState.BothTurn).OnEnter += () =>
+        {
+            MyDebug.Log("进入 EBattleState.BothTurn");
+            var bothTurnData = battleData.CreateBothTurnData();
+            PnlCard.SetActive(true);
+            // 跳过GrossStart、TurnStart阶段。
+            MyFSM.Register(BothTurnStateWrap.One, EBothTurn.PlayerDraw, bothTurnData);
+        };
+            
+        fsm.GetState(EBattleState.BothTurn).OnExit += () =>
+        {
+            PnlCard.SetActive(false);
+            MyFSM.Release(BothTurnStateWrap.One);
+        };
 
-        MyFSM.GetBindState(BattleStateWrap.One, EBattleState.Win)
-            .OnEnter(() =>
-            {
-                PnlWin.SetActive(true);
-            })
-            .OnExit(() =>
-            {
-                PnlWin.SetActive(false);
-            });
+        fsm.GetState(EBattleState.Win).OnEnter += () =>
+        {
+            PnlWin.SetActive(true);
+        };
+        fsm.GetState(EBattleState.Win).OnExit += () =>
+        {
+            PnlWin.SetActive(false);
+        };
     }
 
-    IEnumerable<BindDataBase> OnRegisterBothTurnState(BothTurnData bothTurnData)
+    IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)
     {
+        yield return Binder.FromBtn(BtnEndTurn).To(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerYieldEnd));
+    }
+    void BindBothTurn(MyFSM<EBothTurn> fsm, BothTurnData bothTurnData)
+    {
+        fsm.GetState(EBothTurn.GrossStart).OnEnter += () =>
+        {
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.TurnStart);
+        };
+        fsm.GetState(EBothTurn.TurnStart).OnEnter += () =>
+        {
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerDraw);
+        };
+        fsm.GetState(EBothTurn.PlayerDraw).OnEnter += () =>
+        {
+            bothTurnData.DrawSome(5);
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard);
+        };
+        fsm.GetState(EBothTurn.PlayerYieldCard).OnEnter += () =>
+        {
+            BtnEndTurn.enabled = true;
+            TxtEndTurn.text = "结束回合";
+            MyFSM.Register(YieldCardStateWrap.One, EYieldCardState.None, bothTurnData.CreateYieldCardData());
+        };
+        fsm.GetState(EBothTurn.PlayerYieldCard).OnExit += () =>
+        {
+            BtnEndTurn.enabled = false;
+            TxtEndTurn.text = "--";
+            MyFSM.Release(YieldCardStateWrap.One);
+        };
+        fsm.GetState(EBothTurn.PlayerYieldEnd).OnEnter += () =>
+        {
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerDiscard);
+        };
+        fsm.GetState(EBothTurn.PlayerDiscard).OnEnter += () =>
+        {
+            bothTurnData.DiscardAllHand();
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.DiscardEnd);
+        };
+        fsm.GetState(EBothTurn.DiscardEnd).OnEnter += () =>
+        {
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.TurnStart);
+        };
+        
         Dictionary<CardDataBase, CardModel> handCardModelDic = new();
-        // MyDebug.Log("OnBothTurnDataCreate");
         bothTurnData.HandList.OnAdd += cardData =>
         {
             Vector3 initThisPos = default;
@@ -241,54 +283,19 @@ public class BattleView : Singleton<BattleView>
         {
             TxtHasExhaustCount.text = "0";
         };
-        yield return Binder.From(BtnEndTurn).To(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerYieldEnd));
-    }
-    void OnChangeBothTurnState(BothTurnData bothTurnData)
-    {
-        MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.GrossStart)
-            .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.TurnStart));
-        MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.TurnStart)
-            .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerDraw));
-        MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.PlayerDraw)
-            .OnEnter(() =>
-            {
-                bothTurnData.DrawSome(5);
-                MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard);
-            });
-        MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard)
-            .OnEnter(() =>
-            {
-                BtnEndTurn.enabled = true;
-                TxtEndTurn.text = "结束回合";
-                
-                MyFSM.Register(YieldCardStateWrap.One, EYieldCardState.None, bothTurnData.CreateYieldCardData());
-            })
-            .OnExit(() =>
-            {
-                BtnEndTurn.enabled = false;
-                TxtEndTurn.text = "--";
-                
-                MyFSM.Release(YieldCardStateWrap.One);
-            });
-        MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.PlayerYieldEnd)
-            .OnEnter(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerDiscard));
-        MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.PlayerDiscard)
-            .OnEnter(() =>
-            {
-                bothTurnData.DiscardAllHand();
-                MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.DiscardEnd);
-            });
-        MyFSM.GetBindState(BothTurnStateWrap.One, EBothTurn.DiscardEnd)
-            .OnEnter(() =>
-            {
-                MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.TurnStart);
-            });
     }
     protected override void Awake()
     {
         base.Awake();
-        MyFSM.OnRegister(GameStateWrap.One, onChange: OnChangeGameState);
-        MyFSM.OnRegister(BattleStateWrap.One, OnRegisterBattleState, OnChangeBattleState);
-        MyFSM.OnRegister(BothTurnStateWrap.One, OnRegisterBothTurnState, OnChangeBothTurnState);
+        MyFSM.OnRegister(GameStateWrap.One, 
+            alwaysBind: BindGame);
+        MyFSM.OnRegister(BattleStateWrap.One, 
+            alwaysBind: BindBattle,
+            canUnbind: CanUnbindBattle
+            );
+        MyFSM.OnRegister(BothTurnStateWrap.One, 
+            alwaysBind: BindBothTurn,
+            canUnbind: CanUnbindBothTurn);
     }
+    
 }

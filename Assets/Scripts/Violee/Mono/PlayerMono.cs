@@ -26,11 +26,12 @@ public class PlayerMono : Singleton<PlayerMono>
             RefreshCurPointBuff();
         };
         
-        GameState.TitleState
-            .OnUpdate(_ => TickOnTitle());
-        GameState.PlayingState
-            .OnEnter(OnEnterPlaying)
-            .OnExit(OnExitPlaying);
+        // TODO BindState is deleted
+        // GameState.TitleState
+        //     .OnUpdate(_ => TickOnTitle());
+        // GameState.PlayingState
+        //     .OnEnter(OnEnterPlaying)
+        //     .OnExit(OnExitPlaying);
     }
     public static void RefreshCurPointBuff()
     {

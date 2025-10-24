@@ -6,7 +6,7 @@ public enum EGameState
     Title,
     Battle,
 }
-public class GameStateWrap : StateWrapper<EGameState, SlotData>;
+public class GameStateWrap : StateWrapper<EGameState, GameData>;
 
 public enum EBattleState
 {

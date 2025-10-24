@@ -25,41 +25,42 @@ public class MainItemMono : Singleton<MainItemMono>
     {
         WinCount.OnValueChangedAfter += _ => Saver.Save("DataVioleT", "WakeUpCount", WinCount);
         
-        GameState.PlayingState.OnUpdate(_ =>
-        {
-            if (!Configer.SettingsConfig.IsDevelop)
-                return;
-            if (Input.GetKey(KeyCode.D)
-                && Input.GetKey(KeyCode.E)
-                && Input.GetKey(KeyCode.L)
-                && Input.GetKey(KeyCode.I))
-            {
-                Instance.mainItemData.Stamina.Count = 2025;
-                Instance.mainItemData.Energy.Count = 813;
-                Instance.mainItemData.Creativity.Count = 1130;
-            }
-            
-            // if (Input.GetKey(KeyCode.D))
-            // {
-            //     MyDebug.Log("D");
-            // }
-            // if (Input.GetKey(KeyCode.F))
-            // {
-            //     MyDebug.Log("F");
-            // }
-            // if (Input.GetKey(KeyCode.E))
-            // {
-            //     MyDebug.Log("E");
-            // }
-            // if (Input.GetKey(KeyCode.L))
-            // {
-            //     MyDebug.Log("L");
-            // }
-            // if (Input.GetKey(KeyCode.I))
-            // {
-            //     MyDebug.Log("I");
-            // }
-        });
+        // TODO BindState is deleted
+        // GameState.PlayingState.OnUpdate(_ =>
+        // {
+        //     if (!Configer.SettingsConfig.IsDevelop)
+        //         return;
+        //     if (Input.GetKey(KeyCode.D)
+        //         && Input.GetKey(KeyCode.E)
+        //         && Input.GetKey(KeyCode.L)
+        //         && Input.GetKey(KeyCode.I))
+        //     {
+        //         Instance.mainItemData.Stamina.Count = 2025;
+        //         Instance.mainItemData.Energy.Count = 813;
+        //         Instance.mainItemData.Creativity.Count = 1130;
+        //     }
+        //     
+        //     // if (Input.GetKey(KeyCode.D))
+        //     // {
+        //     //     MyDebug.Log("D");
+        //     // }
+        //     // if (Input.GetKey(KeyCode.F))
+        //     // {
+        //     //     MyDebug.Log("F");
+        //     // }
+        //     // if (Input.GetKey(KeyCode.E))
+        //     // {
+        //     //     MyDebug.Log("E");
+        //     // }
+        //     // if (Input.GetKey(KeyCode.L))
+        //     // {
+        //     //     MyDebug.Log("L");
+        //     // }
+        //     // if (Input.GetKey(KeyCode.I))
+        //     // {
+        //     //     MyDebug.Log("I");
+        //     // }
+        // });
     }
     
     public static void OnDijkstraEnd()

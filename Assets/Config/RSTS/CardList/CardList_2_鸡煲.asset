@@ -83,3 +83,4 @@ MonoBehaviour:
   Name: "\u9E21\u7172"
   ID: 2
   Job: 2
+  MaxHP: 75
