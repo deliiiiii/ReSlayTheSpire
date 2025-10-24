@@ -13,6 +13,9 @@ public abstract class MyFSM
     static readonly Dictionary<Type, List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>> unbindDic = new();
     // tickDic包括状态机的Update调用的OnUpdate，和自己绑定的与Data有关的Tick委托（类型Action<float, IMyFSMArg>）
     static readonly Dictionary<Type, List<BindDataUpdate>> tickDic = new();
+    // 只有Register了以后，才会加入selfTickDic
+    static readonly Dictionary<Type, BindDataUpdate> selfTickDic = new();
+    // 只有Register了以后，才会加入argDic
     static readonly Dictionary<Type, IMyFSMArg> argDic = new();
     
     public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, TArg arg)
@@ -36,9 +39,10 @@ public abstract class MyFSM
         if (bindAlwaysDic.TryGetValue(type, out var bindAlwaysActList)) 
             bindAlwaysActList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(arg));
         arg.Launch();
-        tickDic.TryAdd(type, new List<BindDataUpdate>());
-        tickDic[type].Add(Binder.FromTick(fsm.Update, EUpdatePri.Fsm));
-        tickDic[type].ForEach(bindDataUpdate => bindDataUpdate.Bind());
+        if(tickDic.TryGetValue(type, out var tickActList))
+            tickActList.ForEach(bindDataUpdate => bindDataUpdate.Bind());
+        selfTickDic.Add(type, Binder.FromTick(dt => fsm.Update(dt), EUpdatePri.Fsm));
+        selfTickDic[type].Bind();
         EnterState(one, state);
     }
     
@@ -72,6 +76,8 @@ public abstract class MyFSM
         var type = typeof(TEnum);
         // 跳转到空状态
         fsm.OnDestroy();
+        selfTickDic[type].UnBind();
+        selfTickDic.Remove(type);
         tickDic[type].ForEach(bindDataUpdate => bindDataUpdate.UnBind());
         argDic[type].UnInit();
         unbindDic[type]?.ForEach(func => func.Invoke(argDic[type]).ForEach(bindDataBase => bindDataBase.UnBind()));
