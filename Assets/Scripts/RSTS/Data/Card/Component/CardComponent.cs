@@ -1,1 +1,3 @@
-﻿public abstract class CardComponentBase;
+﻿namespace RSTS;
+
+public abstract class CardComponentBase;

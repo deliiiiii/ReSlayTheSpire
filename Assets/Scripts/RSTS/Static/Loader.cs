@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RSTS;
 using RSTS.CDMV;
 
+namespace RSTS;
 public static class Loader
 {
     public static async Task LoadAll()

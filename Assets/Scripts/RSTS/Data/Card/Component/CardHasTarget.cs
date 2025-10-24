@@ -1,4 +1,4 @@
-﻿using RSTS;
+﻿namespace RSTS;
 
 public class CardHasTarget : CardComponentBase
 {
