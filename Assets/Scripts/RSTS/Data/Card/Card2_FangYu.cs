@@ -8,6 +8,9 @@ public class Card2 : CardDataBase
     {
         
     }
-
-    public override void Yield(BothTurnData bothTurnData){}
+    int blockValue => EmbedInt(0);
+    public override void Yield(BothTurnData bothTurnData)
+    {
+        bothTurnData.PlayerAddBlock(blockValue);
+    }
 }

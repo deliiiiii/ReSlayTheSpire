@@ -7,7 +7,7 @@ public class BindDataObs<T> : BindDataBase
 {
     protected Observable<T> osv;
     protected UnityAction<T> act;
-    bool isImmediate;
+    // bool isImmediate = true;
 
     public BindDataObs<T> To(UnityAction<T> fAct)
     {
@@ -33,11 +33,6 @@ public class BindDataObs<T> : BindDataBase
     //     return ret;
     // }
 
-    public BindDataObs<T> Immediate()
-    {
-        isImmediate = true;
-        return this;
-    }
     
     public BindDataObs(Observable<T> osv)
     {
@@ -47,10 +42,10 @@ public class BindDataObs<T> : BindDataBase
     protected override void BindInternal()
     {
         osv.OnValueChangedAfter += act;
-        if (isImmediate)
-        {
+        // if (isImmediate)
+        // {
             act(osv.Value);
-        }
+        // }
     }
 
     public override void UnBind()

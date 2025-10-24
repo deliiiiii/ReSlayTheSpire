@@ -49,4 +49,4 @@ MonoBehaviour:
     - rid: 4049883199248531463
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
-        Cost: 1
+        Cost: 0

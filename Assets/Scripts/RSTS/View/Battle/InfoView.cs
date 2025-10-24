@@ -19,6 +19,8 @@ public class InfoView : Singleton<InfoView>
     
     void BindBattle(MyFSM<EBattleState> fsm, BattleData battleData)
     {
+        TxtPlayerJob.text = battleData.Job.ToString();
+        
         battleData.DeckList.OnAdd += cardData =>
         {
             TxtDeckCount.text = battleData.DeckList.Count.ToString();
@@ -27,8 +29,6 @@ public class InfoView : Singleton<InfoView>
         {
             TxtDeckCount.text = battleData.DeckList.Count.ToString();
         };
-        
-        TxtPlayerJob.text = battleData.Job.ToString();
     }
 
     IEnumerable<BindDataBase> CanUnbindBattle(BattleData battleData)
@@ -37,19 +37,19 @@ public class InfoView : Singleton<InfoView>
         {
             MyFSM.EnterState(GameStateWrap.One, EGameState.Title);
         });
-        yield return Binder.FromObs(battleData.CurHP).To(v =>
-        {
-            ShowHP(v, battleData.MaxHP);
-        });
-        yield return Binder.FromObs(battleData.MaxHP).To(v =>
-        {
-            ShowHP(battleData.CurHP, v);
-        });
-        yield return Binder.FromObs(battleData.Coin).To(v =>
-        {
-            TxtCoin.text = v.ToString();
-        });
+        yield return Binder.FromObs(battleData.CurHP).To(v => ShowHP(v, battleData.MaxHP));
+        yield return Binder.FromObs(battleData.MaxHP).To(v => ShowHP(battleData.CurHP, v));
+        yield return Binder.FromObs(battleData.Coin).To(v => TxtCoin.text = v.ToString());
         yield return Binder.FromObs(battleData.InBattleTime).To(ShowTime);
+        
+        void ShowHP(int curHP, int maxHP)
+        {
+            TxtPlayerHP.text = $"{curHP}/{maxHP}";
+        }
+        void ShowTime(float time)
+        {
+            TxtBattleTime.text = $"{(int)(time / 60):00}:{(int)(time % 60):00}";
+        }
     }
 
     static void TickBattle(float dt, BattleData battleData)
@@ -57,21 +57,14 @@ public class InfoView : Singleton<InfoView>
         battleData.InBattleTime.Value += dt;
     }
    
-    void ShowHP(int curHP, int maxHP)
-    {
-        TxtPlayerHP.text = $"{curHP}/{maxHP}";
-    }
-    void ShowTime(float time)
-    {
-        TxtBattleTime.text = $"{(int)(time / 60):00}:{(int)(time % 60):00}";
-    }
+    
     
     protected override void Awake()
     {
         base.Awake();
         MyFSM.OnRegister(BattleStateWrap.One, 
-            canUnbind: CanUnbindBattle,
             alwaysBind: BindBattle,
+            canUnbind: CanUnbindBattle,
             tick: TickBattle);
     }
 }

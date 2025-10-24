@@ -8,13 +8,15 @@ namespace RSTS;
 public class BothTurnData : IMyFSMArg
 {
     [NonSerialized]BattleData battleData;
+    public Observable<int> PlayerCurHP => battleData.CurHP;
+    public Observable<int> PlayerMaxHP => battleData.MaxHP;
     public Observable<int> PlayerBlock;
     [SerializeReference]public List<BuffDataBase> BuffList = [];
     public int TurnID;
     [SerializeReference]public MyList<EnemyDataBase> EnemyList = [];
-    [SerializeReference]YieldCardData yieldCardData;
+    [SerializeReference]public YieldCardData YieldCardData;
     public YieldCardData CreateYieldCardData() => 
-        yieldCardData = new YieldCardData();
+        YieldCardData = new YieldCardData();
     
     
     public BothTurnData(BattleData battleData)

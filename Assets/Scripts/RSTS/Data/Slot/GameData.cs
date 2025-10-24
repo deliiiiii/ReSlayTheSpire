@@ -1,4 +1,5 @@
 ﻿using System;
+using RSTS.CDMV;
 using UnityEngine;
 
 
@@ -17,14 +18,14 @@ public enum EPlayerJob
 
 
 [Serializable]
-public class GameData: IMyFSMArg
+public class GameData: IMyFSMArg, IRefSimple
 {
     public string PlayerName;
     public bool HasLastBuff;
     
-    [SerializeReference] BattleData battleData;
+    [SerializeReference] public BattleData BattleData;
     public BattleData CreateBattleData(EPlayerJob job) 
-        => battleData = new BattleData(this, job);
+        => BattleData = new BattleData(this, job);
 
     public void Launch()
     {

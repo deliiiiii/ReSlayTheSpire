@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using RSTS.CDMV;
 
 namespace RSTS;
 public class Launcher : Singleton<Launcher>
@@ -6,7 +7,7 @@ public class Launcher : Singleton<Launcher>
     async Task Start()
     {
         await Loader.LoadAll();
-        MyFSM.Register(GameStateWrap.One, EGameState.Title, new GameData());
+        MyFSM.Register(GameStateWrap.One, EGameState.Title, RefPoolSingle<GameData>.Register(() => new GameData()));
     }
 
     void OnDestroy()

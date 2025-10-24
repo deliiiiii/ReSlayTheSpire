@@ -27,6 +27,12 @@ public class BattleData : IMyFSMArg
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
     
+    #region BothTurnData
+    [SerializeReference] public BothTurnData BothTurnData;
+    public BothTurnData CreateBothTurnData()
+        => BothTurnData = new BothTurnData(this);
+    #endregion
+    
     #region Init, Launch
     public BattleData(GameData gameData, EPlayerJob job)
     {
@@ -52,12 +58,6 @@ public class BattleData : IMyFSMArg
     {
         DeckList.MyClear();
     }
-    #endregion
-
-    #region BothTurnData
-    [SerializeReference]BothTurnData bothTurnData;
-    public BothTurnData CreateBothTurnData()
-        => bothTurnData = new BothTurnData(this);
     #endregion
     
     // #region MapData

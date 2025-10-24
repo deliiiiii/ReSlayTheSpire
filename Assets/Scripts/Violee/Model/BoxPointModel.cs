@@ -10,7 +10,7 @@ namespace Violee
         {
             // BindDataUpdate? bFlash = null;
             var sr = GetComponent<SpriteRenderer>();
-            Binder.FromObs(Data.Visited).To(gameObject.SetActive).Immediate();
+            Binder.FromObs(Data.Visited).To(gameObject.SetActive);
             Binder.FromObs(Data.IsFlash).To(b =>
             {
                 if (b)
@@ -28,7 +28,7 @@ namespace Violee
                     // bFlash?.UnBind();
                     sr.color = sr.color.SetAlpha(alpha / 255f);
                 }
-            }).Immediate();
+            });
         }
     }
 }

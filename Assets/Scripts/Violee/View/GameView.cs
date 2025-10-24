@@ -149,7 +149,7 @@ class GameView : ViewBase<GameView>
             SceneItemInfoPnl.SetActive(info != null);
             SceneItemInfoTxt.text = info?.Description ?? "";
             SceneItemInfoTxt.color = info?.Color ?? Color.black;
-        }).Immediate();
+        });
         PlayerMono.OnClickInteract += info =>
         {
             try

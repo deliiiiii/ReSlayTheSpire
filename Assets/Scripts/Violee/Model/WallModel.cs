@@ -110,7 +110,7 @@ namespace Violee
                 {
                     LockedSprite.SetActive(true);
                 }
-            }).Immediate();
+            });
             Binder.FromObs(Data.Opened).To(b =>
             {
                 if (b)
@@ -133,7 +133,7 @@ namespace Violee
                 {
                     LockedSprite.SetActive(true);
                 }
-            }).Immediate();
+            });
             switch (Data.HasDoor)
             {
                 case false:

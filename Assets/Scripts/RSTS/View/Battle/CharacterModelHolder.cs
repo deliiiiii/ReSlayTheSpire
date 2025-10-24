@@ -70,6 +70,16 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
             }
         };
     }
+    
+    IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)
+    {
+        yield return Binder.FromObs(bothTurnData.PlayerCurHP)
+            .To(v => PlayerModel.HPModel.SetHP(v, bothTurnData.PlayerMaxHP));
+        yield return Binder.FromObs(bothTurnData.PlayerMaxHP)
+            .To(v => PlayerModel.HPModel.SetHP(bothTurnData.PlayerCurHP, v));
+        yield return Binder.FromObs(bothTurnData.PlayerBlock)
+            .To(v => PlayerModel.HPModel.SetShield(v));
+    }
 
     void BindYieldCard(MyFSM<EYieldCardState> fsm, YieldCardData yieldCardData)
     {
@@ -86,10 +96,13 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     protected override void Awake()
     {
         base.Awake();
-        MyFSM.OnRegister(BothTurnStateWrap.One, alwaysBind: BindBothTurn);
+        MyFSM.OnRegister(BothTurnStateWrap.One, 
+            alwaysBind: BindBothTurn,
+            canUnbind: CanUnbindBothTurn
+            );
         MyFSM.OnRegister(YieldCardStateWrap.One, alwaysBind: BindYieldCard);
     }
-    
+
     static bool PosInRect(Vector2 pos, RectTransform rectTransform)
     {
         return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, pos, Camera.main);

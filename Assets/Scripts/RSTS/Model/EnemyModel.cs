@@ -23,8 +23,7 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
         {
             MdlHP.SetHP(v, data.Config.MaxHP);
             MdlHP.SetShield(0);
-        }).Immediate().Bind();
-
+        }).Bind();
         Data = data;
     }
     

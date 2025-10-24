@@ -208,7 +208,7 @@ class MapView : ViewBase<MapView>
                 {
                     txt.text = v > 1e9 ? "∞" : point.CostWall.ToString();
                 });
-                b.Immediate();
+                // b.Immediate();
                 costTxtSet.Add(txt);
                 await Configer.SettingsConfig.YieldFrames(multi : 1 / 8f);
             }
