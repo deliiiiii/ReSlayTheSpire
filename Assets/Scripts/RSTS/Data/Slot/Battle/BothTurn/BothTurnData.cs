@@ -16,7 +16,13 @@ public class BothTurnData : IMyFSMArg
     public Observable<int> PlayerMaxHP => PlayerHPAndBuffData.MaxHP;
     public Observable<int> PlayerBlock => PlayerHPAndBuffData.Block;
     public int TurnID;
-    [SerializeReference]public MyList<EnemyDataBase> EnemyList = [];
+    [SerializeReference] public MyList<EnemyDataBase> EnemyList = [];
+    [SerializeReference] public MyList<CardDataBase> HandList = [];
+    [SerializeReference] public MyList<CardDataBase> DrawList = [];
+    [SerializeReference] public MyList<CardDataBase> DiscardList = [];
+    [SerializeReference] public MyList<CardDataBase> ExhaustList = [];
+    /// 第一个参数，弃牌堆；第二个参数，点击后的回调
+    public event Action<List<CardDataBase>, Action<CardDataBase>>? OnOpenDiscardOnceClick;
     
     public BothTurnData(BattleData battleData, MyFSM<EBothTurn> fsm)
     {
@@ -120,11 +126,6 @@ public class BothTurnData : IMyFSMArg
         
         PlayerHPAndBuffData.ClearBuff();
     }
-    
-    [SerializeReference] public MyList<CardDataBase> HandList = [];
-    [SerializeReference] public MyList<CardDataBase> DrawList = [];
-    [SerializeReference] public MyList<CardDataBase> DiscardList = [];
-    [SerializeReference] public MyList<CardDataBase> ExhaustList = [];
 
     bool DrawSome(int drawCount)
     {
@@ -178,7 +179,7 @@ public class BothTurnData : IMyFSMArg
         {
             if(card.ContainsKeyword(ECardKeyword.Ethereal))
                 ExhaustList.MyAdd(card);
-            else if(card.Config.Category != ECardCategory.State)
+            else if(card.Config.Category != ECardCategory.Ability)
                 DiscardList.MyAdd(card);
         });
         HandList.MyClear();
@@ -287,6 +288,11 @@ public class BothTurnData : IMyFSMArg
     {
         toAdd.IsTemporary = true;
         DiscardList.MyAdd(toAdd);
+    }
+
+    public void OpenDiscardOnceClick(Action<CardDataBase> onClick)
+    {
+        OnOpenDiscardOnceClick?.Invoke(DiscardList, onClick);
     }
     #endregion
 }

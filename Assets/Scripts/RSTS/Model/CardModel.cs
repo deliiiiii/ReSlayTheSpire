@@ -16,6 +16,10 @@ public class CardModel : MonoBehaviour
     public Text TxtName;
     public Text TextCategory;
     public TMP_Text TxtDes;
+    public Button Btn;
+    Image[] imgs;
+    Text[] texts;
+    TMP_Text[] tmpTexts;
     public event Action? OnPointerEnterEvt;
     public event Action? OnPointerExitEvt;
     public event Action<Vector3>? OnBeginDragEvt;
@@ -33,8 +37,9 @@ public class CardModel : MonoBehaviour
         TxtName.text = fData.Config.Name;
         TextCategory.text = fData.Config.Category.ToString();
         TxtDes.text = fData.CurDes.Content;
-        
-        var evtTrigger = GetComponent<EventTrigger>();
+
+        if (!TryGetComponent<EventTrigger>(out var evtTrigger))
+            evtTrigger = gameObject.AddComponent<EventTrigger>();
         EventTrigger.Entry entryPointerEnter = new EventTrigger.Entry
         {
             eventID = EventTriggerType.PointerEnter
@@ -72,11 +77,6 @@ public class CardModel : MonoBehaviour
         texts = GetComponentsInChildren<Text>();
         tmpTexts = GetComponentsInChildren<TMP_Text>();
     }
-
-    
-    Image[] imgs;
-    Text[] texts;
-    TMP_Text[] tmpTexts;
     
     void OnPointerEnter(PointerEventData baseEventData)
     {

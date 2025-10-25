@@ -32,12 +32,20 @@ public class BattleView : Singleton<BattleView>
     
     #region Yield Card
     [Header("Yield Card")]
+    public CardModel PfbCard;
+    public CardModel PfbCardOnceClick;
+    
     public GameObject PnlCard;
     public Transform PrtHandCard;
-    public CardModel PfbCard;
+    public Transform PrtDrawCard;
     public Text TxtToDrawCount;
+    public Transform PrtDiscardCard;
+    public GameObject PnlDiscardOnceClick;
+    public Transform PrtDiscardOnceClick;
     public Text TxtHasDiscardCount;
+    public Transform PrtExhaustCard;
     public Text TxtHasExhaustCount;
+    
     public Text TxtEnergy;
     
     public CardModel CurDragCard;
@@ -46,7 +54,6 @@ public class BattleView : Singleton<BattleView>
     public Text TxtEndTurn;
     
     #endregion
-    
     #region Win
     [Header("Win")]
     public GameObject PnlWin;
@@ -95,6 +102,9 @@ public class BattleView : Singleton<BattleView>
         fsm.GetState(EBattleState.BothTurn).OnExit += () =>
         {
             PnlCard.SetActive(false);
+            PnlDiscardOnceClick.SetActive(false);
+            PrtDiscardOnceClick.ClearActiveChildren();
+            
             MyFSM.Release(BothTurnStateWrap.One);
         };
 
@@ -255,6 +265,23 @@ public class BattleView : Singleton<BattleView>
         bothTurnData.ExhaustList.OnClear += () =>
         {
             TxtHasExhaustCount.text = "0";
+        };
+
+        bothTurnData.OnOpenDiscardOnceClick += (cardList, onClick) =>
+        {
+            PnlDiscardOnceClick.SetActive(true);
+            PrtDiscardOnceClick.ClearActiveChildren();
+            foreach (var cardData in cardList)
+            {
+                var cardModel = Instantiate(PfbCardOnceClick, PrtDiscardOnceClick);
+                cardModel.InitByData(cardData);
+                cardModel.gameObject.SetActive(true);
+                cardModel.Btn.onClick.AddListener(() =>
+                {
+                    onClick(cardData);
+                    PnlDiscardOnceClick.SetActive(false);
+                });
+            }
         };
     }
     IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)

@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 5836343031122451767}
   - component: {fileID: 596147016809030329}
   - component: {fileID: 1292523723494048538}
-  - component: {fileID: 2664607782771865211}
+  - component: {fileID: 7572781659947748751}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -358,12 +358,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda972a074874075977ae5c9d3918828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Data:
+  data:
     rid: -2
   TxtCost: {fileID: 6852247969211598333}
   TxtName: {fileID: 864975706804351378}
   TextCategory: {fileID: 265060039619810095}
   TxtDes: {fileID: 4816676601875350139}
+  Btn: {fileID: 5836343031122451767}
   references:
     version: 2
     RefIds:
@@ -502,7 +503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 2
   m_AspectRatio: 0.75
---- !u!114 &2664607782771865211
+--- !u!114 &7572781659947748751
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
