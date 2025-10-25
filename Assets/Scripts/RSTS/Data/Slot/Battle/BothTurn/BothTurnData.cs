@@ -2,45 +2,96 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
 namespace RSTS;
 [Serializable]
 public class BothTurnData : IMyFSMArg
 {
     [NonSerialized]BattleData battleData;
-    public Observable<int> PlayerCurHP => battleData.CurHP;
-    public Observable<int> PlayerMaxHP => battleData.MaxHP;
-    public Observable<int> PlayerBlock;
-    [SerializeReference]public List<BuffDataBase> BuffList = [];
-    public bool HasBuff<T>(out T buffData) where T : BuffDataBase
-    {
-        buffData = BuffList.OfType<T>().First();
-        return buffData == null;
-    }
     
+    [SerializeReference]public HPAndBuffData PlayerHPAndBuffData;
+    public Observable<int> CurEnergy = new(3);
+    public Observable<int> MaxEnergy = new(3);
+    public Observable<int> PlayerCurHP => PlayerHPAndBuffData.CurHP;
+    public Observable<int> PlayerMaxHP => PlayerHPAndBuffData.MaxHP;
+    public Observable<int> PlayerBlock => PlayerHPAndBuffData.Block;
     public int TurnID;
     [SerializeReference]public MyList<EnemyDataBase> EnemyList = [];
-    [SerializeReference]public YieldCardData YieldCardData;
-    public YieldCardData CreateYieldCardData() => 
-        YieldCardData = new YieldCardData();
-
-    static BothTurnData()
-    {
-        MyFSM.OnRegister(BothTurnStateWrap.One, alwaysBind: BindBothTurn);
-    }
-    public BothTurnData(BattleData battleData)
+    
+    public BothTurnData(BattleData battleData, MyFSM<EBothTurn> fsm)
     {
         this.battleData = battleData;
-        PlayerBlock = new Observable<int>(0);
-        TurnID = 0;
-    }
-
-    static void BindBothTurn(MyFSM<EBothTurn> fsm, BothTurnData bothTurnData)
-    {
-        fsm.GetState(EBothTurn.TurnStart).OnEnter += () =>
+        PlayerHPAndBuffData = new HPAndBuffData
         {
-            bothTurnData.PlayerBlock.Value = 0;
+            CurHP = battleData.CurHP,
+            MaxHP = battleData.MaxHP,
+            Block = new Observable<int>(0)
+        };
+        TurnID = 0;
+        
+        fsm.GetState(EBothTurn.GrossStart).OnEnter += () =>
+        {
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerTurnStart);
+        };
+        
+        fsm.GetState(EBothTurn.PlayerTurnStart).OnEnter += () =>
+        {
+            TurnID++;
+            PlayerHPAndBuffData.Block.Value = 0;
+            CurEnergy.Value = MaxEnergy.Value;
+            PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnStart);
+            PlayerHPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnStart);
+            
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerDraw);
+        };
+        
+        fsm.GetState(EBothTurn.PlayerDraw).OnEnter += () =>
+        {
+            DrawSome(5);
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard);
+        };
+        
+        fsm.GetState(EBothTurn.PlayerYieldCard).OnEnter += () =>
+        {
+            MyFSM.Register(YieldCardStateWrap.One, EYieldCardState.None, _ => new YieldCardData());
+        };
+        
+        fsm.GetState(EBothTurn.PlayerYieldCard).OnExit += () =>
+        {
+            MyFSM.Release(YieldCardStateWrap.One);
+        };
+        
+        fsm.GetState(EBothTurn.PlayerDiscard).OnEnter += () =>
+        {
+            DiscardAllHand();
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerTurnEnd);
+        };
+        
+        fsm.GetState(EBothTurn.PlayerTurnEnd).OnEnter += () =>
+        {
+            PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnEnd);
+            PlayerHPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnEnd);
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyTurnStart);
+        };
+        
+        fsm.GetState(EBothTurn.EnemyTurnStart).OnEnter += () =>
+        {
+            EnemyList.ForEach(enemyData =>
+            {
+                enemyData.HPAndBuffData.UseABuff(EBuffUseTime.TurnStart);
+                enemyData.HPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnStart);
+            });
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyTurnEnd);
+        };
+        
+        fsm.GetState(EBothTurn.EnemyTurnEnd).OnEnter += () =>
+        {
+            EnemyList.ForEach(enemyData =>
+            {
+                enemyData.HPAndBuffData.UseABuff(EBuffUseTime.TurnEnd);
+                enemyData.HPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnEnd);
+            });
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerTurnStart);
         };
     }
 
@@ -66,19 +117,16 @@ public class BothTurnData : IMyFSMArg
         DrawList.MyClear();
         DiscardList.MyClear();
         ExhaustList.MyClear();
+        
+        PlayerHPAndBuffData.ClearBuff();
     }
     
-    [SerializeReference]
-    public MyList<CardDataBase> HandList = [];
-    [SerializeReference]
-    public MyList<CardDataBase> DrawList = [];
-    [SerializeReference]
-    public MyList<CardDataBase> DiscardList = [];
-    [SerializeReference]
-    public MyList<CardDataBase> ExhaustList = [];
-    public int Energy;
+    [SerializeReference] public MyList<CardDataBase> HandList = [];
+    [SerializeReference] public MyList<CardDataBase> DrawList = [];
+    [SerializeReference] public MyList<CardDataBase> DiscardList = [];
+    [SerializeReference] public MyList<CardDataBase> ExhaustList = [];
 
-    public bool DrawSome(int drawCount)
+    bool DrawSome(int drawCount)
     {
         for (int i = 0; i < drawCount; i++)
         {
@@ -106,20 +154,19 @@ public class BothTurnData : IMyFSMArg
     public bool TryYield(CardDataBase toYield, out string failReason)
     {
         failReason = string.Empty;
-        if (Energy < toYield.CurCostInfo switch
+        if(toYield.ContainsKeyword(ECardKeyword.Unplayable))
+        {
+            failReason = "该牌无法打出";
+            return false;
+        }
+        if (CurEnergy < toYield.CurCostInfo switch
             {
                 CardCostNumber costNumber => costNumber.Cost,
-                CardCostX => 0,
+                CardCostX => CurEnergy,
                 CardCostNone or _ => int.MaxValue,
             })
         {
             failReason = "能量不足";
-            return false;
-        }
-
-        if(toYield.ContainsKeyword(ECardKeyword.Unplayable))
-        {
-            failReason = "该牌无法打出";
             return false;
         }
         return true;
@@ -139,8 +186,16 @@ public class BothTurnData : IMyFSMArg
 
     public void Yield(CardDataBase toYield)
     {
-        toYield.Yield(this);
-        if (toYield.ContainsKeyword(ECardKeyword.Exhaust))
+        int costEnergy = toYield.CurCostInfo switch
+        {
+            CardCostNumber number => number.Cost,
+            CardCostX => CurEnergy,
+            CardCostNone or _ => 0,
+        };
+        CurEnergy.Value -= costEnergy;
+        toYield.Yield(this, costEnergy);
+        if()
+        else if (toYield.ContainsKeyword(ECardKeyword.Exhaust))
         {
             ExhaustOne(toYield);
         }
@@ -176,21 +231,50 @@ public class BothTurnData : IMyFSMArg
     
     #region yield effect
     // 使用攻击牌攻击的伤害
-    public void AttackEnemy(EnemyDataBase enemyData, int damage)
+    public void AttackEnemy(EnemyDataBase enemyData, int baseAtk)
     {
-        enemyData.CurHP.Value -= damage;
-        if (enemyData.CurHP < 0)
+        Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList);
+        if(resultList.OfType<AttackResultDie>().Any())
             EnemyList.MyRemove(enemyData);
     }
+
+    public void AttackPlayer(EnemyDataBase enemyData, int baseAtk)
+    {
+        Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, out var resultList);
+        if (resultList.OfType<AttackResultDie>().Any())
+            MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
+    }
+
+    void Attack(HPAndBuffData from, HPAndBuffData to, int baseAtk, out List<AttackResult> resultList)
+    {
+        // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
+        
+        // (baseAtk + baseAdd) * (1 + finalMul)
+        var baseAdd = from.GetAtkBaseAdd();
+        var finalMulFrom = from.GetAtkFinalMulti();
+        var finalMulTo = to.GetAtkFinalMulti();
+        var finalAtk = Mathf.FloorToInt((baseAtk + baseAdd) * finalMulFrom * finalMulTo);
+        resultList = [];
+        to.CurHP.Value -= finalAtk;
+        if (to.CurHP < 0)
+        {
+            resultList.Add(new AttackResultDie(to.CurHP));
+        }
+    }
     
+    public void AddBuffToPlayer(BuffDataBase buffData)
+    {
+        PlayerHPAndBuffData.AddBuff(buffData);
+    }
     public void AddBuffToEnemy(EnemyDataBase enemyData, BuffDataBase buffData)
     {
-        enemyData.BuffCom.AddBuff(buffData);
+        enemyData.HPAndBuffData.AddBuff(buffData);
     }
 
     public void PlayerAddBlock(int addedBlock)
     {
-        PlayerBlock.Value += addedBlock;
+        PlayerHPAndBuffData.Block.Value += addedBlock;
     }
     #endregion
 }
+

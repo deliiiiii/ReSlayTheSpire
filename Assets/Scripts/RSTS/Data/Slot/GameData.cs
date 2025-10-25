@@ -18,14 +18,13 @@ public enum EPlayerJob
 
 
 [Serializable]
-public class GameData: IMyFSMArg, IRefSimple
+public class GameData: IMyFSMArg
 {
     public string PlayerName;
     public bool HasLastBuff;
-    
+
     [SerializeReference] public BattleData BattleData;
-    public BattleData CreateBattleData(EPlayerJob job) 
-        => BattleData = new BattleData(this, job);
+    public BattleData CreateBattleData(EPlayerJob job) => BattleData = new BattleData(this, job);
 
     public void Launch()
     {

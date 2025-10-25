@@ -4,5 +4,5 @@
 namespace RSTS;
 public class PlayerModel : MonoBehaviour
 {
-    public HPModel HPModel;
+    public HPAndBuffModel HPAndBuffModel;
 }

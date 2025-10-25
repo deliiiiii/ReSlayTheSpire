@@ -7,11 +7,13 @@ using UnityEngine;
 public class TestAnything : Singleton<TestAnything>
 {
     [SerializeReference]
-    public GameData? GameData;
+    public BattleData? BattleData;
     [Button]
     public void ChangePlayerHP(int delta)
     {
-        GameData ??= RefPoolSingle<GameData>.Acquire();
-        GameData.BattleData.CurHP.Value += delta;
+        if (!MyFSM.IsState(GameStateWrap.One, EGameState.Battle, out var gameData))
+            return;
+        BattleData = gameData.BattleData;
+        BattleData.CurHP.Value += delta;
     }
 }

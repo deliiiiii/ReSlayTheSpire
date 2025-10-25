@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace RSTS;
@@ -8,20 +6,24 @@ namespace RSTS;
 public enum EBuffUseTime
 {
     None,
+    TurnStart,
+    TurnEnd,
 }
 [Serializable]
 public enum EBuffDisposeTime
 {
+    None,
+    TurnStart,
     TurnEnd,
 }
 
 [Serializable]
-public class BuffStackInfo
+public class BuffStackInfo(int count)
 {
-    public int Count;
+    public Observable<int> Count = new(count);
     public void ChangeCount(int delta)
     {
-        Count += delta;
+        Count.Value += delta;
     }
 }
 
@@ -29,19 +31,20 @@ public class BuffStackInfo
 public abstract class BuffDataBase
 {
     [SerializeReference]
-    public required BuffStackInfo? StackInfo;
+    public BuffStackInfo? StackInfo;
+    public abstract string Name { get; }
     public abstract EBuffUseTime UseTime { get; }
     public abstract EBuffDisposeTime DisposeTime { get; }
+    public virtual bool Dispose() => false;
 }
 
-[Serializable]
-public class BuffDataVulnerable : BuffDataBase
+
+public interface IBuffAtkBaseAdd
 {
-    public override EBuffUseTime UseTime => EBuffUseTime.None;
-    public override EBuffDisposeTime DisposeTime => EBuffDisposeTime.TurnEnd;
-    
-    public BuffDataVulnerable(int count)
-    {
-        StackInfo = new BuffStackInfo { Count = count };
-    }
+    int GetAtkBaseAdd();
+}
+
+public interface IBuffAtkFinalMul
+{
+    float GetAtkFinalMulti();
 }

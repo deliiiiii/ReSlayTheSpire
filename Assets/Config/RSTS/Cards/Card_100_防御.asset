@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ab6a8cf5d5949f3a77e224229b63d35, type: 3}
-  m_Name: "Card_2_\u9632\u5FA1"
+  m_Name: "Card_100_\u9632\u5FA1"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -22,7 +22,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   Name: "\u9632\u5FA1"
-  ID: 2
+  ID: 100
   Color: 0
   Rarity: 5
   Category: 1
@@ -49,4 +49,4 @@ MonoBehaviour:
     - rid: 4049883199248531463
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
-        Cost: 0
+        Cost: 1

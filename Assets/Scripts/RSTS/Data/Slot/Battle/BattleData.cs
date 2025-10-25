@@ -26,12 +26,9 @@ public class BattleData : IMyFSMArg
     public Observable<int> MaxHP = new(0);
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
-    
-    #region BothTurnData
+
     [SerializeReference] public BothTurnData BothTurnData;
-    public BothTurnData CreateBothTurnData()
-        => BothTurnData = new BothTurnData(this);
-    #endregion
+    public BothTurnData CreateBothTurnData(MyFSM<EBothTurn> fsm) => new (this, fsm);
     
     #region Init, Launch
     public BattleData(GameData gameData, EPlayerJob job)

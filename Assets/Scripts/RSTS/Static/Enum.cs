@@ -23,13 +23,15 @@ public class BattleStateWrap : StateWrapper<EBattleState, BattleData>;
 public enum EBothTurn
 {
     GrossStart,
-    TurnStart,
+    PlayerTurnStart,
     PlayerDraw,
     PlayerYieldCard,
-    PlayerYieldEnd,
+    // PlayerYieldEnd,
     PlayerDiscard,
-    DiscardEnd,
-    EnemyTurn,
+    PlayerTurnEnd,
+    EnemyTurnStart,
+    EnemyAction,
+    EnemyTurnEnd,
 }
 
 public class BothTurnStateWrap : StateWrapper<EBothTurn, BothTurnData>;

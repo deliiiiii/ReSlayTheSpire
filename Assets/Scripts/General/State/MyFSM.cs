@@ -18,7 +18,7 @@ public abstract class MyFSM
     // 只有Register了以后，才会加入argDic
     static readonly Dictionary<Type, IMyFSMArg> argDic = new();
     
-    public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, TArg arg)
+    public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, Func<MyFSM<TEnum>, TArg> argCtor)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
@@ -30,8 +30,9 @@ public abstract class MyFSM
         }
         var type = typeof(TEnum);
         // IBL的Init，写在构造函数里了。
-        argDic[type] = arg;
         fsmDic[type] = fsm = new MyFSM<TEnum>();
+        var arg = argCtor(fsm);
+        argDic[type] = arg;
         // IBL的Bind
         if (unbindDic.TryGetValue(type, out var unbindFuncList)) 
             unbindFuncList?.ForEach(func =>func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));

@@ -21,7 +21,6 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     public List<EnemyModel> EnemyModelList = [];
 
     readonly List<EnemyModel> enteredTargetEnemyModels = [];
-    readonly List<string> playerWarningList = [];
     
     public EnemyDataBase? TargetingEnemy => enteredTargetEnemyModels.LastOrDefault()?.Data;
     public bool CheckInNoTarget(Vector2 screenPos) => PosInRect(screenPos, TransNoTargetArea.RectTransform);
@@ -57,8 +56,10 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     
     void BindBothTurn(MyFSM<EBothTurn> fsm, BothTurnData bothTurnData)
     {
+        PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
         bothTurnData.EnemyList.OnAdd += enemyData =>
         {
+            // TODO 应对怪物个数不同的情况
             var m = Instantiate(PrbEnemy, TransEnemy[bothTurnData.EnemyList.Count - 1]);
             m.ReadData(enemyData);
             m.gameObject.SetActive(true);
@@ -102,11 +103,11 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)
     {
         yield return Binder.FromObs(bothTurnData.PlayerCurHP)
-            .To(v => PlayerModel.HPModel.SetHP(v, bothTurnData.PlayerMaxHP));
+            .To(v => PlayerModel.HPAndBuffModel.SetHP(v, bothTurnData.PlayerMaxHP));
         yield return Binder.FromObs(bothTurnData.PlayerMaxHP)
-            .To(v => PlayerModel.HPModel.SetHP(bothTurnData.PlayerCurHP, v));
+            .To(v => PlayerModel.HPAndBuffModel.SetHP(bothTurnData.PlayerCurHP, v));
         yield return Binder.FromObs(bothTurnData.PlayerBlock)
-            .To(v => PlayerModel.HPModel.SetShield(v));
+            .To(v => PlayerModel.HPAndBuffModel.SetShield(v));
     }
 
     void BindYieldCard(MyFSM<EYieldCardState> fsm, YieldCardData yieldCardData)
