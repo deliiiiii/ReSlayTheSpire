@@ -26,6 +26,7 @@ MonoBehaviour:
   Color: 0
   Rarity: 5
   Category: 0
+  HasTarget: 1
   Upgrades:
   - Des:
       content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"

@@ -15,6 +15,7 @@ public class CardConfigMulti : ConfigMulti<CardConfigMulti>
     public ECardColor Color;
     public ECardRarity Rarity;
     public ECardCategory Category;
+    public bool HasTarget;
     [ValidateInput(nameof(CheckUpgradeCount), "升级列表中至少需要一行！")]
     public List<CardUpgradeInfo> Upgrades = [];
     

@@ -194,7 +194,10 @@ public class BothTurnData : IMyFSMArg
         };
         CurEnergy.Value -= costEnergy;
         toYield.Yield(this, costEnergy);
-        if()
+        if (toYield.Config.Category == ECardCategory.Ability)
+        {
+            TemporaryRemove(toYield);
+        }
         else if (toYield.ContainsKeyword(ECardKeyword.Exhaust))
         {
             ExhaustOne(toYield);
@@ -208,7 +211,11 @@ public class BothTurnData : IMyFSMArg
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Win);
         }
     }
-    
+
+    void TemporaryRemove(CardDataBase toRemove)
+    {
+        HandList.MyRemove(toRemove);
+    }
     void ExhaustOne(CardDataBase toExhaust)
     {
         HandList.MyRemove(toExhaust);
@@ -274,6 +281,12 @@ public class BothTurnData : IMyFSMArg
     public void PlayerAddBlock(int addedBlock)
     {
         PlayerHPAndBuffData.Block.Value += addedBlock;
+    }
+
+    public void AddTempToDiscard(CardDataBase toAdd)
+    {
+        toAdd.IsTemporary = true;
+        DiscardList.MyAdd(toAdd);
     }
     #endregion
 }

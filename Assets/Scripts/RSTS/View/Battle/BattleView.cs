@@ -170,7 +170,7 @@ public class BattleView : Singleton<BattleView>
                 cardModel.EnableAllShown(false);
                 MyFSM.EnterState(YieldCardStateWrap.One, EYieldCardState.Drag);
                 initPointerPos = worldPos;
-                yieldCardData.HasTarget = cardData.HasComponent<CardHasTarget>();
+                yieldCardData.HasTarget = cardData.HasTarget;
                 if (!yieldCardData.HasTarget)
                 {
                     CharacterModelHolder.EnableNoTargetArea(true);
@@ -209,7 +209,7 @@ public class BattleView : Singleton<BattleView>
                         CharacterModelHolder.ShowPlayerWarning("没有指向任何目标");
                         return;
                     }
-                    cardData.GetComponent<CardHasTarget>().Target = targetingEnemy;
+                    cardData.Target = targetingEnemy;
                 }
                 bothTurnData.Yield(cardData);
             };

@@ -1,15 +1,15 @@
 ﻿using System;
 
 namespace RSTS;
-[CardID(1)][Serializable]
-public class Card1 : CardDataBase
+[CardID(2)][Serializable]
+public class Card2 : CardDataBase
 {
     int atk => EmbedInt(0);
-    int vulnerableCount => EmbedInt(1);
 
     public override void Yield(BothTurnData bothTurnData, int costEnergy)
     {
         bothTurnData.AttackEnemy(Target, atk);
-        bothTurnData.AddBuffToEnemy(Target, new BuffDataVulnerable(vulnerableCount));
+        var copied = this.DeepCopy();
+        bothTurnData.AddTempToDiscard(copied);
     }
 }
