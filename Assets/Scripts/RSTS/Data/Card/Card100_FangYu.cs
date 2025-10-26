@@ -8,6 +8,6 @@ public class Card100 : CardDataBase
 
     public override void Yield(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.PlayerAddBlock(blockValue);
+        bothTurnData.AddBlockToPlayer(blockValue);
     }
 }

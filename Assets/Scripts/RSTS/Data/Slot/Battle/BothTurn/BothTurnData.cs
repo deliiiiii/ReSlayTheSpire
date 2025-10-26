@@ -294,7 +294,7 @@ public class BothTurnData : IMyFSMArg
         enemyData.HPAndBuffData.AddBuff(buffData);
     }
 
-    public void PlayerAddBlock(int addedBlock)
+    public void AddBlockToPlayer(int addedBlock)
     {
         PlayerHPAndBuffData.Block.Value += addedBlock;
     }

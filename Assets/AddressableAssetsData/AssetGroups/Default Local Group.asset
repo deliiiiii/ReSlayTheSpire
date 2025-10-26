@@ -35,6 +35,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2b7a4a60ce80c3f47b3da5e387440af4
+    m_Address: "Card_5_\u94C1\u65A9\u6CE2"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 44670dc01c93d6c49aacb0a54743b9db
     m_Address: "Player_2_\u9E21\u7172"
     m_ReadOnly: 0
