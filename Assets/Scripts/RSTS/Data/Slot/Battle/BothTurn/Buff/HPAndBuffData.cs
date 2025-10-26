@@ -64,11 +64,13 @@ public class HPAndBuffData
         }
     }
 
-    public int GetAtkBaseAdd()
+    public int GetAtkBaseAddSum(Predicate<IBuffAtkBaseAdd>? conditionModify = null, Func<IBuffAtkBaseAdd, int>? modifier = null)
     {
+        conditionModify ??= _ => false;
+        modifier ??= buff => buff.GetAtkBaseAdd();
         return buffList
             .OfType<IBuffAtkBaseAdd>()
-            .Sum(buff => buff.GetAtkBaseAdd());
+            .Sum(buff => conditionModify(buff) ? modifier(buff) : buff.GetAtkBaseAdd());
     }
 
     public float GetAtkFinalMulti()

@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 050fe1578e53c4b4eacd6d922745ff77
+    m_Address: "Card_4_\u91CD\u5203"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 270c2084d35011248b06a513bb6fb5d6
     m_Address: "Bottle_1_\u6D4B\u8BD5"
     m_ReadOnly: 0

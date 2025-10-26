@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 namespace RSTS;
@@ -242,6 +243,17 @@ public class BothTurnData : IMyFSMArg
     public void AttackEnemy(EnemyDataBase enemyData, int baseAtk)
     {
         Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList);
+        AttackEnemyEnd(enemyData, resultList);
+    }
+    
+    public void AttackEnemyWithStrengthMulti(EnemyDataBase enemyData, int baseAtk, int strengthMulti)
+    {
+        Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, strengthMulti);
+        AttackEnemyEnd(enemyData, resultList);
+    }
+
+    void AttackEnemyEnd(EnemyDataBase enemyData, List<AttackResult> resultList)
+    {
         if(resultList.OfType<AttackResultDie>().Any())
             EnemyList.MyRemove(enemyData);
     }
@@ -253,12 +265,15 @@ public class BothTurnData : IMyFSMArg
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
 
-    void Attack(HPAndBuffData from, HPAndBuffData to, int baseAtk, out List<AttackResult> resultList)
+    void Attack(HPAndBuffData from, HPAndBuffData to, int baseAtk, out List<AttackResult> resultList
+        , int strengthMulti = 1)
     {
         // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
         
         // (baseAtk + baseAdd) * (1 + finalMul)
-        var baseAdd = from.GetAtkBaseAdd();
+        var baseAdd = from.GetAtkBaseAddSum(
+            buff => buff is BuffDataStrength,
+            buff => buff.GetAtkBaseAdd() * strengthMulti);
         var finalMulFrom = from.GetAtkFinalMulti();
         var finalMulTo = to.GetAtkFinalMulti();
         var finalAtk = Mathf.FloorToInt((baseAtk + baseAdd) * finalMulFrom * finalMulTo);
