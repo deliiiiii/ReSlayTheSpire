@@ -128,6 +128,17 @@ public class BothTurnData : IMyFSMArg
         PlayerHPAndBuffData.ClearBuff();
     }
 
+    IEnumerable<CardDataBase> CollectAllCards()
+    {
+        foreach (var card in HandList)
+            yield return card;
+        foreach (var card in DrawList)
+            yield return card;
+        foreach (var card in DiscardList)
+            yield return card;
+        foreach (var card in ExhaustList)
+            yield return card;
+    }
     bool DrawSome(int drawCount)
     {
         for (int i = 0; i < drawCount; i++)
@@ -309,6 +320,8 @@ public class BothTurnData : IMyFSMArg
     {
         OnOpenDiscardOnceClick?.Invoke(DiscardList, onClick);
     }
+    
+    public int DaJiCount => CollectAllCards().Count(card => card.Config.name.Contains("打击"));
     #endregion
 }
 
