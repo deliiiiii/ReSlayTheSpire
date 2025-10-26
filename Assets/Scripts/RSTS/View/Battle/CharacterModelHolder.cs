@@ -103,9 +103,9 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)
     {
         yield return Binder.FromObs(bothTurnData.PlayerCurHP)
-            .To(v => PlayerModel.HPAndBuffModel.SetHP(v, bothTurnData.PlayerMaxHP));
+            .To(v => PlayerModel.HPAndBuffModel.DirectlySetHP(v, bothTurnData.PlayerMaxHP));
         yield return Binder.FromObs(bothTurnData.PlayerMaxHP)
-            .To(v => PlayerModel.HPAndBuffModel.SetHP(bothTurnData.PlayerCurHP, v));
+            .To(v => PlayerModel.HPAndBuffModel.DirectlySetHP(bothTurnData.PlayerCurHP, v));
         yield return Binder.FromObs(bothTurnData.PlayerBlock)
             .To(v => PlayerModel.HPAndBuffModel.SetShield(v));
     }

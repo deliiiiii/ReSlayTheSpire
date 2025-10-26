@@ -131,6 +131,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dfa1db2400f07074395455e1b3c6b6de
+    m_Address: "Card_8_\u98DE\u5251\u56DE\u65CB\u9556"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f1bea8dcfc5533e4f8f1d9e7ec2ab3ca
     m_Address: "Bottle_0_\u529B\u91CF"
     m_ReadOnly: 0

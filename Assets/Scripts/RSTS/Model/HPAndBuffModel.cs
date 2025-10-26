@@ -17,15 +17,32 @@ public class HPAndBuffModel : MonoBehaviour
     [SerializeField] GameObject shield2;
     [SerializeField] Transform transBuff;
     [SerializeField] BuffModel pfbBuffModel;
+    [SerializeField] HurtEffect pfbHurtEffect;
 
     readonly Dictionary<BuffDataBase, BuffModel> dicBuffModel = [];
     
     [Button]
-    public void SetHP(int hp, int maxHp)
+    public void DirectlySetHP(int hp, int maxHp)
     {
         txtHP.text = $"{hp.ToString()}/{maxHp.ToString()}";
         imgHP.fillAmount = hp / (float)maxHp;
     }
+    
+    public void OnHurt(int hurt)
+    {
+        var hurtEffect = Instantiate(pfbHurtEffect, transform);
+        hurtEffect.gameObject.SetActive(true);
+        hurtEffect.TxtHurt.text = $"-{hurt}";
+    }
+    
+    public void OnHeal(int heal)
+    {
+        var hurtEffect = Instantiate(pfbHurtEffect, transform);
+        hurtEffect.gameObject.SetActive(true);
+        hurtEffect.TxtHurt.text = $"+{heal}";
+    }
+    
+    
 
     [Button]
     public void SetShield(int shield)

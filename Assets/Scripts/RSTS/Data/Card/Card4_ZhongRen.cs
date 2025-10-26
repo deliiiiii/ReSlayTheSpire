@@ -9,6 +9,6 @@ public class Card4 : CardDataBase
 
     public override void Yield(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.AttackEnemyWithStrengthMulti(Target, atk, strengthMulti);
+        bothTurnData.AttackEnemy(Target, atk, strengthMulti);
     }
 }

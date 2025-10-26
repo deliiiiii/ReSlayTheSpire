@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.PackageManager.Requests;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace RSTS;
@@ -209,15 +210,20 @@ public class BothTurnData : IMyFSMArg
         toYield.Yield(this, costEnergy);
         if (toYield.Config.Category == ECardCategory.Ability)
         {
+            // 打出能力牌，不会消耗
             TemporaryRemove(toYield);
         }
         else if (toYield.ContainsKeyword(ECardKeyword.Exhaust))
         {
-            ExhaustOne(toYield);
+            // 消耗
+            HandList.MyRemove(toYield);
+            ExhaustList.MyAdd(toYield);
         }
         else
         {
-            NormallyYieldOne(toYield);
+            // 正常打出
+            HandList.MyRemove(toYield);
+            DiscardList.MyAdd(toYield);
         }
         if(EnemyList.Count == 0)
         {
@@ -229,18 +235,7 @@ public class BothTurnData : IMyFSMArg
     {
         HandList.MyRemove(toRemove);
     }
-    void ExhaustOne(CardDataBase toExhaust)
-    {
-        HandList.MyRemove(toExhaust);
-        ExhaustList.MyAdd(toExhaust);
-    }
 
-    void NormallyYieldOne(CardDataBase toYield)
-    {
-        HandList.MyRemove(toYield);
-        DiscardList.MyAdd(toYield);
-    }
-    
     
     void RefillDrawList()
     {
@@ -251,22 +246,33 @@ public class BothTurnData : IMyFSMArg
     
     #region yield effect
     // 使用攻击牌攻击的伤害
-    public void AttackEnemy(EnemyDataBase enemyData, int baseAtk)
-    {
-        Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList);
-        AttackEnemyEnd(enemyData, resultList);
-    }
-    
-    public void AttackEnemyWithStrengthMulti(EnemyDataBase enemyData, int baseAtk, int strengthMulti)
+    public void AttackEnemy(EnemyDataBase enemyData, int baseAtk, int strengthMulti = 1)
     {
         Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, strengthMulti);
-        AttackEnemyEnd(enemyData, resultList);
-    }
-
-    void AttackEnemyEnd(EnemyDataBase enemyData, List<AttackResult> resultList)
-    {
         if(resultList.OfType<AttackResultDie>().Any())
             EnemyList.MyRemove(enemyData);
+    }
+    public async Task AttackEnemyMultiTimesAsync(EnemyDataBase enemyData, int baseAtk, int times)
+    {
+        for (int t = 0; t < times; t++)
+        {
+            AttackEnemy(enemyData, baseAtk);
+            await Task.Delay(300);
+        }
+    }
+    
+    public void AttackEnemyRandomly(int baseAtk)
+    {
+        var enemyData = EnemyList.RandomItem();
+        AttackEnemy(enemyData, baseAtk);
+    }
+    public async UniTask AttackEnemyRandomlyMultiTimes(int baseAtk, int times)
+    {
+        for (int t = 0; t < times; t++)
+        {
+            AttackEnemyRandomly(baseAtk);
+            await Task.Delay(300);
+        }
     }
 
     public void AttackPlayer(EnemyDataBase enemyData, int baseAtk)
@@ -318,6 +324,8 @@ public class BothTurnData : IMyFSMArg
 
     public void OpenDiscardOnceClick(Action<CardDataBase> onClick)
     {
+        if(DiscardList.Count == 0)
+            return;
         OnOpenDiscardOnceClick?.Invoke(DiscardList, onClick);
     }
     
