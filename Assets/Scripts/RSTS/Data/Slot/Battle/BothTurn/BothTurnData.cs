@@ -139,7 +139,7 @@ public class BothTurnData : IMyFSMArg
         foreach (var card in ExhaustList)
             yield return card;
     }
-    bool DrawSome(int drawCount)
+    public bool DrawSome(int drawCount)
     {
         for (int i = 0; i < drawCount; i++)
         {
