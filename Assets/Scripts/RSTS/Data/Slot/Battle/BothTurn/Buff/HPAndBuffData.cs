@@ -23,6 +23,8 @@ public class HPAndBuffData
     // }
     bool HasBuff(Type type, out BuffDataBase buffData)
         => (buffData = buffList.FirstOrDefault(buff => buff.GetType() == type)!) != null;
+    public bool HasBuff<T>(out T buffData) where T : BuffDataBase
+        => (buffData = buffList.OfType<T>().FirstOrDefault()!) != null;
 
     public void AddBuff(BuffDataBase addedBuff)
     {

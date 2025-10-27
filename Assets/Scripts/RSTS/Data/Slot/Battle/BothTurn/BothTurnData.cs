@@ -12,8 +12,8 @@ public class BothTurnData : IMyFSMArg
     [NonSerialized]BattleData battleData;
     
     [SerializeReference]public HPAndBuffData PlayerHPAndBuffData;
-    public Observable<int> CurEnergy = new(3);
-    public Observable<int> MaxEnergy = new(3);
+    public Observable<int> CurEnergy = new(5);
+    public Observable<int> MaxEnergy = new(5);
     public Observable<int> PlayerCurHP => PlayerHPAndBuffData.CurHP;
     public Observable<int> PlayerMaxHP => PlayerHPAndBuffData.MaxHP;
     public Observable<int> PlayerBlock => PlayerHPAndBuffData.Block;
@@ -46,7 +46,8 @@ public class BothTurnData : IMyFSMArg
         {
             TurnID++;
             PlayerHPAndBuffData.Block.Value = 0;
-            CurEnergy.Value = MaxEnergy.Value;
+            LoseEnergy(CurEnergy.Value);
+            GainEnergy(MaxEnergy);
             PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnStart);
             PlayerHPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnStart);
             
@@ -149,6 +150,19 @@ public class BothTurnData : IMyFSMArg
         }
         return true;
     }
+    
+    public void LoseEnergy(int lose)
+    {
+        CurEnergy.Value -= lose;
+    }
+    void UseEnergy(int use)
+    {
+        CurEnergy.Value -= use;
+    }
+    public void GainEnergy(int gain)
+    {
+        CurEnergy.Value += gain;
+    }
 
     bool DrawOne()
     {
@@ -213,7 +227,7 @@ public class BothTurnData : IMyFSMArg
             CardCostX => CurEnergy,
             CardCostNone or _ => 0,
         };
-        CurEnergy.Value -= costEnergy;
+        UseEnergy(costEnergy);
         if (toYield.Config.Category == ECardCategory.Ability)
         {
             // 打出能力牌，不会消耗

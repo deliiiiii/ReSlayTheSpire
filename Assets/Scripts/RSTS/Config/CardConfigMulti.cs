@@ -88,6 +88,7 @@ public class EmbedString
     public static Dictionary<Type, string> EmbedCharPairs = new()
     {
         { typeof(int), "[]" },
+        { typeof(EnergyInt), "{}"},
         // { EmbedType.Float, new EmbedCharPair() { Left = "[[", Right = "]]" } },
     }; 
     [SerializeField]
@@ -101,13 +102,12 @@ public class EmbedString
             // 替换Data中[]为Config中对应的值
             EmbedCharPairs.ForEach(pair =>
             {
-                int trueCount = 0;
-                int c = 0;
                 if (pair.Key == typeof(int))
                 {
                     if (!CheckIntCount())
                         return;
-                    trueCount = EmbedIntList.Count;
+                    int trueCount = EmbedIntList.Count;
+                    int c = 0;
                     while (c < trueCount)
                     {
                         ReplaceFirst(tempContent, pair.Value, EmbedIntList[c].ToString(), out var result);
@@ -116,10 +116,16 @@ public class EmbedString
                     }
                 }
 
-                if (pair.Key == typeof(float))
+                if (pair.Key == typeof(EnergyInt))
                 {
-                    trueCount = 0;
-                    // ...
+                    int trueCount = EmbedEnergyIntList.Count;
+                    int c = 0;
+                    while (c < trueCount)
+                    {
+                        ReplaceFirst(tempContent, pair.Value, $"*{EmbedEnergyIntList[c].ToString()}费*", out var result);
+                        tempContent = result;
+                        c++;
+                    }
                 }
             });
             return tempContent;
@@ -129,8 +135,11 @@ public class EmbedString
     // 在编辑器中显示另一个文本的Attribute
     [Header("嵌入Int使用[]")][HideLabel]// [ValidateInput(nameof(CheckIntCount), "嵌入的Int数量与Content中的[]数量不匹配")]
     public List<int> EmbedIntList = [];
-
+    [Header("嵌入能量数量使用{}")][HideLabel]// [ValidateInput(nameof(CheckIntCount), "嵌入的Int数量与Content中的[]数量不匹配")]
+    public List<int> EmbedEnergyIntList = [];
+    
     bool CheckIntCount() => SubStringCount(content, EmbedCharPairs[typeof(int)]) == EmbedIntList.Count;
+    bool CheckEnergyIntCount() => SubStringCount(content, EmbedCharPairs[typeof(EnergyInt)]) == EmbedEnergyIntList.Count;
     int SubStringCount(string main, string sub)
     {
         var count = 0;
@@ -154,9 +163,4 @@ public class EmbedString
     }
 }
 
-
-public enum EmbedType
-{
-    Int,
-    // Float
-}
+public class EnergyInt;

@@ -90,13 +90,19 @@ MonoBehaviour:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 68283da790c78804a9d12e0664391b43
-    m_Address: "Enemy_0_\u500F\u5FFD\u9B54"
+    m_Address: "Enemy_0_\u500F\u5FFD\u9B54\uFF08\u524A\u5F31\uFF09"
     m_ReadOnly: 0
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 696d4f9c7fc12c44e941dd6a13b5e32d
     m_Address: "Card_12_\u5168\u8EAB\u649E\u51FB"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a071e4f41452104da051323408409dc
+    m_Address: "Card_16_\u98DE\u8EAB\u8E22"
     m_ReadOnly: 0
     m_SerializedLabels:
     - RSTSConfig

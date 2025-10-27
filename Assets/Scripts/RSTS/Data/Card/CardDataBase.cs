@@ -54,6 +54,8 @@ public abstract class CardDataBase
         failReason = string.Empty;
         return true;
     }
+
+    // public virtual bool RecommendYield(BothTurnData bothTurnData) => false;
     
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
@@ -67,6 +69,7 @@ public abstract class CardDataBase
     #endregion
 
     protected int EmbedInt(int id) => CurUpgradeInfo.Des.EmbedIntList[id];
+    protected int EmbedEnergyInt(int id) => CurUpgradeInfo.Des.EmbedEnergyIntList[id];
     
     CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
 }
