@@ -123,13 +123,15 @@ public class BothTurnData : IMyFSMArg
     public void UnInit()
     {
         EnemyList.MyClear();
+        
+        CollectAllCards().ForEach(cardData => cardData.OnExitBothTurn());
+        
         HandList.MyClear();
         DrawList.MyClear();
         DiscardList.MyClear();
         ExhaustList.MyClear();
         
         PlayerHPAndBuffData.ClearBuff();
-        CollectAllCards().ForEach(cardData => cardData.OnExitBothTurn());
     }
 
     IEnumerable<CardDataBase> CollectAllCards()
