@@ -49,6 +49,11 @@ public abstract class CardDataBase
     public int UpgradeLevel;
     
     public abstract UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy);
+    public virtual bool YieldCondition(BothTurnData bothTurnData, out string failReason)
+    {
+        failReason = string.Empty;
+        return true;
+    }
     
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);

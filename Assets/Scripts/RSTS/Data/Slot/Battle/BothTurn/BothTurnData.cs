@@ -183,6 +183,10 @@ public class BothTurnData : IMyFSMArg
             failReason = "能量不足";
             return false;
         }
+        if(!toYield.YieldCondition(this, out failReason))
+        {
+            return false;
+        }
         return true;
     }
 
