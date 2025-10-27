@@ -207,7 +207,6 @@ public class BothTurnData : IMyFSMArg
             CardCostNone or _ => 0,
         };
         CurEnergy.Value -= costEnergy;
-        await toYield.YieldAsync(this, costEnergy);
         if (toYield.Config.Category == ECardCategory.Ability)
         {
             // 打出能力牌，不会消耗
@@ -225,6 +224,7 @@ public class BothTurnData : IMyFSMArg
             HandList.MyRemove(toYield);
             DiscardList.MyAdd(toYield);
         }
+        await toYield.YieldAsync(this, costEnergy);
         if(EnemyList.Count == 0)
         {
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Win);
@@ -312,6 +312,9 @@ public class BothTurnData : IMyFSMArg
     void Attack(HPAndBuffData from, HPAndBuffData to, int baseAtk, out List<AttackResult> resultList
         , int strengthMulti = 1)
     {
+        resultList = [];
+        if (!to.CanBeSelected)
+            return;
         // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
         var baseAdd = from.GetAtkBaseAddSum(
             buff => buff is BuffDataStrength,
@@ -319,7 +322,6 @@ public class BothTurnData : IMyFSMArg
         var finalMulFrom = from.GetAtkFinalMulti();
         var finalMulTo = to.GetAtkFinalMulti();
         var finalAtk = Mathf.FloorToInt((baseAtk + baseAdd) * finalMulFrom * finalMulTo);
-        resultList = [];
         to.CurHP.Value -= finalAtk;
         if (to.CurHP <= 0)
         {
@@ -348,10 +350,18 @@ public class BothTurnData : IMyFSMArg
         PlayerHPAndBuffData.Block.Value += addedBlock;
     }
 
-    public void AddTempToDiscard(CardDataBase toAdd)
+    public void AddTempToDiscard(Func<CardDataBase> toAddCtor)
     {
+        var toAdd = toAddCtor();
         toAdd.IsTemporary = true;
         DiscardList.MyAdd(toAdd);
+    }
+    public void AddTempToDraw(Func<CardDataBase> toAddCtor)
+    {
+        var toAdd = toAddCtor();
+        toAdd.IsTemporary = true;
+        var drawIndex = UnityEngine.Random.Range(0, DrawList.Count);
+        DrawList.MyInsert(drawIndex, toAdd);
     }
 
     public void OpenDiscardOnceClick(Action<CardDataBase> onClick)

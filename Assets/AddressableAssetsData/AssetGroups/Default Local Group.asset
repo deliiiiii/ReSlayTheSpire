@@ -59,6 +59,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 35bc84c11dee2dc41bdc88687ec707de
+    m_Address: "Card_5004_\u4F24\u53E3"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 44670dc01c93d6c49aacb0a54743b9db
     m_Address: "Player_2_\u9E21\u7172"
     m_ReadOnly: 0
@@ -67,6 +73,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 466dba388be368a47af24a659c2db885
     m_Address: "Player_0_\u6218\u58EB"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4908a9bccb8f70846af8019c56373adb
+    m_Address: "Card_11_\u72C2\u91CE\u6253\u51FB"
     m_ReadOnly: 0
     m_SerializedLabels:
     - RSTSConfig
@@ -127,6 +139,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c828b52e37ca787468e6d5b115f35d7a
     m_Address: "Card_2_\u6124\u6012"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7b05a21cd4a3044596c99567ec40d7a
+    m_Address: "Card_10_\u53CC\u91CD\u6253\u51FB"
     m_ReadOnly: 0
     m_SerializedLabels:
     - RSTSConfig

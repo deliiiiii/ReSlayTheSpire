@@ -15,6 +15,7 @@ public class HPAndBuffData
     public event Action<BuffDataBase>? OnAddBuff;
     public event Action<BuffDataBase>? OnRemoveBuff;
     public event Action<BuffDataBase, int>? OnChangeBuffStack;
+    public bool CanBeSelected => CurHP.Value > 0;
     // public bool HasBuff<T>(out T buffData) where T : BuffDataBase
     // {
     //     buffData = buffList.OfType<T>().First();

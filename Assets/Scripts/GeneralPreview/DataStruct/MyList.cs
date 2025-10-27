@@ -22,6 +22,13 @@ public class MyList<T>(IEnumerable<T> ie)
     {
         MyDebug.LogError("Please Call MyAdd() instead");
     }
+
+    /// Please Call MyInsert() instead
+    [Obsolete]
+    public new void Insert(int index, T item)
+    {
+        MyDebug.LogError("Please Call MyInsert() instead");
+    }
     
     /// Please Call MyAddRange() instead
     [Obsolete]
@@ -63,6 +70,11 @@ public class MyList<T>(IEnumerable<T> ie)
     public void MyAdd(T item)
     {
         base.Add(item);
+        OnAdd?.Invoke(item);
+    }
+    public void MyInsert(int index, T item)
+    {
+        base.Insert(index, item);
         OnAdd?.Invoke(item);
     }
     public void MyAddRange(IEnumerable<T> collection)

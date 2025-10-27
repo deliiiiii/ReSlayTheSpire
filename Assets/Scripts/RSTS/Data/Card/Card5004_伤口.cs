@@ -2,15 +2,11 @@
 using Cysharp.Threading.Tasks;
 
 namespace RSTS;
-[CardID(2)][Serializable]
-public class Card2 : CardDataBase
+[CardID(5004)][Serializable]
+public class Card5004 : CardDataBase
 {
-    int atk => EmbedInt(0);
-
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.AttackEnemy(Target, atk);
-        bothTurnData.AddTempToDiscard(() => this.DeepCopy());
         return UniTask.CompletedTask;
     }
 }
