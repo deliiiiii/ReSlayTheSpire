@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using JetBrains.Annotations;
 using RSTS.CDMV;
 using Sirenix.OdinInspector;
@@ -18,6 +20,7 @@ public class CardConfigMulti : ConfigMulti<CardConfigMulti>
     public bool HasTarget;
     [ValidateInput(nameof(CheckUpgradeCount), "升级列表中至少需要一行！")]
     public List<CardUpgradeInfo> Upgrades = [];
+    
     
     protected override string PrefixName => "Card";
     protected override bool CheckAll()
@@ -77,6 +80,43 @@ public class CardUpgradeInfo
     [SerializeReference]
     public CardCostBase CostInfo = new CardCostNumber();
 
+    public string ContentWithKeywords
+    {
+        get
+        {
+            StringBuilder sb = new StringBuilder();
+            bool findPre = false;
+            if (Keywords.Any(k => k == ECardKeyword.Unplayable))
+            {
+                findPre = true;
+                sb.Append("[不可打出]");
+            }
+            if (Keywords.Any(k => k == ECardKeyword.Inborn))
+            {
+                findPre = true;
+                sb.Append("[固有]");
+            }
+            if (findPre)
+                sb.AppendLine();
+            sb.Append(Des.Content);
+            if (Keywords.Any(k => k == ECardKeyword.Retain))
+            {
+                findPre = true;
+                sb.Append("[保留]");
+            }
+            if (Keywords.Any(k => k == ECardKeyword.Ethereal))
+            {
+                findPre = true;
+                sb.Append("[虚无]");
+            }
+            if (Keywords.Any(k => k == ECardKeyword.Exhaust))
+            {
+                findPre = true;
+                sb.Append("[消耗]");
+            }
+            return sb.ToString();
+        }
+    }
 
     List<ECardKeyword> GetKeywords() => [..(ECardKeyword[])Enum.GetValues(typeof(ECardKeyword))];
 }
@@ -98,8 +138,8 @@ public class EmbedString
     {
         get
         {
-            var tempContent = content;
-            // 替换Data中[]为Config中对应的值
+            StringBuilder sb = new StringBuilder(content);
+            // 替换Data中[],{}为Config中对应的值
             EmbedCharPairs.ForEach(pair =>
             {
                 if (pair.Key == typeof(int))
@@ -110,8 +150,9 @@ public class EmbedString
                     int c = 0;
                     while (c < trueCount)
                     {
-                        ReplaceFirst(tempContent, pair.Value, EmbedIntList[c].ToString(), out var result);
-                        tempContent = result;
+                        ReplaceFirst(sb.ToString(), pair.Value, EmbedIntList[c].ToString(), out var result);
+                        sb.Clear();
+                        sb.Append(result);
                         c++;
                     }
                 }
@@ -122,13 +163,14 @@ public class EmbedString
                     int c = 0;
                     while (c < trueCount)
                     {
-                        ReplaceFirst(tempContent, pair.Value, $"*{EmbedEnergyIntList[c].ToString()}费*", out var result);
-                        tempContent = result;
+                        ReplaceFirst(sb.ToString(), pair.Value, $"*{EmbedEnergyIntList[c].ToString()}费*", out var result);
+                        sb.Clear();
+                        sb.Append(result);
                         c++;
                     }
                 }
             });
-            return tempContent;
+            return sb.ToString();
         }
     }
     

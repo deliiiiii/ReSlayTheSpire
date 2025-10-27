@@ -26,16 +26,19 @@ MonoBehaviour:
   Color: 4
   Rarity: 3
   Category: 3
+  HasTarget: 0
   Upgrades:
   - Des:
-      content: "\u6D88\u8017\u3002"
+      content: 
       EmbedIntList: 
+      EmbedEnergyIntList: 
     Keywords: 04000000
     CostInfo:
       rid: 4049883412018233344
   - Des:
       content: "\u6D88\u8017\u3002"
       EmbedIntList: 
+      EmbedEnergyIntList: 
     Keywords: 04000000
     CostInfo:
       rid: 4049883427883450370

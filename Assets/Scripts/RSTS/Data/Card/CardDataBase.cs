@@ -60,7 +60,8 @@ public abstract class CardDataBase
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
     public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
-    public EmbedString CurDes => CurUpgradeInfo.Des;
+
+    public string CurContentWithKeywords => CurUpgradeInfo.ContentWithKeywords;
     
     #region Com
     public bool HasTarget => Config.HasTarget;

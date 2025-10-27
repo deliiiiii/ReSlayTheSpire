@@ -36,7 +36,7 @@ public class CardModel : MonoBehaviour
         };
         TxtName.text = fData.Config.Name;
         TextCategory.text = fData.Config.Category.ToString();
-        TxtDes.text = fData.CurDes.Content;
+        TxtDes.text = fData.CurContentWithKeywords;
 
         imgs = GetComponentsInChildren<Image>();
         texts = GetComponentsInChildren<Text>();
