@@ -26,16 +26,19 @@ MonoBehaviour:
   Color: 0
   Rarity: 5
   Category: 1
+  HasTarget: 0
   Upgrades:
   - Des:
       content: "\u83B7\u5F97[]\u70B9\u683C\u6321\u3002"
-      EmbedIntList: 05000000
+      EmbedTypes:
+      - rid: 4049883477275836495
     Keywords: 
     CostInfo:
       rid: 4049883199248531463
   - Des:
       content: "\u83B7\u5F97[]\u70B9\u683C\u6321\u3002"
-      EmbedIntList: 08000000
+      EmbedTypes:
+      - rid: 4049883477275836496
     Keywords: 
     CostInfo:
       rid: 4049883180725436429
@@ -50,3 +53,11 @@ MonoBehaviour:
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 1
+    - rid: 4049883477275836495
+      type: {class: EmbedBlock, ns: RSTS, asm: RSTS}
+      data:
+        BlockValue: 5
+    - rid: 4049883477275836496
+      type: {class: EmbedBlock, ns: RSTS, asm: RSTS}
+      data:
+        BlockValue: 8

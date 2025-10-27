@@ -29,16 +29,20 @@ MonoBehaviour:
   HasTarget: 1
   Upgrades:
   - Des:
-      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u5982\u679C\u654C\u4EBA\u6709\u6613\u4F24\u72B6\u6001\uFF0C\u83B7\u5F97{}\u5E76\u4E14\u62BD[]\u5F20\u724C\u3002"
-      EmbedIntList: 0500000001000000
-      EmbedEnergyIntList: 01000000
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u5982\u679C\u654C\u4EBA\u6709\u6613\u4F24\u72B6\u6001\uFF0C\u83B7\u5F97[]\u8D39\u5E76\u4E14\u62BD[]\u5F20\u724C\u3002"
+      EmbedTypes:
+      - rid: 4049883477275836475
+      - rid: 4049883477275836476
+      - rid: 4049883477275836477
     Keywords: 
     CostInfo:
       rid: 4049883199248531460
   - Des:
-      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u5982\u679C\u654C\u4EBA\u6709\u6613\u4F24\u72B6\u6001\uFF0C\u83B7\u5F97{}\u5E76\u4E14\u62BD[]\u5F20\u724C\u3002"
-      EmbedIntList: 0800000001000000
-      EmbedEnergyIntList: 01000000
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u5982\u679C\u654C\u4EBA\u6709\u6613\u4F24\u72B6\u6001\uFF0C\u83B7\u5F97[]\u8D39\u5E76\u4E14\u62BD[]\u5F20\u724C\u3002"
+      EmbedTypes:
+      - rid: 4049883477275836478
+      - rid: 4049883477275836479
+      - rid: 4049883477275836480
     Keywords: 
     CostInfo:
       rid: 4049883199248531461
@@ -53,3 +57,27 @@ MonoBehaviour:
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 1
+    - rid: 4049883477275836475
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 5
+    - rid: 4049883477275836476
+      type: {class: EmbedEnergy, ns: RSTS, asm: RSTS}
+      data:
+        EnergyValue: 1
+    - rid: 4049883477275836477
+      type: {class: EmbedDraw, ns: RSTS, asm: RSTS}
+      data:
+        DrawValue: 1
+    - rid: 4049883477275836478
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 8
+    - rid: 4049883477275836479
+      type: {class: EmbedEnergy, ns: RSTS, asm: RSTS}
+      data:
+        EnergyValue: 1
+    - rid: 4049883477275836480
+      type: {class: EmbedDraw, ns: RSTS, asm: RSTS}
+      data:
+        DrawValue: 1

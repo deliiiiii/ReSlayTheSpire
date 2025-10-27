@@ -31,14 +31,16 @@ MonoBehaviour:
   - Des:
       content: "\u53EA\u6709\u5728\u624B\u724C\u6BCF\u4E00\u5F20\u724C\u90FD\u662F\u653B\u51FB\u724C\u65F6\u624D\u80FD\u88AB\u6253\u51FA\u3002
         \u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
-      EmbedIntList: 0e000000
+      EmbedTypes:
+      - rid: 4049883477275836463
     Keywords: 
     CostInfo:
       rid: 4049883457877704704
   - Des:
       content: "\u53EA\u6709\u5728\u624B\u724C\u6BCF\u4E00\u5F20\u724C\u90FD\u662F\u653B\u51FB\u724C\u65F6\u624D\u80FD\u88AB\u6253\u51FA\u3002
         \u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
-      EmbedIntList: 12000000
+      EmbedTypes:
+      - rid: 4049883477275836464
     Keywords: 
     CostInfo:
       rid: 4049883457877704705
@@ -53,3 +55,11 @@ MonoBehaviour:
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 0
+    - rid: 4049883477275836463
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 14
+    - rid: 4049883477275836464
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 18

@@ -30,13 +30,15 @@ MonoBehaviour:
   Upgrades:
   - Des:
       content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u5728\u5F03\u724C\u5806\u653E\u5165\u4E00\u5F20\u6B64\u724C\u7684\u590D\u5236\u54C1\u3002"
-      EmbedIntList: 06000000
+      EmbedTypes:
+      - rid: 4049883477275836426
     Keywords: 
     CostInfo:
       rid: 4049883199248531460
   - Des:
       content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u5728\u5F03\u724C\u5806\u653E\u5165\u4E00\u5F20\u6B64\u724C\u7684\u590D\u5236\u54C1\u3002"
-      EmbedIntList: 08000000
+      EmbedTypes:
+      - rid: 4049883477275836427
     Keywords: 
     CostInfo:
       rid: 4049883199248531461
@@ -51,3 +53,11 @@ MonoBehaviour:
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 0
+    - rid: 4049883477275836426
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 6
+    - rid: 4049883477275836427
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 8

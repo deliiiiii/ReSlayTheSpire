@@ -1,10 +1,28 @@
-﻿using RSTS;
+﻿using System;
+using System.Globalization;using RSTS;
 using Sirenix.OdinInspector;
 using UnityEngine;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
 public class TestAnything : Singleton<TestAnything>
 {
+    [Button]
+    public void EnterGameState(EGameState gameState)
+    {
+        MyFSM.EnterState(GameStateWrap.One, gameState);
+    }
+
+    [Button]
+    public void EnterBattleState(EBattleState battleState)
+    {
+        MyFSM.EnterState(BattleStateWrap.One, battleState);
+    }
+    [Button]
+    public void EnterBothTurnState(EBothTurn bothTurnState)
+    {
+        MyFSM.EnterState(BothTurnStateWrap.One, bothTurnState);
+    }
+    
     [SerializeReference]
     public BattleData BattleData;
     [SerializeReference]
@@ -26,4 +44,12 @@ public class TestAnything : Singleton<TestAnything>
         BothTurnData = bothTurnData;
         BothTurnData.DrawSome(count);
     }
+}
+
+[Serializable]
+public class BussTest : BuffDataBase
+{
+    public override string Name { get; }
+    public override EBuffUseTime UseTime { get; }
+    public override EBuffDisposeTime DisposeTime { get; }
 }

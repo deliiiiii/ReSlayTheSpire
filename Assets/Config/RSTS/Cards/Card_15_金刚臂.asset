@@ -30,13 +30,17 @@ MonoBehaviour:
   Upgrades:
   - Des:
       content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u7ED9\u4E88[]\u5C42\u865A\u5F31\u3002"
-      EmbedIntList: 0c00000002000000
+      EmbedTypes:
+      - rid: 4049883477275836467
+      - rid: 4049883477275836468
     Keywords: 
     CostInfo:
       rid: 4049883199248531460
   - Des:
       content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u7ED9\u4E88[]\u5C42\u865A\u5F31\u3002"
-      EmbedIntList: 0e00000003000000
+      EmbedTypes:
+      - rid: 4049883477275836471
+      - rid: 4049883477275836472
     Keywords: 
     CostInfo:
       rid: 4049883199248531461
@@ -51,3 +55,41 @@ MonoBehaviour:
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 2
+    - rid: 4049883477275836467
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 12
+    - rid: 4049883477275836468
+      type: {class: EmbedAddBuff, ns: RSTS, asm: RSTS}
+      data:
+        BuffData:
+          rid: 4049883477275836469
+    - rid: 4049883477275836469
+      type: {class: BuffDataWeak, ns: RSTS, asm: RSTS}
+      data:
+        StackInfo:
+          rid: 4049883477275836470
+    - rid: 4049883477275836470
+      type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
+      data:
+        Count:
+          value: 2
+    - rid: 4049883477275836471
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 14
+    - rid: 4049883477275836472
+      type: {class: EmbedAddBuff, ns: RSTS, asm: RSTS}
+      data:
+        BuffData:
+          rid: 4049883477275836473
+    - rid: 4049883477275836473
+      type: {class: BuffDataWeak, ns: RSTS, asm: RSTS}
+      data:
+        StackInfo:
+          rid: 4049883477275836474
+    - rid: 4049883477275836474
+      type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
+      data:
+        Count:
+          value: 3

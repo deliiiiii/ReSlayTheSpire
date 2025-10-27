@@ -55,22 +55,49 @@ public abstract class CardDataBase
         return true;
     }
 
+
+    public virtual void OnExitBothTurn(){}
+
     // public virtual bool RecommendYield(BothTurnData bothTurnData) => false;
     
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
     public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
 
-    public string CurContentWithKeywords => CurUpgradeInfo.ContentWithKeywords;
+    public string CurContentWithKeywords(BothTurnData bothTurnData)
+    {
+        var replacerList = new List<Func<string>>();
+        int strengthMulti = this is Card4 card4 ? card4.StrengthMulti : 1;
+        int baseAddAtk = this is Card19 card19 ? card19.BaseAtkAdd : 0;
+        CurUpgradeInfo.Des.EmbedTypes.ForEach(embedType =>
+        {
+            replacerList.Add(embedType switch
+            {
+                EmbedAttack attack => () => bothTurnData.UIGetAttackEnemyValue(Target, attack.AttackValue + baseAddAtk, strengthMulti).ToString(),
+                EmbedCard6 _ => () => (this as Card6)!.BaseAtkAddByDaJi(bothTurnData).ToString(),
+                EmbedCard12 _ => () => bothTurnData.UIGetAttackEnemyValue(Target, (this as Card12)!.AtkByBlock(bothTurnData), 1).ToString(),
+                IEmbedNotChange notChange => () => notChange.GetNotChangeString(),
+                _ => () => "NaN!"
+            });
+            
+        });
+        return CurUpgradeInfo.ContentWithKeywords(replacerList);
+        
+    }
     
     #region Com
     public bool HasTarget => Config.HasTarget;
-    public EnemyDataBase Target = null!;
+    public EnemyDataBase? Target;
     public bool IsTemporary;
     #endregion
 
-    protected int EmbedInt(int id) => CurUpgradeInfo.Des.EmbedIntList[id];
-    protected int EmbedEnergyInt(int id) => CurUpgradeInfo.Des.EmbedEnergyIntList[id];
+    protected T NthEmbedAs<T>(int id)
+        where T : EmbedType
+        => (CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as T)!;
+
+    protected TBuff NthEmbedAsBuffCopy<TBuff>(int id)
+        where TBuff : BuffDataBase
+        => ((CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
     
     CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
 }

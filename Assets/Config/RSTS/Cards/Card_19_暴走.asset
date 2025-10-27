@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ab6a8cf5d5949f3a77e224229b63d35, type: 3}
-  m_Name: "Card_17_\u5FA1\u8840\u672F"
+  m_Name: "Card_19_\u66B4\u8D70"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,26 +21,26 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Name: "\u5FA1\u8840\u672F"
-  ID: 17
+  Name: "\u66B4\u8D70"
+  ID: 19
   Color: 0
   Rarity: 1
   Category: 0
   HasTarget: 1
   Upgrades:
   - Des:
-      content: "\u5931\u53BB[]\u70B9\u751F\u547D\u3002 \u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002\u8FD9\u5F20\u724C\u6BCF\u88AB\u6253\u51FA\u4E00\u6B21\uFF0C\u5728\u672C\u573A\u6218\u6597\u4E2D\u5176\u57FA\u7840\u4F24\u5BB3\u589E\u52A0[]\u3002"
       EmbedTypes:
-      - rid: 4049883477275836482
-      - rid: 4049883477275836481
+      - rid: 4049883477275836489
+      - rid: 4049883477275836490
     Keywords: 
     CostInfo:
       rid: 4049883472238215184
   - Des:
-      content: "\u5931\u53BB[]\u70B9\u751F\u547D\u3002 \u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002\u8FD9\u5F20\u724C\u6BCF\u88AB\u6253\u51FA\u4E00\u6B21\uFF0C\u5728\u672C\u573A\u6218\u6597\u4E2D\u5176\u57FA\u7840\u4F24\u5BB3\u589E\u52A0[]\u3002"
       EmbedTypes:
-      - rid: 4049883477275836483
-      - rid: 4049883477275836484
+      - rid: 4049883477275836491
+      - rid: 4049883477275836492
     Keywords: 
     CostInfo:
       rid: 4049883472238215185
@@ -55,19 +55,19 @@ MonoBehaviour:
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 1
-    - rid: 4049883477275836481
+    - rid: 4049883477275836489
       type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
       data:
-        AttackValue: 15
-    - rid: 4049883477275836482
+        AttackValue: 8
+    - rid: 4049883477275836490
       type: {class: EmbedMisc, ns: RSTS, asm: RSTS}
       data:
-        MiscValue: 2
-    - rid: 4049883477275836483
-      type: {class: EmbedMisc, ns: RSTS, asm: RSTS}
-      data:
-        MiscValue: 2
-    - rid: 4049883477275836484
+        MiscValue: 5
+    - rid: 4049883477275836491
       type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
       data:
-        AttackValue: 20
+        AttackValue: 8
+    - rid: 4049883477275836492
+      type: {class: EmbedMisc, ns: RSTS, asm: RSTS}
+      data:
+        MiscValue: 8

@@ -5,9 +5,9 @@ namespace RSTS;
 [CardID(16)][Serializable]
 public class Card16: CardDataBase
 {
-    int atk => EmbedInt(0);
-    int energy => EmbedEnergyInt(0);
-    int card => EmbedInt(1);
+    int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
+    int energy => NthEmbedAs<EmbedEnergy>(1).EnergyValue;
+    int card => NthEmbedAs<EmbedDraw>(2).DrawValue;
 
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {

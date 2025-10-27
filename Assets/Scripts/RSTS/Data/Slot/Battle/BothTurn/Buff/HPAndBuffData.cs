@@ -32,7 +32,7 @@ public class HPAndBuffData
         {
             if (existBuff is { StackInfo: not null } && addedBuff.StackInfo != null)
             {
-                existBuff.StackInfo.ChangeCount(addedBuff.StackInfo.Count);
+                existBuff.StackInfo.Count.Value += addedBuff.StackInfo.Count;
             }
             else
             {
@@ -67,13 +67,12 @@ public class HPAndBuffData
         }
     }
 
-    public int GetAtkBaseAddSum(Predicate<IBuffFromAtkBaseAdd>? conditionModify = null, Func<IBuffFromAtkBaseAdd, int>? modifier = null)
+    public int GetAtkBaseAddSum(Func<IBuffFromAtkBaseAdd, int>? modifier = null)
     {
-        conditionModify ??= _ => false;
         modifier ??= buff => buff.GetAtkBaseAdd();
         return buffList
             .OfType<IBuffFromAtkBaseAdd>()
-            .Sum(buff => conditionModify(buff) ? modifier(buff) : buff.GetAtkBaseAdd());
+            .Sum(modifier);
     }
 
     public float GetFromAtkFinalMulti()

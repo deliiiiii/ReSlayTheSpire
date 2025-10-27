@@ -18,13 +18,9 @@ public enum EBuffDisposeTime
 }
 
 [Serializable]
-public class BuffStackInfo(int count)
+public class BuffStackInfo
 {
-    public Observable<int> Count = new(count);
-    public void ChangeCount(int delta)
-    {
-        Count.Value += delta;
-    }
+    public Observable<int> Count = new(1);
 }
 
 [Serializable]

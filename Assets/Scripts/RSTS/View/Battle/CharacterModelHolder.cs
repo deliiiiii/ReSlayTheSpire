@@ -71,8 +71,10 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
                 // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt try...");
                 if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out var yieldCardData))
                     return;
-                if (!yieldCardData.HasTarget)
+                if (!yieldCardData.CardModel.Data.HasTarget)
                     return;
+                yieldCardData.CardModel.Data.Target = m.Data;
+                yieldCardData.CardModel.RefreshTxtDes();
                 // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt success!");
                 enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
                 m.EnableSelectTarget(true);
@@ -81,8 +83,10 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
 
             m.OnPointerExitEvt += () =>
             {
-                if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag))
+                if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out var yieldCardData))
                     return;
+                yieldCardData.CardModel.Data.Target = null;
+                yieldCardData.CardModel.RefreshTxtDes();
                 enteredTargetEnemyModels.Remove(m);
                 m.EnableSelectTarget(false);
                 enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);

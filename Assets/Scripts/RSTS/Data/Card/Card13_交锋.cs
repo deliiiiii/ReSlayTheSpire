@@ -6,7 +6,7 @@ namespace RSTS;
 [CardID(13)][Serializable]
 public class Card13 : CardDataBase
 {
-    int atk => EmbedInt(0);
+    int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
         bothTurnData.AttackEnemy(Target, atk);

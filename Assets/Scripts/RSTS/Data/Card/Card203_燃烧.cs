@@ -5,10 +5,10 @@ namespace RSTS;
 [CardID(203)][Serializable]
 public class Card203 : CardDataBase
 {
-    int strength => EmbedInt(0);
+    BuffDataStrength buffStrength => NthEmbedAsBuffCopy<BuffDataStrength>(0);
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.AddBuffToPlayer(new BuffFromDataStrength(strength));
+        bothTurnData.AddBuffToPlayer(buffStrength);
         return UniTask.CompletedTask;
     }
 }

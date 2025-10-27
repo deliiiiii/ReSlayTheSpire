@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace RSTS;
@@ -128,6 +129,7 @@ public class BothTurnData : IMyFSMArg
         ExhaustList.MyClear();
         
         PlayerHPAndBuffData.ClearBuff();
+        CollectAllCards().ForEach(cardData => cardData.OnExitBothTurn());
     }
 
     IEnumerable<CardDataBase> CollectAllCards()
@@ -267,13 +269,15 @@ public class BothTurnData : IMyFSMArg
     
     #region yield effect
     // 使用攻击牌攻击的伤害
-    public void AttackEnemy(EnemyDataBase enemyData, int baseAtk, int strengthMulti = 1)
+    public void AttackEnemy(EnemyDataBase? enemyData, int baseAtk,int strengthMulti = 1)
     {
+        if (enemyData == null)
+            return;
         Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, strengthMulti);
         if(resultList.OfType<AttackResultDie>().Any())
             EnemyList.MyRemove(enemyData);
     }
-    public async Task AttackEnemyMultiTimesAsync(EnemyDataBase enemyData, int baseAtk, int times)
+    public async Task AttackEnemyMultiTimesAsync(EnemyDataBase? enemyData, int baseAtk, int times)
     {
         for (int t = 0; t < times; t++)
         {
@@ -336,20 +340,35 @@ public class BothTurnData : IMyFSMArg
         if (PlayerHPAndBuffData.CurHP <= 0)
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
+    
+    public int UIGetAttackEnemyValue(EnemyDataBase? enemyData, int baseAtk
+        , int strengthMultiFromCard4)
+    {
+        return GetAttackValue(PlayerHPAndBuffData, enemyData?.HPAndBuffData ?? null, baseAtk, strengthMultiFromCard4);
+    }
+    
+    int GetAttackValue(HPAndBuffData from, HPAndBuffData? to, int baseAtk
+        , int strengthMultiFromCard4 = 1)
+    {
+        var baseBuffAdd = from.GetAtkBaseAddSum(buff =>
+        {
+            if(buff is BuffDataStrength)
+                return buff.GetAtkBaseAdd() * strengthMultiFromCard4;
+            return buff.GetAtkBaseAdd();
+        });
+        var finalMulFrom = from.GetFromAtkFinalMulti();
+        var finalMulTo = to?.GetToAtkFinalMulti() ?? 1f;
+        return Mathf.FloorToInt((baseAtk + baseBuffAdd) * finalMulFrom * finalMulTo);
+    }
 
     void Attack(HPAndBuffData from, HPAndBuffData to, int baseAtk, out List<AttackResult> resultList
-        , int strengthMulti = 1)
+        , int strengthMultiFromCard4 = 1)
     {
         resultList = [];
         if (!to.CanBeSelected)
             return;
         // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
-        var baseAdd = from.GetAtkBaseAddSum(
-            buff => buff is BuffFromDataStrength,
-            buff => buff.GetAtkBaseAdd() * strengthMulti);
-        var finalMulFrom = from.GetFromAtkFinalMulti();
-        var finalMulTo = to.GetToAtkFinalMulti();
-        var finalAtk = Mathf.FloorToInt((baseAtk + baseAdd) * finalMulFrom * finalMulTo);
+        var finalAtk = GetAttackValue(from, to, baseAtk, strengthMultiFromCard4);
         to.CurHP.Value -= finalAtk;
         if (to.CurHP <= 0)
         {
@@ -361,9 +380,9 @@ public class BothTurnData : IMyFSMArg
     {
         PlayerHPAndBuffData.AddBuff(buffData);
     }
-    public void AddBuffToEnemy(EnemyDataBase enemyData, BuffDataBase buffData)
+    public void AddBuffToEnemy(EnemyDataBase? enemyData, BuffDataBase buffData)
     {
-        enemyData.HPAndBuffData.AddBuff(buffData);
+        enemyData?.HPAndBuffData.AddBuff(buffData);
     }
     public void AddBuffToAllEnemies(Func<BuffDataBase> buffDataCtor)
     {

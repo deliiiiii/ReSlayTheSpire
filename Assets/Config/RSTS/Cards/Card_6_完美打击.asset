@@ -29,14 +29,20 @@ MonoBehaviour:
   HasTarget: 1
   Upgrades:
   - Des:
-      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u4F60\u6BCF\u6709\u4E00\u5F20\u540D\u5B57\u4E2D\u6709\u6253\u51FB\u7684\u724C\uFF0C\u4F24\u5BB3+[]\u3002"
-      EmbedIntList: 0600000002000000
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u4F60\u6BCF\u6709\u4E00\u5F20\u540D\u5B57\u4E2D\u6709\u6253\u51FB\u7684\u724C\uFF0C\u57FA\u7840\u4F24\u5BB3+[]\u3002\uFF08\u5171\u8BA1+[]\uFF09"
+      EmbedTypes:
+      - rid: 4049883477275836438
+      - rid: 4049883477275836439
+      - rid: 4049883477275836505
     Keywords: 
     CostInfo:
       rid: 4049883448556126208
   - Des:
-      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u4F60\u6BCF\u6709\u4E00\u5F20\u540D\u5B57\u4E2D\u6709\u6253\u51FB\u7684\u724C\uFF0C\u4F24\u5BB3+[]\u3002"
-      EmbedIntList: 0600000003000000
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u4F60\u6BCF\u6709\u4E00\u5F20\u540D\u5B57\u4E2D\u6709\u6253\u51FB\u7684\u724C\uFF0C\u57FA\u7840\u4F24\u5BB3+[]\u3002\uFF08\u5171\u8BA1+[]\uFF09"
+      EmbedTypes:
+      - rid: 4049883477275836440
+      - rid: 4049883477275836441
+      - rid: 4049883477275836506
     Keywords: 
     CostInfo:
       rid: 4049883448556126209
@@ -51,3 +57,25 @@ MonoBehaviour:
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 2
+    - rid: 4049883477275836438
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 6
+    - rid: 4049883477275836439
+      type: {class: EmbedMisc, ns: RSTS, asm: RSTS}
+      data:
+        MiscValue: 2
+    - rid: 4049883477275836440
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 6
+    - rid: 4049883477275836441
+      type: {class: EmbedMisc, ns: RSTS, asm: RSTS}
+      data:
+        MiscValue: 3
+    - rid: 4049883477275836505
+      type: {class: EmbedCard6, ns: RSTS, asm: RSTS}
+      data: 
+    - rid: 4049883477275836506
+      type: {class: EmbedCard6, ns: RSTS, asm: RSTS}
+      data: 

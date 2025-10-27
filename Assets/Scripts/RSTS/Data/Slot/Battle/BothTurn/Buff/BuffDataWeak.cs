@@ -8,10 +8,6 @@ public class BuffDataWeak : BuffDataBase, IBuffFromAtkFinalMul
     public override EBuffUseTime UseTime => EBuffUseTime.None;
     public override EBuffDisposeTime DisposeTime => EBuffDisposeTime.TurnEnd;
     
-    public BuffDataWeak(int count)
-    {
-        StackInfo = new BuffStackInfo(count);
-    }
 
     public float GetAtkFinalMulti()
     {

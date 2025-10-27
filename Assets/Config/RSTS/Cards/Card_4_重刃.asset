@@ -29,14 +29,18 @@ MonoBehaviour:
   HasTarget: 1
   Upgrades:
   - Des:
-      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u529B\u91CF\u5728\u91CD\u5203\u4E0A\u53D1\u6325[]\u500D\u6548\u679C\u3002"
-      EmbedIntList: 0e00000003000000
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002\uFF08\u529B\u91CF\u5728\u91CD\u5203\u4E0A\u53D1\u6325\u4E86[]\u500D\u6548\u679C\u3002\uFF09"
+      EmbedTypes:
+      - rid: 4049883477275836430
+      - rid: 4049883477275836431
     Keywords: 
     CostInfo:
       rid: 4049883448556126208
   - Des:
-      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u529B\u91CF\u5728\u91CD\u5203\u4E0A\u53D1\u6325[]\u500D\u6548\u679C\u3002"
-      EmbedIntList: 0e00000005000000
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002\uFF08\u529B\u91CF\u5728\u91CD\u5203\u4E0A\u53D1\u6325\u4E86[]\u500D\u6548\u679C\u3002\uFF09"
+      EmbedTypes:
+      - rid: 4049883477275836432
+      - rid: 4049883477275836433
     Keywords: 
     CostInfo:
       rid: 4049883448556126209
@@ -51,3 +55,19 @@ MonoBehaviour:
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
         Cost: 2
+    - rid: 4049883477275836430
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 14
+    - rid: 4049883477275836431
+      type: {class: EmbedMisc, ns: RSTS, asm: RSTS}
+      data:
+        MiscValue: 3
+    - rid: 4049883477275836432
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 14
+    - rid: 4049883477275836433
+      type: {class: EmbedMisc, ns: RSTS, asm: RSTS}
+      data:
+        MiscValue: 5

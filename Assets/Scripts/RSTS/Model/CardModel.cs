@@ -10,8 +10,7 @@ namespace RSTS;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 public class CardModel : MonoBehaviour
 {
-    [SerializeReference][ReadOnly]
-    CardDataBase data;
+    [SerializeReference][ReadOnly] public CardDataBase Data;
     public Text TxtCost;
     public Text TxtName;
     public Text TextCategory;
@@ -25,9 +24,9 @@ public class CardModel : MonoBehaviour
     public event Action<Vector3>? OnBeginDragEvt;
     public event Action<Vector3>? OnDragEvt;
     public event Action<Vector3>? OnEndDragEvt;
-    public void InitByData(CardDataBase fData)
+    public void ReadData(CardDataBase fData)
     {
-        data = fData;
+        Data = fData;
         TxtCost.text = fData.CurCostInfo switch
         {
             CardCostNumber costNumber => costNumber.Cost.ToString(),
@@ -36,13 +35,20 @@ public class CardModel : MonoBehaviour
         };
         TxtName.text = fData.Config.Name;
         TextCategory.text = fData.Config.Category.ToString();
-        TxtDes.text = fData.CurContentWithKeywords;
+        RefreshTxtDes();
 
         imgs = GetComponentsInChildren<Image>();
         texts = GetComponentsInChildren<Text>();
         tmpTexts = GetComponentsInChildren<TMP_Text>();
     }
-    
+
+    public void RefreshTxtDes()
+    {
+        if (!MyFSM.IsState(BattleStateWrap.One, EBattleState.BothTurn, out var battleData))
+            return;
+        TxtDes.text = Data.CurContentWithKeywords(battleData.BothTurnData);
+    }
+
     public void OnPointerEnter(BaseEventData baseEventData)
     {
         OnPointerEnterEvt?.Invoke();
