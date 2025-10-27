@@ -190,10 +190,13 @@ public class BothTurnData : IMyFSMArg
     {
         HandList.ForEach(card =>
         {
-            if(card.ContainsKeyword(ECardKeyword.Ethereal))
+            if (card.ContainsKeyword(ECardKeyword.Ethereal))
+            {
                 ExhaustList.MyAdd(card);
-            else if(card.Config.Category != ECardCategory.Ability)
-                DiscardList.MyAdd(card);
+                return;
+            }
+            // else if(card.Config.Category != ECardCategory.Ability)
+            DiscardList.MyAdd(card);
         });
         HandList.MyClear();
     }
