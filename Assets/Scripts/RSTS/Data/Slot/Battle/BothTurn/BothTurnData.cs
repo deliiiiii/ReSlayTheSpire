@@ -324,10 +324,10 @@ public class BothTurnData : IMyFSMArg
             return;
         // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
         var baseAdd = from.GetAtkBaseAddSum(
-            buff => buff is BuffDataStrength,
+            buff => buff is BuffFromDataStrength,
             buff => buff.GetAtkBaseAdd() * strengthMulti);
-        var finalMulFrom = from.GetAtkFinalMulti();
-        var finalMulTo = to.GetAtkFinalMulti();
+        var finalMulFrom = from.GetFromAtkFinalMulti();
+        var finalMulTo = to.GetToAtkFinalMulti();
         var finalAtk = Mathf.FloorToInt((baseAtk + baseAdd) * finalMulFrom * finalMulTo);
         to.CurHP.Value -= finalAtk;
         if (to.CurHP <= 0)

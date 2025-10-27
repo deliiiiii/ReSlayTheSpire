@@ -3,13 +3,13 @@
 namespace RSTS;
 
 [Serializable]
-public class BuffDataStrength : BuffDataBase, IBuffAtkBaseAdd
+public class BuffFromDataStrength : BuffDataBase, IBuffFromAtkBaseAdd
 {
     public override string Name => "力量";
     public override EBuffUseTime UseTime => EBuffUseTime.None;
     public override EBuffDisposeTime DisposeTime => EBuffDisposeTime.None;
     
-    public BuffDataStrength(int count)
+    public BuffFromDataStrength(int count)
     {
         StackInfo = new BuffStackInfo(count);
     }

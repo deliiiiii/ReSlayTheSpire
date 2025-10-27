@@ -39,7 +39,7 @@ public abstract class BuffDataBase
 }
 
 
-public interface IBuffAtkBaseAdd
+public interface IBuffFromAtkBaseAdd
 {
     int GetAtkBaseAdd();
 }
@@ -48,3 +48,6 @@ public interface IBuffAtkFinalMul
 {
     float GetAtkFinalMulti();
 }
+
+public interface IBuffFromAtkFinalMul : IBuffAtkFinalMul;
+public interface IBuffToAtkFinalMul : IBuffAtkFinalMul;

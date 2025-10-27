@@ -65,21 +65,29 @@ public class HPAndBuffData
         }
     }
 
-    public int GetAtkBaseAddSum(Predicate<IBuffAtkBaseAdd>? conditionModify = null, Func<IBuffAtkBaseAdd, int>? modifier = null)
+    public int GetAtkBaseAddSum(Predicate<IBuffFromAtkBaseAdd>? conditionModify = null, Func<IBuffFromAtkBaseAdd, int>? modifier = null)
     {
         conditionModify ??= _ => false;
         modifier ??= buff => buff.GetAtkBaseAdd();
         return buffList
-            .OfType<IBuffAtkBaseAdd>()
+            .OfType<IBuffFromAtkBaseAdd>()
             .Sum(buff => conditionModify(buff) ? modifier(buff) : buff.GetAtkBaseAdd());
     }
 
-    public float GetAtkFinalMulti()
+    public float GetFromAtkFinalMulti()
     {
         return buffList
-            .OfType<IBuffAtkFinalMul>()
+            .OfType<IBuffFromAtkFinalMul>()
             .Aggregate(1f, (seed, buff) => seed * (1 + buff.GetAtkFinalMulti()));
     }
+    
+    public float GetToAtkFinalMulti()
+    {
+        return buffList
+            .OfType<IBuffToAtkFinalMul>()
+            .Aggregate(1f, (seed, buff) => seed * (1 + buff.GetAtkFinalMulti()));
+    }
+    
 
     public void UseABuff(EBuffUseTime eUseTime)
     {
