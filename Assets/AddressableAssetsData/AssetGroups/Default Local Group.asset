@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 02f5f4b8d11649e4eabc06fb6d3672f5
+    m_Address: "Card_9_\u95EA\u7535\u9739\u96F3"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 03b72f0c71f89124c84b71095e08b618
     m_Address: "Card_7_\u5251\u67C4\u6253\u51FB"
     m_ReadOnly: 0
@@ -72,7 +78,7 @@ MonoBehaviour:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 68283da790c78804a9d12e0664391b43
-    m_Address: "Enemy_0_\u6D4B\u8BD50"
+    m_Address: "Enemy_0_\u500F\u5FFD\u9B54"
     m_ReadOnly: 0
     m_SerializedLabels:
     - RSTSConfig
@@ -84,7 +90,7 @@ MonoBehaviour:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 825cd0cf7b1f3d74083469043d6cda75
-    m_Address: "Enemy_1_\u6D4B\u8BD51"
+    m_Address: "Enemy_2_\u500F\u5FFD\u9B54+"
     m_ReadOnly: 0
     m_SerializedLabels:
     - RSTSConfig
@@ -139,6 +145,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f1bea8dcfc5533e4f8f1d9e7ec2ab3ca
     m_Address: "Bottle_0_\u529B\u91CF"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f9c43c5e4f35ea14ea95257417c8cab0
+    m_Address: "Enemy_1_\u8106\u76AE"
     m_ReadOnly: 0
     m_SerializedLabels:
     - RSTSConfig

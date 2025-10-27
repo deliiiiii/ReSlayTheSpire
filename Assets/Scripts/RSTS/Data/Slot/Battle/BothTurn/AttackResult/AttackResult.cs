@@ -1,4 +1,9 @@
-﻿public abstract class AttackResult;
+﻿using RSTS;
+
+public abstract class AttackResult
+{
+    // public required HPAndBuffData Data;
+}
 
 public class AttackResultDie(int dmg) : AttackResult
 {

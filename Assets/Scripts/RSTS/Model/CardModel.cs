@@ -38,67 +38,32 @@ public class CardModel : MonoBehaviour
         TextCategory.text = fData.Config.Category.ToString();
         TxtDes.text = fData.CurDes.Content;
 
-        if (!TryGetComponent<EventTrigger>(out var evtTrigger))
-            evtTrigger = gameObject.AddComponent<EventTrigger>();
-        EventTrigger.Entry entryPointerEnter = new EventTrigger.Entry
-        {
-            eventID = EventTriggerType.PointerEnter
-        };
-        EventTrigger.Entry entryPointerExit = new EventTrigger.Entry
-        {
-            eventID = EventTriggerType.PointerExit
-        };
-        EventTrigger.Entry entryBeginDrag = new EventTrigger.Entry
-        {
-            eventID = EventTriggerType.BeginDrag
-        };
-        EventTrigger.Entry entryDrag = new EventTrigger.Entry
-        {
-            eventID = EventTriggerType.Drag
-        };
-        EventTrigger.Entry entryEndDrag = new EventTrigger.Entry
-        {
-            eventID = EventTriggerType.EndDrag
-        };
-
-        entryPointerEnter.callback.AddListener(baseEventData => OnPointerEnter((PointerEventData)baseEventData));
-        entryPointerExit.callback.AddListener(baseEventData => OnPointerExit((PointerEventData)baseEventData));
-        entryBeginDrag.callback.AddListener(baseEventData => OnBeginDragDelegate((PointerEventData)baseEventData));
-        entryDrag.callback.AddListener(baseEventData => OnDragDelegate((PointerEventData)baseEventData));
-        entryEndDrag.callback.AddListener(baseEventData => OnEndDragDelegate((PointerEventData)baseEventData));
-        
-        evtTrigger.triggers.Add(entryPointerEnter);
-        evtTrigger.triggers.Add(entryPointerExit);
-        evtTrigger.triggers.Add(entryBeginDrag);
-        evtTrigger.triggers.Add(entryDrag);
-        evtTrigger.triggers.Add(entryEndDrag);
-
         imgs = GetComponentsInChildren<Image>();
         texts = GetComponentsInChildren<Text>();
         tmpTexts = GetComponentsInChildren<TMP_Text>();
     }
     
-    void OnPointerEnter(PointerEventData baseEventData)
+    public void OnPointerEnter(BaseEventData baseEventData)
     {
         OnPointerEnterEvt?.Invoke();
     }
-    void OnPointerExit(PointerEventData baseEventData)
+    public void OnPointerExit(BaseEventData baseEventData)
     {
         OnPointerExitEvt?.Invoke();
     }
-    void OnBeginDragDelegate(PointerEventData baseEventData)
+    public void OnBeginDragDelegate(BaseEventData baseEventData)
     {
-        OnBeginDragEvt?.Invoke(Camera.main!.ScreenToWorldPoint(baseEventData.position));
+        OnBeginDragEvt?.Invoke(Camera.main!.ScreenToWorldPoint((baseEventData as PointerEventData)!.position));
     }
 
-    void OnDragDelegate(PointerEventData baseEventData)
+    public void OnDragDelegate(BaseEventData baseEventData)
     {
-        OnDragEvt?.Invoke(Camera.main!.ScreenToWorldPoint(baseEventData.position));
+        OnDragEvt?.Invoke(Camera.main!.ScreenToWorldPoint((baseEventData as PointerEventData)!.position));
     }
     
-    void OnEndDragDelegate(PointerEventData baseEventData)
+    public void OnEndDragDelegate(BaseEventData baseEventData)
     {
-        OnEndDragEvt?.Invoke(baseEventData.position);
+        OnEndDragEvt?.Invoke((baseEventData as PointerEventData)!.position);
     }
     
     public void EnableAllShown(bool enable)

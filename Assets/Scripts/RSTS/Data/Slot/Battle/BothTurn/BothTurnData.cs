@@ -198,7 +198,7 @@ public class BothTurnData : IMyFSMArg
         HandList.MyClear();
     }
 
-    public void Yield(CardDataBase toYield)
+    public async UniTask YieldAsync(CardDataBase toYield)
     {
         int costEnergy = toYield.CurCostInfo switch
         {
@@ -207,7 +207,7 @@ public class BothTurnData : IMyFSMArg
             CardCostNone or _ => 0,
         };
         CurEnergy.Value -= costEnergy;
-        toYield.Yield(this, costEnergy);
+        await toYield.YieldAsync(this, costEnergy);
         if (toYield.Config.Category == ECardCategory.Ability)
         {
             // 打出能力牌，不会消耗
@@ -263,15 +263,42 @@ public class BothTurnData : IMyFSMArg
     
     public void AttackEnemyRandomly(int baseAtk)
     {
+        if(EnemyList.Count == 0)
+            return;
         var enemyData = EnemyList.RandomItem();
         AttackEnemy(enemyData, baseAtk);
     }
-    public async UniTask AttackEnemyRandomlyMultiTimes(int baseAtk, int times)
+    public async UniTask AttackEnemyRandomlyMultiTimesAsync(int baseAtk, int times)
     {
         for (int t = 0; t < times; t++)
         {
             AttackEnemyRandomly(baseAtk);
-            await Task.Delay(300);
+            await UniTask.Delay(300);
+        }
+    }
+
+    public void AttackAllEnemies(int baseAtk)
+    {
+        // var allResult = new List<AttackResult>();
+        var toRemoveList = new List<EnemyDataBase>();
+        EnemyList.ForEach(enemyData =>
+        {
+            Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList);
+            // allResult.AddRange(resultList);
+            if (resultList.OfType<AttackResultDie>().Any())
+            {
+                toRemoveList.Add(enemyData);
+            }
+        });
+        toRemoveList.ForEach(toRemove => EnemyList.MyRemove(toRemove));
+    }
+    
+    public async UniTask AttackAllEnemiesMultiTimesAsync(int baseAtk, int times)
+    {
+        for (int t = 0; t < times; t++)
+        {
+            AttackAllEnemies(baseAtk);
+            await UniTask.Delay(300);
         }
     }
 
@@ -286,8 +313,6 @@ public class BothTurnData : IMyFSMArg
         , int strengthMulti = 1)
     {
         // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
-        
-        // (baseAtk + baseAdd) * (1 + finalMul)
         var baseAdd = from.GetAtkBaseAddSum(
             buff => buff is BuffDataStrength,
             buff => buff.GetAtkBaseAdd() * strengthMulti);
@@ -296,7 +321,7 @@ public class BothTurnData : IMyFSMArg
         var finalAtk = Mathf.FloorToInt((baseAtk + baseAdd) * finalMulFrom * finalMulTo);
         resultList = [];
         to.CurHP.Value -= finalAtk;
-        if (to.CurHP < 0)
+        if (to.CurHP <= 0)
         {
             resultList.Add(new AttackResultDie(to.CurHP));
         }
@@ -309,6 +334,13 @@ public class BothTurnData : IMyFSMArg
     public void AddBuffToEnemy(EnemyDataBase enemyData, BuffDataBase buffData)
     {
         enemyData.HPAndBuffData.AddBuff(buffData);
+    }
+    public void AddBuffToAllEnemies(Func<BuffDataBase> buffDataCtor)
+    {
+        foreach (var enemyData in EnemyList)
+        {
+            enemyData.HPAndBuffData.AddBuff(buffDataCtor());
+        }
     }
 
     public void AddBlockToPlayer(int addedBlock)

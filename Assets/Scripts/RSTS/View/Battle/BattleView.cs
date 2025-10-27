@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -221,7 +222,7 @@ public class BattleView : Singleton<BattleView>
                     }
                     cardData.Target = targetingEnemy;
                 }
-                bothTurnData.Yield(cardData);
+                bothTurnData.YieldAsync(cardData).Forget();
             };
         };
         bothTurnData.HandList.OnRemove += cardData =>

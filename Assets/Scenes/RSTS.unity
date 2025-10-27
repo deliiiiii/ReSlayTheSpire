@@ -2449,7 +2449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TxtHurt: {fileID: 1631086962}
-  MoveY: 40
+  MoveY: 128.09
   Duration: 0.9
   EaseType: 9
 --- !u!1 &345480510

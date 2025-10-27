@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36e56aae84824973aa372fea7033b210, type: 3}
-  m_Name: "Enemy_1_\u6D4B\u8BD51"
+  m_Name: "Enemy_1_\u8106\u76AE"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,6 +21,6 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Name: "\u6D4B\u8BD51"
+  Name: "\u8106\u76AE"
   ID: 1
-  MaxHP: 1999
+  MaxHP: 20

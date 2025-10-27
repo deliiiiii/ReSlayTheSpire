@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using RSTS.CDMV;
 using Sirenix.Utilities;
 
@@ -47,7 +48,7 @@ public abstract class CardDataBase
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
     public int UpgradeLevel;
     
-    public abstract void Yield(BothTurnData bothTurnData, int costEnergy);
+    public abstract UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy);
     
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
