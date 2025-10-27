@@ -330,6 +330,13 @@ public class BothTurnData : IMyFSMArg
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
 
+    public void LoseHPToPlayer(int loseHP)
+    {
+        PlayerHPAndBuffData.CurHP.Value -= loseHP;
+        if (PlayerHPAndBuffData.CurHP <= 0)
+            MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
+    }
+
     void Attack(HPAndBuffData from, HPAndBuffData to, int baseAtk, out List<AttackResult> resultList
         , int strengthMulti = 1)
     {

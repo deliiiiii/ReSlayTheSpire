@@ -10,9 +10,11 @@ public class HurtEffect : MonoBehaviour
     public float MoveY = 40f;
     public float Duration = 0.9f;
     public Ease EaseType = Ease.OutCubic;
+    public Canvas ParentCanvas;
     
     void OnEnable()
     {
+        transform.SetParent(ParentCanvas.transform);
         // 使用DoTween 代码实现伤害数字上浮并淡出效果
         var rt = TxtHurt.rectTransform;
         var startPos = rt.anchoredPosition;

@@ -18,20 +18,6 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
     public void ReadData(EnemyDataBase enemyData)
     {
         name = $"Enemy_{enemyData.Config.Name}";
-        MdlHPAndBuff.DirectlySetHP(enemyData.HPAndBuffData.CurHP, enemyData.HPAndBuffData.MaxHP);
-        MdlHPAndBuff.SetShield(0);
-        enemyData.HPAndBuffData.CurHP.OnValueChangedFull += (oldV, newV) =>
-        {
-            MdlHPAndBuff.DirectlySetHP(newV, enemyData.HPAndBuffData.MaxHP);
-            if (newV - oldV > 0)
-            {
-                MdlHPAndBuff.OnHeal(newV - oldV);
-            }
-            else if (newV - oldV < 0)
-            {
-                MdlHPAndBuff.OnHurt(oldV - newV);
-            }
-        };
         MdlHPAndBuff.ReadData(enemyData.HPAndBuffData);
         Data = enemyData;
     }

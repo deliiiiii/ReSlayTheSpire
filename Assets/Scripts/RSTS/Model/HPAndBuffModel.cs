@@ -27,15 +27,15 @@ public class HPAndBuffModel : MonoBehaviour
         txtHP.text = $"{hp.ToString()}/{maxHp.ToString()}";
         imgHP.fillAmount = hp / (float)maxHp;
     }
-    
-    public void OnHurt(int hurt)
+
+    void OnHurt(int hurt)
     {
         var hurtEffect = Instantiate(pfbHurtEffect, transform);
         hurtEffect.gameObject.SetActive(true);
         hurtEffect.TxtHurt.text = $"-{hurt}";
     }
-    
-    public void OnHeal(int heal)
+
+    void OnHeal(int heal)
     {
         var hurtEffect = Instantiate(pfbHurtEffect, transform);
         hurtEffect.gameObject.SetActive(true);
@@ -60,6 +60,8 @@ public class HPAndBuffModel : MonoBehaviour
 
     public void ReadData(HPAndBuffData fData)
     {
+        DirectlySetHP(fData.CurHP, fData.MaxHP);
+        SetShield(0);
         fData.OnAddBuff += buffData =>
         {
             var buffModel = Instantiate(pfbBuffModel, transBuff);
@@ -80,6 +82,19 @@ public class HPAndBuffModel : MonoBehaviour
             buffModel.ChangeCount(count);
         };
         
+        fData.CurHP.OnValueChangedFull += (oldV, newV) =>
+        {
+            DirectlySetHP(newV, fData.MaxHP);
+            switch (newV - oldV)
+            {
+                case > 0:
+                    OnHeal(newV - oldV);
+                    break;
+                case < 0:
+                    OnHurt(oldV - newV);
+                    break;
+            }
+        };
         
         data = fData;
     }

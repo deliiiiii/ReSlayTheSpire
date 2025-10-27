@@ -56,7 +56,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     
     void BindBothTurn(MyFSM<EBothTurn> fsm, BothTurnData bothTurnData)
     {
-        PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
+        PlayerModel.ReadData(bothTurnData.PlayerHPAndBuffData);
         bothTurnData.EnemyList.OnAdd += enemyData =>
         {
             // TODO 应对怪物个数不同的情况
