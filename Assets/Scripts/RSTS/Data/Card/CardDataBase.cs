@@ -4,6 +4,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using RSTS.CDMV;
 using Sirenix.Utilities;
+using UnityEngine;
 
 namespace RSTS;
 
@@ -46,7 +47,11 @@ public abstract class CardDataBase
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
     public CardConfigMulti Config;
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
-    public int UpgradeLevel;
+    public int UpgradeLevel => tempUpgradeLevel;
+
+    int trueUpgradeLevel;
+    int tempUpgradeLevel;
+    public Action? OnUpgrade;
     
     public abstract UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy);
     public T GetModify<T>(BothTurnData bothTurnData)
@@ -62,13 +67,35 @@ public abstract class CardDataBase
     }
 
 
-    public virtual void OnExitBothTurn(){}
+    public virtual void OnExitBothTurn()
+    {
+        tempUpgradeLevel = trueUpgradeLevel;
+    }
     public virtual void OnPlayerTurnEnd(BothTurnData bothTurnData){}
 
     // public virtual bool RecommendYield(BothTurnData bothTurnData) => false;
     
+    public void UpgradeTempInTurn()
+    {
+        if (CanTempUpgrade)
+        {
+            tempUpgradeLevel++;
+            OnUpgrade?.Invoke();
+        }
+    }
+
+    public void Upgrade()
+    {
+        if (CanUpgrade)
+        {
+            trueUpgradeLevel++;
+            tempUpgradeLevel = trueUpgradeLevel;
+            OnUpgrade?.Invoke();
+        }
+    }
     public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
-    public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
+    public bool CanUpgrade => trueUpgradeLevel < Config.Upgrades.Count - 1;
+    public bool CanTempUpgrade => tempUpgradeLevel < Config.Upgrades.Count - 1;
     public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
     public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
     public EmbedString CurDes => CurUpgradeInfo.Des;

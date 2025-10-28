@@ -26,6 +26,7 @@ public class BothTurnData : IMyFSMArg
     [SerializeReference] public MyList<CardDataBase> ExhaustList = [];
     /// 第一个参数，弃牌堆；第二个参数，点击后的回调
     public event Action<List<CardDataBase>, Action<CardDataBase>>? OnOpenDiscardOnceClick;
+    public event Action<List<CardDataBase>, int, Action<CardDataBase>>? OnOpenHandOnceClick;
 
     public event Action? OnPlayerLoseHP;
     
@@ -518,11 +519,24 @@ public class BothTurnData : IMyFSMArg
         DrawList.MyInsert(drawIndex, toAdd);
     }
 
-    public void OpenDiscardOnceClick(Action<CardDataBase> onClick)
+    public void OpenDiscardOnceClick(Action<CardDataBase> onConfirm)
     {
         if(DiscardList.Count == 0)
             return;
-        OnOpenDiscardOnceClick?.Invoke(DiscardList, onClick);
+        OnOpenDiscardOnceClick?.Invoke(DiscardList, onConfirm);
+    }
+    
+    public void OpenHandCardOnceClick(int selectCount, Func<CardDataBase, bool> filter, Action<CardDataBase> onConfirm)
+    {
+        var filtered = HandList.Where(filter).ToList();
+        if (filtered.Count == 0)
+            return;
+        // 选择随机一个手牌。。。 
+        var selected = filtered.RandomItem();
+        MyDebug.Log($"武装选到了{selected.Config.name}");
+        onConfirm(selected);
+        // TODO UI选择
+        // OnOpenHandOnceClick?.Invoke(filtered, selectCount, onConfirm);
     }
 
     public IEnumerable<CardDataBase> ExhaustHandCardBy(Func<CardDataBase, bool> match)

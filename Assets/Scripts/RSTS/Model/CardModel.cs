@@ -27,9 +27,9 @@ public class CardModel : MonoBehaviour
     public void ReadData(CardDataBase fData)
     {
         Data = fData;
-        RefreshTxtCost();
-        TxtName.text = fData.Config.Name;
+        
         TextCategory.text = fData.Config.Category.ToString();
+        RefreshTxtCost();
         RefreshTxtDes();
 
         imgs = GetComponentsInChildren<Image>();
@@ -41,6 +41,13 @@ public class CardModel : MonoBehaviour
     {
         if (!MyFSM.IsState(BattleStateWrap.One, EBattleState.BothTurn, out var battleData))
             return;
+        string plus = Data.UpgradeLevel switch
+        {
+            0 => "",
+            1 => "+",
+            _ => $"+{Data.UpgradeLevel}"
+        };
+        TxtName.text = $"{Data.Config.Name}{plus}";
         TxtDes.text = battleData.BothTurnData.CurContentWithKeywords(Data);
     }
 

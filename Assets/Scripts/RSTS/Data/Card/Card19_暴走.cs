@@ -18,6 +18,7 @@ public class Card19 : CardDataBase
 
     public override void OnExitBothTurn()
     {
+        base.OnExitBothTurn();
         useTime = 0;
     }
 

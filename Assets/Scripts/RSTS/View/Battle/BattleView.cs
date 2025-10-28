@@ -166,8 +166,14 @@ public class BattleView : Singleton<BattleView>
             
             var cardModel = Instantiate(PfbCard, PrtHandCard);
             cardModel.ReadData(cardData);
+            cardData.OnUpgrade = () =>
+            {
+                cardModel.RefreshTxtDes();
+                cardModel.RefreshTxtCost();
+            };
             cardModel.gameObject.SetActive(true);
             handCardModelDic.Add(cardData, cardModel);
+
             cardModel.OnPointerEnterEvt += () =>
             {
                 if (MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag))
@@ -303,6 +309,11 @@ public class BattleView : Singleton<BattleView>
                     PnlDiscardOnceClick.SetActive(false);
                 });
             }
+        };
+
+        bothTurnData.OnOpenHandOnceClick += (cardList, count, onConfirm) =>
+        {
+            
         };
         
         bothTurnData.OnPlayerLoseHP += () =>
