@@ -254,12 +254,19 @@ public class BothTurnData : IMyFSMArg
         HandList.MyClear();
     }
 
+    public string UIGetEnergy(CardDataBase cardData)
+    {
+        if (cardData.CurCostInfo is CardCostX)
+            return "X";
+        int costEnergy = GetEnergy(cardData);
+        return costEnergy.ToString();
+    }
     public int GetEnergy(CardDataBase cardData)
     {
         int costEnergy = cardData.CurCostInfo switch
         {
             CardCostNumber number => number.Cost,
-            CardCostX => CurEnergy,
+            CardCostX  => CurEnergy,
             CardCostNone or _ => 0,
         };
         if (cardData is Card24)
@@ -268,6 +275,7 @@ public class BothTurnData : IMyFSMArg
             if (costEnergy < 0)
                 costEnergy = 0;
         }
+        MyDebug.Log($"GetEnergy {cardData.GetType()} : {costEnergy}");
         return costEnergy;
     }
     public async UniTask YieldAsync(CardDataBase toYield)

@@ -48,7 +48,7 @@ public class CardModel : MonoBehaviour
     {
         if (!MyFSM.IsState(BattleStateWrap.One, EBattleState.BothTurn, out var battleData))
             return;
-        TxtCost.text = battleData.BothTurnData.GetEnergy(Data).ToString();
+        TxtCost.text = battleData.BothTurnData.UIGetEnergy(Data);
     }
 
     public void OnPointerEnter(BaseEventData baseEventData)
