@@ -23,4 +23,4 @@ MonoBehaviour:
     SerializationNodes: []
   Name: "\u500F\u5FFD\u9B54\uFF08\u524A\u5F31\uFF09"
   ID: 0
-  MaxHP: 100
+  MaxHP: 999

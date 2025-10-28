@@ -153,7 +153,7 @@ public class BothTurnData : IMyFSMArg
             {
                 IEmbedNotChange notChange => notChange.GetNotChangeString(),
                 EmbedCard6 => cardData.GetModify<AttackModifyCard6>(this).BaseAtkAddByDaJi.ToString(),
-                EmbedCard12 => cardData.GetModify<AttackModifyCard12>(this).AtkByBlock.ToString(),
+                // EmbedCard12 => cardData.GetModify<AttackModifyCard12>(this).AtkByBlock.ToString(),
                 EmbedCard19 => cardData.GetModify<AttackModifyCard19>(this).BaseAtkAddByUse.ToString(),
                 EmbedCard28 => cardData.GetModify<AttackModifyCard28>(this).AtkTimeByExhaust.ToString(),
                 EmbedAttack attack => 
@@ -244,25 +244,23 @@ public class BothTurnData : IMyFSMArg
 
     public string UIGetEnergy(CardDataBase cardData)
     {
-        if (cardData.CurCostInfo is CardCostX)
-            return "X";
-        int costEnergy = GetEnergy(cardData);
-        return costEnergy.ToString();
+        return cardData.CurCostInfo switch
+        {
+            CardCostNumber number when cardData is Card24 => Math.Max(0, number.Cost - loseHpCount).ToString(),
+            CardCostNumber number => number.Cost.ToString(),
+            CardCostX => "X",
+            CardCostNone or _ => "",
+        };
     }
     public int GetEnergy(CardDataBase cardData)
     {
         int costEnergy = cardData.CurCostInfo switch
         {
+            CardCostNumber number when cardData is Card24 => Math.Max(0, number.Cost - loseHpCount),
             CardCostNumber number => number.Cost,
-            CardCostX  => CurEnergy,
+            CardCostX => CurEnergy,
             CardCostNone or _ => 0,
         };
-        if (cardData is Card24)
-        {
-            costEnergy -= loseHpCount;
-            if (costEnergy < 0)
-                costEnergy = 0;
-        }
         return costEnergy;
     }
     public async UniTask YieldAsync(CardDataBase toYield)

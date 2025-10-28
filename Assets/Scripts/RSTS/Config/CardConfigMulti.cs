@@ -239,8 +239,6 @@ public class EmbedMisc : EmbedType, IEmbedNotChange
 [Serializable]
 public class EmbedCard6 : EmbedType;
 [Serializable]
-public class EmbedCard12 : EmbedType;
-[Serializable]
 public class EmbedCard19 : EmbedType;
 [Serializable]
 public class EmbedCard28 : EmbedType;
