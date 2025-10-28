@@ -31,15 +31,17 @@ public class HPAndBuffModel : MonoBehaviour
     void OnHurt(int hurt)
     {
         var hurtEffect = Instantiate(pfbHurtEffect, transform);
+        hurtEffect.TxtHurt.text = $"{hurt}";
+        hurtEffect.TxtHurt.color = Color.red;
         hurtEffect.gameObject.SetActive(true);
-        hurtEffect.TxtHurt.text = $"-{hurt}";
     }
 
     void OnHeal(int heal)
     {
         var hurtEffect = Instantiate(pfbHurtEffect, transform);
+        hurtEffect.TxtHurt.text = $"{heal}";
+        hurtEffect.TxtHurt.color = Color.green;
         hurtEffect.gameObject.SetActive(true);
-        hurtEffect.TxtHurt.text = $"+{heal}";
     }
     
     

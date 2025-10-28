@@ -12,7 +12,7 @@ public class Card27 : CardDataBase
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
         bothTurnData.AttackEnemyWithResult(Target, atk, out var resultList);
-        if (resultList.OfType<AttackResultBaseDie>().Any())
+        if (resultList.OfType<AttackResultDie>().Any())
         {
             bothTurnData.GainMaxHP(addHPMax);
         }

@@ -293,6 +293,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa9a7a87fc8a70e45a3dcd3b8873062d
+    m_Address: "Card_30_\u6B7B\u4EA1\u6536\u5272"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fa8710fe9b96bbe4b91276498905531d, type: 2}
   m_SchemaSet:

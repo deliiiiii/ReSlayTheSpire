@@ -18,9 +18,9 @@ public class HurtEffect : MonoBehaviour
         // 使用DoTween 代码实现伤害数字上浮并淡出效果
         var rt = TxtHurt.rectTransform;
         var startPos = rt.anchoredPosition;
-        var startColor = TxtHurt.color;
-        startColor.a = 1f;
-        TxtHurt.color = startColor;
+        // var startColor = TxtHurt.color;
+        // startColor.a = 1f;
+        // TxtHurt.color = startColor;
         TxtHurt.transform.localScale = Vector3.one;
 
         DOTween.Kill(gameObject);

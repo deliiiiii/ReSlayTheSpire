@@ -1,6 +1,11 @@
 ﻿namespace RSTS;
 public abstract class AttackResultBase;
-public class AttackResultBaseDie(int dmg) : AttackResultBase
+public class AttackResultDie(int dmg) : AttackResultBase
 {
-    public int OverflowDamage = dmg;
+    public readonly int OverflowDamage = dmg;
+}
+
+public class AttackResultHurt(int dmg) : AttackResultBase
+{
+    public int HurtDamage = dmg;
 }

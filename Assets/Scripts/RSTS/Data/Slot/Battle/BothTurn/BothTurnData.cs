@@ -312,7 +312,7 @@ public class BothTurnData : IMyFSMArg
         if (enemyData == null)
             return;
         Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out resultList, modifyList);
-        if(resultList.OfType<AttackResultBaseDie>().Any())
+        if(resultList.OfType<AttackResultDie>().Any())
             EnemyList.MyRemove(enemyData);
     }
     // 使用攻击牌攻击的伤害
@@ -322,7 +322,7 @@ public class BothTurnData : IMyFSMArg
         if (enemyData == null)
             return;
         Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, modifyList);
-        if(resultList.OfType<AttackResultBaseDie>().Any())
+        if(resultList.OfType<AttackResultDie>().Any())
             EnemyList.MyRemove(enemyData);
     }
     public async Task AttackEnemyMultiTimesAsync(EnemyDataBase? enemyData, int baseAtk, int times
@@ -356,18 +356,34 @@ public class BothTurnData : IMyFSMArg
     public void AttackAllEnemies(int baseAtk
         , List<AttackModifyBase>? modifyList = null)
     {
-        // var allResult = new List<AttackResult>();
         var toRemoveList = new List<EnemyDataBase>();
         EnemyList.ForEach(enemyData =>
         {
             Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, modifyList);
-            // allResult.AddRange(resultList);
-            if (resultList.OfType<AttackResultBaseDie>().Any())
+            if (resultList.OfType<AttackResultDie>().Any())
             {
                 toRemoveList.Add(enemyData);
             }
         });
         toRemoveList.ForEach(toRemove => EnemyList.MyRemove(toRemove));
+    }
+    
+    public void AttackAllEnemiesWithResult(int baseAtk, out List<AttackResultBase> allResult
+        , List<AttackModifyBase>? modifyList = null)
+    {
+        var ret = new List<AttackResultBase>();
+        var toRemoveList = new List<EnemyDataBase>();
+        EnemyList.ForEach(enemyData =>
+        {
+            Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, modifyList);
+            ret.AddRange(resultList);
+            if (resultList.OfType<AttackResultDie>().Any())
+            {
+                toRemoveList.Add(enemyData);
+            }
+        });
+        toRemoveList.ForEach(toRemove => EnemyList.MyRemove(toRemove));
+        allResult = ret;
     }
     
     public async UniTask AttackAllEnemiesMultiTimesAsync(int baseAtk, int times
@@ -383,14 +399,20 @@ public class BothTurnData : IMyFSMArg
     public void AttackPlayerFromEnemy(EnemyDataBase enemyData, int baseAtk)
     {
         Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, out var resultList);
-        if (resultList.OfType<AttackResultBaseDie>().Any())
+        if (resultList.OfType<AttackResultDie>().Any())
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
 
     public void GainMaxHP(int addedMaxHP)
     {
-        PlayerHPAndBuffData.MaxHP.Value += addedMaxHP;
-        PlayerHPAndBuffData.CurHP.Value += addedMaxHP;
+        PlayerMaxHP.Value += addedMaxHP;
+        PlayerCurHP.Value += addedMaxHP;
+    }
+    
+    public void GainCurHP(int addedCurHP)
+    {
+        // PlayerHPAndBuffData.
+        PlayerCurHP.Value = Math.Clamp(PlayerCurHP + addedCurHP, PlayerCurHP, PlayerMaxHP);
     }
     
     public void BurnPlayer(int atk)
@@ -407,8 +429,8 @@ public class BothTurnData : IMyFSMArg
     
     public void LoseHPToPlayer(int loseHP)
     {
-        PlayerHPAndBuffData.CurHP.Value -= loseHP;
-        if (PlayerHPAndBuffData.CurHP <= 0)
+        PlayerCurHP.Value -= loseHP;
+        if (PlayerCurHP <= 0)
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
     
@@ -443,10 +465,21 @@ public class BothTurnData : IMyFSMArg
             return;
         // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
         var finalAtk = GetAttackValue(from, to, baseAtk, modifyList);
+        // 先减格挡
+        if (to.Block.Value >= finalAtk)
+        {
+            to.Block.Value -= finalAtk;
+            return;
+        }
+        finalAtk -= to.Block;
+        to.Block.Value = 0;
+        
+        // 再减血
+        resultList.Add(new AttackResultHurt(finalAtk));
         to.CurHP.Value -= finalAtk;
         if (to.CurHP <= 0)
         {
-            resultList.Add(new AttackResultBaseDie(to.CurHP));
+            resultList.Add(new AttackResultDie(-to.CurHP));
         }
     }
     
@@ -468,7 +501,7 @@ public class BothTurnData : IMyFSMArg
 
     public void AddBlockToPlayer(int addedBlock)
     {
-        PlayerHPAndBuffData.Block.Value += addedBlock;
+        PlayerBlock.Value += addedBlock;
     }
 
     public void AddTempToDiscard(Func<CardDataBase> toAddCtor)
