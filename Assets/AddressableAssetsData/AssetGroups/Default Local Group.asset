@@ -41,6 +41,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1730bdd3512a8dd4ab58c01a601879dd
+    m_Address: "Card_20_\u65E0\u8C0B\u51B2\u950B"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 270c2084d35011248b06a513bb6fb5d6
     m_Address: "Bottle_1_\u6D4B\u8BD5"
     m_ReadOnly: 0
@@ -109,6 +115,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6a071e4f41452104da051323408409dc
     m_Address: "Card_16_\u98DE\u8EAB\u8E22"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 70ab6e52a0ec149469ee73624b882f74
+    m_Address: "Card_5003_\u6655\u7729"
     m_ReadOnly: 0
     m_SerializedLabels:
     - RSTSConfig
