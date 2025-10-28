@@ -60,30 +60,11 @@ public abstract class CardDataBase
 
     // public virtual bool RecommendYield(BothTurnData bothTurnData) => false;
     
+    public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
     public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
     public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
-
-    public string CurContentWithKeywords(BothTurnData bothTurnData)
-    {
-        var replacerList = new List<Func<string>>();
-        int strengthMulti = this is Card4 card4 ? card4.StrengthMulti : 1;
-        int baseAddAtk = this is Card19 card19 ? card19.BaseAtkAdd : 0;
-        CurUpgradeInfo.Des.EmbedTypes.ForEach(embedType =>
-        {
-            replacerList.Add(embedType switch
-            {
-                EmbedAttack attack => () => bothTurnData.UIGetAttackEnemyValue(Target, attack.AttackValue + baseAddAtk, strengthMulti).ToString(),
-                EmbedCard6 _ => () => (this as Card6)!.BaseAtkAddByDaJi(bothTurnData).ToString(),
-                EmbedCard12 _ => () => bothTurnData.UIGetAttackEnemyValue(Target, (this as Card12)!.AtkByBlock(bothTurnData), 1).ToString(),
-                IEmbedNotChange notChange => () => notChange.GetNotChangeString(),
-                _ => () => "NaN!"
-            });
-            
-        });
-        return CurUpgradeInfo.ContentWithKeywords(replacerList);
-        
-    }
+    public EmbedString CurDes => CurUpgradeInfo.Des;
     
     #region Com
     public bool HasTarget => Config.HasTarget;
@@ -98,8 +79,6 @@ public abstract class CardDataBase
     protected TBuff NthEmbedAsBuffCopy<TBuff>(int id)
         where TBuff : BuffDataBase
         => ((CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
-    
-    CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
 }
 
 

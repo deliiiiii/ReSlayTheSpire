@@ -26,6 +26,8 @@ public class BothTurnData : IMyFSMArg
     [SerializeReference] public MyList<CardDataBase> ExhaustList = [];
     /// 第一个参数，弃牌堆；第二个参数，点击后的回调
     public event Action<List<CardDataBase>, Action<CardDataBase>>? OnOpenDiscardOnceClick;
+
+    public event Action? OnPlayerLoseHP;
     
     public BothTurnData(BattleData battleData, MyFSM<EBothTurn> fsm)
     {
@@ -35,6 +37,14 @@ public class BothTurnData : IMyFSMArg
             CurHP = battleData.CurHP,
             MaxHP = battleData.MaxHP,
             Block = new Observable<int>(0)
+        };
+        PlayerHPAndBuffData.CurHP.OnValueChangedFull += (oldV, newV) =>
+        {
+            if (newV < oldV)
+            {
+                loseHpCount++;
+                OnPlayerLoseHP?.Invoke();
+            }
         };
         TurnID = 0;
         
@@ -133,6 +143,31 @@ public class BothTurnData : IMyFSMArg
         
         PlayerHPAndBuffData.ClearBuff();
     }
+    
+    public string CurContentWithKeywords(CardDataBase cardData)
+    {
+        var replacerList = new List<Func<string>>();
+        int strengthMulti = cardData is Card4 card4 ? card4.StrengthMulti : 1;
+        int baseAddAtk = cardData is Card19 card19 ? card19.BaseAtkAdd : 0;
+        cardData.CurDes.EmbedTypes.ForEach(embedType =>
+        {
+            replacerList.Add(embedType switch
+            {
+                EmbedAttack attack => () => GetAttackValue(
+                    PlayerHPAndBuffData, cardData.Target?.HPAndBuffData
+                    , attack.AttackValue + baseAddAtk, strengthMulti).ToString(),
+                EmbedCard6 _ => () => (cardData as Card6)!.BaseAtkAddByDaJi(this).ToString(),
+                EmbedCard12 _ => () => GetAttackValue(
+                    PlayerHPAndBuffData, cardData.Target?.HPAndBuffData,
+                    (cardData as Card12)!.AtkByBlock(this), 1).ToString(),
+                IEmbedNotChange notChange => () => notChange.GetNotChangeString(),
+                _ => () => "NaN!"
+            });
+            
+        });
+        return cardData.CurUpgradeInfo.ContentWithKeywords(replacerList);
+        
+    }
 
     IEnumerable<CardDataBase> CollectAllCards()
     {
@@ -191,12 +226,8 @@ public class BothTurnData : IMyFSMArg
             failReason = "该牌无法打出";
             return false;
         }
-        if (CurEnergy < toYield.CurCostInfo switch
-            {
-                CardCostNumber costNumber => costNumber.Cost,
-                CardCostX => CurEnergy,
-                CardCostNone or _ => int.MaxValue,
-            })
+        var cost = GetEnergy(toYield);
+        if (CurEnergy < cost)
         {
             failReason = "能量不足";
             return false;
@@ -223,15 +254,26 @@ public class BothTurnData : IMyFSMArg
         HandList.MyClear();
     }
 
-    public async UniTask YieldAsync(CardDataBase toYield)
+    public int GetEnergy(CardDataBase cardData)
     {
-        int costEnergy = toYield.CurCostInfo switch
+        int costEnergy = cardData.CurCostInfo switch
         {
             CardCostNumber number => number.Cost,
             CardCostX => CurEnergy,
             CardCostNone or _ => 0,
         };
-        UseEnergy(costEnergy);
+        if (cardData is Card24)
+        {
+            costEnergy -= loseHpCount;
+            if (costEnergy < 0)
+                costEnergy = 0;
+        }
+        return costEnergy;
+    }
+    public async UniTask YieldAsync(CardDataBase toYield)
+    {
+        int cost = GetEnergy(toYield);
+        UseEnergy(cost);
         if (toYield.Config.Category == ECardCategory.Ability)
         {
             // 打出能力牌，不会消耗
@@ -248,7 +290,7 @@ public class BothTurnData : IMyFSMArg
             HandList.MyRemove(toYield);
             DiscardList.MyAdd(toYield);
         }
-        await toYield.YieldAsync(this, costEnergy);
+        await toYield.YieldAsync(this, cost);
         if(EnemyList.Count == 0)
         {
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Win);
@@ -431,7 +473,8 @@ public class BothTurnData : IMyFSMArg
     }
     
     public int DaJiCount => CollectAllCards().Count(card => card.Config.name.Contains("打击"));
+    int loseHpCount;
     #endregion
-    
+
 }
 

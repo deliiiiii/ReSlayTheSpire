@@ -27,12 +27,7 @@ public class CardModel : MonoBehaviour
     public void ReadData(CardDataBase fData)
     {
         Data = fData;
-        TxtCost.text = fData.CurCostInfo switch
-        {
-            CardCostNumber costNumber => costNumber.Cost.ToString(),
-            CardCostX => "X",
-            CardCostNone or _=> "",
-        };
+        RefreshTxtCost();
         TxtName.text = fData.Config.Name;
         TextCategory.text = fData.Config.Category.ToString();
         RefreshTxtDes();
@@ -46,7 +41,14 @@ public class CardModel : MonoBehaviour
     {
         if (!MyFSM.IsState(BattleStateWrap.One, EBattleState.BothTurn, out var battleData))
             return;
-        TxtDes.text = Data.CurContentWithKeywords(battleData.BothTurnData);
+        TxtDes.text = battleData.BothTurnData.CurContentWithKeywords(Data);
+    }
+
+    public void RefreshTxtCost()
+    {
+        if (!MyFSM.IsState(BattleStateWrap.One, EBattleState.BothTurn, out var battleData))
+            return;
+        TxtCost.text = battleData.BothTurnData.GetEnergy(Data).ToString();
     }
 
     public void OnPointerEnter(BaseEventData baseEventData)

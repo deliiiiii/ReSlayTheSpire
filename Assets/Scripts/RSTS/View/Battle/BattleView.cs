@@ -303,6 +303,11 @@ public class BattleView : Singleton<BattleView>
                 });
             }
         };
+        
+        bothTurnData.OnPlayerLoseHP += () =>
+        {
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtCost());
+        };
     }
     IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)
     {
