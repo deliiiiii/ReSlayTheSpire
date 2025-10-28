@@ -26,8 +26,6 @@ public enum EBothTurn
     PlayerTurnStart,
     PlayerDraw,
     PlayerYieldCard,
-    // PlayerYieldEnd,
-    PlayerDiscard,
     PlayerTurnEnd,
     EnemyTurnStart,
     EnemyAction,

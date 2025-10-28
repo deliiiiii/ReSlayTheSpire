@@ -316,7 +316,7 @@ public class BattleView : Singleton<BattleView>
             .To(v => ShowEnergy(v, bothTurnData.MaxEnergy));
         yield return Binder.FromObs(bothTurnData.MaxEnergy)
             .To(v => ShowEnergy(bothTurnData.CurEnergy, v));
-        yield return Binder.FromBtn(BtnEndTurn).To(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerDiscard));
+        yield return Binder.FromBtn(BtnEndTurn).To(() => MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerTurnEnd));
         yield break;
         void ShowEnergy(int cur, int max) => TxtEnergy.text = cur + " / " + max;
     }

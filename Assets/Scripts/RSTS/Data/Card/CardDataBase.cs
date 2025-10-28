@@ -63,6 +63,7 @@ public abstract class CardDataBase
 
 
     public virtual void OnExitBothTurn(){}
+    public virtual void OnPlayerTurnEnd(BothTurnData bothTurnData){}
 
     // public virtual bool RecommendYield(BothTurnData bothTurnData) => false;
     

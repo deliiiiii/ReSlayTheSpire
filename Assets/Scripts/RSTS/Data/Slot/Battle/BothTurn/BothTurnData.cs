@@ -81,14 +81,11 @@ public class BothTurnData : IMyFSMArg
             MyFSM.Release(YieldCardStateWrap.One);
         };
         
-        fsm.GetState(EBothTurn.PlayerDiscard).OnEnter += () =>
-        {
-            DiscardAllHand();
-            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.PlayerTurnEnd);
-        };
         
         fsm.GetState(EBothTurn.PlayerTurnEnd).OnEnter += () =>
         {
+            HandList.ForEach(cardData => cardData.OnPlayerTurnEnd(this));
+            DiscardAllHand();
             PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnEnd);
             PlayerHPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnEnd);
             MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyTurnStart);
@@ -382,8 +379,8 @@ public class BothTurnData : IMyFSMArg
             await UniTask.Delay(300);
         }
     }
-
-    public void AttackPlayer(EnemyDataBase enemyData, int baseAtk)
+    
+    public void AttackPlayerFromEnemy(EnemyDataBase enemyData, int baseAtk)
     {
         Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, out var resultList);
         if (resultList.OfType<AttackResultBaseDie>().Any())
@@ -395,6 +392,19 @@ public class BothTurnData : IMyFSMArg
         PlayerHPAndBuffData.MaxHP.Value += addedMaxHP;
         PlayerHPAndBuffData.CurHP.Value += addedMaxHP;
     }
+    
+    public void BurnPlayer(int atk)
+    {
+        if(PlayerBlock >= atk)
+        {
+            PlayerBlock.Value -= atk;
+            return;
+        }
+        var realBurn = atk - PlayerBlock;
+        PlayerBlock.Value = 0;
+        LoseHPToPlayer(realBurn);
+    }
+    
     public void LoseHPToPlayer(int loseHP)
     {
         PlayerHPAndBuffData.CurHP.Value -= loseHP;

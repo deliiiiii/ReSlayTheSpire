@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ab6a8cf5d5949f3a77e224229b63d35, type: 3}
-  m_Name: "Card_12_\u5168\u8EAB\u649E\u51FB"
+  m_Name: "Card_29_\u71D4\u796D"
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,43 +21,45 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Name: "\u5168\u8EAB\u649E\u51FB"
-  ID: 12
+  Name: "\u71D4\u796D"
+  ID: 29
   Color: 0
-  Rarity: 0
+  Rarity: 2
   Category: 0
-  HasTarget: 1
+  HasTarget: 0
   Upgrades:
   - Des:
-      content: "\u9020\u6210\u4F60\u5F53\u524D\u683C\u6321\u503C\u7684\u4F24\u5BB3\u3002\uFF08[]\u70B9\uFF09"
+      content: "\u5BF9\u6240\u6709\u654C\u4EBA\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002
+        \u5C06\u4E00\u707C\u4F24\u653E\u5165\u4F60\u7684\u5F03\u724C\u5806\u4E2D\u3002"
       EmbedTypes:
-      - rid: 4049883498450255913
+      - rid: 4049883472238215186
     Keywords: 
     CostInfo:
-      rid: 4049883457877704704
+      rid: 4049883199248531460
   - Des:
-      content: "\u9020\u6210\u4F60\u5F53\u524D\u683C\u6321\u503C\u7684\u4F24\u5BB3\u3002\uFF08[]\u70B9\uFF09"
+      content: "\u5BF9\u6240\u6709\u654C\u4EBA\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002
+        \u5C06\u4E00\u707C\u4F24\u653E\u5165\u4F60\u7684\u5F03\u724C\u5806\u4E2D\u3002"
       EmbedTypes:
-      - rid: 4049883498450255914
+      - rid: 4049883498450255918
     Keywords: 
     CostInfo:
-      rid: 4049883457877704705
+      rid: 4049883498450255919
   references:
     version: 2
     RefIds:
-    - rid: 4049883457877704704
+    - rid: 4049883199248531460
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
-        Cost: 1
-    - rid: 4049883457877704705
+        Cost: 2
+    - rid: 4049883472238215186
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 21
+    - rid: 4049883498450255918
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 28
+    - rid: 4049883498450255919
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
-        Cost: 0
-    - rid: 4049883498450255913
-      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
-      data:
-        AttackValue: 0
-    - rid: 4049883498450255914
-      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
-      data:
-        AttackValue: 0
+        Cost: 2
