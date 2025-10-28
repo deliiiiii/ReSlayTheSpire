@@ -163,10 +163,8 @@ public class BothTurnData : IMyFSMArg
                 IEmbedNotChange notChange => () => notChange.GetNotChangeString(),
                 _ => () => "NaN!"
             });
-            
         });
         return cardData.CurUpgradeInfo.ContentWithKeywords(replacerList);
-        
     }
 
     IEnumerable<CardDataBase> CollectAllCards()
@@ -190,18 +188,11 @@ public class BothTurnData : IMyFSMArg
         return true;
     }
     
-    public void LoseEnergy(int lose)
-    {
-        CurEnergy.Value -= lose;
-    }
-    public void UseEnergy(int use)
-    {
-        CurEnergy.Value -= use;
-    }
-    public void GainEnergy(int gain)
-    {
-        CurEnergy.Value += gain;
-    }
+    public void LoseEnergy(int lose) => CurEnergy.Value -= lose;
+
+    public void UseEnergy(int use) => CurEnergy.Value -= use;
+
+    public void GainEnergy(int gain) => CurEnergy.Value += gain;
 
     bool DrawOne()
     {
@@ -248,7 +239,6 @@ public class BothTurnData : IMyFSMArg
                 ExhaustList.MyAdd(card);
                 return;
             }
-            // else if(card.Config.Category != ECardCategory.Ability)
             DiscardList.MyAdd(card);
         });
         HandList.MyClear();
@@ -275,7 +265,6 @@ public class BothTurnData : IMyFSMArg
             if (costEnergy < 0)
                 costEnergy = 0;
         }
-        MyDebug.Log($"GetEnergy {cardData.GetType()} : {costEnergy}");
         return costEnergy;
     }
     public async UniTask YieldAsync(CardDataBase toYield)
@@ -311,12 +300,9 @@ public class BothTurnData : IMyFSMArg
         ExhaustList.MyAdd(toExhaust);
     }
 
-    void TemporaryRemove(CardDataBase toRemove)
-    {
-        HandList.MyRemove(toRemove);
-    }
+    void TemporaryRemove(CardDataBase toRemove) => HandList.MyRemove(toRemove);
 
-    
+
     void RefillDrawList()
     {
         DrawList.MyAddRange(DiscardList);
@@ -325,8 +311,19 @@ public class BothTurnData : IMyFSMArg
     }
     
     #region yield effect
+
+    public void AttackEnemyWithResult(EnemyDataBase? enemyData, int baseAtk, out List<AttackResult> resultList,
+        int strengthMulti = 1)
+    {
+        resultList = [];
+        if (enemyData == null)
+            return;
+        Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out resultList, strengthMulti);
+        if(resultList.OfType<AttackResultDie>().Any())
+            EnemyList.MyRemove(enemyData);
+    }
     // 使用攻击牌攻击的伤害
-    public void AttackEnemy(EnemyDataBase? enemyData, int baseAtk,int strengthMulti = 1)
+    public void AttackEnemy(EnemyDataBase? enemyData, int baseAtk, int strengthMulti = 1)
     {
         if (enemyData == null)
             return;
@@ -391,12 +388,18 @@ public class BothTurnData : IMyFSMArg
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
 
+    public void GainMaxHP(int addedMaxHP)
+    {
+        PlayerHPAndBuffData.MaxHP.Value += addedMaxHP;
+        PlayerHPAndBuffData.CurHP.Value += addedMaxHP;
+    }
     public void LoseHPToPlayer(int loseHP)
     {
         PlayerHPAndBuffData.CurHP.Value -= loseHP;
         if (PlayerHPAndBuffData.CurHP <= 0)
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
+    
     
     public int UIGetAttackEnemyValue(EnemyDataBase? enemyData, int baseAtk
         , int strengthMultiFromCard4)
