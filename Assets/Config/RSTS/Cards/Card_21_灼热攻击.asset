@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab6a8cf5d5949f3a77e224229b63d35, type: 3}
+  m_Name: "Card_21_\u707C\u70ED\u653B\u51FB"
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  Name: "\u707C\u70ED\u653B\u51FB"
+  ID: 21
+  Color: 0
+  Rarity: 1
+  Category: 0
+  HasTarget: 1
+  Upgrades:
+  - Des:
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u80FD\u88AB\u591A\u6B21\u5347\u7EA7\u3002"
+      EmbedTypes:
+      - rid: 4049883472238215186
+    Keywords: 
+    CostInfo:
+      rid: 4049883199248531460
+  - Des:
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u80FD\u88AB\u591A\u6B21\u5347\u7EA7\u3002"
+      EmbedTypes:
+      - rid: 4049883472238215187
+    Keywords: 
+    CostInfo:
+      rid: 4049883199248531461
+  - Des:
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u80FD\u88AB\u591A\u6B21\u5347\u7EA7\u3002"
+      EmbedTypes:
+      - rid: 4049883496031453184
+    Keywords: 
+    CostInfo:
+      rid: 4049883496031453185
+  - Des:
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u80FD\u88AB\u591A\u6B21\u5347\u7EA7\u3002"
+      EmbedTypes:
+      - rid: 4049883496031453186
+    Keywords: 
+    CostInfo:
+      rid: 4049883496031453187
+  - Des:
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u80FD\u88AB\u591A\u6B21\u5347\u7EA7\u3002"
+      EmbedTypes:
+      - rid: 4049883496031453188
+    Keywords: 
+    CostInfo:
+      rid: 4049883496031453189
+  - Des:
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u80FD\u88AB\u591A\u6B21\u5347\u7EA7\u3002"
+      EmbedTypes:
+      - rid: 4049883496031453190
+    Keywords: 
+    CostInfo:
+      rid: 4049883496031453191
+  references:
+    version: 2
+    RefIds:
+    - rid: 4049883199248531460
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
+      data:
+        Cost: 2
+    - rid: 4049883199248531461
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
+      data:
+        Cost: 2
+    - rid: 4049883472238215186
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 12
+    - rid: 4049883472238215187
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 16
+    - rid: 4049883496031453184
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 21
+    - rid: 4049883496031453185
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
+      data:
+        Cost: 2
+    - rid: 4049883496031453186
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 27
+    - rid: 4049883496031453187
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
+      data:
+        Cost: 2
+    - rid: 4049883496031453188
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 34
+    - rid: 4049883496031453189
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
+      data:
+        Cost: 2
+    - rid: 4049883496031453190
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 42
+    - rid: 4049883496031453191
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
+      data:
+        Cost: 2
