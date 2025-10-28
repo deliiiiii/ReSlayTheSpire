@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab6a8cf5d5949f3a77e224229b63d35, type: 3}
+  m_Name: "Card_22_\u65AD\u9B42\u65A9"
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  Name: "\u65AD\u9B42\u65A9"
+  ID: 22
+  Color: 0
+  Rarity: 1
+  Category: 0
+  HasTarget: 1
+  Upgrades:
+  - Des:
+      content: "\u6D88\u8017\u624B\u724C\u4E2D\u6240\u6709\u975E\u653B\u51FB\u724C\u3002
+        \u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
+      EmbedTypes:
+      - rid: 4049883472238215186
+    Keywords: 
+    CostInfo:
+      rid: 4049883199248531460
+  - Des:
+      content: "\u6D88\u8017\u624B\u724C\u4E2D\u6240\u6709\u975E\u653B\u51FB\u724C\u3002
+        \u9020\u6210[]\u70B9\u4F24\u5BB3\u3002"
+      EmbedTypes:
+      - rid: 4049883496031453192
+    Keywords: 
+    CostInfo:
+      rid: 4049883496031453193
+  references:
+    version: 2
+    RefIds:
+    - rid: 4049883199248531460
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
+      data:
+        Cost: 2
+    - rid: 4049883472238215186
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 16
+    - rid: 4049883496031453192
+      type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
+      data:
+        AttackValue: 22
+    - rid: 4049883496031453193
+      type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
+      data:
+        Cost: 2

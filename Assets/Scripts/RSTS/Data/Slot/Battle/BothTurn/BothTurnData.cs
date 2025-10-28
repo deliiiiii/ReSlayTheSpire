@@ -159,7 +159,7 @@ public class BothTurnData : IMyFSMArg
     {
         CurEnergy.Value -= lose;
     }
-    void UseEnergy(int use)
+    public void UseEnergy(int use)
     {
         CurEnergy.Value -= use;
     }
@@ -240,8 +240,7 @@ public class BothTurnData : IMyFSMArg
         else if (toYield.ContainsKeyword(ECardKeyword.Exhaust))
         {
             // 消耗
-            HandList.MyRemove(toYield);
-            ExhaustList.MyAdd(toYield);
+            ExhaustOne(toYield);
         }
         else
         {
@@ -254,6 +253,12 @@ public class BothTurnData : IMyFSMArg
         {
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Win);
         }
+    }
+    
+    void ExhaustOne(CardDataBase toExhaust)
+    {
+        HandList.MyRemove(toExhaust);
+        ExhaustList.MyAdd(toExhaust);
     }
 
     void TemporaryRemove(CardDataBase toRemove)
@@ -419,8 +424,14 @@ public class BothTurnData : IMyFSMArg
             return;
         OnOpenDiscardOnceClick?.Invoke(DiscardList, onClick);
     }
+
+    public void ExhaustHandCardBy(Func<CardDataBase, bool> match)
+    {
+        HandList.Where(match).ToList().ForEach(ExhaustOne);
+    }
     
     public int DaJiCount => CollectAllCards().Count(card => card.Config.name.Contains("打击"));
     #endregion
+    
 }
 
