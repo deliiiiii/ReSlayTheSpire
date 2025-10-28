@@ -29,18 +29,20 @@ MonoBehaviour:
   HasTarget: 1
   Upgrades:
   - Des:
-      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002\u8FD9\u5F20\u724C\u6BCF\u88AB\u6253\u51FA\u4E00\u6B21\uFF0C\u5728\u672C\u573A\u6218\u6597\u4E2D\u5176\u57FA\u7840\u4F24\u5BB3\u589E\u52A0[]\u3002"
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002\u8FD9\u5F20\u724C\u6BCF\u88AB\u6253\u51FA\u4E00\u6B21\uFF0C\u5728\u672C\u573A\u6218\u6597\u4E2D\u5176\u57FA\u7840\u4F24\u5BB3\u589E\u52A0[]\u3002\uFF08\u603B\u5171[]\u70B9\uFF09"
       EmbedTypes:
       - rid: 4049883477275836489
       - rid: 4049883477275836490
+      - rid: 4049883498450255911
     Keywords: 
     CostInfo:
       rid: 4049883472238215184
   - Des:
-      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002\u8FD9\u5F20\u724C\u6BCF\u88AB\u6253\u51FA\u4E00\u6B21\uFF0C\u5728\u672C\u573A\u6218\u6597\u4E2D\u5176\u57FA\u7840\u4F24\u5BB3\u589E\u52A0[]\u3002"
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002\u8FD9\u5F20\u724C\u6BCF\u88AB\u6253\u51FA\u4E00\u6B21\uFF0C\u5728\u672C\u573A\u6218\u6597\u4E2D\u5176\u57FA\u7840\u4F24\u5BB3\u589E\u52A0[]\u3002\uFF08\u603B\u5171[]\u70B9\uFF09"
       EmbedTypes:
       - rid: 4049883477275836491
       - rid: 4049883477275836492
+      - rid: 4049883498450255912
     Keywords: 
     CostInfo:
       rid: 4049883472238215185
@@ -71,3 +73,9 @@ MonoBehaviour:
       type: {class: EmbedMisc, ns: RSTS, asm: RSTS}
       data:
         MiscValue: 8
+    - rid: 4049883498450255911
+      type: {class: EmbedCard19, ns: RSTS, asm: RSTS}
+      data: 
+    - rid: 4049883498450255912
+      type: {class: EmbedCard19, ns: RSTS, asm: RSTS}
+      data: 

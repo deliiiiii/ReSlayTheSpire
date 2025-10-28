@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
 namespace RSTS;
@@ -10,7 +11,10 @@ public class Card4 : CardDataBase
 
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.AttackEnemy(Target, atk, StrengthMulti);
+        bothTurnData.AttackEnemy(Target, atk, GetModifyList(bothTurnData));
         return UniTask.CompletedTask;
     }
+
+    public override List<AttackModifyBase> GetModifyList(BothTurnData bothTurnData)
+        => [new AttackModifyCard4 { StrengthMulti = StrengthMulti }];
 }

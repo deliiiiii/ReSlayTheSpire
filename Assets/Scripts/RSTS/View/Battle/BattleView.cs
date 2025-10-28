@@ -241,13 +241,14 @@ public class BattleView : Singleton<BattleView>
                 }
                 bothTurnData.YieldAsync(cardData).Forget();
                 cardData.Target = null;
-                cardModel.RefreshTxtDes();
             };
+            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
         bothTurnData.HandList.OnRemove += cardData =>
         {
             Destroy(handCardModelDic[cardData].gameObject);
             handCardModelDic.Remove(cardData);
+            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
         
         bothTurnData.DrawList.OnAdd += cardData =>

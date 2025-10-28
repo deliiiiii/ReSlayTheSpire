@@ -81,7 +81,7 @@ public class CardUpgradeInfo
     [SerializeReference]
     public CardCostBase CostInfo = new CardCostNumber();
     
-    public string ContentWithKeywords(List<Func<string>> replacerList)
+    public string ContentWithKeywords(List<string> replacerList)
     {
         StringBuilder sb = new StringBuilder();
         bool findPre = false;
@@ -121,7 +121,7 @@ public class CardUpgradeInfo
 public class EmbedString
 {
     [SerializeField] string content;
-    public string ReplacedContent(List<Func<string>> replacerList)
+    public string ReplacedContent(List<string> replacerList)
     {
         StringBuilder sb = new StringBuilder(content);
         // 替换Data中[]为Config中对应的值
@@ -129,7 +129,7 @@ public class EmbedString
         int c = 0;
         while (c < trueCount)
         {
-            ReplaceFirst(sb.ToString(), "[]", replacerList[c](), out var result);
+            ReplaceFirst(sb.ToString(), "[]", replacerList[c], out var result);
             sb.Clear();
             sb.Append(result);
             c++;
@@ -240,3 +240,7 @@ public class EmbedMisc : EmbedType, IEmbedNotChange
 public class EmbedCard6 : EmbedType;
 [Serializable]
 public class EmbedCard12 : EmbedType;
+[Serializable]
+public class EmbedCard19 : EmbedType;
+[Serializable]
+public class EmbedCard28 : EmbedType;

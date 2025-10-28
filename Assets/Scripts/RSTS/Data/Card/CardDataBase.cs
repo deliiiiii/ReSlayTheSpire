@@ -49,6 +49,12 @@ public abstract class CardDataBase
     public int UpgradeLevel;
     
     public abstract UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy);
+    public T GetModify<T>(BothTurnData bothTurnData)
+        where T : AttackModifyBase
+    {
+        return GetModifyList(bothTurnData).OfType<T>().FirstOrDefault()!;
+    }
+    public virtual List<AttackModifyBase> GetModifyList(BothTurnData bothTurnData) => [];
     public virtual bool YieldCondition(BothTurnData bothTurnData, out string failReason)
     {
         failReason = string.Empty;
@@ -79,6 +85,7 @@ public abstract class CardDataBase
     protected TBuff NthEmbedAsBuffCopy<TBuff>(int id)
         where TBuff : BuffDataBase
         => ((CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
+
 }
 
 

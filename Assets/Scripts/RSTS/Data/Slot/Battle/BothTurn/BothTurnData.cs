@@ -146,22 +146,20 @@ public class BothTurnData : IMyFSMArg
     
     public string CurContentWithKeywords(CardDataBase cardData)
     {
-        var replacerList = new List<Func<string>>();
-        int strengthMulti = cardData is Card4 card4 ? card4.StrengthMulti : 1;
-        int baseAddAtk = cardData is Card19 card19 ? card19.BaseAtkAdd : 0;
+        var replacerList = new List<string>();
         cardData.CurDes.EmbedTypes.ForEach(embedType =>
         {
             replacerList.Add(embedType switch
             {
-                EmbedAttack attack => () => GetAttackValue(
-                    PlayerHPAndBuffData, cardData.Target?.HPAndBuffData
-                    , attack.AttackValue + baseAddAtk, strengthMulti).ToString(),
-                EmbedCard6 _ => () => (cardData as Card6)!.BaseAtkAddByDaJi(this).ToString(),
-                EmbedCard12 _ => () => GetAttackValue(
-                    PlayerHPAndBuffData, cardData.Target?.HPAndBuffData,
-                    (cardData as Card12)!.AtkByBlock(this), 1).ToString(),
-                IEmbedNotChange notChange => () => notChange.GetNotChangeString(),
-                _ => () => "NaN!"
+                IEmbedNotChange notChange => notChange.GetNotChangeString(),
+                EmbedCard6 => cardData.GetModify<AttackModifyCard6>(this).BaseAtkAddByDaJi.ToString(),
+                EmbedCard12 => cardData.GetModify<AttackModifyCard12>(this).AtkByBlock.ToString(),
+                EmbedCard19 => cardData.GetModify<AttackModifyCard19>(this).BaseAtkAddByUse.ToString(),
+                EmbedCard28 => cardData.GetModify<AttackModifyCard28>(this).AtkTimeByExhaust.ToString(),
+                EmbedAttack attack => 
+                    GetAttackValue(PlayerHPAndBuffData, cardData.Target?.HPAndBuffData, attack.AttackValue
+                    , cardData.GetModifyList(this)).ToString(),
+                _ => "NaN!"
             });
         });
         return cardData.CurUpgradeInfo.ContentWithKeywords(replacerList);
@@ -294,7 +292,7 @@ public class BothTurnData : IMyFSMArg
         }
     }
     
-    void ExhaustOne(CardDataBase toExhaust)
+    public void ExhaustOne(CardDataBase toExhaust)
     {
         HandList.MyRemove(toExhaust);
         ExhaustList.MyAdd(toExhaust);
@@ -312,59 +310,64 @@ public class BothTurnData : IMyFSMArg
     
     #region yield effect
 
-    public void AttackEnemyWithResult(EnemyDataBase? enemyData, int baseAtk, out List<AttackResult> resultList,
-        int strengthMulti = 1)
+    public void AttackEnemyWithResult(EnemyDataBase? enemyData, int baseAtk, out List<AttackResultBase> resultList
+        , List<AttackModifyBase>? modifyList = null)
     {
         resultList = [];
         if (enemyData == null)
             return;
-        Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out resultList, strengthMulti);
-        if(resultList.OfType<AttackResultDie>().Any())
+        Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out resultList, modifyList);
+        if(resultList.OfType<AttackResultBaseDie>().Any())
             EnemyList.MyRemove(enemyData);
     }
     // 使用攻击牌攻击的伤害
-    public void AttackEnemy(EnemyDataBase? enemyData, int baseAtk, int strengthMulti = 1)
+    public void AttackEnemy(EnemyDataBase? enemyData, int baseAtk
+        , List<AttackModifyBase>? modifyList = null)
     {
         if (enemyData == null)
             return;
-        Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, strengthMulti);
-        if(resultList.OfType<AttackResultDie>().Any())
+        Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, modifyList);
+        if(resultList.OfType<AttackResultBaseDie>().Any())
             EnemyList.MyRemove(enemyData);
     }
-    public async Task AttackEnemyMultiTimesAsync(EnemyDataBase? enemyData, int baseAtk, int times)
+    public async Task AttackEnemyMultiTimesAsync(EnemyDataBase? enemyData, int baseAtk, int times
+        , List<AttackModifyBase>? modifyList = null)
     {
         for (int t = 0; t < times; t++)
         {
-            AttackEnemy(enemyData, baseAtk);
+            AttackEnemy(enemyData, baseAtk, modifyList);
             await Task.Delay(300);
         }
     }
     
-    public void AttackEnemyRandomly(int baseAtk)
+    public void AttackEnemyRandomly(int baseAtk
+        , List<AttackModifyBase>? modifyList = null)
     {
         if(EnemyList.Count == 0)
             return;
         var enemyData = EnemyList.RandomItem();
-        AttackEnemy(enemyData, baseAtk);
+        AttackEnemy(enemyData, baseAtk, modifyList);
     }
-    public async UniTask AttackEnemyRandomlyMultiTimesAsync(int baseAtk, int times)
+    public async UniTask AttackEnemyRandomlyMultiTimesAsync(int baseAtk, int times
+        , List<AttackModifyBase>? modifyList = null)
     {
         for (int t = 0; t < times; t++)
         {
-            AttackEnemyRandomly(baseAtk);
+            AttackEnemyRandomly(baseAtk, modifyList);
             await UniTask.Delay(300);
         }
     }
 
-    public void AttackAllEnemies(int baseAtk)
+    public void AttackAllEnemies(int baseAtk
+        , List<AttackModifyBase>? modifyList = null)
     {
         // var allResult = new List<AttackResult>();
         var toRemoveList = new List<EnemyDataBase>();
         EnemyList.ForEach(enemyData =>
         {
-            Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList);
+            Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, modifyList);
             // allResult.AddRange(resultList);
-            if (resultList.OfType<AttackResultDie>().Any())
+            if (resultList.OfType<AttackResultBaseDie>().Any())
             {
                 toRemoveList.Add(enemyData);
             }
@@ -372,11 +375,12 @@ public class BothTurnData : IMyFSMArg
         toRemoveList.ForEach(toRemove => EnemyList.MyRemove(toRemove));
     }
     
-    public async UniTask AttackAllEnemiesMultiTimesAsync(int baseAtk, int times)
+    public async UniTask AttackAllEnemiesMultiTimesAsync(int baseAtk, int times
+        , List<AttackModifyBase>? modifyList = null)
     {
         for (int t = 0; t < times; t++)
         {
-            AttackAllEnemies(baseAtk);
+            AttackAllEnemies(baseAtk, modifyList);
             await UniTask.Delay(300);
         }
     }
@@ -384,7 +388,7 @@ public class BothTurnData : IMyFSMArg
     public void AttackPlayer(EnemyDataBase enemyData, int baseAtk)
     {
         Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, out var resultList);
-        if (resultList.OfType<AttackResultDie>().Any())
+        if (resultList.OfType<AttackResultBaseDie>().Any())
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
 
@@ -400,16 +404,18 @@ public class BothTurnData : IMyFSMArg
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
     
-    
-    public int UIGetAttackEnemyValue(EnemyDataBase? enemyData, int baseAtk
-        , int strengthMultiFromCard4)
+    int GetAttackValue(HPAndBuffData from, HPAndBuffData? to, int baseAtk, List<AttackModifyBase>? modifyList = null)
     {
-        return GetAttackValue(PlayerHPAndBuffData, enemyData?.HPAndBuffData ?? null, baseAtk, strengthMultiFromCard4);
-    }
-    
-    int GetAttackValue(HPAndBuffData from, HPAndBuffData? to, int baseAtk
-        , int strengthMultiFromCard4 = 1)
-    {
+        int strengthMultiFromCard4 = modifyList?.OfType<AttackModifyCard4>().FirstOrDefault()?.StrengthMulti ?? 1;
+        baseAtk = 
+            modifyList?.OfType<AttackModifyCard12>().FirstOrDefault()?.AtkByBlock ??
+                  baseAtk;
+
+        int baseCardAdd =
+            modifyList?.OfType<AttackModifyCard6>().FirstOrDefault()?.BaseAtkAddByDaJi ??
+            modifyList?.OfType<AttackModifyCard19>().FirstOrDefault()?.BaseAtkAddByUse ??
+            0;
+        
         var baseBuffAdd = from.GetAtkBaseAddSum(buff =>
         {
             if(buff is BuffDataStrength)
@@ -418,21 +424,21 @@ public class BothTurnData : IMyFSMArg
         });
         var finalMulFrom = from.GetFromAtkFinalMulti();
         var finalMulTo = to?.GetToAtkFinalMulti() ?? 1f;
-        return Mathf.FloorToInt((baseAtk + baseBuffAdd) * finalMulFrom * finalMulTo);
+        return Mathf.FloorToInt((baseAtk + baseCardAdd + baseBuffAdd) * finalMulFrom * finalMulTo);
     }
 
-    void Attack(HPAndBuffData from, HPAndBuffData to, int baseAtk, out List<AttackResult> resultList
-        , int strengthMultiFromCard4 = 1)
+    void Attack(HPAndBuffData from, HPAndBuffData to, int baseAtk, out List<AttackResultBase> resultList
+        , List<AttackModifyBase>? modifyList = null)
     {
         resultList = [];
         if (!to.CanBeSelected)
             return;
         // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
-        var finalAtk = GetAttackValue(from, to, baseAtk, strengthMultiFromCard4);
+        var finalAtk = GetAttackValue(from, to, baseAtk, modifyList);
         to.CurHP.Value -= finalAtk;
         if (to.CurHP <= 0)
         {
-            resultList.Add(new AttackResultDie(to.CurHP));
+            resultList.Add(new AttackResultBaseDie(to.CurHP));
         }
     }
     
@@ -478,9 +484,9 @@ public class BothTurnData : IMyFSMArg
         OnOpenDiscardOnceClick?.Invoke(DiscardList, onClick);
     }
 
-    public void ExhaustHandCardBy(Func<CardDataBase, bool> match)
+    public IEnumerable<CardDataBase> ExhaustHandCardBy(Func<CardDataBase, bool> match)
     {
-        HandList.Where(match).ToList().ForEach(ExhaustOne);
+        return HandList.Where(match).ToList();
     }
     
     public int DaJiCount => CollectAllCards().Count(card => card.Config.name.Contains("打击"));
