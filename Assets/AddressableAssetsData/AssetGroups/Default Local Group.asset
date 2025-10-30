@@ -101,6 +101,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 39383049ab9adcb4f86fb824b3c2bb80
+    m_Address: "Card_106_\u6218\u543C"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 44670dc01c93d6c49aacb0a54743b9db
     m_Address: "Player_2_\u9E21\u7172"
     m_ReadOnly: 0

@@ -548,7 +548,7 @@ public class BothTurnData : IMyFSMArg
             return;
         // 选择随机一个手牌。。。 
         var selected = filtered.RandomItem();
-        MyDebug.Log($"武装选到了{selected.Config.name}");
+        MyDebug.Log($"选手牌：是{selected.Config.name}");
         onConfirm(selected);
         // TODO UI选择
         // OnOpenHandOnceClick?.Invoke(filtered, selectCount, onConfirm);
