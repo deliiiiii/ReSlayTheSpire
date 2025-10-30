@@ -10,11 +10,15 @@ public class Card28 : CardDataBase
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
     IEnumerable<CardDataBase> ToExhaustCards(BothTurnData bothTurnData) 
-        => bothTurnData.ExhaustHandCardBy(cardData => cardData != this);
+        => bothTurnData.HandList.Where(cardData => cardData != this);
     public override async UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
         var count = ToExhaustCards(bothTurnData).Count();
-        ToExhaustCards(bothTurnData).ForEach(bothTurnData.ExhaustOne);
+        ToExhaustCards(bothTurnData).ForEach(handCard =>
+        {
+            bothTurnData.HandList.MyRemove(handCard);
+            bothTurnData.ExhaustList.MyAdd(handCard);
+        });
         await bothTurnData.AttackEnemyMultiTimesAsync(Target, atk, count);
     }
 

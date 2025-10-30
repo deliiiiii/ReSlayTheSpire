@@ -245,15 +245,19 @@ public class BattleView : Singleton<BattleView>
                         return;
                     }
                 }
-                bothTurnData.YieldAsync(cardData).Forget();
+                bothTurnData.YieldHandAsync(cardData).Forget();
                 cardData.Target = null;
             };
             handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
         bothTurnData.HandList.OnRemove += cardData =>
         {
-            Destroy(handCardModelDic[cardData].gameObject);
-            handCardModelDic.Remove(cardData);
+            // 打出破灭时，抽牌堆顶部被打出的牌没有CardModel。
+            if (handCardModelDic.ContainsKey(cardData))
+            {
+                Destroy(handCardModelDic[cardData].gameObject);
+                handCardModelDic.Remove(cardData);
+            }
             handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
         

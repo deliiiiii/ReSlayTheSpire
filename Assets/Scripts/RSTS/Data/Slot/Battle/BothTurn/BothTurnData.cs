@@ -183,6 +183,21 @@ public class BothTurnData : IMyFSMArg
         }
         return true;
     }
+
+    public bool TryPullOneFromDraw(bool shouldRifill, out CardDataBase drawn)
+    {
+        drawn = null!;
+        if (DrawList.Count == 0 && shouldRifill)
+            RefillDrawList();
+        if (DrawList.Count == 0)
+        {
+            Debug.LogError("没有牌可以抽了");
+            return false;
+        }
+        drawn = DrawList[^1];
+        DrawList.MyRemoveAt(DrawList.Count - 1);
+        return true;
+    }
     
     public void LoseEnergy(int lose) => CurEnergy.Value -= lose;
 
@@ -192,17 +207,10 @@ public class BothTurnData : IMyFSMArg
 
     bool DrawOne()
     {
-        if (DrawList.Count == 0)
-            RefillDrawList();
-        if (DrawList.Count == 0)
-        {
-            Debug.LogError("没有牌可以抽了");
-            return false;
-        }
-        var ret = DrawList[^1];
-        DrawList.MyRemoveAt(DrawList.Count - 1);
-        HandList.MyAdd(ret);
-        return true;
+        var ret = TryPullOneFromDraw(shouldRifill: true, out var drawn);
+        if(ret)
+            HandList.MyAdd(drawn);
+        return ret;
     }
 
     public bool TryYield(CardDataBase toYield, out string failReason)
@@ -261,24 +269,39 @@ public class BothTurnData : IMyFSMArg
         };
         return costEnergy;
     }
-    public async UniTask YieldAsync(CardDataBase toYield)
+    public async UniTask YieldHandAsync(CardDataBase toYield
+        , List<YieldModify>? modifyList = null)
     {
         int cost = GetEnergy(toYield);
         UseEnergy(cost);
+        HandList.MyRemove(toYield);
+        modifyList ??= [];
+        await YieldInternal(toYield, cost, modifyList);
+    }
+
+    public async UniTask YieldBlindAsync(CardDataBase toYield
+        , List<YieldModify>? modifyList = null)
+    {
+        modifyList ??= [];
+        await YieldInternal(toYield, 0, modifyList);
+    }
+
+    async UniTask YieldInternal(CardDataBase toYield, int cost
+        , List<YieldModify> modifyList)
+    {
         if (toYield.Config.Category == ECardCategory.Ability)
         {
             // 打出能力牌，不会消耗
-            TemporaryRemove(toYield);
         }
-        else if (toYield.ContainsKeyword(ECardKeyword.Exhaust))
+        else if (toYield.ContainsKeyword(ECardKeyword.Exhaust) 
+                 || modifyList.AnyType<YieldModifyForceExhaust>())
         {
             // 消耗
-            ExhaustOne(toYield);
+            ExhaustList.MyAdd(toYield);
         }
         else
         {
             // 正常打出
-            HandList.MyRemove(toYield);
             DiscardList.MyAdd(toYield);
         }
         await toYield.YieldAsync(this, cost);
@@ -287,14 +310,6 @@ public class BothTurnData : IMyFSMArg
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Win);
         }
     }
-    
-    public void ExhaustOne(CardDataBase toExhaust)
-    {
-        HandList.MyRemove(toExhaust);
-        ExhaustList.MyAdd(toExhaust);
-    }
-
-    void TemporaryRemove(CardDataBase toRemove) => HandList.MyRemove(toRemove);
 
 
     void RefillDrawList()
@@ -539,10 +554,6 @@ public class BothTurnData : IMyFSMArg
         // OnOpenHandOnceClick?.Invoke(filtered, selectCount, onConfirm);
     }
 
-    public IEnumerable<CardDataBase> ExhaustHandCardBy(Func<CardDataBase, bool> match)
-    {
-        return HandList.Where(match).ToList();
-    }
     
     public int DaJiCount => CollectAllCards().Count(card => card.Config.name.Contains("打击"));
     int loseHpCount;

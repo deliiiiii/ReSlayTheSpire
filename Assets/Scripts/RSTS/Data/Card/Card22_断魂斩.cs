@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sirenix.Utilities;
 
@@ -12,8 +13,13 @@ public class Card22 : CardDataBase
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
         bothTurnData.AttackEnemy(Target, atk);
-        bothTurnData.ExhaustHandCardBy(card => card.Config.Category != ECardCategory.Attack)
-            .ForEach(bothTurnData.ExhaustOne);
+        bothTurnData.HandList
+            .Where(handCard => handCard.Config.Category != ECardCategory.Attack)
+            .ForEach(handCard =>
+            {
+                bothTurnData.HandList.MyRemove(handCard);
+                bothTurnData.ExhaustList.MyAdd(handCard);
+            });
         return UniTask.CompletedTask;
     }
 }
