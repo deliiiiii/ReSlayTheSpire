@@ -185,6 +185,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - RSTSConfig
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7318e1a529220f144a0cedeeec04d328
+    m_Address: "Card_204_\u91D1\u5C5E\u5316"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RSTSConfig
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 78d3123e55ddc2c47bb77946611b1f68
     m_Address: "Card_13_\u4EA4\u950B"
     m_ReadOnly: 0

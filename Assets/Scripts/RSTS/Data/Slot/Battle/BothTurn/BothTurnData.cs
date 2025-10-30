@@ -99,7 +99,15 @@ public class BothTurnData : IMyFSMArg
                 enemyData.HPAndBuffData.UseABuff(EBuffUseTime.TurnStart);
                 enemyData.HPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnStart);
             });
-            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyTurnEnd);
+
+            Func().Forget();
+            return;
+
+            async UniTask Func()
+            {
+                await UniTask.Delay(1000);
+                MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyTurnEnd);
+            }
         };
         
         fsm.GetState(EBothTurn.EnemyTurnEnd).OnEnter += () =>
