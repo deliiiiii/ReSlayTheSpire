@@ -9,7 +9,7 @@ public class Card100 : CardDataBase
 
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.AddBlockToPlayer(blockValue);
+        bothTurnData.GainBlock(blockValue);
         return UniTask.CompletedTask;
     }
 }

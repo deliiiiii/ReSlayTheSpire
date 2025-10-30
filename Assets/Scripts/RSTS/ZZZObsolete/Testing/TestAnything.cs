@@ -58,11 +58,3 @@ public class TestAnything : Singleton<TestAnything>
         BothTurnData.DrawSome(count);
     }
 }
-
-[Serializable]
-public class BussTest : BuffDataBase
-{
-    public override string Name { get; }
-    public override EBuffUseTime UseTime { get; }
-    public override EBuffDisposeTime DisposeTime { get; }
-}
