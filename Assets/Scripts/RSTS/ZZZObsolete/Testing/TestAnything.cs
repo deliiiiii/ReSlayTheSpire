@@ -27,6 +27,19 @@ public class TestAnything : Singleton<TestAnything>
     public BattleData BattleData;
     [SerializeReference]
     public BothTurnData BothTurnData;
+
+    [Button]
+    public void AttackPlayer(int baseAtk, int enemyID)
+    {
+        BothTurnData = null!;
+        if (!MyFSM.IsState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard, out var bothTurnData))
+            return;
+        BothTurnData = bothTurnData;
+        if(enemyID < 0 || enemyID >= BothTurnData.EnemyList.Count)
+            return;
+        BothTurnData.AttackPlayerFromEnemy(bothTurnData.EnemyList[enemyID], baseAtk);
+    }
+    
     [Button]
     public void ChangePlayerHP(int delta)
     {

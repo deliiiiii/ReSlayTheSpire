@@ -1,4 +1,5 @@
 ﻿namespace RSTS;
+
 public abstract class AttackModifyBase;
 
 public class AttackModifyCard4: AttackModifyBase
@@ -25,3 +26,5 @@ public class AttackModifyCard28: AttackModifyBase
 {
     public int AtkTimeByExhaust;
 }
+
+public class AttackModifyFromBuff : AttackModifyBase;

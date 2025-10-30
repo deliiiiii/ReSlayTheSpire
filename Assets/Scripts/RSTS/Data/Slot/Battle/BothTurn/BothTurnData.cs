@@ -393,7 +393,7 @@ public class BothTurnData : IMyFSMArg
         {
             Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, out var resultList, modifyList);
             ret.AddRange(resultList);
-            if (resultList.OfType<AttackResultDie>().Any())
+            if (resultList.AnyType<AttackResultDie>())
             {
                 toRemoveList.Add(enemyData);
             }
@@ -412,10 +412,17 @@ public class BothTurnData : IMyFSMArg
         }
     }
     
-    public void AttackPlayerFromEnemy(EnemyDataBase enemyData, int baseAtk)
+    public void AttackPlayerFromEnemy(EnemyDataBase enemyData, int baseAtk,
+        List<AttackModifyBase>? modifyList = null)
     {
-        Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, out var resultList);
-        if (resultList.OfType<AttackResultDie>().Any())
+        modifyList ??= [];
+        Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, out var resultList, modifyList);
+        if (PlayerHPAndBuffData.HasBuff<BuffFlameBarrier>(out var buffFlameBarrier))
+        {
+            var flameDamage = buffFlameBarrier.StackInfo?.Count ?? 0;
+            AttackEnemy(enemyData, flameDamage, [new AttackModifyFromBuff()]);
+        }
+        if (resultList.AnyType<AttackResultDie>())
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
 
@@ -450,16 +457,20 @@ public class BothTurnData : IMyFSMArg
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
     
-    int GetAttackValue(HPAndBuffData from, HPAndBuffData? to, int baseAtk, List<AttackModifyBase>? modifyList = null)
+    int GetAttackValue(HPAndBuffData from, HPAndBuffData? to, int baseAtk, List<AttackModifyBase> modifyList)
     {
-        int strengthMultiFromCard4 = modifyList?.OfType<AttackModifyCard4>().FirstOrDefault()?.StrengthMulti ?? 1;
+        if (modifyList.AnyType<AttackModifyFromBuff>())
+        {
+            return baseAtk;
+        }
+        int strengthMultiFromCard4 = modifyList.OfType<AttackModifyCard4>().FirstOrDefault()?.StrengthMulti ?? 1;
         baseAtk = 
-            modifyList?.OfType<AttackModifyCard12>().FirstOrDefault()?.AtkByBlock ??
+            modifyList.OfType<AttackModifyCard12>().FirstOrDefault()?.AtkByBlock ??
                   baseAtk;
 
         int baseCardAdd =
-            modifyList?.OfType<AttackModifyCard6>().FirstOrDefault()?.BaseAtkAddByDaJi ??
-            modifyList?.OfType<AttackModifyCard19>().FirstOrDefault()?.BaseAtkAddByUse ??
+            modifyList.OfType<AttackModifyCard6>().FirstOrDefault()?.BaseAtkAddByDaJi ??
+            modifyList.OfType<AttackModifyCard19>().FirstOrDefault()?.BaseAtkAddByUse ??
             0;
         
         var baseBuffAdd = from.GetAtkBaseAddSum(buff =>
@@ -477,6 +488,7 @@ public class BothTurnData : IMyFSMArg
         , List<AttackModifyBase>? modifyList = null)
     {
         resultList = [];
+        modifyList ??= [];
         if (!to.CanBeSelected)
             return;
         // (atk + strength) * (1 - weak) * (1 + vulnerable) * (1 + backAttack)
