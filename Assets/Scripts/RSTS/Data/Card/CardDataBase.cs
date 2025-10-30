@@ -47,10 +47,10 @@ public abstract class CardDataBase
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
     public CardConfigMulti Config;
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
-    public int UpgradeLevel => tempUpgradeLevel;
+    public int UpgradeLevel;
 
-    int trueUpgradeLevel;
-    int tempUpgradeLevel;
+    bool isTempUpgrade;
+    int savedUpgradeLevel;
     public Action? OnUpgrade;
     
     public abstract UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy);
@@ -69,33 +69,30 @@ public abstract class CardDataBase
 
     public virtual void OnExitBothTurn()
     {
-        tempUpgradeLevel = trueUpgradeLevel;
+        if (isTempUpgrade)
+        {
+            isTempUpgrade = false;
+            UpgradeLevel = savedUpgradeLevel;
+        }
     }
     public virtual void OnPlayerTurnEnd(BothTurnData bothTurnData){}
 
     // public virtual bool RecommendYield(BothTurnData bothTurnData) => false;
     
-    public void UpgradeTempInTurn()
+    public void Upgrade(bool isTemp)
     {
-        if (CanTempUpgrade)
+        if (!CanUpgrade)
+            return;
+        if (isTemp)
         {
-            tempUpgradeLevel++;
-            OnUpgrade?.Invoke();
+            isTempUpgrade = true;
+            savedUpgradeLevel = UpgradeLevel;
         }
-    }
-
-    public void Upgrade()
-    {
-        if (CanUpgrade)
-        {
-            trueUpgradeLevel++;
-            tempUpgradeLevel = trueUpgradeLevel;
-            OnUpgrade?.Invoke();
-        }
+        UpgradeLevel++;
+        OnUpgrade?.Invoke();
     }
     public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
-    public bool CanUpgrade => trueUpgradeLevel < Config.Upgrades.Count - 1;
-    public bool CanTempUpgrade => tempUpgradeLevel < Config.Upgrades.Count - 1;
+    public bool CanUpgrade => UpgradeLevel < Config.Upgrades.Count - 1;
     public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
     public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
     public EmbedString CurDes => CurUpgradeInfo.Des;
