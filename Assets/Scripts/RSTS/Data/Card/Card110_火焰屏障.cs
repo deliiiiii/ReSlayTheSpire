@@ -9,7 +9,7 @@ public class Card110 : CardDataBase
     BuffFlameBarrier buffFlameBarrier => NthEmbedAsBuffCopy<BuffFlameBarrier>(1);
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.AddBlockToPlayer(block);
+        bothTurnData.GainBlock(block);
         bothTurnData.AddBuffToPlayer(buffFlameBarrier);
         return UniTask.CompletedTask;
     }

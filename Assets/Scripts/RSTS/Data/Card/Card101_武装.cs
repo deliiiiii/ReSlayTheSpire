@@ -11,7 +11,7 @@ public class Card101 : CardDataBase
 
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.AddBlockToPlayer(blockValue);
+        bothTurnData.GainBlock(blockValue);
         if (UpgradeLevel == 0)
         {
             bothTurnData.OpenHandCardOnceClick(1,

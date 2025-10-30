@@ -39,7 +39,7 @@ public class BothTurnData : IMyFSMArg
             MaxHP = battleData.MaxHP,
             Block = new Observable<int>(0)
         };
-        PlayerHPAndBuffData.CurHP.OnValueChangedFull += (oldV, newV) =>
+        PlayerCurHP.OnValueChangedFull += (oldV, newV) =>
         {
             if (newV < oldV)
             {
@@ -57,7 +57,7 @@ public class BothTurnData : IMyFSMArg
         fsm.GetState(EBothTurn.PlayerTurnStart).OnEnter += () =>
         {
             TurnID++;
-            PlayerHPAndBuffData.Block.Value = 0;
+            PlayerBlock.Value = 0;
             LoseEnergy(CurEnergy.Value);
             GainEnergy(MaxEnergy);
             PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnStart);
@@ -199,12 +199,6 @@ public class BothTurnData : IMyFSMArg
         return true;
     }
     
-    public void LoseEnergy(int lose) => CurEnergy.Value -= lose;
-
-    public void UseEnergy(int use) => CurEnergy.Value -= use;
-
-    public void GainEnergy(int gain) => CurEnergy.Value += gain;
-
     bool DrawOne()
     {
         var ret = TryPullOneFromDraw(shouldRifill: true, out var drawn);
@@ -303,6 +297,14 @@ public class BothTurnData : IMyFSMArg
         {
             // 正常打出
             DiscardList.MyAdd(toYield);
+        }
+
+        if (toYield.Config.Category == ECardCategory.Attack)
+        {
+            if (PlayerHPAndBuffData.HasBuff<BuffDataAttackGainBlock>(out var buff))
+            {
+                GainBlock(buff.StackInfo?.Count ?? 0);
+            }
         }
         await toYield.YieldAsync(this, cost);
         if(EnemyList.Count == 0)
@@ -412,6 +414,18 @@ public class BothTurnData : IMyFSMArg
         }
     }
     
+    public void BurnPlayer(int atk)
+    {
+        if(PlayerBlock >= atk)
+        {
+            PlayerBlock.Value -= atk;
+            return;
+        }
+        var realBurn = atk - PlayerBlock;
+        PlayerBlock.Value = 0;
+        LoseHP(realBurn);
+    }
+    
     public void AttackPlayerFromEnemy(EnemyDataBase enemyData, int baseAtk,
         List<AttackModifyBase>? modifyList = null)
     {
@@ -425,37 +439,27 @@ public class BothTurnData : IMyFSMArg
         if (resultList.AnyType<AttackResultDie>())
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
-
+    
     public void GainMaxHP(int addedMaxHP)
     {
         PlayerMaxHP.Value += addedMaxHP;
         PlayerCurHP.Value += addedMaxHP;
     }
     
-    public void GainCurHP(int addedCurHP)
-    {
-        // PlayerHPAndBuffData.
-        PlayerCurHP.Value = Math.Clamp(PlayerCurHP + addedCurHP, PlayerCurHP, PlayerMaxHP);
-    }
-    
-    public void BurnPlayer(int atk)
-    {
-        if(PlayerBlock >= atk)
-        {
-            PlayerBlock.Value -= atk;
-            return;
-        }
-        var realBurn = atk - PlayerBlock;
-        PlayerBlock.Value = 0;
-        LoseHPToPlayer(realBurn);
-    }
-    
-    public void LoseHPToPlayer(int loseHP)
+    public void GainCurHP(int addedCurHP) 
+        => PlayerCurHP.Value = Math.Clamp(PlayerCurHP + addedCurHP, PlayerCurHP, PlayerMaxHP);
+
+    public void LoseHP(int loseHP)
     {
         PlayerCurHP.Value -= loseHP;
         if (PlayerCurHP <= 0)
             MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
+    
+    public void GainBlock(int addedBlock) => PlayerBlock.Value += addedBlock;
+    public void LoseEnergy(int lose) => CurEnergy.Value -= lose;
+    public void UseEnergy(int use) => CurEnergy.Value -= use;
+    public void GainEnergy(int gain) => CurEnergy.Value += gain;
     
     int GetAttackValue(HPAndBuffData from, HPAndBuffData? to, int baseAtk, List<AttackModifyBase> modifyList)
     {
@@ -525,11 +529,6 @@ public class BothTurnData : IMyFSMArg
         {
             enemyData.HPAndBuffData.AddBuff(buffDataCtor());
         }
-    }
-
-    public void AddBlockToPlayer(int addedBlock)
-    {
-        PlayerBlock.Value += addedBlock;
     }
 
     public void AddTempToDiscard(Func<CardDataBase> toAddCtor)
