@@ -9,7 +9,7 @@ public class Card5 : CardDataBase
     int atk => NthEmbedAs<EmbedAttack>(1).AttackValue;
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.GainBlock(block);
+        bothTurnData.AddBlockToPlayer(block);
         bothTurnData.AttackEnemy(Target, atk);
         return UniTask.CompletedTask;
     }

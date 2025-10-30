@@ -10,7 +10,7 @@ public class Card17 : CardDataBase
 
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        bothTurnData.LoseHP(loseHP);
+        bothTurnData.LoseHPToPlayer(loseHP);
         bothTurnData.AttackEnemy(Target, atk);
         return UniTask.CompletedTask;
     }
