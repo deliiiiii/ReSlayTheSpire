@@ -37,7 +37,7 @@ MonoBehaviour:
     CostInfo:
       rid: 4049883472238215210
   - Des:
-      content: 
+      content: "\u9020\u6210[]\u70B9\u4F24\u5BB3\u3002 \u7ED9\u4E88[]\u5C42\u6613\u4F24\u3002"
       EmbedTypes:
       - rid: 4049883477275836422
       - rid: 4049883477275836423
@@ -54,7 +54,7 @@ MonoBehaviour:
     - rid: 4049883472238215211
       type: {class: CardCostNumber, ns: RSTS, asm: RSTS}
       data:
-        Cost: 0
+        Cost: 2
     - rid: 4049883477275836418
       type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
       data:
@@ -72,7 +72,6 @@ MonoBehaviour:
     - rid: 4049883477275836421
       type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
       data:
-        count: 2
         Count:
           value: 2
     - rid: 4049883477275836422
@@ -92,6 +91,5 @@ MonoBehaviour:
     - rid: 4049883477275836425
       type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
       data:
-        count: 0
         Count:
           value: 3

@@ -30,15 +30,13 @@ MonoBehaviour:
   Upgrades:
   - Des:
       content: 
-      EmbedIntList: 
-      EmbedEnergyIntList: 
+      EmbedTypes: []
     Keywords: 04000000
     CostInfo:
       rid: 4049883412018233344
   - Des:
-      content: "\u6D88\u8017\u3002"
-      EmbedIntList: 
-      EmbedEnergyIntList: 
+      content: 
+      EmbedTypes: []
     Keywords: 04000000
     CostInfo:
       rid: 4049883427883450370

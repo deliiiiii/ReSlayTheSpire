@@ -33,11 +33,13 @@ public class HPAndBuffData
             if (existBuff is { StackInfo: not null } && addedBuff.StackInfo != null)
             {
                 existBuff.StackInfo.Count.Value += addedBuff.StackInfo.Count;
+                if (existBuff.StackInfo.Count.Value == 0)
+                {
+                    RemoveBuff(existBuff);
+                }
+                return;
             }
-            else
-            {
-                MyDebug.Log("Add Buff " + addedBuff.GetType().Name + " Cannot Stack");
-            }
+            MyDebug.Log("Add Buff " + addedBuff.GetType().Name + " Cannot Stack");
             return;
         }
         buffList.Add(addedBuff);
@@ -92,7 +94,10 @@ public class HPAndBuffData
 
     public void UseABuff(EBuffUseTime eUseTime)
     {
-        
+        buffList
+            .Where(buff => buff.UseTime == eUseTime)
+            .ToList()
+            .ForEach(buffData => buffData.Use(this));
     }
     public void DisposeABuff(EBuffDisposeTime eDisposeTime)
     {

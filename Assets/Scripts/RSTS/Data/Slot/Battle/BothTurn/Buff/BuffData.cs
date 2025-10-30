@@ -31,6 +31,7 @@ public abstract class BuffDataBase
     public abstract string Name { get; }
     public abstract EBuffUseTime UseTime { get; }
     public abstract EBuffDisposeTime DisposeTime { get; }
+    public virtual void Use(HPAndBuffData hpAndBuffData){}
     public virtual bool Dispose() => false;
 }
 
