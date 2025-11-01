@@ -36,9 +36,9 @@ public abstract class MyFSM
         // IBL的Bind
         if (unbindDic.TryGetValue(type, out var unbindFuncList)) 
             unbindFuncList?.ForEach(func =>func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
-        // IBL的Launch
         if (bindAlwaysDic.TryGetValue(type, out var bindAlwaysActList)) 
             bindAlwaysActList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(arg));
+        // IBL的Launch
         arg.Launch();
         if(tickDic.TryGetValue(type, out var tickActList))
             tickActList.ForEach(bindDataUpdate => bindDataUpdate.Bind());
@@ -179,7 +179,7 @@ public class MyFSM<TEnum> : MyFSM
 
     public void OnDestroy()
     {
-        curStateClass.Exit();
+        curStateClass.Destroy();
         curState = null;
         curStateClass = null;
     }

@@ -139,7 +139,7 @@ public class EmbedString
     
     // 在编辑器中显示另一个文本的Attribute
     [Header("嵌入数值都使用[]，这个list填入多态子类！")][HideLabel][SerializeReference]
-    // [ValidateInput(nameof(CheckIntCount), "嵌入的Int数量与Content中的[]数量不匹配")]
+    // [ValidateInput(nameof(CheckEmbedCount), "嵌入的Int数量与Content中的[]数量不匹配")]
     public List<EmbedType> EmbedTypes = [];
     
     bool CheckEmbedCount() => SubStringCount(content, "[]") == EmbedTypes.Count;
@@ -218,7 +218,7 @@ public class EmbedEnergy : EmbedType, IEmbedNotChange
 public class EmbedAddBuff : EmbedType, IEmbedNotChange
 {
     [SerializeReference]
-    public BuffDataBase BuffData = null!;
+    public BuffDataBase BuffData;
 
     public string GetNotChangeString()
     {

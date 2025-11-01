@@ -15,6 +15,7 @@ public class Card22 : CardDataBase
         bothTurnData.AttackEnemy(Target, atk);
         bothTurnData.HandList
             .Where(handCard => handCard.Config.Category != ECardCategory.Attack)
+            .ToList()
             .ForEach(handCard =>
             {
                 bothTurnData.HandList.MyRemove(handCard);

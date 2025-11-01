@@ -9,11 +9,11 @@ namespace RSTS;
 public class Card28 : CardDataBase
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
-    IEnumerable<CardDataBase> ToExhaustCards(BothTurnData bothTurnData) 
-        => bothTurnData.HandList.Where(cardData => cardData != this);
+    List<CardDataBase> ToExhaustCards(BothTurnData bothTurnData) 
+        => bothTurnData.HandList.Where(cardData => cardData != this).ToList();
     public override async UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        var count = ToExhaustCards(bothTurnData).Count();
+        var count = ToExhaustCards(bothTurnData).Count;
         ToExhaustCards(bothTurnData).ForEach(handCard =>
         {
             bothTurnData.HandList.MyRemove(handCard);
