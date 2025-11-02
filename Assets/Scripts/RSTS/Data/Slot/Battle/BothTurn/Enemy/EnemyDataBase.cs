@@ -53,12 +53,13 @@ public abstract class EnemyDataBase
     
 
 
-    public UniTask DoCurIntention(BothTurnData bothTurnData)
+    public UniTask DoCurIntention(BothTurnData bothTurnData, out List<AttackResultBase> resultList)
     {
+        resultList = [];
         switch (CurIntention())
         {
             case IntentionAttack attack:
-                bothTurnData.AttackPlayerFromEnemy(this, attack.Attack);
+                bothTurnData.AttackPlayerFromEnemy(this, attack.Attack, out resultList);
                 break;
             case IntentionBlock block:
                 HPAndBuffData.Block.Value += block.Block;

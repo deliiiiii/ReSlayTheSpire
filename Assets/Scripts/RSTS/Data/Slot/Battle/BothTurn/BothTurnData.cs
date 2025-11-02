@@ -121,7 +121,12 @@ public class BothTurnData : IMyFSMArg
             {
                 foreach (var enemyData in EnemyList)
                 {
-                    await enemyData.DoCurIntention(this);
+                    await enemyData.DoCurIntention(this, out var resultList);
+                    if (resultList.AnyType<AttackResultDie>())
+                    {
+                        MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
+                        return;
+                    }
                     await UniTask.Delay(200);
                 }
                 MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyTurnEnd);
@@ -452,18 +457,16 @@ public class BothTurnData : IMyFSMArg
         LoseHP(realBurn);
     }
     
-    public void AttackPlayerFromEnemy(EnemyDataBase enemyData, int baseAtk,
-        List<AttackModifyBase>? modifyList = null)
+    public void AttackPlayerFromEnemy(EnemyDataBase enemyData, int baseAtk, out List<AttackResultBase> resultList
+        , List<AttackModifyBase>? modifyList = null)
     {
         modifyList ??= [];
-        Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, out var resultList, modifyList);
+        Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, out resultList, modifyList);
         if (PlayerHPAndBuffData.HasBuff<BuffFlameBarrier>(out var buffFlameBarrier))
         {
             var flameDamage = buffFlameBarrier.StackInfo?.Count ?? 0;
             AttackEnemy(enemyData, flameDamage, [new AttackModifyFromBuff()]);
         }
-        // if (resultList.AnyType<AttackResultDie>())
-        //     MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
     }
     
     public void GainMaxHP(int addedMaxHP)

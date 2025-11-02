@@ -37,7 +37,7 @@ public class TestAnything : Singleton<TestAnything>
         BothTurnData = bothTurnData;
         if(enemyID < 0 || enemyID >= BothTurnData.EnemyList.Count)
             return;
-        BothTurnData.AttackPlayerFromEnemy(bothTurnData.EnemyList[enemyID], baseAtk);
+        BothTurnData.AttackPlayerFromEnemy(bothTurnData.EnemyList[enemyID], baseAtk, out _);
     }
     
     [Button]

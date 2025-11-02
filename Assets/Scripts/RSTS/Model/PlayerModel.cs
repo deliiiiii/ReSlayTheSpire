@@ -5,8 +5,4 @@ namespace RSTS;
 public class PlayerModel : MonoBehaviour
 {
     public HPAndBuffModel HPAndBuffModel;
-    public void ReadData(HPAndBuffData data)
-    {
-        HPAndBuffModel.ReadData(data);
-    }
 }

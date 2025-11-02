@@ -56,7 +56,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     
     void BindBothTurn(MyFSM<EBothTurn> fsm, BothTurnData bothTurnData)
     {
-        PlayerModel.ReadData(bothTurnData.PlayerHPAndBuffData);
+        PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
         bothTurnData.EnemyList.OnAdd += enemyData =>
         {
             // TODO 应对怪物个数不同的情况
@@ -103,17 +103,6 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
             }
         };
     }
-    
-    IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)
-    {
-        yield break;
-        // yield return Binder.FromObs(bothTurnData.PlayerCurHP)
-        //     .To(v => PlayerModel.HPAndBuffModel.DirectlySetHP(v, bothTurnData.PlayerMaxHP));
-        // yield return Binder.FromObs(bothTurnData.PlayerMaxHP)
-        //     .To(v => PlayerModel.HPAndBuffModel.DirectlySetHP(bothTurnData.PlayerCurHP, v));
-        // yield return Binder.FromObs(bothTurnData.PlayerBlock)
-        //     .To(v => PlayerModel.HPAndBuffModel.SetShield(v));
-    }
 
     void BindYieldCard(MyFSM<EYieldCardState> fsm, YieldCardData yieldCardData)
     {
@@ -131,10 +120,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     {
         base.Awake();
         MyFSM.OnRegister(BattleStateWrap.One, alwaysBind: BindBattle);
-        MyFSM.OnRegister(BothTurnStateWrap.One, 
-            alwaysBind: BindBothTurn,
-            canUnbind: CanUnbindBothTurn
-            );
+        MyFSM.OnRegister(BothTurnStateWrap.One, alwaysBind: BindBothTurn);
         MyFSM.OnRegister(YieldCardStateWrap.One, alwaysBind: BindYieldCard);
     }
 
