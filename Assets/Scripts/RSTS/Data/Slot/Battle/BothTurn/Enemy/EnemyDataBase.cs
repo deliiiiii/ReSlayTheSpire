@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using RSTS.CDMV;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -9,6 +11,7 @@ namespace RSTS;
 [Serializable]
 public abstract class EnemyDataBase
 {
+    #region Ctor
     static Dictionary<int, Func<EnemyDataBase>> enemyDic = [];
     public static void InitEnemyDic()
     {
@@ -40,12 +43,44 @@ public abstract class EnemyDataBase
         }
         throw new Exception($"Enemy ID {id} out of range");
     }
+    #endregion
     
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
     public EnemyConfigMulti Config;
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
     public HPAndBuffData HPAndBuffData = new();
 
+    
+
+
+    public UniTask DoCurIntention(BothTurnData bothTurnData)
+    {
+        switch (CurIntention())
+        {
+            case IntentionAttack attack:
+                bothTurnData.AttackPlayerFromEnemy(this, attack.Attack);
+                break;
+            case IntentionBlock block:
+                HPAndBuffData.Block.Value += block.Block;
+                break;
+            // default:
+            //     break;
+        }
+        
+        return UniTask.CompletedTask;
+    }
+
+    protected abstract IntentionBase? CurIntention();
+    protected IntentionBase? NthIntention(int n)
+    {
+        if (n < 0 || n >= Config.IntentionList.Count)
+        {
+            MyDebug.LogError($"{Config.name}'s intention[{n}] out of range");
+            return null;
+        }
+        return Config.IntentionList[n];
+    }
+    
     void ReadConfig(EnemyConfigMulti config)
     {
         Config = config;

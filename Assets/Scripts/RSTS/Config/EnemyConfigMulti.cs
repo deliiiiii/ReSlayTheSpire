@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using RSTS.CDMV;
 using UnityEngine;
@@ -11,4 +12,6 @@ public class EnemyConfigMulti : ConfigMulti<EnemyConfigMulti>
     protected override string PrefixName => "Enemy";
 
     public int MaxHP;
+
+    public List<IntentionBase> IntentionList = [];
 }

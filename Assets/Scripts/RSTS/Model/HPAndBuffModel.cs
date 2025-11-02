@@ -98,6 +98,11 @@ public class HPAndBuffModel : MonoBehaviour
             }
         };
         
+        fData.Block.OnValueChangedFull += (_, newV) =>
+        {
+            SetShield(newV);
+        };
+        
         data = fData;
     }
 }

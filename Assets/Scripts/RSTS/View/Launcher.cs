@@ -10,7 +10,7 @@ public class Launcher : Singleton<Launcher>
         MyFSM.Register(GameStateWrap.One, EGameState.Title, _ => new GameData());
     }
 
-    void OnDestroy()
+    void OnExit()
     {
         MyFSM.Release(GameStateWrap.One);
     }

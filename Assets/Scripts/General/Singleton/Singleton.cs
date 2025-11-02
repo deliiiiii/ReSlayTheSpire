@@ -43,7 +43,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         if (s == PlayModeStateChange.ExitingPlayMode && instance != null)
         {
-            DestroyImmediate(gameObject);
+            // DestroyImmediate(gameObject);
             instance = null;
         }
     }

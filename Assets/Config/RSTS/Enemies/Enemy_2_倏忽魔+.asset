@@ -20,7 +20,31 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: IntentionList
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[RSTS.IntentionBase, RSTS]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|RSTS.IntentionAttack, RSTS
+    - Name: Attack
+      Entry: 3
+      Data: 5
+    - Name: AttackTime
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   Name: "\u500F\u5FFD\u9B54+"
   ID: 2
   MaxHP: 1999

@@ -179,7 +179,7 @@ public class MyFSM<TEnum> : MyFSM
 
     public void OnDestroy()
     {
-        curStateClass.Destroy();
+        curStateClass.Exit();
         curState = null;
         curStateClass = null;
     }
