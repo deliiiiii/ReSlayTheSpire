@@ -7,22 +7,11 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public class Observable<T>
-    where T : struct
+public class Observable<T> where T : struct
 {
     [SerializeField] T value;
-    bool forceEverySet;
-    bool enableRepeatEvent;
-
-    bool CanAddOne() => value is int or float or double;
-    [Button][ShowIf(nameof(CanAddOne))]
-    public void AddOne()
-    {
-        if (CanAddOne())
-        {
-            Value = (Value as dynamic) + 1;
-        }
-    }
+    bool invokeEvenEqual;
+    bool acceptDuplicateEvent;
     public T Value
     {
         get => value;
@@ -31,38 +20,24 @@ public class Observable<T>
             var oldV = this.value;
             if (value is IComparable com)
             {
-                if (com.CompareTo(oldV) == 0 && !forceEverySet)
+                if (com.CompareTo(oldV) == 0 && !invokeEvenEqual)
                 {
                     return;
                 }
             }
-            else if (value.Equals(oldV))
+            else if (value.Equals(oldV) && !invokeEvenEqual)
                 return;
-            onValueChangedBefore?.Invoke(oldV);
             this.value = value;
             onValueChangedAfter?.Invoke(this.value);
             onValueChangedFull?.Invoke(oldV, value);
         }
     }
-    UnityAction<T>? onValueChangedBefore;
-    public event UnityAction<T>? OnValueChangedBefore
-    {
-        add
-        {
-            if (!enableRepeatEvent || (!onValueChangedBefore?.GetInvocationList().Contains(value) ?? true))
-            {
-                onValueChangedBefore += value;
-            }
-        }
-        remove => onValueChangedBefore -= value;
-    }
-    
     UnityAction<T>? onValueChangedAfter;
     public event UnityAction<T>? OnValueChangedAfter
     {
         add
         {
-            if (!enableRepeatEvent || (!onValueChangedAfter?.GetInvocationList().Contains(value) ?? true))
+            if (!acceptDuplicateEvent || (!onValueChangedAfter?.GetInvocationList().Contains(value) ?? true))
             {
                 onValueChangedAfter += value;
             }
@@ -74,7 +49,7 @@ public class Observable<T>
     {
         add
         {
-            if (!enableRepeatEvent || (!onValueChangedFull?.GetInvocationList().Contains(value) ?? true))
+            if (!acceptDuplicateEvent || (!onValueChangedFull?.GetInvocationList().Contains(value) ?? true))
             {
                 onValueChangedFull += value;
             }
@@ -89,15 +64,14 @@ public class Observable<T>
     public Observable(T initValue, 
         UnityAction<T>? before = null, 
         UnityAction<T>? after = null,
-        bool forceEverySet = false,
-        bool enableRepeatEvent = false
+        bool invokeEvenEqual = false,
+        bool acceptDuplicateEvent = false
         )
     {
         value = initValue;
-        onValueChangedBefore += before;
         onValueChangedAfter += after;
-        this.forceEverySet = forceEverySet;
-        this.enableRepeatEvent = enableRepeatEvent;
+        this.invokeEvenEqual = invokeEvenEqual;
+        this.acceptDuplicateEvent = acceptDuplicateEvent;
     }
     public static implicit operator T(Observable<T> v)
     {
