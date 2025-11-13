@@ -20,16 +20,17 @@ public class ClockController : MonoBehaviour
         curTime.OnValueChangedFull += (oldTime, newTime) =>
         {
             if (WindowManager.HasWatchingClock
-                && PlayerMono.InteractInfo.Value is SceneItemInteractInfo
-                    { SceneItemData: ClockItemData { Watched: false } clockItemData }
-                && clockItemData == data
+                // TODO Observable 不再支持class type
+                // && PlayerMono.InteractInfo.Value is SceneItemInteractInfo
+                //     { SceneItemData: ClockItemData { Watched: false } clockItemData }
+                // && clockItemData == data
                 && newTime.Hour != oldTime.Hour)
             {
                 int energy = newTime.Hour == 10 ? 4 : 2;
                 var des = $"叮! 时间到了{newTime.Hour}点整...!\n鉴于你凝思了许久，精力+{energy}点。";
                 void BuffAct() => MainItemMono.GainEnergy(energy);
                 BuffManager.AddWinBuff(des, BuffAct);
-                clockItemData.Watched = true;
+                // clockItemData.Watched = true;
             }
         };
     }

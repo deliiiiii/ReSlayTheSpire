@@ -13,7 +13,7 @@ public class Card16: CardDataBase
     {
         bothTurnData.AttackEnemy(Target, atk);
         // if (RecommendYield(bothTurnData))
-        if(Target.HPAndBuffData.HasBuff<BuffDataVulnerable>(out _))
+        if(Target?.HPAndBuffData.HasBuff<BuffDataVulnerable>(out _) ?? false)
         {
             bothTurnData.GainEnergy(energy);
             bothTurnData.DrawSome(card);

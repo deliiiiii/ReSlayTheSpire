@@ -8,21 +8,22 @@ using UnityEngine.Events;
 
 [Serializable]
 public class Observable<T>
+    where T : struct
 {
-    [SerializeField] T? value;
+    [SerializeField] T value;
     bool forceEverySet;
     bool enableRepeatEvent;
 
-    bool canAddOne => value is int or float or double;
-    [Button][ShowIf(nameof(canAddOne))]
+    bool CanAddOne() => value is int or float or double;
+    [Button][ShowIf(nameof(CanAddOne))]
     public void AddOne()
     {
-        if (canAddOne)
+        if (CanAddOne())
         {
             Value = (Value as dynamic) + 1;
         }
     }
-    public T? Value
+    public T Value
     {
         get => value;
         set
@@ -35,7 +36,7 @@ public class Observable<T>
                     return;
                 }
             }
-            else if (value != null && value.Equals(oldV))
+            else if (value.Equals(oldV))
                 return;
             onValueChangedBefore?.Invoke(oldV);
             this.value = value;
@@ -43,7 +44,7 @@ public class Observable<T>
             onValueChangedFull?.Invoke(oldV, value);
         }
     }
-    UnityAction<T?>? onValueChangedBefore;
+    UnityAction<T>? onValueChangedBefore;
     public event UnityAction<T>? OnValueChangedBefore
     {
         add
@@ -56,8 +57,8 @@ public class Observable<T>
         remove => onValueChangedBefore -= value;
     }
     
-    UnityAction<T?>? onValueChangedAfter;
-    public event UnityAction<T?>? OnValueChangedAfter
+    UnityAction<T>? onValueChangedAfter;
+    public event UnityAction<T>? OnValueChangedAfter
     {
         add
         {
@@ -68,8 +69,8 @@ public class Observable<T>
         }
         remove => onValueChangedAfter -= value;
     }
-    UnityAction<T?, T?>? onValueChangedFull;
-    public event UnityAction<T?, T?>? OnValueChangedFull
+    UnityAction<T, T>? onValueChangedFull;
+    public event UnityAction<T, T>? OnValueChangedFull
     {
         add
         {
@@ -85,9 +86,9 @@ public class Observable<T>
     {
         value = initValue;
     }
-    public Observable(T? initValue, 
-        UnityAction<T?>? before = null, 
-        UnityAction<T?>? after = null,
+    public Observable(T initValue, 
+        UnityAction<T>? before = null, 
+        UnityAction<T>? after = null,
         bool forceEverySet = false,
         bool enableRepeatEvent = false
         )
@@ -100,7 +101,7 @@ public class Observable<T>
     }
     public static implicit operator T(Observable<T> v)
     {
-        return v.Value!;
+        return v.Value;
     }
     
     public static implicit operator float(Observable<T> v)
@@ -118,7 +119,7 @@ public class Observable<T>
 
     public override string ToString()
     {
-        return Value?.ToString() ?? $"NULL Observable{typeof(T)}";
+        return Value.ToString();
     }
 }
 

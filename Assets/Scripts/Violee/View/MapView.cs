@@ -110,21 +110,22 @@ class MapView : ViewBase<MapView>
         // });
         
         
-        WindowManager.DrawWindow
-            .OnAdd(() =>
-            {
-                var doorInteractInfo = PlayerMono.InteractInfo.Value as DoorInteractInfo;
-                doorInteractInfo?.InsidePointDataList.ForEach(x =>
-                {
-                    x.Visit();
-                    x.Flash(true);
-                });
-            })
-            .OnRemove(() =>
-            {
-                var doorInteractInfo = PlayerMono.InteractInfo.Value as DoorInteractInfo;
-                doorInteractInfo?.InsidePointDataList.ForEach(x => x.Flash(false));
-            });
+        // TODO Observable 不再支持class type
+        // WindowManager.DrawWindow
+        //     .OnAdd(() =>
+        //     {
+        //         var doorInteractInfo = PlayerMono.InteractInfo.Value as DoorInteractInfo;
+        //         doorInteractInfo?.InsidePointDataList.ForEach(x =>
+        //         {
+        //             x.Visit();
+        //             x.Flash(true);
+        //         });
+        //     })
+        //     .OnRemove(() =>
+        //     {
+        //         var doorInteractInfo = PlayerMono.InteractInfo.Value as DoorInteractInfo;
+        //         doorInteractInfo?.InsidePointDataList.ForEach(x => x.Flash(false));
+        //     });
         
         TitleBtn.OnClickAsObservable()
             .TimeInterval()

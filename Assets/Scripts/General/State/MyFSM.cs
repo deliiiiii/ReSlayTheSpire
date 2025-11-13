@@ -17,15 +17,15 @@ public abstract class MyFSM
     static readonly Dictionary<Type, BindDataUpdate> selfTickDic = new();
     // 只有Register了以后，才会加入argDic
     static readonly Dictionary<Type, IMyFSMArg> argDic = new();
-    
-    public static void Register<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, Func<MyFSM<TEnum>, TArg> argCtor)
+
+    public static void Register<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state, Func<MyFSM<TEnum>, TArg> argCtor)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
-        var fsm = Get<TEnum>(shouldFind: false);
+        var fsm = Get<TEnum>();
         if (fsm != null)
         {
-            MyDebug.LogError("StateFactory: Acquire<" + typeof(TEnum).Name + ">Duplicated");
+            MyDebug.LogError($"FSM{typeof(TEnum).Name} Duplicated");
             return;
         }
         var type = typeof(TEnum);
@@ -42,13 +42,13 @@ public abstract class MyFSM
         arg.Launch();
         if(tickDic.TryGetValue(type, out var tickActList))
             tickActList.ForEach(bindDataUpdate => bindDataUpdate.Bind());
-        selfTickDic.Add(type, Binder.FromTick(dt => fsm.Update(dt), EUpdatePri.Fsm));
+        selfTickDic.Add(type, Binder.FromTick(fsm.Update, EUpdatePri.Fsm));
         selfTickDic[type].Bind();
         EnterState(one, state);
     }
     
     public static void OnRegister<TEnum, TArg>(
-        StateWrapper<TEnum, TArg> one,
+        StateWrap<TEnum, TArg> one,
         [CanBeNull] Action<MyFSM<TEnum>, TArg> alwaysBind = null,
         [CanBeNull] Func<TArg, IEnumerable<BindDataBase>> canUnbind = null,
         [CanBeNull] Action<float, TArg> tick = null)
@@ -67,12 +67,11 @@ public abstract class MyFSM
             tickDic[type].Add(Binder.FromTick(dt => tick(dt, argDic[type] as TArg), EUpdatePri.Fsm));
     }
 
-    public static void Release<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
+    public static void Release<TEnum, TArg>(StateWrap<TEnum, TArg> one)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
-        var fsm = Get<TEnum>();
-        if (fsm == null)
+        if (!TryGet<TEnum>(nameof(Release), out var fsm))
             return;
         var type = typeof(TEnum);
         // 跳转到空状态
@@ -86,20 +85,21 @@ public abstract class MyFSM
         argDic.Remove(type);
     }
 
-    public static TArg EnterState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+    public static void EnterState<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
-        Get<TEnum>()?.ChangeState(state);
-        return argDic[typeof(TEnum)] as TArg;
+        if (!TryGet<TEnum>(nameof(EnterState), out var fsm))
+            return;
+        fsm.ChangeState(state);
     }
 
-    public static bool IsState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state)
+    public static bool IsState<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
         => Get<TEnum>()?.IsOneOfState(state) ?? false;
 
-    public static bool IsState<TEnum, TArg>(StateWrapper<TEnum, TArg> one, TEnum state, out TArg arg)
+    public static bool IsState<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state, out TArg arg)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
@@ -107,19 +107,25 @@ public abstract class MyFSM
         arg = ret ? arg = argDic[typeof(TEnum)] as TArg : null;
         return ret;
     }
-    
-    public static string ShowState<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
+
+    public static string ShowState<TEnum, TArg>(StateWrap<TEnum, TArg> one)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
-        => Get<TEnum>(shouldFind : false)?.CurStateName;
-    
-    [CanBeNull]
-    static MyFSM<T> Get<T>(bool shouldFind = true) where T : Enum
+        => TryGet<TEnum>(nameof(ShowState), out var fsm) ? fsm.CurStateName : "Null";
+
+    static bool TryGet<TEnum>(string log, out MyFSM<TEnum> fsm) where TEnum : Enum
     {
-        if (fsmDic.TryGetValue(typeof(T), out var holder))
-            return (MyFSM<T>)holder;
-        if(shouldFind)
-            MyDebug.LogError("StateFactory: Get<" + typeof(T).Name + ">Not Exist");
+        fsm = Get<TEnum>();
+        if (fsm != null)
+            return true;
+        MyDebug.LogError($"FSM{typeof(TEnum).Name} Not Exist when {log}");
+        return false;
+    }
+    [CanBeNull]
+    static MyFSM<TEnum> Get<TEnum>() where TEnum : Enum
+    {
+        if (fsmDic.TryGetValue(typeof(TEnum), out var holder))
+            return holder as MyFSM<TEnum>;
         return null;
     }
 }

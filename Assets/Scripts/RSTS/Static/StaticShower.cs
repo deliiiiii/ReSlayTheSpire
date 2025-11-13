@@ -11,7 +11,7 @@ public class StaticShower : Singleton<StaticShower>
     [ShowInInspector] static string GameState => GetState(GameStateWrap.One);
     [ShowInInspector] static string BattleState => GetState(BattleStateWrap.One);
     [ShowInInspector] static string YieldCardState => GetState(BothTurnStateWrap.One);
-    static string GetState<TEnum, TArg>(StateWrapper<TEnum, TArg> one)
+    static string GetState<TEnum, TArg>(StateWrap<TEnum, TArg> one)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
         => !Application.isPlaying ? NotInPlayMode : MyFSM.ShowState(one);

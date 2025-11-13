@@ -7,8 +7,9 @@ public class InteractCasterReticle : MonoBehaviour
 {
     public LayerMask TarLayer;
 
-    readonly Observable<InteractReceiver?> lastIr
-        = new(null, x => x?.DisableOutline(), x => x?.EnableOutline());
+    // TODO Observable 不再支持class type
+    // readonly Observable<InteractReceiver?> lastIr
+    //     = new(null, x => x?.DisableOutline(), x => x?.EnableOutline());
     void Awake()
     {
         // TODO BindState is deleted

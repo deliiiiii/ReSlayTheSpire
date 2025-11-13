@@ -143,25 +143,26 @@ class GameView : ViewBase<GameView>
         Binder.FromObs(MainItemMono.WinCount).To(v => WinCountTxt.text = v.ToString());
         Binder.FromObs(MapManager.DoorCount).To(v => DoorCountTxt.text = v.ToString());
         
-        Binder.FromObs(PlayerMono.InteractInfo).To(info => {
-            NormalReticle.SetActive(GameState.IsPlaying && info == null);
-            FindReticle.SetActive(info != null);
-            SceneItemInfoPnl.SetActive(info != null);
-            SceneItemInfoTxt.text = info?.Description ?? "";
-            SceneItemInfoTxt.color = info?.Color ?? Color.black;
-        });
-        PlayerMono.OnClickInteract += info =>
-        {
-            try
-            {
-                _ = GetUICb(info);
-            }
-            catch (Exception e)
-            {
-                MyDebug.LogError(e);
-                throw;
-            }
-        };
+        // TODO Observable 不再支持class type
+        // Binder.FromObs(PlayerMono.InteractInfo).To(info => {
+        //     NormalReticle.SetActive(GameState.IsPlaying && info == null);
+        //     FindReticle.SetActive(info != null);
+        //     SceneItemInfoPnl.SetActive(info != null);
+        //     SceneItemInfoTxt.text = info?.Description ?? "";
+        //     SceneItemInfoTxt.color = info?.Color ?? Color.black;
+        // });
+        // PlayerMono.OnClickInteract += info =>
+        // {
+        //     try
+        //     {
+        //         _ = GetUICb(info);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         MyDebug.LogError(e);
+        //         throw;
+        //     }
+        // };
         
         // TODO BindState is deleted
         // GameState.GeneratingMapState

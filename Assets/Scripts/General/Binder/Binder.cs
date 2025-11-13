@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public static class Binder
 {
-    public static BindDataObs<T> FromObs<T>(Observable<T> osv) 
+    public static BindDataObs<T> FromObs<T>(Observable<T> osv)
+        where T : struct
     {
         return new BindDataObs<T>(osv);
     }

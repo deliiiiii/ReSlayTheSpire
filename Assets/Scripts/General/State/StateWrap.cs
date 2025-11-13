@@ -6,10 +6,10 @@ public interface IMyFSMArg
     public void UnInit();
 }
 
-public class StateWrapper<TEnum, TArg>
+public class StateWrap<TEnum, TArg>
     where TEnum : Enum
     where TArg : class, IMyFSMArg
 {
-    public static StateWrapper<TEnum, TArg> One => new();
-    protected StateWrapper(){}
+    public static StateWrap<TEnum, TArg> One => new();
+    protected StateWrap(){}
 }

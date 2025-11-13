@@ -32,8 +32,8 @@ namespace Violee
 
         public InteractInfo GetCb()
         {
-            if (!Data.HasDoor || Data.Opened.Value ||
-                (PlayerMono.PlayerCurPoint.Value?.NextPointAndWallSet.All(pair => pair.Item2 != Data) ?? true))
+            if (!Data.HasDoor || Data.Opened.Value)
+                // || (PlayerMono.PlayerCurPoint.Value?.NextPointAndWallSet.All(pair => pair.Item2 != Data) ?? true))
                 return InteractInfo.CreateUnActive();
             var energyCost = MainItemMono.CheckEnergyCost(1);
             if (MainItemMono.EnergyCount < energyCost)
@@ -51,8 +51,9 @@ namespace Violee
                 Description = $"打开门：消耗{energyCost}点精力, 并绘制门后连通区域的装饰。",
                 Color = Color.magenta,
                 
-                InsidePointDataList = PlayerMono.PlayerCurPoint.Value?
-                    .AtWallGetInsidePoints(Data).ToList() ?? [],
+                InsidePointDataList = null!,
+                // InsidePointDataList = PlayerMono.PlayerCurPoint.Value?
+                //     .AtWallGetInsidePoints(Data).ToList() ?? [],
                 WallData = Data,
                 // GetDrawConfigs = () => Configer.DrawConfigList.DrawConfigs.Take(3).ToList(),
                 GetDrawConfigs = () =>

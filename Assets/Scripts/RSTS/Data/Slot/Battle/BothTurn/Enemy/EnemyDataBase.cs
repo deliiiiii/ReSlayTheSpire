@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using RSTS.CDMV;
 using Sirenix.Utilities;
-using UnityEngine;
 
 namespace RSTS;
 [Serializable]
@@ -60,24 +58,22 @@ public abstract class EnemyDataBase
         {
             case IntentionAttack attack:
                 bothTurnData.AttackPlayerFromEnemy(this, attack.Attack, out resultList);
-                break;
+                return UniTask.CompletedTask;
             case IntentionBlock block:
                 HPAndBuffData.Block.Value += block.Block;
-                break;
-            // default:
-            //     break;
+                return UniTask.CompletedTask;
+            default:
+                return UniTask.CompletedTask;
         }
-        
-        return UniTask.CompletedTask;
     }
 
-    protected abstract IntentionBase? CurIntention();
-    protected IntentionBase? NthIntention(int n)
+    protected abstract IntentionBase CurIntention();
+    protected IntentionBase NthIntention(int n)
     {
         if (n < 0 || n >= Config.IntentionList.Count)
         {
             MyDebug.LogError($"{Config.name}'s intention[{n}] out of range");
-            return null;
+            return IntentionNone.One;
         }
         return Config.IntentionList[n];
     }

@@ -6,7 +6,7 @@ public enum EGameState
     Title,
     Battle,
 }
-public class GameStateWrap : StateWrapper<EGameState, GameData>;
+public class GameStateWrap : StateWrap<EGameState, GameData>;
 
 public enum EBattleState
 {
@@ -18,7 +18,7 @@ public enum EBattleState
     Win,
 }
 
-public class BattleStateWrap : StateWrapper<EBattleState, BattleData>;
+public class BattleStateWrap : StateWrap<EBattleState, BattleData>;
 
 public enum EBothTurn
 {
@@ -32,7 +32,7 @@ public enum EBothTurn
     EnemyTurnEnd,
 }
 
-public class BothTurnStateWrap : StateWrapper<EBothTurn, BothTurnData>;
+public class BothTurnStateWrap : StateWrap<EBothTurn, BothTurnData>;
 
 public enum EYieldCardState
 {
@@ -40,7 +40,7 @@ public enum EYieldCardState
     Drag,
 }
 
-public class YieldCardStateWrap : StateWrapper<EYieldCardState, YieldCardData>;
+public class YieldCardStateWrap : StateWrap<EYieldCardState, YieldCardData>;
 
 public enum ECardColor
 {

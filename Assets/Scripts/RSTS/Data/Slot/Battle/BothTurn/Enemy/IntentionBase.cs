@@ -17,3 +17,9 @@ public class IntentionBlock : IntentionBase
 {
     public int Block;
 }
+
+[Serializable]
+public class IntentionNone : IntentionBase
+{
+    public static readonly IntentionNone One = new();
+}

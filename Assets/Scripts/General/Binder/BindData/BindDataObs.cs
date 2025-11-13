@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class BindDataObs<T> : BindDataBase
+    where T : struct
 {
     protected Observable<T> osv;
     protected UnityAction<T> act;
