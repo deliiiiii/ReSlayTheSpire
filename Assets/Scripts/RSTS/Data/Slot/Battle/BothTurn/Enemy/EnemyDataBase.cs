@@ -9,8 +9,9 @@ namespace RSTS;
 [Serializable]
 public abstract class EnemyDataBase
 {
-    #region Ctor
+    #region Factory
     static Dictionary<int, Func<EnemyDataBase>> enemyDic = [];
+    
     public static void InitEnemyDic()
     {
         enemyDic.Clear();
@@ -27,8 +28,7 @@ public abstract class EnemyDataBase
             }
             enemyDic.Add(config.ID, () =>
             {
-                var ins = (Activator.CreateInstance(type) as EnemyDataBase)!;
-                ins.ReadConfig(config);
+                var ins = (Activator.CreateInstance(type, args: config) as EnemyDataBase)!;
                 return ins;
             });
         }
@@ -42,19 +42,24 @@ public abstract class EnemyDataBase
         throw new Exception($"Enemy ID {id} out of range");
     }
     #endregion
-    
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
+
+    protected EnemyDataBase(EnemyConfigMulti config)
+    {
+        Config = config;
+        HPAndBuffData.MaxHP.Value = Config.MaxHP;
+        HPAndBuffData.CurHP.Value = Config.MaxHP;
+    }
+
     public EnemyConfigMulti Config;
-#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
     public HPAndBuffData HPAndBuffData = new();
-
     
-
-
     public UniTask DoCurIntention(BothTurnData bothTurnData, out List<AttackResultBase> resultList)
     {
+        IntentionEnumerator ??= IntentionSeq().GetEnumerator();
         resultList = [];
-        switch (CurIntention())
+        if (!IntentionEnumerator.MoveNext())
+            return UniTask.CompletedTask;
+        switch (IntentionEnumerator.Current)
         {
             case IntentionAttack attack:
                 bothTurnData.AttackPlayerFromEnemy(this, attack.Attack, out resultList);
@@ -62,12 +67,16 @@ public abstract class EnemyDataBase
             case IntentionBlock block:
                 HPAndBuffData.Block.Value += block.Block;
                 return UniTask.CompletedTask;
+            case IntentionDebug debug:
+                MyDebug.Log(debug.Msg);
+                return UniTask.CompletedTask;
             default:
                 return UniTask.CompletedTask;
         }
     }
 
-    protected abstract IntentionBase CurIntention();
+    protected IEnumerator<IntentionBase>? IntentionEnumerator;
+    protected abstract IEnumerable<IntentionBase> IntentionSeq();
     protected IntentionBase NthIntention(int n)
     {
         if (n < 0 || n >= Config.IntentionList.Count)
@@ -76,13 +85,6 @@ public abstract class EnemyDataBase
             return IntentionNone.One;
         }
         return Config.IntentionList[n];
-    }
-    
-    void ReadConfig(EnemyConfigMulti config)
-    {
-        Config = config;
-        HPAndBuffData.MaxHP.Value = Config.MaxHP;
-        HPAndBuffData.CurHP.Value = Config.MaxHP;
     }
 }
 [AttributeUsage(AttributeTargets.Class)]

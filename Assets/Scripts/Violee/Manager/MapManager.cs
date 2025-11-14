@@ -168,7 +168,7 @@ internal class MapManager : SingletonCS<MapManager>
         List<BoxPointData> tempPoints = [..insidePoints];
         config.ToDrawModels.ForEach(model =>
         {
-            var p = tempPoints.RandomItem(p => model.Data.IsAir 
+            var p = tempPoints.RandomItem(filter: p => model.Data.IsAir 
                 ? !p.BelongBox.OccupiedAirs.Contains(p.Dir) && p.HasSWall()
                 : !p.BelongBox.OccupiedFloors.Contains(p.Dir));
             if (p == null)

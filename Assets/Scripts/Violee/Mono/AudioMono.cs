@@ -57,7 +57,7 @@ public class AudioMono : Singleton<AudioMono>
         {
             lastestClips.Clear();
         }
-        var newClip = recordList.RandomItem(x => x != CurClip && !lastestClips.Contains(x)) ?? Instance.BGMKisekiIns;
+        var newClip = recordList.RandomItem(filter: x => x != CurClip && !lastestClips.Contains(x)) ?? Instance.BGMKisekiIns;
         lastestClips.Add(newClip);
         return newClip;
     }

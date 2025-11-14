@@ -26,13 +26,22 @@ MonoBehaviour:
       Data: 0|System.Collections.Generic.List`1[[RSTS.IntentionBase, RSTS]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
-      Data: 1|RSTS.IntentionBlock, RSTS
-    - Name: Block
-      Entry: 3
-      Data: 10
+      Data: 1|RSTS.IntentionDebug, RSTS
+    - Name: Msg
+      Entry: 1
+      Data: Debug00
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|RSTS.IntentionDebug, RSTS
+    - Name: Msg
+      Entry: 1
+      Data: Debug11
     - Name: 
       Entry: 8
       Data: 

@@ -183,7 +183,7 @@ public class MainItemMono : Singleton<MainItemMono>
         Func<char, bool> filter = Instance.mainItemData.LetterList.Count == 5 
             ? _ => true
             : c => c != 'T';
-        var c = violeT.RandomItem(c => !Instance.mainItemData.LetterList.Contains(c) && filter(c));
+        var c = violeT.RandomItem(filter: c => !Instance.mainItemData.LetterList.Contains(c) && filter(c));
         Instance.mainItemData.LetterList.Add(c);
         OnGainVioleT?.Invoke(c);
     }

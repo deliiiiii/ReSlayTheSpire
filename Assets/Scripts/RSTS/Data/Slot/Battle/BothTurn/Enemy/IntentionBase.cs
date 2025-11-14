@@ -23,3 +23,9 @@ public class IntentionNone : IntentionBase
 {
     public static readonly IntentionNone One = new();
 }
+
+[Serializable]
+public class IntentionDebug : IntentionBase
+{
+    public required string Msg;
+}

@@ -5,65 +5,52 @@ using JetBrains.Annotations;
 
 public static class ListExt
 {
-    public static int RandomIndexWeighted(this List<int> list)
-        => list.IndexOf(list.RandomItem(weightFunc: x => x));
-    // {
-    //     if ((list?.Count ?? 0) == 0)
-    //         return 0;
-    //     var totalWeight = list.Sum();
-    //     var randomValue = UnityEngine.Random.Range(0, totalWeight);
-    //     var curWeight = 0;
-    //     for (var i = 0; i < list.Count; i++)
-    //     {
-    //         curWeight += list[i];
-    //         if (curWeight >= randomValue)
-    //         {
-    //             return i;
-    //         }
-    //     }
-    //     return 0;
-    // }
+    public static int RandomIndexWeighted(this List<int> list, Random seed = null)
+        => list.IndexOf(list.RandomItemWeighted(weightFunc: x => x, filter: null, seed: seed));
 
-    public static T RandomItem<T>(this List<T> list)
-        => RandomItem(list, null, null);
-    [CanBeNull] public static T RandomItem<T>(this List<T> list, Func<T, bool> filter)
-        => RandomItem(list, filter, null);
-    public static T RandomItem<T>(this List<T> list, [CanBeNull] Func<T, int> weightFunc)
-        => RandomItem(list, null, weightFunc);
-    [CanBeNull] public static T RandomItem<T>(this List<T> list, [CanBeNull] Func<T, bool> filter, [CanBeNull] Func<T, int> weightFunc)
+    public static T RandomItem<T>(this List<T> list
+        , List<int> weightList
+        , [CanBeNull] Func<T, bool> filter = null
+        , [CanBeNull] Random seed = null)
+        => RandomItemWeighted(list, x => weightList[list.IndexOf(x)], filter, seed);
+    
+    public static T RandomItem<T>(this List<T> list
+        , [CanBeNull] Func<T, int> weightFunc = null
+        , [CanBeNull] Func<T, bool> filter = null
+        , [CanBeNull] Random seed = null)
     {
         filter ??= _ => true;
         if (weightFunc != null)
-            return RandomItemWeighted(list, filter, weightFunc);
+            return RandomItemWeighted(list, weightFunc, filter, seed);
         var fList = list.Where(filter).ToList();
-        return fList.Count == 0 ? default : fList[UnityEngine.Random.Range(0, fList.Count)];
+        if(fList.Count == 0)
+            return default;
+        return fList[seed?.Next(0, fList.Count) ?? UnityEngine.Random.Range(0, fList.Count)];
     }
-    static T RandomItemWeighted<T>(this List<T> list, [CanBeNull] Func<T, bool> filter, Func<T, int> weightFunc)
+    static T RandomItemWeighted<T>(this List<T> list, Func<T, int> weightFunc, [CanBeNull] Func<T, bool> filter
+        , [CanBeNull] Random seed = null)
     {
         filter ??= _ => true;
-        if ((list?.Count ?? 0) == 0)
+        var fList = list.Where(filter).ToList();
+        if (fList.Count == 0)
             return default;
 
-        var filteredList = list.Where(filter).ToList();
-        if (filteredList.Count == 0)
-            return default;
-
-        var weights = filteredList.Select(weightFunc).ToList();
+        var weights = fList.Select(weightFunc).ToList();
         var totalWeight = weights.Sum();
-        var randomValue = UnityEngine.Random.Range(0, totalWeight) + 1;
+        var randomValue = (seed?.Next(0, totalWeight) ?? UnityEngine.Random.Range(0, totalWeight)) + 1;
         var curWeight = 0;
 
-        for (var i = 0; i < filteredList.Count; i++)
+        for (var i = 0; i < fList.Count; i++)
         {
             curWeight += weights[i];
             if (curWeight >= randomValue)
             {
-                return filteredList[i];
+                return fList[i];
             }
             
         }
 
-        return filteredList[^1];
+        return fList[^1];
     }
 
     [CanBeNull]

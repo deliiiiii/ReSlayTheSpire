@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace RSTS;
 [EnemyID(2)][Serializable]
-public class Enemy2 : EnemyDataBase
+internal class Enemy2(EnemyConfigMulti config) : EnemyDataBase(config)
 {
-    protected override IntentionBase CurIntention()
+    protected override IEnumerable<IntentionBase> IntentionSeq()
     {
-        return NthIntention(0);
+        if (Config.IntentionList.Count == 0)
+            yield break;
+        var i0 = NthIntention(0);
+        while (true)
+            yield return i0;
     }
 }

@@ -7,24 +7,24 @@ using Violee;
 
 public class PlayerMono : Singleton<PlayerMono>
 {
-    static FirstPersonController fpc = null!;
+    // static FirstPersonController fpc = null!;
 
     protected override void Awake()
     {
-        base.Awake();
-        fpc = GetComponent<FirstPersonController>();
-        gameObject.SetActive(false);
+        // base.Awake();
+        // fpc = GetComponent<FirstPersonController>();
+        // gameObject.SetActive(false);
 
-        OnPlayerEnter += p =>
-        {
-            if (!(p?.Visited ?? true))
-            {
-                p.VisitConnected();
-                // MyDebug.Log($"First Enter Point!!{p.BelongBox.Pos2D}:{p.Dir}");
-            }
-
-            RefreshCurPointBuff();
-        };
+        // OnPlayerEnter += p =>
+        // {
+        //     if (!(p?.Visited ?? true))
+        //     {
+        //         p.VisitConnected();
+        //         // MyDebug.Log($"First Enter Point!!{p.BelongBox.Pos2D}:{p.Dir}");
+        //     }
+        //
+        //     RefreshCurPointBuff();
+        // };
         
         // TODO BindState is deleted
         // GameState.TitleState
@@ -39,18 +39,18 @@ public class PlayerMono : Singleton<PlayerMono>
     }
     
     
-    static event Action<BoxPointData?>? OnPlayerExit;
-    static event Action<BoxPointData?>? OnPlayerEnter;
+    // static event Action<BoxPointData?>? OnPlayerExit;
+    // static event Action<BoxPointData?>? OnPlayerEnter;
     // TODO Observable 不再支持class type
     // public static readonly Observable<BoxPointData> PlayerCurPoint 
     //     = new(null!, p => OnPlayerExit?.Invoke(p), p => OnPlayerEnter?.Invoke(p));
     
-    static Transform staTransform => Instance.transform;
-    static GameObject staGameObject => Instance.gameObject;
-    public static void OnDijkstraEnd(Vector3 pos3D)
-    {
-        staTransform.position = pos3D + Vector3.up * (3f * staTransform.localScale.y);
-    }
+    // static Transform staTransform => Instance.transform;
+    // static GameObject staGameObject => Instance.gameObject;
+    // public static void OnDijkstraEnd(Vector3 pos3D)
+    // {
+    //     staTransform.position = pos3D + Vector3.up * (3f * staTransform.localScale.y);
+    // }
     // public static void OnEnterPlaying()
     // {
     //     staGameObject.SetActive(true);
