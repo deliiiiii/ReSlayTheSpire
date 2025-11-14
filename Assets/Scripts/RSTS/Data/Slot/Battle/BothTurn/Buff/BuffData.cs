@@ -28,17 +28,9 @@ public enum EBuffDisposeType
     Other,
 }
 
-// [Serializable]
-// public class BuffStackInfo
-// {
-    // public Observable<int> Count = new(1);
-// }
-
 [Serializable]
 public abstract class BuffDataBase
 {
-    // [SerializeReference]
-    // public BuffStackInfo? StackInfo;
     [ShowIf(nameof(HasStack))]
     public Observable<int> StackCount = new(1);
     public abstract string Name { get; }
