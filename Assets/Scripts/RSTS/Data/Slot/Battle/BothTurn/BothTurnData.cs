@@ -334,7 +334,7 @@ public class BothTurnData : IMyFSMArg
         {
             if (PlayerHPAndBuffData.HasBuff<BuffDataAttackGainBlock>(out var buff))
             {
-                GainBlock(buff.StackInfo?.Count ?? 0);
+                GainBlock(buff.StackCount);
             }
         }
         await toYield.YieldAsync(this, cost);
@@ -464,7 +464,7 @@ public class BothTurnData : IMyFSMArg
         Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, out resultList, modifyList);
         if (PlayerHPAndBuffData.HasBuff<BuffFlameBarrier>(out var buffFlameBarrier))
         {
-            var flameDamage = buffFlameBarrier.StackInfo?.Count ?? 0;
+            var flameDamage = buffFlameBarrier.StackCount;
             AttackEnemy(enemyData, flameDamage, [new AttackModifyFromBuff()]);
         }
     }

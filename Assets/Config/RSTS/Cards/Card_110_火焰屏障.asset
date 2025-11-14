@@ -65,6 +65,8 @@ MonoBehaviour:
       data:
         StackInfo:
           rid: 4049883548498264069
+        StackCount:
+          value: 4
     - rid: 4049883548498264069
       type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
       data:
@@ -88,6 +90,8 @@ MonoBehaviour:
       data:
         StackInfo:
           rid: 4049883548498264074
+        StackCount:
+          value: 6
     - rid: 4049883548498264074
       type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
       data:

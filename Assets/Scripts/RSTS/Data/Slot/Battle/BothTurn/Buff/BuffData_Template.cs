@@ -9,4 +9,5 @@ public class BuffData_Template : BuffDataBase
     public override EBuffUseTime UseTime => EBuffUseTime.None;
     public override EBuffDisposeTime DisposeTime => EBuffDisposeTime.None;
     protected override EBuffDisposeType DisposeType => EBuffDisposeType.Never;
+    public override bool HasStack => false;
 }

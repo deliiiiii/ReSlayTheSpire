@@ -9,9 +9,7 @@ public class BuffDataStrength : BuffDataBase, IBuffFromAtkBaseAdd
     public override EBuffUseTime UseTime => EBuffUseTime.None;
     public override EBuffDisposeTime DisposeTime => EBuffDisposeTime.None;
     protected override EBuffDisposeType DisposeType => EBuffDisposeType.Never;
+    public override bool HasStack => true;
 
-    public int GetAtkBaseAdd()
-    {
-        return StackInfo?.Count ?? 0;
-    }
+    public int GetAtkBaseAdd() => StackCount;
 }

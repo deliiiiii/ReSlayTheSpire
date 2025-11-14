@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -95,19 +96,19 @@ namespace RSTS.Editor
         {
             var tar = sos
                 .OfType<CardConfigMulti>()
-                .Where(x => x.Color == ECardColor.Green)
+                // .Where(x => x.Color == ECardColor.Green)
                 .ToList();
             tar.ForEach(x =>
             {
-                Debug.Log(x.name);
-                x.Upgrades.Clear();
-                x.Upgrades.Add(new CardUpgradeInfo()
-                {
-                    CostInfo = new CardCostNumber()
-                    {
-                        Cost = 114514
-                    }
-                });
+                // x.Upgrades.ForEach(upgrade =>
+                // {
+                //     upgrade.Des.EmbedTypes
+                //         .OfType<EmbedAddBuff>()
+                //         .ForEach(embedType =>
+                //         {
+                //             embedType.BuffData.StackCount.Value = embedType.BuffData.StackInfo?.Count ?? 0;
+                //         });
+                // });
             });
         
             modified = tar.OfType<ScriptableObject>().ToList();

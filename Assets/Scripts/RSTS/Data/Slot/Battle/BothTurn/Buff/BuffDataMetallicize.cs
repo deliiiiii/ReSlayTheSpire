@@ -9,8 +9,9 @@ public class BuffDataMetallicize : BuffDataBase
     public override EBuffUseTime UseTime => EBuffUseTime.TurnEnd;
     public override EBuffDisposeTime DisposeTime => EBuffDisposeTime.None;
     protected override EBuffDisposeType DisposeType => EBuffDisposeType.Never;
+    public override bool HasStack => true;
     public override void Use(HPAndBuffData hpAndBuffData)
     {
-        hpAndBuffData.Block.Value += StackInfo?.Count.Value ?? 0;
+        hpAndBuffData.Block.Value += StackCount;
     }
 }

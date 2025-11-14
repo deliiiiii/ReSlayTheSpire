@@ -11,7 +11,7 @@ public class BuffModel : MonoBehaviour
     public void ReadData(BuffDataBase data)
     {
         TxtName.text = data.Name;
-        TxtCount.text = data.StackInfo?.Count.ToString() ?? string.Empty;
+        TxtCount.text = data.HasStack ? data.StackCount.ToString() : string.Empty;
     }
     
     public void ChangeCount(int count)

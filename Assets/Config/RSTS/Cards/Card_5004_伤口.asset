@@ -30,7 +30,7 @@ MonoBehaviour:
   Upgrades:
   - Des:
       content: 
-      EmbedIntList: 
+      EmbedTypes: []
     Keywords: 02000000
     CostInfo:
       rid: 4049883472238215169

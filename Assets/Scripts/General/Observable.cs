@@ -95,6 +95,8 @@ public class Observable<T> where T : struct
     {
         return Value.ToString();
     }
+    
+    public const string NameOfValue = nameof(value); 
 }
 
 

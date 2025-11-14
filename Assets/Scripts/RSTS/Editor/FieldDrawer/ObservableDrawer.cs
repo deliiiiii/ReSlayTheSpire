@@ -8,7 +8,7 @@ namespace RSTS.Editor
     {
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            var valueChild = Property.Children.FirstOrDefault(c => c.Name == "value");
+            var valueChild = Property.Children.FirstOrDefault(c => c.Name == Observable<int>.NameOfValue);
             if (valueChild != null)
             {
                 valueChild.Draw(label);

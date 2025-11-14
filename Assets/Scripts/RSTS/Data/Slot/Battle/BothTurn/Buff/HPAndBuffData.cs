@@ -30,10 +30,10 @@ public class HPAndBuffData
     {
         if(HasBuff(addedBuff.GetType(), out var existBuff))
         {
-            if (existBuff is { StackInfo: not null } && addedBuff.StackInfo != null)
+            if (existBuff.HasStack)
             {
-                existBuff.StackInfo.Count.Value += addedBuff.StackInfo.Count;
-                if (existBuff.StackInfo.Count.Value == 0)
+                existBuff.StackCount.Value += addedBuff.StackCount;
+                if (existBuff.StackCount.Value == 0)
                 {
                     RemoveBuff(existBuff);
                 }
@@ -43,9 +43,9 @@ public class HPAndBuffData
             return;
         }
         buffList.Add(addedBuff);
-        if (addedBuff.StackInfo != null)
+        if (addedBuff.HasStack)
         {
-            addedBuff.StackInfo.Count.OnValueChangedAfter += v 
+            addedBuff.StackCount.OnValueChangedAfter += v 
                 => OnChangeBuffStack?.Invoke(addedBuff, v);
         }
         OnAddBuff?.Invoke(addedBuff);

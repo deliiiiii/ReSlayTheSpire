@@ -9,4 +9,5 @@ public class BuffDataAttackGainBlock : BuffDataBase
     public override EBuffUseTime UseTime => EBuffUseTime.None;
     public override EBuffDisposeTime DisposeTime => EBuffDisposeTime.TurnEnd;
     protected override EBuffDisposeType DisposeType => EBuffDisposeType.AllStack;
+    public override bool HasStack => true;
 }
