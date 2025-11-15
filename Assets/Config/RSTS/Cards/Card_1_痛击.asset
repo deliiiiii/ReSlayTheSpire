@@ -67,14 +67,7 @@ MonoBehaviour:
     - rid: 4049883477275836420
       type: {class: BuffDataVulnerable, ns: RSTS, asm: RSTS}
       data:
-        StackInfo:
-          rid: 4049883477275836421
         StackCount:
-          value: 2
-    - rid: 4049883477275836421
-      type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
-      data:
-        Count:
           value: 2
     - rid: 4049883477275836422
       type: {class: EmbedAttack, ns: RSTS, asm: RSTS}
@@ -88,12 +81,5 @@ MonoBehaviour:
     - rid: 4049883477275836424
       type: {class: BuffDataVulnerable, ns: RSTS, asm: RSTS}
       data:
-        StackInfo:
-          rid: 4049883477275836425
         StackCount:
-          value: 3
-    - rid: 4049883477275836425
-      type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
-      data:
-        Count:
           value: 3

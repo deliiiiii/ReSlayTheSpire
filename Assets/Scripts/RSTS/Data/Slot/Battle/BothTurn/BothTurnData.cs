@@ -121,7 +121,7 @@ public class BothTurnData : IMyFSMArg
             {
                 foreach (var enemyData in EnemyList)
                 {
-                    await enemyData.DoCurIntention(this, out var resultList);
+                    var resultList = await enemyData.DoCurIntentionAsync(this);
                     if (resultList.AnyType<AttackResultDie>())
                     {
                         MyFSM.EnterState(BattleStateWrap.One, EBattleState.Lose);
@@ -468,7 +468,21 @@ public class BothTurnData : IMyFSMArg
             AttackEnemy(enemyData, flameDamage, [new AttackModifyFromBuff()]);
         }
     }
-    
+
+    public async UniTask<List<AttackResultBase>> AttackPlayerFromEnemyMultiTimesAsync(EnemyDataBase enemyData, int baseAtk, int times
+        , List<AttackModifyBase>? modifyList = null)
+    {
+        List<AttackResultBase> resultList = [];
+        for (int t = 0; t < times; t++)
+        {
+            AttackPlayerFromEnemy(enemyData, baseAtk, out var curResultList, modifyList);
+            resultList.AddRange(curResultList);
+            await UniTask.Delay(300);
+        }
+
+        return resultList;
+    }
+
     public void GainMaxHP(int addedMaxHP)
     {
         PlayerMaxHP.Value += addedMaxHP;

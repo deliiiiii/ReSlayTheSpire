@@ -25,7 +25,6 @@ public class GameData: IMyFSMArg
 
     [SerializeReference] public BattleData BattleData;
     public BattleData CreateBattleData(EPlayerJob job) => BattleData = new BattleData(this, job);
-
     public void Launch()
     {
     }

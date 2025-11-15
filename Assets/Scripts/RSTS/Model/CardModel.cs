@@ -24,23 +24,23 @@ public class CardModel : MonoBehaviour
     public event Action<Vector3>? OnBeginDragEvt;
     public event Action<Vector3>? OnDragEvt;
     public event Action<Vector3>? OnEndDragEvt;
-    public void ReadData(CardDataBase fData)
+    public void ReadDataInBothTurn(CardDataBase fData, BothTurnData bothTurnData)
     {
         Data = fData;
         
         TextCategory.text = fData.Config.Category.ToString();
-        RefreshTxtCost();
-        RefreshTxtDes();
+        RefreshTxtCost(bothTurnData);
+        RefreshTxtDes(bothTurnData);
 
         imgs = GetComponentsInChildren<Image>();
         texts = GetComponentsInChildren<Text>();
         tmpTexts = GetComponentsInChildren<TMP_Text>();
+        
+        gameObject.SetActive(true);
     }
 
-    public void RefreshTxtDes()
+    public void RefreshTxtDes(BothTurnData bothTurnData)
     {
-        if (!MyFSM.IsState(BattleStateWrap.One, EBattleState.BothTurn, out var battleData))
-            return;
         string plus = Data.UpgradeLevel switch
         {
             0 => "",
@@ -48,16 +48,14 @@ public class CardModel : MonoBehaviour
             _ => $"+{Data.UpgradeLevel}"
         };
         TxtName.text = $"{Data.Config.Name}{plus}";
-        TxtDes.text = battleData.BothTurnData.CurContentWithKeywords(Data);
+        TxtDes.text = bothTurnData.CurContentWithKeywords(Data);
     }
 
-    public void RefreshTxtCost()
+    public void RefreshTxtCost(BothTurnData bothTurnData)
     {
-        if (!MyFSM.IsState(BattleStateWrap.One, EBattleState.BothTurn, out var battleData))
-            return;
-        TxtCost.text = battleData.BothTurnData.UIGetEnergy(Data);
+        TxtCost.text = bothTurnData.UIGetEnergy(Data);
     }
-
+    
     public void OnPointerEnter(BaseEventData baseEventData)
     {
         OnPointerEnterEvt?.Invoke();

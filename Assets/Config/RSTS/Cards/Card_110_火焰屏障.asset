@@ -63,14 +63,7 @@ MonoBehaviour:
     - rid: 4049883548498264068
       type: {class: BuffFlameBarrier, ns: RSTS, asm: RSTS}
       data:
-        StackInfo:
-          rid: 4049883548498264069
         StackCount:
-          value: 4
-    - rid: 4049883548498264069
-      type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
-      data:
-        Count:
           value: 4
     - rid: 4049883548498264070
       type: {class: EmbedBlock, ns: RSTS, asm: RSTS}
@@ -88,12 +81,5 @@ MonoBehaviour:
     - rid: 4049883548498264073
       type: {class: BuffFlameBarrier, ns: RSTS, asm: RSTS}
       data:
-        StackInfo:
-          rid: 4049883548498264074
         StackCount:
-          value: 6
-    - rid: 4049883548498264074
-      type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
-      data:
-        Count:
           value: 6

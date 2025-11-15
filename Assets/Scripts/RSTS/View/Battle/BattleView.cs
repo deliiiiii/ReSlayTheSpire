@@ -142,19 +142,19 @@ public class BattleView : Singleton<BattleView>
         Dictionary<CardDataBase, CardModel> handCardModelDic = new();
         bothTurnData.PlayerHPAndBuffData.OnAddBuff += _ =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes(bothTurnData));
         };
         bothTurnData.PlayerHPAndBuffData.OnRemoveBuff += _ =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes(bothTurnData));
         };
         bothTurnData.PlayerHPAndBuffData.OnChangeBuffStack += (_, _) =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes(bothTurnData));
         };
         bothTurnData.PlayerBlock.OnValueChangedAfter += _ =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes(bothTurnData));
         };
         
         
@@ -165,21 +165,19 @@ public class BattleView : Singleton<BattleView>
             Vector3 initScale = default;
             
             var cardModel = Instantiate(PfbCard, PrtHandCard);
-            cardModel.ReadData(cardData);
+            cardModel.ReadDataInBothTurn(cardData, bothTurnData);
             cardData.OnUpgrade = () =>
             {
-                cardModel.RefreshTxtDes();
-                cardModel.RefreshTxtCost();
+                cardModel.RefreshTxtDes(bothTurnData);
+                cardModel.RefreshTxtCost(bothTurnData);
             };
-            cardModel.gameObject.SetActive(true);
             handCardModelDic.Add(cardData, cardModel);
 
             cardModel.OnPointerEnterEvt += () =>
             {
                 if (MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag))
                     return;
-                CurDragCard.gameObject.SetActive(true);
-                CurDragCard.ReadData(cardData);
+                CurDragCard.ReadDataInBothTurn(cardData, bothTurnData);
                 initThisPos = CurDragCard.transform.position = cardModel.transform.position;
                 var initDeltaScale = cardModel.GetComponent<RectTransform>().sizeDelta.x
                                      / CurDragCard.GetComponent<RectTransform>().sizeDelta.x;
@@ -248,7 +246,7 @@ public class BattleView : Singleton<BattleView>
                 bothTurnData.YieldHandAsync(cardData).Forget();
                 cardData.Target = null;
             };
-            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
+            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes(bothTurnData));
         };
         bothTurnData.HandList.OnRemove += cardData =>
         {
@@ -258,7 +256,7 @@ public class BattleView : Singleton<BattleView>
                 Destroy(handCardModelDic[cardData].gameObject);
                 handCardModelDic.Remove(cardData);
             }
-            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
+            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes(bothTurnData));
         };
         
         bothTurnData.DrawList.OnAdd += cardData =>
@@ -305,8 +303,7 @@ public class BattleView : Singleton<BattleView>
             foreach (var cardData in cardList)
             {
                 var cardModel = Instantiate(PfbCardOnceClick, PrtDiscardOnceClick);
-                cardModel.ReadData(cardData);
-                cardModel.gameObject.SetActive(true);
+                cardModel.ReadDataInBothTurn(cardData, bothTurnData);
                 cardModel.Btn.onClick.AddListener(() =>
                 {
                     onClick(cardData);
@@ -322,7 +319,7 @@ public class BattleView : Singleton<BattleView>
         
         bothTurnData.OnPlayerLoseHP += () =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtCost());
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtCost(bothTurnData));
         };
     }
     IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)

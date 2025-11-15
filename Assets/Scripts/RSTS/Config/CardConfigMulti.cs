@@ -222,7 +222,7 @@ public class EmbedAddBuff : EmbedType, IEmbedNotChange
 
     public string GetNotChangeString()
     {
-        return BuffData.StackCount.ToString() ?? "NaN";
+        return BuffData.StackCount.ToString();
     }
 }
 

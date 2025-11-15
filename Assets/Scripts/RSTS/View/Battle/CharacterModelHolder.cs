@@ -21,8 +21,6 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     public List<EnemyModel> EnemyModelList = [];
 
     readonly List<EnemyModel> enteredTargetEnemyModels = [];
-    
-    public EnemyDataBase? TargetingEnemy => enteredTargetEnemyModels.LastOrDefault()?.Data;
     public bool CheckInNoTarget(Vector2 screenPos) => PosInRect(screenPos, TransNoTargetArea.RectTransform);
 
     public void EnableNoTargetArea(bool enable)
@@ -74,7 +72,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
                 if (!yieldCardData.CardModel.Data.HasTarget)
                     return;
                 yieldCardData.CardModel.Data.Target = m.Data;
-                yieldCardData.CardModel.RefreshTxtDes();
+                yieldCardData.CardModel.RefreshTxtDes(bothTurnData);
                 // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt success!");
                 enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
                 m.EnableSelectTarget(true);
@@ -86,7 +84,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
                 if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out var yieldCardData))
                     return;
                 yieldCardData.CardModel.Data.Target = null;
-                yieldCardData.CardModel.RefreshTxtDes();
+                yieldCardData.CardModel.RefreshTxtDes(bothTurnData);
                 enteredTargetEnemyModels.Remove(m);
                 m.EnableSelectTarget(false);
                 enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);

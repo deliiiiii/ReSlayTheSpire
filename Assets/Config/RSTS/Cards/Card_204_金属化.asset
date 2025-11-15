@@ -57,14 +57,7 @@ MonoBehaviour:
     - rid: 4049883548498264106
       type: {class: BuffDataMetallicize, ns: RSTS, asm: RSTS}
       data:
-        StackInfo:
-          rid: 4049883548498264107
         StackCount:
-          value: 3
-    - rid: 4049883548498264107
-      type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
-      data:
-        Count:
           value: 3
     - rid: 4049883548498264108
       type: {class: EmbedAddBuff, ns: RSTS, asm: RSTS}
@@ -78,12 +71,5 @@ MonoBehaviour:
     - rid: 4049883548498264110
       type: {class: BuffDataMetallicize, ns: RSTS, asm: RSTS}
       data:
-        StackInfo:
-          rid: 4049883548498264111
         StackCount:
-          value: 4
-    - rid: 4049883548498264111
-      type: {class: BuffStackInfo, ns: RSTS, asm: RSTS}
-      data:
-        Count:
           value: 4

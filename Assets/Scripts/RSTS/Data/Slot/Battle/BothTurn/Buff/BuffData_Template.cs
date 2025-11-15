@@ -3,6 +3,7 @@
 namespace RSTS;
 
 [Serializable]
+// ReSharper disable once InconsistentNaming
 public class BuffData_Template : BuffDataBase
 {
     public override string Name => "模板Buff";

@@ -46,33 +46,34 @@ public abstract class EnemyDataBase
     protected EnemyDataBase(EnemyConfigMulti config)
     {
         Config = config;
-        HPAndBuffData.MaxHP.Value = Config.MaxHP;
-        HPAndBuffData.CurHP.Value = Config.MaxHP;
+        HPAndBuffData.MaxHP.Value = HPAndBuffData.CurHP.Value = Config.MaxHP;
     }
 
     public EnemyConfigMulti Config;
     public HPAndBuffData HPAndBuffData = new();
     
-    public UniTask DoCurIntention(BothTurnData bothTurnData, out List<AttackResultBase> resultList)
+    public async UniTask<List<AttackResultBase>> DoCurIntentionAsync(BothTurnData bothTurnData)
     {
+        List<AttackResultBase> resultList = [];
         IntentionEnumerator ??= IntentionSeq().GetEnumerator();
-        resultList = [];
         if (!IntentionEnumerator.MoveNext())
-            return UniTask.CompletedTask;
+            return resultList;
         switch (IntentionEnumerator.Current)
         {
-            case IntentionAttack attack:
+            case IntentionAttack { AttackTime: 1 } attack:
                 bothTurnData.AttackPlayerFromEnemy(this, attack.Attack, out resultList);
-                return UniTask.CompletedTask;
+                break;
+            case IntentionAttack { AttackTime: > 1 } attack:
+                resultList = await bothTurnData.AttackPlayerFromEnemyMultiTimesAsync(this, attack.Attack, attack.AttackTime);
+                break;
             case IntentionBlock block:
                 HPAndBuffData.Block.Value += block.Block;
-                return UniTask.CompletedTask;
+                break;
             case IntentionDebug debug:
                 MyDebug.Log(debug.Msg);
-                return UniTask.CompletedTask;
-            default:
-                return UniTask.CompletedTask;
+                break;
         }
+        return resultList;
     }
 
     protected IEnumerator<IntentionBase>? IntentionEnumerator;

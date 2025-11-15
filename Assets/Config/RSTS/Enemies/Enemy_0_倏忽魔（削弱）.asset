@@ -44,10 +44,10 @@ MonoBehaviour:
       Data: 2|RSTS.IntentionAttack, RSTS
     - Name: Attack
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: AttackTime
       Entry: 3
-      Data: 1
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
