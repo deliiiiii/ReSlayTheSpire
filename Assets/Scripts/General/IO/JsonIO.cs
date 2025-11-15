@@ -1,14 +1,24 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+
+class WritablePropertiesOnlyResolver : DefaultContractResolver
+{
+    protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization) 
+        => base.CreateProperties(type, memberSerialization)
+            .Where(p => p.Writable)
+            .ToList();
+}
 
 public static class JsonIO
 {
-    public static void Write<T>(string f_pathPre,string f_name,T curEntity)
+    public static void Write<T>(string f_pathPre, string f_name, T curEntity)
     {
         //Debug.Log("write"+curEntity);
         string path = f_pathPre +"/" + f_name + ".json";
@@ -21,7 +31,8 @@ public static class JsonIO
         var settings = new JsonSerializerSettings
         {
             Formatting = Formatting.Indented,
-            // 不序列化属性
+            TypeNameHandling = TypeNameHandling.All,
+            ContractResolver = new WritablePropertiesOnlyResolver()
         };
         string str = JsonConvert.SerializeObject(curEntity, settings);
         File.WriteAllText(path, str);

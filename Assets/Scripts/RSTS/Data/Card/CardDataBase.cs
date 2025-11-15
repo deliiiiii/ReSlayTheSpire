@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using RSTS.CDMV;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -29,8 +30,7 @@ public abstract class CardDataBase
             }
             cardDic.Add(config.ID, () =>
             {
-                var ins = (Activator.CreateInstance(type) as CardDataBase)!;
-                ins.Config = config;
+                var ins = (Activator.CreateInstance(type, args: config) as CardDataBase)!;
                 return ins;
             });
         }
@@ -43,15 +43,16 @@ public abstract class CardDataBase
         }
         throw new Exception($"CreateCard : ID {id} out of range");
     }
-    
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
+
+    protected CardDataBase() => Config = null!;
+    protected CardDataBase(CardConfigMulti config) => Config = config;
+
     public CardConfigMulti Config;
-#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
     public int UpgradeLevel;
 
-    bool isTempUpgrade;
-    int savedUpgradeLevel;
-    public Action? OnUpgrade;
+    [SerializeField] bool isTempUpgrade;
+    [SerializeField] int savedUpgradeLevel;
+    [NonSerialized] public Action? OnUpgrade;
     
     public abstract UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy);
     public T GetModify<T>(BothTurnData bothTurnData)

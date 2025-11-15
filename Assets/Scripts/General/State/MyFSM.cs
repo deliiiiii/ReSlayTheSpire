@@ -111,7 +111,9 @@ public abstract class MyFSM
     public static string ShowState<TEnum, TArg>(StateWrap<TEnum, TArg> one)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
-        => TryGet<TEnum>(nameof(ShowState), out var fsm) ? fsm.CurStateName : "Null";
+    {
+        return Get<TEnum>()?.CurStateName ?? "Null";
+    }
 
     static bool TryGet<TEnum>(string log, out MyFSM<TEnum> fsm) where TEnum : Enum
     {

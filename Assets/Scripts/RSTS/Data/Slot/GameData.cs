@@ -32,5 +32,9 @@ public class GameData: IMyFSMArg
     public void UnInit()
     {
     }
+
+    public void Save() => Saver.Save("DataSaved", nameof(GameData), this);
+
+    public GameData Load() => Saver.Load<GameData>("DataSaved", nameof(GameData));
 }
 
