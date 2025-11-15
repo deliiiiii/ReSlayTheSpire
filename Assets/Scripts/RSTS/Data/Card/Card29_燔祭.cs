@@ -9,7 +9,7 @@ public class Card29 : CardDataBase
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
         bothTurnData.AttackAllEnemies(atk);
-        bothTurnData.AddTempToDiscard(() => CreateCard(5002));
+        bothTurnData.AddTempToDiscard(() => CreateData(5002));
         return UniTask.CompletedTask;
     }
 }

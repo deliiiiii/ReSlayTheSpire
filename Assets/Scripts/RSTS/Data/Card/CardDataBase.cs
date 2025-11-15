@@ -2,56 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
-using RSTS.CDMV;
-using Sirenix.Utilities;
 using UnityEngine;
+using RSTS.CDMV;
 
 namespace RSTS;
 
 [Serializable]
-public abstract class CardDataBase
+public abstract class CardDataBase : DataBaseMulti<CardDataBase, CardIDAttribute, CardConfigMulti>
 {
-    static Dictionary<int, Func<CardDataBase>> cardDic = [];
-    public static void InitCardDic()
-    {
-        cardDic.Clear();
-        var subTypeDic = typeof(CardDataBase).Assembly.GetTypes()
-            .Where(x => x.IsSubclassOf(typeof(CardDataBase))
-                        && x.GetAttribute<CardIDAttribute>() != null)
-            .ToDictionary(x => x.GetAttribute<CardIDAttribute>().ID);
-        foreach (var config in RefPoolMulti<CardConfigMulti>.Acquire())
-        {
-            if (!subTypeDic.TryGetValue(config.ID, out var type))
-            {
-                MyDebug.LogError($"class Card{config.ID} not found");
-                cardDic.Add(config.ID, () => new Card_Template{ Config = config });
-                continue;
-            }
-            cardDic.Add(config.ID, () =>
-            {
-                var ins = (Activator.CreateInstance(type, args: config) as CardDataBase)!;
-                return ins;
-            });
-        }
-    }
-    public static CardDataBase CreateCard(int id)
-    {
-        if (cardDic.TryGetValue(id, out var func))
-        {
-            return func();
-        }
-        throw new Exception($"CreateCard : ID {id} out of range");
-    }
-
-    protected CardDataBase() => Config = null!;
-    protected CardDataBase(CardConfigMulti config) => Config = config;
-
-    public CardConfigMulti Config;
     public int UpgradeLevel;
-
-    [SerializeField] bool isTempUpgrade;
-    [SerializeField] int savedUpgradeLevel;
+    
     [NonSerialized] public Action? OnUpgrade;
     
     public abstract UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy);
@@ -99,9 +59,12 @@ public abstract class CardDataBase
     public EmbedString CurDes => CurUpgradeInfo.Des;
     
     #region Com
+    // TODO 改为组件模式吧。这样对于肉鸽还有点小巧思在里头的。
     public bool HasTarget => Config.HasTarget;
     public EnemyDataBase? Target;
     public bool IsTemporary;
+    [SerializeField] bool isTempUpgrade;
+    [SerializeField] int savedUpgradeLevel;
     #endregion
 
     protected T NthEmbedAs<T>(int id)
@@ -116,7 +79,4 @@ public abstract class CardDataBase
 
 
 [AttributeUsage(AttributeTargets.Class)]
-public class CardIDAttribute(int id) : Attribute
-{
-    public readonly int ID = id;
-}
+public class CardIDAttribute(int id) : IDAttribute(id);

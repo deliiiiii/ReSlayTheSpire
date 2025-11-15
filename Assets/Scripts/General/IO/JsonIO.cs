@@ -18,6 +18,13 @@ class WritablePropertiesOnlyResolver : DefaultContractResolver
 
 public static class JsonIO
 {
+    static readonly JsonSerializerSettings settings = new()
+    {
+        Formatting = Formatting.Indented,
+        TypeNameHandling = TypeNameHandling.Auto,
+        ContractResolver = new WritablePropertiesOnlyResolver(),
+        PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+    };
     public static void Write<T>(string f_pathPre, string f_name, T curEntity)
     {
         //Debug.Log("write"+curEntity);
@@ -28,12 +35,6 @@ public static class JsonIO
             Directory.CreateDirectory(pathShort);
         }
         // string str = JsonUtility.ToJson(curEntity, true);
-        var settings = new JsonSerializerSettings
-        {
-            Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.All,
-            ContractResolver = new WritablePropertiesOnlyResolver()
-        };
         string str = JsonConvert.SerializeObject(curEntity, settings);
         File.WriteAllText(path, str);
     }
@@ -47,7 +48,7 @@ public static class JsonIO
         }
         string str = File.ReadAllText(path);
         // return JsonUtility.FromJson<T>(str);
-        return JsonConvert.DeserializeObject<T>(str);
+        return JsonConvert.DeserializeObject<T>(str, settings);
     }
     public static void Delete(string f_pathPre, string f_name)
     {

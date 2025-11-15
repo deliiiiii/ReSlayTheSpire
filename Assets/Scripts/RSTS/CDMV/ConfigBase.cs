@@ -12,18 +12,17 @@ public abstract class ConfigBase : SerializedScriptableObject
     public abstract void OnLoad();
 }
 
-public abstract class ConfigSingle<T> : ConfigBase, IRefSimple
-    where T : ConfigSingle<T>, new()
+public abstract class ConfigSingle : ConfigBase, IRefSingle
 {
-    public sealed override void OnLoad() => RefPoolSingle<T>.Register(() => (this as T)!);
+    public sealed override void OnLoad() => RefPoolSingle<ConfigSingle>.Register(() => this);
 }
 
-[Serializable]
-public abstract class ConfigMulti<T> : ConfigBase, IRefMulti
-    where T : ConfigMulti<T>, new()
-{
-    public sealed override void OnLoad() => RefPoolMulti<T>.RegisterOne(() => (this as T)!);
+public abstract class ConfigSingle<T> : ConfigSingle
+    where T : ConfigSingle<T>, new();
 
+[Serializable]
+public abstract class ConfigMulti: ConfigBase, IRefMulti
+{
     [OnValueChanged(nameof(OnNameAndIdChanged))] 
     [ValidateInput(nameof(CheckName), "名称不能为空")]
     public string Name = string.Empty;
@@ -32,7 +31,7 @@ public abstract class ConfigMulti<T> : ConfigBase, IRefMulti
     [ValidateInput(nameof(CheckId), "ID不能为空且不能为负数")]
     [ValidateInput(nameof(CheckNameAndIdIdentical), "ID在当前文件夹有重复")]
     public int ID;
-
+    
     protected abstract string PrefixName { get; }
 
     protected virtual bool CheckAll()
@@ -70,4 +69,10 @@ public abstract class ConfigMulti<T> : ConfigBase, IRefMulti
         UnityEditor.AssetDatabase.RenameAsset(UnityEditor.AssetDatabase.GetAssetPath(this), newName);
 #endif
     }
+}
+[Serializable]
+public abstract class ConfigMulti<T> : ConfigMulti
+    where T : ConfigMulti<T>, new()
+{
+    public sealed override void OnLoad() => RefPoolMulti<T>.RegisterOne(() => (this as T)!);
 }

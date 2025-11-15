@@ -16,18 +16,15 @@ public class BattleData : IMyFSMArg
     
     public EPlayerJob Job;
     
-    [SerializeReference]
     public MyList<CardDataBase> DeckList = [];
-    [SerializeReference]
     public MyList<ItemData> ItemList = [];
-    [SerializeReference]
     public MyList<BottleData?> BottleList = [];
     public Observable<int> CurHP = new(0);
     public Observable<int> MaxHP = new(0);
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
 
-    [SerializeReference] public BothTurnData bothTurnData;
+    [SerializeReference] BothTurnData bothTurnData;
     public BothTurnData CreateBothTurnData(MyFSM<EBothTurn> fsm) => bothTurnData = new (this, fsm);
     #region Init, Launch
     public BattleData(GameData gameData, EPlayerJob job)
@@ -41,7 +38,7 @@ public class BattleData : IMyFSMArg
         config.InitialCardDic.ForEach(pair =>
         {
             for(int i = 0; i < pair.Value; i++)
-                DeckList.MyAdd(CardDataBase.CreateCard(pair.Key.ID));
+                DeckList.MyAdd(CardDataBase.CreateData(pair.Key.ID));
         });
         for (int i = 0; i < 3; i++)
         {

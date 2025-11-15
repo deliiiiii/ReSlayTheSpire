@@ -12,18 +12,18 @@ public class BothTurnData : IMyFSMArg
 {
     [NonSerialized]BattleData battleData;
     
-    [SerializeReference]public HPAndBuffData PlayerHPAndBuffData;
+    public HPAndBuffData PlayerHPAndBuffData;
     public Observable<int> CurEnergy = new(5);
     public Observable<int> MaxEnergy = new(5);
     public Observable<int> PlayerCurHP => PlayerHPAndBuffData.CurHP;
     public Observable<int> PlayerMaxHP => PlayerHPAndBuffData.MaxHP;
     public Observable<int> PlayerBlock => PlayerHPAndBuffData.Block;
     public int TurnID;
-    [SerializeReference] public MyList<EnemyDataBase> EnemyList = [];
-    [SerializeReference] public MyList<CardDataBase> HandList = [];
-    [SerializeReference] public MyList<CardDataBase> DrawList = [];
-    [SerializeReference] public MyList<CardDataBase> DiscardList = [];
-    [SerializeReference] public MyList<CardDataBase> ExhaustList = [];
+    public MyList<EnemyDataBase> EnemyList = [];
+    public MyList<CardDataBase> HandList = [];
+    public MyList<CardDataBase> DrawList = [];
+    public MyList<CardDataBase> DiscardList = [];
+    public MyList<CardDataBase> ExhaustList = [];
     /// 第一个参数，弃牌堆；第二个参数，点击后的回调
     public event Action<List<CardDataBase>, Action<CardDataBase>>? OnOpenDiscardOnceClick;
     public event Action<List<CardDataBase>, int, Action<CardDataBase>>? OnOpenHandOnceClick;
