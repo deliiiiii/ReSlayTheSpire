@@ -101,14 +101,14 @@ public class BothTurnData : IMyFSMArg
                 enemyData.HPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnStart);
             });
 
+            MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyAction);
             Func().Forget();
             return;
-
-            UniTask Func()
+            
+            async UniTask Func()
             {
-                // await UniTask.Delay(1000);
+                await UniTask.Delay(1000);
                 MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyAction);
-                return UniTask.CompletedTask;
             }
         };
 
@@ -215,10 +215,10 @@ public class BothTurnData : IMyFSMArg
         return true;
     }
 
-    public bool TryPullOneFromDraw(bool shouldRifill, out CardDataBase drawn)
+    public bool TryPullOneFromDraw(bool shouldRefill, out CardDataBase drawn)
     {
         drawn = null!;
-        if (DrawList.Count == 0 && shouldRifill)
+        if (DrawList.Count == 0 && shouldRefill)
             RefillDrawList();
         if (DrawList.Count == 0)
         {
@@ -232,7 +232,7 @@ public class BothTurnData : IMyFSMArg
     
     bool DrawOne()
     {
-        var ret = TryPullOneFromDraw(shouldRifill: true, out var drawn);
+        var ret = TryPullOneFromDraw(shouldRefill: true, out var drawn);
         if(ret)
             HandList.MyAdd(drawn);
         return ret;

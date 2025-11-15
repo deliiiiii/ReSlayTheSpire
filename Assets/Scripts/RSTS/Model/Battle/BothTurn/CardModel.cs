@@ -10,7 +10,9 @@ namespace RSTS;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 public class CardModel : MonoBehaviour
 {
-    [SerializeReference][ReadOnly] public CardDataBase Data;
+    [SerializeReference][ReadOnly] CardDataBase data;
+    BothTurnData bothTurnData;
+    
     public Text TxtCost;
     public Text TxtName;
     public Text TextCategory;
@@ -24,13 +26,21 @@ public class CardModel : MonoBehaviour
     public event Action<Vector3>? OnBeginDragEvt;
     public event Action<Vector3>? OnDragEvt;
     public event Action<Vector3>? OnEndDragEvt;
-    public void ReadDataInBothTurn(CardDataBase fData, BothTurnData bothTurnData)
+    public void ReadDataInBothTurn(CardDataBase fData, BothTurnData fBothTurnData)
     {
-        Data = fData;
+        data = fData;
+        bothTurnData = fBothTurnData;
         
-        TextCategory.text = fData.Config.Category.ToString();
-        RefreshTxtCost(bothTurnData);
-        RefreshTxtDes(bothTurnData);
+        data.OnUpgrade = () =>
+        {
+            RefreshTxtDes();
+            RefreshTxtCost();
+        };
+        
+        
+        TextCategory.text = data.Config.Category.ToString();
+        RefreshTxtCost();
+        RefreshTxtDes();
 
         imgs = GetComponentsInChildren<Image>();
         texts = GetComponentsInChildren<Text>();
@@ -38,22 +48,22 @@ public class CardModel : MonoBehaviour
         
         gameObject.SetActive(true);
     }
-
-    public void RefreshTxtDes(BothTurnData bothTurnData)
+    
+    public void RefreshTxtDes()
     {
-        string plus = Data.UpgradeLevel switch
+        string plus = data.UpgradeLevel switch
         {
             0 => "",
             1 => "+",
-            _ => $"+{Data.UpgradeLevel}"
+            _ => $"+{data.UpgradeLevel}"
         };
-        TxtName.text = $"{Data.Config.Name}{plus}";
-        TxtDes.text = bothTurnData.CurContentWithKeywords(Data);
+        TxtName.text = $"{data.Config.Name}{plus}";
+        TxtDes.text = bothTurnData.CurContentWithKeywords(data);
     }
 
-    public void RefreshTxtCost(BothTurnData bothTurnData)
+    public void RefreshTxtCost()
     {
-        TxtCost.text = bothTurnData.UIGetEnergy(Data);
+        TxtCost.text = bothTurnData.UIGetEnergy(data);
     }
     
     public void OnPointerEnter(BaseEventData baseEventData)

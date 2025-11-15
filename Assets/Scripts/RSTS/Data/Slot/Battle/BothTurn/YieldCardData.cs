@@ -3,6 +3,7 @@
 public class YieldCardData : IMyFSMArg
 {
     public CardModel CardModel;
+    public CardDataBase CardData;
     public void Launch()
     {
     }

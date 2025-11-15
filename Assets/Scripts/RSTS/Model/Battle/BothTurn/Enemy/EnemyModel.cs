@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 namespace RSTS;
 public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHandler
 {
-    public EnemyDataBase Data;
     public HPAndBuffModel MdlHPAndBuff;
     public GameObject ImgSelectTarget;
     
@@ -19,7 +18,6 @@ public class EnemyModel : MonoBehaviour , IPointerEnterHandler, IPointerExitHand
     {
         name = $"Enemy_{enemyData.Config.Name}";
         MdlHPAndBuff.ReadData(enemyData.HPAndBuffData);
-        Data = enemyData;
     }
     
     public void EnableSelectTarget(bool enable)

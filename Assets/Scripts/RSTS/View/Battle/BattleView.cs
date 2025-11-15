@@ -142,19 +142,19 @@ public class BattleView : Singleton<BattleView>
         Dictionary<CardDataBase, CardModel> handCardModelDic = new();
         bothTurnData.PlayerHPAndBuffData.OnAddBuff += _ =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes(bothTurnData));
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
         };
         bothTurnData.PlayerHPAndBuffData.OnRemoveBuff += _ =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes(bothTurnData));
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
         };
         bothTurnData.PlayerHPAndBuffData.OnChangeBuffStack += (_, _) =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes(bothTurnData));
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
         };
         bothTurnData.PlayerBlock.OnValueChangedAfter += _ =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes(bothTurnData));
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
         };
         
         
@@ -166,11 +166,6 @@ public class BattleView : Singleton<BattleView>
             
             var cardModel = Instantiate(PfbCard, PrtHandCard);
             cardModel.ReadDataInBothTurn(cardData, bothTurnData);
-            cardData.OnUpgrade = () =>
-            {
-                cardModel.RefreshTxtDes(bothTurnData);
-                cardModel.RefreshTxtCost(bothTurnData);
-            };
             handCardModelDic.Add(cardData, cardModel);
 
             cardModel.OnPointerEnterEvt += () =>
@@ -196,6 +191,7 @@ public class BattleView : Singleton<BattleView>
                 if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.None, out var yieldCardData))
                     return;
                 yieldCardData.CardModel = CurDragCard;
+                yieldCardData.CardData = cardData;
                 CharacterModelHolder.HidePlayerWarning();
                 if (!bothTurnData.TryYield(cardData, out var failReason))
                 {
@@ -246,7 +242,7 @@ public class BattleView : Singleton<BattleView>
                 bothTurnData.YieldHandAsync(cardData).Forget();
                 cardData.Target = null;
             };
-            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes(bothTurnData));
+            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
         bothTurnData.HandList.OnRemove += cardData =>
         {
@@ -256,7 +252,7 @@ public class BattleView : Singleton<BattleView>
                 Destroy(handCardModelDic[cardData].gameObject);
                 handCardModelDic.Remove(cardData);
             }
-            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes(bothTurnData));
+            handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
         
         bothTurnData.DrawList.OnAdd += cardData =>
@@ -319,7 +315,7 @@ public class BattleView : Singleton<BattleView>
         
         bothTurnData.OnPlayerLoseHP += () =>
         {
-            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtCost(bothTurnData));
+            handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtCost());
         };
     }
     IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData)

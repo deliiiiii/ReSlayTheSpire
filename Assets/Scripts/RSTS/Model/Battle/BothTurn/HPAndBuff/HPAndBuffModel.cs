@@ -9,7 +9,6 @@ namespace RSTS;
 
 public class HPAndBuffModel : MonoBehaviour
 {
-    [SerializeReference] HPAndBuffData data;
     [SerializeField] Image imgHP;
     [SerializeField] Text txtHP;
     [SerializeField] Text txtShield;
@@ -60,33 +59,33 @@ public class HPAndBuffModel : MonoBehaviour
         shield2.SetActive(false);
     }
 
-    public void ReadData(HPAndBuffData fData)
+    public void ReadData(HPAndBuffData data)
     {
-        DirectlySetHP(fData.CurHP, fData.MaxHP);
+        DirectlySetHP(data.CurHP, data.MaxHP);
         SetShield(0);
-        fData.OnAddBuff += buffData =>
+        data.OnAddBuff += buffData =>
         {
             var buffModel = Instantiate(pfbBuffModel, transBuff);
             buffModel.ReadData(buffData);
             buffModel.gameObject.SetActive(true);
             dicBuffModel.Add(buffData, buffModel);
         };
-        fData.OnRemoveBuff += buffData =>
+        data.OnRemoveBuff += buffData =>
         {
             var buffModel = dicBuffModel[buffData];
             Destroy(buffModel.gameObject);
             dicBuffModel.Remove(buffData);
         };
 
-        fData.OnChangeBuffStack += (buffData, count) =>
+        data.OnChangeBuffStack += (buffData, count) =>
         {
             var buffModel = dicBuffModel[buffData];
             buffModel.ChangeCount(count);
         };
         
-        fData.CurHP.OnValueChangedFull += (oldV, newV) =>
+        data.CurHP.OnValueChangedFull += (oldV, newV) =>
         {
-            DirectlySetHP(newV, fData.MaxHP);
+            DirectlySetHP(newV, data.MaxHP);
             switch (newV - oldV)
             {
                 case > 0:
@@ -98,11 +97,9 @@ public class HPAndBuffModel : MonoBehaviour
             }
         };
         
-        fData.Block.OnValueChangedFull += (_, newV) =>
+        data.Block.OnValueChangedFull += (_, newV) =>
         {
             SetShield(newV);
         };
-        
-        data = fData;
     }
 }

@@ -19,6 +19,7 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     public EnemyModel PrbEnemy;
     public List<Transform> TransEnemy = [];
     public List<EnemyModel> EnemyModelList = [];
+    Dictionary<EnemyDataBase, EnemyModel> enemyModelDic = [];
 
     readonly List<EnemyModel> enteredTargetEnemyModels = [];
     public bool CheckInNoTarget(Vector2 screenPos) => PosInRect(screenPos, TransNoTargetArea.RectTransform);
@@ -58,45 +59,46 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
         bothTurnData.EnemyList.OnAdd += enemyData =>
         {
             // TODO 应对怪物个数不同的情况
-            var m = Instantiate(PrbEnemy, TransEnemy[bothTurnData.EnemyList.Count - 1]);
-            m.ReadData(enemyData);
-            m.gameObject.SetActive(true);
-            EnemyModelList.Add(m);
+            var enemyModel = Instantiate(PrbEnemy, TransEnemy[bothTurnData.EnemyList.Count - 1]);
+            enemyModel.ReadData(enemyData);
+            enemyModel.gameObject.SetActive(true);
+            EnemyModelList.Add(enemyModel);
+            enemyModelDic.Add(enemyData, enemyModel);
             
             // MyDebug.Log($"EnemyModel {m.name} find Enter Drag");
-            m.OnPointerEnterEvt += () =>
+            enemyModel.OnPointerEnterEvt += () =>
             {
                 // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt try...");
                 if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out var yieldCardData))
                     return;
-                if (!yieldCardData.CardModel.Data.HasTarget)
+                if (!yieldCardData.CardData.HasTarget)
                     return;
-                yieldCardData.CardModel.Data.Target = m.Data;
-                yieldCardData.CardModel.RefreshTxtDes(bothTurnData);
+                yieldCardData.CardData.Target = enemyData;
+                yieldCardData.CardModel.RefreshTxtDes();
                 // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt success!");
                 enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
-                m.EnableSelectTarget(true);
-                enteredTargetEnemyModels.Add(m);
+                enemyModel.EnableSelectTarget(true);
+                enteredTargetEnemyModels.Add(enemyModel);
             };
 
-            m.OnPointerExitEvt += () =>
+            enemyModel.OnPointerExitEvt += () =>
             {
                 if (!MyFSM.IsState(YieldCardStateWrap.One, EYieldCardState.Drag, out var yieldCardData))
                     return;
-                yieldCardData.CardModel.Data.Target = null;
-                yieldCardData.CardModel.RefreshTxtDes(bothTurnData);
-                enteredTargetEnemyModels.Remove(m);
-                m.EnableSelectTarget(false);
+                yieldCardData.CardData.Target = null;
+                yieldCardData.CardModel.RefreshTxtDes();
+                enteredTargetEnemyModels.Remove(enemyModel);
+                enemyModel.EnableSelectTarget(false);
                 enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);
             };
         };
         
         bothTurnData.EnemyList.OnRemove += enemyData =>
         {
-            var enemyModel = EnemyModelList.Find(em => em.Data == enemyData);
-            if (enemyModel != null)
+            if (enemyModelDic.TryGetValue(enemyData, out var enemyModel))
             {
                 EnemyModelList.Remove(enemyModel);
+                enemyModelDic.Remove(enemyData);
                 Destroy(enemyModel.gameObject);
             }
         };

@@ -7,7 +7,7 @@ public class Card103 : CardDataBase
 {
     public override async UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
-        var ret = bothTurnData.TryPullOneFromDraw(shouldRifill: false, out var toYieldExhaust);
+        var ret = bothTurnData.TryPullOneFromDraw(shouldRefill: false, out var toYieldExhaust);
         if (!ret)
         {
             MyDebug.Log("破灭：抽牌堆无牌可抽");
