@@ -3996,8 +3996,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f492d55f4847e7aaedc673e7ad75b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data:
-    rid: -2
   imgHP: {fileID: 719017502}
   txtHP: {fileID: 780326077}
   txtShield: {fileID: 342348221}
@@ -4006,11 +4004,6 @@ MonoBehaviour:
   transBuff: {fileID: 87228096}
   pfbBuffModel: {fileID: 883953563}
   pfbHurtEffect: {fileID: 656884258}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!1 &537092712
 GameObject:
   m_ObjectHideFlags: 0
@@ -5193,8 +5186,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f492d55f4847e7aaedc673e7ad75b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data:
-    rid: -2
   imgHP: {fileID: 1267448484}
   txtHP: {fileID: 1575849640}
   txtShield: {fileID: 1829728232}
@@ -5203,11 +5194,6 @@ MonoBehaviour:
   transBuff: {fileID: 900376119}
   pfbBuffModel: {fileID: 1132934030}
   pfbHurtEffect: {fileID: 344967187}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!222 &675742757
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8449,6 +8435,8 @@ MonoBehaviour:
     rid: -2
   BothTurnData:
     rid: -2
+  GameData:
+    rid: -2
   references:
     version: 2
     RefIds:
@@ -9305,7 +9293,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 864975706804351378, guid: 44b1910fd81a3c94889cf24dd153bfd2, type: 3}
       propertyPath: m_RaycastTarget
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2240365388425644092, guid: 44b1910fd81a3c94889cf24dd153bfd2, type: 3}
       propertyPath: m_Pivot.x
@@ -9913,7 +9901,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0.15, y: 1}
-  m_AnchoredPosition: {x: 24.801025, y: 0}
+  m_AnchoredPosition: {x: 24.801147, y: 0}
   m_SizeDelta: {x: -43.4125, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1198975873

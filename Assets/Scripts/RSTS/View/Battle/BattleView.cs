@@ -166,6 +166,9 @@ public class BattleView : Singleton<BattleView>
             
             var cardModel = Instantiate(PfbCard, PrtHandCard);
             cardModel.ReadDataInBothTurn(cardData, bothTurnData);
+            cardData.OnUpgrade += cardModel.RefreshTxtDes;
+            cardData.OnUpgrade += cardModel.RefreshTxtCost;
+            
             handCardModelDic.Add(cardData, cardModel);
 
             cardModel.OnPointerEnterEvt += () =>
@@ -249,7 +252,10 @@ public class BattleView : Singleton<BattleView>
             // 打出破灭时，抽牌堆顶部被打出的牌没有CardModel。
             if (handCardModelDic.ContainsKey(cardData))
             {
-                Destroy(handCardModelDic[cardData].gameObject);
+                var cardModel = handCardModelDic[cardData];
+                cardData.OnUpgrade -= cardModel.RefreshTxtDes;
+                cardData.OnUpgrade -= cardModel.RefreshTxtCost;
+                Destroy(cardModel.gameObject);
                 handCardModelDic.Remove(cardData);
             }
             handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());

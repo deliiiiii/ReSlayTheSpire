@@ -102,14 +102,14 @@ public class BothTurnData : IMyFSMArg
             });
 
             MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyAction);
-            Func().Forget();
-            return;
-            
-            async UniTask Func()
-            {
-                await UniTask.Delay(1000);
-                MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyAction);
-            }
+            // Func().Forget();
+            // return;
+            //
+            // async UniTask Func()
+            // {
+            //     await UniTask.Delay(1000);
+            //     MyFSM.EnterState(BothTurnStateWrap.One, EBothTurn.EnemyAction);
+            // }
         };
 
         fsm.GetState(EBothTurn.EnemyAction).OnEnter += () =>
@@ -146,17 +146,18 @@ public class BothTurnData : IMyFSMArg
 
     public void Launch()
     {
+        // HandList.MyClear();
+        // DrawList.MyClear();
+        DrawList.MyAddRange(battleData.DeckList);
+        DrawList.Shuffle();
+        CollectAllCards().ForEach(cardData => cardData.OnEnterBothTurn());
+        // DiscardList.MyClear();
+        // ExhaustList.MyClear();
+        
         EnemyList.MyClear();
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(1));
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
-        
-        HandList.MyClear();
-        DrawList.MyClear();
-        DrawList.MyAddRange(battleData.DeckList);
-        DrawList.Shuffle();
-        DiscardList.MyClear();
-        ExhaustList.MyClear();
     }
 
     public void UnInit()
@@ -577,13 +578,13 @@ public class BothTurnData : IMyFSMArg
     public void AddTempToDiscard(Func<CardDataBase> toAddCtor)
     {
         var toAdd = toAddCtor();
-        toAdd.IsTemporary = true;
+        toAdd.BothTurnCom.TryAddCom<CardComTemporary>(out _);
         DiscardList.MyAdd(toAdd);
     }
     public void AddTempToDraw(Func<CardDataBase> toAddCtor)
     {
         var toAdd = toAddCtor();
-        toAdd.IsTemporary = true;
+        toAdd.BothTurnCom.TryAddCom<CardComTemporary>(out _);
         var drawIndex = UnityEngine.Random.Range(0, DrawList.Count);
         DrawList.MyInsert(drawIndex, toAdd);
     }

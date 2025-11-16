@@ -19,9 +19,14 @@ public class CharacterModelHolder : Singleton<CharacterModelHolder>
     public EnemyModel PrbEnemy;
     public List<Transform> TransEnemy = [];
     public List<EnemyModel> EnemyModelList = [];
-    Dictionary<EnemyDataBase, EnemyModel> enemyModelDic = [];
+    readonly Dictionary<EnemyDataBase, EnemyModel> enemyModelDic = [];
 
     readonly List<EnemyModel> enteredTargetEnemyModels = [];
+
+    public CharacterModelHolder()
+    {
+    }
+
     public bool CheckInNoTarget(Vector2 screenPos) => PosInRect(screenPos, TransNoTargetArea.RectTransform);
 
     public void EnableNoTargetArea(bool enable)

@@ -31,13 +31,6 @@ public class CardModel : MonoBehaviour
         data = fData;
         bothTurnData = fBothTurnData;
         
-        data.OnUpgrade = () =>
-        {
-            RefreshTxtDes();
-            RefreshTxtCost();
-        };
-        
-        
         TextCategory.text = data.Config.Category.ToString();
         RefreshTxtCost();
         RefreshTxtDes();

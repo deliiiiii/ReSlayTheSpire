@@ -9,709 +9,721 @@
       {
         "$id": "3",
         "$type": "RSTS.Card0, RSTS",
-        "UpgradeLevel": 0,
+        "BothTurnCom": {
+          "$id": "4"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
         "ID": 0
       },
       {
-        "$id": "4",
+        "$id": "5",
         "$type": "RSTS.Card100, RSTS",
-        "UpgradeLevel": 0,
+        "BothTurnCom": {
+          "$id": "6"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
         "ID": 100
       },
       {
-        "$id": "5",
+        "$id": "7",
         "$type": "RSTS.Card90, RSTS",
-        "UpgradeLevel": 0,
+        "BothTurnCom": {
+          "$id": "8"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
         "ID": 90
       },
       {
-        "$id": "6",
-        "$type": "RSTS.Card1, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 1
-      },
-      {
-        "$id": "7",
-        "$type": "RSTS.Card1, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 1
-      },
-      {
-        "$id": "8",
-        "$type": "RSTS.Card6008, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 6008
-      },
-      {
         "$id": "9",
-        "$type": "RSTS.Card5000, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card1, RSTS",
+        "BothTurnCom": {
+          "$id": "10"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 5000
-      },
-      {
-        "$id": "10",
-        "$type": "RSTS.Card203, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 203
+        "ID": 1
       },
       {
         "$id": "11",
-        "$type": "RSTS.Card203, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card1, RSTS",
+        "BothTurnCom": {
+          "$id": "12"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 203
-      },
-      {
-        "$id": "12",
-        "$type": "RSTS.Card203, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 203
+        "ID": 1
       },
       {
         "$id": "13",
-        "$type": "RSTS.Card2, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card6008, RSTS",
+        "BothTurnCom": {
+          "$id": "14"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 2
-      },
-      {
-        "$id": "14",
-        "$type": "RSTS.Card3, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 3
+        "ID": 6008
       },
       {
         "$id": "15",
-        "$type": "RSTS.Card4, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card5000, RSTS",
+        "BothTurnCom": {
+          "$id": "16"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 4
-      },
-      {
-        "$id": "16",
-        "$type": "RSTS.Card5, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 5
+        "ID": 5000
       },
       {
         "$id": "17",
-        "$type": "RSTS.Card6, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card203, RSTS",
+        "BothTurnCom": {
+          "$id": "18"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 6
-      },
-      {
-        "$id": "18",
-        "$type": "RSTS.Card7, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 7
+        "ID": 203
       },
       {
         "$id": "19",
-        "$type": "RSTS.Card7, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card203, RSTS",
+        "BothTurnCom": {
+          "$id": "20"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 7
-      },
-      {
-        "$id": "20",
-        "$type": "RSTS.Card7, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 7
+        "ID": 203
       },
       {
         "$id": "21",
-        "$type": "RSTS.Card8, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card203, RSTS",
+        "BothTurnCom": {
+          "$id": "22"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 8
-      },
-      {
-        "$id": "22",
-        "$type": "RSTS.Card9, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 9
+        "ID": 203
       },
       {
         "$id": "23",
-        "$type": "RSTS.Card10, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card2, RSTS",
+        "BothTurnCom": {
+          "$id": "24"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 10
-      },
-      {
-        "$id": "24",
-        "$type": "RSTS.Card11, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 11
+        "ID": 2
       },
       {
         "$id": "25",
-        "$type": "RSTS.Card12, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card3, RSTS",
+        "BothTurnCom": {
+          "$id": "26"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 12
-      },
-      {
-        "$id": "26",
-        "$type": "RSTS.Card13, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 13
+        "ID": 3
       },
       {
         "$id": "27",
-        "$type": "RSTS.Card14, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card4, RSTS",
+        "BothTurnCom": {
+          "$id": "28"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 14
-      },
-      {
-        "$id": "28",
-        "$type": "RSTS.Card14, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 14
+        "ID": 4
       },
       {
         "$id": "29",
-        "$type": "RSTS.Card14, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card5, RSTS",
+        "BothTurnCom": {
+          "$id": "30"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 14
-      },
-      {
-        "$id": "30",
-        "$type": "RSTS.Card14, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 14
+        "ID": 5
       },
       {
         "$id": "31",
-        "$type": "RSTS.Card14, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card6, RSTS",
+        "BothTurnCom": {
+          "$id": "32"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 14
-      },
-      {
-        "$id": "32",
-        "$type": "RSTS.Card14, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 14
+        "ID": 6
       },
       {
         "$id": "33",
-        "$type": "RSTS.Card15, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card7, RSTS",
+        "BothTurnCom": {
+          "$id": "34"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 15
-      },
-      {
-        "$id": "34",
-        "$type": "RSTS.Card16, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 16
+        "ID": 7
       },
       {
         "$id": "35",
-        "$type": "RSTS.Card17, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card7, RSTS",
+        "BothTurnCom": {
+          "$id": "36"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 17
-      },
-      {
-        "$id": "36",
-        "$type": "RSTS.Card18, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 18
+        "ID": 7
       },
       {
         "$id": "37",
-        "$type": "RSTS.Card19, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card7, RSTS",
+        "BothTurnCom": {
+          "$id": "38"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 19
-      },
-      {
-        "$id": "38",
-        "$type": "RSTS.Card20, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 20
+        "ID": 7
       },
       {
         "$id": "39",
-        "$type": "RSTS.Card21, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card8, RSTS",
+        "BothTurnCom": {
+          "$id": "40"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 21
-      },
-      {
-        "$id": "40",
-        "$type": "RSTS.Card22, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 22
+        "ID": 8
       },
       {
         "$id": "41",
-        "$type": "RSTS.Card23, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card9, RSTS",
+        "BothTurnCom": {
+          "$id": "42"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 23
-      },
-      {
-        "$id": "42",
-        "$type": "RSTS.Card24, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 24
+        "ID": 9
       },
       {
         "$id": "43",
-        "$type": "RSTS.Card25, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card10, RSTS",
+        "BothTurnCom": {
+          "$id": "44"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 25
-      },
-      {
-        "$id": "44",
-        "$type": "RSTS.Card25, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 25
+        "ID": 10
       },
       {
         "$id": "45",
-        "$type": "RSTS.Card25, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card11, RSTS",
+        "BothTurnCom": {
+          "$id": "46"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 25
-      },
-      {
-        "$id": "46",
-        "$type": "RSTS.Card25, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 25
+        "ID": 11
       },
       {
         "$id": "47",
-        "$type": "RSTS.Card25, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card12, RSTS",
+        "BothTurnCom": {
+          "$id": "48"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 25
-      },
-      {
-        "$id": "48",
-        "$type": "RSTS.Card25, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 25
+        "ID": 12
       },
       {
         "$id": "49",
-        "$type": "RSTS.Card26, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card13, RSTS",
+        "BothTurnCom": {
+          "$id": "50"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 26
-      },
-      {
-        "$id": "50",
-        "$type": "RSTS.Card27, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 27
+        "ID": 13
       },
       {
         "$id": "51",
-        "$type": "RSTS.Card28, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card14, RSTS",
+        "BothTurnCom": {
+          "$id": "52"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 28
-      },
-      {
-        "$id": "52",
-        "$type": "RSTS.Card29, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 29
+        "ID": 14
       },
       {
         "$id": "53",
-        "$type": "RSTS.Card30, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card14, RSTS",
+        "BothTurnCom": {
+          "$id": "54"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 30
-      },
-      {
-        "$id": "54",
-        "$type": "RSTS.Card101, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 101
+        "ID": 14
       },
       {
         "$id": "55",
-        "$type": "RSTS.Card101, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card14, RSTS",
+        "BothTurnCom": {
+          "$id": "56"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 101
-      },
-      {
-        "$id": "56",
-        "$type": "RSTS.Card102, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 102
+        "ID": 14
       },
       {
         "$id": "57",
-        "$type": "RSTS.Card103, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card14, RSTS",
+        "BothTurnCom": {
+          "$id": "58"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 103
-      },
-      {
-        "$id": "58",
-        "$type": "RSTS.Card106, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 106
+        "ID": 14
       },
       {
         "$id": "59",
-        "$type": "RSTS.Card110, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card14, RSTS",
+        "BothTurnCom": {
+          "$id": "60"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 110
-      },
-      {
-        "$id": "60",
-        "$type": "RSTS.Card110, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 110
+        "ID": 14
       },
       {
         "$id": "61",
-        "$type": "RSTS.Card115, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card14, RSTS",
+        "BothTurnCom": {
+          "$id": "62"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
-        "ID": 115
-      },
-      {
-        "$id": "62",
-        "$type": "RSTS.Card115, RSTS",
-        "UpgradeLevel": 0,
-        "Target": null,
-        "IsTemporary": false,
-        "ID": 115
+        "ID": 14
       },
       {
         "$id": "63",
-        "$type": "RSTS.Card115, RSTS",
-        "UpgradeLevel": 0,
+        "$type": "RSTS.Card15, RSTS",
+        "BothTurnCom": {
+          "$id": "64"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
+        "ID": 15
+      },
+      {
+        "$id": "65",
+        "$type": "RSTS.Card16, RSTS",
+        "BothTurnCom": {
+          "$id": "66"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 16
+      },
+      {
+        "$id": "67",
+        "$type": "RSTS.Card17, RSTS",
+        "BothTurnCom": {
+          "$id": "68"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 17
+      },
+      {
+        "$id": "69",
+        "$type": "RSTS.Card18, RSTS",
+        "BothTurnCom": {
+          "$id": "70"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 18
+      },
+      {
+        "$id": "71",
+        "$type": "RSTS.Card19, RSTS",
+        "BothTurnCom": {
+          "$id": "72"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 19
+      },
+      {
+        "$id": "73",
+        "$type": "RSTS.Card20, RSTS",
+        "BothTurnCom": {
+          "$id": "74"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 20
+      },
+      {
+        "$id": "75",
+        "$type": "RSTS.Card21, RSTS",
+        "BothTurnCom": {
+          "$id": "76"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 21
+      },
+      {
+        "$id": "77",
+        "$type": "RSTS.Card22, RSTS",
+        "BothTurnCom": {
+          "$id": "78"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 22
+      },
+      {
+        "$id": "79",
+        "$type": "RSTS.Card23, RSTS",
+        "BothTurnCom": {
+          "$id": "80"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 23
+      },
+      {
+        "$id": "81",
+        "$type": "RSTS.Card24, RSTS",
+        "BothTurnCom": {
+          "$id": "82"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 24
+      },
+      {
+        "$id": "83",
+        "$type": "RSTS.Card25, RSTS",
+        "BothTurnCom": {
+          "$id": "84"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 25
+      },
+      {
+        "$id": "85",
+        "$type": "RSTS.Card25, RSTS",
+        "BothTurnCom": {
+          "$id": "86"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 25
+      },
+      {
+        "$id": "87",
+        "$type": "RSTS.Card25, RSTS",
+        "BothTurnCom": {
+          "$id": "88"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 25
+      },
+      {
+        "$id": "89",
+        "$type": "RSTS.Card25, RSTS",
+        "BothTurnCom": {
+          "$id": "90"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 25
+      },
+      {
+        "$id": "91",
+        "$type": "RSTS.Card25, RSTS",
+        "BothTurnCom": {
+          "$id": "92"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 25
+      },
+      {
+        "$id": "93",
+        "$type": "RSTS.Card25, RSTS",
+        "BothTurnCom": {
+          "$id": "94"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 25
+      },
+      {
+        "$id": "95",
+        "$type": "RSTS.Card26, RSTS",
+        "BothTurnCom": {
+          "$id": "96"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 26
+      },
+      {
+        "$id": "97",
+        "$type": "RSTS.Card27, RSTS",
+        "BothTurnCom": {
+          "$id": "98"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 27
+      },
+      {
+        "$id": "99",
+        "$type": "RSTS.Card28, RSTS",
+        "BothTurnCom": {
+          "$id": "100"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 28
+      },
+      {
+        "$id": "101",
+        "$type": "RSTS.Card29, RSTS",
+        "BothTurnCom": {
+          "$id": "102"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 29
+      },
+      {
+        "$id": "103",
+        "$type": "RSTS.Card30, RSTS",
+        "BothTurnCom": {
+          "$id": "104"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 30
+      },
+      {
+        "$id": "105",
+        "$type": "RSTS.Card101, RSTS",
+        "BothTurnCom": {
+          "$id": "106"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 101
+      },
+      {
+        "$id": "107",
+        "$type": "RSTS.Card101, RSTS",
+        "BothTurnCom": {
+          "$id": "108"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 101
+      },
+      {
+        "$id": "109",
+        "$type": "RSTS.Card101, RSTS",
+        "BothTurnCom": {
+          "$id": "110"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 101
+      },
+      {
+        "$id": "111",
+        "$type": "RSTS.Card101, RSTS",
+        "BothTurnCom": {
+          "$id": "112"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 101
+      },
+      {
+        "$id": "113",
+        "$type": "RSTS.Card101, RSTS",
+        "BothTurnCom": {
+          "$id": "114"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 101
+      },
+      {
+        "$id": "115",
+        "$type": "RSTS.Card101, RSTS",
+        "BothTurnCom": {
+          "$id": "116"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 101
+      },
+      {
+        "$id": "117",
+        "$type": "RSTS.Card101, RSTS",
+        "BothTurnCom": {
+          "$id": "118"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 101
+      },
+      {
+        "$id": "119",
+        "$type": "RSTS.Card101, RSTS",
+        "BothTurnCom": {
+          "$id": "120"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 101
+      },
+      {
+        "$id": "121",
+        "$type": "RSTS.Card101, RSTS",
+        "BothTurnCom": {
+          "$id": "122"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 101
+      },
+      {
+        "$id": "123",
+        "$type": "RSTS.Card102, RSTS",
+        "BothTurnCom": {
+          "$id": "124"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 102
+      },
+      {
+        "$id": "125",
+        "$type": "RSTS.Card103, RSTS",
+        "BothTurnCom": {
+          "$id": "126"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 103
+      },
+      {
+        "$id": "127",
+        "$type": "RSTS.Card106, RSTS",
+        "BothTurnCom": {
+          "$id": "128"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 106
+      },
+      {
+        "$id": "129",
+        "$type": "RSTS.Card110, RSTS",
+        "BothTurnCom": {
+          "$id": "130"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 110
+      },
+      {
+        "$id": "131",
+        "$type": "RSTS.Card110, RSTS",
+        "BothTurnCom": {
+          "$id": "132"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 110
+      },
+      {
+        "$id": "133",
+        "$type": "RSTS.Card115, RSTS",
+        "BothTurnCom": {
+          "$id": "134"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
         "ID": 115
       },
       {
-        "$id": "64",
-        "$type": "RSTS.Card204, RSTS",
-        "UpgradeLevel": 0,
+        "$id": "135",
+        "$type": "RSTS.Card115, RSTS",
+        "BothTurnCom": {
+          "$id": "136"
+        },
+        "upgradeLevel": 0,
         "Target": null,
-        "IsTemporary": false,
+        "ID": 115
+      },
+      {
+        "$id": "137",
+        "$type": "RSTS.Card115, RSTS",
+        "BothTurnCom": {
+          "$id": "138"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
+        "ID": 115
+      },
+      {
+        "$id": "139",
+        "$type": "RSTS.Card204, RSTS",
+        "BothTurnCom": {
+          "$id": "140"
+        },
+        "upgradeLevel": 0,
+        "Target": null,
         "ID": 204
-      }
-    ],
-    "DeckList2": [
-      {
-        "$ref": "3"
-      },
-      {
-        "$ref": "4"
-      },
-      {
-        "$ref": "5"
-      },
-      {
-        "$ref": "6"
-      },
-      {
-        "$ref": "7"
-      },
-      {
-        "$ref": "8"
-      },
-      {
-        "$ref": "9"
-      },
-      {
-        "$ref": "10"
-      },
-      {
-        "$ref": "11"
-      },
-      {
-        "$ref": "12"
-      },
-      {
-        "$ref": "13"
-      },
-      {
-        "$ref": "14"
-      },
-      {
-        "$ref": "15"
-      },
-      {
-        "$ref": "16"
-      },
-      {
-        "$ref": "17"
-      },
-      {
-        "$ref": "18"
-      },
-      {
-        "$ref": "19"
-      },
-      {
-        "$ref": "20"
-      },
-      {
-        "$ref": "21"
-      },
-      {
-        "$ref": "22"
-      },
-      {
-        "$ref": "23"
-      },
-      {
-        "$ref": "24"
-      },
-      {
-        "$ref": "25"
-      },
-      {
-        "$ref": "26"
-      },
-      {
-        "$ref": "27"
-      },
-      {
-        "$ref": "28"
-      },
-      {
-        "$ref": "29"
-      },
-      {
-        "$ref": "30"
-      },
-      {
-        "$ref": "31"
-      },
-      {
-        "$ref": "32"
-      },
-      {
-        "$ref": "33"
-      },
-      {
-        "$ref": "34"
-      },
-      {
-        "$ref": "35"
-      },
-      {
-        "$ref": "36"
-      },
-      {
-        "$ref": "37"
-      },
-      {
-        "$ref": "38"
-      },
-      {
-        "$ref": "39"
-      },
-      {
-        "$ref": "40"
-      },
-      {
-        "$ref": "41"
-      },
-      {
-        "$ref": "42"
-      },
-      {
-        "$ref": "43"
-      },
-      {
-        "$ref": "44"
-      },
-      {
-        "$ref": "45"
-      },
-      {
-        "$ref": "46"
-      },
-      {
-        "$ref": "47"
-      },
-      {
-        "$ref": "48"
-      },
-      {
-        "$ref": "49"
-      },
-      {
-        "$ref": "50"
-      },
-      {
-        "$ref": "51"
-      },
-      {
-        "$ref": "52"
-      },
-      {
-        "$ref": "53"
-      },
-      {
-        "$ref": "54"
-      },
-      {
-        "$ref": "55"
-      },
-      {
-        "$ref": "56"
-      },
-      {
-        "$ref": "57"
-      },
-      {
-        "$ref": "58"
-      },
-      {
-        "$ref": "59"
-      },
-      {
-        "$ref": "60"
-      },
-      {
-        "$ref": "61"
-      },
-      {
-        "$ref": "62"
-      },
-      {
-        "$ref": "63"
-      },
-      {
-        "$ref": "64"
       }
     ],
     "ItemList": [],
     "BottleList": [
-      null,
-      null,
-      null
+      {
+        "$id": "141"
+      },
+      {
+        "$id": "142"
+      },
+      {
+        "$id": "143"
+      }
     ],
     "CurHP": {
-      "$id": "65",
-      "Value": 80
+      "$id": "144",
+      "Value": 55
     },
     "MaxHP": {
-      "$id": "66",
+      "$id": "145",
       "Value": 80
     },
     "Coin": {
-      "$id": "67",
+      "$id": "146",
       "Value": 99
     },
     "InBattleTime": {
-      "$id": "68",
-      "Value": 10.4162064
+      "$id": "147",
+      "Value": 37.42056
     }
   }
 }
