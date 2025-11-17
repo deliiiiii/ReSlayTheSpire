@@ -42,8 +42,7 @@ public class CardInBattle : DataBaseConfig<CardInBattle, CardConfigMulti>
 public abstract class CardInTurn : DataBaseAttr<CardInTurn, CardIDAttribute, CardInBattle>
 {
     // 反射初始化
-    [JsonProperty][SerializeField]
-    CardInBattle cardInBattle = null!;
+    [SerializeField] CardInBattle cardInBattle = null!;
     // 无来源卡牌
     public CardInTurn CreateBlindCard(int id) => CreateByAttr(id, CardInBattle.CreateByConfig(id));
     

@@ -13,7 +13,7 @@ namespace RSTS;
 [Serializable]
 public class BattleData : IMyFSMArg
 {
-    [NonSerialized] GameData gameData;
+    [SerializeField] GameData gameData;
     
     public EPlayerJob Job;
     
@@ -25,8 +25,6 @@ public class BattleData : IMyFSMArg
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
 
-    [SerializeReference][JsonProperty] BothTurnData bothTurnData;
-    public BothTurnData CreateBothTurnData(MyFSM<EBothTurn> fsm) => bothTurnData = new (this, fsm);
     #region Init, Launch
     public BattleData(GameData gameData, EPlayerJob job)
     {

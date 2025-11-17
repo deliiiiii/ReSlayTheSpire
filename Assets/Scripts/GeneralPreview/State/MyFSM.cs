@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Sirenix.Utilities;
 
 public abstract class MyFSM
@@ -49,22 +48,22 @@ public abstract class MyFSM
     
     public static void OnRegister<TEnum, TArg>(
         StateWrap<TEnum, TArg> one,
-        [CanBeNull] Action<MyFSM<TEnum>, TArg> alwaysBind = null,
-        [CanBeNull] Func<TArg, IEnumerable<BindDataBase>> canUnbind = null,
-        [CanBeNull] Action<float, TArg> tick = null)
+        Action<MyFSM<TEnum>, TArg>? alwaysBind = null,
+        Func<TArg, IEnumerable<BindDataBase>>? canUnbind = null,
+        Action<float, TArg>? tick = null)
         where TEnum : Enum
         where TArg : class, IMyFSMArg
     {
         var type = typeof(TEnum);
         unbindDic.TryAdd(type, new List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>());
         if(canUnbind != null)
-            unbindDic[type].Add(arg => canUnbind(arg as TArg));
+            unbindDic[type].Add(arg => canUnbind((TArg)arg));
         bindAlwaysDic.TryAdd(type, new List<Action<IMyFSMArg>>());
         if(alwaysBind != null)
-            bindAlwaysDic[type].Add(arg => alwaysBind.Invoke(Get<TEnum>(), arg as TArg));
+            bindAlwaysDic[type].Add(arg => alwaysBind.Invoke(Get<TEnum>()!, (TArg)arg));
         tickDic.TryAdd(type, new List<BindDataUpdate>());
         if(tick != null)
-            tickDic[type].Add(Binder.FromTick(dt => tick(dt, argDic[type] as TArg), EUpdatePri.Fsm));
+            tickDic[type].Add(Binder.FromTick(dt => tick(dt, (TArg)argDic[type]), EUpdatePri.Fsm));
     }
 
     public static void Release<TEnum, TArg>(StateWrap<TEnum, TArg> one)
@@ -104,7 +103,7 @@ public abstract class MyFSM
         where TArg : class, IMyFSMArg
     {
         var ret = Get<TEnum>()?.IsOneOfState(state) ?? false;
-        arg = ret ? arg = argDic[typeof(TEnum)] as TArg : null;
+        arg = ret ? (TArg)argDic[typeof(TEnum)] : null!;
         return ret;
     }
 
@@ -117,14 +116,13 @@ public abstract class MyFSM
 
     static bool TryGet<TEnum>(string log, out MyFSM<TEnum> fsm) where TEnum : Enum
     {
-        fsm = Get<TEnum>();
+        fsm = Get<TEnum>()!;
         if (fsm != null)
             return true;
         MyDebug.LogError($"FSM{typeof(TEnum).Name} Not Exist when {log}");
         return false;
     }
-    [CanBeNull]
-    static MyFSM<TEnum> Get<TEnum>() where TEnum : Enum
+    static MyFSM<TEnum>? Get<TEnum>() where TEnum : Enum
     {
         if (fsmDic.TryGetValue(typeof(TEnum), out var holder))
             return holder as MyFSM<TEnum>;
@@ -145,13 +143,13 @@ public class MyFSM<TEnum> : MyFSM
 
     public string CurStateName => curState?.ToString() ?? "Null";
     Dictionary<TEnum, MyState> stateDic;
-    MyState curStateClass;
-    Enum curState;
+    MyState? curStateClass;
+    Enum? curState;
     
     public MyState GetState(TEnum e)
     {
-        if (e == null)
-            return null;
+        // if (e == null)
+        //     return null;
         if (stateDic.TryGetValue(e, out var value))
             return value;
         MyState state = new();
@@ -187,7 +185,7 @@ public class MyFSM<TEnum> : MyFSM
 
     public void OnDestroy()
     {
-        curStateClass.Exit();
+        curStateClass?.Exit();
         curState = null;
         curStateClass = null;
     }

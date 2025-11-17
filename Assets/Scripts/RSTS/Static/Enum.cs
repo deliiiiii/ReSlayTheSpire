@@ -42,6 +42,14 @@ public enum EYieldCardState
 
 public class YieldCardStateWrap : StateWrap<EYieldCardState, YieldCardData>;
 
+public enum EPlayerJob
+{
+    ZhanShi,
+    LieShou,
+    JiBao,
+    GuanZhe
+}
+
 public enum ECardColor
 {
     Red,

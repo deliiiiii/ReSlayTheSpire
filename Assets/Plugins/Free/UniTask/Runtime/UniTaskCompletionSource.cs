@@ -193,7 +193,8 @@ namespace Cysharp.Threading.Tasks
 
         /// <summary>Gets the operation version.</summary>
         [DebuggerHidden]
-        public short Version => version;
+        public short Version => 
+            version;
 
         /// <summary>Gets the status of the operation.</summary>
         /// <param name="token">Opaque value that was provided to the <see cref="UniTask"/>'s constructor.</param>

@@ -59,18 +59,16 @@ public class TestAnything : Singleton<TestAnything>
         BothTurnData.DrawSome(count);
     }
 
-    [SerializeReference]
-    public GameData GameData;
     [Button]
     public void SaveGameData()
     {
-        if(!MyFSM.IsState(GameStateWrap.One, EGameState.Battle, out GameData))
+        if(!MyFSM.IsState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard, out BothTurnData))
             return;
-        GameData.Save();
+        BothTurnData.Save();
     }
     [Button]
     public void LoadGameData()
     {
-        GameData = GameData.Load();
+        BothTurnData = BothTurnData.Load();
     }
 }

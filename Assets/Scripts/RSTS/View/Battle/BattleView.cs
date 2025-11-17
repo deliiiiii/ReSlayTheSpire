@@ -68,7 +68,7 @@ public class BattleView : Singleton<BattleView>
             InfoView.gameObject.SetActive(true);
             PnlItem.SetActive(true);
             MyFSM.Register(BattleStateWrap.One, EBattleState.SelectLastBuff,
-                _ => gameData.CreateBattleData(EPlayerJob.ZhanShi));
+                _ => new BattleData(gameData, EPlayerJob.ZhanShi));
         };
         fsm.GetState(EGameState.Battle).OnExit += () =>
         {
@@ -97,7 +97,8 @@ public class BattleView : Singleton<BattleView>
         {
             PnlCard.SetActive(true);
             // 跳过GrossStart、TurnStart阶段。
-            MyFSM.Register(BothTurnStateWrap.One, EBothTurn.PlayerDraw, battleData.CreateBothTurnData);
+            MyFSM.Register(BothTurnStateWrap.One, EBothTurn.PlayerDraw,
+                fsm2 => new BothTurnData(battleData, fsm2));
         };
             
         fsm.GetState(EBattleState.BothTurn).OnExit += () =>

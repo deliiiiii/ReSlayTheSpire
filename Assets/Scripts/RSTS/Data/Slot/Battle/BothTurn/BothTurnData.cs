@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -10,7 +11,10 @@ namespace RSTS;
 [Serializable]
 public class BothTurnData : IMyFSMArg
 {
-    [NonSerialized]BattleData battleData;
+    public void Save() => Saver.Save("DataSaved", nameof(BothTurnData), this);
+    public BothTurnData Load() => Saver.Load<BothTurnData>("DataSaved", nameof(BothTurnData));
+    
+    [SerializeField] BattleData battleData;
     
     public HPAndBuffData PlayerHPAndBuffData;
     public Observable<int> CurEnergy = new(5);
@@ -19,7 +23,7 @@ public class BothTurnData : IMyFSMArg
     public Observable<int> PlayerMaxHP => PlayerHPAndBuffData.MaxHP;
     public Observable<int> PlayerBlock => PlayerHPAndBuffData.Block;
     public int TurnID;
-    public MyList<EnemyDataBase> EnemyList = [];
+    [JsonIgnore]public MyList<EnemyDataBase> EnemyList = [];
     public MyList<CardInTurn> HandList = [];
     public MyList<CardInTurn> DrawList = [];
     public MyList<CardInTurn> DiscardList = [];
@@ -27,7 +31,6 @@ public class BothTurnData : IMyFSMArg
     /// 第一个参数，弃牌堆；第二个参数，点击后的回调
     public event Action<List<CardInTurn>, Action<CardInTurn>>? OnOpenDiscardOnceClick;
     public event Action<List<CardInTurn>, int, Action<CardInTurn>>? OnOpenHandOnceClick;
-
     public event Action? OnPlayerLoseHP;
     
     public BothTurnData(BattleData battleData, MyFSM<EBothTurn> fsm)

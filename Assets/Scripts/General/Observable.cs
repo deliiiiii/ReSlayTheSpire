@@ -32,7 +32,7 @@ public class Observable<T> where T : struct
             onValueChangedFull?.Invoke(oldV, value);
         }
     }
-    UnityAction<T>? onValueChangedAfter;
+    [JsonIgnore] UnityAction<T>? onValueChangedAfter;
     public event UnityAction<T>? OnValueChangedAfter
     {
         add
@@ -44,7 +44,7 @@ public class Observable<T> where T : struct
         }
         remove => onValueChangedAfter -= value;
     }
-    UnityAction<T, T>? onValueChangedFull;
+    [JsonIgnore] UnityAction<T, T>? onValueChangedFull;
     public event UnityAction<T, T>? OnValueChangedFull
     {
         add

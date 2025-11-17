@@ -20,8 +20,9 @@ public abstract class DataBaseConfig<TData, TConfigMulti>
 {
     [JsonIgnore]
     public TConfigMulti Config = null!;
-    [JsonProperty] int ID
+    int ID
     {
+        get;
         set
         {
             field = value;
