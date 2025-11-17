@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [CardID(10)][Serializable]
-public class Card10 : CardDataBase
+public class Card10 : CardInTurn
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
     public override async UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)

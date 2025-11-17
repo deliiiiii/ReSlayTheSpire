@@ -6,10 +6,10 @@ using Sirenix.Utilities;
 
 namespace RSTS;
 [CardID(28)][Serializable]
-public class Card28 : CardDataBase
+public class Card28 : CardInTurn
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
-    List<CardDataBase> ToExhaustCards(BothTurnData bothTurnData) 
+    List<CardInTurn> ToExhaustCards(BothTurnData bothTurnData) 
         => bothTurnData.HandList.Where(cardData => cardData != this).ToList();
     public override async UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {

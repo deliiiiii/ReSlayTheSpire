@@ -139,7 +139,7 @@ public class BattleView : Singleton<BattleView>
         };
 
         
-        Dictionary<CardDataBase, CardModel> handCardModelDic = new();
+        Dictionary<CardInTurn, CardModel> handCardModelDic = new();
         bothTurnData.PlayerHPAndBuffData.OnAddBuff += _ =>
         {
             handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
@@ -166,8 +166,8 @@ public class BattleView : Singleton<BattleView>
             
             var cardModel = Instantiate(PfbCard, PrtHandCard);
             cardModel.ReadDataInBothTurn(cardData, bothTurnData);
-            cardData.OnUpgrade += cardModel.RefreshTxtDes;
-            cardData.OnUpgrade += cardModel.RefreshTxtCost;
+            cardData.OnTempUpgrade += cardModel.RefreshTxtDes;
+            cardData.OnTempUpgrade += cardModel.RefreshTxtCost;
             
             handCardModelDic.Add(cardData, cardModel);
 
@@ -253,8 +253,8 @@ public class BattleView : Singleton<BattleView>
             if (handCardModelDic.ContainsKey(cardData))
             {
                 var cardModel = handCardModelDic[cardData];
-                cardData.OnUpgrade -= cardModel.RefreshTxtDes;
-                cardData.OnUpgrade -= cardModel.RefreshTxtCost;
+                cardData.OnTempUpgrade -= cardModel.RefreshTxtDes;
+                cardData.OnTempUpgrade -= cardModel.RefreshTxtCost;
                 Destroy(cardModel.gameObject);
                 handCardModelDic.Remove(cardData);
             }

@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [CardID(100)][Serializable]
-public class Card100 : CardDataBase
+public class Card100 : CardInTurn
 {
     int blockValue => NthEmbedAs<EmbedBlock>(0).BlockValue;
 

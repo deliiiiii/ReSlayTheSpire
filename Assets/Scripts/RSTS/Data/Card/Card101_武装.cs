@@ -5,24 +5,24 @@ using Sirenix.Utilities;
 
 namespace RSTS;
 [CardID(101)][Serializable]
-public class Card101 : CardDataBase
+public class Card101 : CardInTurn
 {
     int blockValue => NthEmbedAs<EmbedBlock>(0).BlockValue;
 
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {
         bothTurnData.GainBlock(blockValue);
-        if (UpgradeLevel == 0)
+        if (TempUpgradeLevel == 0)
         {
             bothTurnData.OpenHandCardOnceClick(1,
                 handCard => handCard != this && handCard.CanUpgrade(),
-                handCard => handCard.Upgrade(isTemp: true));
+                handCard => handCard.UpgradeTemp());
         }
         else
         {
             bothTurnData.HandList
                 .Where(handCard => handCard != this && handCard.CanUpgrade())
-                .ForEach(handCard => handCard.Upgrade(isTemp: true));
+                .ForEach(handCard => handCard.UpgradeTemp());
         }
         return UniTask.CompletedTask;
     }

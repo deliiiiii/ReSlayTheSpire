@@ -12,73 +12,64 @@ public class IDAttribute(int id) : Attribute
     public readonly int ID = id;
 }
 
-public abstract class DataBaseSingle<TData>;
-
+/// 通过Config创建的数据基类，Json忽略Config字段，通过ID自动关联
 [Serializable]
-public abstract class DataBaseMulti<TData, TAttribute, TConfigMulti>
-    where TData : DataBaseMulti<TData, TAttribute, TConfigMulti>
-    where TAttribute : IDAttribute
+public abstract class DataBaseConfig<TData, TConfigMulti>
+    where TData : DataBaseConfig<TData, TConfigMulti>
     where TConfigMulti : ConfigMulti<TConfigMulti>, new()
 {
-    static Dictionary<int, Func<TData>> ctorDic = [];
+    [JsonIgnore]
+    public TConfigMulti Config = null!;
+    [JsonProperty] int ID
+    {
+        set
+        {
+            field = value;
+            Config = RefPoolMulti<TConfigMulti>.Acquire().FirstOrDefault(c => c.ID == field)!;
+        }
+    }
+    public static TData CreateByConfig(int id)
+    {
+        var ret = Activator.CreateInstance<TData>();
+        ret.ID = id;
+        return ret;
+    }
+}
+
+/// 通过反射创建的数据基类，子类需添加IDAttribute特性
+[Serializable]
+public abstract class DataBaseAttr<TData, TAttribute, TContext>
+    where TData : DataBaseAttr<TData, TAttribute, TContext>
+    where TAttribute : IDAttribute
+{
+    static Dictionary<int, Func<TContext, TData>> ctorDic = [];
     public static void InitCtorDic()
     {
         ctorDic.Clear();
-        var subTypeDic = typeof(TData).Assembly.GetTypes()
+        typeof(TData).Assembly.GetTypes()
             .Where(x => x.IsSubclassOf(typeof(TData))
                         && x.GetAttribute<TAttribute>() != null)
-            .ToDictionary(x => x.GetAttribute<TAttribute>().ID);
-        foreach (var config in RefPoolMulti<TConfigMulti>.Acquire())
-        {
-            if (!subTypeDic.TryGetValue(config.ID, out var type))
+            .ToDictionary(x => x.GetAttribute<TAttribute>().ID)
+            .ForEach(pair =>
             {
-                MyDebug.LogError($"InitCtorDic: {typeof(TData).Name} ID{config.ID} not found" +
-                                 $", ID will be 0 as default");
-                // ctorDic.Add(config.ID, () => new Card_Template
-                // {
-                //     ID = config.ID,
-                //     Config = config,
-                // });
-                ctorDic.Add(config.ID, ctorDic[0]);
-                continue;
-            }
-            ctorDic.Add(config.ID, () =>
-            {
-                var ins = (Activator.CreateInstance(type) as TData)!;
-                ins.ID = config.ID;
-                ins.Config = config;
-                return ins;
+                ctorDic.Add(pair.Key, context =>
+                {
+                    var ins = (Activator.CreateInstance(pair.Value) as TData)!;
+                    ins.ReadContext(context);
+                    return ins;
+                });
+                // ctorDic.TryAdd(pair.Key, ctorDic[0]);
             });
-        }
     }
     
-    public static TData CreateData(int id)
+    public static TData CreateByAttr(int id, TContext context)
     {
         if (ctorDic.TryGetValue(id, out var func))
         {
-            return func();
+            return func(context);
         }
         throw new Exception($"{typeof(TData).Name} CreateData : ID {id} out of range");
     }
     
-    
-    [JsonIgnore]
-    public TConfigMulti Config = null!;
-
-    public required int ID
-    {
-        get;
-        set
-        {
-            field = value;
-            Config = RefPoolMulti<TConfigMulti>.Acquire().FirstOrDefault(c => c.ID == value)!;
-        }
-    }
+    protected abstract void ReadContext(TContext context);
 }
-
-/// <summary>
-/// TAttribute为IDAttribute
-/// </summary>
-public abstract class DataBaseMulti<TData, TConfigMulti> : DataBaseMulti<TData, IDAttribute, TConfigMulti>
-    where TData : DataBaseMulti<TData, IDAttribute, TConfigMulti>
-    where TConfigMulti : ConfigMulti<TConfigMulti>, new();

@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [CardID(12)][Serializable]
-public class Card12 : CardDataBase
+public class Card12 : CardInTurn
 {
     public override UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy)
     {

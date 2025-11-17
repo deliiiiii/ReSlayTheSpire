@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using RSTS.CDMV;
 
 namespace RSTS;
 public static class Loader
 {
-    public static async Task LoadAll()
+    public static async UniTask LoadAll()
     {
         var configAll = new List<ConfigBase>(1000);
         configAll.AddRange(await Resourcer.LoadAssetsAsyncByLabel<ConfigBase>("RSTSConfig"));
@@ -15,7 +15,7 @@ public static class Loader
             config.OnLoad();
         }
         
-        CardDataBase.InitCtorDic();
+        CardInTurn.InitCtorDic();
         // TODO Enemy跟Card一样管理好了。尝试一下基类带三个泛型参数有没有问题！
         EnemyDataBase.InitEnemyDic();
     }

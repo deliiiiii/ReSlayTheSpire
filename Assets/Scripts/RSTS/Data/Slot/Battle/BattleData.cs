@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using RSTS.CDMV;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -16,7 +17,7 @@ public class BattleData : IMyFSMArg
     
     public EPlayerJob Job;
     
-    public MyList<CardDataBase> DeckList = [];
+    public MyList<CardInBattle> DeckList = [];
     public MyList<ItemData> ItemList = [];
     public MyList<BottleData?> BottleList = [];
     public Observable<int> CurHP = new(0);
@@ -24,7 +25,7 @@ public class BattleData : IMyFSMArg
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
 
-    [SerializeReference] BothTurnData bothTurnData;
+    [SerializeReference][JsonProperty] BothTurnData bothTurnData;
     public BothTurnData CreateBothTurnData(MyFSM<EBothTurn> fsm) => bothTurnData = new (this, fsm);
     #region Init, Launch
     public BattleData(GameData gameData, EPlayerJob job)
@@ -38,7 +39,8 @@ public class BattleData : IMyFSMArg
         config.InitialCardDic.ForEach(pair =>
         {
             for(int i = 0; i < pair.Value; i++)
-                DeckList.MyAdd(CardDataBase.CreateData(pair.Key.ID));
+                // DeckList.MyAdd(CardBattle.CreateData(pair.Key.ID));
+                DeckList.MyAdd(CardInBattle.CreateByConfig(pair.Key.ID));
         });
         for (int i = 0; i < 3; i++)
         {

@@ -1,13 +1,22 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using RSTS.CDMV;
 
 namespace RSTS;
 public class Launcher : Singleton<Launcher>
 {
-    async Task Start()
+    async UniTask Start()
     {
-        await Loader.LoadAll();
-        MyFSM.Register(GameStateWrap.One, EGameState.Title, _ => new GameData());
+        try
+        {
+            await Loader.LoadAll();
+            MyFSM.Register(GameStateWrap.One, EGameState.Title, _ => new GameData());
+        }
+        catch (Exception e)
+        {
+            MyDebug.LogError(e);
+        }
     }
 
     void OnExit()

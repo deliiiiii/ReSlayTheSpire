@@ -20,13 +20,13 @@ public class BothTurnData : IMyFSMArg
     public Observable<int> PlayerBlock => PlayerHPAndBuffData.Block;
     public int TurnID;
     public MyList<EnemyDataBase> EnemyList = [];
-    public MyList<CardDataBase> HandList = [];
-    public MyList<CardDataBase> DrawList = [];
-    public MyList<CardDataBase> DiscardList = [];
-    public MyList<CardDataBase> ExhaustList = [];
+    public MyList<CardInTurn> HandList = [];
+    public MyList<CardInTurn> DrawList = [];
+    public MyList<CardInTurn> DiscardList = [];
+    public MyList<CardInTurn> ExhaustList = [];
     /// 第一个参数，弃牌堆；第二个参数，点击后的回调
-    public event Action<List<CardDataBase>, Action<CardDataBase>>? OnOpenDiscardOnceClick;
-    public event Action<List<CardDataBase>, int, Action<CardDataBase>>? OnOpenHandOnceClick;
+    public event Action<List<CardInTurn>, Action<CardInTurn>>? OnOpenDiscardOnceClick;
+    public event Action<List<CardInTurn>, int, Action<CardInTurn>>? OnOpenHandOnceClick;
 
     public event Action? OnPlayerLoseHP;
     
@@ -148,7 +148,10 @@ public class BothTurnData : IMyFSMArg
     {
         // HandList.MyClear();
         // DrawList.MyClear();
-        DrawList.MyAddRange(battleData.DeckList);
+        battleData.DeckList.ForEach(cardBattle =>
+        {
+            DrawList.MyAdd(CardInTurn.CreateByAttr(cardBattle.Config.ID, cardBattle));
+        });
         DrawList.Shuffle();
         CollectAllCards().ForEach(cardData => cardData.OnEnterBothTurn());
         // DiscardList.MyClear();
@@ -174,7 +177,7 @@ public class BothTurnData : IMyFSMArg
         PlayerHPAndBuffData.ClearBuff();
     }
     
-    public string CurContentWithKeywords(CardDataBase cardData)
+    public string CurContentWithKeywords(CardInTurn cardData)
     {
         var replacerList = new List<string>();
         cardData.CurDes.EmbedTypes.ForEach(embedType =>
@@ -195,7 +198,7 @@ public class BothTurnData : IMyFSMArg
         return cardData.CurUpgradeInfo.ContentWithKeywords(replacerList);
     }
 
-    IEnumerable<CardDataBase> CollectAllCards()
+    IEnumerable<CardInTurn> CollectAllCards()
     {
         foreach (var card in HandList)
             yield return card;
@@ -216,7 +219,7 @@ public class BothTurnData : IMyFSMArg
         return true;
     }
 
-    public bool TryPullOneFromDraw(bool shouldRefill, out CardDataBase drawn)
+    public bool TryPullOneFromDraw(bool shouldRefill, out CardInTurn drawn)
     {
         drawn = null!;
         if (DrawList.Count == 0 && shouldRefill)
@@ -239,7 +242,7 @@ public class BothTurnData : IMyFSMArg
         return ret;
     }
 
-    public bool TryYield(CardDataBase toYield, out string failReason)
+    public bool TryYield(CardInTurn toYield, out string failReason)
     {
         failReason = string.Empty;
         if(toYield.ContainsKeyword(ECardKeyword.Unplayable))
@@ -274,7 +277,7 @@ public class BothTurnData : IMyFSMArg
         HandList.MyClear();
     }
 
-    public string UIGetEnergy(CardDataBase cardData)
+    public string UIGetEnergy(CardInTurn cardData)
     {
         return cardData.CurCostInfo switch
         {
@@ -284,7 +287,7 @@ public class BothTurnData : IMyFSMArg
             CardCostNone or _ => "",
         };
     }
-    public int GetEnergy(CardDataBase cardData)
+    public int GetEnergy(CardInTurn cardData)
     {
         int costEnergy = cardData.CurCostInfo switch
         {
@@ -295,7 +298,7 @@ public class BothTurnData : IMyFSMArg
         };
         return costEnergy;
     }
-    public async UniTask YieldHandAsync(CardDataBase toYield
+    public async UniTask YieldHandAsync(CardInTurn toYield
         , List<YieldModify>? modifyList = null)
     {
         int cost = GetEnergy(toYield);
@@ -305,14 +308,14 @@ public class BothTurnData : IMyFSMArg
         await YieldInternal(toYield, cost, modifyList);
     }
 
-    public async UniTask YieldBlindAsync(CardDataBase toYield
+    public async UniTask YieldBlindAsync(CardInTurn toYield
         , List<YieldModify>? modifyList = null)
     {
         modifyList ??= [];
         await YieldInternal(toYield, 0, modifyList);
     }
 
-    async UniTask YieldInternal(CardDataBase toYield, int cost
+    async UniTask YieldInternal(CardInTurn toYield, int cost
         , List<YieldModify> modifyList)
     {
         if (toYield.Config.Category == ECardCategory.Ability)
@@ -575,28 +578,28 @@ public class BothTurnData : IMyFSMArg
         }
     }
 
-    public void AddTempToDiscard(Func<CardDataBase> toAddCtor)
+    public void AddTempToDiscard(Func<CardInTurn> toAddCtor)
     {
         var toAdd = toAddCtor();
-        toAdd.BothTurnCom.TryAddCom<CardComTemporary>(out _);
+        toAdd.IsTemporary = true;
         DiscardList.MyAdd(toAdd);
     }
-    public void AddTempToDraw(Func<CardDataBase> toAddCtor)
+    public void AddTempToDraw(Func<CardInTurn> toAddCtor)
     {
         var toAdd = toAddCtor();
-        toAdd.BothTurnCom.TryAddCom<CardComTemporary>(out _);
+        toAdd.IsTemporary = true;
         var drawIndex = UnityEngine.Random.Range(0, DrawList.Count);
         DrawList.MyInsert(drawIndex, toAdd);
     }
 
-    public void OpenDiscardOnceClick(Action<CardDataBase> onConfirm)
+    public void OpenDiscardOnceClick(Action<CardInTurn> onConfirm)
     {
         if(DiscardList.Count == 0)
             return;
         OnOpenDiscardOnceClick?.Invoke(DiscardList, onConfirm);
     }
     
-    public void OpenHandCardOnceClick(int selectCount, Func<CardDataBase, bool> filter, Action<CardDataBase> onConfirm)
+    public void OpenHandCardOnceClick(int selectCount, Func<CardInTurn, bool> filter, Action<CardInTurn> onConfirm)
     {
         var filtered = HandList.Where(filter).ToList();
         if (filtered.Count == 0)

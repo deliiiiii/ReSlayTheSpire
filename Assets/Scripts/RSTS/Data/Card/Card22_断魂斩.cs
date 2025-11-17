@@ -6,7 +6,7 @@ using Sirenix.Utilities;
 
 namespace RSTS;
 [CardID(22)][Serializable]
-public class Card22 : CardDataBase
+public class Card22 : CardInTurn
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
 

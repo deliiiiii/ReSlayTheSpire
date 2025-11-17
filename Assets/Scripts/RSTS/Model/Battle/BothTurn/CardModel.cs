@@ -10,7 +10,7 @@ namespace RSTS;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 public class CardModel : MonoBehaviour
 {
-    [SerializeReference][ReadOnly] CardDataBase data;
+    [SerializeReference][ReadOnly] CardInTurn data;
     BothTurnData bothTurnData;
     
     public Text TxtCost;
@@ -26,7 +26,7 @@ public class CardModel : MonoBehaviour
     public event Action<Vector3>? OnBeginDragEvt;
     public event Action<Vector3>? OnDragEvt;
     public event Action<Vector3>? OnEndDragEvt;
-    public void ReadDataInBothTurn(CardDataBase fData, BothTurnData fBothTurnData)
+    public void ReadDataInBothTurn(CardInTurn fData, BothTurnData fBothTurnData)
     {
         data = fData;
         bothTurnData = fBothTurnData;
@@ -44,11 +44,11 @@ public class CardModel : MonoBehaviour
     
     public void RefreshTxtDes()
     {
-        string plus = data.UpgradeLevel switch
+        string plus = data.TempUpgradeLevel switch
         {
             0 => "",
             1 => "+",
-            _ => $"+{data.UpgradeLevel}"
+            _ => $"+{data.TempUpgradeLevel}"
         };
         TxtName.text = $"{data.Config.Name}{plus}";
         TxtDes.text = bothTurnData.CurContentWithKeywords(data);

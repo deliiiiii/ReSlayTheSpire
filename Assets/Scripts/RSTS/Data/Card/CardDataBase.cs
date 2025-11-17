@@ -3,166 +3,96 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
-using UnityEngine;
 using RSTS.CDMV;
-using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace RSTS;
 
 [Serializable]
-public abstract class CardDataBase : DataBaseMulti<CardDataBase, CardIDAttribute, CardConfigMulti>
+public class CardInBattle : DataBaseConfig<CardInBattle, CardConfigMulti>
 {
-    [JsonProperty] int upgradeLevel;
-    public int UpgradeLevel => BothTurnCom.HasCom<CardComTemporary>(out var com) ? com.TempUpgradeLevel : upgradeLevel;
+    public int UpgradeLevel;
+    // public void Upgrade()
+    // {
+    //     if (!CanUpgrade())
+    //         return; 
+    //     UpgradeLevel++;
+    //     // OnUpgrade?.Invoke();
+    // }
+    public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
+    // public virtual bool CanUpgrade()
+    // {
+    //     return UpgradeLevel < Config.Upgrades.Count - 1;
+    // }
 
-    public event Action? OnUpgrade;
+    public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
+    public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
+    public EmbedString CurDes => CurUpgradeInfo.Des;
+    public bool HasTarget => Config.HasTarget;
+    public T NthEmbedAs<T>(int id)
+        where T : EmbedType
+        => (CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as T)!;
+
+    public TBuff NthEmbedAsBuffCopy<TBuff>(int id)
+        where TBuff : BuffDataBase
+        => ((CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
+}
+
+[Serializable]
+public abstract class CardInTurn : DataBaseAttr<CardInTurn, CardIDAttribute, CardInBattle>
+{
+    // 反射初始化
+    [JsonProperty][SerializeField]
+    CardInBattle cardInBattle = null!;
+    // 无来源卡牌
+    public CardInTurn CreateBlindCard(int id) => CreateByAttr(id, CardInBattle.CreateByConfig(id));
     
-    public abstract UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy);
-    public T GetModify<T>(BothTurnData bothTurnData)
-        where T : AttackModifyBase
+    public CardConfigMulti Config => cardInBattle.Config;
+    public CardUpgradeInfo CurUpgradeInfo => cardInBattle.CurUpgradeInfo;
+    public bool ContainsKeyword(ECardKeyword keyword) => cardInBattle.ContainsKeyword(keyword);
+    public CardCostBase CurCostInfo => cardInBattle.CurCostInfo;
+    public EmbedString CurDes => cardInBattle.CurDes;
+    public bool HasTarget => cardInBattle.HasTarget;
+    public T NthEmbedAs<T>(int id) where T : EmbedType => cardInBattle.NthEmbedAs<T>(id);
+    public TBuff NthEmbedAsBuffCopy<TBuff>(int id) where TBuff : BuffDataBase => cardInBattle.NthEmbedAsBuffCopy<TBuff>(id);
+    
+    public int TempUpgradeLevel;
+    public EnemyDataBase? Target;
+    // 临时加入的，如“愤怒”
+    public bool IsTemporary;
+
+    protected override void ReadContext(CardInBattle context)
     {
-        return GetModifyList(bothTurnData).OfType<T>().FirstOrDefault()!;
+        cardInBattle = context;
+        TempUpgradeLevel = context.UpgradeLevel;
     }
+
+    public event Action? OnTempUpgrade;
+    
     public virtual List<AttackModifyBase> GetModifyList(BothTurnData bothTurnData) => [];
     public virtual bool YieldCondition(BothTurnData bothTurnData, out string failReason)
     {
         failReason = string.Empty;
         return true;
     }
-
-    public virtual void OnEnterBothTurn()
-    {
-        BothTurnCom = new(this);
-        if (Config.HasTarget)
-        {
-            BothTurnCom.TryAddCom<CardComTarget>(out _);
-        }
-    }
-
-    public virtual void OnExitBothTurn()
-    {
-        BothTurnCom.Clear();
-    }
+    public virtual void OnEnterBothTurn() { }
+    public virtual void OnExitBothTurn() { }
     public virtual void OnPlayerTurnEnd(BothTurnData bothTurnData){}
-
     // public virtual bool RecommendYield(BothTurnData bothTurnData) => false;
-    
-    public void Upgrade(bool isTemp)
+    public bool CanUpgrade() => TempUpgradeLevel < cardInBattle.Config.Upgrades.Count - 1;
+
+    public void UpgradeTemp()
     {
-        if (isTemp)
-        {
-            BothTurnCom.TryAddCom<CardComTemporary>(out var com);
-            if (!CanUpgrade())
-                return;
-            com.TempUpgradeLevel++;
-        }
-        else
-        {
-            if (!CanUpgrade())
-                return; 
-            upgradeLevel++;
-        }
-        OnUpgrade?.Invoke();
+        TempUpgradeLevel++;
+        OnTempUpgrade?.Invoke();
     }
-    public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
-    public bool CanUpgrade()
+    public T GetModify<T>(BothTurnData bothTurnData)
+        where T : AttackModifyBase
     {
-        if (BothTurnCom.HasCom<CardComTemporary>(out var com))
-        {
-            return com.TempUpgradeLevel < Config.Upgrades.Count - 1;
-        }
-        return UpgradeLevel < Config.Upgrades.Count - 1;
+        return GetModifyList(bothTurnData).OfType<T>().FirstOrDefault()!;
     }
-
-    public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
-    public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
-    public EmbedString CurDes => CurUpgradeInfo.Des;
-    
-    #region Com
-
-    public ComHolder<CardDataBase, CardComBase> BothTurnCom = null!;
-
-    public bool HasTarget => BothTurnCom.HasCom<CardComTarget>(out _);
-    public EnemyDataBase? Target
-    {
-        get => BothTurnCom.GetCom<CardComTarget>()?.Target;
-        set
-        {
-            if(BothTurnCom.HasCom<CardComTarget>(out var com))
-                com.Target = value;
-        }
-    }
-    #endregion
-
-    protected T NthEmbedAs<T>(int id)
-        where T : EmbedType
-        => (CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as T)!;
-
-    protected TBuff NthEmbedAsBuffCopy<TBuff>(int id)
-        where TBuff : BuffDataBase
-        => ((CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
-
+    public abstract UniTask YieldAsync(BothTurnData bothTurnData, int costEnergy);
 }
-
-[Serializable]
-public class ComHolder<TOwner, TCom>(TOwner owner)
-    where TCom : ComponentBase<TOwner>
-{
-    [SerializeField]
-    TOwner owner = owner;
-    [SerializeField]
-    List<TCom> comList = [];
-    
-    public bool TryAddCom<TSubCom>(out TSubCom com) where TSubCom : TCom, new()
-    {
-        com = null!;
-        if (HasCom<TSubCom>(out _))
-            return false;
-        com = new TSubCom();
-        com.OnCtor(owner);
-        comList.Add(com);
-        return true;
-    }
-    
-    public bool HasCom<TSubCom>(out TSubCom com) where TSubCom : TCom, new()
-    {
-        return (com = comList.OfType<TSubCom>().FirstOrDefault()!) != null;
-    }
-    public TSubCom? GetCom<TSubCom>() where TSubCom : TCom, new()
-    {
-        return comList.OfType<TSubCom>().FirstOrDefault();
-    }
-    public void RemoveCom<TSubCom>() where TSubCom : TCom, new()
-    {
-        comList.RemoveAll(x => x is TSubCom);
-    }
-    public void Clear() => comList.Clear();
-}
-
-public abstract class ComponentBase<TOwner>
-{
-    public virtual void OnCtor(TOwner owner){}
-}
-
-public abstract class CardComBase : ComponentBase<CardDataBase>;
-
-[Serializable]
-public class CardComTarget : CardComBase
-{
-    public EnemyDataBase? Target;
-}
-
-[Serializable]
-public class CardComTemporary : CardComBase
-{
-    public int TempUpgradeLevel;
-    public override void OnCtor(CardDataBase owner)
-    {
-        base.OnCtor(owner);
-        TempUpgradeLevel = owner.UpgradeLevel;
-    }
-}
-
 
 
 [AttributeUsage(AttributeTargets.Class)]
