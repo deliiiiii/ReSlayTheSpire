@@ -5,13 +5,7 @@ using Sirenix.Utilities;
 
 public abstract class MyFSM
 {
-    static readonly Dictionary<Type, StateWrap> wrapDic = [];
-    // bindAlwaysDic包括了State的OnEnter、OnExit，和Data的事件绑定回调，如data.OnXXXEvent += () => {}
-    static readonly Dictionary<Type, List<Action<IMyFSMArg>>> bindAlwaysDic = [];
-    // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
-    static readonly Dictionary<Type, List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>> unbindDic = [];
-    // tickDic包括状态机的Update调用的OnUpdate，和自己绑定的与Data有关的Tick委托（类型Action<float, IMyFSMArg>）
-    static readonly Dictionary<Type, List<BindDataUpdate>> tickDic = [];
+    static readonly Dictionary<Type, IStateWrap> wrapDic = [];
     
     public static void Register<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state, Func<MyFSM<TEnum>, TArg> argCtor)
         where TEnum : struct, Enum
@@ -35,38 +29,31 @@ public abstract class MyFSM
         // 【1.1】绑定自身Tick
         var selfTick = Binder.FromTick(dt => fsm.Update(dt), EUpdatePri.Fsm);
         wrap.SelfTick = selfTick;
-        
+
         // 【2】IBL的Bind
-        if (unbindDic.TryGetValue(type, out var unbindFuncList)) 
-            unbindFuncList?.ForEach(func =>func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
-        if (bindAlwaysDic.TryGetValue(type, out var bindAlwaysActList)) 
-            bindAlwaysActList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(arg));
+        one.CanUnBind.ForEach(func => func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
+        one.BindAlways.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(arg));
+        one.Tick.ForEach(bindDataUpdate => bindDataUpdate.Bind());
         // 【3】IBL的Launch
         arg.Launch();
-        if(tickDic.TryGetValue(type, out var tickActList))
-            tickActList.ForEach(bindDataUpdate => bindDataUpdate.Bind());
         // 【4】进入初始状态
         EnterState(one, state);
     }
     
     public static void OnRegister<TEnum, TArg>(
-        StateWrap<TEnum, TArg> one,
+        StateForView<TEnum, TArg> view,
         Action<MyFSM<TEnum>, TArg>? alwaysBind = null,
         Func<TArg, IEnumerable<BindDataBase>>? canUnbind = null,
         Action<float, TArg>? tick = null)
         where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
     {
-        var type = one.GetType();
-        unbindDic.TryAdd(type, []);
         if(canUnbind != null)
-            unbindDic[type].Add(arg => canUnbind((TArg)arg));
-        bindAlwaysDic.TryAdd(type, []);
+            view.CanUnBind.Add(canUnbind);
         if(alwaysBind != null)
-            bindAlwaysDic[type].Add(arg => alwaysBind.Invoke(Get(one)?.Fsm!, (TArg)arg));
-        tickDic.TryAdd(type, []);
+            view.BindAlways.Add(arg => alwaysBind.Invoke(Get(StateWrap<TEnum, TArg>.One)?.Fsm!, arg));
         if(tick != null)
-            tickDic[type].Add(Binder.FromTick(dt => tick(dt, Get(one)?.Arg!), EUpdatePri.Fsm));
+            view.Tick.Add(Binder.FromTick(dt => tick(dt, Get(StateWrap<TEnum, TArg>.One)?.Arg!), EUpdatePri.Fsm));
     }
 
     public static void Release<TEnum, TArg>(StateWrap<TEnum, TArg> one)
@@ -80,12 +67,13 @@ public abstract class MyFSM
         wrap.Fsm.OnDestroy();
         // 【3】Launch的反向
         wrap.Arg.UnInit();
-        tickDic[type].ForEach(bindDataUpdate => bindDataUpdate.UnBind());
+        
         // 【2】Bind的反向
-        unbindDic[type]?.ForEach(func => func.Invoke(wrap.Arg).ForEach(bindDataBase => bindDataBase.UnBind()));
+        one.Tick.ForEach(bindDataUpdate => bindDataUpdate.UnBind());
+        one.CanUnBind.ForEach(func => func.Invoke(wrap.Arg).ForEach(bindDataBase => bindDataBase.UnBind()));
         // 【1.1】自身Tick的反向。【1】构造函数不用反向。
         wrap.SelfTick.UnBind();
-        // 移除Wrap
+        // 【0】移除Wrap
         wrapDic.Remove(type);
     }
 
@@ -135,11 +123,9 @@ public abstract class MyFSM
         where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
     {
-        if (wrapDic.TryGetValue(one.GetType(), out var wrap))
-            return wrap as StateWrap<TEnum, TArg>;
-        return null;
+        wrapDic.TryGetValue(one.GetType(), out var wrap);
+        return wrap as StateWrap<TEnum, TArg>;
     }
-
 }
 
 [Serializable]

@@ -363,7 +363,7 @@
     ],
     "CurHP": {
       "$id": "73",
-      "value": 80,
+      "value": 78,
       "invokeEvenEqual": false,
       "acceptDuplicateEvent": false
     },
@@ -381,7 +381,7 @@
     },
     "InBattleTime": {
       "$id": "76",
-      "value": 2.233732,
+      "value": 9.601158,
       "invokeEvenEqual": false,
       "acceptDuplicateEvent": false
     }
@@ -414,152 +414,20 @@
     "invokeEvenEqual": false,
     "acceptDuplicateEvent": false
   },
-  "TurnID": 0,
+  "TurnID": 1,
   "HandList": [
     {
       "$id": "81",
-      "$type": "RSTS.Card25, RSTS",
+      "$type": "RSTS.Card12, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "47"
+        "$ref": "26"
       }
     },
     {
       "$id": "82",
-      "$type": "RSTS.Card17, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "36"
-      }
-    },
-    {
-      "$id": "83",
-      "$type": "RSTS.Card18, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "37"
-      }
-    },
-    {
-      "$id": "84",
-      "$type": "RSTS.Card1, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "7"
-      }
-    },
-    {
-      "$id": "85",
-      "$type": "RSTS.Card101, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "60"
-      }
-    }
-  ],
-  "DrawList": [
-    {
-      "$id": "86",
-      "$type": "RSTS.Card115, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "71"
-      }
-    },
-    {
-      "$id": "87",
-      "$type": "RSTS.Card7, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "20"
-      }
-    },
-    {
-      "$id": "88",
-      "$type": "RSTS.Card11, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "25"
-      }
-    },
-    {
-      "$id": "89",
-      "$type": "RSTS.Card101, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "63"
-      }
-    },
-    {
-      "$id": "90",
-      "$type": "RSTS.Card25, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "48"
-      }
-    },
-    {
-      "$id": "91",
-      "$type": "RSTS.Card203, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "13"
-      }
-    },
-    {
-      "$id": "92",
-      "$type": "RSTS.Card115, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "70"
-      }
-    },
-    {
-      "$id": "93",
-      "$type": "RSTS.Card5, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "17"
-      }
-    },
-    {
-      "$id": "94",
-      "$type": "RSTS.Card25, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "44"
-      }
-    },
-    {
-      "$id": "95",
       "$type": "RSTS.Card101, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
@@ -569,298 +437,7 @@
       }
     },
     {
-      "$id": "96",
-      "$type": "RSTS.Card14, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "30"
-      }
-    },
-    {
-      "$id": "97",
-      "$type": "RSTS.Card21, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "40"
-      }
-    },
-    {
-      "$id": "98",
-      "$type": "RSTS.Card101, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "57"
-      }
-    },
-    {
-      "$id": "99",
-      "$type": "RSTS.Card14, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "33"
-      }
-    },
-    {
-      "$id": "100",
-      "$type": "RSTS.Card2, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "14"
-      }
-    },
-    {
-      "$id": "101",
-      "$type": "RSTS.Card26, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "50"
-      }
-    },
-    {
-      "$id": "102",
-      "$type": "RSTS.Card5000, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "10"
-      }
-    },
-    {
-      "$id": "103",
-      "$type": "RSTS.Card90, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "6"
-      }
-    },
-    {
-      "$id": "104",
-      "$type": "RSTS.Card25, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "49"
-      }
-    },
-    {
-      "$id": "105",
-      "$type": "RSTS.Card6008, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "9"
-      }
-    },
-    {
-      "$id": "106",
-      "$type": "RSTS.Card25, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "45"
-      }
-    },
-    {
-      "$id": "107",
-      "$type": "RSTS.Card1, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "8"
-      }
-    },
-    {
-      "$id": "108",
-      "$type": "RSTS.Card101, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "62"
-      }
-    },
-    {
-      "$id": "109",
-      "$type": "RSTS.Card8, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "22"
-      }
-    },
-    {
-      "$id": "110",
-      "$type": "RSTS.Card10, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "24"
-      }
-    },
-    {
-      "$id": "111",
-      "$type": "RSTS.Card4, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "16"
-      }
-    },
-    {
-      "$id": "112",
-      "$type": "RSTS.Card100, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "5"
-      }
-    },
-    {
-      "$id": "113",
-      "$type": "RSTS.Card106, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "66"
-      }
-    },
-    {
-      "$id": "114",
-      "$type": "RSTS.Card27, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "51"
-      }
-    },
-    {
-      "$id": "115",
-      "$type": "RSTS.Card3, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "15"
-      }
-    },
-    {
-      "$id": "116",
-      "$type": "RSTS.Card28, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "52"
-      }
-    },
-    {
-      "$id": "117",
-      "$type": "RSTS.Card25, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "46"
-      }
-    },
-    {
-      "$id": "118",
-      "$type": "RSTS.Card7, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "21"
-      }
-    },
-    {
-      "$id": "119",
-      "$type": "RSTS.Card110, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "68"
-      }
-    },
-    {
-      "$id": "120",
-      "$type": "RSTS.Card0, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "4"
-      }
-    },
-    {
-      "$id": "121",
-      "$type": "RSTS.Card203, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "12"
-      }
-    },
-    {
-      "$id": "122",
-      "$type": "RSTS.Card19, RSTS",
-      "useTime": 0,
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "38"
-      }
-    },
-    {
-      "$id": "123",
-      "$type": "RSTS.Card30, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "54"
-      }
-    },
-    {
-      "$id": "124",
-      "$type": "RSTS.Card23, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "42"
-      }
-    },
-    {
-      "$id": "125",
+      "$id": "83",
       "$type": "RSTS.Card101, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
@@ -870,17 +447,59 @@
       }
     },
     {
-      "$id": "126",
-      "$type": "RSTS.Card203, RSTS",
+      "$id": "84",
+      "$type": "RSTS.Card4, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "11"
+        "$ref": "16"
       }
     },
     {
-      "$id": "127",
+      "$id": "85",
+      "$type": "RSTS.Card101, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "55"
+      }
+    }
+  ],
+  "DrawList": [
+    {
+      "$id": "86",
+      "$type": "RSTS.Card0, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "4"
+      }
+    },
+    {
+      "$id": "87",
+      "$type": "RSTS.Card15, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "34"
+      }
+    },
+    {
+      "$id": "88",
+      "$type": "RSTS.Card115, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "70"
+      }
+    },
+    {
+      "$id": "89",
       "$type": "RSTS.Card13, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
@@ -890,37 +509,17 @@
       }
     },
     {
-      "$id": "128",
-      "$type": "RSTS.Card110, RSTS",
+      "$id": "90",
+      "$type": "RSTS.Card2, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "67"
+        "$ref": "14"
       }
     },
     {
-      "$id": "129",
-      "$type": "RSTS.Card29, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "53"
-      }
-    },
-    {
-      "$id": "130",
-      "$type": "RSTS.Card204, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "72"
-      }
-    },
-    {
-      "$id": "131",
+      "$id": "91",
       "$type": "RSTS.Card9, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
@@ -930,37 +529,207 @@
       }
     },
     {
-      "$id": "132",
+      "$id": "92",
+      "$type": "RSTS.Card6, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "18"
+      }
+    },
+    {
+      "$id": "93",
+      "$type": "RSTS.Card25, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "47"
+      }
+    },
+    {
+      "$id": "94",
+      "$type": "RSTS.Card27, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "51"
+      }
+    },
+    {
+      "$id": "95",
+      "$type": "RSTS.Card14, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "28"
+      }
+    },
+    {
+      "$id": "96",
+      "$type": "RSTS.Card203, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "11"
+      }
+    },
+    {
+      "$id": "97",
+      "$type": "RSTS.Card20, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "39"
+      }
+    },
+    {
+      "$id": "98",
+      "$type": "RSTS.Card110, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "67"
+      }
+    },
+    {
+      "$id": "99",
+      "$type": "RSTS.Card18, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "37"
+      }
+    },
+    {
+      "$id": "100",
+      "$type": "RSTS.Card30, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "54"
+      }
+    },
+    {
+      "$id": "101",
+      "$type": "RSTS.Card7, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "20"
+      }
+    },
+    {
+      "$id": "102",
+      "$type": "RSTS.Card26, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "50"
+      }
+    },
+    {
+      "$id": "103",
+      "$type": "RSTS.Card25, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "46"
+      }
+    },
+    {
+      "$id": "104",
+      "$type": "RSTS.Card29, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "53"
+      }
+    },
+    {
+      "$id": "105",
+      "$type": "RSTS.Card25, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "45"
+      }
+    },
+    {
+      "$id": "106",
+      "$type": "RSTS.Card203, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "13"
+      }
+    },
+    {
+      "$id": "107",
+      "$type": "RSTS.Card14, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "31"
+      }
+    },
+    {
+      "$id": "108",
       "$type": "RSTS.Card101, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "61"
+        "$ref": "63"
       }
     },
     {
-      "$id": "133",
-      "$type": "RSTS.Card24, RSTS",
+      "$id": "109",
+      "$type": "RSTS.Card21, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "43"
+        "$ref": "40"
       }
     },
     {
-      "$id": "134",
-      "$type": "RSTS.Card101, RSTS",
+      "$id": "110",
+      "$type": "RSTS.Card115, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "58"
+        "$ref": "71"
       }
     },
     {
-      "$id": "135",
+      "$id": "111",
+      "$type": "RSTS.Card106, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "66"
+      }
+    },
+    {
+      "$id": "112",
       "$type": "RSTS.Card103, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
@@ -970,17 +739,147 @@
       }
     },
     {
-      "$id": "136",
-      "$type": "RSTS.Card16, RSTS",
+      "$id": "113",
+      "$type": "RSTS.Card25, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "35"
+        "$ref": "44"
       }
     },
     {
-      "$id": "137",
+      "$id": "114",
+      "$type": "RSTS.Card101, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "57"
+      }
+    },
+    {
+      "$id": "115",
+      "$type": "RSTS.Card7, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "21"
+      }
+    },
+    {
+      "$id": "116",
+      "$type": "RSTS.Card14, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "33"
+      }
+    },
+    {
+      "$id": "117",
+      "$type": "RSTS.Card25, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "48"
+      }
+    },
+    {
+      "$id": "118",
+      "$type": "RSTS.Card28, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "52"
+      }
+    },
+    {
+      "$id": "119",
+      "$type": "RSTS.Card203, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "12"
+      }
+    },
+    {
+      "$id": "120",
+      "$type": "RSTS.Card115, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "69"
+      }
+    },
+    {
+      "$id": "121",
+      "$type": "RSTS.Card6008, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "9"
+      }
+    },
+    {
+      "$id": "122",
+      "$type": "RSTS.Card11, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "25"
+      }
+    },
+    {
+      "$id": "123",
+      "$type": "RSTS.Card14, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "30"
+      }
+    },
+    {
+      "$id": "124",
+      "$type": "RSTS.Card90, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "6"
+      }
+    },
+    {
+      "$id": "125",
+      "$type": "RSTS.Card24, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "43"
+      }
+    },
+    {
+      "$id": "126",
+      "$type": "RSTS.Card14, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "32"
+      }
+    },
+    {
+      "$id": "127",
       "$type": "RSTS.Card102, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
@@ -990,13 +889,114 @@
       }
     },
     {
-      "$id": "138",
-      "$type": "RSTS.Card15, RSTS",
+      "$id": "128",
+      "$type": "RSTS.Card17, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "34"
+        "$ref": "36"
+      }
+    },
+    {
+      "$id": "129",
+      "$type": "RSTS.Card1, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "8"
+      }
+    },
+    {
+      "$id": "130",
+      "$type": "RSTS.Card7, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "19"
+      }
+    },
+    {
+      "$id": "131",
+      "$type": "RSTS.Card10, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "24"
+      }
+    },
+    {
+      "$id": "132",
+      "$type": "RSTS.Card101, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "60"
+      }
+    },
+    {
+      "$id": "133",
+      "$type": "RSTS.Card3, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "15"
+      }
+    },
+    {
+      "$id": "134",
+      "$type": "RSTS.Card5, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "17"
+      }
+    },
+    {
+      "$id": "135",
+      "$type": "RSTS.Card100, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "5"
+      }
+    },
+    {
+      "$id": "136",
+      "$type": "RSTS.Card8, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "22"
+      }
+    },
+    {
+      "$id": "137",
+      "$type": "RSTS.Card204, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "72"
+      }
+    },
+    {
+      "$id": "138",
+      "$type": "RSTS.Card19, RSTS",
+      "useTime": 0,
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "38"
       }
     },
     {
@@ -1011,46 +1011,16 @@
     },
     {
       "$id": "140",
-      "$type": "RSTS.Card14, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "28"
-      }
-    },
-    {
-      "$id": "141",
       "$type": "RSTS.Card101, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "55"
+        "$ref": "58"
       }
     },
     {
-      "$id": "142",
-      "$type": "RSTS.Card14, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "31"
-      }
-    },
-    {
-      "$id": "143",
-      "$type": "RSTS.Card12, RSTS",
-      "TempUpgradeLevel": 0,
-      "Target": null,
-      "IsTemporary": false,
-      "cardInBattle": {
-        "$ref": "26"
-      }
-    },
-    {
-      "$id": "144",
+      "$id": "141",
       "$type": "RSTS.Card22, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
@@ -1060,57 +1030,88 @@
       }
     },
     {
-      "$id": "145",
-      "$type": "RSTS.Card7, RSTS",
+      "$id": "142",
+      "$type": "RSTS.Card110, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "19"
+        "$ref": "68"
+      }
+    },
+    {
+      "$id": "143",
+      "$type": "RSTS.Card16, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "35"
+      }
+    },
+    {
+      "$id": "144",
+      "$type": "RSTS.Card23, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "42"
+      }
+    }
+  ],
+  "DiscardList": [
+    {
+      "$id": "145",
+      "$type": "RSTS.Card25, RSTS",
+      "TempUpgradeLevel": 0,
+      "Target": null,
+      "IsTemporary": false,
+      "cardInBattle": {
+        "$ref": "49"
       }
     },
     {
       "$id": "146",
-      "$type": "RSTS.Card115, RSTS",
+      "$type": "RSTS.Card101, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "69"
+        "$ref": "61"
       }
     },
     {
       "$id": "147",
-      "$type": "RSTS.Card6, RSTS",
+      "$type": "RSTS.Card101, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "18"
+        "$ref": "62"
       }
     },
     {
       "$id": "148",
-      "$type": "RSTS.Card20, RSTS",
+      "$type": "RSTS.Card1, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "39"
+        "$ref": "7"
       }
     },
     {
       "$id": "149",
-      "$type": "RSTS.Card14, RSTS",
+      "$type": "RSTS.Card5000, RSTS",
       "TempUpgradeLevel": 0,
       "Target": null,
       "IsTemporary": false,
       "cardInBattle": {
-        "$ref": "32"
+        "$ref": "10"
       }
     }
   ],
-  "DiscardList": [],
   "ExhaustList": [],
-  "loseHpCount": 0
+  "loseHpCount": 2
 }
