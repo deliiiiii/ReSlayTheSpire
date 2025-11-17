@@ -8,6 +8,12 @@ using UnityEngine;
 public class TestAnything : Singleton<TestAnything>
 {
     [Button]
+    public void TestFSM()
+    {
+        // MyFSM.Register();
+    }
+    
+    [Button]
     public void EnterGameState(EGameState gameState)
     {
         MyFSM.EnterState(GameStateWrap.One, gameState);

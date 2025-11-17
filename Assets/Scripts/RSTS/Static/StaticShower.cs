@@ -12,7 +12,7 @@ public class StaticShower : Singleton<StaticShower>
     [ShowInInspector] static string BattleState => GetState(BattleStateWrap.One);
     [ShowInInspector] static string YieldCardState => GetState(BothTurnStateWrap.One);
     static string GetState<TEnum, TArg>(StateWrap<TEnum, TArg> one)
-        where TEnum : Enum
+        where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
         => !Application.isPlaying ? NotInPlayMode : MyFSM.ShowState(one);
     #endregion

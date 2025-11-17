@@ -19,8 +19,8 @@ public class MyState
     {
         OnUpdate?.Invoke(dt);
     }
-    [CanBeNull] public event Action<float> OnUpdate;
-    [CanBeNull] public event Action OnEnter;
-    [CanBeNull] public event Action OnExit;
-    [CanBeNull] public event Action OnDestroy;
+    public event Action<float>? OnUpdate;
+    public event Action? OnEnter;
+    public event Action? OnExit;
+    public event Action? OnDestroy;
 }

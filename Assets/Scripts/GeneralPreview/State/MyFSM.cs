@@ -5,44 +5,47 @@ using Sirenix.Utilities;
 
 public abstract class MyFSM
 {
-    static readonly Dictionary<Type, MyFSM> fsmDic = new();
+    static readonly Dictionary<Type, StateWrap> wrapDic = [];
     // bindAlwaysDic包括了State的OnEnter、OnExit，和Data的事件绑定回调，如data.OnXXXEvent += () => {}
-    static readonly Dictionary<Type, List<Action<IMyFSMArg>>> bindAlwaysDic = new();
+    static readonly Dictionary<Type, List<Action<IMyFSMArg>>> bindAlwaysDic = [];
     // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
-    static readonly Dictionary<Type, List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>> unbindDic = new();
+    static readonly Dictionary<Type, List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>> unbindDic = [];
     // tickDic包括状态机的Update调用的OnUpdate，和自己绑定的与Data有关的Tick委托（类型Action<float, IMyFSMArg>）
-    static readonly Dictionary<Type, List<BindDataUpdate>> tickDic = new();
-    // 只有Register了以后，才会加入selfTickDic
-    static readonly Dictionary<Type, BindDataUpdate> selfTickDic = new();
-    // 只有Register了以后，才会加入argDic
-    static readonly Dictionary<Type, IMyFSMArg> argDic = new();
-
+    static readonly Dictionary<Type, List<BindDataUpdate>> tickDic = [];
+    
     public static void Register<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state, Func<MyFSM<TEnum>, TArg> argCtor)
-        where TEnum : Enum
+        where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
     {
-        var fsm = Get<TEnum>();
-        if (fsm != null)
+        var type = one.GetType();
+        var wrap = Get(one);
+        if (wrap != null)
         {
-            MyDebug.LogError($"FSM{typeof(TEnum).Name} Duplicated");
+            MyDebug.LogError($"Wrap {type.Name} Duplicated");
             return;
         }
-        var type = typeof(TEnum);
-        // IBL的Init，写在构造函数里了。
-        fsmDic[type] = fsm = new MyFSM<TEnum>();
+        // 【0】添加Wrap
+        wrapDic.Add(type, one);
+        wrap = one;
+        var fsm = new MyFSM<TEnum>();
+        wrap.Fsm = fsm; 
+        // 【1】IBL的Init，写在构造函数里了。
         var arg = argCtor(fsm);
-        argDic[type] = arg;
-        // IBL的Bind
+        wrap.Arg = arg;
+        // 【1.1】绑定自身Tick
+        var selfTick = Binder.FromTick(dt => fsm.Update(dt), EUpdatePri.Fsm);
+        wrap.SelfTick = selfTick;
+        
+        // 【2】IBL的Bind
         if (unbindDic.TryGetValue(type, out var unbindFuncList)) 
             unbindFuncList?.ForEach(func =>func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
         if (bindAlwaysDic.TryGetValue(type, out var bindAlwaysActList)) 
             bindAlwaysActList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(arg));
-        // IBL的Launch
+        // 【3】IBL的Launch
         arg.Launch();
         if(tickDic.TryGetValue(type, out var tickActList))
             tickActList.ForEach(bindDataUpdate => bindDataUpdate.Bind());
-        selfTickDic.Add(type, Binder.FromTick(fsm.Update, EUpdatePri.Fsm));
-        selfTickDic[type].Bind();
+        // 【4】进入初始状态
         EnterState(one, state);
     }
     
@@ -51,88 +54,97 @@ public abstract class MyFSM
         Action<MyFSM<TEnum>, TArg>? alwaysBind = null,
         Func<TArg, IEnumerable<BindDataBase>>? canUnbind = null,
         Action<float, TArg>? tick = null)
-        where TEnum : Enum
+        where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
     {
-        var type = typeof(TEnum);
-        unbindDic.TryAdd(type, new List<Func<IMyFSMArg, IEnumerable<BindDataBase>>>());
+        var type = one.GetType();
+        unbindDic.TryAdd(type, []);
         if(canUnbind != null)
             unbindDic[type].Add(arg => canUnbind((TArg)arg));
-        bindAlwaysDic.TryAdd(type, new List<Action<IMyFSMArg>>());
+        bindAlwaysDic.TryAdd(type, []);
         if(alwaysBind != null)
-            bindAlwaysDic[type].Add(arg => alwaysBind.Invoke(Get<TEnum>()!, (TArg)arg));
-        tickDic.TryAdd(type, new List<BindDataUpdate>());
+            bindAlwaysDic[type].Add(arg => alwaysBind.Invoke(Get(one)?.Fsm!, (TArg)arg));
+        tickDic.TryAdd(type, []);
         if(tick != null)
-            tickDic[type].Add(Binder.FromTick(dt => tick(dt, (TArg)argDic[type]), EUpdatePri.Fsm));
+            tickDic[type].Add(Binder.FromTick(dt => tick(dt, Get(one)?.Arg!), EUpdatePri.Fsm));
     }
 
     public static void Release<TEnum, TArg>(StateWrap<TEnum, TArg> one)
-        where TEnum : Enum
+        where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
     {
-        if (!TryGet<TEnum>(nameof(Release), out var fsm))
+        if (!TryGet(one, nameof(Release), out var wrap))
             return;
-        var type = typeof(TEnum);
-        // 跳转到空状态
-        fsm.OnDestroy();
-        selfTickDic[type].UnBind();
-        selfTickDic.Remove(type);
+        var type = one.GetType();
+        // 【4】跳转到空状态
+        wrap.Fsm.OnDestroy();
+        // 【3】Launch的反向
+        wrap.Arg.UnInit();
         tickDic[type].ForEach(bindDataUpdate => bindDataUpdate.UnBind());
-        argDic[type].UnInit();
-        unbindDic[type]?.ForEach(func => func.Invoke(argDic[type]).ForEach(bindDataBase => bindDataBase.UnBind()));
-        fsmDic.Remove(type);
-        argDic.Remove(type);
+        // 【2】Bind的反向
+        unbindDic[type]?.ForEach(func => func.Invoke(wrap.Arg).ForEach(bindDataBase => bindDataBase.UnBind()));
+        // 【1.1】自身Tick的反向。【1】构造函数不用反向。
+        wrap.SelfTick.UnBind();
+        // 移除Wrap
+        wrapDic.Remove(type);
     }
 
     public static void EnterState<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state)
-        where TEnum : Enum
+        where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
     {
-        if (!TryGet<TEnum>(nameof(EnterState), out var fsm))
+        if (!TryGet(one, nameof(EnterState), out var wrap))
             return;
-        fsm.ChangeState(state);
+        wrap.Fsm.ChangeState(state);
     }
 
     public static bool IsState<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state)
-        where TEnum : Enum
+        where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
-        => Get<TEnum>()?.IsOneOfState(state) ?? false;
+        => Get(one)?.Fsm.IsOneOfState(state) ?? false;
 
     public static bool IsState<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state, out TArg arg)
-        where TEnum : Enum
+        where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
     {
-        var ret = Get<TEnum>()?.IsOneOfState(state) ?? false;
-        arg = ret ? (TArg)argDic[typeof(TEnum)] : null!;
+        var wrap = Get(one);
+        var ret = wrap?.Fsm.IsOneOfState(state) ?? false;
+        arg = ret ? wrap?.Arg ?? null! : null!;
         return ret;
     }
 
     public static string ShowState<TEnum, TArg>(StateWrap<TEnum, TArg> one)
-        where TEnum : Enum
+        where TEnum : struct, Enum
         where TArg : class, IMyFSMArg
     {
-        return Get<TEnum>()?.CurStateName ?? "Null";
+        return Get(one)?.Fsm.CurStateName ?? "Null";
     }
 
-    static bool TryGet<TEnum>(string log, out MyFSM<TEnum> fsm) where TEnum : Enum
+    static bool TryGet<TEnum, TArg>(StateWrap<TEnum, TArg> one, string log, out StateWrap<TEnum, TArg> wrap) 
+        where TEnum : struct, Enum
+        where TArg : class, IMyFSMArg
     {
-        fsm = Get<TEnum>()!;
-        if (fsm != null)
+        wrap = Get(one)!;
+        if (wrap != null)
             return true;
-        MyDebug.LogError($"FSM{typeof(TEnum).Name} Not Exist when {log}");
+        MyDebug.LogError($"TryGet wrap {one.GetType().Name} Not Exist when {log}");
         return false;
     }
-    static MyFSM<TEnum>? Get<TEnum>() where TEnum : Enum
+
+    static StateWrap<TEnum, TArg>? Get<TEnum, TArg>(StateWrap<TEnum, TArg> one)
+        where TEnum : struct, Enum
+        where TArg : class, IMyFSMArg
     {
-        if (fsmDic.TryGetValue(typeof(TEnum), out var holder))
-            return holder as MyFSM<TEnum>;
+        if (wrapDic.TryGetValue(one.GetType(), out var wrap))
+            return wrap as StateWrap<TEnum, TArg>;
         return null;
     }
+
 }
 
 [Serializable]
 public class MyFSM<TEnum> : MyFSM 
-    where TEnum : Enum
+    where TEnum : struct, Enum
 { 
     public MyFSM()
     {
