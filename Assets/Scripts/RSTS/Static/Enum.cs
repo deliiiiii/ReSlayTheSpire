@@ -1,4 +1,6 @@
-﻿namespace RSTS;
+﻿using System;
+
+namespace RSTS;
 
 public enum EGameState
 {
@@ -6,7 +8,16 @@ public enum EGameState
     Title,
     Battle,
 }
-public class GameFSM : MyFSMForData<GameFSM, EGameState, GameData>;
+
+public static class FSM
+{
+    public static readonly GameFSM Game = new();
+}
+
+public class GameFSM : MyFSMForData<EGameState, GameData>
+{
+    public readonly BattleFSM Battle = new();
+}
 
 public enum EBattleState
 {
@@ -18,7 +29,10 @@ public enum EBattleState
     Win,
 }
 
-public class BattleFSM : MyFSMForData<BattleFSM, EBattleState, BattleData>;
+public class BattleFSM : MyFSMForData<EBattleState, BattleData>
+{
+    public readonly BothTurnFSM BothTurn = new();
+}
 
 public enum EBothTurn
 {
@@ -32,7 +46,10 @@ public enum EBothTurn
     EnemyTurnEnd,
 }
 
-public class BothTurnFSM : MyFSMForData<BothTurnFSM, EBothTurn, BothTurnData>;
+public class BothTurnFSM : MyFSMForData<EBothTurn, BothTurnData>
+{
+    public readonly YieldCardFSM YieldCard = new();
+}
 
 public enum EYieldCardState
 {
@@ -40,7 +57,7 @@ public enum EYieldCardState
     Drag,
 }
 
-public class YieldCardFSM : MyFSMForData<YieldCardFSM, EYieldCardState, YieldCardData>;
+public class YieldCardFSM : MyFSMForData<EYieldCardState, YieldCardData>;
 
 public enum EPlayerJob
 {

@@ -20,14 +20,11 @@ public class TitleView : ViewBase
     }
     IEnumerable<BindDataBase> CanUnbindGame(MyFSMForView<EGameState, GameData> fsm)
     {
-        yield return Binder.FromEvt(BtnStart.onClick).To(() =>
-        {
-            fsm.EnterState(EGameState.Battle);
-        });
+        yield return Binder.FromEvt(BtnStart.onClick).To(() => fsm.EnterState(EGameState.Battle));
     }
 
     public override void Bind()
     {
-        GameFSM.OnRegister(alwaysBind: BindGame, canUnbind: CanUnbindGame);
+        FSM.Game.OnRegister(alwaysBind: BindGame, canUnbind: CanUnbindGame);
     }
 }

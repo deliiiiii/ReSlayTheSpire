@@ -15,7 +15,7 @@ public enum EGameState
     Winning,
 }
 
-public class GameFSM : MyFSMForData<GameFSM, EGameState, IMyFSMArg<GameFSM>>;
+public class GameFSM : MyFSMForData<EGameState, IMyFSMArg<EGameState>>;
 
 public class GameState : SingletonCS<GameState>
 {

@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using Sirenix.Utilities;
 
-public class MyFSMForView<TEnum, TArg>
+public abstract class MyFSMForView<TEnum, TArg>
     where TEnum : struct, Enum
-    where TArg : class
+    where TArg : class, IMyFSMArg<TEnum>
 {
     public TArg Arg = null!;
     protected MyState? CurStateClass;
@@ -36,27 +36,24 @@ public class MyFSMForView<TEnum, TArg>
         CurState = e;
         CurStateClass.Enter();
     }
+    public bool IsOneOfState(params Enum[] enums) => enums.Contains(CurState);
+    public bool IsState(TEnum e) => IsOneOfState(e);
+    public string CurStateName => CurState?.ToString() ?? "Null";
 
     protected MyState GetStateSub(TEnum e) => (GetState(e) as MyState)!;
-}
-
-public class MyFSMForView<TForData, TEnum, TArg> : MyFSMForView<TEnum, TArg>
-    where TForData : MyFSMForView<TForData, TEnum, TArg>, new()
-    where TEnum : struct, Enum
-    where TArg : class, IMyFSMArg<TForData>
-{
-    protected static readonly TForData One = new ();
-    public static void OnRegister(
+    
+    
+    public void OnRegister(
         Action<MyFSMForView<TEnum, TArg>>? alwaysBind = null,
         Func<MyFSMForView<TEnum, TArg>, IEnumerable<BindDataBase>>? canUnbind = null,
         Action<float, TArg>? tick = null)
     {
         if(canUnbind != null)
-            One.CanUnBind.Add(canUnbind);
+            CanUnBind.Add(canUnbind);
         if(alwaysBind != null)
-            One.BindAlways.Add(alwaysBind.Invoke);
+            BindAlways.Add(alwaysBind.Invoke);
         if(tick != null)
-            One.Tick.Add(Binder.FromTick(dt => tick(dt, One.Arg), EUpdatePri.Fsm));
+            Tick.Add(Binder.FromTick(dt => tick(dt, Arg), EUpdatePri.Fsm));
     }
     
     // bindAlwaysDic包括了State的OnEnter、OnExit，和Data的事件绑定回调，如data.OnXXXEvent += () => {}
@@ -67,82 +64,69 @@ public class MyFSMForView<TForData, TEnum, TArg> : MyFSMForView<TEnum, TArg>
     internal readonly List<BindDataUpdate> Tick = [];
 }
 
-
 [Serializable]
-public class MyFSMForData<TForData, TEnum, TArg> : MyFSMForView<TForData, TEnum, TArg>
-    where TForData : MyFSMForData<TForData, TEnum, TArg>, new()
+public abstract class MyFSMForData<TEnum, TArg> : MyFSMForView<TEnum, TArg>
     where TEnum : struct, Enum
-    where TArg : class, IMyFSMArg<TForData>
+    where TArg : class, IMyFSMArg<TEnum>
 {
-    public static void EnterStateStatic(TEnum state) => One.EnterState(state);
-    public static bool IsStateStatic(TEnum state) => One.IsOneOfState(state);
-    public static bool IsStateStatic(TEnum state, out MyFSMForView<TEnum, TArg> fsm)
-    {
-        var ret = One.IsOneOfState(state);
-        fsm = One;
-        return ret;
-    }
-    public static string CurStateNameStatic => One.CurState?.ToString() ?? "Null";
-    
-    
     bool isRegistered;
     BindDataUpdate selfTick = null!;
     readonly List<BindDataBase> unbindableInstances = [];
     
-    public static void Register(TEnum state, TArg arg)
+    public void Register(TEnum state, TArg arg)
     {
-        if (One.isRegistered)
+        if (isRegistered)
         {
-            MyDebug.LogError($"Register FSM: {typeof(TForData).Name} Duplicated");
+            MyDebug.LogError($"Register FSM: {GetType().Name} Duplicated");
             return;
         }
         // 【0】添加FSM
-        One.isRegistered = true;
+        isRegistered = true;
         // 【1】IBL的Init，写在构造函数里了。
-        One.Arg = arg;
+        Arg = arg;
         // 【1.1】绑定自身Tick
-        One.selfTick = Binder.FromTick(One.Update, EUpdatePri.Fsm);
+        selfTick = Binder.FromTick(Update, EUpdatePri.Fsm);
         // 【2】IBL的Bind
-        One.Arg.Bind(One);
-        One.unbindableInstances.Clear();
-        One.unbindableInstances.Clear();
-        One.CanUnBind.ForEach(func =>
+        Arg.Bind(GetStateSub);
+        unbindableInstances.Clear();
+        unbindableInstances.Clear();
+        CanUnBind.ForEach(func =>
         {
-            func.Invoke(One).ForEach(bdb =>
+            func.Invoke(this).ForEach(bdb =>
             {
                 bdb.Bind();
-                One.unbindableInstances.Add(bdb);
+                unbindableInstances.Add(bdb);
             });
         });
-        One.BindAlways.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(One));
-        One.Tick.ForEach(bindDataUpdate => bindDataUpdate.Bind());
+        BindAlways.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(this));
+        Tick.ForEach(bindDataUpdate => bindDataUpdate.Bind());
         // 【3】IBL的Launch
-        One.Arg.Launch();
+        Arg.Launch();
         // 【4】进入初始状态
-        One.Launch(state);
+        Launch(state);
     }
 
-    public static void Release()
+    public void Release()
     {
-        if (!One.isRegistered)
+        if (!isRegistered)
         {
-            MyDebug.LogError($"Release FSM: {typeof(TForData).Name} Not Exist");
+            MyDebug.LogError($"Release FSM: {GetType().Name} Not Exist");
             return;
         }
         // 【4】跳转到空状态，并清空所有状态类
-        One.OnDestroy();
+        OnDestroy();
         // 【3】Launch的反向
-        One.Arg.UnInit();
+        Arg.UnInit();
         // 【2】Bind的反向
-        One.Tick.ForEach(bindDataUpdate => bindDataUpdate.UnBind());
-        One.unbindableInstances.ForEach(instance => instance.UnBind());
-        One.unbindableInstances.Clear();
+        Tick.ForEach(bindDataUpdate => bindDataUpdate.UnBind());
+        unbindableInstances.ForEach(instance => instance.UnBind());
+        unbindableInstances.Clear();
         // 【1.1】自身Tick的反向。
-        One.selfTick.UnBind();
+        selfTick.UnBind();
         // 【1】构造函数不用反向。
-        One.Arg = null!;
+        Arg = null!;
         // 【0】移除Wrap
-        One.isRegistered = false;
+        isRegistered = false;
     }
     
     
@@ -165,5 +149,4 @@ public class MyFSMForData<TForData, TEnum, TArg> : MyFSMForView<TForData, TEnum,
         CurState = null;
         CurStateClass = null;
     }
-    protected bool IsOneOfState(params Enum[] enums) => enums.Contains(CurState);
 }

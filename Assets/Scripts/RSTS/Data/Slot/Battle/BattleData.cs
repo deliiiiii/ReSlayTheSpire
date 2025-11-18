@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace RSTS;
 [Serializable]
-public class BattleData : IMyFSMArg<BattleFSM>
+public class BattleData : IMyFSMArg<EBattleState>
 {
     public EPlayerJob Job = EPlayerJob.ZhanShi;
     public MyList<CardInBattle> DeckList = [];
@@ -23,15 +23,15 @@ public class BattleData : IMyFSMArg<BattleFSM>
     public Observable<float> InBattleTime = new(0);
 
     #region IMyFSMArg
-    public void Bind(BattleFSM fsm)
+    public void Bind(Func<EBattleState, MyState> getState)
     {
-        fsm.GetState(EBattleState.BothTurn)
+        getState(EBattleState.BothTurn)
             .OnEnter(() =>
             {
                 // 跳过GrossStart阶段
-                BothTurnFSM.Register(EBothTurn.PlayerTurnStart, new BothTurnData(fsm.Arg));
+                FSM.Game.Battle.BothTurn.Register(EBothTurn.PlayerTurnStart, new BothTurnData(FSM.Game.Battle.Arg));
             })
-            .OnExit(BothTurnFSM.Release);
+            .OnExit(FSM.Game.Battle.BothTurn.Release);
     }
 
     public void Launch()

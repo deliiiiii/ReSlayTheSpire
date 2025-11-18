@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace RSTS;
 [Serializable]
-public class BothTurnData : IMyFSMArg<BothTurnFSM>
+public class BothTurnData : IMyFSMArg<EBothTurn>
 {
     public void Save() => Saver.Save("DataSaved", nameof(BothTurnData), this);
     public BothTurnData Load() => Saver.Load<BothTurnData>("DataSaved", nameof(BothTurnData));
@@ -52,14 +52,16 @@ public class BothTurnData : IMyFSMArg<BothTurnFSM>
         DeckList = battleData.DeckList;
     }
     
-    public void Bind(BothTurnFSM fsm)
+
+    public void Bind(Func<EBothTurn, MyState> getState)
     {
-        fsm.GetState(EBothTurn.GrossStart).OnEnter(() =>
+        var fsm = FSM.Game.Battle.BothTurn;
+        getState(EBothTurn.GrossStart).OnEnter(() =>
         {
             fsm.EnterState(EBothTurn.PlayerTurnStart);
         });
         
-        fsm.GetState(EBothTurn.PlayerTurnStart).OnEnter(() =>
+        getState(EBothTurn.PlayerTurnStart).OnEnter(() =>
         {
             TurnID++;
             PlayerBlock.Value = 0;
@@ -71,17 +73,17 @@ public class BothTurnData : IMyFSMArg<BothTurnFSM>
             fsm.EnterState(EBothTurn.PlayerDraw);
         });
         
-        fsm.GetState(EBothTurn.PlayerDraw).OnEnter(() =>
+        getState(EBothTurn.PlayerDraw).OnEnter(() =>
         {
             DrawSome(5);
             fsm.EnterState(EBothTurn.PlayerYieldCard);
         });
         
-        fsm.GetState(EBothTurn.PlayerYieldCard)
-            .OnEnter(() => YieldCardFSM.Register(EYieldCardState.None, new YieldCardData()))
-            .OnExit(YieldCardFSM.Release);
+        getState(EBothTurn.PlayerYieldCard)
+            .OnEnter(() => fsm.YieldCard.Register(EYieldCardState.None, new YieldCardData()))
+            .OnExit(fsm.YieldCard.Release);
         
-        fsm.GetState(EBothTurn.PlayerTurnEnd).OnEnter(() =>
+        getState(EBothTurn.PlayerTurnEnd).OnEnter(() =>
         {
             HandList.ForEach(cardData => cardData.OnPlayerTurnEnd(this));
             DiscardAllHand();
@@ -90,7 +92,7 @@ public class BothTurnData : IMyFSMArg<BothTurnFSM>
             fsm.EnterState(EBothTurn.EnemyTurnStart);
         });
         
-        fsm.GetState(EBothTurn.EnemyTurnStart).OnEnter(() =>
+        getState(EBothTurn.EnemyTurnStart).OnEnter(() =>
         {
             EnemyList.ForEach(enemyData =>
             {
@@ -110,7 +112,7 @@ public class BothTurnData : IMyFSMArg<BothTurnFSM>
             // }
         });
 
-        fsm.GetState(EBothTurn.EnemyAction).OnEnter(() =>
+        getState(EBothTurn.EnemyAction).OnEnter(() =>
         {
             Func().Forget();
             return;
@@ -122,7 +124,7 @@ public class BothTurnData : IMyFSMArg<BothTurnFSM>
                     var resultList = await enemyData.DoCurIntentionAsync(this);
                     if (resultList.AnyType<AttackResultDie>())
                     {
-                        BattleFSM.EnterStateStatic(EBattleState.Lose);
+                        FSM.Game.Battle.EnterState(EBattleState.Lose);
                         return;
                     }
                     await UniTask.Delay(200);
@@ -131,7 +133,7 @@ public class BothTurnData : IMyFSMArg<BothTurnFSM>
             }
         });
         
-        fsm.GetState(EBothTurn.EnemyTurnEnd).OnEnter(() =>
+        getState(EBothTurn.EnemyTurnEnd).OnEnter(() =>
         {
             EnemyList.ForEach(enemyData =>
             {
@@ -342,7 +344,7 @@ public class BothTurnData : IMyFSMArg<BothTurnFSM>
         await toYield.YieldAsync(this, cost);
         if(EnemyList.Count == 0)
         {
-            BattleFSM.EnterStateStatic(EBattleState.Win);
+            FSM.Game.Battle.EnterState(EBattleState.Win);
         }
     }
 
@@ -498,7 +500,7 @@ public class BothTurnData : IMyFSMArg<BothTurnFSM>
     {
         PlayerCurHP.Value -= loseHP;
         if (PlayerCurHP <= 0)
-            BattleFSM.EnterStateStatic(EBattleState.Lose);
+            FSM.Game.Battle.EnterState(EBattleState.Lose);
     }
     
     public void GainBlock(int addedBlock) => PlayerBlock.Value += addedBlock;

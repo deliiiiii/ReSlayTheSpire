@@ -6,7 +6,7 @@ namespace RSTS;
 
 public class StaticShower : Singleton<StaticShower>
 {
-    [ShowInInspector] string GameState => GameFSM.CurStateNameStatic;
-    [ShowInInspector] static string BattleState => BattleFSM.CurStateNameStatic;
-    [ShowInInspector] static string YieldCardState => BothTurnFSM.CurStateNameStatic;
+    [ShowInInspector] string GameState => FSM.Game.CurStateName;
+    [ShowInInspector] static string BattleState => FSM.Game.Battle.CurStateName;
+    [ShowInInspector] static string YieldCardState => FSM.Game.Battle.BothTurn.YieldCard.CurStateName;
 }

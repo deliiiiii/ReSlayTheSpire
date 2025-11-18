@@ -118,7 +118,7 @@ public class BattleView : ViewBase
     {
         foreach (var btn in LastBuffBtnList) 
             yield return Binder.FromEvt(btn.onClick).To(() => fsm.EnterState(EBattleState.BothTurn));
-        yield return Binder.FromEvt(BtnReturnToTitle.onClick).To(() => GameFSM.EnterStateStatic(EGameState.Title));
+        yield return Binder.FromEvt(BtnReturnToTitle.onClick).To(() => FSM.Game.EnterState(EGameState.Title));
     }
     void BindBothTurn(MyFSMForView<EBothTurn, BothTurnData> fsm)
     {
@@ -169,7 +169,7 @@ public class BattleView : ViewBase
 
             cardModel.OnPointerEnterEvt += () =>
             {
-                if (YieldCardFSM.IsStateStatic(EYieldCardState.Drag))
+                if (FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
                     return;
                 CurDragCard.ReadDataInBothTurn(cardData, bothTurnData);
                 initThisPos = CurDragCard.transform.position = cardModel.transform.position;
@@ -180,16 +180,17 @@ public class BattleView : ViewBase
             };
             cardModel.OnPointerExitEvt += () =>
             {
-                if (YieldCardFSM.IsStateStatic(EYieldCardState.Drag))
+                if (FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
                     return;
                 CurDragCard.transform.localScale = initScale;
                 CurDragCard.gameObject.SetActive(false);
             };
             cardModel.OnBeginDragEvt += worldPos =>
             {
-                if (YieldCardFSM.IsStateStatic(EYieldCardState.Drag, out var fsm2))
+                if (FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
                     return;
-                var yieldCardData = fsm2.Arg;
+                var yieldCardFSM = FSM.Game.Battle.BothTurn.YieldCard;
+                var yieldCardData = yieldCardFSM.Arg;
                 yieldCardData.CardModel = CurDragCard;
                 yieldCardData.CardData = cardData;
                 CharacterModelHolder.HidePlayerWarning();
@@ -199,7 +200,7 @@ public class BattleView : ViewBase
                     return;
                 }
                 cardModel.EnableAllShown(false);
-                fsm2.EnterState(EYieldCardState.Drag);
+                yieldCardFSM.EnterState(EYieldCardState.Drag);
                 initPointerPos = worldPos;
                 if (!cardData.HasTarget)
                 {
@@ -208,7 +209,7 @@ public class BattleView : ViewBase
             };
             cardModel.OnDragEvt += worldPos =>
             {
-                if (!YieldCardFSM.IsStateStatic(EYieldCardState.Drag))
+                if (!FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
                     return;
                 var delta = worldPos - initPointerPos;
                 CurDragCard.transform.position =
@@ -216,10 +217,10 @@ public class BattleView : ViewBase
             };
             cardModel.OnEndDragEvt += screenPos =>
             {
-                if (!YieldCardFSM.IsStateStatic(EYieldCardState.Drag, out var fsm2))
+                if (!FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
                     return;
                 cardModel.EnableAllShown(true);
-                fsm2.EnterState(EYieldCardState.None);
+                FSM.Game.Battle.BothTurn.YieldCard.EnterState(EYieldCardState.None);
 
                 CurDragCard.gameObject.SetActive(false);
                 if (!cardData.HasTarget)
@@ -335,12 +336,12 @@ public class BattleView : ViewBase
 
     public override void Bind()
     {
-        GameFSM.OnRegister(alwaysBind: BindGame);
-        BattleFSM.OnRegister(
+        FSM.Game.OnRegister(alwaysBind: BindGame);
+        FSM.Game.Battle.OnRegister(
             alwaysBind: BindBattle,
             canUnbind: CanUnbindBattle
         );
-        BothTurnFSM.OnRegister(
+        FSM.Game.Battle.BothTurn.OnRegister(
             alwaysBind: BindBothTurn,
             canUnbind: CanUnbindBothTurn);
     }

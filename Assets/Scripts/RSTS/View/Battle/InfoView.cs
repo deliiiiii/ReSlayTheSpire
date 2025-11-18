@@ -35,7 +35,7 @@ public class InfoView : ViewBase
     IEnumerable<BindDataBase> CanUnbindBattle(MyFSMForView<EBattleState, BattleData> fsm)
     {
         var battleData = fsm.Arg;
-        yield return Binder.FromEvt(BtnExitBattle.onClick).To(() => GameFSM.EnterStateStatic(EGameState.Title));
+        yield return Binder.FromEvt(BtnExitBattle.onClick).To(() => FSM.Game.EnterState(EGameState.Title));
         yield return Binder.FromObs(battleData.CurHP).To(v => ShowHP(v, battleData.MaxHP));
         yield return Binder.FromObs(battleData.MaxHP).To(v => ShowHP(battleData.CurHP, v));
         yield return Binder.FromObs(battleData.Coin).To(v => TxtCoin.text = v.ToString());
@@ -58,7 +58,7 @@ public class InfoView : ViewBase
 
     public override void Bind()
     {
-        BattleFSM.OnRegister(
+        FSM.Game.Battle.OnRegister(
             alwaysBind: BindBattle,
             canUnbind: CanUnbindBattle,
             tick: TickBattle);

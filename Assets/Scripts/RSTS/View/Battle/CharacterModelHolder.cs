@@ -72,9 +72,9 @@ public class CharacterModelHolder : ViewBase
             enemyModel.OnPointerEnterEvt += () =>
             {
                 // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt try...");
-                if (!YieldCardFSM.IsStateStatic(EYieldCardState.Drag, out var fsm2))
+                if (!FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
                     return;
-                var yieldCardData = fsm2.Arg;
+                var yieldCardData = FSM.Game.Battle.BothTurn.YieldCard.Arg;
                 if (!yieldCardData.CardData.HasTarget)
                     return;
                 yieldCardData.CardData.Target = enemyData;
@@ -87,9 +87,9 @@ public class CharacterModelHolder : ViewBase
 
             enemyModel.OnPointerExitEvt += () =>
             {
-                if (!YieldCardFSM.IsStateStatic(EYieldCardState.Drag, out var fsm2))
+                if (!FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
                     return;
-                var yieldCardData = fsm2.Arg;
+                var yieldCardData = FSM.Game.Battle.BothTurn.YieldCard.Arg;
                 yieldCardData.CardData.Target = null;
                 yieldCardData.CardModel.RefreshTxtDes();
                 enteredTargetEnemyModels.Remove(enemyModel);
@@ -135,8 +135,8 @@ public class CharacterModelHolder : ViewBase
 
     public override void Bind()
     {
-        BattleFSM.OnRegister(alwaysBind: BindBattle);
-        BothTurnFSM.OnRegister(alwaysBind: BindBothTurn);
-        YieldCardFSM.OnRegister(alwaysBind: BindYieldCard);
+        FSM.Game.Battle.OnRegister(alwaysBind: BindBattle);
+        FSM.Game.Battle.BothTurn.OnRegister(alwaysBind: BindBothTurn);
+        FSM.Game.Battle.BothTurn.YieldCard.OnRegister(alwaysBind: BindYieldCard);
     }
 }
