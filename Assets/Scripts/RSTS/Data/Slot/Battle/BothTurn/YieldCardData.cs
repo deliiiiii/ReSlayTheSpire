@@ -7,6 +7,8 @@ public class YieldCardData : IMyFSMArg<EYieldCardState>
     public CardModel CardModel;
     public CardInTurn CardData;
 
+    public void Init() { }
+
     public void Bind(Func<EYieldCardState, MyState> getState)
     {
     }

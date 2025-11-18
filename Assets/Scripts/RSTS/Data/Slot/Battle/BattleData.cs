@@ -23,14 +23,13 @@ public class BattleData : IMyFSMArg<EBattleState>
     public Observable<float> InBattleTime = new(0);
 
     #region IMyFSMArg
+
+    public void Init() { }
+
     public void Bind(Func<EBattleState, MyState> getState)
     {
         getState(EBattleState.BothTurn)
-            .OnEnter(() =>
-            {
-                // 跳过GrossStart阶段
-                FSM.Game.Battle.BothTurn.Register(EBothTurn.PlayerTurnStart, new BothTurnData(FSM.Game.Battle.Arg));
-            })
+            .OnEnter(FSM.Game.Battle.BothTurn.Register)
             .OnExit(FSM.Game.Battle.BothTurn.Release);
     }
 

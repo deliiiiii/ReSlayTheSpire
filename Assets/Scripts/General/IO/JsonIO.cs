@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using JetBrains.Annotations;
 using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -54,7 +55,7 @@ public static class JsonIO
     static readonly JsonSerializerSettings settings = new()
     {
         Formatting = Formatting.Indented,
-        TypeNameHandling = TypeNameHandling.Auto,
+        TypeNameHandling = TypeNameHandling.All,
         ContractResolver = new PrivateFieldsContractResolver(),
         PreserveReferencesHandling = PreserveReferencesHandling.Objects,
     };
@@ -71,6 +72,7 @@ public static class JsonIO
         string str = JsonConvert.SerializeObject(obj, settings);
         File.WriteAllText(path, str);
     }
+    [CanBeNull]
     public static T Read<T>(string pathPre, string name)
     {
         string path = pathPre + "/" + name + ".json";

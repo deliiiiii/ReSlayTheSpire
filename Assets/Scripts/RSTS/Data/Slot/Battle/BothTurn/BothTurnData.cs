@@ -11,10 +11,7 @@ namespace RSTS;
 [Serializable]
 public class BothTurnData : IMyFSMArg<EBothTurn>
 {
-    public void Save() => Saver.Save("DataSaved", nameof(BothTurnData), this);
-    public BothTurnData Load() => Saver.Load<BothTurnData>("DataSaved", nameof(BothTurnData));
-    
-    public HPAndBuffData PlayerHPAndBuffData;
+    public HPAndBuffData PlayerHPAndBuffData = new();
     public Observable<int> CurEnergy = new(5);
     public Observable<int> MaxEnergy = new(5);
     public Observable<int> PlayerCurHP => PlayerHPAndBuffData.CurHP;
@@ -22,7 +19,6 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
     public Observable<int> PlayerBlock => PlayerHPAndBuffData.Block;
     public int TurnID;
     [JsonIgnore]public MyList<EnemyDataBase> EnemyList = [];
-    public MyList<CardInBattle> DeckList { get; set; }
     public MyList<CardInTurn> HandList = [];
     public MyList<CardInTurn> DrawList = [];
     public MyList<CardInTurn> DiscardList = [];
@@ -32,15 +28,13 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
     public event Action<List<CardInTurn>, int, Action<CardInTurn>>? OnOpenHandOnceClick;
     public event Action? OnPlayerLoseHP;
     
-    public BothTurnData(BattleData battleData)
+    public void Init()
     {
-        PlayerHPAndBuffData = new HPAndBuffData
-        {
-            CurHP = battleData.CurHP,
-            MaxHP = battleData.MaxHP,
-            Block = new Observable<int>(0)
-        };
-        PlayerCurHP.OnValueChangedFull += (oldV, newV) =>
+        var battleData = FSM.Game.Battle.Arg;
+        PlayerHPAndBuffData.CurHP = battleData.CurHP;
+        PlayerHPAndBuffData.MaxHP = battleData.MaxHP;
+        PlayerHPAndBuffData.Block = new Observable<int>(0);
+        PlayerHPAndBuffData.CurHP.OnValueChangedFull += (oldV, newV) =>
         {
             if (newV < oldV)
             {
@@ -49,9 +43,7 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
             }
         };
         TurnID = 0;
-        DeckList = battleData.DeckList;
     }
-    
 
     public void Bind(Func<EBothTurn, MyState> getState)
     {
@@ -80,7 +72,7 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
         });
         
         getState(EBothTurn.PlayerYieldCard)
-            .OnEnter(() => fsm.YieldCard.Register(EYieldCardState.None, new YieldCardData()))
+            .OnEnter(fsm.YieldCard.Register)
             .OnExit(fsm.YieldCard.Release);
         
         getState(EBothTurn.PlayerTurnEnd).OnEnter(() =>
@@ -148,7 +140,7 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
     {
         // HandList.MyClear();
         // DrawList.MyClear();
-        DeckList.ForEach(cardBattle =>
+        FSM.Game.Battle.Arg.DeckList.ForEach(cardBattle =>
         {
             DrawList.MyAdd(CardInTurn.CreateByAttr(cardBattle.Config.ID, cardBattle));
         });

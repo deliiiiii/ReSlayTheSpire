@@ -15,7 +15,7 @@ public class Launcher : Singleton<Launcher>
         {
             await Loader.LoadAll();
             ViewList.ForEach(v => v.Bind());
-            FSM.Game.Register(EGameState.Title, new GameData());
+            FSM.Game.Register();
         }
         catch (Exception e)
         {

@@ -15,7 +15,19 @@ public enum EGameState
     Winning,
 }
 
-public class GameFSM : MyFSMForData<EGameState, IMyFSMArg<EGameState>>;
+public class GameData : IMyFSMArg<EGameState>
+{
+    public void Init() { }
+    public void Bind(Func<EGameState, MyState> getState) { }
+    public void Launch() { }
+    public void UnInit() { }
+}
+
+public class GameFSM : MyFSMForData<GameFSM, EGameState, GameData>
+{
+    public override string SavePreName => "VioleeSaved";
+    public override string SaveFileName => nameof(GameFSM);
+}
 
 public class GameState : SingletonCS<GameState>
 {

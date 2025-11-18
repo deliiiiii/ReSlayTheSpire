@@ -12,13 +12,12 @@ public class GameData: IMyFSMArg<EGameState>
     public string PlayerName;
     public bool HasLastBuff;
 
+    public void Init() { }
+
     public void Bind(Func<EGameState, MyState> getState)
     {
         getState(EGameState.Battle)
-            .OnEnter(() =>
-            {
-                FSM.Game.Battle.Register(EBattleState.SelectLastBuff, new BattleData());
-            })
+            .OnEnter(FSM.Game.Battle.Register)
             .OnExit(FSM.Game.Battle.Release);
     }
 

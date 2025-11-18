@@ -6,36 +6,36 @@ using Sirenix.OdinInspector;
 
 public class TestAnything : Singleton<TestAnything>
 {
+    [ShowInInspector] string GameState => FSM.Game.CurStateName;
+    [ShowInInspector] static string BattleState => FSM.Game.Battle.CurStateName;
+    [ShowInInspector] static string YieldCardState => FSM.Game.Battle.BothTurn.YieldCard.CurStateName;
+    [Button] public void SaveGameFSM() => FSM.Game.Save();
     [Button] public void EnterGameState(EGameState gameState) => FSM.Game.EnterState(gameState);
     [Button] public void EnterBattleState(EBattleState battleState) => FSM.Game.Battle.EnterState(battleState);
     [Button] public void EnterBothTurnState(EBothTurn bothTurnState) => FSM.Game.Battle.BothTurn.EnterState(bothTurnState);
 
-    [field: AllowNull, MaybeNull][ShowIf(nameof(ShowBothTurnData))]
-    BothTurnData BothTurnData
-    {
-        get
-        {
-            if (field != null)
-                return field;
-            if(!ShowBothTurnData)
-            {
-                throw new InvalidOperationException("Not in BothTurn PlayerYieldCard state");
-            }
-            return field = FSM.Game.Battle.BothTurn.Arg;
-        }
-        set;
-    }
-    bool ShowBothTurnData => FSM.Game.Battle.BothTurn.IsState(EBothTurn.PlayerYieldCard);
-
-    [Button]
-    public void AttackPlayer(int baseAtk, int enemyID)
-    {
-        if(enemyID < 0 || enemyID >= BothTurnData.EnemyList.Count)
-            return;
-        BothTurnData.AttackPlayerFromEnemy(BothTurnData.EnemyList[enemyID], baseAtk, out _);
-    }
-    [Button] public void ChangePlayerHP(int delta) => BothTurnData.PlayerCurHP.Value += delta;
-    [Button] public void DrawCard(int count) => BothTurnData.DrawSome(count);
-    [Button] public void SaveGameData() => BothTurnData.Save();
-    [Button] public void LoadGameData() => BothTurnData = BothTurnData.Load();
+    // [field: AllowNull, MaybeNull]
+    // BothTurnData BothTurnData
+    // {
+    //     get
+    //     {
+    //         if (field != null)
+    //             return field;
+    //         if(!FSM.Game.Battle.BothTurn.IsState(EBothTurn.PlayerYieldCard))
+    //         {
+    //             throw new InvalidOperationException("Not in BothTurn PlayerYieldCard state");
+    //         }
+    //         return field = FSM.Game.Battle.BothTurn.Arg;
+    //     }
+    // }
+    //
+    // [Button]
+    // public void AttackPlayer(int baseAtk, int enemyID)
+    // {
+    //     if(enemyID < 0 || enemyID >= BothTurnData.EnemyList.Count)
+    //         return;
+    //     BothTurnData.AttackPlayerFromEnemy(BothTurnData.EnemyList[enemyID], baseAtk, out _);
+    // }
+    // [Button] public void ChangePlayerHP(int delta) => BothTurnData.PlayerCurHP.Value += delta;
+    // [Button] public void DrawCard(int count) => BothTurnData.DrawSome(count);
 }

@@ -2,6 +2,7 @@
 
 public interface IMyFSMArg<out TEnum>
 {
+    public void Init();
     public void Bind(Func<TEnum, MyState> getState);
     public void Launch();
     public void UnInit();
