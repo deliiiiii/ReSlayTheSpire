@@ -5,31 +5,29 @@ using UnityEngine.UI;
 
 namespace RSTS;
 
-public class TitleView : Singleton<TitleView>
+public class TitleView : ViewBase
 {
     public Button BtnStart;
     public Button BtnExit;
 
     public GameObject PnlButtons;
-
-    protected override void Awake()
+    
+    void BindGame(MyFSMForView<EGameState, GameData> fsm)
     {
-        base.Awake();
-        MyFSM.OnRegister(GameStateWrap.One,
-            canUnbind: OnRegisterGameState,
-            alwaysBind: OnChangeGameState);
+        fsm.GetState(EGameState.Title)
+            .OnEnterAfter(() => PnlButtons.SetActive(true))
+            .OnExitBefore(() => PnlButtons.SetActive(false));
     }
-
-    IEnumerable<BindDataBase> OnRegisterGameState(GameData gameData)
+    IEnumerable<BindDataBase> CanUnbindGame(MyFSMForView<EGameState, GameData> fsm)
     {
-        yield return Binder.FromBtn(BtnStart).To(() =>
+        yield return Binder.FromEvt(BtnStart.onClick).To(() =>
         {
-            MyFSM.EnterState(GameStateWrap.One, EGameState.Battle);
+            fsm.EnterState(EGameState.Battle);
         });
     }
-    void OnChangeGameState(MyFSM<EGameState> fsm, GameData gameData)
+
+    public override void Bind()
     {
-        fsm.GetState(EGameState.Title).OnEnter += () => PnlButtons.SetActive(true);
-        fsm.GetState(EGameState.Title).OnExit += () => PnlButtons.SetActive(false);
+        GameFSM.OnRegister(alwaysBind: BindGame, canUnbind: CanUnbindGame);
     }
 }

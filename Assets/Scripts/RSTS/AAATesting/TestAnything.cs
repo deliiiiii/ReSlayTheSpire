@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using RSTS;
 using Sirenix.OdinInspector;
@@ -7,74 +8,36 @@ using UnityEngine;
 
 public class TestAnything : Singleton<TestAnything>
 {
-    [Button]
-    public void TestFSM()
-    {
-        // MyFSM.Register();
-    }
-    
-    [Button]
-    public void EnterGameState(EGameState gameState)
-    {
-        MyFSM.EnterState(GameStateWrap.One, gameState);
-    }
+    [Button] public void EnterGameState(EGameState gameState) => GameFSM.EnterStateStatic(gameState);
+    [Button] public void EnterBattleState(EBattleState battleState) => BattleFSM.EnterStateStatic(battleState);
+    [Button] public void EnterBothTurnState(EBothTurn bothTurnState) => BothTurnFSM.EnterStateStatic(bothTurnState);
 
-    [Button]
-    public void EnterBattleState(EBattleState battleState)
+    [field: AllowNull, MaybeNull][ShowIf(nameof(ShowBothTurnData))]
+    BothTurnData BothTurnData
     {
-        MyFSM.EnterState(BattleStateWrap.One, battleState);
+        get
+        {
+            if (field != null)
+                return field; 
+            if(!BothTurnFSM.IsStateStatic(EBothTurn.PlayerYieldCard, out var fsm))
+            {
+                throw new InvalidOperationException("Not in BothTurn PlayerYieldCard state");
+            }
+            return field = fsm.Arg;
+        }
+        set;
     }
-    [Button]
-    public void EnterBothTurnState(EBothTurn bothTurnState)
-    {
-        MyFSM.EnterState(BothTurnStateWrap.One, bothTurnState);
-    }
-    
-    [SerializeReference]
-    public BattleData BattleData;
-    [SerializeReference]
-    public BothTurnData BothTurnData;
+    bool ShowBothTurnData => BothTurnFSM.IsStateStatic(EBothTurn.PlayerYieldCard);
 
     [Button]
     public void AttackPlayer(int baseAtk, int enemyID)
     {
-        BothTurnData = null!;
-        if (!MyFSM.IsState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard, out var bothTurnData))
-            return;
-        BothTurnData = bothTurnData;
         if(enemyID < 0 || enemyID >= BothTurnData.EnemyList.Count)
             return;
-        BothTurnData.AttackPlayerFromEnemy(bothTurnData.EnemyList[enemyID], baseAtk, out _);
+        BothTurnData.AttackPlayerFromEnemy(BothTurnData.EnemyList[enemyID], baseAtk, out _);
     }
-    
-    [Button]
-    public void ChangePlayerHP(int delta)
-    {
-        if (!MyFSM.IsState(BattleStateWrap.One, EBattleState.BothTurn, out var battleData))
-            return;
-        BattleData = battleData;
-        BattleData.CurHP.Value += delta;
-    }
-
-    [Button]
-    public void DrawCard(int count)
-    {
-        if (!MyFSM.IsState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard, out var bothTurnData))
-            return;
-        BothTurnData = bothTurnData;
-        BothTurnData.DrawSome(count);
-    }
-
-    [Button]
-    public void SaveGameData()
-    {
-        if(!MyFSM.IsState(BothTurnStateWrap.One, EBothTurn.PlayerYieldCard, out BothTurnData))
-            return;
-        BothTurnData.Save();
-    }
-    [Button]
-    public void LoadGameData()
-    {
-        BothTurnData = BothTurnData.Load();
-    }
+    [Button] public void ChangePlayerHP(int delta) => BothTurnData.PlayerCurHP.Value += delta;
+    [Button] public void DrawCard(int count) => BothTurnData.DrawSome(count);
+    [Button] public void SaveGameData() => BothTurnData.Save();
+    [Button] public void LoadGameData() => BothTurnData = BothTurnData.Load();
 }

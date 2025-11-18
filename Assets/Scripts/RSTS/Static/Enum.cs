@@ -6,7 +6,7 @@ public enum EGameState
     Title,
     Battle,
 }
-public class GameStateWrap : StateWrap<EGameState, GameData>;
+public class GameFSM : MyFSMForData<GameFSM, EGameState, GameData>;
 
 public enum EBattleState
 {
@@ -18,7 +18,7 @@ public enum EBattleState
     Win,
 }
 
-public class BattleStateWrap : StateWrap<EBattleState, BattleData>;
+public class BattleFSM : MyFSMForData<BattleFSM, EBattleState, BattleData>;
 
 public enum EBothTurn
 {
@@ -32,7 +32,7 @@ public enum EBothTurn
     EnemyTurnEnd,
 }
 
-public class BothTurnStateWrap : StateWrap<EBothTurn, BothTurnData>;
+public class BothTurnFSM : MyFSMForData<BothTurnFSM, EBothTurn, BothTurnData>;
 
 public enum EYieldCardState
 {
@@ -40,7 +40,7 @@ public enum EYieldCardState
     Drag,
 }
 
-public class YieldCardStateWrap : StateWrap<EYieldCardState, YieldCardData>;
+public class YieldCardFSM : MyFSMForData<YieldCardFSM, EYieldCardState, YieldCardData>;
 
 public enum EPlayerJob
 {

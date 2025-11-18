@@ -14,7 +14,7 @@ public class ScrambleIcon : MonoBehaviour
     void Awake()
     {
         
-        Binder.FromBtn(Btn).To(() => ScrambleView.TryReverseSelected(this));
+        Binder.FromEvt(Btn.onClick).To(() => ScrambleView.TryReverseSelected(this));
     }
 
     public void OnSelected()

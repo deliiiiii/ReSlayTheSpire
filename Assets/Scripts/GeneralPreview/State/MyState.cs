@@ -1,26 +1,72 @@
 using System;
-using JetBrains.Annotations;
 
-public class MyState
+public class MyStateForView
 {
-    public void Enter()
+    internal Action? OnEnterAfterEvt;
+    internal Action? OnExitBeforeEvt;
+    
+    public MyStateForView OnEnterAfter(Action act)
     {
-        OnEnter?.Invoke();
+        OnEnterAfterEvt += act;
+        return this;
     }
-    public void Exit()
+
+    public MyStateForView OnExitBefore(Action act)
     {
-        OnExit?.Invoke();
+        OnExitBeforeEvt += act;
+        return this;
     }
-    public void Destroy()
+}
+
+public class MyState : MyStateForView
+{
+    internal void Enter()
     {
-        OnDestroy?.Invoke();
+        OnEnterEvt?.Invoke();
+        OnEnterAfterEvt?.Invoke();
     }
-    public void Update(float dt)
+    internal void Exit()
     {
-        OnUpdate?.Invoke(dt);
+        OnExitBeforeEvt?.Invoke();
+        OnExitEvt?.Invoke();
     }
-    public event Action<float>? OnUpdate;
-    public event Action? OnEnter;
-    public event Action? OnExit;
-    public event Action? OnDestroy;
+    internal void Destroy()
+    {
+        OnDestroyEvt?.Invoke();
+    }
+    internal void Update(float dt)
+    {
+        OnUpdateEvt?.Invoke(dt);
+    }
+    internal event Action<float>? OnUpdateEvt;
+    internal event Action? OnEnterEvt;
+    internal event Action? OnExitEvt;
+    internal event Action? OnDestroyEvt;
+
+    [Obsolete("In class XXXData, use OnEnter instead.")]
+    public new MyStateForView OnEnterAfter(Action act) => this;
+    [Obsolete("In class XXXData, use OnExit instead.")]
+    public new MyStateForView OnExitBefore(Action act) => this;
+    public MyState OnEnter(Action act)
+    {
+        OnEnterEvt += act;
+        return this;
+    }
+    public MyState OnExit(Action act)
+    {
+        OnExitEvt += act;
+        return this;
+    }
+
+    public MyState OnUpdate(Action<float> act)
+    {
+        OnUpdateEvt += act;
+        return this;
+    }
+    public MyState OnDestroy(Action act)
+    {
+        OnDestroyEvt += act;
+        return this;
+    }
+    
 }

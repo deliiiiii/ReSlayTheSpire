@@ -7006,7 +7006,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 084e783177e14ac893cb416e95ca57c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalOnScene: 0
   TransNoTargetArea: {fileID: 1760304497}
   PnlPlayerWarning: {fileID: 1399562721}
   TxtPlayerWarning: {fileID: 167201204}
@@ -7320,7 +7319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1ff777caa141fdb739d4265b31458a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalOnScene: 0
   TxtPlayerName: {fileID: 510344460}
   TxtPlayerJob: {fileID: 1725442284}
   TxtPlayerHP: {fileID: 1459874409}
@@ -7436,6 +7434,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
+  ViewList:
+  - {fileID: 1074942899}
+  - {fileID: 1254304333}
+  - {fileID: 790236039}
+  - {fileID: 825370371}
 --- !u!4 &854234061
 Transform:
   m_ObjectHideFlags: 0
@@ -8431,17 +8434,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalOnScene: 0
-  BattleData:
-    rid: -2
-  BothTurnData:
-    rid: -2
-  GameData:
-    rid: -2
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!1 &1049781028
 GameObject:
   m_ObjectHideFlags: 0
@@ -8682,7 +8674,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d168b8ceea0349cca04fcf085ad3eb55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalOnScene: 0
   InfoView: {fileID: 825370371}
   PnlItem: {fileID: 632319727}
   CharacterModelHolder: {fileID: 790236039}
@@ -10407,7 +10398,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb7ee98e3654c94bcc72996515b5475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalOnScene: 0
   BtnStart: {fileID: 1568664492}
   BtnExit: {fileID: 2014217060}
   PnlButtons: {fileID: 477525304}

@@ -23,7 +23,7 @@ public class WordLine : MonoBehaviour
             ScrambleIconList.Add(wordObj);
         }
 
-        Binder.FromBtn(ChooseWordBtn).To(() =>
+        Binder.FromEvt(ChooseWordBtn.onClick).To(() =>
         {
             MyDebug.Log($"Win !! {word}");
             OnWin?.Invoke(word);

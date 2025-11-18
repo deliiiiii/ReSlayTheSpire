@@ -10,8 +10,8 @@ public static class Binder
         return new BindDataObs<T>(osv);
     }
 
-    public static BindDataEvent FromBtn(Button btn)
-        => new(btn.onClick);
+    public static BindDataEvent FromEvt(UnityEvent evt)
+        => new(evt);
     
     // public static BindDataEvent From(UnityEvent evt)
     //     => new(evt);

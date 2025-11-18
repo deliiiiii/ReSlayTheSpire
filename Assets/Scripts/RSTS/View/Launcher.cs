@@ -1,17 +1,21 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using RSTS.CDMV;
+using UnityEngine;
 
 namespace RSTS;
 public class Launcher : Singleton<Launcher>
 {
+    public List<ViewBase> ViewList = [];
+    // ReSharper disable once Unity.IncorrectMethodSignature
+    // ReSharper disable once UnusedMember.Local
     async UniTask Start()
     {
         try
         {
             await Loader.LoadAll();
-            MyFSM.Register(GameStateWrap.One, EGameState.Title, _ => new GameData());
+            ViewList.ForEach(v => v.Bind());
+            GameFSM.Register(EGameState.Title, new GameData());
         }
         catch (Exception e)
         {
@@ -19,10 +23,10 @@ public class Launcher : Singleton<Launcher>
         }
     }
 
-    void OnExit()
-    {
-        MyFSM.Release(GameStateWrap.One);
-    }
+    // void OnExit()
+    // {
+    //     GameFSM.Release();
+    // }
 
     // void Update()
     // {

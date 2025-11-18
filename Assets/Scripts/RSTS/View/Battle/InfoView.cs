@@ -3,7 +3,7 @@ using UnityEngine.UI;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
 namespace RSTS;
-public class InfoView : Singleton<InfoView>
+public class InfoView : ViewBase
 {
     public Text TxtPlayerName;
     public Text TxtPlayerJob;
@@ -17,8 +17,9 @@ public class InfoView : Singleton<InfoView>
     public Button BtnDeck;
     public Button BtnExitBattle;
     
-    void BindBattle(MyFSM<EBattleState> fsm, BattleData battleData)
+    void BindBattle(MyFSMForView<EBattleState, BattleData> fsm)
     {
+        var battleData = fsm.Arg;
         TxtPlayerJob.text = battleData.Job.ToString();
         
         battleData.DeckList.OnAdd += cardData =>
@@ -31,12 +32,10 @@ public class InfoView : Singleton<InfoView>
         };
     }
 
-    IEnumerable<BindDataBase> CanUnbindBattle(BattleData battleData)
+    IEnumerable<BindDataBase> CanUnbindBattle(MyFSMForView<EBattleState, BattleData> fsm)
     {
-        yield return Binder.FromBtn(BtnExitBattle).To(() =>
-        {
-            MyFSM.EnterState(GameStateWrap.One, EGameState.Title);
-        });
+        var battleData = fsm.Arg;
+        yield return Binder.FromEvt(BtnExitBattle.onClick).To(() => GameFSM.EnterStateStatic(EGameState.Title));
         yield return Binder.FromObs(battleData.CurHP).To(v => ShowHP(v, battleData.MaxHP));
         yield return Binder.FromObs(battleData.MaxHP).To(v => ShowHP(battleData.CurHP, v));
         yield return Binder.FromObs(battleData.Coin).To(v => TxtCoin.text = v.ToString());
@@ -56,13 +55,10 @@ public class InfoView : Singleton<InfoView>
     {
         battleData.InBattleTime.Value += dt;
     }
-   
-    
-    
-    protected override void Awake()
+
+    public override void Bind()
     {
-        base.Awake();
-        MyFSM.OnRegister(BattleStateWrap.One, 
+        BattleFSM.OnRegister(
             alwaysBind: BindBattle,
             canUnbind: CanUnbindBattle,
             tick: TickBattle);

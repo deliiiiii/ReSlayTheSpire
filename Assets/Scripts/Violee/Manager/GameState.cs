@@ -15,22 +15,23 @@ public enum EGameState
     Winning,
 }
 
+public class GameFSM : MyFSMForData<GameFSM, EGameState, IMyFSMArg<GameFSM>>;
 
 public class GameState : SingletonCS<GameState>
 {
-    static readonly MyFSM<EGameState> gameFsm = new ();
+    static readonly GameFSM gameFsm = new ();
     // TODO BindState is deleted
     // public static readonly BindState TitleState;
-    public static void EnterTitle() => gameFsm.ChangeState(EGameState.Title);
+    public static void EnterTitle() => gameFsm.EnterState(EGameState.Title);
     // TODO BindState is deleted
     // public static readonly BindState WinningState;
-    public static void EnterWinning() => gameFsm.ChangeState(EGameState.Winning);
+    public static void EnterWinning() => gameFsm.EnterState(EGameState.Winning);
     // TODO BindState is deleted
     // public static readonly BindState GeneratingMapState;
-    public static void EnterGeneratingMap() => gameFsm.ChangeState(EGameState.GeneratingMap);
+    public static void EnterGeneratingMap() => gameFsm.EnterState(EGameState.GeneratingMap);
     // TODO BindState is deleted
     // public static readonly BindState PlayingState;
-    public static void EnterPlaying() => gameFsm.ChangeState(EGameState.Playing);
+    public static void EnterPlaying() => gameFsm.EnterState(EGameState.Playing);
     
 
     static GameState()
@@ -49,6 +50,6 @@ public class GameState : SingletonCS<GameState>
         // }, EUpdatePri.Input);
     }
     
-    public static bool IsTitle => gameFsm.IsOneOfState(EGameState.Title);
-    public static bool IsPlaying => gameFsm.IsOneOfState(EGameState.Playing);
+    // public static bool IsTitle => gameFsm.IsOneOfState(EGameState.Title);
+    // public static bool IsPlaying => gameFsm.IsOneOfState(EGameState.Playing);
 }

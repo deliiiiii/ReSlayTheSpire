@@ -146,26 +146,26 @@ class MapView : ViewBase<MapView>
             })
             .AddTo(this);
 
-        Binder.FromBtn(QuickKeyBtn).To(() => Configer.SettingsConfig.ReverseQuickKey());
-        Binder.FromBtn(ShowBoxCostBtn).To(() => Configer.SettingsConfig.ReverseShowBoxCost());
+        Binder.FromEvt(QuickKeyBtn.onClick).To(() => Configer.SettingsConfig.ReverseQuickKey());
+        Binder.FromEvt(ShowBoxCostBtn.onClick).To(() => Configer.SettingsConfig.ReverseShowBoxCost());
         // Binder.From(DisablePauseBtn).To(() => Configer.SettingsConfig.ReverseDisablePause());
-        Binder.FromBtn(DreamCatcherGachaBtn).To(() => Configer.SettingsConfig.ReverseDreamCatcherGachaUp());
-        Binder.FromBtn(AddTiltWallBtn).To(() => Configer.SettingsConfig.ReverseAddTiltWall());
-        Binder.FromBtn(UseSmallMapBtn).To(() => Configer.SettingsConfig.ReverseUseSmallMap());
+        Binder.FromEvt(DreamCatcherGachaBtn.onClick).To(() => Configer.SettingsConfig.ReverseDreamCatcherGachaUp());
+        Binder.FromEvt(AddTiltWallBtn.onClick).To(() => Configer.SettingsConfig.ReverseAddTiltWall());
+        Binder.FromEvt(UseSmallMapBtn.onClick).To(() => Configer.SettingsConfig.ReverseUseSmallMap());
         
         
-        Binder.FromBtn(SettingsBtn).To(OpenSettingsPnl);
+        Binder.FromEvt(SettingsBtn.onClick).To(OpenSettingsPnl);
         // QuickKeyTg.onValueChanged.AddListener(Configer.SettingsConfig.SetQuickKey);
         // ShowBoxCostTg.onValueChanged.AddListener(Configer.SettingsConfig.SetShowBoxCost);
         // DisablePauseTg.onValueChanged.AddListener(Configer.SettingsConfig.SetDisablePause);
         // DreamCatcherGachaTg.onValueChanged.AddListener(Configer.SettingsConfig.SetDreamCatcherGachaUp);
         
-        Binder.FromBtn(ReturnBtn).To(() =>
+        Binder.FromEvt(ReturnBtn.onClick).To(() =>
         {
             FirstBtnPnl.gameObject.SetActive(true);
             SettingsPnl.gameObject.SetActive(false);
         });
-        Binder.FromBtn(ExitBtn).To(() =>
+        Binder.FromEvt(ExitBtn.onClick).To(() =>
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;

@@ -3,188 +3,167 @@ using System;
 using System.Linq;
 using Sirenix.Utilities;
 
-public abstract class MyFSM
-{
-    static readonly Dictionary<Type, IStateWrap> wrapDic = [];
-    
-    public static void Register<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state, Func<MyFSM<TEnum>, TArg> argCtor)
-        where TEnum : struct, Enum
-        where TArg : class, IMyFSMArg
-    {
-        var type = one.GetType();
-        var wrap = Get(one);
-        if (wrap != null)
-        {
-            MyDebug.LogError($"Wrap {type.Name} Duplicated");
-            return;
-        }
-        // 【0】添加Wrap
-        wrapDic.Add(type, one);
-        wrap = one;
-        var fsm = new MyFSM<TEnum>();
-        wrap.Fsm = fsm; 
-        // 【1】IBL的Init，写在构造函数里了。
-        var arg = argCtor(fsm);
-        wrap.Arg = arg;
-        // 【1.1】绑定自身Tick
-        var selfTick = Binder.FromTick(dt => fsm.Update(dt), EUpdatePri.Fsm);
-        wrap.SelfTick = selfTick;
-
-        // 【2】IBL的Bind
-        one.CanUnBind.ForEach(func => func.Invoke(arg).ForEach(bindDataBase => bindDataBase.Bind()));
-        one.BindAlways.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(arg));
-        one.Tick.ForEach(bindDataUpdate => bindDataUpdate.Bind());
-        // 【3】IBL的Launch
-        arg.Launch();
-        // 【4】进入初始状态
-        EnterState(one, state);
-    }
-    
-    public static void OnRegister<TEnum, TArg>(
-        StateForView<TEnum, TArg> view,
-        Action<MyFSM<TEnum>, TArg>? alwaysBind = null,
-        Func<TArg, IEnumerable<BindDataBase>>? canUnbind = null,
-        Action<float, TArg>? tick = null)
-        where TEnum : struct, Enum
-        where TArg : class, IMyFSMArg
-    {
-        if(canUnbind != null)
-            view.CanUnBind.Add(canUnbind);
-        if(alwaysBind != null)
-            view.BindAlways.Add(arg => alwaysBind.Invoke(Get(StateWrap<TEnum, TArg>.One)?.Fsm!, arg));
-        if(tick != null)
-            view.Tick.Add(Binder.FromTick(dt => tick(dt, Get(StateWrap<TEnum, TArg>.One)?.Arg!), EUpdatePri.Fsm));
-    }
-
-    public static void Release<TEnum, TArg>(StateWrap<TEnum, TArg> one)
-        where TEnum : struct, Enum
-        where TArg : class, IMyFSMArg
-    {
-        if (!TryGet(one, nameof(Release), out var wrap))
-            return;
-        var type = one.GetType();
-        // 【4】跳转到空状态
-        wrap.Fsm.OnDestroy();
-        // 【3】Launch的反向
-        wrap.Arg.UnInit();
-        
-        // 【2】Bind的反向
-        one.Tick.ForEach(bindDataUpdate => bindDataUpdate.UnBind());
-        one.CanUnBind.ForEach(func => func.Invoke(wrap.Arg).ForEach(bindDataBase => bindDataBase.UnBind()));
-        // 【1.1】自身Tick的反向。【1】构造函数不用反向。
-        wrap.SelfTick.UnBind();
-        // 【0】移除Wrap
-        wrapDic.Remove(type);
-    }
-
-    public static void EnterState<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state)
-        where TEnum : struct, Enum
-        where TArg : class, IMyFSMArg
-    {
-        if (!TryGet(one, nameof(EnterState), out var wrap))
-            return;
-        wrap.Fsm.ChangeState(state);
-    }
-
-    public static bool IsState<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state)
-        where TEnum : struct, Enum
-        where TArg : class, IMyFSMArg
-        => Get(one)?.Fsm.IsOneOfState(state) ?? false;
-
-    public static bool IsState<TEnum, TArg>(StateWrap<TEnum, TArg> one, TEnum state, out TArg arg)
-        where TEnum : struct, Enum
-        where TArg : class, IMyFSMArg
-    {
-        var wrap = Get(one);
-        var ret = wrap?.Fsm.IsOneOfState(state) ?? false;
-        arg = ret ? wrap?.Arg ?? null! : null!;
-        return ret;
-    }
-
-    public static string ShowState<TEnum, TArg>(StateWrap<TEnum, TArg> one)
-        where TEnum : struct, Enum
-        where TArg : class, IMyFSMArg
-    {
-        return Get(one)?.Fsm.CurStateName ?? "Null";
-    }
-
-    static bool TryGet<TEnum, TArg>(StateWrap<TEnum, TArg> one, string log, out StateWrap<TEnum, TArg> wrap) 
-        where TEnum : struct, Enum
-        where TArg : class, IMyFSMArg
-    {
-        wrap = Get(one)!;
-        if (wrap != null)
-            return true;
-        MyDebug.LogError($"TryGet wrap {one.GetType().Name} Not Exist when {log}");
-        return false;
-    }
-
-    static StateWrap<TEnum, TArg>? Get<TEnum, TArg>(StateWrap<TEnum, TArg> one)
-        where TEnum : struct, Enum
-        where TArg : class, IMyFSMArg
-    {
-        wrapDic.TryGetValue(one.GetType(), out var wrap);
-        return wrap as StateWrap<TEnum, TArg>;
-    }
-}
-
-[Serializable]
-public class MyFSM<TEnum> : MyFSM 
+public class MyFSMForView<TEnum, TArg>
     where TEnum : struct, Enum
-{ 
-    public MyFSM()
-    {
-        stateDic = new Dictionary<TEnum, MyState>();
-        foreach (var e in Enum.GetValues(typeof(TEnum))) 
-            stateDic.Add((TEnum)e, new MyState());
-    }
-
-    public string CurStateName => curState?.ToString() ?? "Null";
-    Dictionary<TEnum, MyState> stateDic;
-    MyState? curStateClass;
-    Enum? curState;
+    where TArg : class
+{
+    public TArg Arg = null!;
+    protected MyState? CurStateClass;
+    protected Enum? CurState;
+    protected readonly Dictionary<TEnum, MyState> StateDic = [];
     
-    public MyState GetState(TEnum e)
+    public MyStateForView GetState(TEnum e)
     {
-        // if (e == null)
-        //     return null;
-        if (stateDic.TryGetValue(e, out var value))
+        if (StateDic.TryGetValue(e, out var value))
             return value;
         MyState state = new();
-        stateDic.Add(e, state);
+        StateDic.Add(e, state);
         return state;
     }
     
-    public void Update(float dt) => curStateClass?.Update(dt);
-
-    public void ChangeState(TEnum e)
+    public void EnterState(TEnum e)
     {
-        if (curStateClass == null)
+        if (CurStateClass == null)
         {
-            Launch(e);
+            MyDebug.LogError("FSM Not Launched");
             return;
         }
-        var newStateClass = GetState(e);
-        if (newStateClass == curStateClass)
+        var newStateClass = GetStateSub(e);
+        if (newStateClass == CurStateClass)
             return;
-        curStateClass.Exit();
-        curStateClass = newStateClass;
-        curState = e;
-        curStateClass.Enter();
+        CurStateClass.Exit();
+        CurStateClass = newStateClass;
+        CurState = e;
+        CurStateClass.Enter();
     }
 
-    public bool IsOneOfState(params Enum[] enums) => enums.Contains(curState);
-    void Launch(TEnum startState)
+    protected MyState GetStateSub(TEnum e) => (GetState(e) as MyState)!;
+}
+
+public class MyFSMForView<TForData, TEnum, TArg> : MyFSMForView<TEnum, TArg>
+    where TForData : MyFSMForView<TForData, TEnum, TArg>, new()
+    where TEnum : struct, Enum
+    where TArg : class, IMyFSMArg<TForData>
+{
+    protected static readonly TForData One = new ();
+    public static void OnRegister(
+        Action<MyFSMForView<TEnum, TArg>>? alwaysBind = null,
+        Func<MyFSMForView<TEnum, TArg>, IEnumerable<BindDataBase>>? canUnbind = null,
+        Action<float, TArg>? tick = null)
     {
-        curStateClass = GetState(startState);
-        curState = startState;
-        curStateClass.Enter();
+        if(canUnbind != null)
+            One.CanUnBind.Add(canUnbind);
+        if(alwaysBind != null)
+            One.BindAlways.Add(alwaysBind.Invoke);
+        if(tick != null)
+            One.Tick.Add(Binder.FromTick(dt => tick(dt, One.Arg), EUpdatePri.Fsm));
+    }
+    
+    // bindAlwaysDic包括了State的OnEnter、OnExit，和Data的事件绑定回调，如data.OnXXXEvent += () => {}
+    internal readonly List<Action<MyFSMForView<TEnum, TArg>>> BindAlways = [];
+    // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
+    internal readonly List<Func<MyFSMForView<TEnum, TArg>, IEnumerable<BindDataBase>>> CanUnBind = [];
+    // tickDic包括自己绑定的与Data有关的Tick委托（类型Action<float, IMyFSMArg>）
+    internal readonly List<BindDataUpdate> Tick = [];
+}
+
+
+[Serializable]
+public class MyFSMForData<TForData, TEnum, TArg> : MyFSMForView<TForData, TEnum, TArg>
+    where TForData : MyFSMForData<TForData, TEnum, TArg>, new()
+    where TEnum : struct, Enum
+    where TArg : class, IMyFSMArg<TForData>
+{
+    public static void EnterStateStatic(TEnum state) => One.EnterState(state);
+    public static bool IsStateStatic(TEnum state) => One.IsOneOfState(state);
+    public static bool IsStateStatic(TEnum state, out MyFSMForView<TEnum, TArg> fsm)
+    {
+        var ret = One.IsOneOfState(state);
+        fsm = One;
+        return ret;
+    }
+    public static string CurStateNameStatic => One.CurState?.ToString() ?? "Null";
+    
+    
+    bool isRegistered;
+    BindDataUpdate selfTick = null!;
+    readonly List<BindDataBase> unbindableInstances = [];
+    
+    public static void Register(TEnum state, TArg arg)
+    {
+        if (One.isRegistered)
+        {
+            MyDebug.LogError($"Register FSM: {typeof(TForData).Name} Duplicated");
+            return;
+        }
+        // 【0】添加FSM
+        One.isRegistered = true;
+        // 【1】IBL的Init，写在构造函数里了。
+        One.Arg = arg;
+        // 【1.1】绑定自身Tick
+        One.selfTick = Binder.FromTick(One.Update, EUpdatePri.Fsm);
+        // 【2】IBL的Bind
+        One.Arg.Bind(One);
+        One.unbindableInstances.Clear();
+        One.unbindableInstances.Clear();
+        One.CanUnBind.ForEach(func =>
+        {
+            func.Invoke(One).ForEach(bdb =>
+            {
+                bdb.Bind();
+                One.unbindableInstances.Add(bdb);
+            });
+        });
+        One.BindAlways.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(One));
+        One.Tick.ForEach(bindDataUpdate => bindDataUpdate.Bind());
+        // 【3】IBL的Launch
+        One.Arg.Launch();
+        // 【4】进入初始状态
+        One.Launch(state);
     }
 
-    public void OnDestroy()
+    public static void Release()
     {
-        curStateClass?.Exit();
-        curState = null;
-        curStateClass = null;
+        if (!One.isRegistered)
+        {
+            MyDebug.LogError($"Release FSM: {typeof(TForData).Name} Not Exist");
+            return;
+        }
+        // 【4】跳转到空状态，并清空所有状态类
+        One.OnDestroy();
+        // 【3】Launch的反向
+        One.Arg.UnInit();
+        // 【2】Bind的反向
+        One.Tick.ForEach(bindDataUpdate => bindDataUpdate.UnBind());
+        One.unbindableInstances.ForEach(instance => instance.UnBind());
+        One.unbindableInstances.Clear();
+        // 【1.1】自身Tick的反向。
+        One.selfTick.UnBind();
+        // 【1】构造函数不用反向。
+        One.Arg = null!;
+        // 【0】移除Wrap
+        One.isRegistered = false;
     }
+    
+    
+    public new MyState GetState(TEnum e) => GetStateSub(e);
+    
+    internal void Launch(TEnum startState)
+    {
+        // foreach (var e in Enum.GetValues(typeof(TEnum))) 
+        //     StateDic.Add((TEnum)e, new MyState());
+        CurStateClass = GetStateSub(startState);
+        CurState = startState;
+        CurStateClass.Enter();
+    }
+    void Update(float dt) => CurStateClass?.Update(dt);
+    internal void OnDestroy()
+    {
+        CurStateClass?.Exit();
+        StateDic.Clear();
+        
+        CurState = null;
+        CurStateClass = null;
+    }
+    protected bool IsOneOfState(params Enum[] enums) => enums.Contains(CurState);
 }

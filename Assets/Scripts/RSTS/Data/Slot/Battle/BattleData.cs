@@ -11,12 +11,9 @@ using UnityEngine;
 
 namespace RSTS;
 [Serializable]
-public class BattleData : IMyFSMArg
+public class BattleData : IMyFSMArg<BattleFSM>
 {
-    [SerializeField] GameData gameData;
-    
-    public EPlayerJob Job;
-    
+    public EPlayerJob Job = EPlayerJob.ZhanShi;
     public MyList<CardInBattle> DeckList = [];
     public MyList<ItemData> ItemList = [];
     public MyList<BottleData?> BottleList = [];
@@ -25,12 +22,18 @@ public class BattleData : IMyFSMArg
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
 
-    #region Init, Launch
-    public BattleData(GameData gameData, EPlayerJob job)
+    #region IMyFSMArg
+    public void Bind(BattleFSM fsm)
     {
-        this.gameData = gameData;
-        Job = job;
+        fsm.GetState(EBattleState.BothTurn)
+            .OnEnter(() =>
+            {
+                // 跳过GrossStart阶段
+                BothTurnFSM.Register(EBothTurn.PlayerTurnStart, new BothTurnData(fsm.Arg));
+            })
+            .OnExit(BothTurnFSM.Release);
     }
+
     public void Launch()
     {
         var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);

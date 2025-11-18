@@ -238,26 +238,26 @@ class GameView : ViewBase<GameView>
         };
 
         
-        Binder.FromBtn(MinimapBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.FullMapWindow));
-        Binder.FromBtn(RedrawBtn).To(() =>
+        Binder.FromEvt(MinimapBtn.onClick).To(() => WindowManager.WindowList.MyAdd(WindowManager.FullMapWindow));
+        Binder.FromEvt(RedrawBtn.onClick).To(() =>
         {
             MainItemMono.CostCreativity(MainItemMono.CheckCreativityCost(1));
             showDrawConfigsAct();
         });
-        Binder.FromBtn(ContinueBtn).To(() =>
+        Binder.FromEvt(ContinueBtn.onClick).To(() =>
         {
             // TODO BindState is deleted
             // WindowManager.PauseWindow.TarState = GameState.PlayingState;
             WindowManager.WindowList.MyRemove(WindowManager.PauseWindow);
         });
-        Binder.FromBtn(ReturnToTitleBtn).To(() =>
+        Binder.FromEvt(ReturnToTitleBtn.onClick).To(() =>
         {
             // TODO BindState is deleted
             // WindowManager.PauseWindow.TarState = GameState.TitleState;
             WindowManager.WindowList.MyRemove(WindowManager.PauseWindow);
             WindowManager.WindowList.MyRemove(WindowManager.WinWindow);
         });
-        Binder.FromBtn(ExitWatchingItemBtn).To(async () =>
+        Binder.FromEvt(ExitWatchingItemBtn.onClick).To(async () =>
         {
             try
             {
@@ -272,12 +272,12 @@ class GameView : ViewBase<GameView>
                 throw;
             }
         });
-        Binder.FromBtn(VioleTBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.VioleTWindow));
-        Binder.FromBtn(VioleTPnlCloseBtn).To(() => WindowManager.WindowList.MyRemove(WindowManager.VioleTWindow));
-        Binder.FromBtn(DicScrollOpenBtn).To(() => WindowManager.WindowList.MyAdd(WindowManager.DicWindow));
-        Binder.FromBtn(DicScrollCloseBtn).To(() => WindowManager.WindowList.MyRemove(WindowManager.DicWindow));
+        Binder.FromEvt(VioleTBtn.onClick).To(() => WindowManager.WindowList.MyAdd(WindowManager.VioleTWindow));
+        Binder.FromEvt(VioleTPnlCloseBtn.onClick).To(() => WindowManager.WindowList.MyRemove(WindowManager.VioleTWindow));
+        Binder.FromEvt(DicScrollOpenBtn.onClick).To(() => WindowManager.WindowList.MyAdd(WindowManager.DicWindow));
+        Binder.FromEvt(DicScrollCloseBtn.onClick).To(() => WindowManager.WindowList.MyRemove(WindowManager.DicWindow));
 
-        Binder.FromBtn(ResetWinCountBtn).To(() => MainItemMono.WinCount.Value = 0);
+        Binder.FromEvt(ResetWinCountBtn.onClick).To(() => MainItemMono.WinCount.Value = 0);
         InitDic();
     }
 

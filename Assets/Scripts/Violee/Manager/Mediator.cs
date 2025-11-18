@@ -17,7 +17,7 @@ public static class Mediator
         //     });
         
         MapManager.GenerateStream
-            .Where(_ => GameState.IsTitle)
+            // .Where(_ => GameState.IsTitle)
             .OnBegin(_ => GameState.EnterGeneratingMap());
         // MapManager.DijkstraStream
         //     .OnEnd(param =>
