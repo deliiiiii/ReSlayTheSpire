@@ -12,19 +12,19 @@ public class TitleView : ViewBase
 
     public GameObject PnlButtons;
     
-    void BindGame(MyFSMForView<EGameState, GameData> fsm)
+    void BindGame(GameData gameData, IFSM<EGameState> fsm)
     {
         fsm.GetState(EGameState.Title)
             .OnEnterAfter(() => PnlButtons.SetActive(true))
             .OnExitBefore(() => PnlButtons.SetActive(false));
     }
-    IEnumerable<BindDataBase> CanUnbindGame(MyFSMForView<EGameState, GameData> fsm)
+    IEnumerable<BindDataBase> CanUnbindGame(GameData gameData, IFSM<EGameState> fsm)
     {
         yield return Binder.FromEvt(BtnStart.onClick).To(() => fsm.EnterState(EGameState.Battle));
     }
 
     public override void Bind()
     {
-        FSM.Game.OnRegister(alwaysBind: BindGame, canUnbind: CanUnbindGame);
+        GameData.OnRegister(alwaysBind: BindGame, canUnbind: CanUnbindGame);
     }
 }

@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ namespace RSTS;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 public class CardModel : MonoBehaviour
 {
-    [SerializeReference][ReadOnly] CardInTurn data;
+    [SerializeReference][ReadOnly] public CardInTurn Data;
     BothTurnData bothTurnData;
     
     public Text TxtCost;
@@ -21,17 +22,17 @@ public class CardModel : MonoBehaviour
     Image[] imgs;
     Text[] texts;
     TMP_Text[] tmpTexts;
-    public event Action? OnPointerEnterEvt;
-    public event Action? OnPointerExitEvt;
-    public event Action<Vector3>? OnBeginDragEvt;
-    public event Action<Vector3>? OnDragEvt;
-    public event Action<Vector3>? OnEndDragEvt;
+    public UnityEvent OnPointerEnterEvt = new();
+    public UnityEvent OnPointerExitEvt = new();
+    public UnityEvent<Vector3> OnBeginDragEvt = new();
+    public UnityEvent<Vector3> OnDragEvt = new();
+    public UnityEvent<Vector3> OnEndDragEvt = new();
     public void ReadDataInBothTurn(CardInTurn fData, BothTurnData fBothTurnData)
     {
-        data = fData;
+        Data = fData;
         bothTurnData = fBothTurnData;
         
-        TextCategory.text = data.Config.Category.ToString();
+        TextCategory.text = Data.Config.Category.ToString();
         RefreshTxtCost();
         RefreshTxtDes();
 
@@ -44,42 +45,42 @@ public class CardModel : MonoBehaviour
     
     public void RefreshTxtDes()
     {
-        string plus = data.TempUpgradeLevel switch
+        string plus = Data.TempUpgradeLevel switch
         {
             0 => "",
             1 => "+",
-            _ => $"+{data.TempUpgradeLevel}"
+            _ => $"+{Data.TempUpgradeLevel}"
         };
-        TxtName.text = $"{data.Config.Name}{plus}";
-        TxtDes.text = bothTurnData.CurContentWithKeywords(data);
+        TxtName.text = $"{Data.Config.Name}{plus}";
+        TxtDes.text = bothTurnData.CurContentWithKeywords(Data);
     }
 
     public void RefreshTxtCost()
     {
-        TxtCost.text = bothTurnData.UIGetEnergy(data);
+        TxtCost.text = bothTurnData.UIGetEnergy(Data);
     }
     
     public void OnPointerEnter(BaseEventData baseEventData)
     {
-        OnPointerEnterEvt?.Invoke();
+        OnPointerEnterEvt.Invoke();
     }
     public void OnPointerExit(BaseEventData baseEventData)
     {
-        OnPointerExitEvt?.Invoke();
+        OnPointerExitEvt.Invoke();
     }
     public void OnBeginDragDelegate(BaseEventData baseEventData)
     {
-        OnBeginDragEvt?.Invoke(Camera.main!.ScreenToWorldPoint((baseEventData as PointerEventData)!.position));
+        OnBeginDragEvt.Invoke(Camera.main!.ScreenToWorldPoint((baseEventData as PointerEventData)!.position));
     }
 
     public void OnDragDelegate(BaseEventData baseEventData)
     {
-        OnDragEvt?.Invoke(Camera.main!.ScreenToWorldPoint((baseEventData as PointerEventData)!.position));
+        OnDragEvt.Invoke(Camera.main!.ScreenToWorldPoint((baseEventData as PointerEventData)!.position));
     }
     
     public void OnEndDragDelegate(BaseEventData baseEventData)
     {
-        OnEndDragEvt?.Invoke((baseEventData as PointerEventData)!.position);
+        OnEndDragEvt.Invoke((baseEventData as PointerEventData)!.position);
     }
     
     public void EnableAllShown(bool enable)

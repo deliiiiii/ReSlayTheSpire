@@ -12,6 +12,8 @@ public static class Binder
 
     public static BindDataEvent FromEvt(UnityEvent evt)
         => new(evt);
+    public static BindDataEvent<T> FromEvt<T>(UnityEvent<T> evt)
+        => new(evt);
     
     // public static BindDataEvent From(UnityEvent evt)
     //     => new(evt);

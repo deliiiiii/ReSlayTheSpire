@@ -17,9 +17,8 @@ public class InfoView : ViewBase
     public Button BtnDeck;
     public Button BtnExitBattle;
     
-    void BindBattle(MyFSMForView<EBattleState, BattleData> fsm)
+    void BindBattle(BattleData battleData, IFSM<EBattleState> fsm)
     {
-        var battleData = fsm.Arg;
         TxtPlayerJob.text = battleData.Job.ToString();
         
         battleData.DeckList.OnAdd += cardData =>
@@ -32,10 +31,9 @@ public class InfoView : ViewBase
         };
     }
 
-    IEnumerable<BindDataBase> CanUnbindBattle(MyFSMForView<EBattleState, BattleData> fsm)
+    IEnumerable<BindDataBase> CanUnbindBattle(BattleData battleData, IFSM<EBattleState> fsm)
     {
-        var battleData = fsm.Arg;
-        yield return Binder.FromEvt(BtnExitBattle.onClick).To(() => FSM.Game.EnterState(EGameState.Title));
+        yield return Binder.FromEvt(BtnExitBattle.onClick).To(() => FSM.GameData.EnterState(EGameState.Title));
         yield return Binder.FromObs(battleData.CurHP).To(v => ShowHP(v, battleData.MaxHP));
         yield return Binder.FromObs(battleData.MaxHP).To(v => ShowHP(battleData.CurHP, v));
         yield return Binder.FromObs(battleData.Coin).To(v => TxtCoin.text = v.ToString());
@@ -51,16 +49,10 @@ public class InfoView : ViewBase
         }
     }
 
-    static void TickBattle(float dt, BattleData battleData)
-    {
-        battleData.InBattleTime.Value += dt;
-    }
-
     public override void Bind()
     {
-        FSM.Game.Battle.OnRegister(
+        BattleData.OnRegister(
             alwaysBind: BindBattle,
-            canUnbind: CanUnbindBattle,
-            tick: TickBattle);
+            canUnbind: CanUnbindBattle);
     }
 }

@@ -571,7 +571,7 @@ class GameView : ViewBase<GameView>
     {
         MainItemMono.WinCount.Value++;
         WindowManager.WinWindow.GetWord = () => word;
-        GameState.EnterWinning();
+        // GameState.EnterWinning();
     }
     #endregion
 }

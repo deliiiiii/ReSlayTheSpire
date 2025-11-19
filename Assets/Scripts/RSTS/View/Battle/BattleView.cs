@@ -3,6 +3,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -61,7 +62,7 @@ public class BattleView : ViewBase
     public Button BtnReturnToTitle;
     #endregion
 
-    void BindGame(MyFSMForView<EGameState, GameData> fsm)
+    void BindGame(GameData gameData, IFSM<EGameState> fsm)
     {
         fsm.GetState(EGameState.Battle)
             .OnEnterAfter(() =>
@@ -75,7 +76,7 @@ public class BattleView : ViewBase
                 InfoView.gameObject.SetActive(false);
             });
     }
-    void BindBattle(MyFSMForView<EBattleState, BattleData> fsm)
+    void BindBattle(BattleData battleData, IFSM<EBattleState> fsm)
     {
         fsm.GetState(EBattleState.SelectLastBuff)
             .OnEnterAfter(() =>
@@ -114,15 +115,16 @@ public class BattleView : ViewBase
                 PnlWin.SetActive(false);
             });
     }
-    IEnumerable<BindDataBase> CanUnbindBattle(MyFSMForView<EBattleState, BattleData> fsm)
+    IEnumerable<BindDataBase> CanUnbindBattle(BattleData battleData, IFSM<EBattleState> fsm)
     {
         foreach (var btn in LastBuffBtnList) 
             yield return Binder.FromEvt(btn.onClick).To(() => fsm.EnterState(EBattleState.BothTurn));
-        yield return Binder.FromEvt(BtnReturnToTitle.onClick).To(() => FSM.Game.EnterState(EGameState.Title));
+        yield return Binder.FromEvt(BtnReturnToTitle.onClick).To(() => FSM.GameData.EnterState(EGameState.Title));
     }
-    void BindBothTurn(MyFSMForView<EBothTurn, BothTurnData> fsm)
+
+    readonly Dictionary<CardInTurn, CardModel> handCardModelDic = [];
+    void BindBothTurn(BothTurnData bothTurnData, IFSM<EBothTurn> fsm)
     {
-        var bothTurnData = fsm.Arg;
         fsm.GetState(EBothTurn.PlayerYieldCard)
             .OnEnterAfter(() => 
             {
@@ -134,8 +136,6 @@ public class BattleView : ViewBase
                 BtnEndTurn.enabled = false;
                 TxtEndTurn.text = "--";
             });
-        
-        Dictionary<CardInTurn, CardModel> handCardModelDic = new();
         bothTurnData.PlayerHPAndBuffData.OnAddBuff += _ =>
         {
             handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
@@ -156,93 +156,12 @@ public class BattleView : ViewBase
         
         bothTurnData.HandList.OnAdd += cardData =>
         {
-            Vector3 initThisPos = default;
-            Vector3 initPointerPos = default;
-            Vector3 initScale = default;
-            
             var cardModel = Instantiate(PfbCard, PrtHandCard);
             cardModel.ReadDataInBothTurn(cardData, bothTurnData);
             cardData.OnTempUpgrade += cardModel.RefreshTxtDes;
             cardData.OnTempUpgrade += cardModel.RefreshTxtCost;
             
             handCardModelDic.Add(cardData, cardModel);
-
-            cardModel.OnPointerEnterEvt += () =>
-            {
-                if (FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
-                    return;
-                CurDragCard.ReadDataInBothTurn(cardData, bothTurnData);
-                initThisPos = CurDragCard.transform.position = cardModel.transform.position;
-                var initDeltaScale = cardModel.GetComponent<RectTransform>().sizeDelta.x
-                                     / CurDragCard.GetComponent<RectTransform>().sizeDelta.x;
-                initScale = cardModel.transform.localScale;
-                CurDragCard.transform.localScale = initScale * (initDeltaScale * 1.5f);
-            };
-            cardModel.OnPointerExitEvt += () =>
-            {
-                if (FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
-                    return;
-                CurDragCard.transform.localScale = initScale;
-                CurDragCard.gameObject.SetActive(false);
-            };
-            cardModel.OnBeginDragEvt += worldPos =>
-            {
-                if (FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
-                    return;
-                var yieldCardFSM = FSM.Game.Battle.BothTurn.YieldCard;
-                var yieldCardData = yieldCardFSM.Arg;
-                yieldCardData.CardModel = CurDragCard;
-                yieldCardData.CardData = cardData;
-                CharacterModelHolder.HidePlayerWarning();
-                if (!bothTurnData.TryYield(cardData, out var failReason))
-                {
-                    CharacterModelHolder.ShowPlayerWarning(failReason);
-                    return;
-                }
-                cardModel.EnableAllShown(false);
-                yieldCardFSM.EnterState(EYieldCardState.Drag);
-                initPointerPos = worldPos;
-                if (!cardData.HasTarget)
-                {
-                    CharacterModelHolder.EnableNoTargetArea(true);
-                }
-            };
-            cardModel.OnDragEvt += worldPos =>
-            {
-                if (!FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
-                    return;
-                var delta = worldPos - initPointerPos;
-                CurDragCard.transform.position =
-                    new Vector3(initThisPos.x + delta.x, initThisPos.y + delta.y, initThisPos.z);
-            };
-            cardModel.OnEndDragEvt += screenPos =>
-            {
-                if (!FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
-                    return;
-                cardModel.EnableAllShown(true);
-                FSM.Game.Battle.BothTurn.YieldCard.EnterState(EYieldCardState.None);
-
-                CurDragCard.gameObject.SetActive(false);
-                if (!cardData.HasTarget)
-                {
-                    CharacterModelHolder.EnableNoTargetArea(false);
-                    if (!CharacterModelHolder.CheckInNoTarget(screenPos))
-                    {
-                        CharacterModelHolder.ShowPlayerWarning("没有拖到无目标区域");
-                        return;
-                    }
-                }
-                else
-                {
-                    if (cardData.Target == null)
-                    {
-                        CharacterModelHolder.ShowPlayerWarning("没有指向任何目标");
-                        return;
-                    }
-                }
-                bothTurnData.YieldHandAsync(cardData).Forget();
-                cardData.Target = null;
-            };
             handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
         bothTurnData.HandList.OnRemove += cardData =>
@@ -322,9 +241,8 @@ public class BattleView : ViewBase
             handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtCost());
         };
     }
-    IEnumerable<BindDataBase> CanUnbindBothTurn(MyFSMForView<EBothTurn, BothTurnData> fsm)
+    IEnumerable<BindDataBase> CanUnbindBothTurn(BothTurnData bothTurnData, IFSM<EBothTurn> fsm)
     {
-        var bothTurnData = fsm.Arg;
         yield return Binder.FromObs(bothTurnData.CurEnergy)
             .To(v => ShowEnergy(v, bothTurnData.MaxEnergy));
         yield return Binder.FromObs(bothTurnData.MaxEnergy)
@@ -333,16 +251,105 @@ public class BattleView : ViewBase
         yield break;
         void ShowEnergy(int cur, int max) => TxtEnergy.text = cur + " / " + max;
     }
+    
+    IEnumerable<BindDataBase> CanUnbindYieldCard(YieldCardData yieldCardData, IFSM<EYieldCardState> fsm)
+    {
+        var bothTurnData = yieldCardData.Parent;
+        Vector3 initThisPos = default;
+        Vector3 initPointerPos = default;
+        Vector3 initScale = default;
+        foreach(var cardModel in handCardModelDic.Values)
+        {
+            var cardData = cardModel.Data;
+            yield return Binder.FromEvt(cardModel.OnPointerEnterEvt).To(() =>
+            {
+                if (fsm.IsState(EYieldCardState.Drag))
+                    return;
+                CurDragCard.ReadDataInBothTurn(cardData, bothTurnData);
+                initThisPos = CurDragCard.transform.position = cardModel.transform.position;
+                var initDeltaScale = cardModel.GetComponent<RectTransform>().sizeDelta.x
+                                     / CurDragCard.GetComponent<RectTransform>().sizeDelta.x;
+                initScale = cardModel.transform.localScale;
+                CurDragCard.transform.localScale = initScale * (initDeltaScale * 1.5f);
+            });
+            yield return Binder.FromEvt(cardModel.OnPointerExitEvt).To(() =>
+            {
+                if (fsm.IsState(EYieldCardState.Drag))
+                    return;
+                CurDragCard.transform.localScale = initScale;
+                CurDragCard.gameObject.SetActive(false);
+            });
+            yield return Binder.FromEvt(cardModel.OnBeginDragEvt).To(worldPos =>
+            {
+                if (fsm.IsState(EYieldCardState.Drag))
+                    return;
+                yieldCardData.CardModel = CurDragCard;
+                yieldCardData.CardData = cardData;
+                CharacterModelHolder.HidePlayerWarning();
+                if (!bothTurnData.TryYield(cardData, out var failReason))
+                {
+                    CharacterModelHolder.ShowPlayerWarning(failReason);
+                    return;
+                }
+
+                cardModel.EnableAllShown(false);
+                fsm.EnterState(EYieldCardState.Drag);
+                initPointerPos = worldPos;
+                if (!cardData.HasTarget)
+                {
+                    CharacterModelHolder.EnableNoTargetArea(true);
+                }
+            });
+            yield return Binder.FromEvt(cardModel.OnDragEvt).To(worldPos =>
+            {
+                if (!fsm.IsState(EYieldCardState.Drag))
+                    return;
+                var delta = worldPos - initPointerPos;
+                CurDragCard.transform.position =
+                    new Vector3(initThisPos.x + delta.x, initThisPos.y + delta.y, initThisPos.z);
+            });
+            yield return Binder.FromEvt(cardModel.OnEndDragEvt).To(screenPos =>
+            {
+                if (!fsm.IsState(EYieldCardState.Drag))
+                    return;
+                cardModel.EnableAllShown(true);
+                fsm.EnterState(EYieldCardState.None);
+
+                CurDragCard.gameObject.SetActive(false);
+                if (!cardData.HasTarget)
+                {
+                    CharacterModelHolder.EnableNoTargetArea(false);
+                    if (!CharacterModelHolder.CheckInNoTarget(screenPos))
+                    {
+                        CharacterModelHolder.ShowPlayerWarning("没有拖到无目标区域");
+                        return;
+                    }
+                }
+                else
+                {
+                    if (cardData.Target == null)
+                    {
+                        CharacterModelHolder.ShowPlayerWarning("没有指向任何目标");
+                        return;
+                    }
+                }
+
+                bothTurnData.YieldHandAsync(cardData).Forget();
+                cardData.Target = null;
+            });
+        }
+    }
 
     public override void Bind()
     {
-        FSM.Game.OnRegister(alwaysBind: BindGame);
-        FSM.Game.Battle.OnRegister(
+        GameData.OnRegister(alwaysBind: BindGame);
+        BattleData.OnRegister(
             alwaysBind: BindBattle,
             canUnbind: CanUnbindBattle
         );
-        FSM.Game.Battle.BothTurn.OnRegister(
+        BothTurnData.OnRegister(
             alwaysBind: BindBothTurn,
             canUnbind: CanUnbindBothTurn);
+        YieldCardData.OnRegister(canUnbind: CanUnbindYieldCard);
     }
 }

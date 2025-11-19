@@ -30,7 +30,7 @@ public class VioletMono : Singleton<VioletMono>
 
         Mediator.Mediate();
         
-        GameState.EnterTitle();
+        // GameState.EnterTitle();
     }
     // public Vector2Int CreateSceneItemPos;
     // public EBoxDir D;

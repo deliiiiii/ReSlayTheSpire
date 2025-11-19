@@ -8,7 +8,7 @@ using Sirenix.Utilities;
 
 namespace RSTS;
 [Serializable]
-public class BattleData : IMyFSMArg<BattleFSM>
+public class BattleData(GameData parent) : FSMArg<BattleData, EBattleState, GameData>(parent)
 {
     public EPlayerJob Job = EPlayerJob.ZhanShi;
     public MyList<CardInBattle> DeckList = [];
@@ -19,17 +19,25 @@ public class BattleData : IMyFSMArg<BattleFSM>
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
 
+    BothTurnData bothTurnData;
     #region IMyFSMArg
 
-    public void Init() { }
-    public void Bind(BattleFSM fsm)
+    protected override void Bind()
     {
-        fsm.GetState(EBattleState.BothTurn)
-            .OnEnter(FSM.Game.Battle.BothTurn.Register)
-            .OnExit(FSM.Game.Battle.BothTurn.Release);
+        GetState(EBattleState.BothTurn)
+            .OnEnter(() =>
+            {
+                bothTurnData = new(this);
+                bothTurnData.Launch(EBothTurn.GrossStart);
+            })
+            .OnExit(() =>
+            {
+                bothTurnData.Release();
+                bothTurnData = null!;
+            });
     }
-    
-    public void Launch()
+
+    protected override void Launch()
     {
         var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);
         config.InitialCardDic.ForEach(pair =>
@@ -45,10 +53,18 @@ public class BattleData : IMyFSMArg<BattleFSM>
         CurHP.Value = MaxHP.Value = config.MaxHP;
         Coin.Value = 99;
     }
-    public void UnInit()
+
+    protected override void UnInit()
     {
         DeckList.MyClear();
     }
+
+    protected override void Tick(float dt)
+    {
+        base.Tick(dt);
+        InBattleTime.Value += dt;
+    }
+
     #endregion
     
     // #region MapData

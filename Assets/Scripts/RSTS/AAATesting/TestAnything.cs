@@ -6,14 +6,6 @@ using Sirenix.OdinInspector;
 
 public class TestAnything : Singleton<TestAnything>
 {
-    [ShowInInspector] string GameState => FSM.Game.CurStateName;
-    [ShowInInspector] static string BattleState => FSM.Game.Battle.CurStateName;
-    [ShowInInspector] static string YieldCardState => FSM.Game.Battle.BothTurn.YieldCard.CurStateName;
-    [Button] public void SaveGameFSM() => FSM.Game.Save();
-    [Button] public void EnterGameState(EGameState gameState) => FSM.Game.EnterState(gameState);
-    [Button] public void EnterBattleState(EBattleState battleState) => FSM.Game.Battle.EnterState(battleState);
-    [Button] public void EnterBothTurnState(EBothTurn bothTurnState) => FSM.Game.Battle.BothTurn.EnterState(bothTurnState);
-
     // [field: AllowNull, MaybeNull]
     // BothTurnData BothTurnData
     // {

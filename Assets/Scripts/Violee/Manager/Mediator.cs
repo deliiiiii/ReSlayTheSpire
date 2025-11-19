@@ -16,15 +16,15 @@ public static class Mediator
         //         PlayerMono.TickOnPlaying(WindowManager.HasWindow);
         //     });
         
-        MapManager.GenerateStream
+        // MapManager.GenerateStream
             // .Where(_ => GameState.IsTitle)
-            .OnBegin(_ => GameState.EnterGeneratingMap());
+            // .OnBegin(_ => GameState.EnterGeneratingMap());
         // MapManager.DijkstraStream
         //     .OnEnd(param =>
         //     {
         //         PlayerMono.OnDijkstraEnd(BoxHelper.Pos2DTo3DPoint(param.StartPos, param.StartDir));
         //         MainItemMono.OnDijkstraEnd();
         //     });
-        MapManager.DijkstraStream.Continue(_ => GameState.EnterPlaying());
+        // MapManager.DijkstraStream.Continue(_ => GameState.EnterPlaying());
     }
 }

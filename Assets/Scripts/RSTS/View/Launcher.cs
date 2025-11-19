@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace RSTS;
 public class Launcher : Singleton<Launcher>
@@ -15,7 +14,7 @@ public class Launcher : Singleton<Launcher>
         {
             await Loader.LoadAll();
             ViewList.ForEach(v => v.Bind());
-            FSM.Game.Register();
+            FSM.GameData.Launch(EGameState.Title);
         }
         catch (Exception e)
         {

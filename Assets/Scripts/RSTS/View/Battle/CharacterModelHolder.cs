@@ -41,7 +41,7 @@ public class CharacterModelHolder : ViewBase
         PnlPlayerWarning.SetActive(false);
     }
     
-    void BindBattle(MyFSMForView<EBattleState, BattleData> fsm)
+    void BindBattle(BattleData battleData, IFSM<EBattleState> fsm)
     {
         fsm.GetState(EBattleState.BothTurn)
             .OnEnterAfter(() =>
@@ -55,9 +55,8 @@ public class CharacterModelHolder : ViewBase
             });
     }
     
-    void BindBothTurn(MyFSMForView<EBothTurn, BothTurnData> fsm)
+    void BindBothTurn(BothTurnData bothTurnData, IFSM<EBothTurn> fsm)
     {
-        var bothTurnData = fsm.Arg;
         PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
         bothTurnData.EnemyList.OnAdd += enemyData =>
         {
@@ -67,35 +66,6 @@ public class CharacterModelHolder : ViewBase
             enemyModel.gameObject.SetActive(true);
             EnemyModelList.Add(enemyModel);
             enemyModelDic.Add(enemyData, enemyModel);
-            
-            // MyDebug.Log($"EnemyModel {m.name} find Enter Drag");
-            enemyModel.OnPointerEnterEvt += () =>
-            {
-                // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt try...");
-                if (!FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
-                    return;
-                var yieldCardData = FSM.Game.Battle.BothTurn.YieldCard.Arg;
-                if (!yieldCardData.CardData.HasTarget)
-                    return;
-                yieldCardData.CardData.Target = enemyData;
-                yieldCardData.CardModel.RefreshTxtDes();
-                // MyDebug.Log($"EnemyModel {m.name} OnPointerEnterEvt success!");
-                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
-                enemyModel.EnableSelectTarget(true);
-                enteredTargetEnemyModels.Add(enemyModel);
-            };
-
-            enemyModel.OnPointerExitEvt += () =>
-            {
-                if (!FSM.Game.Battle.BothTurn.YieldCard.IsState(EYieldCardState.Drag))
-                    return;
-                var yieldCardData = FSM.Game.Battle.BothTurn.YieldCard.Arg;
-                yieldCardData.CardData.Target = null;
-                yieldCardData.CardModel.RefreshTxtDes();
-                enteredTargetEnemyModels.Remove(enemyModel);
-                enemyModel.EnableSelectTarget(false);
-                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);
-            };
         };
         
         bothTurnData.EnemyList.OnRemove += enemyData =>
@@ -109,7 +79,7 @@ public class CharacterModelHolder : ViewBase
         };
     }
 
-    void BindYieldCard(MyFSMForView<EYieldCardState, YieldCardData> fsm)
+    void BindYieldCard(YieldCardData yieldCardData, IFSM<EYieldCardState> fsm)
     {
         fsm.GetState(EYieldCardState.Drag).OnEnterAfter(() =>
         {
@@ -127,6 +97,36 @@ public class CharacterModelHolder : ViewBase
                 enteredTargetEnemyModels.Clear();
             });
     }
+    
+    IEnumerable<BindDataBase> CanUnbindYieldCard(YieldCardData yieldCardData, IFSM<EYieldCardState> fsm)
+    {
+        foreach (var enemyModel in enemyModelDic.Values)
+        {
+            yield return Binder.FromEvt(enemyModel.OnPointerEnterEvt).To(() =>
+            {
+                if (!fsm.IsState(EYieldCardState.Drag))
+                    return;
+                if (!yieldCardData.CardData.HasTarget)
+                    return;
+                yieldCardData.CardData.Target = enemyModel.Data;
+                yieldCardData.CardModel.RefreshTxtDes();
+                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
+                enemyModel.EnableSelectTarget(true);
+                enteredTargetEnemyModels.Add(enemyModel);
+            });
+
+            yield return Binder.FromEvt(enemyModel.OnPointerExitEvt).To(() =>
+            {
+                if (!fsm.IsState(EYieldCardState.Drag))
+                    return;
+                yieldCardData.CardData.Target = null;
+                yieldCardData.CardModel.RefreshTxtDes();
+                enteredTargetEnemyModels.Remove(enemyModel);
+                enemyModel.EnableSelectTarget(false);
+                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);
+            });
+        }
+    }
 
     static bool PosInRect(Vector2 pos, RectTransform rectTransform)
     {
@@ -135,8 +135,8 @@ public class CharacterModelHolder : ViewBase
 
     public override void Bind()
     {
-        FSM.Game.Battle.OnRegister(alwaysBind: BindBattle);
-        FSM.Game.Battle.BothTurn.OnRegister(alwaysBind: BindBothTurn);
-        FSM.Game.Battle.BothTurn.YieldCard.OnRegister(alwaysBind: BindYieldCard);
+        BattleData.OnRegister(alwaysBind: BindBattle);
+        BothTurnData.OnRegister(alwaysBind: BindBothTurn);
+        YieldCardData.OnRegister(alwaysBind: BindYieldCard, canUnbind: CanUnbindYieldCard);
     }
 }
