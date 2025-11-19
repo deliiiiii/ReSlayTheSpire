@@ -155,26 +155,26 @@ public class BattleView : ViewBase
         };
         
         
-        bothTurnData.HandList.OnAdd += cardData =>
+        bothTurnData.HandList.OnAdd += cardInTurn =>
         {
             var cardModel = Instantiate(PfbCard, PrtHandCard);
-            cardModel.ReadDataInBothTurn(cardData, bothTurnData);
-            cardData.OnTempUpgrade += cardModel.RefreshTxtDes;
-            cardData.OnTempUpgrade += cardModel.RefreshTxtCost;
+            cardModel.ReadDataInBothTurn(cardInTurn, bothTurnData);
+            cardInTurn.OnTempUpgrade += cardModel.RefreshTxtDes;
+            cardInTurn.OnTempUpgrade += cardModel.RefreshTxtCost;
             
-            handCardModelDic.Add(cardData, cardModel);
+            handCardModelDic.Add(cardInTurn, cardModel);
             handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
-        bothTurnData.HandList.OnRemove += cardData =>
+        bothTurnData.HandList.OnRemove += cardInTurn =>
         {
             // 打出破灭时，抽牌堆顶部被打出的牌没有CardModel。
-            if (handCardModelDic.ContainsKey(cardData))
+            if (handCardModelDic.ContainsKey(cardInTurn))
             {
-                var cardModel = handCardModelDic[cardData];
-                cardData.OnTempUpgrade -= cardModel.RefreshTxtDes;
-                cardData.OnTempUpgrade -= cardModel.RefreshTxtCost;
+                var cardModel = handCardModelDic[cardInTurn];
+                cardInTurn.OnTempUpgrade -= cardModel.RefreshTxtDes;
+                cardInTurn.OnTempUpgrade -= cardModel.RefreshTxtCost;
                 Destroy(cardModel.gameObject);
-                handCardModelDic.Remove(cardData);
+                handCardModelDic.Remove(cardInTurn);
             }
             handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
@@ -261,7 +261,7 @@ public class BattleView : ViewBase
         Vector3 initScale = default;
         foreach(var cardModel in handCardModelDic.Values)
         {
-            var cardData = cardModel.Data.CardInTurn;
+            var cardData = cardModel.Data.InTurn;
             yield return Binder.FromEvt(cardModel.OnPointerEnterEvt).To(() =>
             {
                 if (yieldCardData.IsState(EYieldCardState.Drag))
@@ -308,7 +308,7 @@ public class BattleView : ViewBase
                 cardModel.EnableAllShown(false);
                 yieldCardData.EnterState(EYieldCardState.Drag);
                 initPointerPos = worldPos;
-                if (!cardData.HasTarget)
+                if (!cardData.Parent.HasTarget)
                 {
                     CharacterModelHolder.EnableNoTargetArea(true);
                 }
@@ -329,7 +329,7 @@ public class BattleView : ViewBase
                 yieldCardData.EnterState(EYieldCardState.None);
 
                 CurDragCard.gameObject.SetActive(false);
-                if (!cardData.HasTarget)
+                if (!cardData.Parent.HasTarget)
                 {
                     CharacterModelHolder.EnableNoTargetArea(false);
                     if (!CharacterModelHolder.CheckInNoTarget(screenPos))

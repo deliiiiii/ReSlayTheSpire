@@ -16,7 +16,7 @@ public class Card13 : CardInTurn
     public override bool YieldCondition(BothTurnData bothTurnData, out string failReason)
     {
         failReason = string.Empty;
-        if (bothTurnData.HandList.All(cardData => cardData.Config.Category == ECardCategory.Attack))
+        if (bothTurnData.HandList.All(cardInTurn => cardInTurn.Parent.Config.Category == ECardCategory.Attack))
             return true;
         failReason = "我的手牌中有非攻击牌！";
         return false;

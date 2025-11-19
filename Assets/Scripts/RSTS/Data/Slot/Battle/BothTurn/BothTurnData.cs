@@ -88,7 +88,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
         
         GetState(EBothTurnState.PlayerTurnEnd).OnEnter(() =>
         {
-            HandList.ForEach(cardData => cardData.OnPlayerTurnEnd(this));
+            HandList.ForEach(cardInTurn => cardInTurn.OnPlayerTurnEnd(this));
             DiscardAllHand();
             PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnEnd);
             PlayerHPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnEnd);
@@ -151,12 +151,12 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
     {
         // HandList.MyClear();
         // DrawList.MyClear();
-        Parent.DeckList.ForEach(cardBattle =>
+        Parent.DeckList.ForEach(cardData =>
         {
-            DrawList.MyAdd(CardInTurn.CreateByAttr(cardBattle.Config.ID, cardBattle));
+            DrawList.MyAdd(CardInTurn.CreateByAttr(cardData.Config.ID, cardData));
         });
         DrawList.Shuffle();
-        CollectAllCards().ForEach(cardData => cardData.OnEnterBothTurn());
+        CollectAllCards().ForEach(cardInTurn => cardInTurn.OnEnterBothTurn());
         // DiscardList.MyClear();
         // ExhaustList.MyClear();
         
@@ -170,7 +170,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
     {
         EnemyList.MyClear();
         
-        CollectAllCards().ForEach(cardData => cardData.OnExitBothTurn());
+        CollectAllCards().ForEach(cardInTurn => cardInTurn.OnExitBothTurn());
         
         HandList.MyClear();
         DrawList.MyClear();
@@ -178,27 +178,29 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
         ExhaustList.MyClear();
         
         PlayerHPAndBuffData.ClearBuff();
+
+        Parent.DeckList.ForEach(cardData => cardData.InTurn = null);
     }
     
-    public string CurContentWithKeywords(CardInTurn cardData)
+    public string CurContentWithKeywords(CardInTurn cardInTurn)
     {
         var replacerList = new List<string>();
-        cardData.CurDes.EmbedTypes.ForEach(embedType =>
+        cardInTurn.Parent.CurDes.EmbedTypes.ForEach(embedType =>
         {
             replacerList.Add(embedType switch
             {
                 IEmbedNotChange notChange => notChange.GetNotChangeString(),
-                EmbedCard6 => cardData.GetModify<AttackModifyCard6>(this).BaseAtkAddByDaJi.ToString(),
+                EmbedCard6 => cardInTurn.GetModify<AttackModifyCard6>(this).BaseAtkAddByDaJi.ToString(),
                 // EmbedCard12 => cardData.GetModify<AttackModifyCard12>(this).AtkByBlock.ToString(),
-                EmbedCard19 => cardData.GetModify<AttackModifyCard19>(this).BaseAtkAddByUse.ToString(),
-                EmbedCard28 => cardData.GetModify<AttackModifyCard28>(this).AtkTimeByExhaust.ToString(),
+                EmbedCard19 => cardInTurn.GetModify<AttackModifyCard19>(this).BaseAtkAddByUse.ToString(),
+                EmbedCard28 => cardInTurn.GetModify<AttackModifyCard28>(this).AtkTimeByExhaust.ToString(),
                 EmbedAttack attack => 
-                    GetAttackValue(PlayerHPAndBuffData, cardData.Target?.HPAndBuffData, attack.AttackValue
-                    , cardData.GetModifyList(this)).ToString(),
+                    GetAttackValue(PlayerHPAndBuffData, cardInTurn.Target?.HPAndBuffData, attack.AttackValue
+                    , cardInTurn.GetModifyList(this)).ToString(),
                 _ => "NaN!"
             });
         });
-        return cardData.CurUpgradeInfo.ContentWithKeywords(replacerList);
+        return cardInTurn.Parent.CurUpgradeInfo.ContentWithKeywords(replacerList);
     }
 
     IEnumerable<CardInTurn> CollectAllCards()
@@ -248,7 +250,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
     public bool TryYield(CardInTurn toYield, out string failReason)
     {
         failReason = string.Empty;
-        if(toYield.ContainsKeyword(ECardKeyword.Unplayable))
+        if(toYield.Parent.ContainsKeyword(ECardKeyword.Unplayable))
         {
             failReason = "该牌无法打出";
             return false;
@@ -270,7 +272,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
     {
         HandList.ForEach(card =>
         {
-            if (card.ContainsKeyword(ECardKeyword.Ethereal))
+            if (card.Parent.ContainsKeyword(ECardKeyword.Ethereal))
             {
                 ExhaustList.MyAdd(card);
                 return;
@@ -280,21 +282,21 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
         HandList.MyClear();
     }
 
-    public string UIGetEnergy(CardInTurn cardData)
+    public string UIGetEnergy(CardInTurn cardInTurn)
     {
-        return cardData.CurCostInfo switch
+        return cardInTurn.Parent.CurCostInfo switch
         {
-            CardCostNumber number when cardData is Card24 => Math.Max(0, number.Cost - loseHpCount).ToString(),
+            CardCostNumber number when cardInTurn is Card24 => Math.Max(0, number.Cost - loseHpCount).ToString(),
             CardCostNumber number => number.Cost.ToString(),
             CardCostX => "X",
             CardCostNone or _ => "",
         };
     }
-    public int GetEnergy(CardInTurn cardData)
+    public int GetEnergy(CardInTurn cardInTurn)
     {
-        int costEnergy = cardData.CurCostInfo switch
+        int costEnergy = cardInTurn.Parent.CurCostInfo switch
         {
-            CardCostNumber number when cardData is Card24 => Math.Max(0, number.Cost - loseHpCount),
+            CardCostNumber number when cardInTurn is Card24 => Math.Max(0, number.Cost - loseHpCount),
             CardCostNumber number => number.Cost,
             CardCostX => CurEnergy,
             CardCostNone or _ => 0,
@@ -328,11 +330,11 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
     async UniTask YieldInternal(CardInTurn toYield, int cost
         , List<YieldModify> modifyList)
     {
-        if (toYield.Config.Category == ECardCategory.Ability)
+        if (toYield.Parent.Config.Category == ECardCategory.Ability)
         {
             // 打出能力牌，不会消耗
         }
-        else if (toYield.ContainsKeyword(ECardKeyword.Exhaust) 
+        else if (toYield.Parent.ContainsKeyword(ECardKeyword.Exhaust) 
                  || modifyList.AnyType<YieldModifyForceExhaust>())
         {
             // 消耗
@@ -344,7 +346,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
             DiscardList.MyAdd(toYield);
         }
 
-        if (toYield.Config.Category == ECardCategory.Attack)
+        if (toYield.Parent.Config.Category == ECardCategory.Attack)
         {
             if (PlayerHPAndBuffData.HasBuff<BuffDataAttackGainBlock>(out var buff))
             {
@@ -612,14 +614,14 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
             return;
         // 选择随机一个手牌。。。 
         var selected = filtered.RandomItem();
-        MyDebug.Log($"选手牌：是{selected.Config.name}");
+        MyDebug.Log($"选手牌：是{selected.Parent.Config.name}");
         onConfirm(selected);
         // TODO UI选择
         // OnOpenHandOnceClick?.Invoke(filtered, selectCount, onConfirm);
     }
 
     
-    public int DaJiCount => CollectAllCards().Count(card => card.Config.name.Contains("打击"));
+    public int DaJiCount => CollectAllCards().Count(card => card.Parent.Config.name.Contains("打击"));
     int loseHpCount;
     #endregion
 

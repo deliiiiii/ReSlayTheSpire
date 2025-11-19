@@ -109,7 +109,7 @@ public class CharacterModelHolder : ViewBase
             {
                 if (!yieldCardData.IsState(EYieldCardState.Drag))
                     return;
-                if (!yieldCardData.CardData.HasTarget)
+                if (!yieldCardData.CardData.Parent.HasTarget)
                     return;
                 yieldCardData.CardData.Target = enemyModel.Data;
                 yieldCardData.CardModel.RefreshTxtDes();

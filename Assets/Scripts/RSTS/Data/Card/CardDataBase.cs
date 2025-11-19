@@ -9,15 +9,28 @@ using UnityEngine;
 namespace RSTS;
 
 [Serializable]
-public class CardInBattle : DataConfig<CardInBattle, CardConfigMulti>
+public class CardData
 {
-    public int UpgradeLevel
+    public CardData(int id){ID = id;}
+    [JsonIgnore] public CardConfigMulti Config = null!;
+    [JsonProperty]
+    int ID
     {
-        get => CardInTurn?.TempUpgradeLevel ?? field;
         set
         {
-            if (CardInTurn != null)
-                CardInTurn.TempUpgradeLevel = value;
+            field = value;
+            Config = RefPoolMulti<CardConfigMulti>.Acquire()
+                .FirstOrDefault(c => c.ID == field)!;
+        }
+    }
+    
+    public int UpgradeLevel
+    {
+        get => InTurn?.TempUpgradeLevel ?? field;
+        set
+        {
+            if (InTurn != null)
+                InTurn.TempUpgradeLevel = value;
             else
                 field = value;
         }
@@ -32,11 +45,6 @@ public class CardInBattle : DataConfig<CardInBattle, CardConfigMulti>
     }
     public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
     public bool CanUpgrade() => UpgradeLevel < Config.Upgrades.Count - 1;
-    // public virtual bool CanUpgrade()
-    // {
-    //     return UpgradeLevel < Config.Upgrades.Count - 1;
-    // }
-
     public bool ContainsKeyword(ECardKeyword keyword) => CurUpgradeInfo.Keywords.Contains(keyword);
     public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
     public EmbedString CurDes => CurUpgradeInfo.Des;
@@ -49,41 +57,42 @@ public class CardInBattle : DataConfig<CardInBattle, CardConfigMulti>
         where TBuff : BuffDataBase
         => ((CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
     
-    [SubState<EBattleState>(EBattleState.BothTurn)]
-    public CardInTurn? CardInTurn;
-    
+    // [SubState<EBattleState>(EBattleState.BothTurn)]
+    public CardInTurn InTurn
+    {
+        get
+        {
+            if (FSM.GameData.IsSubState<BattleData>(out var battleData) &&
+                battleData.IsSubState<BothTurnData>(out _))
+                return field;
+            throw new InvalidOperationException("CardInTurn 只能在战斗中访问");
+        }
+        set;
+    }
 }
 
 [Serializable]
 public abstract class CardInTurn : 
-    DataAttr<CardInTurn, CardIDAttribute, CardInBattle>, IBelong<CardInBattle>
+    DataAttr<CardInTurn, CardIDAttribute, CardData>, IBelong<CardData>
 {
-    public static implicit operator CardInBattle(CardInTurn self) => self.Parent;
-    
     // 反射初始化
-    public CardInBattle Parent { get; private set; } = null!;
+    public CardData Parent { get; private set; } = null!;
+    public T NthEmbedAs<T>(int id) where T : EmbedType => Parent.NthEmbedAs<T>(id);
+    public TBuff NthEmbedAsBuffCopy<TBuff>(int id) where TBuff : BuffDataBase => Parent.NthEmbedAsBuffCopy<TBuff>(id);
+    
     
     // 无来源卡牌
     public CardInTurn CreateBlindCard(int id) => CreateByAttr(id, Parent);
-    
-    public CardConfigMulti Config => Parent.Config;
-    public CardUpgradeInfo CurUpgradeInfo => Parent.CurUpgradeInfo;
-    public bool ContainsKeyword(ECardKeyword keyword) => Parent.ContainsKeyword(keyword);
-    public CardCostBase CurCostInfo => Parent.CurCostInfo;
-    public EmbedString CurDes => Parent.CurDes;
-    public bool HasTarget => Parent.HasTarget;
-    public T NthEmbedAs<T>(int id) where T : EmbedType => Parent.NthEmbedAs<T>(id);
-    public TBuff NthEmbedAsBuffCopy<TBuff>(int id) where TBuff : BuffDataBase => Parent.NthEmbedAsBuffCopy<TBuff>(id);
     
     public int TempUpgradeLevel;
     public EnemyDataBase? Target;
     // 临时加入的，如“愤怒”
     public bool IsTemporary;
 
-    protected override void ReadContext(CardInBattle context)
+    protected override void ReadContext(CardData context)
     {
         Parent = context;
-        Parent.CardInTurn = this;
+        Parent.InTurn = this;
         TempUpgradeLevel = context.UpgradeLevel;
     }
 

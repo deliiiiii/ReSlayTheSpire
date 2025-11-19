@@ -84,6 +84,7 @@ public abstract class FSM<TArg, TEnum>
         AlwaysBindList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(Arg, GetState));
         selfTick.Bind();
         // 【3】IBL的Launch
+        // TODO Launch几乎只在处理MyAdd，这对于反序列化来说是灾难。考虑删除之。
         Launch();
         // 【4】进入初始状态
         curStateClass = GetState(startState);

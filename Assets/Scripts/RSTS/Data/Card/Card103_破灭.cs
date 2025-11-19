@@ -14,7 +14,7 @@ public class Card103 : CardInTurn
             return;
         }
 
-        MyDebug.Log($"破灭：{toYieldExhaust.Config.name}");
+        MyDebug.Log($"破灭：{toYieldExhaust.Parent.Config.name}");
         await bothTurnData.YieldBlindAsync(toYieldExhaust, [new YieldModifyForceExhaust()]);
     }
 }

@@ -13,27 +13,6 @@ public class IDAttribute(int id) : Attribute
 }
 
 /// 通过Config创建的数据接口，Json忽略Config字段，通过ID自动关联
-public abstract class DataConfig<TData, TConfigMulti>
-    where TData : DataConfig<TData, TConfigMulti>
-    where TConfigMulti : ConfigMulti<TConfigMulti>, new()
-{
-    [JsonIgnore] public TConfigMulti Config = null!;
-    [JsonProperty]
-    int ID
-    {
-        set
-        {
-            field = value;
-            Config = RefPoolMulti<TConfigMulti>.Acquire().FirstOrDefault(c => c.ID == field)!;
-        }
-    }
-    public static TData CreateByConfig(int id)
-    {
-        var ret = Activator.CreateInstance<TData>();
-        ret.ID = id;
-        return ret;
-    }
-}
 
 /// 通过反射创建的数据基类，子类需添加IDAttribute特性
 public abstract class DataAttr<TData, TAttribute, TContext>

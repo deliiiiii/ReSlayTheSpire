@@ -10,11 +10,11 @@ namespace RSTS;
 
 
 [Serializable]
-public class BattleData(GameData parent) : FSM<BattleData, EBattleState, GameData>(parent)
+public class BattleData : FSM<BattleData, EBattleState, GameData>
 {
     // 持久数据
     public EPlayerJob Job = EPlayerJob.ZhanShi;
-    public MyList<CardInBattle> DeckList = [];
+    public MyList<CardData> DeckList = [];
     public MyList<ItemData> ItemList = [];
     public MyList<BottleData?> BottleList = [];
     public Observable<int> CurHP = new(0);
@@ -28,7 +28,12 @@ public class BattleData(GameData parent) : FSM<BattleData, EBattleState, GameDat
     BothTurnData bothTurnData = null!;
 
     #region IMyFSMArg
-
+    public BattleData(GameData parent) : base(parent)
+    {
+        var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);
+        CurHP.Value = MaxHP.Value = config.MaxHP;
+        Coin.Value = 99;
+    }
     protected override void Bind()
     {
         GetState(EBattleState.BothTurn)
@@ -53,14 +58,12 @@ public class BattleData(GameData parent) : FSM<BattleData, EBattleState, GameDat
         {
             for(int i = 0; i < pair.Value; i++)
                 // DeckList.MyAdd(CardBattle.CreateData(pair.Key.ID));
-                DeckList.MyAdd(CardInBattle.CreateByConfig(pair.Key.ID));
+                DeckList.MyAdd(new CardData(pair.Key.ID));
         });
         for (int i = 0; i < 3; i++)
         {
             BottleList.MyAdd(null);
         }
-        CurHP.Value = MaxHP.Value = config.MaxHP;
-        Coin.Value = 99;
     }
 
     protected override void UnInit()

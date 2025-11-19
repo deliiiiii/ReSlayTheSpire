@@ -14,7 +14,7 @@ public class Card22 : CardInTurn
     {
         bothTurnData.AttackEnemy(Target, atk);
         bothTurnData.HandList
-            .Where(handCard => handCard.Config.Category != ECardCategory.Attack)
+            .Where(handCard => handCard.Parent.Config.Category != ECardCategory.Attack)
             .ToList()
             .ForEach(handCard =>
             {
