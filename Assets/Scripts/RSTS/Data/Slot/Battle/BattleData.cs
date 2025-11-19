@@ -10,7 +10,7 @@ namespace RSTS;
 
 
 [Serializable]
-public class BattleData : FSM<BattleData, EBattleState, GameData>
+public class BattleData(GameData parent) : FSM<BattleData, EBattleState, GameData>(parent)
 {
     // 持久数据
     public EPlayerJob Job = EPlayerJob.ZhanShi;
@@ -21,16 +21,11 @@ public class BattleData : FSM<BattleData, EBattleState, GameData>
     public Observable<int> MaxHP = new(0);
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
-    public WeatherData WeatherData;
+    public WeatherData WeatherData = new();
     
     // 子状态数据
     [SubState<EBattleState>(EBattleState.BothTurn)]
     BothTurnData bothTurnData = null!;
-
-    public BattleData(GameData parent) : base(parent)
-    {
-        WeatherData = new(this);
-    }
 
     #region IMyFSMArg
 

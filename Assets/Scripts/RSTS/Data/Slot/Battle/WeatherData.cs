@@ -2,7 +2,7 @@
 using RSTS;
 
 [Serializable]
-public class WeatherData(BattleData parent) : FSM<WeatherData, EWeatherState, BattleData>(parent)
+public class WeatherData : FSM<WeatherData, EWeatherState>
 {
     [SubState<EWeatherState>(EWeatherState.Good)]
     GoodData goodData = null!;
@@ -48,13 +48,13 @@ public enum EWeatherState
 }
 
 [Serializable]
-public class GoodData
+public class GoodData : IBelong<WeatherData>
 {
     public int GetInt() => 42;
 }
 
 [Serializable]
-public class BadData
+public class BadData : IBelong<WeatherData>
 {
     public int GetInt2() => 24;
 }

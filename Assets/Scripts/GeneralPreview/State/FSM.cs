@@ -133,7 +133,8 @@ public abstract class FSM<TArg, TEnum>
     }
     bool IsOneOfState(params TEnum[] enums) => enums.Contains(curState);
 
-    public bool IsSubState<TSubData>([NotNullWhen(true)] out TSubData? data) where TSubData : class
+    public bool IsSubState<TSubData>([NotNullWhen(true)] out TSubData? data) 
+        where TSubData : class, IBelong<TArg>
     {
         var fieldInfo = subDataDic.Keys
             .FirstOrDefault(fieldInfo => fieldInfo.FieldType == typeof(TSubData));
@@ -142,6 +143,7 @@ public abstract class FSM<TArg, TEnum>
             data = fieldInfo.GetValue(this) as TSubData;
             return IsState(subDataDic[fieldInfo]);
         }
+        MyDebug.LogError($"FSM {typeof(TArg).Name} 中不存在类型为 {typeof(TSubData).Name} 的子状态数据.");
         data = null;
         return false;
     }
@@ -159,7 +161,8 @@ public abstract class FSM<TArg, TEnum>
                     return;
                 if (!fieldInfo.IsPrivate)
                 {
-                    MyDebug.LogError($"封装性考虑,{typeof(TArg).Name}类中的字段{fieldInfo.Name}推荐为private");
+                    MyDebug.LogError($"封装性考虑, {typeof(TArg).Name}类中的字段{fieldInfo.Name}推荐为private. " +
+                                     $"欲访问此字段, 请使用IsSubState<TSubData>(out TSubData data)方法.");
                 }
                 subDataDic.Add(fieldInfo, attr.Value);
             });
@@ -168,13 +171,14 @@ public abstract class FSM<TArg, TEnum>
 
 
 public abstract class FSM<TArg, TEnum, TParentStateData>(TParentStateData parent)
-    : FSM<TArg, TEnum>
+    : FSM<TArg, TEnum>, IBelong<TParentStateData>
     where TArg : FSM<TArg, TEnum, TParentStateData>
     where TEnum : struct, Enum
 {
     public readonly TParentStateData Parent = parent;
 }
 
+public interface IBelong<T>;
 public delegate MyStateForView StateFunc<in TEnum>(TEnum e) where TEnum : struct, Enum;
 
 
