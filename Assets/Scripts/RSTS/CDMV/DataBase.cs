@@ -12,18 +12,15 @@ public class IDAttribute(int id) : Attribute
     public readonly int ID = id;
 }
 
-/// 通过Config创建的数据基类，Json忽略Config字段，通过ID自动关联
-[Serializable]
-public abstract class DataBaseConfig<TData, TConfigMulti>
-    where TData : DataBaseConfig<TData, TConfigMulti>
+/// 通过Config创建的数据接口，Json忽略Config字段，通过ID自动关联
+public abstract class DataConfig<TData, TConfigMulti>
+    where TData : DataConfig<TData, TConfigMulti>
     where TConfigMulti : ConfigMulti<TConfigMulti>, new()
 {
-    [JsonIgnore]
-    public TConfigMulti Config = null!;
+    [JsonIgnore] public TConfigMulti Config = null!;
     [JsonProperty]
     int ID
     {
-        get;
         set
         {
             field = value;
@@ -39,9 +36,8 @@ public abstract class DataBaseConfig<TData, TConfigMulti>
 }
 
 /// 通过反射创建的数据基类，子类需添加IDAttribute特性
-[Serializable]
-public abstract class DataBaseAttr<TData, TAttribute, TContext>
-    where TData : DataBaseAttr<TData, TAttribute, TContext>
+public abstract class DataAttr<TData, TAttribute, TContext>
+    where TData : DataAttr<TData, TAttribute, TContext>
     where TAttribute : IDAttribute
 {
     static Dictionary<int, Func<TContext, TData>> ctorDic = [];

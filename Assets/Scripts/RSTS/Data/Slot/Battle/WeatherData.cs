@@ -13,7 +13,7 @@ public class WeatherData : FSM<WeatherData, EWeatherState>
         GetState(EWeatherState.Good)
             .OnEnter(() =>
             {
-                goodData = new();
+                goodData = new(this);
                 goodData.GetInt();
             })
             .OnExit(() =>
@@ -24,7 +24,7 @@ public class WeatherData : FSM<WeatherData, EWeatherState>
         GetState(EWeatherState.Bad)
             .OnEnter(() =>
             {
-                badData = new();
+                badData = new(this);
                 badData.GetInt2();
             })
             .OnExit(() =>
@@ -48,13 +48,15 @@ public enum EWeatherState
 }
 
 [Serializable]
-public class GoodData : IBelong<WeatherData>
+public class GoodData(WeatherData parent) : IBelong<WeatherData>
 {
     public int GetInt() => 42;
+    public WeatherData Parent { get; } = parent;
 }
 
 [Serializable]
-public class BadData : IBelong<WeatherData>
+public class BadData(WeatherData parent) : IBelong<WeatherData>
 {
     public int GetInt2() => 24;
+    public WeatherData Parent { get; } = parent;
 }

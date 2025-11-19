@@ -11,9 +11,8 @@ namespace RSTS;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 public class CardModel : MonoBehaviour
 {
-    [SerializeReference][ReadOnly] public CardInTurn Data;
+    [SerializeReference][ReadOnly] public CardInBattle Data;
     BothTurnData bothTurnData;
-    
     public Text TxtCost;
     public Text TxtName;
     public Text TextCategory;
@@ -27,11 +26,10 @@ public class CardModel : MonoBehaviour
     public UnityEvent<Vector3> OnBeginDragEvt = new();
     public UnityEvent<Vector3> OnDragEvt = new();
     public UnityEvent<Vector3> OnEndDragEvt = new();
-    public void ReadDataInBothTurn(CardInTurn fData, BothTurnData fBothTurnData)
+    public void ReadDataInBothTurn(CardInBattle fData, BothTurnData fBothTurnData)
     {
         Data = fData;
         bothTurnData = fBothTurnData;
-        
         TextCategory.text = Data.Config.Category.ToString();
         RefreshTxtCost();
         RefreshTxtDes();
@@ -45,19 +43,19 @@ public class CardModel : MonoBehaviour
     
     public void RefreshTxtDes()
     {
-        string plus = Data.TempUpgradeLevel switch
+        string plus = Data.UpgradeLevel switch
         {
             0 => "",
             1 => "+",
-            _ => $"+{Data.TempUpgradeLevel}"
+            _ => $"+{Data.UpgradeLevel}"
         };
         TxtName.text = $"{Data.Config.Name}{plus}";
-        TxtDes.text = bothTurnData.CurContentWithKeywords(Data);
+        TxtDes.text = bothTurnData.CurContentWithKeywords(Data.CardInTurn);
     }
 
     public void RefreshTxtCost()
     {
-        TxtCost.text = bothTurnData.UIGetEnergy(Data);
+        TxtCost.text = bothTurnData.UIGetEnergy(Data.CardInTurn);
     }
     
     public void OnPointerEnter(BaseEventData baseEventData)

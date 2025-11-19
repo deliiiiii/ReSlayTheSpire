@@ -4,7 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using UnityEngine;
 
 public abstract class FSM<TArg, TEnum>
     where TArg : FSM<TArg, TEnum>
@@ -33,17 +35,15 @@ public abstract class FSM<TArg, TEnum>
     {
         selfTick = Binder.FromTick(Tick, EUpdatePri.Fsm);
     }
+    [HideInInspector] bool isLaunched;
+    [ReadOnly] TEnum curState;
+    [JsonIgnore][HideInInspector] MyState? curStateClass;
+    [JsonIgnore][HideInInspector] readonly Dictionary<TEnum, MyState> stateDic = [];
+    [JsonIgnore][HideInInspector] readonly BindDataUpdate selfTick;
+    [JsonIgnore][HideInInspector] readonly List<BindDataBase> unbindableInstances = [];
+    [HideInInspector] TArg Arg => (this as TArg)!;
 
-    bool isLaunched;
-    TEnum curState;
-    [JsonIgnore] MyState? curStateClass;
-    [JsonIgnore] readonly Dictionary<TEnum, MyState> stateDic = [];
-    [JsonIgnore] readonly BindDataUpdate selfTick;
-    [JsonIgnore] readonly List<BindDataBase> unbindableInstances = [];
-    TArg Arg => (this as TArg)!;
-
-    
-    public string CurStateName => curState.ToString();
+    [HideInInspector] public string CurStateName => curState.ToString();
     public void EnterState(TEnum e)
     {
         if (curStateClass == null)
@@ -175,10 +175,13 @@ public abstract class FSM<TArg, TEnum, TParentStateData>(TParentStateData parent
     where TArg : FSM<TArg, TEnum, TParentStateData>
     where TEnum : struct, Enum
 {
-    public readonly TParentStateData Parent = parent;
+    [HideInInspector] public TParentStateData Parent { get; } = parent;
 }
 
-public interface IBelong<T>;
+public interface IBelong<out T>
+{
+    [HideInInspector] public T Parent { get; }
+}
 public delegate MyStateForView StateFunc<in TEnum>(TEnum e) where TEnum : struct, Enum;
 
 

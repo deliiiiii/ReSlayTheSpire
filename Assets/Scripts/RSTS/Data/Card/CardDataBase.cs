@@ -9,17 +9,29 @@ using UnityEngine;
 namespace RSTS;
 
 [Serializable]
-public class CardInBattle : DataBaseConfig<CardInBattle, CardConfigMulti>
+public class CardInBattle : DataConfig<CardInBattle, CardConfigMulti>
 {
-    public int UpgradeLevel;
-    // public void Upgrade()
-    // {
-    //     if (!CanUpgrade())
-    //         return; 
-    //     UpgradeLevel++;
-    //     // OnUpgrade?.Invoke();
-    // }
+    public int UpgradeLevel
+    {
+        get => CardInTurn?.TempUpgradeLevel ?? field;
+        set
+        {
+            if (CardInTurn != null)
+                CardInTurn.TempUpgradeLevel = value;
+            else
+                field = value;
+        }
+    }
+
+    public void Upgrade()
+    {
+        if (!CanUpgrade())
+            return; 
+        UpgradeLevel++;
+        // OnUpgrade?.Invoke();
+    }
     public CardUpgradeInfo CurUpgradeInfo => Config.Upgrades[UpgradeLevel];
+    public bool CanUpgrade() => UpgradeLevel < Config.Upgrades.Count - 1;
     // public virtual bool CanUpgrade()
     // {
     //     return UpgradeLevel < Config.Upgrades.Count - 1;
@@ -36,24 +48,32 @@ public class CardInBattle : DataBaseConfig<CardInBattle, CardConfigMulti>
     public TBuff NthEmbedAsBuffCopy<TBuff>(int id)
         where TBuff : BuffDataBase
         => ((CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
+    
+    [SubState<EBattleState>(EBattleState.BothTurn)]
+    public CardInTurn? CardInTurn;
+    
 }
 
 [Serializable]
-public abstract class CardInTurn : DataBaseAttr<CardInTurn, CardIDAttribute, CardInBattle>
+public abstract class CardInTurn : 
+    DataAttr<CardInTurn, CardIDAttribute, CardInBattle>, IBelong<CardInBattle>
 {
-    // 反射初始化
-    [SerializeField] CardInBattle cardInBattle = null!;
-    // 无来源卡牌
-    public CardInTurn CreateBlindCard(int id) => CreateByAttr(id, CardInBattle.CreateByConfig(id));
+    public static implicit operator CardInBattle(CardInTurn self) => self.Parent;
     
-    public CardConfigMulti Config => cardInBattle.Config;
-    public CardUpgradeInfo CurUpgradeInfo => cardInBattle.CurUpgradeInfo;
-    public bool ContainsKeyword(ECardKeyword keyword) => cardInBattle.ContainsKeyword(keyword);
-    public CardCostBase CurCostInfo => cardInBattle.CurCostInfo;
-    public EmbedString CurDes => cardInBattle.CurDes;
-    public bool HasTarget => cardInBattle.HasTarget;
-    public T NthEmbedAs<T>(int id) where T : EmbedType => cardInBattle.NthEmbedAs<T>(id);
-    public TBuff NthEmbedAsBuffCopy<TBuff>(int id) where TBuff : BuffDataBase => cardInBattle.NthEmbedAsBuffCopy<TBuff>(id);
+    // 反射初始化
+    public CardInBattle Parent { get; private set; } = null!;
+    
+    // 无来源卡牌
+    public CardInTurn CreateBlindCard(int id) => CreateByAttr(id, Parent);
+    
+    public CardConfigMulti Config => Parent.Config;
+    public CardUpgradeInfo CurUpgradeInfo => Parent.CurUpgradeInfo;
+    public bool ContainsKeyword(ECardKeyword keyword) => Parent.ContainsKeyword(keyword);
+    public CardCostBase CurCostInfo => Parent.CurCostInfo;
+    public EmbedString CurDes => Parent.CurDes;
+    public bool HasTarget => Parent.HasTarget;
+    public T NthEmbedAs<T>(int id) where T : EmbedType => Parent.NthEmbedAs<T>(id);
+    public TBuff NthEmbedAsBuffCopy<TBuff>(int id) where TBuff : BuffDataBase => Parent.NthEmbedAsBuffCopy<TBuff>(id);
     
     public int TempUpgradeLevel;
     public EnemyDataBase? Target;
@@ -62,12 +82,12 @@ public abstract class CardInTurn : DataBaseAttr<CardInTurn, CardIDAttribute, Car
 
     protected override void ReadContext(CardInBattle context)
     {
-        cardInBattle = context;
+        Parent = context;
+        Parent.CardInTurn = this;
         TempUpgradeLevel = context.UpgradeLevel;
     }
 
     public event Action? OnTempUpgrade;
-    
     public virtual List<AttackModifyBase> GetModifyList(BothTurnData bothTurnData) => [];
     public virtual bool YieldCondition(BothTurnData bothTurnData, out string failReason)
     {
@@ -78,7 +98,7 @@ public abstract class CardInTurn : DataBaseAttr<CardInTurn, CardIDAttribute, Car
     public virtual void OnExitBothTurn() { }
     public virtual void OnPlayerTurnEnd(BothTurnData bothTurnData){}
     // public virtual bool RecommendYield(BothTurnData bothTurnData) => false;
-    public bool CanUpgrade() => TempUpgradeLevel < cardInBattle.Config.Upgrades.Count - 1;
+    public bool CanUpgrade() => Parent.CanUpgrade();
 
     public void UpgradeTemp()
     {
