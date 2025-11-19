@@ -14,7 +14,7 @@ public class TitleView : ViewBase
     public GameObject PnlButtons;
     
     void BindGame(GameData gameData, StateFunc<EGameState> stateFunc)
-    { ;
+    {
         stateFunc(EGameState.Title)
             .OnEnterAfter(() => PnlButtons.SetActive(true))
             .OnExitBefore(() => PnlButtons.SetActive(false));

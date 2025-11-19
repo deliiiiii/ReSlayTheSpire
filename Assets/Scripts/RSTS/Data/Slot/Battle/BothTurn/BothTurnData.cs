@@ -301,11 +301,14 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
     public async UniTask YieldHandAsync(CardInTurn toYield
         , List<YieldModify>? modifyList = null)
     {
+        yieldCardData.Release();
         int cost = GetEnergy(toYield);
         UseEnergy(cost);
         HandList.MyRemove(toYield);
         modifyList ??= [];
         await YieldInternal(toYield, cost, modifyList);
+        toYield.Target = null;
+        yieldCardData.Launch(EYieldCardState.None);
     }
 
     public async UniTask YieldBlindAsync(CardInTurn toYield

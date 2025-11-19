@@ -32,4 +32,5 @@ public enum EYieldCardState
 {
     None,
     Drag,
+    Using,
 }
