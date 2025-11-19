@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Sirenix.Utilities;
@@ -41,9 +42,9 @@ public class CharacterModelHolder : ViewBase
         PnlPlayerWarning.SetActive(false);
     }
     
-    void BindBattle(BattleData battleData, IFSM<EBattleState> fsm)
+    void BindBattle(BattleData battleData, StateFunc<EBattleState> stateFunc)
     {
-        fsm.GetState(EBattleState.BothTurn)
+        stateFunc(EBattleState.BothTurn)
             .OnEnterAfter(() =>
             {
                 PlayerModel.gameObject.SetActive(true);
@@ -55,7 +56,7 @@ public class CharacterModelHolder : ViewBase
             });
     }
     
-    void BindBothTurn(BothTurnData bothTurnData, IFSM<EBothTurn> fsm)
+    void BindBothTurn(BothTurnData bothTurnData, StateFunc<EBothTurn> stateFunc)
     {
         PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
         bothTurnData.EnemyList.OnAdd += enemyData =>
@@ -79,16 +80,18 @@ public class CharacterModelHolder : ViewBase
         };
     }
 
-    void BindYieldCard(YieldCardData yieldCardData, IFSM<EYieldCardState> fsm)
+    void BindYieldCard(YieldCardData yieldCardData, StateFunc<EYieldCardState> stateFunc)
     {
-        fsm.GetState(EYieldCardState.Drag).OnEnterAfter(() =>
-        {
-            EnemyModelList.ForEach(m =>
+        stateFunc(EYieldCardState.Drag)
+            .OnEnterAfter(() =>
             {
-                m.EnableSelectTarget(false);
-            });
-            enteredTargetEnemyModels.Clear();
-        }).OnExitBefore(() =>
+                EnemyModelList.ForEach(m =>
+                {
+                    m.EnableSelectTarget(false);
+                });
+                enteredTargetEnemyModels.Clear();
+            })
+            .OnExitBefore(() =>
             {
                 EnemyModelList.ForEach(m =>
                 {
@@ -98,13 +101,13 @@ public class CharacterModelHolder : ViewBase
             });
     }
     
-    IEnumerable<BindDataBase> CanUnbindYieldCard(YieldCardData yieldCardData, IFSM<EYieldCardState> fsm)
+    IEnumerable<BindDataBase> CanUnbindYieldCard(YieldCardData yieldCardData)
     {
         foreach (var enemyModel in enemyModelDic.Values)
         {
             yield return Binder.FromEvt(enemyModel.OnPointerEnterEvt).To(() =>
             {
-                if (!fsm.IsState(EYieldCardState.Drag))
+                if (!yieldCardData.IsState(EYieldCardState.Drag))
                     return;
                 if (!yieldCardData.CardData.HasTarget)
                     return;
@@ -117,7 +120,7 @@ public class CharacterModelHolder : ViewBase
 
             yield return Binder.FromEvt(enemyModel.OnPointerExitEvt).To(() =>
             {
-                if (!fsm.IsState(EYieldCardState.Drag))
+                if (!yieldCardData.IsState(EYieldCardState.Drag))
                     return;
                 yieldCardData.CardData.Target = null;
                 yieldCardData.CardModel.RefreshTxtDes();

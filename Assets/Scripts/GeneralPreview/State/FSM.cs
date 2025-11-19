@@ -4,27 +4,27 @@ using System.Linq;
 using Newtonsoft.Json;
 using Sirenix.Utilities;
 
-public interface IFSM<in TEnum>
-    where TEnum : struct, Enum
-{
-    MyStateForView GetState(TEnum e);
-    void EnterState(TEnum e);
-    bool IsState(TEnum e);
-}
+// public interface IFSM<in TEnum>
+//     where TEnum : struct, Enum
+// {
+//     MyStateForView GetState(TEnum e);
+//     void EnterState(TEnum e);
+//     bool IsState(TEnum e);
+// }
 
-public abstract class FSMArgForView<TArg, TEnum> : IFSM<TEnum>
+public abstract class FSMArgForView<TArg, TEnum>
     where TArg : FSMArgForView<TArg, TEnum>
     where TEnum : struct, Enum
 {
     // bindAlwaysDic包括了State的OnEnter、OnExit，和Data的事件绑定回调，如data.OnXXXEvent += () => {}
-    [JsonIgnore] protected static readonly List<Action<TArg, IFSM<TEnum>>> AlwaysBindList = [];
+    [JsonIgnore] protected static readonly List<Action<TArg, StateFunc<TEnum>>> AlwaysBindList = [];
     // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
-    [JsonIgnore] protected static readonly List<Func<TArg, IFSM<TEnum>, IEnumerable<BindDataBase>>> 
+    [JsonIgnore] protected static readonly List<Func<TArg, IEnumerable<BindDataBase>>> 
         CanUnbindList = [];
     
     public static void OnRegister(
-        Action<TArg, IFSM<TEnum>>? alwaysBind = null,
-        Func<TArg, IFSM<TEnum>, IEnumerable<BindDataBase>>? canUnbind = null)
+        Action<TArg, StateFunc<TEnum>>? alwaysBind = null,
+        Func<TArg, IEnumerable<BindDataBase>>? canUnbind = null)
     {
         if(canUnbind != null)
             CanUnbindList.Add(canUnbind);
@@ -37,7 +37,7 @@ public abstract class FSMArgForView<TArg, TEnum> : IFSM<TEnum>
     [JsonIgnore] protected MyState? CurStateClass;
     [JsonIgnore] protected readonly Dictionary<TEnum, MyState> StateDic = [];
 
-    public MyStateForView GetState(TEnum e) => GetStateInternal(e);
+    MyStateForView GetState(TEnum e) => GetStateInternal(e);
     protected MyState GetStateInternal(TEnum e)
     {
         if (StateDic.TryGetValue(e, out var value))
@@ -95,13 +95,13 @@ public abstract class FSMArg<TArg, TEnum> : FSMArgForView<TArg, TEnum>
         unbindableInstances.Clear();
         CanUnbindList.ForEach(func =>
         {
-            func.Invoke(Arg, this).ForEach(bdb =>
+            func.Invoke(Arg).ForEach(bdb =>
             {
                 bdb.Bind();
                 unbindableInstances.Add(bdb);
             });
         });
-        AlwaysBindList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(Arg, this));
+        AlwaysBindList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(Arg, GetState));
         selfTick.Bind();
         // 【3】IBL的Launch
         Launch();
@@ -135,7 +135,7 @@ public abstract class FSMArg<TArg, TEnum> : FSMArgForView<TArg, TEnum>
     
     public string CurStateName => CurState.ToString();
 
-    protected new MyState GetState(TEnum e) => GetStateInternal(e);
+    protected MyState GetState(TEnum e) => GetStateInternal(e);
 
     protected abstract void Bind();
     protected abstract void Launch();
@@ -154,3 +154,5 @@ public abstract class FSMArg<TArg, TEnum, TParentFSMArg>(TParentFSMArg parent)
 {
     public readonly TParentFSMArg Parent = parent;
 }
+
+public delegate MyStateForView StateFunc<in TEnum>(TEnum e) where TEnum : struct, Enum;
