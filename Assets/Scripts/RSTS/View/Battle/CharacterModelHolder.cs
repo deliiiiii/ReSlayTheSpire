@@ -56,7 +56,7 @@ public class CharacterModelHolder : ViewBase
             });
     }
     
-    void BindBothTurn(BothTurnData bothTurnData, StateFunc<EBothTurn> stateFunc)
+    void BindBothTurn(BothTurnData bothTurnData, StateFunc<EBothTurnState> stateFunc)
     {
         PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
         bothTurnData.EnemyList.OnAdd += enemyData =>

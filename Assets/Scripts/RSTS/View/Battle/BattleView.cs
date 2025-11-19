@@ -124,9 +124,9 @@ public class BattleView : ViewBase
     }
 
     readonly Dictionary<CardInTurn, CardModel> handCardModelDic = [];
-    void BindBothTurn(BothTurnData bothTurnData, StateFunc<EBothTurn> stateFunc)
+    void BindBothTurn(BothTurnData bothTurnData, StateFunc<EBothTurnState> stateFunc)
     {
-        stateFunc(EBothTurn.PlayerYieldCard)
+        stateFunc(EBothTurnState.PlayerYieldCard)
             .OnEnterAfter(() => 
             {
                 BtnEndTurn.enabled = true;
@@ -248,7 +248,7 @@ public class BattleView : ViewBase
             .To(v => ShowEnergy(v, bothTurnData.MaxEnergy));
         yield return Binder.FromObs(bothTurnData.MaxEnergy)
             .To(v => ShowEnergy(bothTurnData.CurEnergy, v));
-        yield return Binder.FromEvt(BtnEndTurn.onClick).To(() => bothTurnData.EnterState(EBothTurn.PlayerTurnEnd));
+        yield return Binder.FromEvt(BtnEndTurn.onClick).To(() => bothTurnData.EnterState(EBothTurnState.PlayerTurnEnd));
         yield break;
         void ShowEnergy(int cur, int max) => TxtEnergy.text = cur + " / " + max;
     }
@@ -266,6 +266,18 @@ public class BattleView : ViewBase
             {
                 if (yieldCardData.IsState(EYieldCardState.Drag))
                     return;
+                if (yieldCardData.Parent.Parent.WeatherData.IsSubState<GoodData>(out var data))
+                {
+                    var @int = data.GetInt();
+                    MyDebug.Log($"Enter When Good Weather{@int}");
+                    yieldCardData.Parent.Parent.WeatherData.EnterState(EWeatherState.Bad);
+                }
+                else if (yieldCardData.Parent.Parent.WeatherData.IsSubState<BadData>(out var badData))
+                {
+                    var @int = badData.GetInt2();
+                    MyDebug.Log($"Enter When Bad Weather{@int}");
+                    yieldCardData.Parent.Parent.WeatherData.EnterState(EWeatherState.Good);
+                }
                 CurDragCard.ReadDataInBothTurn(cardData, bothTurnData);
                 initThisPos = CurDragCard.transform.position = cardModel.transform.position;
                 var initDeltaScale = cardModel.GetComponent<RectTransform>().sizeDelta.x

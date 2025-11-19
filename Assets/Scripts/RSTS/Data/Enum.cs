@@ -16,7 +16,7 @@ public enum EBattleState
     Win,
 }
 
-public enum EBothTurn
+public enum EBothTurnState
 {
     GrossStart,
     PlayerTurnStart,

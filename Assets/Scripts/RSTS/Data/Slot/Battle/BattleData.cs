@@ -4,12 +4,15 @@ using RSTS.CDMV;
 using Sirenix.Utilities;
 
 
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
 namespace RSTS;
+
+
+
 [Serializable]
-public class BattleData(GameData parent) : FSMArg<BattleData, EBattleState, GameData>(parent)
+public class BattleData : FSM<BattleData, EBattleState, GameData>
 {
+    // 持久数据
     public EPlayerJob Job = EPlayerJob.ZhanShi;
     public MyList<CardInBattle> DeckList = [];
     public MyList<ItemData> ItemList = [];
@@ -18,8 +21,17 @@ public class BattleData(GameData parent) : FSMArg<BattleData, EBattleState, Game
     public Observable<int> MaxHP = new(0);
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
+    public WeatherData WeatherData;
+    
+    // 子状态数据
+    [SubState<EBattleState>(EBattleState.BothTurn)]
+    BothTurnData bothTurnData = null!;
 
-    BothTurnData bothTurnData;
+    public BattleData(GameData parent) : base(parent)
+    {
+        WeatherData = new(this);
+    }
+
     #region IMyFSMArg
 
     protected override void Bind()
@@ -28,7 +40,7 @@ public class BattleData(GameData parent) : FSMArg<BattleData, EBattleState, Game
             .OnEnter(() =>
             {
                 bothTurnData = new(this);
-                bothTurnData.Launch(EBothTurn.GrossStart);
+                bothTurnData.Launch(EBothTurnState.GrossStart);
             })
             .OnExit(() =>
             {
@@ -39,6 +51,8 @@ public class BattleData(GameData parent) : FSMArg<BattleData, EBattleState, Game
 
     protected override void Launch()
     {
+        WeatherData.Launch(EWeatherState.Good);
+        
         var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);
         config.InitialCardDic.ForEach(pair =>
         {

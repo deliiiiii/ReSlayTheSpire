@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json;
 using Sirenix.Utilities;
 
-// public interface IFSM<in TEnum>
-//     where TEnum : struct, Enum
-// {
-//     MyStateForView GetState(TEnum e);
-//     void EnterState(TEnum e);
-//     bool IsState(TEnum e);
-// }
-
-public abstract class FSMArgForView<TArg, TEnum>
-    where TArg : FSMArgForView<TArg, TEnum>
+public abstract class FSM<TArg, TEnum>
+    where TArg : FSM<TArg, TEnum>
     where TEnum : struct, Enum
 {
     // bindAlwaysDic包括了State的OnEnter、OnExit，和Data的事件绑定回调，如data.OnXXXEvent += () => {}
@@ -21,7 +15,6 @@ public abstract class FSMArgForView<TArg, TEnum>
     // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
     [JsonIgnore] protected static readonly List<Func<TArg, IEnumerable<BindDataBase>>> 
         CanUnbindList = [];
-    
     public static void OnRegister(
         Action<TArg, StateFunc<TEnum>>? alwaysBind = null,
         Func<TArg, IEnumerable<BindDataBase>>? canUnbind = null)
@@ -31,55 +24,42 @@ public abstract class FSMArgForView<TArg, TEnum>
         if(alwaysBind != null)
             AlwaysBindList.Add(alwaysBind.Invoke);
     }
-    
-    
-    protected TEnum CurState;
-    [JsonIgnore] protected MyState? CurStateClass;
-    [JsonIgnore] protected readonly Dictionary<TEnum, MyState> StateDic = [];
 
-    MyStateForView GetState(TEnum e) => GetStateInternal(e);
-    protected MyState GetStateInternal(TEnum e)
+    static FSM()
     {
-        if (StateDic.TryGetValue(e, out var value))
-            return value;
-        MyState state = new();
-        StateDic.Add(e, state);
-        return state;
+        InitSubData();
     }
+    protected FSM()
+    {
+        selfTick = Binder.FromTick(Tick, EUpdatePri.Fsm);
+    }
+
+    bool isLaunched;
+    TEnum curState;
+    [JsonIgnore] MyState? curStateClass;
+    [JsonIgnore] readonly Dictionary<TEnum, MyState> stateDic = [];
+    [JsonIgnore] readonly BindDataUpdate selfTick;
+    [JsonIgnore] readonly List<BindDataBase> unbindableInstances = [];
+    TArg Arg => (this as TArg)!;
+
     
+    public string CurStateName => curState.ToString();
     public void EnterState(TEnum e)
     {
-        if (CurStateClass == null)
+        if (curStateClass == null)
         {
             MyDebug.LogError("FSM Not Launched");
             return;
         }
         var newStateClass = GetStateInternal(e);
-        if (newStateClass == CurStateClass)
+        if (newStateClass == curStateClass)
             return;
-        CurStateClass.Exit();
-        CurStateClass = newStateClass;
-        CurState = e;
-        CurStateClass.Enter();
+        curStateClass.Exit();
+        curStateClass = newStateClass;
+        curState = e;
+        curStateClass.Enter();
     }
-    
-    public bool IsOneOfState(params TEnum[] enums) => enums.Contains(CurState);
     public bool IsState(TEnum e) => IsOneOfState(e);
-}
-
-
-public abstract class FSMArg<TArg, TEnum> : FSMArgForView<TArg, TEnum>
-    where TArg : FSMArg<TArg, TEnum>
-    where TEnum : struct, Enum
-{
-    protected FSMArg()
-    {
-        selfTick = Binder.FromTick(Tick, EUpdatePri.Fsm);
-    }
-    protected TArg Arg => (this as TArg)!;
-    bool isLaunched;
-    [JsonIgnore] readonly BindDataUpdate selfTick;
-    [JsonIgnore] readonly List<BindDataBase> unbindableInstances = [];
     public void Launch(TEnum startState)
     {
         if (isLaunched)
@@ -106,11 +86,10 @@ public abstract class FSMArg<TArg, TEnum> : FSMArgForView<TArg, TEnum>
         // 【3】IBL的Launch
         Launch();
         // 【4】进入初始状态
-        CurStateClass = GetState(startState);
-        CurState = startState;
-        CurStateClass.Enter();
+        curStateClass = GetState(startState);
+        curState = startState;
+        curStateClass.Enter();
     }
-
     public void Release()
     {
         if (!isLaunched)
@@ -119,9 +98,9 @@ public abstract class FSMArg<TArg, TEnum> : FSMArgForView<TArg, TEnum>
             return;
         }
         // 【4】跳转到空状态，并清空所有状态类
-        CurStateClass?.Exit();
-        StateDic.Clear();
-        CurStateClass = null;
+        curStateClass?.Exit();
+        stateDic.Clear();
+        curStateClass = null;
         // 【3】Launch的反向
         UnInit();
         // 【2】Bind的反向
@@ -133,26 +112,75 @@ public abstract class FSMArg<TArg, TEnum> : FSMArgForView<TArg, TEnum>
         isLaunched = false;
     }
     
-    public string CurStateName => CurState.ToString();
-
-    protected MyState GetState(TEnum e) => GetStateInternal(e);
-
+    
     protected abstract void Bind();
     protected abstract void Launch();
     protected abstract void UnInit();
 
     protected virtual void Tick(float dt)
     {
-        CurStateClass?.Update(dt);
+        curStateClass?.Update(dt);
+    }
+    protected MyState GetState(TEnum e) => GetStateInternal(e);
+    
+    MyState GetStateInternal(TEnum e)
+    {
+        if (stateDic.TryGetValue(e, out var value))
+            return value;
+        MyState state = new();
+        stateDic.Add(e, state);
+        return state;
+    }
+    bool IsOneOfState(params TEnum[] enums) => enums.Contains(curState);
+
+    public bool IsSubState<TSubData>([NotNullWhen(true)] out TSubData? data) where TSubData : class
+    {
+        var fieldInfo = subDataDic.Keys
+            .FirstOrDefault(fieldInfo => fieldInfo.FieldType == typeof(TSubData));
+        if(fieldInfo != null)
+        {
+            data = fieldInfo.GetValue(this) as TSubData;
+            return IsState(subDataDic[fieldInfo]);
+        }
+        data = null;
+        return false;
+    }
+
+    static readonly Dictionary<FieldInfo, TEnum> subDataDic = [];
+
+    static void InitSubData()
+    {
+        typeof(TArg)
+            .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            .ForEach(fieldInfo =>
+            {
+                var attr = fieldInfo.GetCustomAttribute<SubStateAttribute<TEnum>>();
+                if (attr == null)
+                    return;
+                if (!fieldInfo.IsPrivate)
+                {
+                    MyDebug.LogError($"封装性考虑,{typeof(TArg).Name}类中的字段{fieldInfo.Name}推荐为private");
+                }
+                subDataDic.Add(fieldInfo, attr.Value);
+            });
     }
 }
 
-public abstract class FSMArg<TArg, TEnum, TParentFSMArg>(TParentFSMArg parent)
-    : FSMArg<TArg, TEnum>
-    where TArg : FSMArg<TArg, TEnum, TParentFSMArg>
+
+public abstract class FSM<TArg, TEnum, TParentStateData>(TParentStateData parent)
+    : FSM<TArg, TEnum>
+    where TArg : FSM<TArg, TEnum, TParentStateData>
     where TEnum : struct, Enum
 {
-    public readonly TParentFSMArg Parent = parent;
+    public readonly TParentStateData Parent = parent;
 }
 
 public delegate MyStateForView StateFunc<in TEnum>(TEnum e) where TEnum : struct, Enum;
+
+
+[AttributeUsage(AttributeTargets.Field)]
+public class SubStateAttribute<TEnum>(TEnum value) : Attribute
+    where TEnum : struct, Enum
+{
+    public readonly TEnum Value = value;
+}

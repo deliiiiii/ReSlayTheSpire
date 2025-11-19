@@ -9,8 +9,9 @@ using UnityEngine;
 
 namespace RSTS;
 [Serializable]
-public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
+public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
 {
+    #region 持久数据
     public HPAndBuffData PlayerHPAndBuffData = new();
     public Observable<int> CurEnergy = new(5);
     public Observable<int> MaxEnergy = new(5);
@@ -27,7 +28,9 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
     public event Action<List<CardInTurn>, Action<CardInTurn>>? OnOpenDiscardOnceClick;
     public event Action<List<CardInTurn>, int, Action<CardInTurn>>? OnOpenHandOnceClick;
     public event Action? OnPlayerLoseHP;
-
+    #endregion
+    
+    [SubState<EBothTurnState>(EBothTurnState.PlayerYieldCard)]
     YieldCardData yieldCardData = null!;
     
     public BothTurnData(BattleData parent) : base(parent)
@@ -48,12 +51,12 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
 
     protected override void Bind()
     {
-        GetState(EBothTurn.GrossStart).OnEnter(() =>
+        GetState(EBothTurnState.GrossStart).OnEnter(() =>
         {
-            EnterState(EBothTurn.PlayerTurnStart);
+            EnterState(EBothTurnState.PlayerTurnStart);
         });
         
-        GetState(EBothTurn.PlayerTurnStart).OnEnter(() =>
+        GetState(EBothTurnState.PlayerTurnStart).OnEnter(() =>
         {
             TurnID++;
             PlayerBlock.Value = 0;
@@ -62,16 +65,16 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
             PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnStart);
             PlayerHPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnStart);
             
-            EnterState(EBothTurn.PlayerDraw);
+            EnterState(EBothTurnState.PlayerDraw);
         });
         
-        GetState(EBothTurn.PlayerDraw).OnEnter(() =>
+        GetState(EBothTurnState.PlayerDraw).OnEnter(() =>
         {
             DrawSome(5);
-            EnterState(EBothTurn.PlayerYieldCard);
+            EnterState(EBothTurnState.PlayerYieldCard);
         });
         
-        GetState(EBothTurn.PlayerYieldCard)
+        GetState(EBothTurnState.PlayerYieldCard)
             .OnEnter(() =>
             {
                 yieldCardData = new(this);
@@ -83,16 +86,16 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
                 yieldCardData = null!;
             });
         
-        GetState(EBothTurn.PlayerTurnEnd).OnEnter(() =>
+        GetState(EBothTurnState.PlayerTurnEnd).OnEnter(() =>
         {
             HandList.ForEach(cardData => cardData.OnPlayerTurnEnd(this));
             DiscardAllHand();
             PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnEnd);
             PlayerHPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnEnd);
-            EnterState(EBothTurn.EnemyTurnStart);
+            EnterState(EBothTurnState.EnemyTurnStart);
         });
         
-        GetState(EBothTurn.EnemyTurnStart).OnEnter(() =>
+        GetState(EBothTurnState.EnemyTurnStart).OnEnter(() =>
         {
             EnemyList.ForEach(enemyData =>
             {
@@ -101,7 +104,7 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
                 enemyData.HPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnStart);
             });
 
-            EnterState(EBothTurn.EnemyAction);
+            EnterState(EBothTurnState.EnemyAction);
             // Func().Forget();
             // return;
             //
@@ -112,7 +115,7 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
             // }
         });
 
-        GetState(EBothTurn.EnemyAction).OnEnter(() =>
+        GetState(EBothTurnState.EnemyAction).OnEnter(() =>
         {
             Func().Forget();
             return;
@@ -129,18 +132,18 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
                     }
                     await UniTask.Delay(200);
                 }
-                EnterState(EBothTurn.EnemyTurnEnd);
+                EnterState(EBothTurnState.EnemyTurnEnd);
             }
         });
         
-        GetState(EBothTurn.EnemyTurnEnd).OnEnter(() =>
+        GetState(EBothTurnState.EnemyTurnEnd).OnEnter(() =>
         {
             EnemyList.ForEach(enemyData =>
             {
                 enemyData.HPAndBuffData.UseABuff(EBuffUseTime.TurnEnd);
                 enemyData.HPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnEnd);
             });
-            EnterState(EBothTurn.PlayerTurnStart);
+            EnterState(EBothTurnState.PlayerTurnStart);
         });
     }
 
@@ -309,6 +312,10 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
         await YieldInternal(toYield, cost, modifyList);
         toYield.Target = null;
         yieldCardData.Launch(EYieldCardState.None);
+        if(EnemyList.Count == 0)
+        {
+            Parent.EnterState(EBattleState.Win);
+        }
     }
 
     public async UniTask YieldBlindAsync(CardInTurn toYield
@@ -345,11 +352,7 @@ public class BothTurnData : FSMArg<BothTurnData, EBothTurn, BattleData>
             }
         }
         await toYield.YieldAsync(this, cost);
-        if(EnemyList.Count == 0)
-        {
-            Parent.EnterState(EBattleState.Win);
-        }
-    }
+      }
 
 
     void RefillDrawList()

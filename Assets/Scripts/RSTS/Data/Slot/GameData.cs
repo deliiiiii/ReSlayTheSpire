@@ -1,5 +1,4 @@
 ﻿using System;
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 namespace RSTS;
 
 public static class FSM
@@ -8,12 +7,13 @@ public static class FSM
 }
 
 [Serializable]
-public class GameData: FSMArg<GameData, EGameState>
+public class GameData: FSM<GameData, EGameState>
 {
-    public string PlayerName;
+    public string PlayerName = "DELI";
     public bool HasLastBuff;
 
-    BattleData battleData;
+    [SubState<EGameState>(EGameState.Battle)]
+    BattleData battleData = null!;
     protected override void Bind()
     {
         GetState(EGameState.Battle)
@@ -27,6 +27,7 @@ public class GameData: FSMArg<GameData, EGameState>
                 battleData.Release();
                 battleData = null!;
             });
+        
     }
 
     protected override void Launch()
