@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace RSTS;
 [Serializable]
-public class BothTurnData : IMyFSMArg<EBothTurn>
+public class BothTurnData : IMyFSMArg<BothTurnFSM>
 {
     public HPAndBuffData PlayerHPAndBuffData = new();
     public Observable<int> CurEnergy = new(5);
@@ -45,15 +45,14 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
         TurnID = 0;
     }
 
-    public void Bind(Func<EBothTurn, MyState> getState)
+    public void Bind(BothTurnFSM fsm)
     {
-        var fsm = FSM.Game.Battle.BothTurn;
-        getState(EBothTurn.GrossStart).OnEnter(() =>
+        fsm.GetState(EBothTurn.GrossStart).OnEnter(() =>
         {
             fsm.EnterState(EBothTurn.PlayerTurnStart);
         });
         
-        getState(EBothTurn.PlayerTurnStart).OnEnter(() =>
+        fsm.GetState(EBothTurn.PlayerTurnStart).OnEnter(() =>
         {
             TurnID++;
             PlayerBlock.Value = 0;
@@ -65,17 +64,17 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
             fsm.EnterState(EBothTurn.PlayerDraw);
         });
         
-        getState(EBothTurn.PlayerDraw).OnEnter(() =>
+        fsm.GetState(EBothTurn.PlayerDraw).OnEnter(() =>
         {
             DrawSome(5);
             fsm.EnterState(EBothTurn.PlayerYieldCard);
         });
         
-        getState(EBothTurn.PlayerYieldCard)
+        fsm.GetState(EBothTurn.PlayerYieldCard)
             .OnEnter(fsm.YieldCard.Register)
             .OnExit(fsm.YieldCard.Release);
         
-        getState(EBothTurn.PlayerTurnEnd).OnEnter(() =>
+        fsm.GetState(EBothTurn.PlayerTurnEnd).OnEnter(() =>
         {
             HandList.ForEach(cardData => cardData.OnPlayerTurnEnd(this));
             DiscardAllHand();
@@ -84,7 +83,7 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
             fsm.EnterState(EBothTurn.EnemyTurnStart);
         });
         
-        getState(EBothTurn.EnemyTurnStart).OnEnter(() =>
+        fsm.GetState(EBothTurn.EnemyTurnStart).OnEnter(() =>
         {
             EnemyList.ForEach(enemyData =>
             {
@@ -104,7 +103,7 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
             // }
         });
 
-        getState(EBothTurn.EnemyAction).OnEnter(() =>
+        fsm.GetState(EBothTurn.EnemyAction).OnEnter(() =>
         {
             Func().Forget();
             return;
@@ -125,7 +124,7 @@ public class BothTurnData : IMyFSMArg<EBothTurn>
             }
         });
         
-        getState(EBothTurn.EnemyTurnEnd).OnEnter(() =>
+        fsm.GetState(EBothTurn.EnemyTurnEnd).OnEnter(() =>
         {
             EnemyList.ForEach(enemyData =>
             {

@@ -7,18 +7,22 @@ namespace RSTS;
 
 
 [Serializable]
-public class GameData: IMyFSMArg<EGameState>
+public class GameData: IMyFSMArg<GameFSM>
 {
     public string PlayerName;
     public bool HasLastBuff;
 
     public void Init() { }
+    public void Bind(GameFSM fsm)
+    {
+        fsm.GetState(EGameState.Battle)
+            .OnEnter(FSM.Game.Battle.Register)
+            .OnExit(FSM.Game.Battle.Release);
+    }
 
     public void Bind(Func<EGameState, MyState> getState)
     {
-        getState(EGameState.Battle)
-            .OnEnter(FSM.Game.Battle.Register)
-            .OnExit(FSM.Game.Battle.Release);
+       
     }
 
     public void Launch()

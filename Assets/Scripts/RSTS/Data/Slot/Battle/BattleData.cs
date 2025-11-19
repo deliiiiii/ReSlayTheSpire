@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using RSTS.CDMV;
 using Sirenix.Utilities;
-using UnityEngine;
 
 
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 
 namespace RSTS;
 [Serializable]
-public class BattleData : IMyFSMArg<EBattleState>
+public class BattleData : IMyFSMArg<BattleFSM>
 {
     public EPlayerJob Job = EPlayerJob.ZhanShi;
     public MyList<CardInBattle> DeckList = [];
@@ -25,14 +22,13 @@ public class BattleData : IMyFSMArg<EBattleState>
     #region IMyFSMArg
 
     public void Init() { }
-
-    public void Bind(Func<EBattleState, MyState> getState)
+    public void Bind(BattleFSM fsm)
     {
-        getState(EBattleState.BothTurn)
+        fsm.GetState(EBattleState.BothTurn)
             .OnEnter(FSM.Game.Battle.BothTurn.Register)
             .OnExit(FSM.Game.Battle.BothTurn.Release);
     }
-
+    
     public void Launch()
     {
         var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);

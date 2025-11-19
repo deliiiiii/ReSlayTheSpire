@@ -15,9 +15,13 @@ public enum EGameState
     Winning,
 }
 
-public class GameData : IMyFSMArg<EGameState>
+public class GameData : IMyFSMArg<GameFSM>
 {
     public void Init() { }
+    public void Bind(GameFSM fsm)
+    {
+    }
+
     public void Bind(Func<EGameState, MyState> getState) { }
     public void Launch() { }
     public void UnInit() { }

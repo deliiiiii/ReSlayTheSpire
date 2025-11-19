@@ -6,7 +6,7 @@ using Sirenix.Utilities;
 
 public abstract class MyFSMForView<TEnum, TArg>
     where TEnum : struct, Enum
-    where TArg : class, IMyFSMArg<TEnum>, new()
+    where TArg : class, new()
 {
     public TArg Arg = null!;
     protected TEnum CurState;
@@ -69,7 +69,7 @@ public abstract class MyFSMForView<TEnum, TArg>
 public abstract class MyFSMForData<TSub, TEnum, TArg> : MyFSMForView<TEnum, TArg>
     where TSub : MyFSMForData<TSub, TEnum, TArg>, new()
     where TEnum : struct, Enum
-    where TArg : class, IMyFSMArg<TEnum>, new()
+    where TArg : class, IMyFSMArg<TSub>, new()
 {
     public bool IsRegistered;
     [JsonIgnore] BindDataUpdate selfTick = null!;
@@ -121,11 +121,10 @@ public abstract class MyFSMForData<TSub, TEnum, TArg> : MyFSMForView<TEnum, TArg
         IsRegistered = true;
         // 【1】IBL的Init
         TryLoadArg();
-        Arg.Init();
         // 【1.1】绑定自身Tick
         selfTick = Binder.FromTick(Update, EUpdatePri.Fsm);
         // 【2】IBL的Bind
-        Arg.Bind(GetStateSub);
+        Arg.Bind((this as TSub)!);
         unbindableInstances.Clear();
         unbindableInstances.Clear();
         CanUnBind.ForEach(func =>
@@ -205,6 +204,7 @@ public abstract class MyFSMForData<TSub, TEnum, TArg> : MyFSMForView<TEnum, TArg
         {
             CurState = DefaultState;
             Arg = DefaultArg;
+            Arg.Init();
         }
     }
     
