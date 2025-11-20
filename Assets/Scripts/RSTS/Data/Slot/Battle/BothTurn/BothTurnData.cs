@@ -47,6 +47,18 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
             }
         };
         TurnID = 0;
+        
+        Parent.DeckList.ForEach(cardData =>
+        {
+            DrawList.MyAdd(CardInTurn.CreateByAttr(cardData.Config.ID, cardData));
+        });
+        DrawList.Shuffle();
+        
+        EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
+        EnemyList.MyAdd(EnemyDataBase.CreateEnemy(1));
+        EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
+        
+        CollectAllCards().ForEach(cardInTurn => cardInTurn.OnEnterBothTurn());
     }
 
     protected override void Bind()
@@ -146,31 +158,11 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
             EnterState(EBothTurnState.PlayerTurnStart);
         });
     }
-
-    protected override void Launch()
-    {
-        // HandList.MyClear();
-        // DrawList.MyClear();
-        Parent.DeckList.ForEach(cardData =>
-        {
-            DrawList.MyAdd(CardInTurn.CreateByAttr(cardData.Config.ID, cardData));
-        });
-        DrawList.Shuffle();
-        CollectAllCards().ForEach(cardInTurn => cardInTurn.OnEnterBothTurn());
-        // DiscardList.MyClear();
-        // ExhaustList.MyClear();
-        
-        EnemyList.MyClear();
-        EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
-        EnemyList.MyAdd(EnemyDataBase.CreateEnemy(1));
-        EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
-    }
-
     protected override void UnInit()
     {
-        EnemyList.MyClear();
-        
         CollectAllCards().ForEach(cardInTurn => cardInTurn.OnExitBothTurn());
+        
+        EnemyList.MyClear();
         
         HandList.MyClear();
         DrawList.MyClear();

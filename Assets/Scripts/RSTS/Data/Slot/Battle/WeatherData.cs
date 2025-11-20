@@ -32,10 +32,6 @@ public class WeatherData : FSM<WeatherData, EWeatherState>
                 badData = null!;
             });
     }
-    protected override void Launch()
-    {
-    }
-
     protected override void UnInit()
     {
     }

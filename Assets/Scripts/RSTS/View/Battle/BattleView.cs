@@ -153,9 +153,11 @@ public class BattleView : ViewBase
         {
             handCardModelDic.Values.ForEach(cardModel => cardModel.RefreshTxtDes());
         };
-        
-        
-        bothTurnData.HandList.OnAdd += cardInTurn =>
+
+
+        bothTurnData.HandList.OnAdd += AddCardModel;
+        bothTurnData.HandList.ForEach(AddCardModel);
+        void AddCardModel(CardInTurn cardInTurn)
         {
             var cardModel = Instantiate(PfbCard, PrtHandCard);
             cardModel.ReadDataInBothTurn(cardInTurn, bothTurnData);
@@ -164,7 +166,7 @@ public class BattleView : ViewBase
             
             handCardModelDic.Add(cardInTurn, cardModel);
             handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
-        };
+        }
         bothTurnData.HandList.OnRemove += cardInTurn =>
         {
             // 打出破灭时，抽牌堆顶部被打出的牌没有CardModel。
@@ -178,6 +180,8 @@ public class BattleView : ViewBase
             }
             handCardModelDic.Values.ForEach(cardModel2 => cardModel2.RefreshTxtDes());
         };
+        
+        
         
         bothTurnData.DrawList.OnAdd += cardData =>
         {
@@ -266,18 +270,18 @@ public class BattleView : ViewBase
             {
                 if (yieldCardData.IsState(EYieldCardState.Drag))
                     return;
-                if (yieldCardData.Parent.Parent.WeatherData.IsSubState<GoodData>(out var data))
-                {
-                    var @int = data.GetInt();
-                    MyDebug.Log($"Enter When Good Weather{@int}");
-                    yieldCardData.Parent.Parent.WeatherData.EnterState(EWeatherState.Bad);
-                }
-                else if (yieldCardData.Parent.Parent.WeatherData.IsSubState<BadData>(out var badData))
-                {
-                    var @int = badData.GetInt2();
-                    MyDebug.Log($"Enter When Bad Weather{@int}");
-                    yieldCardData.Parent.Parent.WeatherData.EnterState(EWeatherState.Good);
-                }
+                // if (yieldCardData.Parent.Parent.WeatherData.IsSubState<GoodData>(out var data))
+                // {
+                //     var @int = data.GetInt();
+                //     MyDebug.Log($"Enter When Good Weather{@int}");
+                //     yieldCardData.Parent.Parent.WeatherData.EnterState(EWeatherState.Bad);
+                // }
+                // else if (yieldCardData.Parent.Parent.WeatherData.IsSubState<BadData>(out var badData))
+                // {
+                //     var @int = badData.GetInt2();
+                //     MyDebug.Log($"Enter When Bad Weather{@int}");
+                //     yieldCardData.Parent.Parent.WeatherData.EnterState(EWeatherState.Good);
+                // }
                 CurDragCard.ReadDataInBothTurn(cardData, bothTurnData);
                 initThisPos = CurDragCard.transform.position = cardModel.transform.position;
                 var initDeltaScale = cardModel.GetComponent<RectTransform>().sizeDelta.x

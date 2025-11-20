@@ -27,10 +27,12 @@ public class InfoView : ViewBase
         {
             TxtDeckCount.text = battleData.DeckList.Count.ToString();
         };
+        TxtDeckCount.text = battleData.DeckList.Count.ToString();
         battleData.DeckList.OnRemove += cardData =>
         {
             TxtDeckCount.text = battleData.DeckList.Count.ToString();
         };
+        
     }
 
     IEnumerable<BindDataBase> CanUnbindBattle(BattleData battleData)

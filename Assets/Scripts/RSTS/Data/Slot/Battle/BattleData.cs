@@ -31,8 +31,19 @@ public class BattleData : FSM<BattleData, EBattleState, GameData>
     public BattleData(GameData parent) : base(parent)
     {
         var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);
+        config.InitialCardDic.ForEach(pair =>
+        {
+            for(int i = 0; i < pair.Value; i++)
+                DeckList.MyAdd(new CardData(pair.Key.ID));
+        });
+        for (int i = 0; i < 3; i++)
+        {
+            BottleList.MyAdd(null);
+        }
         CurHP.Value = MaxHP.Value = config.MaxHP;
         Coin.Value = 99;
+        
+        WeatherData.Launch(EWeatherState.Good);
     }
     protected override void Bind()
     {
@@ -47,22 +58,6 @@ public class BattleData : FSM<BattleData, EBattleState, GameData>
                 bothTurnData.Release();
                 bothTurnData = null!;
             });
-    }
-
-    protected override void Launch()
-    {
-        WeatherData.Launch(EWeatherState.Good);
-        
-        var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);
-        config.InitialCardDic.ForEach(pair =>
-        {
-            for(int i = 0; i < pair.Value; i++)
-                DeckList.MyAdd(new CardData(pair.Key.ID));
-        });
-        for (int i = 0; i < 3; i++)
-        {
-            BottleList.MyAdd(null);
-        }
     }
 
     protected override void UnInit()

@@ -29,11 +29,6 @@ public class GameData: FSM<GameData, EGameState>
             });
         
     }
-
-    protected override void Launch()
-    {
-    }
-
     protected override void UnInit()
     {
     }

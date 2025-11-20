@@ -59,16 +59,17 @@ public class CharacterModelHolder : ViewBase
     void BindBothTurn(BothTurnData bothTurnData, StateFunc<EBothTurnState> stateFunc)
     {
         PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
-        bothTurnData.EnemyList.OnAdd += enemyData =>
+        bothTurnData.EnemyList.OnAdd += enemyData => AddEnemyModel(enemyData, bothTurnData.EnemyList.Count - 1);
+        bothTurnData.EnemyList.ForEach(AddEnemyModel);
+        void AddEnemyModel(EnemyDataBase enemyData, int i)
         {
             // TODO 应对怪物个数不同的情况
-            var enemyModel = Instantiate(PrbEnemy, TransEnemy[bothTurnData.EnemyList.Count - 1]);
+            var enemyModel = Instantiate(PrbEnemy, TransEnemy[i]);
             enemyModel.ReadData(enemyData);
             enemyModel.gameObject.SetActive(true);
             EnemyModelList.Add(enemyModel);
             enemyModelDic.Add(enemyData, enemyModel);
-        };
-        
+        }
         bothTurnData.EnemyList.OnRemove += enemyData =>
         {
             if (enemyModelDic.TryGetValue(enemyData, out var enemyModel))
@@ -79,6 +80,8 @@ public class CharacterModelHolder : ViewBase
             }
         };
     }
+
+   
 
     void BindYieldCard(YieldCardData yieldCardData, StateFunc<EYieldCardState> stateFunc)
     {
