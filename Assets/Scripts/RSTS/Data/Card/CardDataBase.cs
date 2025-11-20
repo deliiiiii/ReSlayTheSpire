@@ -58,14 +58,15 @@ public class CardData
         => ((CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
     
     // [SubState<EBattleState>(EBattleState.BothTurn)]
-    public CardInTurn InTurn
+    public CardInTurn? InTurn
     {
         get
         {
             if (FSM.GameData.IsSubState<BattleData>(out var battleData) &&
                 battleData.IsSubState<BothTurnData>(out _))
                 return field;
-            throw new InvalidOperationException("CardInTurn 只能在战斗中访问");
+            // MyDebug.LogError("CardInTurn 只能在战斗中访问");
+            return null;
         }
         set;
     }

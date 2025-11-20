@@ -43,11 +43,11 @@ public class CardModel : MonoBehaviour
     
     public void RefreshTxtDes()
     {
-        string plus = Data.UpgradeLevel switch
+        string plus = Data.InTurn.TempUpgradeLevel switch
         {
             0 => "",
             1 => "+",
-            _ => $"+{Data.UpgradeLevel}"
+            _ => $"+{Data.InTurn.TempUpgradeLevel}"
         };
         TxtName.text = $"{Data.Config.Name}{plus}";
         TxtDes.text = bothTurnData.CurContentWithKeywords(Data.InTurn);

@@ -178,8 +178,6 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
         ExhaustList.MyClear();
         
         PlayerHPAndBuffData.ClearBuff();
-
-        Parent.DeckList.ForEach(cardData => cardData.InTurn = null);
     }
     
     public string CurContentWithKeywords(CardInTurn cardInTurn)

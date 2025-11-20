@@ -57,7 +57,6 @@ public class BattleData : FSM<BattleData, EBattleState, GameData>
         config.InitialCardDic.ForEach(pair =>
         {
             for(int i = 0; i < pair.Value; i++)
-                // DeckList.MyAdd(CardBattle.CreateData(pair.Key.ID));
                 DeckList.MyAdd(new CardData(pair.Key.ID));
         });
         for (int i = 0; i < 3; i++)
