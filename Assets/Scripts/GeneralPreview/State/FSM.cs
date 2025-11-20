@@ -13,28 +13,40 @@ public abstract class FSM<TArg, TEnum>
     where TEnum : struct, Enum
 {
     // bindAlwaysDic包括了State的OnEnter、OnExit，和Data的事件绑定回调，如data.OnXXXEvent += () => {}
-    [JsonIgnore] protected static readonly List<Action<TArg, StateFunc<TEnum>>> AlwaysBindList = [];
+    [JsonIgnore] static readonly List<Action<TArg, StateFunc<TEnum>>> alwaysBindList = [];
     // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
-    [JsonIgnore] protected static readonly List<Func<TArg, IEnumerable<BindDataBase>>> 
-        CanUnbindList = [];
+    [JsonIgnore] static readonly List<Func<TArg, IEnumerable<BindDataBase>>> canUnbindList = [];
+    [JsonIgnore] static readonly Dictionary<FieldInfo, TEnum> subDataDic = [];
+
+    static FSM() => InitSubData();
     public static void OnRegister(
         Action<TArg, StateFunc<TEnum>>? alwaysBind = null,
         Func<TArg, IEnumerable<BindDataBase>>? canUnbind = null)
     {
         if(canUnbind != null)
-            CanUnbindList.Add(canUnbind);
+            canUnbindList.Add(canUnbind);
         if(alwaysBind != null)
-            AlwaysBindList.Add(alwaysBind.Invoke);
+            alwaysBindList.Add(alwaysBind.Invoke);
     }
-
-    static FSM()
+    static void InitSubData()
     {
-        InitSubData();
+        typeof(TArg)
+            .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            .ForEach(fieldInfo =>
+            {
+                var attr = fieldInfo.GetCustomAttribute<SubStateAttribute<TEnum>>();
+                if (attr == null)
+                    return;
+                if (!fieldInfo.IsPrivate)
+                {
+                    MyDebug.LogError($"封装性考虑, {typeof(TArg).Name}类中的字段{fieldInfo.Name}推荐为private. " +
+                                     $"欲访问此字段, 请使用IsSubState<TSubData>(out TSubData data)方法.");
+                }
+                subDataDic.Add(fieldInfo, attr.Value);
+            });
     }
-    protected FSM()
-    {
-        selfTick = Binder.FromTick(Tick, EUpdatePri.Fsm);
-    }
+    
+    protected FSM() => selfTick = Binder.FromTick(Tick, EUpdatePri.Fsm);
     [HideInInspector] bool isLaunched;
     [ReadOnly] TEnum curState;
     [JsonIgnore][HideInInspector] MyState? curStateClass;
@@ -71,7 +83,7 @@ public abstract class FSM<TArg, TEnum>
         isLaunched = true;
         // 【1】【2】IBL的Init、Bind, 构造函数
         unbindableInstances.Clear();
-        CanUnbindList.ForEach(func =>
+        canUnbindList.ForEach(func =>
         {
             func.Invoke(Arg).ForEach(bdb =>
             {
@@ -79,9 +91,9 @@ public abstract class FSM<TArg, TEnum>
                 unbindableInstances.Add(bdb);
             });
         });
-        AlwaysBindList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(Arg, GetState));
+        alwaysBindList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(Arg, GetState));
         selfTick.Bind();
-        // 【4】进入初始状态
+        // 【3】进入初始状态
         curStateClass = GetState(startState);
         curState = startState;
         curStateClass.Enter();
@@ -93,7 +105,7 @@ public abstract class FSM<TArg, TEnum>
             MyDebug.LogError($"Release FSM: {GetType().Name} Not Exist");
             return;
         }
-        // 【4】跳转到空状态，并清空所有状态类
+        // 【3】跳转到空状态，并清空所有状态类
         curStateClass?.Exit();
         stateDic.Clear();
         curStateClass = null;
@@ -105,6 +117,20 @@ public abstract class FSM<TArg, TEnum>
         UnInit();
         // 【0】移除FSM
         isLaunched = false;
+    }
+    public bool IsSubState<TSubData>([NotNullWhen(true)] out TSubData? data) 
+        where TSubData : class, IBelong<TArg>
+    {
+        var fieldInfo = subDataDic.Keys
+            .FirstOrDefault(fieldInfo => fieldInfo.FieldType == typeof(TSubData));
+        if(fieldInfo != null)
+        {
+            data = fieldInfo.GetValue(this) as TSubData;
+            return IsState(subDataDic[fieldInfo]);
+        }
+        MyDebug.LogError($"FSM {typeof(TArg).Name} 中不存在类型为 {typeof(TSubData).Name} 的子状态数据.");
+        data = null;
+        return false;
     }
     
     protected abstract void UnInit();
@@ -124,41 +150,6 @@ public abstract class FSM<TArg, TEnum>
         return state;
     }
     bool IsOneOfState(params TEnum[] enums) => enums.Contains(curState);
-
-    public bool IsSubState<TSubData>([NotNullWhen(true)] out TSubData? data) 
-        where TSubData : class, IBelong<TArg>
-    {
-        var fieldInfo = subDataDic.Keys
-            .FirstOrDefault(fieldInfo => fieldInfo.FieldType == typeof(TSubData));
-        if(fieldInfo != null)
-        {
-            data = fieldInfo.GetValue(this) as TSubData;
-            return IsState(subDataDic[fieldInfo]);
-        }
-        MyDebug.LogError($"FSM {typeof(TArg).Name} 中不存在类型为 {typeof(TSubData).Name} 的子状态数据.");
-        data = null;
-        return false;
-    }
-
-    static readonly Dictionary<FieldInfo, TEnum> subDataDic = [];
-
-    static void InitSubData()
-    {
-        typeof(TArg)
-            .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .ForEach(fieldInfo =>
-            {
-                var attr = fieldInfo.GetCustomAttribute<SubStateAttribute<TEnum>>();
-                if (attr == null)
-                    return;
-                if (!fieldInfo.IsPrivate)
-                {
-                    MyDebug.LogError($"封装性考虑, {typeof(TArg).Name}类中的字段{fieldInfo.Name}推荐为private. " +
-                                     $"欲访问此字段, 请使用IsSubState<TSubData>(out TSubData data)方法.");
-                }
-                subDataDic.Add(fieldInfo, attr.Value);
-            });
-    }
 }
 
 
