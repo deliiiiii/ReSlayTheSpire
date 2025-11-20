@@ -1,3 +1,3 @@
-﻿public abstract class YieldModify;
+﻿public abstract class YieldModifyBase;
 
-public class YieldModifyForceExhaust : YieldModify;
+public class YieldModifyForceExhaust : YieldModifyBase;

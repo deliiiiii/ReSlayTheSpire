@@ -292,7 +292,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
         return costEnergy;
     }
     public async UniTask YieldHandAsync(CardInTurn toYield
-        , List<YieldModify>? modifyList = null)
+        , List<YieldModifyBase>? modifyList = null)
     {
         yieldCardData.Release();
         int cost = GetEnergy(toYield);
@@ -309,14 +309,14 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
     }
 
     public async UniTask YieldBlindAsync(CardInTurn toYield
-        , List<YieldModify>? modifyList = null)
+        , List<YieldModifyBase>? modifyList = null)
     {
         modifyList ??= [];
         await YieldInternal(toYield, 0, modifyList);
     }
 
     async UniTask YieldInternal(CardInTurn toYield, int cost
-        , List<YieldModify> modifyList)
+        , List<YieldModifyBase> modifyList)
     {
         if (toYield.Parent.Config.Category == ECardCategory.Ability)
         {
