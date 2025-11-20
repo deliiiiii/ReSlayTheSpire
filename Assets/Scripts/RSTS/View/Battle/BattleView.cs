@@ -301,7 +301,6 @@ public class BattleView : ViewBase
                 if (yieldCardData.IsState(EYieldCardState.Drag))
                     return;
                 yieldCardData.CardModel = CurDragCard;
-                yieldCardData.CardData = cardData;
                 CharacterModelHolder.HidePlayerWarning();
                 if (!bothTurnData.TryYield(cardData, out var failReason))
                 {

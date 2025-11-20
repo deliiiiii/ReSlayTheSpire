@@ -5,6 +5,5 @@ namespace RSTS;
 public class YieldCardData(BothTurnData parent) : FSM<YieldCardData, EYieldCardState, BothTurnData>(parent)
 {
     public CardModel CardModel;
-    public CardInTurn CardData;
     protected override void UnInit() { }
 }

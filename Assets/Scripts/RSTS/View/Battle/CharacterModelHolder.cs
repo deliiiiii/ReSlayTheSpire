@@ -112,9 +112,9 @@ public class CharacterModelHolder : ViewBase
             {
                 if (!yieldCardData.IsState(EYieldCardState.Drag))
                     return;
-                if (!yieldCardData.CardData.Parent.HasTarget)
+                if (!yieldCardData.CardModel.Data.HasTarget)
                     return;
-                yieldCardData.CardData.Target = enemyModel.Data;
+                yieldCardData.CardModel.Data.InTurn.Target = enemyModel.Data;
                 yieldCardData.CardModel.RefreshTxtDes();
                 enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
                 enemyModel.EnableSelectTarget(true);
@@ -125,7 +125,7 @@ public class CharacterModelHolder : ViewBase
             {
                 if (!yieldCardData.IsState(EYieldCardState.Drag))
                     return;
-                yieldCardData.CardData.Target = null;
+                yieldCardData.CardModel.Data.InTurn.Target = null;
                 yieldCardData.CardModel.RefreshTxtDes();
                 enteredTargetEnemyModels.Remove(enemyModel);
                 enemyModel.EnableSelectTarget(false);
