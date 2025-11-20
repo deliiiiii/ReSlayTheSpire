@@ -14,7 +14,7 @@ public class GameData: FSM<GameData, EGameState>
 
     [SubState<EGameState>(EGameState.Battle)]
     BattleData battleData = null!;
-    protected override void Bind()
+    public GameData()
     {
         GetState(EGameState.Battle)
             .OnEnter(() =>
@@ -27,7 +27,6 @@ public class GameData: FSM<GameData, EGameState>
                 battleData.Release();
                 battleData = null!;
             });
-        
     }
     protected override void UnInit()
     {

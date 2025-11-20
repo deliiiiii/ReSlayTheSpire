@@ -22,12 +22,12 @@ public class BattleData : FSM<BattleData, EBattleState, GameData>
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
     public WeatherData WeatherData = new();
+    public MapData MapData = new();
     
     // 子状态数据
     [SubState<EBattleState>(EBattleState.BothTurn)]
     BothTurnData bothTurnData = null!;
 
-    #region IMyFSMArg
     public BattleData(GameData parent) : base(parent)
     {
         var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);
@@ -44,9 +44,7 @@ public class BattleData : FSM<BattleData, EBattleState, GameData>
         Coin.Value = 99;
         
         WeatherData.Launch(EWeatherState.Good);
-    }
-    protected override void Bind()
-    {
+        
         GetState(EBattleState.BothTurn)
             .OnEnter(() =>
             {
@@ -70,10 +68,4 @@ public class BattleData : FSM<BattleData, EBattleState, GameData>
         base.Tick(dt);
         InBattleTime.Value += dt;
     }
-
-    #endregion
-    
-    // #region MapData
-    // [SerializeReference]MapData mapData;
-    // #endregion
 }

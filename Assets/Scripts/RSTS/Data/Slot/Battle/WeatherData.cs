@@ -8,7 +8,7 @@ public class WeatherData : FSM<WeatherData, EWeatherState>
     GoodData goodData = null!;
     [SubState<EWeatherState>(EWeatherState.Bad)]
     BadData badData = null!;
-    protected override void Bind()
+    public WeatherData()
     {
         GetState(EWeatherState.Good)
             .OnEnter(() =>

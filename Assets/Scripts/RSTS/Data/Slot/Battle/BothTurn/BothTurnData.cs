@@ -59,10 +59,8 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
         
         CollectAllCards().ForEach(cardInTurn => cardInTurn.OnEnterBothTurn());
-    }
 
-    protected override void Bind()
-    {
+        
         GetState(EBothTurnState.GrossStart).OnEnter(() =>
         {
             EnterState(EBothTurnState.PlayerTurnStart);

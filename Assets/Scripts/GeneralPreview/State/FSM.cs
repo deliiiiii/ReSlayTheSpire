@@ -69,9 +69,7 @@ public abstract class FSM<TArg, TEnum>
         }
         // 【0】添加FSM
         isLaunched = true;
-        // 【1】IBL的Init, 构造函数
-        // 【2】IBL的Bind
-        Bind();
+        // 【1】【2】IBL的Init、Bind, 构造函数
         unbindableInstances.Clear();
         CanUnbindList.ForEach(func =>
         {
@@ -109,9 +107,6 @@ public abstract class FSM<TArg, TEnum>
         isLaunched = false;
     }
     
-    
-    protected abstract void Bind();
-    // protected abstract void Launch();
     protected abstract void UnInit();
 
     protected virtual void Tick(float dt)

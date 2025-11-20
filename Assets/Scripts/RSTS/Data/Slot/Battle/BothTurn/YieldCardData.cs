@@ -6,6 +6,5 @@ public class YieldCardData(BothTurnData parent) : FSM<YieldCardData, EYieldCardS
 {
     public CardModel CardModel;
     public CardInTurn CardData;
-    protected override void Bind() { }
     protected override void UnInit() { }
 }
