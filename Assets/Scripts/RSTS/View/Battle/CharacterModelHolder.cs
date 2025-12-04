@@ -42,9 +42,9 @@ public class CharacterModelHolder : ViewBase
         PnlPlayerWarning.SetActive(false);
     }
     
-    void BindBattle(BattleData battleData, StateFunc<EBattleState> stateFunc)
+    void BindBattle(BattleData battleData, Func<EBattleState, IStateForView> func)
     {
-        stateFunc(EBattleState.BothTurn)
+        func(EBattleState.BothTurn)
             .OnEnterAfter(() =>
             {
                 PlayerModel.gameObject.SetActive(true);
@@ -56,7 +56,7 @@ public class CharacterModelHolder : ViewBase
             });
     }
     
-    void BindBothTurn(BothTurnData bothTurnData, StateFunc<EBothTurnState> stateFunc)
+    void BindBothTurn(BothTurnData bothTurnData, Func<EBothTurnState, IStateForView> func)
     {
         PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
         bothTurnData.EnemyList.OnAdd += enemyData => AddEnemyModel(enemyData, bothTurnData.EnemyList.Count - 1);
@@ -83,9 +83,9 @@ public class CharacterModelHolder : ViewBase
 
    
 
-    void BindYieldCard(YieldCardData yieldCardData, StateFunc<EYieldCardState> stateFunc)
+    void BindYieldCard(YieldCardData yieldCardData, Func<EYieldCardState, IStateForView> func)
     {
-        stateFunc(EYieldCardState.Drag)
+        func(EYieldCardState.Drag)
             .OnEnterAfter(() =>
             {
                 EnemyModelList.ForEach(m =>

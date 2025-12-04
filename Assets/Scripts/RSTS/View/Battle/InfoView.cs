@@ -19,7 +19,7 @@ public class InfoView : ViewBase
     public Button BtnDeck;
     public Button BtnExitBattle;
     
-    void BindBattle(BattleData battleData, StateFunc<EBattleState> stateFunc)
+    void BindBattle(BattleData battleData, Func<EBattleState, IStateForView> func)
     {
         TxtPlayerJob.text = battleData.Job.ToString();
         

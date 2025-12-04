@@ -63,9 +63,9 @@ public class BattleView : ViewBase
     public Button BtnReturnToTitle;
     #endregion
 
-    void BindGame(GameData gameData, StateFunc<EGameState> stateFunc)
+    void BindGame(GameData gameData, Func<EGameState, IStateForView> func)
     {
-        stateFunc(EGameState.Battle)
+        func(EGameState.Battle)
             .OnEnterAfter(() =>
             {
                 InfoView.gameObject.SetActive(true);
@@ -77,9 +77,9 @@ public class BattleView : ViewBase
                 InfoView.gameObject.SetActive(false);
             });
     }
-    void BindBattle(BattleData battleData, StateFunc<EBattleState> stateFunc)
+    void BindBattle(BattleData battleData, Func<EBattleState, IStateForView> func)
     {
-        stateFunc(EBattleState.SelectLastBuff)
+        func(EBattleState.SelectLastBuff)
             .OnEnterAfter(() =>
             {
                 // InitBuffButtons();
@@ -94,7 +94,7 @@ public class BattleView : ViewBase
         // MyFSM.GetBindState(BattleStateWrap.One, EBattleState.SelectRoom)
         //     .OnEnter(() => MyFSM.EnterState(BattleStateWrap.One, EBattleState.BothTurn));
         
-        stateFunc(EBattleState.BothTurn)
+        func(EBattleState.BothTurn)
             .OnEnterAfter(() =>
             {
                 PnlCard.SetActive(true);
@@ -106,7 +106,7 @@ public class BattleView : ViewBase
                 PrtDiscardOnceClick.ClearActiveChildren();
             });
 
-        stateFunc(EBattleState.Win)
+        func(EBattleState.Win)
             .OnEnterAfter(() =>
             {
                 PnlWin.SetActive(true);
@@ -124,9 +124,9 @@ public class BattleView : ViewBase
     }
 
     readonly Dictionary<CardInTurn, CardModel> handCardModelDic = [];
-    void BindBothTurn(BothTurnData bothTurnData, StateFunc<EBothTurnState> stateFunc)
+    void BindBothTurn(BothTurnData bothTurnData, Func<EBothTurnState, IStateForView> func)
     {
-        stateFunc(EBothTurnState.PlayerYieldCard)
+        func(EBothTurnState.PlayerYieldCard)
             .OnEnterAfter(() => 
             {
                 BtnEndTurn.enabled = true;

@@ -22,6 +22,7 @@ public class GameData: FSM<GameData, EGameState>
                 battleData = new BattleData(this);
                 battleData.Launch(EBattleState.SelectLastBuff);
             })
+            .OnUpdate(_ => {})
             .OnExit(() =>
             {
                 battleData.Release();

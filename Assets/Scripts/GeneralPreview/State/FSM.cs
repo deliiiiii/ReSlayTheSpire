@@ -13,14 +13,14 @@ public abstract class FSM<TArg, TEnum>
     where TEnum : struct, Enum
 {
     // bindAlwaysDic包括了State的OnEnter、OnExit，和Data的事件绑定回调，如data.OnXXXEvent += () => {}
-    [JsonIgnore] static readonly List<Action<TArg, StateFunc<TEnum>>> alwaysBindList = [];
+    [JsonIgnore] static readonly List<Action<TArg, Func<TEnum, IStateForView>>> alwaysBindList = [];
     // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
     [JsonIgnore] static readonly List<Func<TArg, IEnumerable<BindDataBase>>> canUnbindList = [];
     [JsonIgnore] static readonly Dictionary<FieldInfo, TEnum> subDataDic = [];
 
     static FSM() => InitSubData();
     public static void OnRegister(
-        Action<TArg, StateFunc<TEnum>>? alwaysBind = null,
+        Action<TArg, Func<TEnum, IStateForView>>? alwaysBind = null,
         Func<TArg, IEnumerable<BindDataBase>>? canUnbind = null)
     {
         if(canUnbind != null)
@@ -49,7 +49,7 @@ public abstract class FSM<TArg, TEnum>
     protected FSM() => selfTick = Binder.FromTick(Tick, EUpdatePri.Fsm);
     [HideInInspector] bool isLaunched;
     [ReadOnly] TEnum curState;
-    [JsonIgnore][HideInInspector] MyState? curStateClass;
+    [JsonIgnore][HideInInspector] IState? curStateClass;
     [JsonIgnore][HideInInspector] readonly Dictionary<TEnum, MyState> stateDic = [];
     [JsonIgnore][HideInInspector] readonly BindDataUpdate selfTick;
     [JsonIgnore][HideInInspector] readonly List<BindDataBase> unbindableInstances = [];
@@ -63,7 +63,7 @@ public abstract class FSM<TArg, TEnum>
             MyDebug.LogError("FSM Not Launched");
             return;
         }
-        var newStateClass = GetStateInternal(e);
+        var newStateClass = GetState(e);
         if (newStateClass == curStateClass)
             return;
         curStateClass.Exit();
@@ -91,7 +91,7 @@ public abstract class FSM<TArg, TEnum>
                 unbindableInstances.Add(bdb);
             });
         });
-        alwaysBindList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(Arg, GetState));
+        alwaysBindList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(Arg, GetStateInternal));
         selfTick.Bind();
         // 【3】进入初始状态
         curStateClass = GetState(startState);
@@ -139,13 +139,14 @@ public abstract class FSM<TArg, TEnum>
     {
         curStateClass?.Update(dt);
     }
-    protected MyState GetState(TEnum e) => GetStateInternal(e);
+    
+    protected IStateForData GetState(TEnum e) => GetStateInternal(e);
     
     MyState GetStateInternal(TEnum e)
     {
         if (stateDic.TryGetValue(e, out var value))
             return value;
-        MyState state = new();
+        var state = new MyState();
         stateDic.Add(e, state);
         return state;
     }
@@ -165,7 +166,7 @@ public interface IBelong<out T>
 {
     [HideInInspector] public T Parent { get; }
 }
-public delegate MyStateForView StateFunc<in TEnum>(TEnum e) where TEnum : struct, Enum;
+// public delegate MyStateForView StateFunc<in TEnum>(TEnum e) where TEnum : struct, Enum;
 
 
 [AttributeUsage(AttributeTargets.Field)]
