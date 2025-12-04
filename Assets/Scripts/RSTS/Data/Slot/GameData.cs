@@ -1,11 +1,6 @@
 ﻿using System;
 namespace RSTS;
 
-public static class FSM
-{
-    public static readonly GameData GameData = new();
-}
-
 [Serializable]
 public class GameData: FSM<GameData, EGameState>
 {
@@ -22,7 +17,6 @@ public class GameData: FSM<GameData, EGameState>
                 battleData = new BattleData(this);
                 battleData.Launch(EBattleState.SelectLastBuff);
             })
-            .OnUpdate(_ => {})
             .OnExit(() =>
             {
                 battleData.Release();

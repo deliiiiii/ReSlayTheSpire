@@ -108,6 +108,7 @@ public abstract class FSM<TArg, TEnum>
         // 【3】跳转到空状态，并清空所有状态类
         curStateClass?.Exit();
         stateDic.Clear();
+        curState = default;
         curStateClass = null;
         // 【2】Bind的反向
         selfTick.UnBind();

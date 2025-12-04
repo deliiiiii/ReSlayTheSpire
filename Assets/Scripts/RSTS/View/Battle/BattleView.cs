@@ -120,7 +120,7 @@ public class BattleView : ViewBase
     {
         foreach (var btn in LastBuffBtnList) 
             yield return Binder.FromEvt(btn.onClick).To(() => battleData.EnterState(EBattleState.BothTurn));
-        yield return Binder.FromEvt(BtnReturnToTitle.onClick).To(() => FSM.GameData.EnterState(EGameState.Title));
+        yield return Binder.FromEvt(BtnReturnToTitle.onClick).To(() => battleData.Parent.EnterState(EGameState.Title));
     }
 
     readonly Dictionary<CardInTurn, CardModel> handCardModelDic = [];
