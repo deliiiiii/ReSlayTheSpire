@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Sirenix.Utilities;
 
 namespace RSTS;
 [CardID(22)][Serializable]
-public class Card22 : CardInTurn
+public class Card22(CardData parent) : CardInTurn(parent)
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
 

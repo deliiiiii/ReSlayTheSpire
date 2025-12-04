@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [CardID(7)][Serializable]
-public class Card7 : CardInTurn
+public class Card7(CardData parent) : CardInTurn(parent)
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
     int draw => NthEmbedAs<EmbedDraw>(1).DrawValue;

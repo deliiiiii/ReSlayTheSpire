@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [CardID(6)][Serializable]
-public class Card6 : CardInTurn
+public class Card6(CardData parent) : CardInTurn(parent)
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
     int addPerDaJi => NthEmbedAs<EmbedMisc>(1).MiscValue;

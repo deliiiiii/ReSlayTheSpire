@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [CardID(102)][Serializable]
-public class Card102 : CardInTurn
+public class Card102(CardData parent) : CardInTurn(parent)
 {
     BuffDataStrength addStrength => NthEmbedAsBuffCopy<BuffDataStrength>(0);
     BuffDataLoseStrength loseStrength => NthEmbedAsBuffCopy<BuffDataLoseStrength>(1);

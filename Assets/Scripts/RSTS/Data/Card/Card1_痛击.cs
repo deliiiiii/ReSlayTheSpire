@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [CardID(1)][Serializable]
-public class Card1 : CardInTurn
+public class Card1(CardData parent) : CardInTurn(parent)
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
     BuffDataVulnerable vulnerableBuff => NthEmbedAsBuffCopy<BuffDataVulnerable>(1);

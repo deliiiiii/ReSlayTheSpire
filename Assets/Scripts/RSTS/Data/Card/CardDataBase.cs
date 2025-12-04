@@ -21,18 +21,8 @@ public class CardData
                 .FirstOrDefault(c => c.ID == field)!;
         }
     }
-    
-    public int UpgradeLevel
-    {
-        get => InTurn?.TempUpgradeLevel ?? field;
-        set
-        {
-            if (InTurn != null)
-                InTurn.TempUpgradeLevel = value;
-            else
-                field = value;
-        }
-    }
+
+    public int UpgradeLevel;
 
     public void Upgrade()
     {
@@ -54,47 +44,25 @@ public class CardData
     public TBuff NthEmbedAsBuffCopy<TBuff>(int id)
         where TBuff : BuffDataBase
         => ((CurUpgradeInfo.Des.EmbedTypes.ToList()[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
-    
-    // [SubState<EBattleState>(EBattleState.BothTurn)]
-    public CardInTurn? InTurn
-    {
-        get
-        {
-            if (FSM.GameData.IsSubState<BattleData>(out var battleData) &&
-                battleData.IsSubState<BothTurnData>(out _))
-                return field;
-            // MyDebug.LogError("CardInTurn 只能在战斗中访问");
-            return null;
-        }
-        set;
-    }
 }
 
 [Serializable]
-public abstract class CardInTurn : 
-    DataAttr<CardInTurn, CardIDAttribute, CardData>, IBelong<CardData>
+public abstract class CardInTurn(CardData parent) : DataAttr<CardInTurn, CardIDAttribute, CardData>
 {
-    // 反射初始化
-    public CardData Parent { get; private set; } = null!;
+    public CardData Parent { get; } = parent;
+    
     public T NthEmbedAs<T>(int id) where T : EmbedType => Parent.NthEmbedAs<T>(id);
     public TBuff NthEmbedAsBuffCopy<TBuff>(int id) where TBuff : BuffDataBase => Parent.NthEmbedAsBuffCopy<TBuff>(id);
     
     
     // 无来源卡牌
-    public CardInTurn CreateBlindCard(int id) => CreateByAttr(id, Parent);
+    public CardInTurn CreateBlindCard(int id) => CreateByAttr(id, new CardData(id));
     
-    public int TempUpgradeLevel;
+    public int TempUpgradeLevel = parent.UpgradeLevel;
     public EnemyDataBase? Target;
     // 临时加入的，如“愤怒”
     public bool IsTemporary;
-
-    protected override void ReadContext(CardData context)
-    {
-        Parent = context;
-        Parent.InTurn = this;
-        TempUpgradeLevel = context.UpgradeLevel;
-    }
-
+    
     public event Action? OnTempUpgrade;
     public virtual List<AttackModifyBase> GetModifyList(BothTurnData bothTurnData) => [];
     public virtual bool YieldCondition(BothTurnData bothTurnData, out string failReason)

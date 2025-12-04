@@ -265,7 +265,7 @@ public class BattleView : ViewBase
         Vector3 initScale = default;
         foreach(var cardModel in handCardModelDic.Values)
         {
-            var cardData = cardModel.Data.InTurn;
+            var cardData = cardModel.Data;
             yield return Binder.FromEvt(cardModel.OnPointerEnterEvt).To(() =>
             {
                 if (yieldCardData.IsState(EYieldCardState.Drag))

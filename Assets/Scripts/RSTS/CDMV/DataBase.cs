@@ -19,7 +19,7 @@ public abstract class DataAttr<TData, TAttribute, TContext>
     where TData : DataAttr<TData, TAttribute, TContext>
     where TAttribute : IDAttribute
 {
-    static Dictionary<int, Func<TContext, TData>> ctorDic = [];
+    static readonly Dictionary<int, Func<TContext, TData>> ctorDic = [];
     public static void InitCtorDic()
     {
         ctorDic.Clear();
@@ -31,8 +31,7 @@ public abstract class DataAttr<TData, TAttribute, TContext>
             {
                 ctorDic.Add(pair.Key, context =>
                 {
-                    var ins = (Activator.CreateInstance(pair.Value) as TData)!;
-                    ins.ReadContext(context);
+                    var ins = (Activator.CreateInstance(pair.Value, args: context) as TData)!;
                     return ins;
                 });
                 // ctorDic.TryAdd(pair.Key, ctorDic[0]);
@@ -47,6 +46,4 @@ public abstract class DataAttr<TData, TAttribute, TContext>
         }
         throw new Exception($"{typeof(TData).Name} CreateData : ID {id} out of range");
     }
-    
-    protected abstract void ReadContext(TContext context);
 }

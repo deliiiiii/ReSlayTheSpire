@@ -6,7 +6,7 @@ using Sirenix.Utilities;
 
 namespace RSTS;
 [CardID(28)][Serializable]
-public class Card28 : CardInTurn
+public class Card28(CardData parent) : CardInTurn(parent)
 {
     int atk => NthEmbedAs<EmbedAttack>(0).AttackValue;
     List<CardInTurn> ToExhaustCards(BothTurnData bothTurnData) 

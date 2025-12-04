@@ -30,10 +30,6 @@ public class MyState : MyStateForView
         OnExitBeforeEvt?.Invoke();
         OnExitEvt?.Invoke();
     }
-    internal void Destroy()
-    {
-        OnDestroyEvt?.Invoke();
-    }
     internal void Update(float dt)
     {
         OnUpdateEvt?.Invoke(dt);
@@ -41,7 +37,6 @@ public class MyState : MyStateForView
     internal event Action<float>? OnUpdateEvt;
     internal event Action? OnEnterEvt;
     internal event Action? OnExitEvt;
-    internal event Action? OnDestroyEvt;
 
     [Obsolete("In class XXXData, use OnEnter instead.")]
     public new MyStateForView OnEnterAfter(Action act) => this;
@@ -63,10 +58,4 @@ public class MyState : MyStateForView
         OnUpdateEvt += act;
         return this;
     }
-    public MyState OnDestroy(Action act)
-    {
-        OnDestroyEvt += act;
-        return this;
-    }
-    
 }

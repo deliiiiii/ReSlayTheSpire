@@ -8,6 +8,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 
 namespace RSTS;
+
 [Serializable]
 public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
 {
@@ -299,7 +300,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
         UseEnergy(cost);
         HandList.MyRemove(toYield);
         modifyList ??= [];
-        await YieldInternal(toYield, cost, modifyList);
+        await YieldInternalAsync(toYield, cost, modifyList);
         toYield.Target = null;
         yieldCardData.Launch(EYieldCardState.None);
         if(EnemyList.Count == 0)
@@ -312,10 +313,10 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
         , List<YieldModifyBase>? modifyList = null)
     {
         modifyList ??= [];
-        await YieldInternal(toYield, 0, modifyList);
+        await YieldInternalAsync(toYield, 0, modifyList);
     }
 
-    async UniTask YieldInternal(CardInTurn toYield, int cost
+    async UniTask YieldInternalAsync(CardInTurn toYield, int cost
         , List<YieldModifyBase> modifyList)
     {
         if (toYield.Parent.Config.Category == ECardCategory.Ability)
@@ -609,7 +610,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
     }
 
     
-    public int DaJiCount => CollectAllCards().Count(card => card.Parent.Config.name.Contains("打击"));
+    public int DaJiCount => CollectAllCards().Count(cardData => cardData.Parent.Config.name.Contains("打击"));
     int loseHpCount;
     #endregion
 

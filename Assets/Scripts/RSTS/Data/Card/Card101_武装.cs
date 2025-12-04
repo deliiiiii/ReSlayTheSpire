@@ -5,7 +5,7 @@ using Sirenix.Utilities;
 
 namespace RSTS;
 [CardID(101)][Serializable]
-public class Card101 : CardInTurn
+public class Card101(CardData parent) : CardInTurn(parent)
 {
     int blockValue => NthEmbedAs<EmbedBlock>(0).BlockValue;
 
