@@ -1,6 +1,6 @@
 using System;
 
-internal class MyState : IStateForView, IStateForData
+internal class MyState : IStateForFSM, IStateForView, IStateForData
 {
     internal event Action<float>? OnUpdateEvt;
     internal event Action? OnEnterEvt;
@@ -8,7 +8,7 @@ internal class MyState : IStateForView, IStateForData
     internal event Action? OnExitBeforeEvt;
     internal event Action? OnExitEvt;   
     
-    #region IState
+    #region IStateForFSM
     public void Enter()
     {
         OnEnterEvt?.Invoke();

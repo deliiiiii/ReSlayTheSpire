@@ -47,9 +47,10 @@ public abstract class FSM<TArg, TEnum>
     }
     
     protected FSM() => selfTick = Binder.FromTick(Tick, EUpdatePri.Fsm);
+
     [HideInInspector] bool isLaunched;
     [ReadOnly] TEnum curState;
-    [JsonIgnore][HideInInspector] IState? curStateClass;
+    [JsonIgnore][HideInInspector] IStateForFSM? curStateClass;
     [JsonIgnore][HideInInspector] readonly Dictionary<TEnum, MyState> stateDic = [];
     [JsonIgnore][HideInInspector] readonly BindDataUpdate selfTick;
     [JsonIgnore][HideInInspector] readonly List<BindDataBase> unbindableInstances = [];
@@ -63,7 +64,7 @@ public abstract class FSM<TArg, TEnum>
             MyDebug.LogError("FSM Not Launched");
             return;
         }
-        var newStateClass = GetState(e);
+        var newStateClass = GetStateInternal(e);
         if (newStateClass == curStateClass)
             return;
         curStateClass.Exit();
@@ -81,7 +82,9 @@ public abstract class FSM<TArg, TEnum>
         }
         // 【0】添加FSM
         isLaunched = true;
-        // 【1】【2】IBL的Init、Bind, 构造函数
+        // 【1】IBL的Init: 构造函数
+        // 【2】Bind
+        Bind(GetStateInternal);
         unbindableInstances.Clear();
         canUnbindList.ForEach(func =>
         {
@@ -94,7 +97,7 @@ public abstract class FSM<TArg, TEnum>
         alwaysBindList.ForEach(bindAlwaysAct => bindAlwaysAct.Invoke(Arg, GetStateInternal));
         selfTick.Bind();
         // 【3】进入初始状态
-        curStateClass = GetState(startState);
+        curStateClass = GetStateInternal(startState);
         curState = startState;
         curStateClass.Enter();
     }
@@ -133,15 +136,14 @@ public abstract class FSM<TArg, TEnum>
         data = null;
         return false;
     }
-    
+
+    protected abstract void Bind(Func<TEnum, IStateForData> getState);
     protected abstract void UnInit();
 
     protected virtual void Tick(float dt)
     {
         curStateClass?.Update(dt);
     }
-    
-    protected IStateForData GetState(TEnum e) => GetStateInternal(e);
     
     MyState GetStateInternal(TEnum e)
     {

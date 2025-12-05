@@ -8,12 +8,13 @@ public class WeatherData : FSM<WeatherData, EWeatherState>
     GoodData goodData = null!;
     [SubState<EWeatherState>(EWeatherState.Bad)]
     BadData badData = null!;
-    public WeatherData()
+
+    protected override void Bind(Func<EWeatherState, IStateForData> getState)
     {
-        GetState(EWeatherState.Good)
+        getState(EWeatherState.Good)
             .OnEnter(() =>
             {
-                goodData = new(this);
+                goodData = new GoodData(this);
                 goodData.GetInt();
             })
             .OnExit(() =>
@@ -21,10 +22,10 @@ public class WeatherData : FSM<WeatherData, EWeatherState>
                 goodData = null!;
             });
 
-        GetState(EWeatherState.Bad)
+        getState(EWeatherState.Bad)
             .OnEnter(() =>
             {
-                badData = new(this);
+                badData = new BadData(this);
                 badData.GetInt2();
             })
             .OnExit(() =>
@@ -32,6 +33,7 @@ public class WeatherData : FSM<WeatherData, EWeatherState>
                 badData = null!;
             });
     }
+
     protected override void UnInit()
     {
     }

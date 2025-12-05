@@ -60,14 +60,16 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
         
         CollectAllCards().ForEach(cardInTurn => cardInTurn.OnEnterBothTurn());
+    }
 
-        
-        GetState(EBothTurnState.GrossStart).OnEnter(() =>
+    protected override void Bind(Func<EBothTurnState, IStateForData> getState)
+    {
+        getState(EBothTurnState.GrossStart).OnEnter(() =>
         {
             EnterState(EBothTurnState.PlayerTurnStart);
         });
         
-        GetState(EBothTurnState.PlayerTurnStart).OnEnter(() =>
+        getState(EBothTurnState.PlayerTurnStart).OnEnter(() =>
         {
             TurnID++;
             PlayerBlock.Value = 0;
@@ -79,13 +81,13 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
             EnterState(EBothTurnState.PlayerDraw);
         });
         
-        GetState(EBothTurnState.PlayerDraw).OnEnter(() =>
+        getState(EBothTurnState.PlayerDraw).OnEnter(() =>
         {
             DrawSome(5);
             EnterState(EBothTurnState.PlayerYieldCard);
         });
         
-        GetState(EBothTurnState.PlayerYieldCard)
+        getState(EBothTurnState.PlayerYieldCard)
             .OnEnter(() =>
             {
                 yieldCardData = new(this);
@@ -97,7 +99,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
                 yieldCardData = null!;
             });
         
-        GetState(EBothTurnState.PlayerTurnEnd).OnEnter(() =>
+        getState(EBothTurnState.PlayerTurnEnd).OnEnter(() =>
         {
             HandList.ForEach(cardInTurn => cardInTurn.OnPlayerTurnEnd(this));
             DiscardAllHand();
@@ -106,7 +108,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
             EnterState(EBothTurnState.EnemyTurnStart);
         });
         
-        GetState(EBothTurnState.EnemyTurnStart).OnEnter(() =>
+        getState(EBothTurnState.EnemyTurnStart).OnEnter(() =>
         {
             EnemyList.ForEach(enemyData =>
             {
@@ -126,7 +128,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
             // }
         });
 
-        GetState(EBothTurnState.EnemyAction).OnEnter(() =>
+        getState(EBothTurnState.EnemyAction).OnEnter(() =>
         {
             Func().Forget();
             return;
@@ -147,7 +149,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
             }
         });
         
-        GetState(EBothTurnState.EnemyTurnEnd).OnEnter(() =>
+        getState(EBothTurnState.EnemyTurnEnd).OnEnter(() =>
         {
             EnemyList.ForEach(enemyData =>
             {
@@ -157,6 +159,7 @@ public class BothTurnData : FSM<BothTurnData, EBothTurnState, BattleData>
             EnterState(EBothTurnState.PlayerTurnStart);
         });
     }
+
     protected override void UnInit()
     {
         CollectAllCards().ForEach(cardInTurn => cardInTurn.OnExitBothTurn());

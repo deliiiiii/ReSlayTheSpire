@@ -9,9 +9,10 @@ public class GameData: FSM<GameData, EGameState>
 
     [SubState<EGameState>(EGameState.Battle)]
     BattleData battleData = null!;
-    public GameData()
+
+    protected override void Bind(Func<EGameState, IStateForData> getState)
     {
-        GetState(EGameState.Battle)
+        getState(EGameState.Battle)
             .OnEnter(() =>
             {
                 battleData = new BattleData(this);
@@ -23,7 +24,13 @@ public class GameData: FSM<GameData, EGameState>
                 battleData = null!;
             });
     }
+
     protected override void UnInit()
     {
+    }
+
+    void Test()
+    {
+        // var gameData = FSM<EGameState>.GetData<GameData>();
     }
 }

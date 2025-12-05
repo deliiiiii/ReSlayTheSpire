@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public abstract class BindDataBase
 {
     public void Bind()
     {
-        foreach (var guard in GuardSet)
+        if (guardSet.Any(guard => !guard.Invoke()))
         {
-            if (!guard.Invoke())
-            {
-                return;
-            }
+            return;
         }
+
         BindInternal();
     }
     protected abstract void BindInternal();
     public abstract void UnBind(); 
-    public readonly HashSet<Func<bool>> GuardSet = new ();
+    readonly HashSet<Func<bool>> guardSet = new ();
     public T Where<T>(Func<bool> guard)
         where T : BindDataBase
     {
-        GuardSet.Add(guard);
+        guardSet.Add(guard);
         return this as T;
     }
 }

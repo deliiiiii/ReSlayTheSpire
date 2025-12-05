@@ -2,13 +2,7 @@
 using System.Linq;
 using RSTS.CDMV;
 using Sirenix.Utilities;
-
-
-
 namespace RSTS;
-
-
-
 [Serializable]
 public class BattleData : FSM<BattleData, EBattleState, GameData>
 {
@@ -47,11 +41,14 @@ public class BattleData : FSM<BattleData, EBattleState, GameData>
         Coin.Value = 99;
         
         WeatherData.Launch(EWeatherState.Good);
-        
-        GetState(EBattleState.BothTurn)
+    }
+
+    protected override void Bind(Func<EBattleState, IStateForData> getState)
+    {
+        getState(EBattleState.BothTurn)
             .OnEnter(() =>
             {
-                bothTurnData = new(this);
+                bothTurnData = new BothTurnData(this);
                 bothTurnData.Launch(EBothTurnState.GrossStart);
             })
             .OnExit(() =>
