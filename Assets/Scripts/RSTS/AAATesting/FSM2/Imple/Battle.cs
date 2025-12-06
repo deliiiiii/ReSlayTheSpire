@@ -1,33 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
 using RSTS.CDMV;
 using Sirenix.Utilities;
 
 namespace RSTS;
 
-public class GameFSM : FSM2<object, GameState>
-{
-    public string PlayerName = "DELI";
-    public bool HasLastBuff;
-    public GameFSM(object context = null!) : base(context)
-    {
-        Launch<GameChoosePlayer>();
-    }
-}
-
-public abstract class GameState(GameFSM fsm) : GameFSM.StateBase(fsm);
-public class GameChoosePlayer(GameFSM fsm) : GameState(fsm);
-public class GameTitle(GameFSM fsm) : GameState(fsm);
-public class GameBattle : GameState
-{
-    BattleFSM battleFSM;
-    public GameBattle(GameFSM fsm) : base(fsm)
-    {
-        MyDebug.Log("Enter Battle State");
-        battleFSM = new(fsm);
-    }
-}
-
-public class BattleFSM : FSM2<GameFSM, BattleState>
+public partial class Battle
 {
     public EPlayerJob Job = EPlayerJob.ZhanShi;
     public MyList<CardData> DeckList = [];
@@ -39,15 +19,23 @@ public class BattleFSM : FSM2<GameFSM, BattleState>
     public Observable<float> InBattleTime = new(0);
     public WeatherData WeatherData = new();
     public MapData MapData = new();
-
-    public BattleFSM(GameFSM fsm) : base(fsm)
+    
+    public BattleFSM BattleFSM;
+    public Game Game => FSM.Outer;
+    
+    public Battle()
     {
+        Game.PlayerName = "DELI in battle";
+        
         var config = RefPoolMulti<PlayerConfigMulti>.Acquire().First(c => c.Job == Job);
         config.InitialCardDic.ForEach(pair =>
         {
             for (int i = 0; i < pair.Value; i++)
                 DeckList.MyAdd(new CardData(pair.Key.ID));
         });
+
+        BattleFSM = new BattleFSM { Outer = this };
+        BattleFSM.Launch<BothTurn>();
     }
 
     // public override void UnInit()
@@ -61,3 +49,10 @@ public class BattleFSM : FSM2<GameFSM, BattleState>
     //     InBattleTime.Value += dt;
     // }
 }
+public class BattleFSM : FSM2<Battle, BattleFSM, BattleState>;
+
+public abstract class BattleState : StateBase<BattleFSM>;
+public class BattleSelectLastBuff : BattleState;
+public class BattleLose : BattleState;
+public class BattleWin : BattleState;
+public partial class BothTurn : BattleState;

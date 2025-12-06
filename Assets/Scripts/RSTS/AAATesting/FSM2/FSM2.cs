@@ -2,12 +2,13 @@
 using System.Diagnostics.CodeAnalysis;
 
 namespace RSTS;
-public abstract class FSM2<TContext, TBaseState>(TContext context)
-    where TBaseState : FSM2<TContext, TBaseState>.StateBase
+
+public abstract class FSM2<TOuter, TThis, TBaseState>
+    where TThis : FSM2<TOuter, TThis, TBaseState>
+    where TBaseState : StateBase<TThis>
 {
     public static event Action<TBaseState>? OnStateEnter;
     public static event Action<TBaseState>? OnStateExit;
-    // public TContext Context => context;
     // unbindDic包括BindDataBase的子类的Bind/UnBind，如进入状态时绑定UI按钮且退出状态解绑
     // [JsonIgnore] static readonly List<Func<TBaseState, IEnumerable<BindDataBase>>> canUnbindList = [];
     // public static TBaseContext Create<TSubState>() 
@@ -18,21 +19,13 @@ public abstract class FSM2<TContext, TBaseState>(TContext context)
     //     ret.Launch<TSubState>();
     //     return ret;
     // }
-    public abstract class StateBase(FSM2<TContext, TBaseState> fsm)
-    {
-        public readonly FSM2<TContext, TBaseState> FSM = fsm;
-        public virtual void OnExit() { }
-        public virtual void OnUpdate(float dt) {}
-    }
-
     // [JsonIgnore] BindDataUpdate selfTick;
-    protected readonly TContext Context = context;
+    public required TOuter Outer;
     bool isLaunched;
     TBaseState? curState;
     // [JsonIgnore] readonly List<BindDataBase> unbindableInstances = [];
-    
-    
-    protected void Launch<TSubState>() where TSubState : TBaseState
+
+    public void Launch<TSubState>() where TSubState : TBaseState
     {
         isLaunched = true;
         EnterState<TSubState>();
@@ -44,7 +37,7 @@ public abstract class FSM2<TContext, TBaseState>(TContext context)
 
     // protected virtual void Tick(float dt)
     // {
-        // curState?.Update(dt);
+    // curState?.Update(dt);
     // }
     
     public void EnterState<TSubState>() where TSubState : TBaseState
@@ -58,10 +51,11 @@ public abstract class FSM2<TContext, TBaseState>(TContext context)
             OnStateExit?.Invoke(curState);
         curState?.OnExit();
         curState = (TSubState)Activator.CreateInstance(typeof(TSubState), this);
+        curState.FSM = (TThis)this;
         OnStateEnter?.Invoke(curState);
     }
     public bool IsState<TSubState>([NotNullWhen(true)] out TSubState subState)
-        where TSubState : TBaseState
+        where TSubState : StateBase<TThis>
     {
         subState = null!;
         if (curState is TSubState state)
@@ -71,4 +65,15 @@ public abstract class FSM2<TContext, TBaseState>(TContext context)
         }
         return false;
     }
+}
+
+
+public abstract class StateBase<TFSM>
+    // : FSM2<object, TContext, TThis>, IState<TThis> 
+    // where TContext : FSM2<object, TContext, TThis> 
+    // where TThis : class, IState<TContext>
+{
+    public required TFSM FSM;
+    public virtual void OnExit() { }
+    public virtual void OnUpdate(float dt) {}
 }

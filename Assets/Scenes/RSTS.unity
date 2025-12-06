@@ -10609,6 +10609,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MdlHPAndBuff: {fileID: 675742756}
   ImgSelectTarget: {fileID: 1312441147}
+  OnPointerEnterEvt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPointerExitEvt:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1299379846
 GameObject:
   m_ObjectHideFlags: 0
