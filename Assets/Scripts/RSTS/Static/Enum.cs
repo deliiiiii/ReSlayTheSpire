@@ -59,3 +59,39 @@ public enum ECardKeyword
     /// 消耗：打出后进入消耗堆，本场战斗不再抽取与使用
     Exhaust,
 }
+
+public enum EGameState
+{
+    ChoosePlayer,
+    Title,
+    Battle,
+}
+
+public enum EBattleState
+{
+    SelectLastBuff,
+    SelectRoom,
+    BothTurn,
+    SelectReward,
+    Lose,
+    Win,
+}
+
+public enum EBothTurnState
+{
+    GrossStart,
+    PlayerTurnStart,
+    PlayerDraw,
+    PlayerYieldCard,
+    PlayerTurnEnd,
+    EnemyTurnStart,
+    EnemyAction,
+    EnemyTurnEnd,
+}
+
+public enum EYieldCardState
+{
+    None,
+    Drag,
+    Using,
+}

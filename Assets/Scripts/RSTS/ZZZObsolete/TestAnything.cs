@@ -6,6 +6,17 @@ using Sirenix.OdinInspector;
 
 public class TestAnything : Singleton<TestAnything>
 {
+    [Button]
+    public void Bind()
+    {
+        Main.Bind();
+    }
+    [Button]
+    public void Test()
+    {
+        Main.Test();
+    }
+    
     // [field: AllowNull, MaybeNull]
     // BothTurnData BothTurnData
     // {

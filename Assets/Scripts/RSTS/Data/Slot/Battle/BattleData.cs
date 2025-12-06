@@ -17,9 +17,6 @@ public class BattleData : FSM<BattleData, EBattleState, GameData>
     public Observable<float> InBattleTime = new(0);
     public WeatherData WeatherData = new();
     public MapData MapData = new();
-
-    // 如果只有一张卡...
-    public CardData One = new(0);
     
     // 子状态数据
     [SubState<EBattleState>(EBattleState.BothTurn)]

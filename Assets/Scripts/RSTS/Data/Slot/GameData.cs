@@ -1,6 +1,8 @@
 ﻿using System;
 namespace RSTS;
 
+
+
 [Serializable]
 public class GameData: FSM<GameData, EGameState>
 {
@@ -27,10 +29,5 @@ public class GameData: FSM<GameData, EGameState>
 
     protected override void UnInit()
     {
-    }
-
-    void Test()
-    {
-        // var gameData = FSM<EGameState>.GetData<GameData>();
     }
 }
