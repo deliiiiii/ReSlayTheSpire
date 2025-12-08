@@ -20,8 +20,6 @@ public partial class BothTurn
     public MyList<CardInTurn> DiscardList = [];
     public MyList<CardInTurn> ExhaustList = [];
     int loseHpCount;
-
-    Battle Battle => FSM.Outer;
     
 
     /// 第一个参数，弃牌堆；第二个参数，点击后的回调
@@ -33,8 +31,8 @@ public partial class BothTurn
 
     public BothTurn()
     {
-        PlayerHPAndBuffData.CurHP = FSM.Outer.CurHP;
-        PlayerHPAndBuffData.MaxHP = FSM.Outer.MaxHP;
+        PlayerHPAndBuffData.CurHP = Battle.CurHP;
+        PlayerHPAndBuffData.MaxHP = Battle.MaxHP;
         PlayerHPAndBuffData.Block = new Observable<int>(0);
         PlayerHPAndBuffData.CurHP.OnValueChangedFull += (oldV, newV) =>
         {
@@ -46,7 +44,7 @@ public partial class BothTurn
         };
         TurnID = 0;
         
-        FSM.Outer.DeckList.ForEach(cardData =>
+        Battle.DeckList.ForEach(cardData =>
         {
             DrawList.MyAdd(CardInTurn.CreateByAttr(cardData.Config.ID, cardData));
         });
@@ -75,7 +73,7 @@ public partial class BothTurn
 }
 
 public class BothTurnFSM : FSM2<BothTurn, BothTurnFSM, BothTurnState>;
-public abstract class BothTurnState : StateBase<BothTurnFSM>;
+public abstract class BothTurnState : BothTurnFSM.StateBase;
 public class BothTurnGrossStart : BothTurnState;
 public class BothTurnPlayerTurnStart : BothTurnState;
 public class BothTurnPlayerDraw : BothTurnState;

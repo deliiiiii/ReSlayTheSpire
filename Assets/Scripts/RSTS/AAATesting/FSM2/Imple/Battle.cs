@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
+﻿using System.Linq;
 using RSTS.CDMV;
 using Sirenix.Utilities;
 
@@ -21,7 +18,7 @@ public partial class Battle
     public MapData MapData = new();
     
     public BattleFSM BattleFSM;
-    public Game Game => FSM.Outer;
+    public WeatherFSM WeatherFSM;
     
     public Battle()
     {
@@ -36,23 +33,33 @@ public partial class Battle
 
         BattleFSM = new BattleFSM { Outer = this };
         BattleFSM.Launch<BothTurn>();
-    }
 
-    // public override void UnInit()
-    // {
-    //     DeckList.MyClear();
-    // }
-    //
-    // public override void Tick(float dt)
-    // {
-    //     base.Tick(dt);
-    //     InBattleTime.Value += dt;
-    // }
+        WeatherFSM = new WeatherFSM { Outer = this };
+        WeatherFSM.Launch<WeatherSunny>();
+    }
+    
+    public override void OnExit()
+    {
+        DeckList.MyClear();
+    }
+    public override void OnUpdate(float dt)
+    {
+        InBattleTime.Value += dt;
+    }
 }
 public class BattleFSM : FSM2<Battle, BattleFSM, BattleState>;
 
-public abstract class BattleState : StateBase<BattleFSM>;
+public abstract class BattleState : BattleFSM.StateBase
+{
+    public Battle Battle => FSM.Outer;
+}
 public class BattleSelectLastBuff : BattleState;
 public class BattleLose : BattleState;
 public class BattleWin : BattleState;
 public partial class BothTurn : BattleState;
+
+
+public class WeatherFSM : FSM2<Battle, WeatherFSM, Weather>;
+public abstract class Weather : WeatherFSM.StateBase;
+public class WeatherSunny : Weather;
+public class WeatherRainy : Weather;

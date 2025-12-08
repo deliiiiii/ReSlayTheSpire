@@ -5,17 +5,20 @@ public class Game
 {
     public string PlayerName = "DELI";
     public bool HasLastBuff;
-    GameFSM gameFSM;
+    public GameFSM GameFSM;
 
     public Game()
     {
-        gameFSM = new GameFSM{Outer = this};
+        GameFSM = new GameFSM{Outer = this};
     }
-    public void Launch<T>() where T : GameState => gameFSM.Launch<T>();
 }
 
 public class GameFSM : FSM2<Game, GameFSM, GameState>;
-public abstract class GameState : StateBase<GameFSM>;
+
+public abstract class GameState : GameFSM.StateBase
+{
+    public Game Game => FSM.Outer;
+}
 public class GameChoosePlayer : GameState;
 public class GameTitle : GameState;
 

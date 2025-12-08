@@ -5,7 +5,7 @@ namespace RSTS;
 
 public abstract class FSM2<TOuter, TThis, TBaseState>
     where TThis : FSM2<TOuter, TThis, TBaseState>
-    where TBaseState : StateBase<TThis>
+    where TBaseState : FSM2<TOuter, TThis, TBaseState>.StateBase
 {
     public static event Action<TBaseState>? OnStateEnter;
     public static event Action<TBaseState>? OnStateExit;
@@ -55,7 +55,7 @@ public abstract class FSM2<TOuter, TThis, TBaseState>
         OnStateEnter?.Invoke(curState);
     }
     public bool IsState<TSubState>([NotNullWhen(true)] out TSubState subState)
-        where TSubState : StateBase<TThis>
+        where TSubState : StateBase
     {
         subState = null!;
         if (curState is TSubState state)
@@ -65,15 +65,11 @@ public abstract class FSM2<TOuter, TThis, TBaseState>
         }
         return false;
     }
-}
-
-
-public abstract class StateBase<TFSM>
-    // : FSM2<object, TContext, TThis>, IState<TThis> 
-    // where TContext : FSM2<object, TContext, TThis> 
-    // where TThis : class, IState<TContext>
-{
-    public required TFSM FSM;
-    public virtual void OnExit() { }
-    public virtual void OnUpdate(float dt) {}
+    
+    public abstract class StateBase
+    {
+        public required TThis FSM;
+        public virtual void OnExit() { }
+        public virtual void OnUpdate(float dt) {}
+    }
 }

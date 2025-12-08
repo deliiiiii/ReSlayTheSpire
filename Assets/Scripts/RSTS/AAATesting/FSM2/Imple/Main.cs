@@ -24,7 +24,7 @@ public static class Main
     }
     public static void Test()
     {
-        Game game = new Game();
-        game.Launch<Battle>();
+        GameFSM gameFSM = new (){Outer = null!};
+        gameFSM.Launch<Battle>();
     }
 }
