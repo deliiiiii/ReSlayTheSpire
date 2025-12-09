@@ -15,11 +15,11 @@ public class IDAttribute(int id) : Attribute
 /// 通过Config创建的数据接口，Json忽略Config字段，通过ID自动关联
 
 /// 通过反射创建的数据基类，子类需添加IDAttribute特性
-public abstract class DataAttr<TData, TAttribute, TContext>
-    where TData : DataAttr<TData, TAttribute, TContext>
+public abstract class DataAttr<TData, TAttribute>
+    where TData : DataAttr<TData, TAttribute>
     where TAttribute : IDAttribute
 {
-    static readonly Dictionary<int, Func<TContext, TData>> ctorDic = [];
+    static readonly Dictionary<int, Func<TData>> ctorDic = [];
     public static void InitCtorDic()
     {
         ctorDic.Clear();
@@ -29,21 +29,18 @@ public abstract class DataAttr<TData, TAttribute, TContext>
             .ToDictionary(x => x.GetAttribute<TAttribute>().ID)
             .ForEach(pair =>
             {
-                ctorDic.Add(pair.Key, context =>
-                {
-                    var ins = (Activator.CreateInstance(pair.Value, args: context) as TData)!;
-                    return ins;
-                });
-                // ctorDic.TryAdd(pair.Key, ctorDic[0]);
+                ctorDic.Add(pair.Key, () => (TData)Activator.CreateInstance(pair.Value));
             });
     }
     
-    public static TData CreateByAttr(int id, TContext context)
+    protected static TData CreateByAttr(int id)
     {
-        if (ctorDic.TryGetValue(id, out var func))
+        if (ctorDic.TryGetValue(id, out var ctor))
         {
-            return func(context);
+            return ctor();
         }
-        throw new Exception($"{typeof(TData).Name} CreateData : ID {id} out of range");
+        // 找不到对应ID的类时，返回ID为-1的FallBack类.
+        return ctorDic[-1]();
+        // throw new Exception($"{typeof(TData).Name} CreateData : ID {id} out of range");
     }
 }

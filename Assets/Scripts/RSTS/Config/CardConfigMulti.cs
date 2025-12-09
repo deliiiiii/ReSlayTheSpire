@@ -237,6 +237,12 @@ public class EmbedMisc : EmbedType, IEmbedNotChange
 }
 
 [Serializable]
+public class EmbedCard4 : EmbedType
+{
+    public int StrengthMulti;
+}
+
+[Serializable]
 public class EmbedCard6 : EmbedType;
 [Serializable]
 public class EmbedCard19 : EmbedType;

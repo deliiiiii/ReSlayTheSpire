@@ -17,14 +17,14 @@ public class CharacterModelHolder : ViewBase
     public Text TxtPlayerWarning;
     public PlayerModel PlayerModel;
 
-    public EnemyModel PrbEnemy;
-    public List<Transform> TransEnemy = [];
-    public List<EnemyModel> EnemyModelList = [];
-    readonly Dictionary<EnemyDataBase, EnemyModel> enemyModelDic = [];
-
-    readonly List<EnemyModel> enteredTargetEnemyModels = [];
+    // public EnemyModel PrbEnemy;
+    // public List<Transform> TransEnemy = [];
+    // public List<EnemyModel> EnemyModelList = [];
+    // readonly Dictionary<EnemyDataBase, EnemyModel> enemyModelDic = [];
+    //
+    // readonly List<EnemyModel> enteredTargetEnemyModels = [];
     
-    public bool CheckInNoTarget(Vector2 screenPos) => PosInRect(screenPos, TransNoTargetArea.RectTransform);
+    // public bool CheckInNoTarget(Vector2 screenPos) => PosInRect(screenPos, TransNoTargetArea.RectTransform);
 
     public void EnableNoTargetArea(bool enable)
     {
@@ -42,107 +42,107 @@ public class CharacterModelHolder : ViewBase
         PnlPlayerWarning.SetActive(false);
     }
     
-    void BindBattle(BattleData battleData, Func<EBattleState, IStateForView> func)
-    {
-        func(EBattleState.BothTurn)
-            .OnEnterAfter(() =>
-            {
-                PlayerModel.gameObject.SetActive(true);
-            })
-            .OnExitBefore(() =>
-            {
-                PlayerModel.gameObject.SetActive(false);
-                HidePlayerWarning();
-            });
-    }
-    
-    void BindBothTurn(BothTurnData bothTurnData, Func<EBothTurnState, IStateForView> func)
-    {
-        PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
-        bothTurnData.EnemyList.OnAdd += enemyData => AddEnemyModel(enemyData, bothTurnData.EnemyList.Count - 1);
-        bothTurnData.EnemyList.ForEach(AddEnemyModel);
-        void AddEnemyModel(EnemyDataBase enemyData, int i)
-        {
-            // TODO 应对怪物个数不同的情况
-            var enemyModel = Instantiate(PrbEnemy, TransEnemy[i]);
-            enemyModel.ReadData(enemyData);
-            enemyModel.gameObject.SetActive(true);
-            EnemyModelList.Add(enemyModel);
-            enemyModelDic.Add(enemyData, enemyModel);
-        }
-        bothTurnData.EnemyList.OnRemove += enemyData =>
-        {
-            if (enemyModelDic.TryGetValue(enemyData, out var enemyModel))
-            {
-                EnemyModelList.Remove(enemyModel);
-                enemyModelDic.Remove(enemyData);
-                Destroy(enemyModel.gameObject);
-            }
-        };
-    }
-
-   
-
-    void BindYieldCard(YieldCardData yieldCardData, Func<EYieldCardState, IStateForView> func)
-    {
-        func(EYieldCardState.Drag)
-            .OnEnterAfter(() =>
-            {
-                EnemyModelList.ForEach(m =>
-                {
-                    m.EnableSelectTarget(false);
-                });
-                enteredTargetEnemyModels.Clear();
-            })
-            .OnExitBefore(() =>
-            {
-                EnemyModelList.ForEach(m =>
-                {
-                    m.EnableSelectTarget(false);
-                });
-                enteredTargetEnemyModels.Clear();
-            });
-    }
-    
-    IEnumerable<BindDataBase> CanUnbindYieldCard(YieldCardData yieldCardData)
-    {
-        foreach (var enemyModel in enemyModelDic.Values)
-        {
-            yield return Binder.FromEvt(enemyModel.OnPointerEnterEvt).To(() =>
-            {
-                if (!yieldCardData.IsState(EYieldCardState.Drag))
-                    return;
-                if (!yieldCardData.CardModel.Data.Parent.HasTarget)
-                    return;
-                yieldCardData.CardModel.Data.Target = enemyModel.Data;
-                yieldCardData.CardModel.RefreshTxtDes();
-                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
-                enemyModel.EnableSelectTarget(true);
-                enteredTargetEnemyModels.Add(enemyModel);
-            });
-
-            yield return Binder.FromEvt(enemyModel.OnPointerExitEvt).To(() =>
-            {
-                if (!yieldCardData.IsState(EYieldCardState.Drag))
-                    return;
-                yieldCardData.CardModel.Data.Target = null;
-                yieldCardData.CardModel.RefreshTxtDes();
-                enteredTargetEnemyModels.Remove(enemyModel);
-                enemyModel.EnableSelectTarget(false);
-                enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);
-            });
-        }
-    }
-
-    static bool PosInRect(Vector2 pos, RectTransform rectTransform)
-    {
-        return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, pos, Camera.main);
-    }
-
+    // void BindBattle(BattleData battleData, Func<EBattleState, IStateForView> func)
+    // {
+    //     func(EBattleState.BothTurn)
+    //         .OnEnterAfter(() =>
+    //         {
+    //             PlayerModel.gameObject.SetActive(true);
+    //         })
+    //         .OnExitBefore(() =>
+    //         {
+    //             PlayerModel.gameObject.SetActive(false);
+    //             HidePlayerWarning();
+    //         });
+    // }
+    //
+    // void BindBothTurn(BothTurnData bothTurnData, Func<EBothTurnState, IStateForView> func)
+    // {
+    //     PlayerModel.HPAndBuffModel.ReadData(bothTurnData.PlayerHPAndBuffData);
+    //     bothTurnData.EnemyList.OnAdd += enemyData => AddEnemyModel(enemyData, bothTurnData.EnemyList.Count - 1);
+    //     bothTurnData.EnemyList.ForEach(AddEnemyModel);
+    //     void AddEnemyModel(EnemyDataBase enemyData, int i)
+    //     {
+    //         // TODO 应对怪物个数不同的情况
+    //         var enemyModel = Instantiate(PrbEnemy, TransEnemy[i]);
+    //         enemyModel.ReadData(enemyData);
+    //         enemyModel.gameObject.SetActive(true);
+    //         EnemyModelList.Add(enemyModel);
+    //         enemyModelDic.Add(enemyData, enemyModel);
+    //     }
+    //     bothTurnData.EnemyList.OnRemove += enemyData =>
+    //     {
+    //         if (enemyModelDic.TryGetValue(enemyData, out var enemyModel))
+    //         {
+    //             EnemyModelList.Remove(enemyModel);
+    //             enemyModelDic.Remove(enemyData);
+    //             Destroy(enemyModel.gameObject);
+    //         }
+    //     };
+    // }
+    //
+    //
+    //
+    // void BindYieldCard(YieldCardData yieldCardData, Func<EYieldCardState, IStateForView> func)
+    // {
+    //     func(EYieldCardState.Drag)
+    //         .OnEnterAfter(() =>
+    //         {
+    //             EnemyModelList.ForEach(m =>
+    //             {
+    //                 m.EnableSelectTarget(false);
+    //             });
+    //             enteredTargetEnemyModels.Clear();
+    //         })
+    //         .OnExitBefore(() =>
+    //         {
+    //             EnemyModelList.ForEach(m =>
+    //             {
+    //                 m.EnableSelectTarget(false);
+    //             });
+    //             enteredTargetEnemyModels.Clear();
+    //         });
+    // }
+    //
+    // IEnumerable<BindDataBase> CanUnbindYieldCard(YieldCardData yieldCardData)
+    // {
+    //     foreach (var enemyModel in enemyModelDic.Values)
+    //     {
+    //         yield return Binder.FromEvt(enemyModel.OnPointerEnterEvt).To(() =>
+    //         {
+    //             if (!yieldCardData.IsState(EYieldCardState.Drag))
+    //                 return;
+    //             if (!yieldCardData.CardModel.Data.Parent.HasTarget)
+    //                 return;
+    //             yieldCardData.CardModel.Data.Target = enemyModel.Data;
+    //             yieldCardData.CardModel.RefreshTxtDes();
+    //             enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(false);
+    //             enemyModel.EnableSelectTarget(true);
+    //             enteredTargetEnemyModels.Add(enemyModel);
+    //         });
+    //
+    //         yield return Binder.FromEvt(enemyModel.OnPointerExitEvt).To(() =>
+    //         {
+    //             if (!yieldCardData.IsState(EYieldCardState.Drag))
+    //                 return;
+    //             yieldCardData.CardModel.Data.Target = null;
+    //             yieldCardData.CardModel.RefreshTxtDes();
+    //             enteredTargetEnemyModels.Remove(enemyModel);
+    //             enemyModel.EnableSelectTarget(false);
+    //             enteredTargetEnemyModels.LastOrDefault()?.EnableSelectTarget(true);
+    //         });
+    //     }
+    // }
+    //
+    // static bool PosInRect(Vector2 pos, RectTransform rectTransform)
+    // {
+    //     return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, pos, Camera.main);
+    // }
+    //
     public override void Bind()
     {
-        BattleData.OnRegister(alwaysBind: BindBattle);
-        BothTurnData.OnRegister(alwaysBind: BindBothTurn);
-        YieldCardData.OnRegister(alwaysBind: BindYieldCard, canUnbind: CanUnbindYieldCard);
+    //     BattleData.OnRegister(alwaysBind: BindBattle);
+    //     BothTurnData.OnRegister(alwaysBind: BindBothTurn);
+    //     YieldCardData.OnRegister(alwaysBind: BindYieldCard, canUnbind: CanUnbindYieldCard);
     }
 }

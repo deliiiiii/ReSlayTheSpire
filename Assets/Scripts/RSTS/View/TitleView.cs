@@ -13,19 +13,19 @@ public class TitleView : ViewBase
 
     public GameObject PnlButtons;
     
-    void BindGame(GameData gameData, Func<EGameState, IStateForView> func)
-    {
-        func(EGameState.Title)
-            .OnEnterAfter(() => PnlButtons.SetActive(true))
-            .OnExitBefore(() => PnlButtons.SetActive(false));
-    }
-    IEnumerable<BindDataBase> CanUnbindGame(GameData gameData)
-    {
-        yield return Binder.FromEvt(BtnStart.onClick).To(() => gameData.EnterState(EGameState.Battle));
-    }
+    // void BindGame(GameData gameData, Func<EGameState, IStateForView> func)
+    // {
+    //     func(EGameState.Title)
+    //         .OnEnterAfter(() => PnlButtons.SetActive(true))
+    //         .OnExitBefore(() => PnlButtons.SetActive(false));
+    // }
+    // IEnumerable<BindDataBase> CanUnbindGame(GameData gameData)
+    // {
+    //     yield return Binder.FromEvt(BtnStart.onClick).To(() => gameData.EnterState(EGameState.Battle));
+    // }
 
     public override void Bind()
     {
-        GameData.OnRegister(alwaysBind: BindGame, canUnbind: CanUnbindGame);
+        // GameData.OnRegister(alwaysBind: BindGame, canUnbind: CanUnbindGame);
     }
 }

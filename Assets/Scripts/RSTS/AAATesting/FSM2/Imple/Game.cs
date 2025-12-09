@@ -1,6 +1,7 @@
-﻿namespace RSTS;
+﻿using System;
 
-
+namespace RSTS;
+[Serializable]
 public class GameFSM : FSM2<GameFSM>
 {
     public string PlayerName = "DELI";
@@ -12,17 +13,16 @@ public class GameFSM : FSM2<GameFSM>
     }
 }
 
+[Serializable]
 public class GameChoosePlayer : GameFSM.IState
 {
     public required GameFSM BelongFSM { get; set; }
 }
-
+[Serializable]
 public class GameTitle : GameFSM.IState
 {
     public required GameFSM BelongFSM { get; set; }
 }
 
-public partial class GameBattle : GameFSM.IState
-{
-    public required GameFSM BelongFSM { get; set; }
-}
+[Serializable]
+public partial class Battle : GameFSM.IState;

@@ -1,5 +1,4 @@
-﻿using System;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
@@ -11,8 +10,8 @@ namespace RSTS;
 #pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 'required' 修饰符或声明为可以为 null。
 public class CardModel : MonoBehaviour
 {
-    [SerializeReference][ReadOnly] public CardInTurn Data;
-    BothTurnData bothTurnData;
+    [SerializeReference][ReadOnly] public Card Data;
+    BothTurn bothTurn;
     public Text TxtCost;
     public Text TxtName;
     public Text TextCategory;
@@ -26,12 +25,12 @@ public class CardModel : MonoBehaviour
     public UnityEvent<Vector3> OnBeginDragEvt = new();
     public UnityEvent<Vector3> OnDragEvt = new();
     public UnityEvent<Vector3> OnEndDragEvt = new();
-    public void ReadDataInBothTurn(CardInTurn fData, BothTurnData fBothTurnData)
+    public void ReadDataInBothTurn(Card fData, BothTurn fBothTurn)
     {
-        bothTurnData = fBothTurnData;
+        bothTurn = fBothTurn;
         Data = fData;
         
-        TextCategory.text = Data.Parent.Config.Category.ToString();
+        TextCategory.text = Data.Config.Category.ToString();
         RefreshTxtCost();
         RefreshTxtDes();
 
@@ -44,19 +43,21 @@ public class CardModel : MonoBehaviour
     
     public void RefreshTxtDes()
     {
-        string plus = Data.TempUpgradeLevel switch
+        // TODO 根据当前状态调用OfTurn...
+        string plus = Data.UpgradeLevel switch
         {
             0 => "",
             1 => "+",
-            _ => $"+{Data.TempUpgradeLevel}"
+            _ => $"+{Data.UpgradeLevel}"
         };
-        TxtName.text = $"{Data.Parent.Config.Name}{plus}";
-        TxtDes.text = bothTurnData.CurContentWithKeywords(Data);
+        TxtName.text = $"{Data.Config.Name}{plus}";
+        // TODO
+        TxtDes.text = Data.ContentWithKeywords;
     }
 
     public void RefreshTxtCost()
     {
-        TxtCost.text = bothTurnData.UIGetEnergy(Data);
+        TxtCost.text = Data.UIEnergy;
     }
     
     public void OnPointerEnter(BaseEventData baseEventData)

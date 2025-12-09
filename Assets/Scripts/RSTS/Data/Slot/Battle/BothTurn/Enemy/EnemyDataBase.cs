@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using RSTS.CDMV;
+using RSTS;
 using Sirenix.Utilities;
 
 namespace RSTS;
@@ -52,7 +53,7 @@ public abstract class EnemyDataBase
     public EnemyConfigMulti Config;
     public HPAndBuffData HPAndBuffData = new();
     
-    public async UniTask<List<AttackResultBase>> DoCurIntentionAsync(BothTurnData bothTurnData)
+    public async UniTask<List<AttackResultBase>> DoCurIntentionAsync(BothTurn bothTurn)
     {
         List<AttackResultBase> resultList = [];
         IntentionEnumerator ??= IntentionSeq().GetEnumerator();
@@ -61,10 +62,10 @@ public abstract class EnemyDataBase
         switch (IntentionEnumerator.Current)
         {
             case IntentionAttack { AttackTime: 1 } attack:
-                bothTurnData.AttackPlayerFromEnemy(this, attack.Attack, out resultList);
+                resultList = bothTurn.AttackPlayerFromEnemy(this, attack.Attack);
                 break;
             case IntentionAttack { AttackTime: > 1 } attack:
-                resultList = await bothTurnData.AttackPlayerFromEnemyMultiTimesAsync(this, attack.Attack, attack.AttackTime);
+                resultList = await bothTurn.AttackPlayerFromEnemyMultiTimesAsync(this, attack.Attack, attack.AttackTime);
                 break;
             case IntentionBlock block:
                 HPAndBuffData.Block.Value += block.Block;
