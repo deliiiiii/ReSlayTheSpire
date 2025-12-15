@@ -10,8 +10,6 @@ using UnityEngine;
 namespace RSTS;
 public partial class Battle : FSM2<Battle>
 {
-    public required GameFSM BelongFSM { get; set; }
-    
     public EPlayerJob Job = EPlayerJob.ZhanShi;
     public MyList<Card> DeckList = [];
     public MyList<ItemData> ItemList = [];

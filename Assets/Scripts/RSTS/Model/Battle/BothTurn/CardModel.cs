@@ -25,10 +25,10 @@ public class CardModel : MonoBehaviour
     public UnityEvent<Vector3> OnBeginDragEvt = new();
     public UnityEvent<Vector3> OnDragEvt = new();
     public UnityEvent<Vector3> OnEndDragEvt = new();
-    public void ReadDataInBothTurn(Card fData, BothTurn fBothTurn)
+    public void ReadDataInBothTurn(Card data, BothTurn fBothTurn)
     {
         bothTurn = fBothTurn;
-        Data = fData;
+        Data = data;
         
         TextCategory.text = Data.Config.Category.ToString();
         RefreshTxtCost();
@@ -43,7 +43,6 @@ public class CardModel : MonoBehaviour
     
     public void RefreshTxtDes()
     {
-        // TODO 根据当前状态调用OfTurn...
         string plus = Data.UpgradeLevel switch
         {
             0 => "",
@@ -52,12 +51,12 @@ public class CardModel : MonoBehaviour
         };
         TxtName.text = $"{Data.Config.Name}{plus}";
         // TODO
-        TxtDes.text = Data.ContentWithKeywords;
+        // TxtDes.text = Data.ContentWithKeywords;
     }
 
     public void RefreshTxtCost()
     {
-        TxtCost.text = Data.UIEnergy;
+        // TxtCost.text = Data.UIEnergy;
     }
     
     public void OnPointerEnter(BaseEventData baseEventData)

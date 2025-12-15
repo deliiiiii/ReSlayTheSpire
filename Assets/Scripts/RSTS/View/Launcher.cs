@@ -7,10 +7,10 @@ namespace RSTS.Game;
 public class Launcher : Singleton<Launcher>
 {
     public List<ViewBase> ViewList = [];
-    // ReSharper disable once Unity.IncorrectMethodSignature
-    // ReSharper disable once UnusedMember.Local
     [SerializeField]
     public GameFSM GameFSM = null!;
+    // ReSharper disable once Unity.IncorrectMethodSignature
+    // ReSharper disable once UnusedMember.Local
     async UniTask Start()
     {
         try

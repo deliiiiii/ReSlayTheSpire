@@ -10,7 +10,7 @@ public class Card9 : CardInTurn
     public override UniTask YieldAsync(int cost, EnemyDataBase? target)
     {
         BothTurn.AttackAllEnemies(Atk);
-        BothTurn.AddBuffToAllEnemies(() => BuffVulnerable);
+        BothTurn.AddBuffToAllEnemies(BuffVulnerable);
         return UniTask.CompletedTask;
     }
 }

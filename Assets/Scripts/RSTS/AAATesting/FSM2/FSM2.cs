@@ -52,7 +52,8 @@ public abstract class FSM2<TThis>
             curState.OnExit();
         }
         curState = Activator.CreateInstance<TSubState>()!;
-        curState.OnEnter((TThis)this);
+        curState.BelongFSM = (TThis)this;
+        curState.OnEnter();
         OnStateEnter?.Invoke(curState);
     }
     public bool IsState<TSubState>([NotNullWhen(true)] out TSubState subState) where TSubState : class, IState
@@ -69,7 +70,8 @@ public abstract class FSM2<TThis>
 
     public interface IState
     {
-        public void OnEnter(TThis belongFSM){}
+        public TThis BelongFSM { get; set; }
+        public void OnEnter(){}
         public void OnExit(){}
         public void OnUpdate(float dt){}
     }

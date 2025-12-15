@@ -24,8 +24,8 @@ public partial class BothTurn : FSM2<BothTurn>
     public MyList<Card> DrawList = [];
     public MyList<Card> DiscardList = [];
     public MyList<Card> ExhaustList = [];
-    /// 第一个参数，弃牌堆；第二个参数，点击后的回调
 #pragma warning disable CS0067 // 事件从未使用过
+    /// 第一个参数，弃牌堆；第二个参数，点击后的回调
     public event Action<List<Card>, Action<Card>>? OnOpenDiscardOnceClick;
     public event Action<List<Card>, int, Action<Card>>? OnOpenHandOnceClick;
 #pragma warning restore CS0067 // 事件从未使用过
@@ -59,10 +59,11 @@ public partial class BothTurn : FSM2<BothTurn>
     }
     public void OnExit()
     {
+        DrawList.MyClear();
+        BelongFSM.DeckList.ForEach(card => card.ExitTurn(this));
         EnemyList.MyClear();
         
         HandList.MyClear();
-        DrawList.MyClear();
         DiscardList.MyClear();
         ExhaustList.MyClear();
         
@@ -137,9 +138,10 @@ public partial class BothTurn : FSM2<BothTurn>
             cost = 0;
         UseEnergy(cost);
         
-        // 打出能力牌，不会消耗
         if(!modifyList.AnyType<YieldModifyFromDraw>())
             HandList.MyRemove(card);
+        
+        // 打出能力牌，不会消耗
         if (card.Config.Category == ECardCategory.Ability)
         {
         }
@@ -170,11 +172,11 @@ public partial class BothTurn : FSM2<BothTurn>
     }
     
     #region yield effect
-    EnemyDataBase? GetRanEnemy => EnemyList.Count == 0 ? null : EnemyList.RandomItem();
+    EnemyDataBase? RanEnemy() => EnemyList.Count == 0 ? null : EnemyList.RandomItem();
     public List<AttackResultBase> AttackEnemyWithResult(EnemyDataBase? enemyData, int baseAtk
         , List<AttackModifyBase>? modifyList = null)
     {
-        enemyData ??= GetRanEnemy;
+        enemyData ??= RanEnemy();
         if (enemyData == null)
             return [];
         var ret = Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, modifyList);
@@ -186,7 +188,7 @@ public partial class BothTurn : FSM2<BothTurn>
     public List<AttackResultBase> AttackEnemy(EnemyDataBase? enemyData, int baseAtk
         , List<AttackModifyBase>? modifyList = null)
     {
-        enemyData ??= GetRanEnemy;
+        enemyData ??= RanEnemy();
         if (enemyData == null)
             return [];
         var ret = Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, modifyList);
@@ -206,7 +208,7 @@ public partial class BothTurn : FSM2<BothTurn>
     public void AttackEnemyRandomly(int baseAtk
         , List<AttackModifyBase>? modifyList = null)
     {
-        var enemyData = GetRanEnemy;
+        var enemyData = RanEnemy();
         if (enemyData == null)
             return;
         AttackEnemy(enemyData, baseAtk, modifyList);
@@ -307,8 +309,7 @@ public partial class BothTurn : FSM2<BothTurn>
             return baseAtk;
         }
         int strengthMultiFromCard4 = modifyList.OfType<AttackModifyCard4>().FirstOrDefault()?.StrengthMulti ?? 1;
-        baseAtk = 
-            modifyList.OfType<AttackModifyCard12>().FirstOrDefault()?.AtkByBlock ??
+        baseAtk = modifyList.OfType<AttackModifyCard12>().FirstOrDefault()?.AtkByBlock ??
                   baseAtk;
 
         int baseCardAdd =
@@ -362,11 +363,11 @@ public partial class BothTurn : FSM2<BothTurn>
     {
         enemyData?.HPAndBuffData.AddBuff(buffData);
     }
-    public void AddBuffToAllEnemies(Func<BuffDataBase> buffDataCtor)
+    public void AddBuffToAllEnemies(BuffDataBase buffData)
     {
         foreach (var enemyData in EnemyList)
         {
-            enemyData.HPAndBuffData.AddBuff(buffDataCtor());
+            enemyData.HPAndBuffData.AddBuff(buffData);
         }
     }
 

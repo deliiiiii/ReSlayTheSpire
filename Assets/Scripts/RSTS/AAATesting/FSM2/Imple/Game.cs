@@ -25,4 +25,7 @@ public class GameTitle : GameFSM.IState
 }
 
 [Serializable]
-public partial class Battle : GameFSM.IState;
+public partial class Battle : GameFSM.IState
+{
+    public required GameFSM BelongFSM { get; set; }
+}
