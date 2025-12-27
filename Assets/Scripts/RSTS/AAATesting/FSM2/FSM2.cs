@@ -76,3 +76,10 @@ public abstract class FSM2<TThis>
         public void OnUpdate(float dt){}
     }
 }
+
+public abstract class FSMState<TBelong, TThis> : FSM2<TThis>, FSM2<TBelong>.IState
+    where TThis : FSM2<TThis>
+    where TBelong : FSM2<TBelong>
+{
+    public required TBelong BelongFSM { get; set; }
+}

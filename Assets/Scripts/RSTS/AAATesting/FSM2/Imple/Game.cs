@@ -14,18 +14,8 @@ public class GameFSM : FSM2<GameFSM>
 }
 
 [Serializable]
-public class GameChoosePlayer : GameFSM.IState
-{
-    public required GameFSM BelongFSM { get; set; }
-}
+public class GameChoosePlayer : FSMState<GameFSM, GameChoosePlayer>;
 [Serializable]
-public class GameTitle : GameFSM.IState
-{
-    public required GameFSM BelongFSM { get; set; }
-}
-
+public class GameTitle : FSMState<GameFSM, GameTitle>;
 [Serializable]
-public partial class Battle : GameFSM.IState
-{
-    public required GameFSM BelongFSM { get; set; }
-}
+public partial class Battle : FSMState<GameFSM, Battle>;

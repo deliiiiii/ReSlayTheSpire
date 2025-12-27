@@ -8,7 +8,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 
 namespace RSTS;
-public partial class Battle : FSM2<Battle>
+public partial class Battle
 {
     public EPlayerJob Job = EPlayerJob.ZhanShi;
     public MyList<Card> DeckList = [];
@@ -51,22 +51,10 @@ public partial class Battle : FSM2<Battle>
     }
 }
 [Serializable]
-public class BattleSelectLastBuff : Battle.IState
-{
-    public required Battle BelongFSM { get; set; }
-}
+public class BattleSelectLastBuff : FSMState<Battle, BattleSelectLastBuff>;
 [Serializable]
-public partial class BothTurn : Battle.IState
-{
-    public required Battle BelongFSM { get; set; }
-}
+public partial class BothTurn : FSMState<Battle, BothTurn>;
 [Serializable]
-public class BattleLose : Battle.IState
-{
-    public required Battle BelongFSM { get; set; }
-}
+public class BattleLose : FSMState<Battle, BattleLose>;
 [Serializable]
-public class BattleWin : Battle.IState
-{
-    public required Battle BelongFSM { get; set; }
-}
+public class BattleWin : FSMState<Battle, BattleWin>;

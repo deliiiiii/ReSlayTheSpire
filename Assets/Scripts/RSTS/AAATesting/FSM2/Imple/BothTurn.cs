@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RSTS;
 
-public partial class BothTurn : FSM2<BothTurn>
+public partial class BothTurn
 {
     public HPAndBuffData PlayerHPAndBuffData = new();
     public Observable<int> CurEnergy = new(5);
@@ -408,18 +408,16 @@ public partial class BothTurn : FSM2<BothTurn>
 }
 
 [Serializable]
-public class BothTurnGrossStart : BothTurn.IState
+public class BothTurnGrossStart : FSMState<BothTurn, BothTurnGrossStart>
 {
-    public required BothTurn BelongFSM { get; set; }
     public void OnEnter()
     {
         BelongFSM.EnterState<BothTurnPlayerTurnStart>();
     }
 }
 [Serializable]
-public class BothTurnPlayerTurnStart : BothTurn.IState
+public class BothTurnPlayerTurnStart : FSMState<BothTurn, BothTurnPlayerTurnStart>
 {
-    public required BothTurn BelongFSM { get; set; }
     public void OnEnter()
     {
         BelongFSM.TurnID++;
@@ -433,9 +431,8 @@ public class BothTurnPlayerTurnStart : BothTurn.IState
     }
 }
 [Serializable]
-public class BothTurnPlayerDraw : BothTurn.IState
+public class BothTurnPlayerDraw : FSMState<BothTurn, BothTurnPlayerDraw>
 {
-    public required BothTurn BelongFSM { get; set; }
     public void OnEnter()
     {
         BelongFSM.DrawSome(5);
@@ -444,15 +441,10 @@ public class BothTurnPlayerDraw : BothTurn.IState
 }
 
 [Serializable]
-public partial class YieldCard : BothTurn.IState
-{
-    public required BothTurn BelongFSM { get; set; }
-}
+public partial class YieldCard : FSMState<BothTurn, YieldCard>;
 [Serializable] 
-public class BothTurnPlayerTurnEnd : BothTurn.IState
+public class BothTurnPlayerTurnEnd : FSMState<BothTurn, BothTurnPlayerTurnEnd>
 {
-    public required BothTurn BelongFSM { get; set; }
-
     public void OnEnter()
     {
         BelongFSM.DiscardAllHand();
@@ -463,9 +455,8 @@ public class BothTurnPlayerTurnEnd : BothTurn.IState
 }
 
 [Serializable]
-public class BothTurnEnemyTurnStart : BothTurn.IState
+public class BothTurnEnemyTurnStart : FSMState<BothTurn, BothTurnEnemyTurnStart>
 {
-    public required BothTurn BelongFSM { get; set; }
     public void OnEnter()
     {
         BelongFSM.EnemyList.ForEach(enemyData =>
@@ -478,9 +469,8 @@ public class BothTurnEnemyTurnStart : BothTurn.IState
     }
 }
 [Serializable]
-public class BothTurnEnemyAction : BothTurn.IState
+public class BothTurnEnemyAction : FSMState<BothTurn, BothTurnEnemyAction>
 {
-    public required BothTurn BelongFSM { get; set; }
     public void OnEnter()
     {
         Func().Forget();
@@ -503,9 +493,8 @@ public class BothTurnEnemyAction : BothTurn.IState
     }
 }
 [Serializable]
-public class BothTurnEnemyTurnEnd : BothTurn.IState
+public class BothTurnEnemyTurnEnd : FSMState<BothTurn, BothTurnEnemyTurnEnd>
 {
-    public required BothTurn BelongFSM { get; set; }
     public void OnEnter()
     {
         BelongFSM.EnemyList.ForEach(enemyData =>
