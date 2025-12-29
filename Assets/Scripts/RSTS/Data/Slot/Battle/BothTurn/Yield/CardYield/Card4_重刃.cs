@@ -7,17 +7,16 @@ namespace RSTS;
 
 [Card(4)]
 [Serializable]
-public class Card4 : CardInTurn
+public class Card4 : Card
 {
     int Atk => AtkAt(0);
     public int StrengthMulti => MiscAt(1);
 
-    public override UniTask YieldAsync(int cost, EnemyDataBase? target)
+    public override UniTask YieldAsync(BothTurn bothTurn, int cost, EnemyDataBase? target)
     {
-        BothTurn.AttackEnemy(target, Atk, ModifyList);
+        bothTurn.AttackEnemy(target, Atk, GetModifyList(bothTurn));
         return UniTask.CompletedTask;
     }
 
-    protected override List<AttackModifyBase> ModifyList 
-        => [new AttackModifyCard4(){StrengthMulti = StrengthMulti}];
+    protected override List<AttackModifyBase> GetModifyList(BothTurn bothTurn) => [new AttackModifyCard4() { StrengthMulti = StrengthMulti }];
 }

@@ -3,12 +3,12 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [Card(18)][Serializable]
-public class Card18 : CardInTurn
+public class Card18 : Card
 {
     int Atk => AtkAt(0);
     int AtkTime => AtkTimeAt(1);
-    public override async UniTask YieldAsync(int cost, EnemyDataBase? target)
+    public override async UniTask YieldAsync(BothTurn bothTurn, int cost, EnemyDataBase? target)
     {
-        await BothTurn.AttackEnemyMultiTimesAsync(target, Atk, AtkTime);
+        await bothTurn.AttackEnemyMultiTimesAsync(target, Atk, AtkTime);
     }
 }

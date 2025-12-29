@@ -29,10 +29,15 @@ public abstract class DataAttr<TData, TAttribute>
             .ToDictionary(x => x.GetAttribute<TAttribute>().ID)
             .ForEach(pair =>
             {
-                ctorDic.Add(pair.Key, () => (TData)Activator.CreateInstance(pair.Value));
+                ctorDic.Add(pair.Key, () =>
+                {
+                    var ret = (TData)Activator.CreateInstance(pair.Value);
+                    ret.ID = pair.Key;
+                    return ret;
+                });
             });
     }
-    
+
     protected static TData CreateByAttr(int id)
     {
         if (ctorDic.TryGetValue(id, out var ctor))
@@ -43,4 +48,6 @@ public abstract class DataAttr<TData, TAttribute>
         return ctorDic[-1]();
         // throw new Exception($"{typeof(TData).Name} CreateData : ID {id} out of range");
     }
+
+    protected int ID;
 }

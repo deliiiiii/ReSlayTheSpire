@@ -1,31 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using RSTS;
 using RSTS.CDMV;
 
-public class Card
+public abstract class Card : DataAttr<Card, CardAttribute>
 {
     protected Card(){}
-    public Battle Battle { get; private set; } = null!;
-    public static Card Create(Battle battle, int id)
+    public static Card Create(int id)
     {
-        var ret = new Card
-        {
-            Battle = battle,
-            Config = RefPoolMulti<CardConfigMulti>.Acquire()
-                .FirstOrDefault(c => c.ID == id)!,
-            cardID = id
-        };
+        var ret = CreateByAttr(id);
+        ret.Config = RefPoolMulti<CardConfigMulti>.Acquire().FirstOrDefault(c => c.ID == id)!;
         return ret;
     }
     [JsonIgnore] public CardConfigMulti Config = null!;
-    [JsonProperty] int cardID;
 
-    public int UpgradeLevel;
+    public int UpgradeLevel
+    {
+        get => isTempUpgraded ? tempUpgradeLevel : field;
+        private set
+        {
+            if(isTempUpgraded)
+                tempUpgradeLevel = value;
+            else
+                field = value;
+        }
+    }
 
+    bool isTempUpgraded;
+    int tempUpgradeLevel;
+    // 临时加入的，如“愤怒”
+    public bool IsTemporary;
+    public void UpgradeTemp()
+    {
+        if (!CanUpgrade())
+            return;
+        isTempUpgraded = true;
+        tempUpgradeLevel++;
+        // OnUpgrade?.Invoke();
+    }
     public void Upgrade()
     {
         if (!CanUpgrade())
@@ -39,11 +53,50 @@ public class Card
     public CardCostBase CurCostInfo => CurUpgradeInfo.CostInfo;
     public EmbedString CurDes => CurUpgradeInfo.Des;
     public bool HasTarget => Config.HasTarget;
-    public T NthEmbedAs<T>(int id) where T : EmbedType => (CurUpgradeInfo.Des.EmbedTypes[id] as T)!;
-    public TBuff NthEmbedAsBuffCopy<TBuff>(int id) where TBuff : BuffDataBase
+    T NthEmbedAs<T>(int id) where T : EmbedType => (CurUpgradeInfo.Des.EmbedTypes[id] as T)!;
+    TBuff NthEmbedAsBuffCopy<TBuff>(int id) where TBuff : BuffDataBase
         => ((CurUpgradeInfo.Des.EmbedTypes[id] as EmbedAddBuff)!.BuffData as TBuff)!.DeepCopy();
     
-    // TODO UI
+    public abstract UniTask YieldAsync(BothTurn bothTurn, int cost, EnemyDataBase? target);
+    public virtual bool YieldCondition(BothTurn bothTurn, out string failReason)
+    {
+        failReason = string.Empty;
+        return true;
+    }
+    public virtual void OnExitPlayerYieldCard(YieldCard yieldCard) {}
+    protected virtual List<AttackModifyBase> GetModifyList(BothTurn bothTurn) => [];
+
+    protected int AtkAt(int id) => NthEmbedAs<EmbedAttack>(id).AttackValue;
+    protected int AtkTimeAt(int id) => NthEmbedAs<EmbedAttackTime>(id).AttackTimeValue;
+    protected int BlockAt(int id) => NthEmbedAs<EmbedBlock>(id).BlockValue;
+    protected int DrawAt(int id) => NthEmbedAs<EmbedDraw>(id).DrawValue;
+    protected int EnergyAt(int id) => NthEmbedAs<EmbedEnergy>(id).EnergyValue;
+    protected TBuff BuffAt<TBuff>(int id) where TBuff : BuffDataBase => NthEmbedAsBuffCopy<TBuff>(id);
+    protected int MiscAt(int id) => NthEmbedAs<EmbedMisc>(id).MiscValue;
+    
+    // TODO
+    public void EnterSubState(BothTurn bothTurn) {}
+    // TODO
+    public void ExitSubState(BothTurn bothTurn) {}
+    
+    public int Energy = 1;
+    // TODO 函数输入应为 BothTurn 和 CardInTurn
+    
+    // public int Energy
+    // {
+    //     get
+    //     {
+    //         return CurCostInfo switch
+    //         {
+    //             CardCostNumber number when this is Card24 => Math.Max(0, number.Cost - BelongFSM.LoseHpCount),
+    //             CardCostNumber number => number.Cost,
+    //             CardCostX => BelongFSM.CurEnergy,
+    //             CardCostNone or _ => 0,
+    //         };
+    //     }
+    // }
+
+    // TODO UI 函数输入应为 Battle 和 Card
     // public string UIEnergy
     // {
     //     get
@@ -57,60 +110,8 @@ public class Card
     //     }
     // }
     // public string ContentWithKeywords => CurUpgradeInfo.ContentWithKeywords([]);
-
-    CardInTurn? inTurn;
-    public CardInTurn this[BothTurn bothTurn] => inTurn!;
-    public CardInTurn EnterTurn(BothTurn bothTurn) => inTurn = CardInTurn.CreateFromBattle(this, bothTurn);
-    public void ExitTurn(BothTurn bothTurn) => inTurn = null;
-
-}
-
-public abstract class CardInTurn : DataAttr<CardInTurn, CardAttribute>
-{
-    public static CardInTurn CreateFromBattle(Card card, BothTurn bothTurn)
-    {
-        var ret = CreateByAttr(card.Config.ID);
-        ret.Card = card;
-        ret.BothTurn = bothTurn;
-        return ret;
-    }
-
-    protected static Card CreateNowhereCard(int id, BothTurn bothTurn)
-    {
-        var ret = Card.Create(bothTurn.BelongFSM, id);
-        ret.EnterTurn(bothTurn);
-        return ret;
-    }
-
-    protected Card Card { get; private set; } = null!;
-    protected BothTurn BothTurn { get; private set; } = null!;
-    public int TempUpgradeLevel;
-    public bool CanUpgrade() => TempUpgradeLevel < Card.Config.Upgrades.Count - 1;
-    // 临时加入的，如“愤怒”
-    public bool IsTemporary;
-    public void UpgradeTemp()
-    {
-        TempUpgradeLevel++;
-        OnTempUpgrade?.Invoke();
-    }
-    public event Action? OnTempUpgrade;
     
-    
-    public int Energy
-    {
-        get
-        {
-            return Card.CurCostInfo switch
-            {
-                CardCostNumber number when this is Card24 => Math.Max(0, number.Cost - BothTurn.LoseHpCount),
-                CardCostNumber number => number.Cost,
-                CardCostX => BothTurn.CurEnergy,
-                CardCostNone or _ => 0,
-            };
-        }
-    }
-    
-    // TODO UI
+    // TODO UI 函数输入应为 BothTurn 和 Card
     // public string UIEnergy
     // {
     //     get
@@ -122,6 +123,8 @@ public abstract class CardInTurn : DataAttr<CardInTurn, CardAttribute>
     //         return Card.UIEnergy;
     //     }
     // }
+    
+    // TODO UI 函数输入应为 ?? 和 Card
     // public string ContentWithKeywords
     // {
     //     get
@@ -150,22 +153,5 @@ public abstract class CardInTurn : DataAttr<CardInTurn, CardAttribute>
     //     }
     // }
     // protected T GetModify<T>() where T : AttackModifyBase => ModifyList.OfType<T>().FirstOrDefault()!;
-        
-        
-    public abstract UniTask YieldAsync(int cost, EnemyDataBase? target);
-    public virtual bool YieldCondition(out string failReason)
-    {
-        failReason = string.Empty;
-        return true;
-    }
-    public virtual void OnExitPlayerYieldCard() {}
-    protected virtual List<AttackModifyBase> ModifyList => [];
-        
-    protected int AtkAt(int id) => Card.NthEmbedAs<EmbedAttack>(id).AttackValue;
-    protected int AtkTimeAt(int id) => Card.NthEmbedAs<EmbedAttackTime>(id).AttackTimeValue;
-    protected int BlockAt(int id) => Card.NthEmbedAs<EmbedBlock>(id).BlockValue;
-    protected int DrawAt(int id) => Card.NthEmbedAs<EmbedDraw>(id).DrawValue;
-    protected int EnergyAt(int id) => Card.NthEmbedAs<EmbedEnergy>(id).EnergyValue;
-    protected TBuff BuffAt<TBuff>(int id) where TBuff : BuffDataBase => Card.NthEmbedAsBuffCopy<TBuff>(id);
-    protected int MiscAt(int id) => Card.NthEmbedAs<EmbedMisc>(id).MiscValue;
+
 }

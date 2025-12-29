@@ -31,7 +31,7 @@ public partial class BothTurn
 #pragma warning restore CS0067 // 事件从未使用过
 
 
-    public void OnEnter()
+    public override void OnEnter()
     {
         PlayerHPAndBuffData.CurHP = BelongFSM.CurHP;
         PlayerHPAndBuffData.MaxHP = BelongFSM.MaxHP;
@@ -52,15 +52,15 @@ public partial class BothTurn
         
         BelongFSM.DeckList.ForEach(card =>
         {
-            card.EnterTurn(this);
+            card.EnterSubState(this);
             DrawList.MyAdd(card);
         });
         DrawList.Shuffle();
     }
-    public void OnExit()
+    public override void OnExit()
     {
         DrawList.MyClear();
-        BelongFSM.DeckList.ForEach(card => card.ExitTurn(this));
+        BelongFSM.DeckList.ForEach(card => card.ExitSubState(this));
         EnemyList.MyClear();
         
         HandList.MyClear();
@@ -133,7 +133,7 @@ public partial class BothTurn
     {
         modifyList ??= [];
         
-        int cost = card[this].Energy;
+        int cost = card.Energy;
         if (modifyList.AnyType<YieldModifyFromDraw>())
             cost = 0;
         UseEnergy(cost);
@@ -164,7 +164,7 @@ public partial class BothTurn
                 GainBlock(buff.StackCount);
             }
         }
-        await card[this].YieldAsync(cost, target);
+        await card.YieldAsync(this, cost, target);
         if(EnemyList.Count == 0)
         {
             BelongFSM.EnterState<BattleWin>();
@@ -373,12 +373,12 @@ public partial class BothTurn
 
     public void AddTempToDiscard(Card card)
     {
-        card[this].IsTemporary = true;
+        card.IsTemporary = true;
         DiscardList.MyAdd(card);
     }
     public void AddTempToDraw(Card card)
     {
-        card[this].IsTemporary = true;
+        card.IsTemporary = true;
         var drawIndex = UnityEngine.Random.Range(0, DrawList.Count);
         DrawList.MyInsert(drawIndex, card);
     }
@@ -398,8 +398,7 @@ public partial class BothTurn
         var selected = filtered.RandomItem();
         MyDebug.Log($"选手牌：是{selected.Config.name}");
         onConfirm(selected);
-        // TODO UI选择
-        // OnOpenHandOnceClick?.Invoke(filtered, selectCount, onConfirm);
+        OnOpenHandOnceClick?.Invoke(filtered, selectCount, onConfirm);
     }
 
     
@@ -410,7 +409,7 @@ public partial class BothTurn
 [Serializable]
 public class BothTurnGrossStart : FSMState<BothTurn, BothTurnGrossStart>
 {
-    public void OnEnter()
+    public override void OnEnter()
     {
         BelongFSM.EnterState<BothTurnPlayerTurnStart>();
     }
@@ -418,7 +417,7 @@ public class BothTurnGrossStart : FSMState<BothTurn, BothTurnGrossStart>
 [Serializable]
 public class BothTurnPlayerTurnStart : FSMState<BothTurn, BothTurnPlayerTurnStart>
 {
-    public void OnEnter()
+    public override void OnEnter()
     {
         BelongFSM.TurnID++;
         BelongFSM.PlayerBlock.Value = 0;
@@ -433,7 +432,7 @@ public class BothTurnPlayerTurnStart : FSMState<BothTurn, BothTurnPlayerTurnStar
 [Serializable]
 public class BothTurnPlayerDraw : FSMState<BothTurn, BothTurnPlayerDraw>
 {
-    public void OnEnter()
+    public override void OnEnter()
     {
         BelongFSM.DrawSome(5);
         BelongFSM.EnterState<YieldCard>();
@@ -445,7 +444,7 @@ public partial class YieldCard : FSMState<BothTurn, YieldCard>;
 [Serializable] 
 public class BothTurnPlayerTurnEnd : FSMState<BothTurn, BothTurnPlayerTurnEnd>
 {
-    public void OnEnter()
+    public override void OnEnter()
     {
         BelongFSM.DiscardAllHand();
         BelongFSM.PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnEnd);
@@ -457,7 +456,7 @@ public class BothTurnPlayerTurnEnd : FSMState<BothTurn, BothTurnPlayerTurnEnd>
 [Serializable]
 public class BothTurnEnemyTurnStart : FSMState<BothTurn, BothTurnEnemyTurnStart>
 {
-    public void OnEnter()
+    public override void OnEnter()
     {
         BelongFSM.EnemyList.ForEach(enemyData =>
         {
@@ -471,7 +470,7 @@ public class BothTurnEnemyTurnStart : FSMState<BothTurn, BothTurnEnemyTurnStart>
 [Serializable]
 public class BothTurnEnemyAction : FSMState<BothTurn, BothTurnEnemyAction>
 {
-    public void OnEnter()
+    public override void OnEnter()
     {
         Func().Forget();
         return;
@@ -495,7 +494,7 @@ public class BothTurnEnemyAction : FSMState<BothTurn, BothTurnEnemyAction>
 [Serializable]
 public class BothTurnEnemyTurnEnd : FSMState<BothTurn, BothTurnEnemyTurnEnd>
 {
-    public void OnEnter()
+    public override void OnEnter()
     {
         BelongFSM.EnemyList.ForEach(enemyData =>
         {

@@ -3,18 +3,18 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [Card(106)][Serializable]
-public class Card106 : CardInTurn
+public class Card106 : Card
 {
     int Draw => DrawAt(0);
-    public override UniTask YieldAsync(int cost, EnemyDataBase? target)
+    public override UniTask YieldAsync(BothTurn bothTurn, int cost, EnemyDataBase? target)
     {
-        BothTurn.DrawSome(Draw);
-        BothTurn.OpenHandCardOnceClick(1,
-            handCard => handCard != Card,
+        bothTurn.DrawSome(Draw);
+        bothTurn.OpenHandCardOnceClick(1,
+            handCard => handCard != this,
             handCard =>
             {
-                BothTurn.HandList.MyRemove(handCard);
-                BothTurn.DrawList.MyAdd(handCard);
+                bothTurn.HandList.MyRemove(handCard);
+                bothTurn.DrawList.MyAdd(handCard);
             });
         return UniTask.CompletedTask;
     }

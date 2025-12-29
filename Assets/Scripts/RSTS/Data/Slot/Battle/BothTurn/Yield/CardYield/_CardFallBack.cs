@@ -8,9 +8,9 @@ public class CardAttribute(int id) : IDAttribute(id);
 
 [Card(-1)][Serializable]
 // ReSharper disable once InconsistentNaming
-public class _Card_FallBack : CardInTurn
+public class _Card_FallBack : Card
 {
-    public override UniTask YieldAsync(int cost, EnemyDataBase? target)
+    public override UniTask YieldAsync(BothTurn bothTurn, int cost, EnemyDataBase? target)
     {
         return UniTask.CompletedTask;
     }

@@ -66,20 +66,24 @@ public abstract class FSM2<TThis>
         }
         return false;
     }
-    protected virtual void Tick(float dt) => curState?.OnUpdate(dt);
-
+    void Tick(float dt) => curState?.OnUpdate(dt);
     public interface IState
     {
         public TThis BelongFSM { get; set; }
-        public void OnEnter(){}
-        public void OnExit(){}
-        public void OnUpdate(float dt){}
+        public void OnEnter();
+        public void OnExit();
+        public void OnUpdate(float dt);
     }
 }
 
-public abstract class FSMState<TBelong, TThis> : FSM2<TThis>, FSM2<TBelong>.IState
+public abstract class FSMState<TBelong, TThis> : 
+    FSM2<TThis>, 
+    FSM2<TBelong>.IState
     where TThis : FSM2<TThis>
     where TBelong : FSM2<TBelong>
 {
     public required TBelong BelongFSM { get; set; }
+    public virtual void OnEnter(){}
+    public virtual void OnExit(){}
+    public virtual void OnUpdate(float dt){}
 }

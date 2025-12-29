@@ -8,7 +8,7 @@ public class Launcher : Singleton<Launcher>
 {
     public List<ViewBase> ViewList = [];
     [SerializeField]
-    public GameFSM GameFSM = null!;
+    public static GameFSM GameFSM = null!;
     // ReSharper disable once Unity.IncorrectMethodSignature
     // ReSharper disable once UnusedMember.Local
     async UniTask Start()

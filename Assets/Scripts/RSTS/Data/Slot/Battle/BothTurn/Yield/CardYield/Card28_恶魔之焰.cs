@@ -6,22 +6,22 @@ using Sirenix.Utilities;
 
 namespace RSTS;
 [Card(28)][Serializable]
-public class Card28 : CardInTurn
+public class Card28 : Card
 {
     int Atk => AtkAt(0);
-    IEnumerable<Card> ToExhaustCards() => BothTurn.HandList.Where(handCard => handCard != Card);
-    public override async UniTask YieldAsync(int cost, EnemyDataBase? target)
+    List<Card> ToExhaustCards(BothTurn bothTurn) => bothTurn.HandList.Where(handCard => handCard != this).ToList();
+    public override async UniTask YieldAsync(BothTurn bothTurn, int cost, EnemyDataBase? target)
     {
-        ToExhaustCards().ForEach(handCard =>
+        ToExhaustCards(bothTurn).ForEach(handCard =>
         {
-            BothTurn.HandList.MyRemove(handCard);
-            BothTurn.ExhaustList.MyAdd(handCard);
+            bothTurn.HandList.MyRemove(handCard);
+            bothTurn.ExhaustList.MyAdd(handCard);
         });
-        await BothTurn.AttackEnemyMultiTimesAsync(target, Atk, ToExhaustCards().Count());
+        await bothTurn.AttackEnemyMultiTimesAsync(target, Atk, ToExhaustCards(bothTurn).Count);
     }
 
-    protected override List<AttackModifyBase> ModifyList =>
-        [
-            new AttackModifyCard28 { AtkTimeByExhaust = ToExhaustCards().Count() },
-        ];
+    protected override List<AttackModifyBase> GetModifyList(BothTurn bothTurn) =>
+    [
+        new AttackModifyCard28 { AtkTimeByExhaust = ToExhaustCards(bothTurn).Count },
+    ];
 }

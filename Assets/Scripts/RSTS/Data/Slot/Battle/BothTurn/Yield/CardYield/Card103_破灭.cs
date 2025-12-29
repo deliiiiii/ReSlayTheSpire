@@ -3,11 +3,11 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [Card(103)][Serializable]
-public class Card103 : CardInTurn
+public class Card103 : Card
 {
-    public override async UniTask YieldAsync(int cost, EnemyDataBase? target)
+    public override async UniTask YieldAsync(BothTurn bothTurn, int cost, EnemyDataBase? target)
     {
-        var ret = BothTurn.TryPullOneFromDraw(shouldRefill: false, out var toYieldExhaust);
+        var ret = bothTurn.TryPullOneFromDraw(shouldRefill: false, out var toYieldExhaust);
         if (!ret)
         {
             MyDebug.Log("破灭：抽牌堆无牌可抽");
@@ -15,6 +15,6 @@ public class Card103 : CardInTurn
         }
 
         MyDebug.Log($"破灭：{toYieldExhaust.Config.name}");
-        await BothTurn.YieldHandAsync(toYieldExhaust, null, [new YieldModifyFromDraw(), new YieldModifyForceExhaust()]);
+        await bothTurn.YieldHandAsync(toYieldExhaust, null, [new YieldModifyFromDraw(), new YieldModifyForceExhaust()]);
     }
 }

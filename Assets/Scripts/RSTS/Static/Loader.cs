@@ -16,7 +16,7 @@ public static class Loader
             config.OnLoad();
         }
         
-        CardInTurn.InitCtorDic();
+        Card.InitCtorDic();
         // TODO Enemy跟Card一样管理好了。尝试一下基类带三个泛型参数有没有问题！
         EnemyDataBase.InitEnemyDic();
     }

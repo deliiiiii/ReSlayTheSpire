@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-
-namespace RSTS;
+﻿namespace RSTS;
 
 public partial class YieldCard 
 {
     public CardModel? CardModel;
     public EnemyDataBase? Target;
     
-    public void OnExit()
+    public override void OnExit()
     {
-        BelongFSM.HandList.ForEach(card => card[BelongFSM].OnExitPlayerYieldCard());
+        BelongFSM.HandList.ForEach(card => card.OnExitPlayerYieldCard(this));
     }
 
     public bool TryYield(Card card, out string failReason)
@@ -21,11 +18,11 @@ public partial class YieldCard
             failReason = "该牌无法打出";
             return false;
         }
-        if (BelongFSM.CurEnergy < card[BelongFSM].Energy)
+        if (BelongFSM.CurEnergy < card.Energy)
         {
             failReason = "能量不足";
             return false;
         }
-        return card[BelongFSM].YieldCondition(out failReason);
+        return card.YieldCondition(BelongFSM, out failReason);
     }
 }

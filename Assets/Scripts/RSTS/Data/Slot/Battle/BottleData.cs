@@ -4,4 +4,6 @@ using System;
 namespace RSTS;
 
 [Serializable]
-public class BottleData;
+public abstract class BottleData;
+[Serializable]
+public class BottleNone : BottleData;

@@ -3,15 +3,15 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [Card(5002)][Serializable]
-public class Card5002 : CardInTurn
+public class Card5002 : Card
 {
     int Atk => MiscAt(0);
-    public override UniTask YieldAsync(int cost, EnemyDataBase? target)
+    public override UniTask YieldAsync(BothTurn bothTurn, int cost, EnemyDataBase? target)
     {
         return UniTask.CompletedTask;
     }
-    public override void OnExitPlayerYieldCard()
+    public override void OnExitPlayerYieldCard(YieldCard yieldCard)
     {
-        BothTurn.BurnPlayer(Atk);
+        yieldCard.BelongFSM.BurnPlayer(Atk);
     }
 }

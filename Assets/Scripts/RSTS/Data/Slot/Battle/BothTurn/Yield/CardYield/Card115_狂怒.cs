@@ -3,12 +3,12 @@ using Cysharp.Threading.Tasks;
 
 namespace RSTS;
 [Card(115)][Serializable]
-public class Card115 : CardInTurn
+public class Card115 : Card
 {
     BuffDataAttackGainBlock BuffAttackGainBlock => BuffAt<BuffDataAttackGainBlock>(0);
-    public override UniTask YieldAsync(int cost, EnemyDataBase? target)
+    public override UniTask YieldAsync(BothTurn bothTurn, int cost, EnemyDataBase? target)
     {
-        BothTurn.AddBuffToPlayer(BuffAttackGainBlock);
+        bothTurn.AddBuffToPlayer(BuffAttackGainBlock);
         return UniTask.CompletedTask;
     }
 }
