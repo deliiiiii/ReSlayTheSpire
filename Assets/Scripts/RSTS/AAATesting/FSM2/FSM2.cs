@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 
@@ -8,10 +7,10 @@ namespace RSTS;
 public abstract class FSM2<TThis>
     where TThis : FSM2<TThis>
 {
-    public static event Action<IState>? OnStateEnter;
-    public static event Action<IState>? OnStateExit;
+    public event Action<IState>? OnStateEnter;
+    public event Action<IState>? OnStateExit;
+    protected IState? CurState;
     bool isLaunched;
-    IState? curState;
     [JsonIgnore] BindDataUpdate? selfTickBind;
 
     public void Launch<TSubState>() where TSubState : class, IState
@@ -34,39 +33,41 @@ public abstract class FSM2<TThis>
             return;
         }
         isLaunched = false;
-        curState?.OnExit();
-        curState = null;
+        CurState?.OnExit();
+        CurState = null;
         selfTickBind?.UnBind();
         selfTickBind = null;
     }
-    public void EnterState<TSubState>() where TSubState : class, IState
+    public void EnterState<TSubState>(Action<TSubState>? act = null) where TSubState : class, IState
     {
         if (!isLaunched)
         {
             MyDebug.LogError($"FSM {GetType().Name} Enter State But NOT Launched");
             return;
         }
-        if (curState != null)
+        if (CurState != null)
         {
-            OnStateExit?.Invoke(curState);
-            curState.OnExit();
+            OnStateExit?.Invoke(CurState);
+            CurState.OnExit();
         }
-        curState = Activator.CreateInstance<TSubState>()!;
-        curState.BelongFSM = (TThis)this;
-        curState.OnEnter();
-        OnStateEnter?.Invoke(curState);
+        var subState = Activator.CreateInstance<TSubState>()!;
+        CurState = subState;
+        CurState.BelongFSM = (TThis)this;
+        act?.Invoke(subState);
+        CurState.OnEnter();
+        OnStateEnter?.Invoke(CurState);
     }
     public bool IsState<TSubState>([NotNullWhen(true)] out TSubState subState) where TSubState : class, IState
     {
         subState = null!;
-        if (curState is TSubState state)
+        if (CurState is TSubState state)
         {
             subState = state;
             return true;
         }
         return false;
     }
-    void Tick(float dt) => curState?.OnUpdate(dt);
+    void Tick(float dt) => CurState?.OnUpdate(dt);
     public interface IState
     {
         public TThis BelongFSM { get; set; }

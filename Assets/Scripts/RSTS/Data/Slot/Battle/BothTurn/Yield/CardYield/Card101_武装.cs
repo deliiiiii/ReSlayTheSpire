@@ -16,13 +16,13 @@ public class Card101 : Card
         {
             bothTurn.OpenHandCardOnceClick(1,
                 handCard => handCard != this && handCard.CanUpgrade(),
-                handCard => handCard.UpgradeTemp());
+                handCard => handCard.UpgradeTemp(bothTurn));
         }
         else
         {
             bothTurn.HandList
                 .Where(handCard => handCard != this && handCard.CanUpgrade())
-                .ForEach(handCard => handCard.UpgradeTemp());
+                .ForEach(handCard => handCard.UpgradeTemp(bothTurn));
         }
         return UniTask.CompletedTask;
     }

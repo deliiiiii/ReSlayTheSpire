@@ -5,9 +5,11 @@ using Newtonsoft.Json;
 using RSTS;
 using RSTS.CDMV;
 
-public abstract class Card : DataAttr<Card, CardAttribute>
+// Card.XXXProperty : (Context,Card) -> type
+//                 | (Battle,Card) -> type
+//                 | (BothTurn,Card) -> type
+public abstract partial class Card : DataAttr<Card, CardAttribute>
 {
-    protected Card(){}
     public static Card Create(int id)
     {
         var ret = CreateByAttr(id);
@@ -27,12 +29,12 @@ public abstract class Card : DataAttr<Card, CardAttribute>
                 field = value;
         }
     }
-
+    
     bool isTempUpgraded;
     int tempUpgradeLevel;
     // 临时加入的，如“愤怒”
     public bool IsTemporary;
-    public void UpgradeTemp()
+    public void UpgradeTemp(BothTurn bothTurn)
     {
         if (!CanUpgrade())
             return;
@@ -74,28 +76,8 @@ public abstract class Card : DataAttr<Card, CardAttribute>
     protected TBuff BuffAt<TBuff>(int id) where TBuff : BuffDataBase => NthEmbedAsBuffCopy<TBuff>(id);
     protected int MiscAt(int id) => NthEmbedAs<EmbedMisc>(id).MiscValue;
     
-    // TODO
-    public void EnterSubState(BothTurn bothTurn) {}
-    // TODO
-    public void ExitSubState(BothTurn bothTurn) {}
     
-    public int Energy = 1;
-    // TODO 函数输入应为 BothTurn 和 CardInTurn
     
-    // public int Energy
-    // {
-    //     get
-    //     {
-    //         return CurCostInfo switch
-    //         {
-    //             CardCostNumber number when this is Card24 => Math.Max(0, number.Cost - BelongFSM.LoseHpCount),
-    //             CardCostNumber number => number.Cost,
-    //             CardCostX => BelongFSM.CurEnergy,
-    //             CardCostNone or _ => 0,
-    //         };
-    //     }
-    // }
-
     // TODO UI 函数输入应为 Battle 和 Card
     // public string UIEnergy
     // {
@@ -154,4 +136,10 @@ public abstract class Card : DataAttr<Card, CardAttribute>
     // }
     // protected T GetModify<T>() where T : AttackModifyBase => ModifyList.OfType<T>().FirstOrDefault()!;
 
+}
+
+public abstract partial class Card
+{
+    public void OnEnterBothTurn(BothTurn bothTurn) {}
+    public void OnExitBothTurn(BothTurn bothTurn) {}
 }

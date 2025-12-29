@@ -8,18 +8,16 @@ namespace RSTS;
 
 public partial class BothTurn
 {
-    public HPAndBuffData PlayerHPAndBuffData = new();
+    public HPAndBuffData PlayerHPAndBuff => BelongFSM.PlayerHPAndBuff;
+    public Observable<int> PlayerCurHP => PlayerHPAndBuff.CurHP;
+    public Observable<int> PlayerMaxHP => PlayerHPAndBuff.MaxHP;
+    public Observable<int> PlayerBlock => PlayerHPAndBuff.Block;
+    
     public Observable<int> CurEnergy = new(5);
     public Observable<int> MaxEnergy = new(5);
-    public Observable<int> PlayerCurHP => PlayerHPAndBuffData.CurHP;
-    public Observable<int> PlayerMaxHP => PlayerHPAndBuffData.MaxHP;
-    public Observable<int> PlayerBlock => PlayerHPAndBuffData.Block;
-    public event Action? OnPlayerLoseHP;
     public MyList<EnemyDataBase> EnemyList = [];
-    
     public int TurnID;
     public int LoseHpCount;
-    
     public MyList<Card> HandList = [];
     public MyList<Card> DrawList = [];
     public MyList<Card> DiscardList = [];
@@ -29,21 +27,11 @@ public partial class BothTurn
     public event Action<List<Card>, Action<Card>>? OnOpenDiscardOnceClick;
     public event Action<List<Card>, int, Action<Card>>? OnOpenHandOnceClick;
 #pragma warning restore CS0067 // 事件从未使用过
-
-
+    
+    public event Action? OnPlayerLoseHP;
+    
     public override void OnEnter()
     {
-        PlayerHPAndBuffData.CurHP = BelongFSM.CurHP;
-        PlayerHPAndBuffData.MaxHP = BelongFSM.MaxHP;
-        PlayerHPAndBuffData.Block = new Observable<int>(0);
-        PlayerHPAndBuffData.CurHP.OnValueChangedFull += (oldV, newV) =>
-        {
-            if (newV < oldV)
-            {
-                LoseHpCount++;
-                OnPlayerLoseHP?.Invoke();
-            }
-        };
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(1));
         EnemyList.MyAdd(EnemyDataBase.CreateEnemy(0));
@@ -52,22 +40,31 @@ public partial class BothTurn
         
         BelongFSM.DeckList.ForEach(card =>
         {
-            card.EnterSubState(this);
+            card.OnEnterBothTurn(this);
             DrawList.MyAdd(card);
         });
         DrawList.Shuffle();
+        
+        PlayerHPAndBuff.CurHP.OnValueChangedFull += (oldV, newV) =>
+        {
+            if (newV < oldV)
+            {
+                LoseHpCount++;
+                OnPlayerLoseHP?.Invoke();
+            }
+        };
     }
     public override void OnExit()
     {
         DrawList.MyClear();
-        BelongFSM.DeckList.ForEach(card => card.ExitSubState(this));
+        BelongFSM.DeckList.ForEach(card => card.OnExitBothTurn(this));
         EnemyList.MyClear();
         
         HandList.MyClear();
         DiscardList.MyClear();
         ExhaustList.MyClear();
         
-        PlayerHPAndBuffData.ClearBuff();
+        PlayerHPAndBuff.ClearBuff();
     }
     IEnumerable<Card> CollectAllCards()
     {
@@ -133,7 +130,7 @@ public partial class BothTurn
     {
         modifyList ??= [];
         
-        int cost = card.Energy;
+        int cost = Mediator.Cost(this, card);
         if (modifyList.AnyType<YieldModifyFromDraw>())
             cost = 0;
         UseEnergy(cost);
@@ -159,7 +156,7 @@ public partial class BothTurn
 
         if (card.Config.Category == ECardCategory.Attack)
         {
-            if (PlayerHPAndBuffData.HasBuff<BuffDataAttackGainBlock>(out var buff))
+            if (PlayerHPAndBuff.HasBuff<BuffDataAttackGainBlock>(out var buff))
             {
                 GainBlock(buff.StackCount);
             }
@@ -179,7 +176,7 @@ public partial class BothTurn
         enemyData ??= RanEnemy();
         if (enemyData == null)
             return [];
-        var ret = Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, modifyList);
+        var ret = Attack(PlayerHPAndBuff, enemyData.HPAndBuffData, baseAtk, modifyList);
         if(ret.OfType<AttackResultDie>().Any())
             EnemyList.MyRemove(enemyData);
         return ret;
@@ -191,7 +188,7 @@ public partial class BothTurn
         enemyData ??= RanEnemy();
         if (enemyData == null)
             return [];
-        var ret = Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, modifyList);
+        var ret = Attack(PlayerHPAndBuff, enemyData.HPAndBuffData, baseAtk, modifyList);
         if(ret.OfType<AttackResultDie>().Any())
             EnemyList.MyRemove(enemyData);
         return ret;
@@ -228,7 +225,7 @@ public partial class BothTurn
         var toRemoveList = new List<EnemyDataBase>();
         EnemyList.ForEach(enemyData =>
         {
-            ret.AddRange(Attack(PlayerHPAndBuffData, enemyData.HPAndBuffData, baseAtk, modifyList));
+            ret.AddRange(Attack(PlayerHPAndBuff, enemyData.HPAndBuffData, baseAtk, modifyList));
             if (ret.AnyType<AttackResultDie>())
             {
                 toRemoveList.Add(enemyData);
@@ -262,8 +259,8 @@ public partial class BothTurn
         , List<AttackModifyBase>? modifyList = null)
     {
         modifyList ??= [];
-        var ret = Attack(enemyData.HPAndBuffData, PlayerHPAndBuffData, baseAtk, modifyList);
-        if (PlayerHPAndBuffData.HasBuff<BuffFlameBarrier>(out var buffFlameBarrier))
+        var ret = Attack(enemyData.HPAndBuffData, PlayerHPAndBuff, baseAtk, modifyList);
+        if (PlayerHPAndBuff.HasBuff<BuffFlameBarrier>(out var buffFlameBarrier))
         {
             var flameDamage = buffFlameBarrier.StackCount;
             AttackEnemy(enemyData, flameDamage, [new AttackModifyFromBuff()]);
@@ -357,7 +354,7 @@ public partial class BothTurn
     
     public void AddBuffToPlayer(BuffDataBase buffData)
     {
-        PlayerHPAndBuffData.AddBuff(buffData);
+        PlayerHPAndBuff.AddBuff(buffData);
     }
     public void AddBuffToEnemy(EnemyDataBase? enemyData, BuffDataBase buffData)
     {
@@ -423,8 +420,8 @@ public class BothTurnPlayerTurnStart : FSMState<BothTurn, BothTurnPlayerTurnStar
         BelongFSM.PlayerBlock.Value = 0;
         BelongFSM.LoseEnergy(BelongFSM.CurEnergy.Value);
         BelongFSM.GainEnergy(BelongFSM.MaxEnergy);
-        BelongFSM.PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnStart);
-        BelongFSM.PlayerHPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnStart);
+        BelongFSM.PlayerHPAndBuff.UseABuff(EBuffUseTime.TurnStart);
+        BelongFSM.PlayerHPAndBuff.DisposeABuff(EBuffDisposeTime.TurnStart);
             
         BelongFSM.EnterState<BothTurnPlayerDraw>();
     }
@@ -447,8 +444,8 @@ public class BothTurnPlayerTurnEnd : FSMState<BothTurn, BothTurnPlayerTurnEnd>
     public override void OnEnter()
     {
         BelongFSM.DiscardAllHand();
-        BelongFSM.PlayerHPAndBuffData.UseABuff(EBuffUseTime.TurnEnd);
-        BelongFSM.PlayerHPAndBuffData.DisposeABuff(EBuffDisposeTime.TurnEnd);
+        BelongFSM.PlayerHPAndBuff.UseABuff(EBuffUseTime.TurnEnd);
+        BelongFSM.PlayerHPAndBuff.DisposeABuff(EBuffDisposeTime.TurnEnd);
         BelongFSM.EnterState<BothTurnEnemyTurnStart>();
     }
 }

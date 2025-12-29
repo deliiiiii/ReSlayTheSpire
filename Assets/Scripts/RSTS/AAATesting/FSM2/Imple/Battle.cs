@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RSTS.CDMV;
 using Sirenix.Utilities;
@@ -10,8 +11,7 @@ public partial class Battle
     public MyList<Card> DeckList = [];
     public MyList<ItemData> ItemList = [];
     public MyList<BottleData> BottleList = [];
-    public Observable<int> CurHP = new(0);
-    public Observable<int> MaxHP = new(0);
+    public HPAndBuffData PlayerHPAndBuff = new();
     public Observable<int> Coin = new(0);
     public Observable<float> InBattleTime = new(0);
     public MapData MapData = new();
@@ -31,7 +31,7 @@ public partial class Battle
         {
             BottleList.MyAdd(new BottleNone());
         }
-        CurHP.Value = MaxHP.Value = config.MaxHP;
+        PlayerHPAndBuff.CurHP.Value = PlayerHPAndBuff.MaxHP.Value = config.MaxHP;
         Coin.Value = 99;
 
         Launch<BattleSelectLastBuff>();
